@@ -586,6 +586,7 @@ pub fn on_workspace_changed_swap_tree(
     trigger: On<WorkspaceChanged>,
     mut tree: ResMut<DockTree>,
     mut registry: ResMut<WorkspaceRegistry>,
+    mut maximized: ResMut<crate::maximize::MaximizedLeaf>,
 ) {
     let event = trigger.event();
 
@@ -609,6 +610,11 @@ pub fn on_workspace_changed_swap_tree(
         ws.tree = target_tree.clone();
     }
     *tree = target_tree;
+    // The tree is being replaced wholesale, so any maximized NodeId
+    // belongs to the outgoing tree. Id counters overlap between trees,
+    // so the stale id could silently name an unrelated node in the new
+    // one; see `maximize`'s module docs.
+    maximized.0 = None;
     registry.active = Some(event.new.clone());
 }
 

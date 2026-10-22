@@ -30,6 +30,14 @@ impl PanelFocus<'_, '_> {
             None => self.last_pressed.0.as_deref() == Some(window_id),
         }
     }
+
+    /// The window id of the panel a keypress belongs to, by the same
+    /// decision chain [`Self::is_focused`] uses: the panel under the
+    /// cursor, else the panel last pressed in.
+    pub fn focused_panel(&self) -> Option<String> {
+        hovered_panel(&self.hover_map, &self.parents, &self.contents)
+            .or_else(|| self.last_pressed.0.clone())
+    }
 }
 
 /// The window id of the dock panel under the cursor, if any.

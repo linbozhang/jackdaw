@@ -3501,6 +3501,10 @@ pub fn init_layout(world: &mut World) {
         build_default_tree(world);
     }
 
+    // The tree above was loaded or rebuilt from scratch; any maximized
+    // NodeId belongs to a tree that no longer exists.
+    jackdaw_panels::maximize::exit_maximize(world);
+
     jackdaw_panels::reconcile::reconcile(world);
 
     // Make sure the active workspace's `.tree` matches the live tree.
@@ -3588,7 +3592,10 @@ fn largest_visible_leaf(
 /// behind the Window menu, which always adds a fresh tab. A fresh workspace
 /// is seeded with a tab per registered window, so the tab usually exists
 /// already and only needs focusing.
-pub(crate) fn open_window_in_default_area_if_absent(world: &mut World, window_id: &str) {
+///
+/// Public so a headless test can drive the open-into-hidden-leaf maximize
+/// rule without a cursor; same arrangement as [`init_layout`].
+pub fn open_window_in_default_area_if_absent(world: &mut World, window_id: &str) {
     let window_id = viewport::canonical_window_id(window_id);
     let existing = {
         let tree = world.resource::<jackdaw_panels::tree::DockTree>();
@@ -3603,6 +3610,11 @@ pub(crate) fn open_window_in_default_area_if_absent(world: &mut World, window_id
     };
     match existing {
         Some((leaf_id, Some(tab_id))) => {
+            // Focusing a tab the user can't see (its leaf is hidden as
+            // a maximize sibling) is the same dead end as opening one
+            // there: restore the layout first, unless the leaf is the
+            // maximized one itself.
+            jackdaw_panels::maximize::exit_maximize_for_leaf(world, leaf_id);
             world
                 .resource_mut::<jackdaw_panels::tree::DockTree>()
                 .set_active(leaf_id, tab_id);
@@ -3657,6 +3669,13 @@ fn open_window_in_default_area(world: &mut World, window_id: &str) {
         return;
     };
 
+    // The landing leaf may be hidden as a maximize sibling (canonical
+    // areas stay in the tree however the layout is arranged); a tab
+    // opened there would be invisible until the user restored the
+    // layout, which reads as a dead button. Restore first, unless the
+    // window is joining the maximized leaf itself.
+    jackdaw_panels::maximize::exit_maximize_for_leaf(world, target_leaf);
+
     let target_is_empty = world
         .resource::<DockTree>()
         .get(target_leaf)
@@ -3690,6 +3709,9 @@ fn open_window_in_default_area(world: &mut World, window_id: &str) {
 fn reset_layout(world: &mut World) {
     *world.resource_mut::<jackdaw_panels::tree::DockTree>() =
         jackdaw_panels::tree::DockTree::default();
+    // Same as `init_layout`: the old tree's ids mean nothing in the
+    // rebuilt one.
+    jackdaw_panels::maximize::exit_maximize(world);
     build_default_tree(world);
     jackdaw_panels::reconcile::reconcile(world);
     sync_active_workspace_from_live_tree(world);

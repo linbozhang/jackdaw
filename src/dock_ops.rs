@@ -3,10 +3,15 @@
 use bevy::picking::pointer::PointerButton;
 use bevy::prelude::*;
 use jackdaw_api::prelude::*;
+use jackdaw_api_internal::keymap::PresetInput;
 use jackdaw_panels::PanelGroup;
 use jackdaw_panels::area::{DockTab, DockTabCloseButton};
+use jackdaw_panels::maximize::MaximizedLeaf;
 use jackdaw_panels::reconcile::NodeBinding;
 use jackdaw_panels::tree::{DockNode, DockTree, NodeId, SplitAxis, TabId};
+
+use crate::core_extension::CoreExtensionInputContext;
+use crate::panel_focus::PanelFocus;
 
 pub struct DockOpsPlugin;
 
@@ -20,6 +25,14 @@ impl Plugin for DockOpsPlugin {
 pub(crate) fn add_to_extension(ctx: &mut ExtensionContext) {
     ctx.register_operator::<DockCloseTabOp>();
     ctx.register_operator::<WindowResizePanelOp>();
+    ctx.register_operator::<PanelToggleMaximizeOp>();
+    // Shift+Space: bare Space activates a focused tree row and
+    // Ctrl+Space opens the command palette, so the maximize chord takes
+    // the one modifier neither claims.
+    ctx.bind_operator::<CoreExtensionInputContext, PanelToggleMaximizeOp>([PresetInput::key(
+        "Space",
+    )
+    .shift()]);
 }
 
 #[operator(
@@ -44,6 +57,84 @@ pub(crate) fn dock_close_tab(
 /// The smallest share of a split either side keeps, matching the clamp
 /// `DockTree::set_fraction` applies.
 const MIN_SHARE: f32 = 0.05;
+
+/// Whether the focused panel can be maximized (or already maximized, so
+/// it can be restored): a focusable window in a leaf with a sibling to
+/// hide. A single-leaf root layout has nothing to maximize over.
+fn can_toggle_maximize(
+    focus: PanelFocus,
+    tree: Res<DockTree>,
+    maximized: Res<MaximizedLeaf>,
+) -> bool {
+    if maximized.0.is_some() {
+        return true;
+    }
+    let Some(window_id) = focus.focused_panel() else {
+        return false;
+    };
+    tree.find_leaf_with_window(&window_id)
+        .is_some_and(|leaf| tree.parent_of(leaf).is_some())
+}
+
+#[operator(
+    id = "panel.toggle_maximize",
+    label = "Toggle Panel Maximize",
+    description = "Expand the panel under the cursor to fill the layout, or restore it.",
+    allows_undo = false,
+    is_available = can_toggle_maximize,
+    params(window_id(
+        String,
+        default = "",
+        doc = "Window the panel holds, such as \"jackdaw.inspector.components\". \
+               Empty means the panel under the cursor."
+    ))
+)]
+pub(crate) fn panel_toggle_maximize(
+    In(params): In<OperatorParameters>,
+    focus: PanelFocus,
+    mut tree: ResMut<DockTree>,
+    mut maximized: ResMut<MaximizedLeaf>,
+) -> OperatorResult {
+    // Toggle's other half: already maximized means restore, whatever
+    // the parameters say.
+    if maximized.0.is_some() {
+        maximized.0 = None;
+        return OperatorResult::Finished;
+    }
+
+    let Some(window_id) = params
+        .as_str("window_id")
+        .filter(|id| !id.is_empty())
+        .map(ToString::to_string)
+        .or_else(|| focus.focused_panel())
+    else {
+        warn!("panel.toggle_maximize: no panel under the cursor and no 'window_id' given");
+        return OperatorResult::Cancelled;
+    };
+    let Some(leaf) = tree.find_leaf_with_window(&window_id) else {
+        warn!("panel.toggle_maximize: no dock panel holds '{window_id}'");
+        return OperatorResult::Cancelled;
+    };
+    if tree.parent_of(leaf).is_none() {
+        warn!("panel.toggle_maximize: '{window_id}' fills the layout; nothing to maximize over");
+        return OperatorResult::Cancelled;
+    }
+    // Bring the window's tab to the front before expanding, so the
+    // maximized view is the panel the user was looking at.
+    let tab = tree
+        .get(leaf)
+        .and_then(|n| n.as_leaf())
+        .and_then(|l| l.windows.iter().find(|t| t.window_id == window_id))
+        .map(|t| t.id);
+    if let Some(tab) = tab {
+        tree.set_active(leaf, tab);
+    }
+    // The reconciler does the rest: it hides the sibling subtree at
+    // every split along the path, and the tree (fractions included)
+    // stays exactly as it was for saving.
+    maximized.0 = Some(leaf);
+    OperatorResult::Finished
+}
 
 #[operator(
     id = "window.resize_panel",

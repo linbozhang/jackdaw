@@ -1649,7 +1649,11 @@ pub fn tree_keyboard_navigation(
         }
     }
 
+    // Enter or bare Space activates the focused row. Shift+Space is the
+    // panel-maximize chord (a longer chord wins over a bare key), so a
+    // held Shift hands the key to the keymap instead of the tree.
     if (keyboard.just_pressed(KeyCode::Enter) || keyboard.just_pressed(KeyCode::Space))
+        && !keyboard.any_pressed([KeyCode::ShiftLeft, KeyCode::ShiftRight])
         && let Some(focused_entity) = focused.0
         && let Ok(tree_node) = tree_node_query.get(focused_entity)
         && let Ok((_, _, children)) = tree_nodes.get(focused_entity)
