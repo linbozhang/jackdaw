@@ -9,3 +9,5 @@ new-workspace = New Workspace
 preparing-build = Preparing build...
 read-only = (read-only)
 material-not-loaded = (material not loaded)
+resources-empty = No resources match this filter.
+resources-none-selected = Select a resource to inspect its fields.

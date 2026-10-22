@@ -450,22 +450,7 @@ impl JackdawExtension for InspectorExtension {
                 .with_default_area(DefaultArea::RightSidebar)
                 .with_priority(4)
                 .with_build(|window| {
-                    window.spawn((
-                        Node {
-                            flex_grow: 1.0,
-                            justify_content: JustifyContent::Center,
-                            align_items: AlignItems::Center,
-                            ..default()
-                        },
-                        children![(
-                            Text::new("Resources"),
-                            TextFont {
-                                font_size: tokens::TEXT_SIZE_SM,
-                                ..default()
-                            },
-                            TextColor(tokens::TEXT_DISABLED),
-                        )],
-                    ));
+                    window.spawn(crate::inspector::resource_panel::resource_panel_content());
                 }),
         );
 

@@ -22,6 +22,7 @@ mod prefab_field_dots;
 pub(crate) mod prefab_menu;
 pub(crate) mod project_component_display;
 pub(crate) mod reflect_fields;
+pub mod resource_panel;
 pub(crate) mod schema_fields;
 pub(crate) mod type_metadata_pane;
 pub mod unavailable;
@@ -98,6 +99,7 @@ impl Plugin for InspectorPlugin {
         component_picker::populate_module_picker_denylist(&mut denylist);
         app.insert_resource(denylist);
         app.add_observer(add_header::on_component_chip_click);
+        resource_panel::plugin(app);
 
         app.register_type_data::<Name, ReflectDisplayable>()
             .add_plugins(component_tooltip::plugin)
@@ -410,6 +412,54 @@ pub fn asset_field_shown_by(world: &World, row: Entity) -> Option<(&str, &str)> 
 pub fn component_cards_showing(world: &mut World) -> Vec<String> {
     let mut cards = world.query::<&ComponentDisplayTypePath>();
     cards.iter(world).map(|card| card.0.clone()).collect()
+}
+
+/// The resources the Resources panel is listing, as their short names in
+/// display order (a name the search filter hides is absent).
+pub fn resource_panel_rows(world: &mut World) -> Vec<String> {
+    let mut mounts = world.query_filtered::<&Children, With<resource_panel::ResourceListMount>>();
+    let Some(children) = mounts
+        .iter(world)
+        .next()
+        .map(|children| children.iter().collect::<Vec<Entity>>())
+    else {
+        return Vec::new();
+    };
+    let mut buttons = world.query::<&resource_panel::ResourceRowButton>();
+    let mut rows: Vec<(usize, String)> = children
+        .iter()
+        .enumerate()
+        .filter_map(|(index, child)| {
+            buttons
+                .get(world, *child)
+                .ok()
+                .map(|button| (index, button.short_name.clone()))
+        })
+        .collect();
+    rows.sort_by_key(|(index, _)| *index);
+    rows.into_iter().map(|(_, name)| name).collect()
+}
+
+/// Every line of text under the resource card for `type_path`, which is
+/// what a person reading the card sees.
+pub fn resource_card_text(world: &mut World, type_path: &str) -> Vec<String> {
+    let mut cards = world.query::<(Entity, &resource_panel::ResourceCard)>();
+    let roots: Vec<Entity> = cards
+        .iter(world)
+        .filter(|(_, card)| card.type_path == type_path)
+        .map(|(entity, _)| entity)
+        .collect();
+    let mut lines = Vec::new();
+    let mut stack = roots;
+    while let Some(entity) = stack.pop() {
+        if let Some(text) = world.get::<Text>(entity) {
+            lines.push(text.0.clone());
+        }
+        if let Some(children) = world.get::<Children>(entity) {
+            stack.extend(children.iter());
+        }
+    }
+    lines
 }
 
 /// Every line of text under the card for `type_path`, which is what a person

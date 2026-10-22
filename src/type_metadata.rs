@@ -72,7 +72,10 @@ impl TypeChrome {
     }
 }
 
-fn is_game_type(type_path: &str) -> bool {
+/// Whether a type path is a game's own (not one of a module's crates, and
+/// not bevy or jackdaw). Game resources are visible in the Resources
+/// panel without any allowlist entry.
+pub(crate) fn is_game_type(type_path: &str) -> bool {
     ModuleCatalog::builtin()
         .component_module(type_path)
         .is_none()

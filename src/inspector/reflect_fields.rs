@@ -45,14 +45,14 @@ const NUMERIC_DISPLAY_PRECISION: i32 = 2;
 /// Round an `f64` to [`NUMERIC_DISPLAY_PRECISION`] for display, scrubbing the
 /// `f32 -> f64` widening noise out of values read back via reflection so the
 /// field shows e.g. `0.1` rather than `0.10000000149011612`.
-fn round_numeric_display(value: f64) -> f64 {
+pub(crate) fn round_numeric_display(value: f64) -> f64 {
     let factor = 10f64.powi(NUMERIC_DISPLAY_PRECISION);
     (value * factor).round() / factor
 }
 
 /// Read a [`ScrubNumberInputValue`] as an `f64` regardless of variant. The
 /// widget's own `as_f64` is private, so the inspector reads the public variants.
-fn scrub_value_as_f64(value: &ScrubNumberInputValue) -> f64 {
+pub(crate) fn scrub_value_as_f64(value: &ScrubNumberInputValue) -> f64 {
     match value {
         ScrubNumberInputValue::F32(v) => *v as f64,
         ScrubNumberInputValue::F64(v) => *v,
@@ -2434,7 +2434,7 @@ fn seed_string_field(
 /// What a string field's text entry showed when its value last came from the
 /// component, which Escape puts back.
 #[derive(Component)]
-struct ShownFieldText(String);
+pub(crate) struct ShownFieldText(pub(crate) String);
 
 /// Marks a string field whose edit Enter or Escape has just settled, so the
 /// focus release that follows commits nothing more.
@@ -3143,7 +3143,7 @@ pub(crate) fn refresh_enum_variants(
     }
 }
 
-fn reflect_field_to_f64(field: &dyn PartialReflect) -> Option<f64> {
+pub(crate) fn reflect_field_to_f64(field: &dyn PartialReflect) -> Option<f64> {
     if let Some(&v) = field.try_downcast_ref::<f32>() {
         Some(v as f64)
     } else if let Some(&v) = field.try_downcast_ref::<f64>() {
