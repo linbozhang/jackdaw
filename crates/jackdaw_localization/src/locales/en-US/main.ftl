@@ -11,3 +11,4 @@ read-only = (read-only)
 material-not-loaded = (material not loaded)
 resources-empty = No resources match this filter.
 resources-none-selected = Select a resource to inspect its fields.
+resources-session-only = Resource changes apply to this editor session only and are not saved with the scene.
