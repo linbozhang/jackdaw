@@ -4,7 +4,8 @@ use jackdaw_feathers::{icons::IconFont, tokens};
 use lucide_icons::Icon;
 
 use crate::area::{DockTab, DockTabBar};
-use crate::reconcile::LeafBinding;
+use crate::maximize::MaximizedLeaf;
+use crate::reconcile::{LeafBinding, NodeBinding};
 use crate::tree::{DockTree, TabId};
 
 #[derive(Component)]
@@ -15,6 +16,21 @@ pub struct DockTabAddButton {
 #[derive(Component)]
 pub struct DockTabGrip;
 
+/// The tab-bar button that maximizes its leaf (or restores it while
+/// maximized). Spawns between the `+` and the grip of every tabbed
+/// bar; the editor's click observer turns a press into the
+/// `panel.toggle_maximize` operator, naming the leaf's active window.
+#[derive(Component)]
+pub struct DockTabMaximizeButton {
+    pub area_entity: Entity,
+}
+
+/// Marker on the glyph inside a [`DockTabMaximizeButton`] so the
+/// maximize sync system can swap the Maximize/Minimize forms without
+/// touching any other text of the bar.
+#[derive(Component)]
+pub struct DockTabMaximizeIcon;
+
 #[derive(Component)]
 pub struct DockTabRow;
 
@@ -23,7 +39,7 @@ pub struct DockTabPlugin;
 impl Plugin for DockTabPlugin {
     fn build(&self, app: &mut App) {
         app.add_observer(handle_dock_tab_clicks)
-            .add_systems(Update, show_close_on_hover);
+            .add_systems(Update, (show_close_on_hover, sync_maximize_button_glyphs));
     }
 }
 
@@ -116,6 +132,30 @@ pub fn spawn_tab_bar_world(
             ChildOf(right_row),
             children![(
                 Text::new(String::from(Icon::Plus.unicode())),
+                TextFont {
+                    font: font_handle.clone().into(),
+                    font_size: tokens::ICON_SM,
+                    ..default()
+                },
+                TextColor(tokens::TAB_INACTIVE_TEXT),
+            )],
+        ));
+
+        // Spawns in the Maximize form; `sync_maximize_button_glyphs`
+        // flips it (and tints it) when this leaf is the maximized one.
+        world.spawn((
+            DockTabMaximizeButton { area_entity },
+            Node {
+                width: Val::Px(15.0),
+                height: Val::Px(15.0),
+                justify_content: JustifyContent::Center,
+                align_items: AlignItems::Center,
+                ..default()
+            },
+            ChildOf(right_row),
+            children![(
+                DockTabMaximizeIcon,
+                Text::new(String::from(Icon::Maximize.unicode())),
                 TextFont {
                     font: font_handle.clone().into(),
                     font_size: tokens::ICON_SM,
@@ -292,6 +332,47 @@ fn handle_dock_tab_clicks(
     };
 
     tree.set_active(binding.0, tab.tab_id);
+}
+
+/// Swap each tab bar's maximize glyph to its restore form while the
+/// leaf the bar belongs to is the maximized one, and back on restore.
+/// A freshly spawned bar always starts in the Maximize form whatever
+/// the state, so new buttons (a tab added to the maximized leaf
+/// rebuilds its bar) are re-synced through the `Added` trigger.
+fn sync_maximize_button_glyphs(
+    maximized: Option<Res<MaximizedLeaf>>,
+    buttons: Query<(&DockTabMaximizeButton, &Children)>,
+    fresh: Query<(), Added<DockTabMaximizeButton>>,
+    bindings: Query<&NodeBinding>,
+    mut glyphs: Query<(&mut Text, &mut TextColor), With<DockTabMaximizeIcon>>,
+) {
+    let Some(maximized) = maximized else {
+        return;
+    };
+    if !maximized.is_changed() && fresh.is_empty() {
+        return;
+    }
+    for (button, children) in &buttons {
+        let Ok(NodeBinding(node)) = bindings.get(button.area_entity) else {
+            continue;
+        };
+        let active = maximized.0 == Some(*node);
+        let glyph = if active {
+            Icon::Minimize
+        } else {
+            Icon::Maximize
+        };
+        for child in children.iter() {
+            if let Ok((mut text, mut color)) = glyphs.get_mut(child) {
+                text.0 = String::from(glyph.unicode());
+                color.0 = if active {
+                    tokens::ACCENT_BLUE
+                } else {
+                    tokens::TAB_INACTIVE_TEXT
+                };
+            }
+        }
+    }
 }
 
 fn show_close_on_hover(
