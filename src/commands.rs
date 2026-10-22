@@ -1676,7 +1676,7 @@ pub(crate) fn apply_json_field_to_ecs(
 /// the type is unregistered or the entity is gone.
 /// Reset one field of a live ECS component to the type's default value:
 /// the state a sparse patch resolves to when the field is not authored.
-fn reset_ecs_field_to_default(
+pub(crate) fn reset_ecs_field_to_default(
     world: &mut World,
     entity: Entity,
     type_path: &str,
@@ -1986,7 +1986,7 @@ fn map_entry_edit(
 
 /// Write `value` into the live map entry `field_path` names. Whether the path
 /// named one the component holds.
-fn apply_json_map_entry_to_ecs(
+pub(crate) fn apply_json_map_entry_to_ecs(
     world: &mut World,
     entity: Entity,
     type_path: &str,

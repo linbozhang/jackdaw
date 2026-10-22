@@ -5,5 +5,8 @@
 #[path = "../util/mod.rs"]
 mod util;
 
+mod edit_undo;
+mod insert_remove;
 mod list_and_show;
+mod no_pie_leak;
 mod visibility;

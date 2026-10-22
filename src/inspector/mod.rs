@@ -22,6 +22,8 @@ mod prefab_field_dots;
 pub(crate) mod prefab_menu;
 pub(crate) mod project_component_display;
 pub(crate) mod reflect_fields;
+pub(crate) mod resource_commands;
+pub(crate) mod resource_ops;
 pub mod resource_panel;
 pub(crate) mod schema_fields;
 pub(crate) mod type_metadata_pane;

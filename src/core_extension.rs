@@ -330,6 +330,7 @@ impl JackdawExtension for JackdawCoreExtension {
         crate::project_window::add_to_extension(ctx);
         crate::material_browser::add_to_extension(ctx);
         crate::inspector::ops::add_to_extension(ctx);
+        crate::inspector::resource_ops::add_to_extension(ctx);
         crate::viewport::add_to_extension(ctx);
         crate::screenshot::add_to_extension(ctx);
         crate::camera_capture::add_to_extension(ctx);
