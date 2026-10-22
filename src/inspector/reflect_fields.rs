@@ -1855,26 +1855,28 @@ fn apply_color_with_undo(
 ) {
     let registry = world.resource::<AppTypeRegistry>().clone();
 
-    // Live edits need the color in canonical reflect form (a `Color`
-    // enum like `{"LinearRgba": {..}}`), not the picker's raw sRGBA
-    // array, so the game can deserialize the full component.
-    if *world.resource::<crate::pie_mirror::PieViewMode>() == crate::pie_mirror::PieViewMode::Live {
-        let srgba = Srgba::new(new_rgba[0], new_rgba[1], new_rgba[2], new_rgba[3]);
-        let canonical = {
-            let reg = registry.read();
-            color_to_canonical_json(Color::Srgba(srgba), &reg)
-        };
-        try_route_pie_live_field_edit(world, _entity, type_path, field_path, canonical);
-        return;
-    }
-
+    let srgba = Srgba::new(new_rgba[0], new_rgba[1], new_rgba[2], new_rgba[3]);
     // The canonical reflect JSON (`{"Srgba": {..}}`) deserializes into any
     // `Color`-typed field; the picker's raw sRGBA array does not.
-    let srgba = Srgba::new(new_rgba[0], new_rgba[1], new_rgba[2], new_rgba[3]);
     let new_json = {
         let reg = registry.read();
         color_to_canonical_json(Color::Srgba(srgba), &reg)
     };
+
+    // A resource's color field is editor-session state: write the resource,
+    // never the document pipeline and never the PIE stream.
+    if super::resource_commands::is_resource_entity(world, _entity) {
+        super::resource_commands::resource_field_commit(world, type_path, field_path, &new_json);
+        return;
+    }
+
+    // Live edits need the color in canonical reflect form (a `Color`
+    // enum like `{"LinearRgba": {..}}`), not the picker's raw sRGBA
+    // array, so the game can deserialize the full component.
+    if *world.resource::<crate::pie_mirror::PieViewMode>() == crate::pie_mirror::PieViewMode::Live {
+        try_route_pie_live_field_edit(world, _entity, type_path, field_path, new_json);
+        return;
+    }
 
     crate::commands::field_edit_commit(
         world,
@@ -2073,6 +2075,12 @@ pub(crate) fn try_route_pie_live_field_edit(
     use crate::pie_mirror::PieViewMode;
     use jackdaw_pie_protocol::ControlEvent;
 
+    // A resource entity is editor-session state: its edits never stream to
+    // a running game, whatever the mode or the projection wiring says.
+    if super::resource_commands::is_resource_entity(world, source_entity) {
+        return false;
+    }
+
     if *world.resource::<PieViewMode>() != PieViewMode::Live {
         return false;
     }
@@ -2162,6 +2170,14 @@ fn apply_field_json_with_undo(
     field_path: &str,
     new_json: serde_json::Value,
 ) {
+    // A resource card's widgets name their resource's entity as the source;
+    // route the write at the resource itself, never the document pipeline,
+    // which holds no patch for it and would write the selection instead.
+    if super::resource_commands::is_resource_entity(world, entity) {
+        super::resource_commands::resource_field_commit(world, type_path, field_path, &new_json);
+        return;
+    }
+
     if try_route_pie_live_field_edit(world, entity, type_path, field_path, new_json.clone()) {
         return;
     }
@@ -2654,6 +2670,12 @@ fn apply_field_value_live(
     new_value_str: &str,
 ) {
     let new_json = parse_to_json_value(new_value_str);
+    // A resource card's drag tick previews onto the resource itself; the
+    // gesture baseline the resource commit reads is captured there.
+    if super::resource_commands::is_resource_entity(world, source_entity) {
+        super::resource_commands::resource_field_preview(world, type_path, field_path, &new_json);
+        return;
+    }
     if try_route_pie_live_field_edit(
         world,
         source_entity,
@@ -3464,6 +3486,13 @@ pub(super) fn apply_enum_variant_with_undo(
         .or_else(|| schema_variant_json(world, type_path, field_path, variant_name))
         .unwrap_or_else(|| serde_json::Value::String(variant_name.to_string()));
 
+    // A resource's enum field is editor-session state: write the resource,
+    // never the document pipeline and never the PIE stream.
+    if super::resource_commands::is_resource_entity(world, _entity) {
+        super::resource_commands::resource_field_commit(world, type_path, field_path, &new_json);
+        return;
+    }
+
     if try_route_pie_live_field_edit(world, _entity, type_path, field_path, new_json.clone()) {
         return;
     }
@@ -3852,13 +3881,24 @@ fn edit_reflect_list(
             items.swap(index, index + 1);
         }
     }
-    crate::commands::field_edit_commit(
-        world,
-        type_path,
-        field_path,
-        &serde_json::Value::Array(items),
-        "Edit list on multiple entities",
-    );
+    // A resource card's list buttons edit the resource's own list: commit
+    // it on the resource path rather than the selection-wide document one.
+    if super::resource_commands::is_resource_entity(world, source) {
+        super::resource_commands::resource_field_commit(
+            world,
+            type_path,
+            field_path,
+            &serde_json::Value::Array(items),
+        );
+    } else {
+        crate::commands::field_edit_commit(
+            world,
+            type_path,
+            field_path,
+            &serde_json::Value::Array(items),
+            "Edit list on multiple entities",
+        );
+    }
     // A list that changed length has no row to write the new value into: the
     // rows are what changed.
     if let Some(mut pending) = world.get_resource_mut::<crate::inspector::PendingInspectorRebuild>()

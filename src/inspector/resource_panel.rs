@@ -8,16 +8,19 @@
 //! resource entity as the source, so struct/enum/list/color rows all
 //! render unchanged.
 //!
-//! This panel is read-only for now: field widgets commit through the
-//! document path, which holds no patch for a resource entity, so an edit
-//! someone types into a card is dropped rather than written. The
-//! insert/remove and field-write operators that route around that arrive
-//! with the resource operators.
+//! Field widgets on the selected resource's card commit through the
+//! resource write path (`crate::inspector::resource_commands`): the world's
+//! ECS only, one undo entry per gesture, and never the scene document,
+//! which holds no patch for a resource entity. Edits are therefore
+//! editor-session state, not part of the saved scene. The panel's Add
+//! button opens a picker of constructible resource types; the card's
+//! Remove button takes the resource back out. Both land on the same undo
+//! stack.
 
 use std::collections::HashSet;
 
 use bevy::ecs::change_detection::Tick;
-use bevy::ecs::reflect::{AppTypeRegistry, ReflectComponent};
+use bevy::ecs::reflect::{AppTypeRegistry, ReflectComponent, ReflectResource};
 use bevy::ecs::system::SystemState;
 use bevy::ecs::world::EntityRef;
 use bevy::feathers::controls::FeathersTextInputContainer;
@@ -26,12 +29,17 @@ use bevy::prelude::*;
 use bevy::text::{EditableText, TextEdit};
 use bevy::ui::Checked;
 use bevy::ui_widgets::Checkbox;
+use jackdaw_api::prelude::*;
 use jackdaw_feathers::button::{ButtonClickEvent, ButtonProps, button};
 use jackdaw_feathers::icons::{EditorFont, Icon, IconFont};
 use jackdaw_feathers::number_input::{
     ScrubNumberInput, ScrubNumberInputValue, is_scrubbing_or_focused,
 };
 use jackdaw_feathers::panel_card::{PanelCardCollapseState, PanelCardProps, spawn_panel_card};
+use jackdaw_feathers::picker::{
+    Category, Matchable, PickerItems, PickerProps, SelectInput, SpawnItemInput, match_text,
+    picker_item,
+};
 use jackdaw_feathers::text_edit::{TextEditProps, TextEditValue, text_edit};
 use jackdaw_feathers::tokens;
 use jackdaw_feathers::tooltip::Tooltip;
@@ -261,17 +269,33 @@ pub struct ResourceListEmpty;
 
 /// Marker on a field widget that belongs to a resource card rather than a
 /// scene entity's inspector, carrying the resource's type path. The field
-/// commit path will read it to route writes at the resource; until the
-/// resource operators exist, commits fall through to the document path,
-/// which drops them.
+/// commit path routes resource-entity writes at the resource itself; this
+/// marker stays on the widgets so the panel's own refresh can tell its
+/// widgets from the inspector's.
 #[derive(Component)]
 pub struct ResourceFieldTarget {
     pub type_path: String,
 }
 
-/// Build the Resources panel: a filter input over a scrollable body. The
-/// body holds the list mount and the card slot; both start empty and
-/// [`refresh_resource_panel`] fills them.
+/// Marker on the panel's "Add Resource" button, which opens the resource
+/// type picker.
+#[derive(Component)]
+pub struct AddResourceButton;
+
+/// Marker on the open resource type picker, so a second Add click closes
+/// it rather than stacking another.
+#[derive(Component)]
+pub struct ResourcePicker;
+
+/// Set by the resource write path after a commit or an insert/remove, so
+/// the panel rebuilds the open card: a write can change a list's length or
+/// an enum's variant shape, which value sync alone cannot reflow.
+#[derive(Resource, Default)]
+pub(crate) struct ResourceCardDirty;
+
+/// Build the Resources panel: a filter input and an Add button over a
+/// scrollable body. The body holds the list mount and the card slot; both
+/// start empty and [`refresh_resource_panel`] fills them.
 pub fn resource_panel_content() -> impl Bundle {
     (
         ResourcePanelRoot,
@@ -285,17 +309,31 @@ pub fn resource_panel_content() -> impl Bundle {
             (
                 Node {
                     padding: UiRect::all(Val::Px(tokens::SPACING_SM)),
+                    column_gap: Val::Px(tokens::SPACING_SM),
                     flex_shrink: 0.0,
                     ..default()
                 },
-                children![(
-                    ResourcePanelSearch,
-                    text_edit(
-                        TextEditProps::default()
-                            .with_placeholder("Filter...")
-                            .allow_empty()
+                children![
+                    (
+                        Node {
+                            flex_grow: 1.0,
+                            min_width: Val::Px(0.0),
+                            ..default()
+                        },
+                        children![(
+                            ResourcePanelSearch,
+                            text_edit(
+                                TextEditProps::default()
+                                    .with_placeholder("Filter...")
+                                    .allow_empty()
+                            )
+                        )],
                     ),
-                )],
+                    (
+                        AddResourceButton,
+                        button(ButtonProps::new("Add Resource").with_left_icon(Icon::Plus)),
+                    ),
+                ],
             ),
             (
                 ResourcePanelBody,
@@ -330,6 +368,150 @@ pub(crate) fn on_resource_row_click(
         return;
     };
     selection.0 = Some(row.type_path.clone());
+}
+
+/// One resource type the Add picker offers.
+struct ResourcePickInfo {
+    short_name: String,
+    group: String,
+    type_path: String,
+}
+
+impl Matchable for ResourcePickInfo {
+    fn haystack(&self) -> String {
+        self.short_name.clone()
+    }
+
+    fn category(&self) -> Category {
+        let name = if self.group.is_empty() {
+            "Game".to_string()
+        } else {
+            self.group.clone()
+        };
+        Category {
+            name: Some(name),
+            order: crate::type_metadata::group_order(&self.type_path, ""),
+        }
+    }
+}
+
+/// Resource types the Add picker offers: registered as resources
+/// (`ReflectResource`), default-constructible, admitted by the visibility
+/// filter, and not already instantiated.
+fn enumerate_insertable_resources(
+    world: &World,
+    registry: &bevy::reflect::TypeRegistry,
+    visibility: &ResourcePanelVisibility,
+) -> Vec<ResourcePickInfo> {
+    let existing: HashSet<String> = world
+        .resource_entities()
+        .iter()
+        .filter_map(|(component_id, _)| {
+            let info = world.components().get_info(component_id)?;
+            let registration = registry.get(info.type_id()?)?;
+            Some(
+                registration
+                    .type_info()
+                    .type_path_table()
+                    .path()
+                    .to_string(),
+            )
+        })
+        .collect();
+
+    let mut out = Vec::new();
+    for registration in registry.iter() {
+        if registration.data::<ReflectResource>().is_none() {
+            continue;
+        }
+        if crate::reflect_default::build_reflective_default(registration.type_id(), registry)
+            .is_none()
+        {
+            continue;
+        }
+        let table = registration.type_info().type_path_table();
+        let type_path = table.path();
+        if existing.contains(type_path) {
+            continue;
+        }
+        if !visibility.visible(type_path) {
+            continue;
+        }
+        out.push(ResourcePickInfo {
+            short_name: table.short_path().to_string(),
+            group: crate::type_metadata::TypeChrome::default().group(type_path),
+            type_path: type_path.to_string(),
+        });
+    }
+    out
+}
+
+/// Handle the "Add Resource" button: toggle the resource type picker, laid
+/// out like the inspector's component picker.
+pub(crate) fn on_add_resource_button_click(
+    event: On<ButtonClickEvent>,
+    add_buttons: Query<(), With<AddResourceButton>>,
+    existing_pickers: Query<Entity, With<ResourcePicker>>,
+    mut commands: Commands,
+) {
+    if add_buttons.get(event.entity).is_err() {
+        return;
+    }
+    if let Some(picker) = existing_pickers.iter().next() {
+        commands.entity(picker).despawn();
+        return;
+    }
+    commands.queue(move |world: &mut World| {
+        let registry = world.resource::<AppTypeRegistry>().clone();
+        let visibility = world.resource::<ResourcePanelVisibility>();
+        let items = {
+            let registry = registry.read();
+            enumerate_insertable_resources(world, &registry, visibility)
+        };
+        let picker = PickerProps::new(spawn_resource_picker_item, on_resource_picker_select)
+            .items(items)
+            .title("Add Resource")
+            .placeholder(Some("Search Resources.."));
+        world.spawn((
+            picker,
+            ResourcePicker,
+            crate::EditorEntity,
+            crate::BlocksCameraInput,
+        ));
+    });
+}
+
+/// One row of the resource picker: the matched name, with the full type
+/// path as the tooltip.
+fn spawn_resource_picker_item(
+    In(SpawnItemInput { matched, entities }): In<SpawnItemInput>,
+    items: Query<&PickerItems<ResourcePickInfo>>,
+    mut commands: Commands,
+) -> Result {
+    let info = items.get(entities.picker)?.at(matched.index)?;
+    commands.spawn((
+        picker_item(matched.index),
+        ChildOf(entities.list),
+        Tooltip::title(matched.haystack).with_description(info.type_path.clone()),
+        children![match_text(matched.segments)],
+    ));
+    Ok(())
+}
+
+/// Insert the picked resource type through the Add Resource operator, and
+/// make the panel show its card right away.
+fn on_resource_picker_select(
+    input: In<SelectInput>,
+    items: Query<&PickerItems<ResourcePickInfo>>,
+    mut commands: Commands,
+) -> Result {
+    let info = items.get(input.entities.picker)?.at(input.index)?;
+    commands
+        .operator(crate::inspector::resource_ops::ResourceInsertOp::ID)
+        .param("type_path", info.type_path.clone())
+        .call();
+    commands.entity(input.entities.picker).try_despawn();
+    Ok(())
 }
 
 /// Keep the Resources panel in step with the world: rebuild the list when
@@ -384,13 +566,21 @@ pub(crate) fn refresh_resource_panel(
     };
 
     // Rebuild the list when the visible set or the filter changed. The
-    // search input sits outside the mount, so typing keeps the focus.
+    // search input sits outside the mount, so typing keeps the focus. The
+    // comparison reads only this mount's rows, so another panel instance
+    // (a test-spawned one beside the window's) never forces a rebuild.
     let mut shown: Vec<String> = {
         let mut buttons = world.query::<&ResourceRowButton>();
-        buttons
-            .iter(world)
-            .map(|button| button.type_path.clone())
-            .collect()
+        world
+            .get::<Children>(mount)
+            .map(|children| {
+                children
+                    .iter()
+                    .filter_map(|child| buttons.get(world, child).ok())
+                    .map(|button| button.type_path.clone())
+                    .collect()
+            })
+            .unwrap_or_default()
     };
     shown.sort();
     let mut wanted: Vec<String> = rows.iter().map(|row| row.type_path.clone()).collect();
@@ -413,6 +603,10 @@ pub(crate) fn refresh_resource_panel(
         cards.iter(world).next().cloned()
     };
     let card = card.filter(|card| world.get_entity(card.entity).is_ok());
+    // A committed write asked for a rebuild: the card's shape may have
+    // changed (a list's length, an enum's variant) even though the
+    // selection did not move.
+    let card_dirty = world.remove_resource::<ResourceCardDirty>().is_some();
 
     match (selected_row, card) {
         (None, Some(_)) => {
@@ -420,7 +614,7 @@ pub(crate) fn refresh_resource_panel(
             spawn_resource_card_hint(world, card_slot);
         }
         (None, None) => spawn_resource_card_hint(world, card_slot),
-        (Some(row), Some(card)) if card.type_path != row.type_path => {
+        (Some(row), Some(card)) if card_dirty || card.type_path != row.type_path => {
             despawn_resource_card(world);
             fill_resource_card(world, card_slot, row);
         }
@@ -535,6 +729,14 @@ fn fill_resource_card(world: &mut World, card_slot: Entity, row: &ResourceRow) {
             type_path: row.type_path.clone(),
             entity: row.entity,
         });
+        // The card's own action: take the resource back out. The operator
+        // acts on the panel's selection, which is this card's resource.
+        commands.spawn((
+            button(ButtonProps::from_operator::<
+                crate::inspector::resource_ops::ResourceRemoveOp,
+            >()),
+            ChildOf(card.body),
+        ));
         match reflected {
             Some(reflected) => {
                 reflect_fields::spawn_reflected_fields(
@@ -783,7 +985,9 @@ pub(crate) fn plugin(app: &mut App) {
         .register_type::<bevy::gizmos::config::GizmoConfigStore>()
         .insert_resource(default_resource_panel_visibility())
         .init_resource::<ResourcePanelSelection>()
+        .init_resource::<super::resource_commands::ResourceFieldEditSessions>()
         .add_observer(on_resource_row_click)
+        .add_observer(on_add_resource_button_click)
         .add_systems(
             Update,
             refresh_resource_panel.run_if(in_state(crate::AppState::Editor)),
