@@ -2,6 +2,7 @@ pub mod add_window_popup;
 pub mod area;
 pub mod drag;
 pub mod layout;
+pub mod maximize;
 pub mod reconcile;
 pub mod registry;
 pub mod sidebar;
@@ -16,6 +17,7 @@ pub use area::{
     IconFontHandle,
 };
 pub use layout::{AreaState, LayoutState};
+pub use maximize::MaximizedLeaf;
 pub use registry::{DockWindowBuildFn, DockWindowDescriptor, WindowRegistry};
 pub use sidebar::{DockSidebarContainer, DockSidebarIcon};
 pub use split::{Panel, PanelGroup, PanelHandle, panel, panel_group, panel_handle};

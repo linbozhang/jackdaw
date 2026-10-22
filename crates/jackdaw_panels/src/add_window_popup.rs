@@ -203,6 +203,12 @@ fn add_window_to_area(world: &mut World, window_id: &str, area_entity: Entity) {
         return;
     };
 
+    // The `+` popup can only be opened from a visible tab bar, but by
+    // the time the click lands the leaf may differ from the maximized
+    // one (e.g. the popup outlived a maximize elsewhere); opening into
+    // a hidden leaf would look like a dead button, so restore first.
+    crate::maximize::exit_maximize_for_leaf(world, binding.0);
+
     // Allocate a fresh TabId in the tree; the reconciler keys both
     // the tab button and content entity by this id, so duplicates of
     // the same window kind stay distinguishable.

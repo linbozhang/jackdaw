@@ -344,6 +344,24 @@ impl DockTree {
         }
     }
 
+    /// Whether `target` sits in the subtree rooted at `node`: `node`
+    /// itself or any descendant. Answers "which side of this split does
+    /// the maximized leaf live on" without walking the whole `nodes`
+    /// map, so a detached-but-stored node (still present after a
+    /// malformed mutation) is correctly reported as out of the subtree.
+    pub fn subtree_contains(&self, node: NodeId, target: NodeId) -> bool {
+        if node == target {
+            return true;
+        }
+        match self.nodes.get(&node) {
+            Some(DockNode::Split(s)) => {
+                let (a, b) = (s.a, s.b);
+                self.subtree_contains(a, target) || self.subtree_contains(b, target)
+            }
+            _ => false,
+        }
+    }
+
     /// Find the leaf that contains a tab carrying the given window
     /// id. Returns the first match; multi-instance windows can live in
     /// several leaves at once, in which case prefer
@@ -914,6 +932,27 @@ mod tests {
         assert_eq!(l.windows.len(), 1);
         assert_eq!(l.windows[0].id, first);
         assert_eq!(l.active, Some(first));
+    }
+
+    #[test]
+    fn subtree_contains_covers_self_and_descendants() {
+        let mut t = DockTree::new();
+        let root = t.set_root_leaf(leaf("root", &["a"]));
+        let (right, _) = t.split(root, Edge::Right, "b".into()).unwrap();
+        let (deep, _) = t.split(right, Edge::Bottom, "c".into()).unwrap();
+        let top_split = t.root.unwrap();
+        // `split` wraps `right` and the new leaf in a fresh split; that
+        // split, not `right`, is `deep`'s ancestor.
+        let deep_split = t.parent_of(deep).unwrap();
+
+        assert!(t.subtree_contains(root, root));
+        assert!(t.subtree_contains(top_split, root));
+        assert!(t.subtree_contains(top_split, deep));
+        assert!(t.subtree_contains(deep_split, deep));
+        // Out-of-subtree, sibling, and unknown ids are all "no".
+        assert!(!t.subtree_contains(right, deep));
+        assert!(!t.subtree_contains(deep_split, root));
+        assert!(!t.subtree_contains(root, NodeId(9999)));
     }
 
     #[test]

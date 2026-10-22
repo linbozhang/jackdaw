@@ -14,6 +14,7 @@ use bevy::prelude::*;
 use jackdaw_feathers::tokens;
 
 use crate::area::{ActiveDockWindow, DockArea, DockAreaStyle, DockTab, DockTabContent, DockWindow};
+use crate::maximize::{self, MaximizedLeaf};
 use crate::registry::{DockWindowBuildFn, WindowRegistry};
 use crate::sidebar::{self, DockSidebarIcon};
 use crate::split::{Panel, PanelGroup, PanelHandle};
@@ -57,10 +58,12 @@ pub struct ReconcilePlugin;
 
 impl Plugin for ReconcilePlugin {
     fn build(&self, app: &mut App) {
-        app.init_resource::<DockTree>().add_systems(
-            Update,
-            (seed_root_from_host, reconcile_tree, sync_leaf_visuals).chain(),
-        );
+        app.init_resource::<DockTree>()
+            .init_resource::<MaximizedLeaf>()
+            .add_systems(
+                Update,
+                (seed_root_from_host, reconcile_tree, sync_leaf_visuals).chain(),
+            );
     }
 }
 
@@ -104,7 +107,7 @@ fn seed_root_from_host(world: &mut World) {
 }
 
 fn reconcile_tree(world: &mut World) {
-    if !world.is_resource_changed::<DockTree>() {
+    if !world.is_resource_changed::<DockTree>() && !world.is_resource_changed::<MaximizedLeaf>() {
         return;
     }
 
@@ -114,7 +117,25 @@ fn reconcile_tree(world: &mut World) {
     let Some(host) = find_dock_tree_host(world) else {
         return;
     };
-    reconcile_at(world, host, root);
+
+    // Read the maximize state through `validate`: a stale id (the
+    // maximized leaf's last tab closed, its window's extension gone)
+    // drops to None here, and clearing the resource re-arms the change
+    // gate so the next frame materializes once more with every sibling
+    // visible again.
+    let maximized = {
+        let stored = world.resource::<MaximizedLeaf>().0;
+        let valid = {
+            let tree = world.resource::<DockTree>();
+            maximize::validate(tree, stored)
+        };
+        if valid != stored {
+            world.resource_mut::<MaximizedLeaf>().0 = valid;
+        }
+        valid
+    };
+
+    reconcile_at(world, host, root, maximized);
 }
 
 fn find_dock_tree_host(world: &mut World) -> Option<Entity> {
@@ -122,14 +143,14 @@ fn find_dock_tree_host(world: &mut World) -> Option<Entity> {
     q.iter(world).next().map(|(e, _)| e)
 }
 
-fn reconcile_at(world: &mut World, entity: Entity, node_id: NodeId) {
+fn reconcile_at(world: &mut World, entity: Entity, node_id: NodeId, maximized: Option<NodeId>) {
     let node = world.resource::<DockTree>().get(node_id).cloned();
     let Some(node) = node else {
         return;
     };
     match node {
         DockNode::Leaf(leaf) => reconcile_leaf(world, entity, node_id, &leaf),
-        DockNode::Split(split) => reconcile_split(world, entity, node_id, &split),
+        DockNode::Split(split) => reconcile_split(world, entity, node_id, &split, maximized),
     }
 }
 
@@ -183,7 +204,13 @@ fn reconcile_leaf(world: &mut World, entity: Entity, node_id: NodeId, leaf: &Doc
     set_host_visible(world, entity, visible);
 }
 
-fn reconcile_split(world: &mut World, entity: Entity, node_id: NodeId, split: &DockSplit) {
+fn reconcile_split(
+    world: &mut World,
+    entity: Entity,
+    node_id: NodeId,
+    split: &DockSplit,
+    maximized: Option<NodeId>,
+) {
     let current_binding = world.entity(entity).get::<NodeBinding>().map(|b| b.0);
 
     let mut children = collect_split_children(world, entity);
@@ -264,8 +291,8 @@ fn reconcile_split(world: &mut World, entity: Entity, node_id: NodeId, split: &D
         }
     }
 
-    reconcile_at(world, child_a, split.a);
-    reconcile_at(world, child_b, split.b);
+    reconcile_at(world, child_a, split.a, maximized);
+    reconcile_at(world, child_b, split.b, maximized);
 
     world.entity_mut(entity).insert(NodeBinding(node_id));
 
@@ -275,6 +302,46 @@ fn reconcile_split(world: &mut World, entity: Entity, node_id: NodeId, split: &D
     // it here so the freshly-reconciled children aren't hidden inside
     // a zero-sized parent.
     set_host_visible(world, entity, true);
+
+    // Maximize overlay, strictly post-order: both subtrees have just
+    // settled their own visibility (empty leaves auto-collapse, split
+    // hosts come back visible), and this — the nearest ancestor on the
+    // root-to-leaf path — writes last, so the hidden sibling can never
+    // be re-shown by a child's pass.
+    hide_maximize_sibling(world, split, child_a, child_b, maximized);
+}
+
+/// Hide the side of `split` that does not hold the maximized leaf, so
+/// `recalculate_group` (which sums only visible panels) gives the
+/// remaining subtree the whole group. Only a split whose subtree holds
+/// the maximized leaf hides anything; a split deeper inside the hidden
+/// sibling leaves both sides alone — the ancestor's overlay already
+/// hid the entire subtree. Splits also don't re-show anything: every
+/// host re-shows itself on each materialization (`reconcile_leaf`'s
+/// auto-collapse check, `reconcile_split`'s unconditional show), so
+/// clearing `MaximizedLeaf` restores the layout through the same pass.
+fn hide_maximize_sibling(
+    world: &mut World,
+    split: &DockSplit,
+    child_a: Entity,
+    child_b: Entity,
+    maximized: Option<NodeId>,
+) {
+    let Some(target) = maximized else {
+        return;
+    };
+    let (holds_a, holds_b) = {
+        let tree = world.resource::<DockTree>();
+        (
+            tree.subtree_contains(split.a, target),
+            tree.subtree_contains(split.b, target),
+        )
+    };
+    if holds_a {
+        set_host_visible(world, child_b, false);
+    } else if holds_b {
+        set_host_visible(world, child_a, false);
+    }
 }
 
 fn spawn_leaf_ui(world: &mut World, entity: Entity, leaf: &DockLeaf) {
