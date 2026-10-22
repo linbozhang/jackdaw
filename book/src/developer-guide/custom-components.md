@@ -66,6 +66,35 @@ designers), use `@EditorDescription`:
 pub struct PlayerSpawn;
 ```
 
+## Custom resources
+
+The same trick works for `Resource` types, and they land in the
+Resources panel instead of the Add Component picker:
+
+```rust
+use bevy::prelude::*;
+
+#[derive(Resource, Reflect, Default)]
+#[reflect(Resource, Default)]
+pub struct GameState {
+    pub score: u32,
+}
+```
+
+A type of your own — any type path that isn't a `bevy` or `jackdaw`
+prefix — shows up in the panel's list the moment the world holds one,
+with no allowlist to edit and nothing to declare. `Default` is what
+makes the panel's Add Resource picker offer the type: it can only
+construct what it can default.
+
+One difference from components to keep in mind: resource edits are
+**session-only**. The panel writes the editor's world, not the scene
+document, so a score changed there lives until the editor closes — see
+[Resources](../user-guide/resources.md). And a resource type the
+schema extractor has seen but whose real type was never loaded into the
+editor (no extension registered it) stays off the list; the panel
+renders what it can reflect, not what a schema string names.
+
 ## Asset types
 
 A type your game registers as a reflected asset is a kind the

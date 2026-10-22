@@ -52,7 +52,7 @@ use super::{FieldBinding, reflect_fields};
 /// Only types whose `Reflect` registration this build carries are listed;
 /// an entry whose type never appears in the world simply never matches.
 /// `Time<Virtual>` / `Time<Fixed>` are registered by `TimePlugin`; the
-/// panel registers the rest itself (see [`plugin`]). `AmbientLight`
+/// panel registers the rest itself (see `plugin`). `AmbientLight`
 /// itself is a camera component on bevy main, not a resource; the global
 /// ambient light is `GlobalAmbientLight`.
 pub const ENGINE_RESOURCE_ALLOWLIST: &[&str] = &[
@@ -263,6 +263,11 @@ pub struct ResourceCard {
 #[derive(Component)]
 pub struct ResourceCardEmpty;
 
+/// Marker on the panel's standing notice that resource edits live and die
+/// with the editor session, pinned above the search row.
+#[derive(Component)]
+pub struct ResourceSessionNotice;
+
 /// Marker on the notice shown while the list holds nothing.
 #[derive(Component)]
 pub struct ResourceListEmpty;
@@ -293,9 +298,10 @@ pub struct ResourcePicker;
 #[derive(Resource, Default)]
 pub(crate) struct ResourceCardDirty;
 
-/// Build the Resources panel: a filter input and an Add button over a
-/// scrollable body. The body holds the list mount and the card slot; both
-/// start empty and [`refresh_resource_panel`] fills them.
+/// Build the Resources panel: a standing session-only notice, then a
+/// filter input and an Add button over a scrollable body. The body holds
+/// the list mount and the card slot; both start empty and
+/// `refresh_resource_panel` fills them.
 pub fn resource_panel_content() -> impl Bundle {
     (
         ResourcePanelRoot,
@@ -306,6 +312,20 @@ pub fn resource_panel_content() -> impl Bundle {
             ..default()
         },
         children![
+            (
+                ResourceSessionNotice,
+                LocalizedText::new("resources-session-only"),
+                TextFont {
+                    font_size: tokens::TEXT_SIZE_SM,
+                    ..default()
+                },
+                TextColor(tokens::TEXT_SECONDARY),
+                Node {
+                    padding: UiRect::all(Val::Px(tokens::SPACING_SM)),
+                    flex_shrink: 0.0,
+                    ..default()
+                },
+            ),
             (
                 Node {
                     padding: UiRect::all(Val::Px(tokens::SPACING_SM)),

@@ -6,7 +6,8 @@ use bevy::prelude::*;
 use bevy::reflect::TypePath;
 use jackdaw::AppState;
 use jackdaw::inspector::resource_panel::{
-    ResourceCardEmpty, ResourcePanelSelection, ResourceRowButton, resource_panel_content,
+    ResourceCardEmpty, ResourcePanelSelection, ResourceRowButton, ResourceSessionNotice,
+    resource_panel_content,
 };
 use jackdaw::inspector::{resource_card_text, resource_panel_rows};
 
@@ -109,5 +110,23 @@ fn without_a_selection_the_panel_says_so() {
     assert_eq!(
         hint.0, "Select a resource to inspect its fields.",
         "the hint carries its localized text, not its key"
+    );
+}
+
+#[test]
+fn the_panel_carries_its_session_only_notice() {
+    let mut app = editor_app();
+
+    let mut notices = app
+        .world_mut()
+        .query_filtered::<&Text, With<ResourceSessionNotice>>();
+    let notice = notices
+        .iter(app.world())
+        .next()
+        .expect("the session-only notice is pinned to the panel");
+    assert_eq!(
+        notice.0,
+        "Resource changes apply to this editor session only and are not saved with the scene.",
+        "the notice says edits live and die with the session, in localized text"
     );
 }
