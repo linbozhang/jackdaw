@@ -1,7 +1,8 @@
 //! The dock layout's maximize mode: what a toggle hides and restores,
 //! how the state survives the tree changing underneath it, what it
-//! leaves in a saved layout, and the chord that drives it. Each module
-//! below was its own test binary; merged, the editor links once.
+//! leaves in a saved layout, the chord and the tab-bar button that
+//! drive it. Each module below was its own test binary; merged, the
+//! editor links once.
 
 #[path = "../util/mod.rs"]
 mod util;
@@ -10,6 +11,7 @@ mod keybind;
 mod maximize_toggle;
 mod persistence_roundtrip;
 mod reconcile;
+mod tab_button;
 
 use bevy::prelude::*;
 use jackdaw::AppState;

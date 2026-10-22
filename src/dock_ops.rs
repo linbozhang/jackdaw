@@ -8,6 +8,7 @@ use jackdaw_panels::PanelGroup;
 use jackdaw_panels::area::{DockTab, DockTabCloseButton};
 use jackdaw_panels::maximize::MaximizedLeaf;
 use jackdaw_panels::reconcile::NodeBinding;
+use jackdaw_panels::tabs::DockTabMaximizeButton;
 use jackdaw_panels::tree::{DockNode, DockTree, NodeId, SplitAxis, TabId};
 
 use crate::core_extension::CoreExtensionInputContext;
@@ -18,7 +19,8 @@ pub struct DockOpsPlugin;
 impl Plugin for DockOpsPlugin {
     fn build(&self, app: &mut App) {
         app.add_observer(on_close_button_click)
-            .add_observer(on_tab_middle_click);
+            .add_observer(on_tab_middle_click)
+            .add_observer(on_maximize_button_click);
     }
 }
 
@@ -278,6 +280,35 @@ fn on_close_button_click(
     commands
         .operator(DockCloseTabOp::ID)
         .param("tab_id", close_btn.tab_id.0 as i64)
+        .call();
+}
+
+/// The tab-bar maximize button: maximize (or restore) the leaf whose
+/// bar was clicked, naming its active window so the operator works
+/// headless without the cursor's focus chain. An empty name falls
+/// back to the operator's own focus resolution.
+fn on_maximize_button_click(
+    trigger: On<PointerClick>,
+    buttons: Query<&DockTabMaximizeButton>,
+    bindings: Query<&NodeBinding>,
+    tree: Res<DockTree>,
+    mut commands: Commands,
+) {
+    let Ok(button) = buttons.get(trigger.event_target()) else {
+        return;
+    };
+    let Ok(NodeBinding(leaf)) = bindings.get(button.area_entity) else {
+        return;
+    };
+    let active_window = tree.get(*leaf).and_then(|n| n.as_leaf()).and_then(|l| {
+        l.windows
+            .iter()
+            .find(|tab| Some(tab.id) == l.active)
+            .map(|tab| tab.window_id.clone())
+    });
+    commands
+        .operator(PanelToggleMaximizeOp::ID)
+        .param("window_id", active_window.unwrap_or_default())
         .call();
 }
 

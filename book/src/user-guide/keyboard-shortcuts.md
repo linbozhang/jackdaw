@@ -92,6 +92,31 @@
 | ] | Increase grid size |
 | Ctrl+Alt+Scroll | Change grid size |
 
+## Panels
+
+| Key | Action |
+|-----|--------|
+| Shift+Space | Maximize / restore the panel under the cursor |
+
+### Panel Maximize
+
+Press **Shift+Space**, or click the maximize icon at the right of a
+panel's tab bar, to expand that panel's tab group to fill the whole
+workspace. Nothing is closed and the layout is not modified — the
+other panels are only hidden for the moment:
+
+- Press **Shift+Space** again (or click the highlighted restore icon in
+  the maximized tab bar) to bring the layout back exactly as it was,
+  split positions included.
+- Opening a panel that would land in a hidden area (the Window menu,
+  the tab bar `+`, or starting Play) restores the layout first, so the
+  result of the action is always visible.
+- Maximize is a view state, not part of the layout: saving while
+  maximized stores the normal arrangement, and a fresh session starts
+  un-maximized.
+- The command palette lists the action as "Toggle Panel Maximize", and
+  the key is rebindable like any other shortcut.
+
 ## File
 
 | Key | Action |

@@ -151,6 +151,12 @@ See the [examples](examples/) for more advanced usage.
 | Ctrl+Z / Ctrl+Shift+Z | Undo / Redo                             |
 | Ctrl+S                | Save scene                              |
 
+### Workspace
+
+| Key         | Action                                   |
+| ----------- | ---------------------------------------- |
+| Shift+Space | Maximize / restore the focused panel     |
+
 For the full shortcuts reference, see the [book](https://jbuehler23.github.io/jackdaw/user-guide/keyboard-shortcuts.html).
 
 ## Documentation
