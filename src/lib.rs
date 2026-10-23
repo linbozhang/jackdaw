@@ -83,6 +83,7 @@ pub mod extension_slots;
 pub mod extensions_dialog;
 pub mod file_ops;
 pub mod fps_overlay;
+pub mod game_export;
 pub mod hot_reload;
 pub mod launch;
 pub mod launcher;
@@ -530,6 +531,7 @@ impl Plugin for EditorCorePlugin {
         .add_plugins(hot_reload::HotReloadPlugin)
         .add_plugins(extension_build::ExtensionBuildPlugin)
         .add_plugins(pie::PiePlugin)
+        .add_plugins(game_export::GameExportPlugin)
         .add_plugins(live_frame_view::LiveFrameViewPlugin)
         .add_plugins(live_input::LiveInputPlugin)
         .add_plugins(game_panel::GamePanelPlugin)
@@ -2675,6 +2677,8 @@ fn file_menu_rows(hot_reload_label: &str, recent: Vec<(String, String)>) -> Vec<
             op_entry::<scene_ops::SceneSaveAsOp>("Save As..."),
             op_entry::<crate::scenes::operators::SceneSaveAllOp>("Save All"),
             op_entry::<scene_ops::SceneSaveSelectionAsPrefabOp>("Save Selection as Prefab"),
+            separator(),
+            op_entry::<crate::game_export::GameExportOp>("Build Game..."),
             separator(),
             op_entry::<app_ops::AppOpenKeybindsOp>("Keybinds..."),
             op_entry::<app_ops::AppOpenExtensionsOp>("Extensions..."),

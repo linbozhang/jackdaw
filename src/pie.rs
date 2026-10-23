@@ -104,12 +104,16 @@ enum ChildStage {
     },
 }
 
-/// The product of a completed game build: the executable Play runs. The
-/// extracted type schema is persisted to `.jackdaw/schema.json` by the
-/// build itself and picked up by the editor's watcher, so it does not
-/// travel back through here.
-struct GameBuildResult {
-    binary: PathBuf,
+/// The product of a completed game build: the executable Play runs, plus
+/// what the build reported about how the game links — which an export
+/// needs and Play ignores. The extracted type schema is persisted to
+/// `.jackdaw/schema.json` by the build itself and picked up by the
+/// editor's watcher, so it does not travel back through here.
+pub(crate) struct GameBuildResult {
+    pub(crate) binary: PathBuf,
+    /// The `dylib` crates the build produced, the signal an export
+    /// refuses; empty for a statically linked (template-shaped) build.
+    pub(crate) dylib_artifacts: Vec<String>,
 }
 
 /// An in-flight or finished build, deduped by [`BuildKey`] (project root
@@ -599,9 +603,9 @@ fn wire_pie_button(
         });
 }
 
-/// Resolve the open project's root directory, or log and bail if no
-/// project is open (Play has nothing to build without one).
-fn project_root(world: &World) -> Option<PathBuf> {
+/// The root of the open project, when one is open. Logs and returns
+/// `None` otherwise, so callers skip rather than crash.
+pub(crate) fn project_root(world: &World) -> Option<PathBuf> {
     match world.get_resource::<crate::project::ProjectRoot>() {
         Some(project) => Some(project.root.clone()),
         None => {
@@ -732,8 +736,8 @@ fn preflight_run_target(
 }
 
 /// Save the modified scenes the game may load, unless the project turned
-/// that off. Refuses when the scene in front has never been saved, since the
-/// game cannot load it.
+/// that off. Refuses when the scene in front has never been saved, since
+/// the game cannot load it.
 fn save_before_play(world: &mut World) -> Result<(), String> {
     if !world
         .get_resource::<EditorBuildSettings>()
@@ -741,19 +745,28 @@ fn save_before_play(world: &mut World) -> Result<(), String> {
     {
         return Ok(());
     }
+    save_scenes_before_launch(world, "playing")
+}
+
+/// Refuse a modified scene that has never been saved, then save every
+/// modified scene, so what the editor shows is on disk before something
+/// else consumes the project — Play launching the game, an export
+/// staging its `assets/`. The `action` names what asked ("playing",
+/// "exporting"), for the refusal messages.
+pub(crate) fn save_scenes_before_launch(world: &mut World, action: &str) -> Result<(), String> {
     let untitled_in_front = world
         .get_resource::<crate::scenes::Scenes>()
         .and_then(|scenes| scenes.tabs.get(scenes.active))
         .is_some_and(|tab| tab.path.is_none());
     if untitled_in_front && crate::scenes::operators::active_tab_modified(world) {
-        return Err("Save the scene before playing".to_string());
+        return Err(format!("Save the scene before {action}"));
     }
     let failures = crate::scenes::operators::save_modified_scenes(world);
     if failures.is_empty() {
         Ok(())
     } else {
         Err(format!(
-            "Not playing: could not save {}",
+            "Not {action}: could not save {}",
             failures.join("; ")
         ))
     }
@@ -837,8 +850,9 @@ pub(crate) fn failure_summary(
 
 /// Start the project's game build on the compute pool, returning the
 /// task and the progress sink the footer polls. `target` narrows the
-/// build to one run's cargo target, if it names one.
-fn spawn_game_build(
+/// build to one run's cargo target, if it names one. Shared by Play's
+/// launches and the export entry, which builds the release profile.
+pub(crate) fn spawn_game_build(
     root: &Path,
     spec: ShimSpec,
     target: Option<CargoTarget>,
@@ -902,6 +916,7 @@ fn spawn_game_build(
                 }
                 Ok(GameBuildResult {
                     binary: build.binary,
+                    dylib_artifacts: build.dylib_artifacts,
                 })
             }
             Err(err) => {
@@ -1679,8 +1694,9 @@ fn watch_project_schema(world: &mut World) {
 
 /// Mirror the active game or extension build into the editor's
 /// `BuildStatus` so the footer shows what is compiling, and clear it once
-/// no build remains.
-fn reconcile_build_status(world: &mut World) {
+/// no build remains. Also carries the export entry's build, which shares
+/// the footer rather than growing a second progress surface.
+pub(crate) fn reconcile_build_status(world: &mut World) {
     let building = world
         .non_send::<PieSession>()
         .builds
@@ -1688,6 +1704,11 @@ fn reconcile_build_status(world: &mut World) {
         .find_map(|build| match build {
             BuildState::Running { progress, .. } => Some(Arc::clone(progress)),
             _ => None,
+        })
+        .or_else(|| {
+            world
+                .get_resource::<crate::game_export::GameExports>()
+                .and_then(crate::game_export::GameExports::progress)
         })
         .or_else(|| {
             world
@@ -1984,6 +2005,18 @@ mod pie_windows {
     }
 }
 
+/// The env a Play launch hands the game: the asset-root default it needs
+/// when nothing names one, then the run's own env — so a run that sets
+/// `BEVY_ASSET_ROOT` itself wins over the default, the same
+/// user-env-wins order the CLI's `jd run --config` launch applies.
+fn apply_run_env(
+    command: &mut Command,
+    cwd: &Path,
+    env: &std::collections::BTreeMap<String, String>,
+) {
+    command.env("BEVY_ASSET_ROOT", cwd).envs(env);
+}
+
 /// Launch the project's game binary for one instance, point it at a
 /// fresh rendezvous, start draining its stderr, and begin awaiting its
 /// connection on a task pool. Returns the `Connecting` stage; on
@@ -2015,10 +2048,9 @@ fn spawn_instance(
 
     let mut command = Command::new(binary);
     crate::project_build::prepare_game_command(&mut command, binary);
+    command.current_dir(&cwd);
+    apply_run_env(&mut command, &cwd, &run.env);
     command
-        .current_dir(&cwd)
-        .envs(&run.env)
-        .env("BEVY_ASSET_ROOT", &cwd)
         .env("JACKDAW_PIE", &server_name)
         .args(&run.args)
         .stderr(Stdio::piped());
@@ -2688,6 +2720,45 @@ mod enter_live_tests {
         assert_eq!(mode, PieWindowMode::Windowed);
         toggle_window_mode(&mut mode);
         assert_eq!(mode, PieWindowMode::Embedded);
+    }
+
+    /// A run's own `BEVY_ASSET_ROOT` beats the launch default, the same
+    /// user-env-wins order the CLI's `jd run --config` launch applies;
+    /// a run that names none gets the project root, where Play has
+    /// always found assets.
+    #[test]
+    fn a_runs_own_asset_root_beats_the_launch_default() {
+        let mut command = Command::new("game");
+        apply_run_env(
+            &mut command,
+            Path::new("/game"),
+            &std::collections::BTreeMap::new(),
+        );
+        assert_eq!(
+            command
+                .get_envs()
+                .find(|(key, _)| *key == std::ffi::OsStr::new("BEVY_ASSET_ROOT")),
+            Some((
+                std::ffi::OsStr::new("BEVY_ASSET_ROOT"),
+                Some(std::ffi::OsStr::new("/game"))
+            )),
+            "with no run env the project root is the asset root"
+        );
+
+        let mut env = std::collections::BTreeMap::new();
+        env.insert("BEVY_ASSET_ROOT".to_string(), "/custom/assets".to_string());
+        let mut command = Command::new("game");
+        apply_run_env(&mut command, Path::new("/game"), &env);
+        assert_eq!(
+            command
+                .get_envs()
+                .find(|(key, _)| *key == std::ffi::OsStr::new("BEVY_ASSET_ROOT")),
+            Some((
+                std::ffi::OsStr::new("BEVY_ASSET_ROOT"),
+                Some(std::ffi::OsStr::new("/custom/assets"))
+            )),
+            "the run's own value beats the cwd default"
+        );
     }
 }
 

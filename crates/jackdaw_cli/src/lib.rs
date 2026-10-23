@@ -802,6 +802,17 @@ fn cmd_export(args: &[String]) -> ExitCode {
     // run's target carried.
     target.profile = Some(profile.clone());
 
+    // The staging directory is validated before the build is paid for:
+    // a release compile can be tens of minutes, and a relative `--out`
+    // would have been refused after them for a typo.
+    let out = parse_out_arg(args).map(PathBuf::from);
+    if let Some(dir) = out.as_deref()
+        && let Err(message) = validate_export_out(dir)
+    {
+        eprintln!("jd export: {message}");
+        return ExitCode::FAILURE;
+    }
+
     println!(
         "jackdaw export: building {} with profile {profile}",
         root.display()
@@ -820,13 +831,6 @@ fn cmd_export(args: &[String]) -> ExitCode {
         return ExitCode::FAILURE;
     }
 
-    let out = parse_out_arg(args).map(PathBuf::from);
-    if let Some(dir) = out.as_deref()
-        && let Err(message) = validate_export_out(dir)
-    {
-        eprintln!("jd export: {message}");
-        return ExitCode::FAILURE;
-    }
     let plan =
         jackdaw_project_build::export::plan_export(&root, &profile, &build.binary, out.as_deref());
     match jackdaw_project_build::export::stage_export(&plan) {

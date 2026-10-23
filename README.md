@@ -40,6 +40,7 @@ https://github.com/user-attachments/assets/56834720-599e-4461-b712-fff7b85fb128
 - **Terrain** heightmap sculpting and texture painting, very WIP :)
 - **Scene serialization** save/load scenes in the `.bsn` format with full asset references. Older `.jsn` scenes are migrated on open.
 - **Run targets** play any `[[bin]]`/`[[example]]` of the workspace, with its own features and cargo profile, from the Play menu or `jd run --config`
+- **Game export** build a standalone release of the game — executable and its whole `assets/` tree staged into a directory that runs when double-clicked — from **File > Build Game...** or `jd export`
 - **Transform tools** translate, rotate, scale with grid snapping and axis constraints
 - **Undo/redo** full command history - some bugs atm with this
 - **Extensible** register custom components, add inspector panels, integrate with your game

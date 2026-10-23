@@ -84,6 +84,67 @@ run's target and launches it with that run's env/args/cwd, exactly as
 the editor's Play of that row does; without `--config`, `jd run` keeps
 its historical behaviour of a plain `cargo run` in the project root.
 
+## Building a standalone executable
+
+An export turns the project into a directory that runs on its own —
+no editor, no cargo, no terminal: double-click the executable and the
+game starts. **File > Build Game...** builds the game with the release
+profile, stages the executable beside a copy of the whole `assets/`
+tree, and opens the folder when it finishes. The footer shows the same
+compiling progress a Play build does; a failure lands in the Build
+panel with the compiler output.
+
+The same export is on the terminal, with a say in what and where:
+
+    jd export                             # release, into .jackdaw/dist/release/
+    jd export --profile dev               # another profile, staged side by side
+    jd export --config Server             # a run's target dimensions (bin, features...)
+    jd export --out D:\ Builds\game       # an absolute directory of your own
+
+`--profile` defaults to `release` and overrides whatever the selected
+run's target carried; `--config` reuses a `[[run]]` target exactly as
+`jd run --config` does, then applies the profile on top. `--out` must
+name an absolute path: the staging directory is cleared on every
+export, so a relative one — `--out .` is the extreme — is refused
+rather than clearing whatever the current directory happens to be.
+
+The staged layout is the one thing a standalone run needs:
+
+```text
+<project>/.jackdaw/dist/release/
+    my-game.exe
+    assets/...
+```
+
+A game resolves its asset root by `BEVY_ASSET_ROOT`, then
+`CARGO_MANIFEST_DIR`, then its own executable's directory — and a
+double-clicked executable has none of the first two, so the
+executable with `assets/` beside it is the only supported layout. The
+whole tree is staged (a game loads its scene and every sidecar from
+there), a re-export replaces rather than merges, and moving or copying
+the directory elsewhere works unchanged — the assets follow the
+executable.
+
+Two things an export refuses, rather than shipping a game that will
+not start:
+
+- A project built with bevy's `dynamic_linking` feature. Its
+  executable needs dlls the staging directory would not have. Remove
+  the feature (a statically linked game carries everything it needs)
+  and export again. The `jd new` template never sets it.
+- An editor extension project. An extension builds a library for the
+  editor and has no game to export.
+
+The staged game still carries the `pie` feature the template adds to
+`jackdaw_runtime`. It is inert outside the editor (nothing connects to
+it without the editor's environment variables), but a release can drop
+it from `jackdaw_runtime`'s features in the game's `Cargo.toml` — a
+one-line edit that is yours to make, not the tool's.
+
+Not to be confused with two other exports: `jd export-terrain` writes
+a heightmap, and the `project.export_binary` operator converts scene
+documents to their binary form. Neither builds the game.
+
 ## Your own launch environment
 
 A run config is committed, so it can only say what is true for everyone
