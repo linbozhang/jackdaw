@@ -679,11 +679,7 @@ fn cmd_run(args: &[String]) -> ExitCode {
             return code;
         }
         println!("jackdaw run: launching {}", root.display());
-        return match rust_env_command("cargo")
-            .arg("run")
-            .current_dir(&root)
-            .status()
-        {
+        return match bare_cargo_run(&root).status() {
             Ok(status) if status.success() => ExitCode::SUCCESS,
             Ok(status) => ExitCode::from(u8::try_from(status.code().unwrap_or(1)).unwrap_or(1)),
             Err(err) => {
@@ -722,6 +718,16 @@ fn cmd_run(args: &[String]) -> ExitCode {
             ExitCode::FAILURE
         }
     }
+}
+
+/// The launch of the historical no-`--config` path: a plain
+/// `cargo run` in the project root. Split out so the exact command
+/// stays pinned by test — with no run selected, `jd run` is what it
+/// always was, byte for byte.
+fn bare_cargo_run(root: &Path) -> std::process::Command {
+    let mut command = rust_env_command("cargo");
+    command.arg("run").current_dir(root);
+    command
 }
 
 /// Resolve and canonicalize the target project directory from
@@ -960,12 +966,36 @@ fn resolve_run_config(root: &Path, label: &str) -> Result<RunEntry, String> {
 #[cfg(test)]
 mod tests {
     use super::{
-        SdkGrade, grade_sdk, parse_config_arg, parse_project_arg, read_run_manifest,
-        removed_feature_problems, resolve_run_config,
+        SdkGrade, bare_cargo_run, grade_sdk, parse_config_arg, parse_project_arg,
+        read_run_manifest, removed_feature_problems, resolve_run_config,
     };
 
     fn args(list: &[&str]) -> Vec<String> {
         list.iter().map(std::string::ToString::to_string).collect()
+    }
+
+    /// The regression anchor for the no-`--config` path: `jd run`
+    /// without a run selection launches exactly `cargo run` in the
+    /// project root — one argument, that cwd, and none of the editor's
+    /// build environment beyond the pinned toolchain. A future refactor
+    /// that routes the bare path through the run-config machinery goes
+    /// red here instead of silently changing what `jd run` runs.
+    #[test]
+    fn the_bare_run_path_runs_plain_cargo_run_in_the_project_root() {
+        let command = bare_cargo_run(std::path::Path::new("/game"));
+        assert_eq!(command.get_program(), "cargo");
+        assert_eq!(command.get_args().collect::<Vec<_>>(), ["run"]);
+        assert_eq!(
+            command.get_current_dir(),
+            Some(std::path::Path::new("/game"))
+        );
+        let envs = command.get_envs().collect::<Vec<_>>();
+        assert_eq!(
+            envs.len(),
+            1,
+            "the pinned toolchain is the only environment it sets"
+        );
+        assert_eq!(envs[0].0, "RUSTUP_TOOLCHAIN");
     }
 
     #[test]

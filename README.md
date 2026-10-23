@@ -39,6 +39,7 @@ https://github.com/user-attachments/assets/56834720-599e-4461-b712-fff7b85fb128
 - **Material system** VERY wip - texture browser, material definitions with ORM auto-detection, per-face application
 - **Terrain** heightmap sculpting and texture painting, very WIP :)
 - **Scene serialization** save/load scenes in the `.bsn` format with full asset references. Older `.jsn` scenes are migrated on open.
+- **Run targets** play any `[[bin]]`/`[[example]]` of the workspace, with its own features and cargo profile, from the Play menu or `jd run --config`
 - **Transform tools** translate, rotate, scale with grid snapping and axis constraints
 - **Undo/redo** full command history - some bugs atm with this
 - **Extensible** register custom components, add inspector panels, integrate with your game
