@@ -3,9 +3,13 @@
 //! The generic poll helper writes each `jackdaw/schedules` reply (a fixed
 //! no-params method) into `SchedulesReply`, shared with the System Graph
 //! panel (`depgraph.rs`). `systems` arrives already in run order and each
-//! carries the system sets it belongs to; `edges` (dependency ordering) and
-//! `ambiguities` (scheduler conflicts) are carried through but only rendered
-//! by the graph panel. This panel rebuilds its sections reactively when the
+//! carries the system sets it belongs to plus its data-access table
+//! (`accesses`, read/write/archetypal/unbounded kinds); `edges` (dependency
+//! ordering) and `ambiguities` (scheduler conflicts) are carried through but
+//! only rendered by the graph panel. Replies from older `jackdaw_remote`
+//! versions lack the access fields entirely: they deserialize with empty
+//! `accesses` and `access_reported == false`, which the panels use to
+//! degrade gracefully. This panel rebuilds its sections reactively when the
 //! reply changes: one bordered card per schedule, each listing its systems
 //! as boxes wrapped in run order.
 
@@ -17,12 +21,31 @@ use jackdaw_feathers::tokens;
 
 use super::style;
 
-/// One system in a schedule: its full reflect type path and the names of the
-/// system sets it belongs to.
+/// One data-access entry for a system in a `jackdaw/schedules` reply: a
+/// component or resource type name and the kind of access. `kind` is kept as
+/// a plain string ("read", "write", "archetypal", "unbounded") so replies
+/// from newer servers with unknown kinds still deserialize; an `unbounded`
+/// entry carries an empty `component` and means "may access any component".
+#[derive(Deserialize, Clone, Default, PartialEq, Eq, Debug)]
+pub struct SystemAccessEntry {
+    pub component: String,
+    pub kind: String,
+}
+
+/// One system in a schedule: its full reflect type path, the names of the
+/// system sets it belongs to, and its data-access table.
 #[derive(Deserialize, Clone)]
 pub struct SystemInfo {
     pub name: String,
     pub sets: Vec<String>,
+    /// Data-access table; absent (empty) on replies from older
+    /// `jackdaw_remote` versions.
+    #[serde(default)]
+    pub accesses: Vec<SystemAccessEntry>,
+    /// Whether the system takes `&mut World` (exclusive). Absent (false) on
+    /// replies from older `jackdaw_remote` versions.
+    #[serde(default)]
+    pub exclusive: bool,
 }
 
 /// One scheduler-detected ambiguity: two systems the scheduler found no
@@ -53,9 +76,13 @@ pub struct ScheduleInfo {
 
 /// The last parsed `jackdaw/schedules` reply, written by the poll helper. The
 /// server's `initialized` field is not declared, so serde drops it.
+/// `access_reported` is the capability flag: absent (false) on replies from
+/// older `jackdaw_remote` versions, which also lack per-system `accesses`.
 #[derive(Resource, Deserialize, Default)]
 pub struct SchedulesReply {
     pub schedules: Vec<ScheduleInfo>,
+    #[serde(default)]
+    pub access_reported: bool,
 }
 
 /// Short system name: the final `::` segment of a reflect type path, with any
@@ -293,5 +320,89 @@ mod tests {
         let reply: SchedulesReply = serde_json::from_value(value).unwrap();
         assert!(reply.schedules[0].edges.is_empty());
         assert!(reply.schedules[0].ambiguities.is_empty());
+    }
+
+    #[test]
+    fn reply_deserializes_accesses_and_capability_flag() {
+        let value = serde_json::json!({
+            "access_reported": true,
+            "schedules": [
+                {
+                    "schedule": "Update",
+                    "initialized": true,
+                    "systems": [
+                        {
+                            "name": "skybound::movement::step",
+                            "sets": ["Movement"],
+                            "accesses": [
+                                {
+                                    "component": "bevy_transform::components::transform::Transform",
+                                    "kind": "write"
+                                },
+                                {
+                                    "component": "skybound::Velocity",
+                                    "kind": "read"
+                                },
+                                { "component": "", "kind": "unbounded" },
+                                // Unknown kinds from a newer server must not
+                                // break deserialization.
+                                { "component": "skybound::Ghost", "kind": "whatever" }
+                            ],
+                            "exclusive": false
+                        },
+                        {
+                            "name": "skybound::save_world",
+                            "sets": [],
+                            "accesses": [],
+                            "exclusive": true
+                        }
+                    ]
+                }
+            ]
+        });
+        let reply: SchedulesReply = serde_json::from_value(value).unwrap();
+        assert!(reply.access_reported);
+
+        let step = &reply.schedules[0].systems[0];
+        assert!(!step.exclusive);
+        assert_eq!(step.accesses.len(), 4);
+        assert_eq!(
+            step.accesses[0],
+            SystemAccessEntry {
+                component: "bevy_transform::components::transform::Transform".to_string(),
+                kind: "write".to_string(),
+            }
+        );
+        assert_eq!(step.accesses[1].kind, "read");
+        assert_eq!(step.accesses[2].kind, "unbounded");
+        assert_eq!(step.accesses[2].component, "");
+        assert_eq!(step.accesses[3].kind, "whatever");
+
+        let save = &reply.schedules[0].systems[1];
+        assert!(save.exclusive);
+        assert!(save.accesses.is_empty());
+    }
+
+    /// Degradation guard: replies from older `jackdaw_remote` versions carry
+    /// neither `access_reported` nor per-system `accesses`/`exclusive`, and
+    /// must parse with all access data defaulted.
+    #[test]
+    fn reply_defaults_access_fields_when_absent() {
+        let value = serde_json::json!({
+            "schedules": [
+                {
+                    "schedule": "Update",
+                    "initialized": true,
+                    "systems": [
+                        { "name": "skybound::movement::step", "sets": ["Movement"] }
+                    ]
+                }
+            ]
+        });
+        let reply: SchedulesReply = serde_json::from_value(value).unwrap();
+        assert!(!reply.access_reported);
+        let system = &reply.schedules[0].systems[0];
+        assert!(system.accesses.is_empty());
+        assert!(!system.exclusive);
     }
 }
