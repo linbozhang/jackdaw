@@ -350,6 +350,26 @@ pub(crate) fn spawn_contexts(
     commands.insert_resource(PointerContextEntity(pointer_entity));
 }
 
+/// Frames after fly mode engages whose look input is discarded.
+///
+/// The right-button press that starts a fly session can arrive bundled with a
+/// huge synthesized pointer delta — measured on real hardware at 10^4–10^6
+/// pixels within a single frame (loop/reports/r1-disc-pm-none, 2026-10-23):
+/// the pointer stack (RDP / vendor driver) re-anchors the cursor around the
+/// grab transition and emits the displacement as raw relative motion, orders
+/// of magnitude beyond any real look drag. Fed straight into the camera that
+/// is the "the view snaps when I right-click" report. The same window also
+/// covers plain event batching, where the press frame aggregates the backlog
+/// of a drag that was already moving.
+///
+/// Three frames cover every point such a delta can land on: the press frame
+/// itself, the next frame (when the cursor grab is requested), and one more
+/// (the grab is applied in that frame's `Last`, so any delta it synthesizes
+/// is only read the frame after). Suppressing costs at most ~50 ms of a drag
+/// that is only just beginning; held drags are unaffected. Movement and zoom
+/// are never suppressed: those paths were confirmed working.
+const FLY_LOOK_SUPPRESS_FRAMES: u32 = 3;
+
 /// Writes `CameraNavInput` from action values and the scroll each
 /// `PreUpdate` frame, after `ActionSystems` has evaluated actions for this
 /// frame.
@@ -357,6 +377,10 @@ pub(crate) fn spawn_contexts(
 /// Ordering: runs in `PreUpdate` after `ActionSystems`; the camera system
 /// runs in `Update`. This guarantees a single write per frame with values
 /// that are stable for the entire `Update` phase.
+///
+/// On the [`FLY_LOOK_SUPPRESS_FRAMES`] frames after fly engages, look input
+/// is discarded (see that constant's docs for why); every other value passes
+/// through untouched.
 ///
 /// Zoom reads [`ScrollTicks`], where a line counts one tick and a hundred
 /// pixels count one.
@@ -374,10 +398,28 @@ pub(crate) fn populate_camera_nav_input(
     keyboard: Res<ButtonInput<KeyCode>>,
     keybinds: Res<KeybindRegistry>,
     mut nav: ResMut<CameraNavInput>,
+    mut fly_age_frames: Local<u32>,
 ) {
     let fly_active = fly_q.iter().any(|a| a.as_bool());
     let look_delta = look_q.iter().fold(Vec2::ZERO, |acc, a| acc + a.as_axis2d());
     let zoom_ticks = scroll.y;
+
+    // Suppress look on the first frames of a fly session; see
+    // `FLY_LOOK_SUPPRESS_FRAMES`. The counter is the age of the session:
+    // zero while not flying, incremented once per held frame.
+    let suppress_look = fly_active && {
+        let suppress = *fly_age_frames < FLY_LOOK_SUPPRESS_FRAMES;
+        *fly_age_frames = (*fly_age_frames).saturating_add(1);
+        suppress
+    };
+    if !fly_active {
+        *fly_age_frames = 0;
+    }
+    let look_delta = if suppress_look {
+        Vec2::ZERO
+    } else {
+        look_delta
+    };
 
     // WASD/QE: keyboard only, guarded by fly_active. Raw keyboard stays
     // because the camera movement keys live in `KeybindRegistry` (the
@@ -461,6 +503,111 @@ mod tests {
             .insert_resource(ModalContextEntity(modal_entity));
         app.add_systems(PostUpdate, update_modal_context_activity);
         (app, modal_entity)
+    }
+
+    // Build a minimal App that runs `populate_camera_nav_input` with one NavFly
+    // and one NavLook action entity whose `ActionValue`s the test drives
+    // directly, frame by frame.
+    fn make_nav_test_app() -> (App, Entity, Entity) {
+        let mut app = App::new();
+        app.init_resource::<ScrollTicks>()
+            .init_resource::<ButtonInput<KeyCode>>()
+            .insert_resource(KeybindRegistry::default())
+            .init_resource::<CameraNavInput>();
+        let fly = app
+            .world_mut()
+            .spawn((NavFly, ActionValue(Vec2::ZERO)))
+            .id();
+        let look = app
+            .world_mut()
+            .spawn((NavLook, ActionValue(Vec2::ZERO)))
+            .id();
+        app.add_systems(Update, populate_camera_nav_input);
+        (app, fly, look)
+    }
+
+    fn set_action_value(world: &mut World, entity: Entity, value: Vec2) {
+        world.get_mut::<ActionValue>(entity).expect("action").0 = value;
+    }
+
+    fn nav(app: &App) -> CameraNavInput {
+        app.world().resource::<CameraNavInput>().clone()
+    }
+
+    /// A look delta bundled with the press that starts fly is discarded, for
+    /// `FLY_LOOK_SUPPRESS_FRAMES` frames, and passes again on the next.
+    #[test]
+    fn look_discarded_on_fly_rising_edge_then_passes() {
+        let (mut app, fly, look) = make_nav_test_app();
+        let giant = Vec2::new(492_988.0, 690_804.0);
+
+        set_action_value(app.world_mut(), fly, Vec2::X);
+        for _ in 0..FLY_LOOK_SUPPRESS_FRAMES {
+            set_action_value(app.world_mut(), look, giant);
+            app.update();
+            assert_eq!(nav(&app).look_delta, Vec2::ZERO, "suppression window");
+        }
+
+        set_action_value(app.world_mut(), look, Vec2::new(15.0, 0.0));
+        app.update();
+        assert_eq!(
+            nav(&app).look_delta,
+            Vec2::new(15.0, 0.0),
+            "held drag past the window looks normally"
+        );
+    }
+
+    /// Releasing the button resets the window: the next press suppresses again.
+    #[test]
+    fn fly_release_resets_suppression_window() {
+        let (mut app, fly, look) = make_nav_test_app();
+
+        set_action_value(app.world_mut(), fly, Vec2::X);
+        set_action_value(app.world_mut(), look, Vec2::new(30_000.0, 40_000.0));
+        app.update();
+        assert_eq!(nav(&app).look_delta, Vec2::ZERO, "first press suppressed");
+
+        set_action_value(app.world_mut(), fly, Vec2::ZERO);
+        app.update();
+
+        set_action_value(app.world_mut(), fly, Vec2::X);
+        set_action_value(app.world_mut(), look, Vec2::new(30_000.0, 40_000.0));
+        app.update();
+        assert_eq!(
+            nav(&app).look_delta,
+            Vec2::ZERO,
+            "second press suppressed too"
+        );
+    }
+
+    /// While not flying, look deltas pass through untouched (the camera system
+    /// gates on `fly_active` itself); suppression must not leak into that path.
+    #[test]
+    fn look_passes_through_when_not_flying() {
+        let (mut app, _fly, look) = make_nav_test_app();
+        let drift = Vec2::new(3.0, -2.0);
+        set_action_value(app.world_mut(), look, drift);
+        app.update();
+        assert!(!nav(&app).fly_active);
+        assert_eq!(nav(&app).look_delta, drift);
+    }
+
+    /// Suppression only touches look: movement and zoom survive the window,
+    /// since those paths were confirmed working.
+    #[test]
+    fn move_axes_and_zoom_survive_the_suppression_window() {
+        let (mut app, fly, _look) = make_nav_test_app();
+        app.world_mut()
+            .resource_mut::<ButtonInput<KeyCode>>()
+            .press(KeyCode::KeyW);
+        app.world_mut().resource_mut::<ScrollTicks>().0.y = 2.5;
+
+        set_action_value(app.world_mut(), fly, Vec2::X);
+        app.update();
+        let nav = nav(&app);
+        assert_eq!(nav.look_delta, Vec2::ZERO);
+        assert_eq!(nav.move_axes.z, 1.0, "fly movement is never suppressed");
+        assert_eq!(nav.zoom_ticks, 2.5, "zoom is never suppressed");
     }
 
     fn is_active(app: &App, entity: Entity) -> bool {
