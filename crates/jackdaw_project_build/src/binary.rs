@@ -86,6 +86,30 @@ pub fn game_target_dir(jackdaw_dir: &Path) -> PathBuf {
     jackdaw_dir.join("target/game")
 }
 
+/// Which cargo target table a run target's name belongs to.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
+pub enum TargetKind {
+    Bin,
+    Example,
+}
+
+impl TargetKind {
+    /// The word cargo's metadata spells the kind, and the word users
+    /// read: the same one.
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::Bin => "bin",
+            Self::Example => "example",
+        }
+    }
+}
+
+impl std::fmt::Display for TargetKind {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str(self.as_str())
+    }
+}
+
 /// The cargo target a run configuration builds: one `[[bin]]` or
 /// `[[example]]`, optionally of another workspace `package`, with
 /// optional cargo features and profile. `None` is the historical build:
@@ -119,6 +143,21 @@ impl CargoTarget {
             _ => spec_package,
         }
     }
+
+    /// Which single `[[bin]]`/`[[example]]` this target names: the bin
+    /// first, a blank name counting as no name. The one precedence
+    /// every consumer of a target's name follows — the argv builder,
+    /// the artifact filter, the existence preflight, the Play-row badge
+    /// — so they cannot disagree about what a target builds.
+    pub fn named(&self) -> Option<(TargetKind, &str)> {
+        if let Some(bin) = self.bin.as_deref().filter(|name| !blank(name)) {
+            Some((TargetKind::Bin, bin))
+        } else if let Some(example) = self.example.as_deref().filter(|name| !blank(name)) {
+            Some((TargetKind::Example, example))
+        } else {
+            None
+        }
+    }
 }
 
 /// Whether a name is blank. The config-side validation rejects blank
@@ -139,14 +178,16 @@ pub fn cargo_target_args(target: Option<&CargoTarget>) -> Vec<String> {
         return Vec::new();
     };
     let mut args = Vec::new();
-    // Both set is rejected by validation before a build starts; if it
-    // ever slips through, the bin wins deterministically rather than
-    // handing cargo two contradictory flags. Blank names degrade the
-    // same way, to the package default.
-    if let Some(bin) = target.bin.as_deref().filter(|bin| !blank(bin)) {
-        args.extend(["--bin".to_string(), bin.to_string()]);
-    } else if let Some(example) = target.example.as_deref().filter(|name| !blank(name)) {
-        args.extend(["--example".to_string(), example.to_string()]);
+    // Both set is rejected by validation before a build starts; `named`
+    // resolves it the way every consumer does — the bin wins
+    // deterministically rather than handing cargo two contradictory
+    // flags. Blank names degrade the same way, to no name at all.
+    match target.named() {
+        Some((TargetKind::Bin, bin)) => args.extend(["--bin".to_string(), bin.to_string()]),
+        Some((TargetKind::Example, example)) => {
+            args.extend(["--example".to_string(), example.to_string()]);
+        }
+        None => {}
     }
     let features: Vec<&str> = target
         .features
@@ -566,24 +607,19 @@ impl WantedArtifact<'_> {
     /// bin nor example, or both (validation rejects both upstream), falls
     /// back to the package default.
     fn from<'a>(target: Option<&'a CargoTarget>) -> WantedArtifact<'a> {
-        let Some(target) = target else {
-            return WantedArtifact::AnyBinary;
-        };
-        // The same precedence as `cargo_target_args`: a blank name or a
-        // both-set target degrades to the package default rather than
-        // handing cargo contradictory flags.
-        if let Some(name) = target.bin.as_deref().filter(|name| !blank(name)) {
-            WantedArtifact::CargoTarget {
+        // The same precedence as `cargo_target_args`, by the same
+        // helper, so the filter can never want another target than the
+        // one the command builds.
+        match target.and_then(CargoTarget::named) {
+            Some((TargetKind::Bin, name)) => WantedArtifact::CargoTarget {
                 name,
                 example: false,
-            }
-        } else if let Some(name) = target.example.as_deref().filter(|name| !blank(name)) {
-            WantedArtifact::CargoTarget {
+            },
+            Some((TargetKind::Example, name)) => WantedArtifact::CargoTarget {
                 name,
                 example: true,
-            }
-        } else {
-            WantedArtifact::AnyBinary
+            },
+            None => WantedArtifact::AnyBinary,
         }
     }
 
@@ -1107,5 +1143,48 @@ mod tests {
             ..bin.clone()
         };
         assert_eq!(cache.get(&featured), None);
+    }
+
+    /// Every consumer of a target's name goes through `named`, so its
+    /// precedence (bin first, blank as absent) is pinned directly here.
+    #[test]
+    fn named_resolves_one_target_with_bin_first_and_blank_absent() {
+        let bin = CargoTarget {
+            bin: Some("server".to_string()),
+            ..CargoTarget::default()
+        };
+        assert_eq!(bin.named(), Some((TargetKind::Bin, "server")));
+
+        let example = CargoTarget {
+            example: Some("split_screen".to_string()),
+            ..CargoTarget::default()
+        };
+        assert_eq!(example.named(), Some((TargetKind::Example, "split_screen")));
+
+        // The bin wins when both are set, as `cargo_target_args` passes.
+        let both = CargoTarget {
+            bin: Some("server".to_string()),
+            example: Some("split_screen".to_string()),
+            ..CargoTarget::default()
+        };
+        assert_eq!(both.named(), Some((TargetKind::Bin, "server")));
+
+        // A blank name is no name; neither kind is the package default.
+        assert_eq!(
+            CargoTarget::default().named(),
+            None,
+            "no names names the package default"
+        );
+        assert_eq!(
+            CargoTarget {
+                bin: Some("  ".to_string()),
+                ..CargoTarget::default()
+            }
+            .named(),
+            None,
+            "a blank bin is no bin"
+        );
+        assert_eq!(TargetKind::Bin.as_str(), "bin");
+        assert_eq!(TargetKind::Example.as_str(), "example");
     }
 }

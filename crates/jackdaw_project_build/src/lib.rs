@@ -39,7 +39,7 @@ mod build;
 mod registry_recipe;
 
 pub use binary::{
-    BuildLoad, CargoTarget, ProjectBinaryBuild, background_jobs, build_project_binary,
+    BuildLoad, CargoTarget, ProjectBinaryBuild, TargetKind, background_jobs, build_project_binary,
     build_project_binary_with_load, cargo_target_args, detach_from_host_build, game_target_dir,
     prepare_game_command,
 };

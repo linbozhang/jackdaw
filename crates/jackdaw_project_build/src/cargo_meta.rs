@@ -8,6 +8,8 @@ use std::path::{Path, PathBuf};
 use jackdaw_env::rust_env_command;
 use serde::Deserialize;
 
+use crate::binary::{CargoTarget, TargetKind};
+
 /// A project's cargo metadata: packages and their targets.
 #[derive(Deserialize)]
 pub struct CargoMeta {
@@ -292,6 +294,85 @@ impl CargoMeta {
                 }
             }
         }
+    }
+
+    /// Whether `package` is a workspace member here, under either
+    /// spelling (`resolve_package` accepts both too).
+    pub fn has_package(&self, package: &str) -> bool {
+        self.packages
+            .iter()
+            .any(|p| same_package_name(&p.name, package))
+    }
+
+    /// The names of one member's `[[bin]]` (or `[[example]]`) targets,
+    /// in manifest order. The existence preflight's raw material; a
+    /// member that is not here lists nothing.
+    pub fn target_names(&self, package: &str, kind: TargetKind) -> Vec<String> {
+        let word = kind.as_str();
+        self.packages
+            .iter()
+            .find(|p| same_package_name(&p.name, package))
+            .map(|p| {
+                p.targets
+                    .iter()
+                    .filter(|t| t.kind.iter().any(|k| k == word))
+                    .map(|t| t.name.clone())
+                    .collect()
+            })
+            .unwrap_or_default()
+    }
+}
+
+/// Whether two spellings name one package: cargo and `resolve_package`
+/// accept the manifest's dashed name and the crate's underscored one
+/// interchangeably.
+fn same_package_name(a: &str, b: &str) -> bool {
+    a.replace('-', "_") == b.replace('-', "_")
+}
+
+/// Whether the package and bin/example a run target names exist in this
+/// workspace, checked before a build starts: a typo fails here with the
+/// names that are available, rather than inside a build in cargo's
+/// words. `spec_package` is the package the project resolved to, which
+/// the target's own `package` override replaces. A target naming no
+/// single bin/example (the package default) has nothing to check.
+pub fn check_run_target(
+    meta: &CargoMeta,
+    spec_package: &str,
+    target: &CargoTarget,
+) -> Result<(), String> {
+    let package = target.package_or(spec_package);
+    let packages = meta.packages();
+    let Some(pkg) = packages
+        .iter()
+        .find(|p| same_package_name(&p.name, package))
+    else {
+        let found: Vec<String> = packages.iter().map(|p| p.name.clone()).collect();
+        return Err(format!(
+            "`{package}` is not a package here (found: {})",
+            found.join(", ")
+        ));
+    };
+    let Some((kind, name)) = target.named() else {
+        return Ok(());
+    };
+    let available = meta.target_names(&pkg.name, kind);
+    if available.iter().any(|available| available == name) {
+        return Ok(());
+    }
+    let word = kind.as_str();
+    if available.is_empty() {
+        Err(format!(
+            "package `{}` declares no {}s, so `{name}` cannot be one",
+            pkg.name, word
+        ))
+    } else {
+        Err(format!(
+            "{word} `{name}` is not a target of package `{}` (available {}s: {})",
+            pkg.name,
+            word,
+            available.join(", ")
+        ))
     }
 }
 
@@ -594,5 +675,159 @@ mod tests {
             Some(("my-game".to_string(), "my_game".to_string()))
         );
         assert_eq!(m.lib_name().as_deref(), Some("my_game"));
+    }
+
+    /// A metadata document naming a workspace member's targets, as the
+    /// existence preflight reads them: `(package, [(target, kinds)])`.
+    fn targets_json(packages: &[(&str, &[(&str, &[&str])])]) -> String {
+        let entries: Vec<serde_json::Value> = packages
+            .iter()
+            .map(|(name, targets)| {
+                let targets: Vec<serde_json::Value> = targets
+                    .iter()
+                    .map(|(target, kinds)| serde_json::json!({ "name": target, "kind": kinds }))
+                    .collect();
+                serde_json::json!({
+                    "name": name,
+                    "id": format!("id-{name}"),
+                    "manifest_path": format!("/ws/{name}/Cargo.toml"),
+                    "targets": targets,
+                })
+            })
+            .collect();
+        serde_json::json!({
+            "packages": entries,
+            "workspace_root": "/ws",
+            "workspace_members": packages
+                .iter()
+                .map(|(name, _)| format!("id-{name}"))
+                .collect::<Vec<_>>(),
+        })
+        .to_string()
+    }
+
+    /// The game with a lib, two bins and one example: the shape the
+    /// preflight branches on.
+    fn preflight_meta() -> CargoMeta {
+        meta(&targets_json(&[
+            (
+                "my-game",
+                &[
+                    ("my_game", &["lib"]),
+                    ("my-game", &["bin"]),
+                    ("server", &["bin"]),
+                    ("split_screen", &["example"]),
+                ],
+            ),
+            ("tools", &[("tools", &["bin"])]),
+        ]))
+    }
+
+    #[test]
+    fn bin_and_example_names_list_per_package_in_either_spelling() {
+        let m = preflight_meta();
+        assert_eq!(
+            m.target_names("my-game", TargetKind::Bin),
+            ["my-game".to_string(), "server".to_string()]
+        );
+        assert_eq!(
+            m.target_names("my_game", TargetKind::Example),
+            ["split_screen".to_string()]
+        );
+        // The other member's targets are not this one's.
+        assert_eq!(
+            m.target_names("tools", TargetKind::Bin),
+            ["tools".to_string()]
+        );
+        assert!(m.has_package("my-game"));
+        assert!(m.has_package("my_game"));
+        assert!(!m.has_package("nope"));
+    }
+
+    #[test]
+    fn a_target_the_package_declares_passes_the_preflight() {
+        let m = preflight_meta();
+        let spec = "my-game";
+        let bin = CargoTarget {
+            bin: Some("server".to_string()),
+            ..CargoTarget::default()
+        };
+        assert!(check_run_target(&m, spec, &bin).is_ok());
+
+        let example = CargoTarget {
+            example: Some("split_screen".to_string()),
+            ..CargoTarget::default()
+        };
+        assert!(check_run_target(&m, spec, &example).is_ok());
+
+        // The package override redirects the check to that member.
+        let other = CargoTarget {
+            package: Some("tools".to_string()),
+            bin: Some("tools".to_string()),
+            ..CargoTarget::default()
+        };
+        assert!(check_run_target(&m, spec, &other).is_ok());
+    }
+
+    #[test]
+    fn an_unknown_package_lists_the_members() {
+        let m = preflight_meta();
+        let target = CargoTarget {
+            package: Some("other-client".to_string()),
+            bin: Some("x".to_string()),
+            ..CargoTarget::default()
+        };
+        let reason = check_run_target(&m, "my-game", &target).unwrap_err();
+        assert!(
+            reason.contains("`other-client` is not a package here"),
+            "{reason}"
+        );
+        assert!(reason.contains("my-game, tools"), "{reason}");
+    }
+
+    #[test]
+    fn an_unknown_bin_lists_the_available_ones() {
+        let m = preflight_meta();
+        let target = CargoTarget {
+            bin: Some("client".to_string()),
+            ..CargoTarget::default()
+        };
+        let reason = check_run_target(&m, "my-game", &target).unwrap_err();
+        assert!(
+            reason.contains("bin `client` is not a target of package `my-game`"),
+            "{reason}"
+        );
+        assert!(
+            reason.contains("available bins: my-game, server"),
+            "{reason}"
+        );
+    }
+
+    #[test]
+    fn a_member_without_examples_says_so_rather_than_listing_nothing() {
+        let m = preflight_meta();
+        let target = CargoTarget {
+            package: Some("tools".to_string()),
+            example: Some("anything".to_string()),
+            ..CargoTarget::default()
+        };
+        let reason = check_run_target(&m, "my-game", &target).unwrap_err();
+        assert!(
+            reason.contains("package `tools` declares no examples"),
+            "{reason}"
+        );
+    }
+
+    /// The package-default build names no bin/example, so there is
+    /// nothing for the preflight to look up.
+    #[test]
+    fn a_target_naming_no_single_target_needs_no_check() {
+        let m = preflight_meta();
+        assert!(check_run_target(&m, "my-game", &CargoTarget::default()).is_ok());
+        let blank = CargoTarget {
+            bin: Some("  ".to_string()),
+            ..CargoTarget::default()
+        };
+        assert!(check_run_target(&m, "my-game", &blank).is_ok());
     }
 }

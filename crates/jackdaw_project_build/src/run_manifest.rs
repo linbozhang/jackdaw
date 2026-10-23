@@ -10,8 +10,11 @@
 
 use serde::Deserialize;
 
-/// One `[[run]]` entry: its label and, optionally, the cargo target it
-/// builds. Field-for-field the mirror of the protocol crate's
+use crate::binary::CargoTarget;
+
+/// One `[[run]]` entry: its label, the cargo target it builds, and the
+/// launch environment `jd run --config` applies to the built binary.
+/// Field-for-field the mirror of the protocol crate's
 /// `RunConfig`/`RunTarget`; see the module docs for why it exists twice.
 #[derive(Deserialize, Clone, Debug, Default, PartialEq, Eq)]
 pub struct RunEntry {
@@ -22,6 +25,16 @@ pub struct RunEntry {
     /// What to build and launch instead of the default game binary.
     #[serde(default)]
     pub target: Option<RunTargetSpec>,
+    /// Env vars the run's game launches with.
+    #[serde(default)]
+    pub env: std::collections::BTreeMap<String, String>,
+    /// Extra argv appended after the game's own.
+    #[serde(default)]
+    pub args: Vec<String>,
+    /// Working directory; defaults to the project root, relative paths
+    /// resolving against it.
+    #[serde(default)]
+    pub cwd: Option<String>,
 }
 
 impl RunEntry {
@@ -69,6 +82,19 @@ impl RunTargetSpec {
             _ => Ok(()),
         }
     }
+
+    /// The build-pipeline parameter this spec describes — the CLI-side
+    /// twin of the editor's conversion in `src/run_config.rs`, and like
+    /// it the only place the two shapes meet.
+    pub fn cargo_target(&self) -> CargoTarget {
+        CargoTarget {
+            package: self.package.clone(),
+            bin: self.bin.clone(),
+            example: self.example.clone(),
+            features: self.features.clone(),
+            profile: self.profile.clone(),
+        }
+    }
 }
 
 /// The `[[run]]` entries of a parsed `jackdaw.toml`. Everything else in
@@ -90,6 +116,28 @@ impl RunManifest {
     pub fn by_name(&self, label: &str) -> Option<&RunEntry> {
         self.runs.iter().find(|run| run.label() == label)
     }
+}
+
+/// The profile names a manifest's `[profile.*]` tables declare. The
+/// existence side of doctor's profile check; `dev` and `release` exist
+/// in cargo whatever the manifest says and are handled separately.
+pub fn declared_profiles(cargo_toml: &str) -> Vec<String> {
+    let Ok(table) = cargo_toml.parse::<toml::Table>() else {
+        return Vec::new();
+    };
+    table
+        .get("profile")
+        .and_then(|profiles| profiles.as_table())
+        .map(|profiles| profiles.keys().cloned().collect())
+        .unwrap_or_default()
+}
+
+/// Whether cargo will accept `--profile <name>` here: one of its
+/// built-ins, or a `[profile.*]` table the manifest declares. A wrong
+/// name is cargo's own instant refusal, so callers warn rather than
+/// block on it.
+pub fn profile_is_available(profile: &str, declared: &[String]) -> bool {
+    matches!(profile, "dev" | "release") || declared.iter().any(|name| name == profile)
 }
 
 #[cfg(test)]
@@ -148,6 +196,11 @@ target = { example = "split_screen", package = "other-client" }
                 profile: Some("release".to_string()),
             })
         );
+        // The launch environment `jd run --config Server` applies, the
+        // same fields the editor's twin test reads.
+        assert_eq!(server.env.get("SEED").map(String::as_str), Some("42"));
+        assert_eq!(server.args, ["--listen".to_string(), "0.0.0.0".to_string()]);
+        assert_eq!(server.cwd.as_deref(), Some("server"));
 
         let split = &manifest.runs[2];
         assert_eq!(split.label(), "Split-screen");
@@ -208,5 +261,63 @@ target = { example = "split_screen", package = "other-client" }
         );
         let one = target("[[run]]\ntarget = { example = \"split\" }");
         assert!(one.validate().is_ok());
+    }
+
+    /// The conversion is field-for-field: whatever the config named is
+    /// exactly what reaches the build command.
+    #[test]
+    fn a_spec_converts_field_for_field_to_a_cargo_target() {
+        let entry = RunManifest::parse(
+            "[[run]]\ntarget = { example = \"split\", package = \"game-client\", profile = \"release\" }",
+        )
+        .unwrap()
+        .runs
+        .into_iter()
+        .next()
+        .unwrap();
+        assert_eq!(
+            entry.target.unwrap().cargo_target(),
+            CargoTarget {
+                package: Some("game-client".to_string()),
+                bin: None,
+                example: Some("split".to_string()),
+                features: Vec::new(),
+                profile: Some("release".to_string()),
+            }
+        );
+    }
+
+    #[test]
+    fn a_run_without_a_target_converts_to_no_cargo_target() {
+        let entry = RunManifest::parse("[[run]]\nname = \"Play\"")
+            .unwrap()
+            .runs
+            .into_iter()
+            .next()
+            .unwrap();
+        assert!(entry.target.is_none());
+        assert_eq!(entry.env, std::collections::BTreeMap::new());
+        assert!(entry.args.is_empty());
+        assert_eq!(entry.cwd, None);
+    }
+
+    #[test]
+    fn declared_profiles_read_from_the_manifests_profile_tables() {
+        let cargo_toml = "[package]\nname = \"g\"\n\n[profile.bench]\n\ndebug = true\n";
+        assert_eq!(declared_profiles(cargo_toml), ["bench".to_string()]);
+        assert_eq!(
+            declared_profiles("[package]\nname = \"g\"\n"),
+            Vec::<String>::new()
+        );
+        assert_eq!(declared_profiles("not toml [[["), Vec::<String>::new());
+    }
+
+    #[test]
+    fn a_profile_is_available_when_builtin_or_declared() {
+        let declared = vec!["bench".to_string()];
+        assert!(profile_is_available("dev", &declared));
+        assert!(profile_is_available("release", &declared));
+        assert!(profile_is_available("bench", &declared));
+        assert!(!profile_is_available("fast", &declared));
     }
 }

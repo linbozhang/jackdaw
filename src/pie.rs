@@ -670,6 +670,20 @@ pub(crate) fn launch_instance(world: &mut World, key: InstanceKey, run: RunConfi
         return;
     };
 
+    // A run target naming a bin/example no package declares would burn a
+    // whole build to learn it from cargo's error; metadata answers in a
+    // blink and lists the names that are real. The warm cache above ran
+    // before this by design: an up-to-date binary was checked when it
+    // was built, and a manifest edit that drops the target also marks
+    // the cache stale.
+    if let Some(target) = &build.1
+        && let Err(reason) = preflight_run_target(&root, &spec.package_name, target)
+    {
+        warn!("PIE: not playing '{}': {reason}", run.label());
+        crate::status_bar::notify_error(world, reason);
+        return;
+    }
+
     // Join an in-flight build's pending list, or start a new build.
     let mut session = world.non_send_mut::<PieSession>();
     match session.builds.get_mut(&build) {
@@ -697,6 +711,24 @@ pub(crate) fn launch_instance(world: &mut World, key: InstanceKey, run: RunConfi
 /// target the run names. Runs without a target share the default build.
 fn build_key(root: &Path, run: &RunConfig) -> BuildKey {
     (root.to_path_buf(), crate::run_config::cargo_target(run))
+}
+
+/// Whether the run's cargo target names a package and bin/example the
+/// project really has, per `cargo metadata`, before a build starts: the
+/// error lists the available names instead of failing a build in
+/// cargo's words. A metadata failure stands down — the build itself
+/// reports it — so the check can only refine errors, never cause one.
+fn preflight_run_target(
+    root: &Path,
+    spec_package: &str,
+    target: &CargoTarget,
+) -> Result<(), String> {
+    match crate::run_config::CargoMeta::load(root) {
+        Some(meta) => {
+            crate::project_build::cargo_meta::check_run_target(&meta, spec_package, target)
+        }
+        None => Ok(()),
+    }
 }
 
 /// Save the modified scenes the game may load, unless the project turned
@@ -1313,12 +1345,26 @@ fn prebuild_play_target(world: &mut World) {
     }
     // Pre-build the first run's target, so the first Play of that run
     // finds its own warm artifact.
-    let first_target = world
+    let first_run = world
         .get_resource::<RunConfigs>()
-        .and_then(|runs| runs.manifest.runs.first())
-        .and_then(crate::run_config::cargo_target);
+        .and_then(|runs| runs.manifest.runs.first().cloned());
+    let first_target = first_run.as_ref().and_then(crate::run_config::cargo_target);
     // Run configs are loaded; this is the one-shot attempt regardless of outcome.
     world.resource_mut::<PiePrebuildState>().attempted = true;
+    // A first run whose target cannot become a cargo command must not
+    // burn a background build into a key no launch will ever consume —
+    // launch refuses it at the door — so name the problem here instead,
+    // where the build status shows it.
+    if let Some(run) = &first_run
+        && let Some(target) = &run.target
+        && let Err(reason) = target.validate()
+    {
+        warn!("PIE: not pre-building '{}': {reason}", run.label());
+        if let Some(mut status) = world.get_resource_mut::<BuildStatus>() {
+            status.state = crate::build_status::BuildState::Blocked { reason };
+        }
+        return;
+    }
     let Some(root) = project_root(world) else {
         return;
     };
@@ -1358,6 +1404,17 @@ fn prebuild_play_target(world: &mut World) {
             return;
         }
     };
+    // The same existence check the launch door applies: a target naming
+    // a bin/example no package declares has nothing to warm.
+    if let Some(target) = &build.1
+        && let Err(reason) = preflight_run_target(&root, &spec.package_name, target)
+    {
+        warn!("PIE: not pre-building: {reason}");
+        if let Some(mut status) = world.get_resource_mut::<BuildStatus>() {
+            status.state = crate::build_status::BuildState::Blocked { reason };
+        }
+        return;
+    }
     let mut session = world.non_send_mut::<PieSession>();
     info!("PIE: pre-building the game in the background for a fast first Play");
     let (task, progress) = spawn_game_build(&root, spec, build.1.clone(), BuildLoad::Background);
@@ -2823,6 +2880,53 @@ target = { example = "schema_echo" }"#,
         assert!(!env_allows_prebuild(Some("0")));
         assert!(!env_allows_prebuild(Some("false")));
         assert!(!env_allows_prebuild(Some(" ")));
+    }
+
+    /// A first run whose target cannot become a cargo command must not
+    /// burn a background build into a key no launch will consume (the
+    /// launch door refuses it); the reason reaches the build status.
+    #[test]
+    fn an_invalid_first_run_target_blocks_instead_of_building() {
+        let mut world = world_ready_to_prebuild(true);
+        world.resource_mut::<RunConfigs>().manifest = toml::from_str(
+            r#"[[run]]
+name = "Broken"
+target = { bin = "a", example = "b" }"#,
+        )
+        .unwrap();
+
+        prebuild_play_target(&mut world);
+
+        assert!(
+            world.non_send::<PieSession>().builds.is_empty(),
+            "nothing was pre-built under a key no launch can consume"
+        );
+        match &world.resource::<BuildStatus>().state {
+            crate::build_status::BuildState::Blocked { reason } => {
+                assert!(reason.contains("both"), "got {reason}");
+            }
+            _ => panic!("the invalid target blocks the pre-build"),
+        }
+        assert!(world.resource::<PiePrebuildState>().attempted);
+    }
+
+    /// A metadata failure must stand down rather than block Play: the
+    /// build itself reports it in its own words. A directory cargo
+    /// cannot read metadata for exercises exactly that.
+    #[test]
+    fn a_preflight_without_metadata_lets_the_build_speak() {
+        let root =
+            std::env::temp_dir().join(format!("jackdaw-preflight-none-{}", std::process::id()));
+        let _ = std::fs::remove_dir_all(&root);
+        std::fs::create_dir_all(&root).unwrap();
+
+        let target = CargoTarget {
+            bin: Some("server".to_string()),
+            ..CargoTarget::default()
+        };
+        assert!(preflight_run_target(&root, "my-game", &target).is_ok());
+
+        let _ = std::fs::remove_dir_all(&root);
     }
 
     #[test]
