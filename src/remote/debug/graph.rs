@@ -208,10 +208,14 @@ fn color_to_vec4(color: Color) -> Vec4 {
 
 // --------------------------- Spawn ---------------------------
 
-/// One node to render: its display label. Ambiguity highlighting is derived
-/// from the `ambiguities` array passed to [`spawn_graph`], not carried here.
+/// One node to render: its display label plus an optional smaller muted
+/// line underneath (the System Graph's read/write access badge). Ambiguity
+/// highlighting is derived from the `ambiguities` array passed to
+/// [`spawn_graph`], not carried here.
+#[derive(Default)]
 pub struct GraphNodeSpec {
     pub label: String,
+    pub subtitle: Option<String>,
 }
 
 /// Tag on a spawned node box. `index` matches its position in the
@@ -249,7 +253,9 @@ const NODE_W: f32 = 190.0;
 /// Build a scrollable, layered node graph as a child of `parent`: one box
 /// per `nodes` entry positioned by [`layered_layout`], plus one wire per
 /// ordering edge and per ambiguity, ordering edges first, capped at
-/// [`MAX_EDGES`] total. Returns the scroll container entity.
+/// [`MAX_EDGES`] total. `node_colors[i]` is that box's background (the
+/// System Graph passes filter hit/miss colors; pass all-default for an
+/// unfiltered look). Returns the scroll container entity.
 pub fn spawn_graph(
     commands: &mut Commands,
     materials: &mut Assets<GraphEdgeMaterial>,
@@ -257,6 +263,7 @@ pub fn spawn_graph(
     nodes: &[GraphNodeSpec],
     edges: &[(usize, usize)],
     ambiguities: &[(usize, usize)],
+    node_colors: &[Color],
 ) -> Entity {
     let slots = layered_layout(nodes.len(), edges);
     let positions: Vec<Vec2> = slots
@@ -268,7 +275,6 @@ pub fn spawn_graph(
             )
         })
         .collect();
-    let node_colors = vec![tokens::COMPONENT_CARD_BG; nodes.len()];
     spawn_graph_positioned(
         commands,
         materials,
@@ -277,7 +283,7 @@ pub fn spawn_graph(
         &positions,
         edges,
         ambiguities,
-        &node_colors,
+        node_colors,
     )
 }
 
@@ -356,7 +362,15 @@ pub fn spawn_graph_positioned(
             .get(index)
             .copied()
             .unwrap_or(tokens::COMPONENT_CARD_BG);
-        commands.spawn((
+        let label_text = (
+            Text::new(spec.label.clone()),
+            TextFont {
+                font_size: tokens::TEXT_SIZE_SM,
+                ..default()
+            },
+            TextColor(tokens::TEXT_PRIMARY),
+        );
+        let mut node = commands.spawn((
             GraphNodeBox { index },
             Node {
                 position_type: PositionType::Absolute,
@@ -370,16 +384,40 @@ pub fn spawn_graph_positioned(
             },
             BackgroundColor(background),
             BorderColor::all(border),
-            children![(
-                Text::new(spec.label.clone()),
-                TextFont {
-                    font_size: tokens::TEXT_SIZE_SM,
-                    ..default()
-                },
-                TextColor(tokens::TEXT_PRIMARY),
-            )],
             ChildOf(content),
         ));
+        match &spec.subtitle {
+            // A subtitle (the access badge) stacks under the label in a
+            // column; without one the box holds the bare label, exactly as
+            // before the field existed.
+            Some(subtitle) => {
+                node.with_children(|parent| {
+                    parent.spawn((
+                        Node {
+                            flex_direction: FlexDirection::Column,
+                            row_gap: Val::Px(2.0),
+                            ..default()
+                        },
+                        children![
+                            label_text,
+                            (
+                                Text::new(subtitle.clone()),
+                                TextFont {
+                                    font_size: tokens::TEXT_SIZE_XS,
+                                    ..default()
+                                },
+                                TextColor(tokens::TEXT_SECONDARY),
+                            ),
+                        ],
+                    ));
+                });
+            }
+            None => {
+                node.with_children(|parent| {
+                    parent.spawn(label_text);
+                });
+            }
+        }
     }
 
     let ordering_color = color_to_vec4(tokens::BORDER_STRONG.with_alpha(0.8));

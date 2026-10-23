@@ -218,6 +218,7 @@ pub(crate) fn rebuild_relationships(
             .iter()
             .map(|n| GraphNodeSpec {
                 label: n.label.clone(),
+                ..Default::default()
             })
             .collect();
         let node_colors: Vec<Color> = nodes.iter().map(|n| node_background(n.kind)).collect();
