@@ -50,6 +50,23 @@ fn parse_manifest_str(text: &str) -> Manifest {
 /// at its historical path.
 pub use jackdaw_project_build::cargo_meta::CargoMeta;
 
+/// The cargo build a run config's target describes: the one conversion
+/// point between the protocol's serde config type and the build
+/// pipeline's parameter type. The editor depends on both crates; the CLI
+/// depends only on the pipeline's own mirror of the schema
+/// (`jackdaw_project_build::run_manifest`), which lockstep tests keep
+/// field-compatible with this one.
+pub(crate) fn cargo_target(run: &RunConfig) -> Option<jackdaw_project_build::CargoTarget> {
+    let target = run.target.as_ref()?;
+    Some(jackdaw_project_build::CargoTarget {
+        package: target.package.clone(),
+        bin: target.bin.clone(),
+        example: target.example.clone(),
+        features: target.features.clone(),
+        profile: target.profile.clone(),
+    })
+}
+
 /// A config-less project gets a one-entry default so its Play button
 /// works with no manifest: every run launches the same game binary,
 /// so there is nothing to resolve.
@@ -93,6 +110,51 @@ name = "Server""#,
     fn bad_toml_yields_empty_manifest() {
         let m = parse_manifest_str("this is not = valid = toml [[");
         assert!(m.runs.is_empty());
+    }
+
+    #[test]
+    fn a_run_without_a_target_builds_the_default() {
+        let m = parse_manifest_str(
+            r#"[[run]]
+name = "Server"
+env = { SEED = "42" }"#,
+        );
+        assert!(cargo_target(&m.runs[0]).is_none());
+    }
+
+    /// The conversion is field-for-field: whatever the config named is
+    /// exactly what reaches the build command.
+    #[test]
+    fn a_target_converts_field_for_field_to_a_cargo_target() {
+        let m = parse_manifest_str(
+            r#"[[run]]
+target = { bin = "server", features = ["net"], profile = "release" }"#,
+        );
+        assert_eq!(
+            cargo_target(&m.runs[0]),
+            Some(jackdaw_project_build::CargoTarget {
+                package: None,
+                bin: Some("server".to_string()),
+                example: None,
+                features: vec!["net".to_string()],
+                profile: Some("release".to_string()),
+            })
+        );
+
+        let m = parse_manifest_str(
+            r#"[[run]]
+target = { example = "split_screen", package = "game-client" }"#,
+        );
+        assert_eq!(
+            cargo_target(&m.runs[0]),
+            Some(jackdaw_project_build::CargoTarget {
+                package: Some("game-client".to_string()),
+                bin: None,
+                example: Some("split_screen".to_string()),
+                features: Vec::new(),
+                profile: None,
+            })
+        );
     }
 
     const META_FIXTURE: &str = r#"{

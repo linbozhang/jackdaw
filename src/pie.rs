@@ -7,9 +7,10 @@
 //! authored scene is never mutated.
 //!
 //! Instances are keyed by [`InstanceKey`] (config label plus 1-based
-//! instance number). All run configurations of a project share one
-//! build, keyed by the project root: several instances wait on one build
-//! and spawn together when it finishes.
+//! instance number). Builds are keyed by [`BuildKey`]: the project root
+//! plus the cargo target a run names. Runs without a target share the
+//! root's default build; several instances wait on one build and spawn
+//! together when it finishes.
 
 use std::collections::{HashMap, VecDeque};
 use std::io::{self, BufRead, BufReader};
@@ -31,9 +32,16 @@ use jackdaw_pie_protocol::{
 use crate::build_status::BuildStatus;
 use crate::ext_build::BuildProgress;
 use crate::pie_mirror::{PieInstances, PieViewMode};
-use crate::project_build::BuildLoad;
 use crate::project_build::shim::ShimSpec;
+use crate::project_build::{BuildLoad, CargoTarget};
 use crate::run_config::RunConfigs;
+
+/// A build's cache key in [`PieSession::builds`]: which project, and
+/// which cargo target of it. A run naming a bin/example gets its own
+/// entry, so playing one target can never launch another target's
+/// cached binary; runs without a target share the root's default
+/// (`None`), exactly the single build per project there always was.
+type BuildKey = (PathBuf, Option<CargoTarget>);
 
 /// How many trailing stderr lines to keep from a game process, so a
 /// crash can be reported without buffering unbounded output.
@@ -104,8 +112,9 @@ struct GameBuildResult {
     binary: PathBuf,
 }
 
-/// An in-flight or finished build, deduped by project root. Instances
-/// waiting on it are spawned when it finishes.
+/// An in-flight or finished build, deduped by [`BuildKey`] (project root
+/// plus cargo target). Instances waiting on it are spawned when it
+/// finishes.
 enum BuildState {
     /// `cargo build` is running on a task pool; `pending` lists the
     /// instances to spawn once the binary is ready. `progress` is the
@@ -134,7 +143,7 @@ struct PendingSpawn {
 #[derive(Default)]
 pub struct PieSession {
     children: HashMap<InstanceKey, ChildStage>,
-    builds: HashMap<PathBuf, BuildState>,
+    builds: HashMap<BuildKey, BuildState>,
 }
 
 impl Drop for PieSession {
@@ -614,6 +623,16 @@ pub(crate) fn launch_instance(world: &mut World, key: InstanceKey, run: RunConfi
         }
     }
 
+    // A target naming both or neither of bin/example cannot become a
+    // cargo command; refuse it before anything else runs.
+    if let Some(target) = &run.target
+        && let Err(reason) = target.validate()
+    {
+        warn!("PIE: not playing '{}': {reason}", run.label());
+        crate::status_bar::notify_error(world, reason);
+        return;
+    }
+
     // Read root before borrowing the session mutably below.
     let Some(root) = project_root(world) else {
         return;
@@ -625,11 +644,13 @@ pub(crate) fn launch_instance(world: &mut World, key: InstanceKey, run: RunConfi
         return;
     }
 
+    let build = build_key(&root, &run);
+
     // If the game binary is built AND still current, spawn from it
     // immediately. A source edit since the last build invalidates the
     // cache so Play runs the new code: each Play is a fresh process, so
     // rebuilding is always safe.
-    if let Some(BuildState::Done(path)) = world.non_send::<PieSession>().builds.get(&root) {
+    if let Some(BuildState::Done(path)) = world.non_send::<PieSession>().builds.get(&build) {
         if source_is_current(&root, path) {
             let path = path.clone();
             if let Some(stage) = spawn_instance(world, &key, &run, &path) {
@@ -641,7 +662,7 @@ pub(crate) fn launch_instance(world: &mut World, key: InstanceKey, run: RunConfi
             return;
         }
         info!("PIE: project source changed; rebuilding before Play");
-        world.non_send_mut::<PieSession>().builds.remove(&root);
+        world.non_send_mut::<PieSession>().builds.remove(&build);
     }
 
     let Some(spec) = crate::project_build::shim_spec_for_project(&root).ok() else {
@@ -651,16 +672,17 @@ pub(crate) fn launch_instance(world: &mut World, key: InstanceKey, run: RunConfi
 
     // Join an in-flight build's pending list, or start a new build.
     let mut session = world.non_send_mut::<PieSession>();
-    match session.builds.get_mut(&root) {
+    match session.builds.get_mut(&build) {
         Some(BuildState::Running { pending, .. }) => {
             pending.push(PendingSpawn { key, run });
         }
         Some(BuildState::Done(_)) => unreachable!("handled above"),
         Some(BuildState::Failed { .. }) | None => {
             info!("PIE: building the game for {key}");
-            let (task, progress) = spawn_game_build(&root, spec, BuildLoad::Foreground);
+            let (task, progress) =
+                spawn_game_build(&root, spec, build.1.clone(), BuildLoad::Foreground);
             session.builds.insert(
-                root,
+                build,
                 BuildState::Running {
                     task,
                     pending: vec![PendingSpawn { key, run }],
@@ -669,6 +691,12 @@ pub(crate) fn launch_instance(world: &mut World, key: InstanceKey, run: RunConfi
             );
         }
     }
+}
+
+/// The key a run's build lives under: the project root plus the cargo
+/// target the run names. Runs without a target share the default build.
+fn build_key(root: &Path, run: &RunConfig) -> BuildKey {
+    (root.to_path_buf(), crate::run_config::cargo_target(run))
 }
 
 /// Save the modified scenes the game may load, unless the project turned
@@ -776,10 +804,12 @@ pub(crate) fn failure_summary(
 }
 
 /// Start the project's game build on the compute pool, returning the
-/// task and the progress sink the footer polls.
+/// task and the progress sink the footer polls. `target` narrows the
+/// build to one run's cargo target, if it names one.
 fn spawn_game_build(
     root: &Path,
     spec: ShimSpec,
+    target: Option<CargoTarget>,
     load: jackdaw_project_build::BuildLoad,
 ) -> (Task<io::Result<GameBuildResult>>, Arc<Mutex<BuildProgress>>) {
     let progress = Arc::new(Mutex::new(BuildProgress::default()));
@@ -824,6 +854,7 @@ fn spawn_game_build(
         let result = crate::project_build::build_project_binary_with_load(
             &spec,
             &jackdaw_dir,
+            target.as_ref(),
             load,
             &mut report,
         );
@@ -1270,7 +1301,8 @@ fn prebuild_wanted(world: &World) -> bool {
 /// first Play reuses a warm artifact instead of compiling on demand.
 /// Mirrors `launch_instance`'s build but with no pending spawn: it only
 /// drives `PieSession.builds` to `Done`, which a later Play reuses
-/// immediately.
+/// immediately. It builds what Play starts first — usually the default
+/// binary, or the first run's cargo target when it names one.
 fn prebuild_play_target(world: &mut World) {
     if world.resource::<PiePrebuildState>().attempted {
         return;
@@ -1279,6 +1311,12 @@ fn prebuild_play_target(world: &mut World) {
     if world.get_resource::<RunConfigs>().is_none() {
         return;
     }
+    // Pre-build the first run's target, so the first Play of that run
+    // finds its own warm artifact.
+    let first_target = world
+        .get_resource::<RunConfigs>()
+        .and_then(|runs| runs.manifest.runs.first())
+        .and_then(crate::run_config::cargo_target);
     // Run configs are loaded; this is the one-shot attempt regardless of outcome.
     world.resource_mut::<PiePrebuildState>().attempted = true;
     let Some(root) = project_root(world) else {
@@ -1299,6 +1337,13 @@ fn prebuild_play_target(world: &mut World) {
         crate::extension_build::start_extension_build(world, &root);
         return;
     }
+    let build = (root.clone(), first_target);
+    // A warm (or in-flight) entry under the first run's key needs no new
+    // build, and no spec resolution either — which is why this check
+    // comes first: nothing left to resolve means nothing to report.
+    if world.non_send::<PieSession>().builds.contains_key(&build) {
+        return; // already built or building (the user may have hit Play already)
+    }
     let spec = match crate::project_build::shim_spec_for_project(&root) {
         Ok(spec) => spec,
         Err(error) => {
@@ -1314,13 +1359,10 @@ fn prebuild_play_target(world: &mut World) {
         }
     };
     let mut session = world.non_send_mut::<PieSession>();
-    if session.builds.contains_key(&root) {
-        return; // already built or building (the user may have hit Play already)
-    }
     info!("PIE: pre-building the game in the background for a fast first Play");
-    let (task, progress) = spawn_game_build(&root, spec, BuildLoad::Background);
+    let (task, progress) = spawn_game_build(&root, spec, build.1.clone(), BuildLoad::Background);
     session.builds.insert(
-        root,
+        build,
         BuildState::Running {
             task,
             pending: Vec::new(),
@@ -1409,9 +1451,12 @@ fn persist_project_build_settings(world: &World) {
 /// Shared by the source watcher (auto-build) and the manual Rebuild
 /// operator. The finished build persists `.jackdaw/schema.json`, which
 /// [`watch_project_schema`] picks up to refresh the editor's types.
+/// Rebuild means the default artifact; a run-specific target builds
+/// when that run launches.
 fn spawn_project_build(world: &mut World, root: &Path, load: BuildLoad) {
+    let build = (root.to_path_buf(), None);
     if matches!(
-        world.non_send::<PieSession>().builds.get(root),
+        world.non_send::<PieSession>().builds.get(&build),
         Some(BuildState::Running { .. })
     ) {
         return;
@@ -1420,9 +1465,9 @@ fn spawn_project_build(world: &mut World, root: &Path, load: BuildLoad) {
         return;
     };
     info!("PIE: building the game");
-    let (task, progress) = spawn_game_build(root, spec, load);
+    let (task, progress) = spawn_game_build(root, spec, None, load);
     world.non_send_mut::<PieSession>().builds.insert(
-        root.to_path_buf(),
+        build,
         BuildState::Running {
             task,
             pending: Vec::new(),
@@ -1469,7 +1514,11 @@ fn watch_project_source_for_edit(world: &mut World) {
     }
     // Only rebuild once the project has been built and loaded at least
     // once; the initial build is driven by `prebuild_play_target`.
-    let built_path = match world.non_send::<PieSession>().builds.get(&root) {
+    let built_path = match world
+        .non_send::<PieSession>()
+        .builds
+        .get(&(root.clone(), None))
+    {
         Some(BuildState::Done(path)) => path.clone(),
         _ => return,
     };
@@ -1635,7 +1684,7 @@ fn poll_builds(world: &mut World) {
     let mut builds = std::mem::take(&mut world.non_send_mut::<PieSession>().builds);
     let mut spawned: Vec<(InstanceKey, ChildStage)> = Vec::new();
 
-    for (root, state) in builds.iter_mut() {
+    for (key, state) in builds.iter_mut() {
         let BuildState::Running {
             task,
             pending,
@@ -1666,8 +1715,8 @@ fn poll_builds(world: &mut World) {
             }
             Some(Err(err)) => {
                 let output = progress.lock().ok().map(|p| p.full_log.clone());
-                let project = root.file_name().map_or_else(
-                    || root.display().to_string(),
+                let project = key.0.file_name().map_or_else(
+                    || key.0.display().to_string(),
                     |name| name.display().to_string(),
                 );
                 let keys: Vec<String> = pending.iter().map(|p| p.key.to_string()).collect();
@@ -2185,7 +2234,7 @@ mod play_status_tests {
         world.init_resource::<State<PlayState>>();
         let mut session = PieSession::default();
         session.builds.insert(
-            PathBuf::from("project"),
+            (PathBuf::from("project"), None),
             BuildState::Failed { launch: true },
         );
         world.insert_non_send(session);
@@ -2198,7 +2247,7 @@ mod play_status_tests {
         world.init_resource::<State<PlayState>>();
         let mut session = PieSession::default();
         session.builds.insert(
-            PathBuf::from("project"),
+            (PathBuf::from("project"), None),
             BuildState::Failed { launch: false },
         );
         world.insert_non_send(session);
@@ -2610,6 +2659,57 @@ mod source_change_tests {
 }
 
 #[cfg(test)]
+mod build_key_tests {
+    use super::*;
+
+    fn run_from(toml_text: &str) -> RunConfig {
+        let manifest: jackdaw_pie_protocol::manifest::Manifest = toml::from_str(toml_text).unwrap();
+        manifest.runs.into_iter().next().unwrap()
+    }
+
+    #[test]
+    fn runs_without_a_target_share_the_default_build() {
+        let run = run_from("[[run]]\nname = \"Play\"");
+        assert_eq!(
+            build_key(Path::new("/game"), &run),
+            (PathBuf::from("/game"), None)
+        );
+    }
+
+    #[test]
+    fn a_run_with_a_target_gets_its_own_key() {
+        let run = run_from("[[run]]\ntarget = { bin = \"server\" }");
+        assert_eq!(
+            build_key(Path::new("/game"), &run).1,
+            Some(CargoTarget {
+                bin: Some("server".to_string()),
+                ..CargoTarget::default()
+            })
+        );
+    }
+
+    /// The collision this keying exists to prevent: playing bin A and
+    /// then example B at the same root must not share a cache entry,
+    /// or the second launch would run the first's binary.
+    #[test]
+    fn same_root_different_targets_do_not_collide() {
+        let bin = run_from("[[run]]\ntarget = { bin = \"server\" }");
+        let example = run_from("[[run]]\ntarget = { example = \"split_screen\" }");
+        assert_ne!(
+            build_key(Path::new("/game"), &bin),
+            build_key(Path::new("/game"), &example)
+        );
+        // The same target under the same root is one entry, whatever
+        // else the run config sets.
+        let bin_again = run_from("[[run]]\ninstances = 2\ntarget = { bin = \"server\" }");
+        assert_eq!(
+            build_key(Path::new("/game"), &bin),
+            build_key(Path::new("/game"), &bin_again)
+        );
+    }
+}
+
+#[cfg(test)]
 mod prebuild_tests {
     use super::*;
 
@@ -2656,6 +2756,62 @@ mod prebuild_tests {
         assert!(matches!(
             world.resource::<BuildStatus>().state,
             crate::build_status::BuildState::Blocked { .. }
+        ));
+    }
+
+    /// The pre-build warms what Play starts first: a first run naming a
+    /// cargo target has its own key, so a warm default entry must not
+    /// satisfy it (the root here names no package, so the attempt ends
+    /// blocked — the point is that it attempted at all).
+    #[test]
+    fn a_first_run_with_a_target_prebuilds_under_its_own_key() {
+        let mut world = world_ready_to_prebuild(true);
+        let root = world.resource::<crate::project::ProjectRoot>().root.clone();
+        world.non_send_mut::<PieSession>().builds.insert(
+            (root.clone(), None),
+            BuildState::Done(PathBuf::from("nowhere")),
+        );
+        world.resource_mut::<RunConfigs>().manifest = toml::from_str(
+            r#"[[run]]
+name = "Echo"
+target = { example = "schema_echo" }"#,
+        )
+        .unwrap();
+
+        prebuild_play_target(&mut world);
+
+        assert!(
+            matches!(
+                world.resource::<BuildStatus>().state,
+                crate::build_status::BuildState::Blocked { .. }
+            ),
+            "the pre-build proceeded past the warm default entry"
+        );
+        // And the warm default entry survived untouched.
+        assert!(matches!(
+            world.non_send::<PieSession>().builds.get(&(root, None)),
+            Some(BuildState::Done(_))
+        ));
+    }
+
+    #[test]
+    fn a_first_run_without_a_target_reuses_the_default_build() {
+        let mut world = world_ready_to_prebuild(true);
+        let root = world.resource::<crate::project::ProjectRoot>().root.clone();
+        world
+            .non_send_mut::<PieSession>()
+            .builds
+            .insert((root, None), BuildState::Done(PathBuf::from("nowhere")));
+        world.resource_mut::<RunConfigs>().manifest =
+            toml::from_str("[[run]]\nname = \"Play\"").unwrap();
+
+        prebuild_play_target(&mut world);
+
+        // Early return on the warm default entry: nothing new started.
+        assert_eq!(world.non_send::<PieSession>().builds.len(), 1);
+        assert!(matches!(
+            world.resource::<BuildStatus>().state,
+            crate::build_status::BuildState::Idle
         ));
     }
 
@@ -2709,7 +2865,7 @@ mod prebuild_tests {
         output.push_log("  --> src/lib.rs:40:13".to_string());
         let mut session = PieSession::default();
         session.builds.insert(
-            PathBuf::from("my-game"),
+            (PathBuf::from("my-game"), None),
             BuildState::Running {
                 task,
                 pending: Vec::new(),
@@ -2746,7 +2902,7 @@ mod prebuild_tests {
         );
 
         world.non_send_mut::<PieSession>().builds.insert(
-            PathBuf::from("my-game"),
+            (PathBuf::from("my-game"), None),
             BuildState::Running {
                 task: AsyncComputeTaskPool::get().spawn(std::future::pending()),
                 pending: Vec::new(),

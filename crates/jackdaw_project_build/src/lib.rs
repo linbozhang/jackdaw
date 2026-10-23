@@ -28,6 +28,7 @@ pub mod linkage;
 pub mod modules;
 pub mod plan;
 pub mod project_manifest;
+pub mod run_manifest;
 pub mod runtime_wiring;
 pub mod sdk_paths;
 pub mod shim;
@@ -38,8 +39,9 @@ mod build;
 mod registry_recipe;
 
 pub use binary::{
-    BuildLoad, ProjectBinaryBuild, background_jobs, build_project_binary,
-    build_project_binary_with_load, detach_from_host_build, game_target_dir, prepare_game_command,
+    BuildLoad, CargoTarget, ProjectBinaryBuild, background_jobs, build_project_binary,
+    build_project_binary_with_load, cargo_target_args, detach_from_host_build, game_target_dir,
+    prepare_game_command,
 };
 pub use build::{
     BuildEvent, ProjectBuild, ProjectBuildError, build_project_dylib, last_built_dylib, sdk_remedy,

@@ -86,6 +86,84 @@ pub fn game_target_dir(jackdaw_dir: &Path) -> PathBuf {
     jackdaw_dir.join("target/game")
 }
 
+/// The cargo target a run configuration builds: one `[[bin]]` or
+/// `[[example]]`, optionally of another workspace `package`, with
+/// optional cargo features and profile. `None` is the historical build:
+/// the plain `-p <package>` with every binary it contains.
+///
+/// This is the build-pipeline's bevy-light twin of the serde type in
+/// `jackdaw_pie_protocol::manifest`: the CLI must not depend on that
+/// crate (it would drag bevy into `jd`), so the editor converts between
+/// the two and lockstep tests pin their field names together. It hashes
+/// and compares whole so an editor can key its build cache by it.
+#[derive(Clone, Debug, Default, PartialEq, Eq, Hash)]
+pub struct CargoTarget {
+    /// Build this workspace member instead of the resolved package.
+    pub package: Option<String>,
+    /// The `[[bin]]` target to build.
+    pub bin: Option<String>,
+    /// The `[[example]]` target to build.
+    pub example: Option<String>,
+    /// Cargo features enabled for the build.
+    pub features: Vec<String>,
+    /// The cargo profile to build with.
+    pub profile: Option<String>,
+}
+
+impl CargoTarget {
+    /// The `-p` package a build with this target selects: its own
+    /// override, or the spec's package when it names none.
+    pub fn package_or<'a>(&'a self, spec_package: &'a str) -> &'a str {
+        match self.package.as_deref() {
+            Some(package) if !blank(package) => package,
+            _ => spec_package,
+        }
+    }
+}
+
+/// Whether a name is blank. The config-side validation rejects blank
+/// bin/example names; every passthrough here treats one the same way,
+/// as no name at all.
+fn blank(name: &str) -> bool {
+    name.trim().is_empty()
+}
+
+/// The argv a run target adds to a `cargo build` invocation: `--bin` or
+/// `--example`, `--features` (comma-joined, as cargo takes them), and
+/// `--profile`. `None` adds nothing, so a no-target build's command is
+/// byte-for-byte what it always was. The `-p` package override is not
+/// here: it replaces the package the base command already selects
+/// (see [`CargoTarget::package_or`]) rather than adding a flag.
+pub fn cargo_target_args(target: Option<&CargoTarget>) -> Vec<String> {
+    let Some(target) = target else {
+        return Vec::new();
+    };
+    let mut args = Vec::new();
+    // Both set is rejected by validation before a build starts; if it
+    // ever slips through, the bin wins deterministically rather than
+    // handing cargo two contradictory flags. Blank names degrade the
+    // same way, to the package default.
+    if let Some(bin) = target.bin.as_deref().filter(|bin| !blank(bin)) {
+        args.extend(["--bin".to_string(), bin.to_string()]);
+    } else if let Some(example) = target.example.as_deref().filter(|name| !blank(name)) {
+        args.extend(["--example".to_string(), example.to_string()]);
+    }
+    let features: Vec<&str> = target
+        .features
+        .iter()
+        .map(String::as_str)
+        .filter(|feature| !blank(feature))
+        .collect();
+    if !features.is_empty() {
+        args.push("--features".to_string());
+        args.push(features.join(","));
+    }
+    if let Some(profile) = target.profile.as_deref().filter(|name| !blank(name)) {
+        args.extend(["--profile".to_string(), profile.to_string()]);
+    }
+    args
+}
+
 /// Build a project's game binary and extract its type schema.
 ///
 /// `jackdaw_dir` is the project's `.jackdaw/`, where the schema is persisted for
@@ -101,21 +179,33 @@ pub fn build_project_binary(
     jackdaw_dir: &Path,
     report: &mut dyn FnMut(BuildEvent),
 ) -> Result<ProjectBinaryBuild, ProjectBuildError> {
-    build_project_binary_with_load(spec, jackdaw_dir, BuildLoad::Foreground, report)
+    build_project_binary_with_load(spec, jackdaw_dir, None, BuildLoad::Foreground, report)
 }
 
 /// [`build_project_binary`], with a say in how much of the machine the
 /// cargo run may take.
+///
+/// `target` narrows the build to one run target (`--bin`/`--example`,
+/// features, profile, and an optional `-p` package override). The
+/// executable comes from cargo's own JSON report whatever the target is,
+/// so the per-profile and `examples/` directory rules stay cargo's.
 pub fn build_project_binary_with_load(
     spec: &ShimSpec,
     jackdaw_dir: &Path,
+    target: Option<&CargoTarget>,
     load: BuildLoad,
     report: &mut dyn FnMut(BuildEvent),
 ) -> Result<ProjectBinaryBuild, ProjectBuildError> {
     let target_dir = game_target_dir(jackdaw_dir);
+    // A run target may name another workspace member than the resolved
+    // package; the rest of the spec (root, crate name) is per-project.
+    let package = target.map_or(spec.package_name.as_str(), |t| {
+        t.package_or(spec.package_name.as_str())
+    });
+    let wanted = WantedArtifact::from(target);
     report(BuildEvent::Log(format!(
         "building {} as a cargo binary in {}, into {}",
-        spec.package_name,
+        package,
         spec.project_root.display(),
         target_dir.display()
     )));
@@ -132,7 +222,8 @@ pub fn build_project_binary_with_load(
     let mut command = rust_env_command("cargo");
     command
         .arg("build")
-        .args(["-p", &spec.package_name])
+        .args(["-p", package])
+        .args(cargo_target_args(target))
         .arg("--target-dir")
         .arg(&target_dir)
         // Plain `json`, not `json-render-diagnostics`: that variant renders
@@ -155,7 +246,7 @@ pub fn build_project_binary_with_load(
     let mut log = String::new();
     let mut executables: Vec<PathBuf> = Vec::new();
     for line in BufReader::new(stdout).lines().map_while(Result::ok) {
-        if let Some(path) = executable_for_package(&line, &spec.package_name) {
+        if let Some(path) = executable_for_package(&line, package, wanted) {
             executables.push(path);
         }
         parse_build_line(&line, &mut done, &mut log, report);
@@ -180,7 +271,7 @@ pub fn build_project_binary_with_load(
     let binary = executables
         .pop()
         .ok_or_else(|| ProjectBuildError::Compile {
-            log: no_binary_message(spec),
+            log: no_binary_message(package),
         })?;
 
     // Ask the freshly built game for its types: a throwaway run that prints and
@@ -456,12 +547,71 @@ fn apply_dynamic_library_path(command: &mut Command, binary: &Path) {
     }
 }
 
+/// The cargo target an artifact must be for the build to adopt it as its
+/// executable.
+#[derive(Clone, Copy)]
+enum WantedArtifact<'a> {
+    /// Any binary artifact of the package: the no-target build, which
+    /// adopts the last one cargo reported, as it always has.
+    AnyBinary,
+    /// Exactly this `--bin`/`--example` target of the package, matched
+    /// against the record's `target.name` and `target.kind`, so a
+    /// targeted build cannot adopt a sibling artifact of a multi-binary
+    /// package.
+    CargoTarget { name: &'a str, example: bool },
+}
+
+impl WantedArtifact<'_> {
+    /// What `target` asks the build to produce. A target naming neither
+    /// bin nor example, or both (validation rejects both upstream), falls
+    /// back to the package default.
+    fn from<'a>(target: Option<&'a CargoTarget>) -> WantedArtifact<'a> {
+        let Some(target) = target else {
+            return WantedArtifact::AnyBinary;
+        };
+        // The same precedence as `cargo_target_args`: a blank name or a
+        // both-set target degrades to the package default rather than
+        // handing cargo contradictory flags.
+        if let Some(name) = target.bin.as_deref().filter(|name| !blank(name)) {
+            WantedArtifact::CargoTarget {
+                name,
+                example: false,
+            }
+        } else if let Some(name) = target.example.as_deref().filter(|name| !blank(name)) {
+            WantedArtifact::CargoTarget {
+                name,
+                example: true,
+            }
+        } else {
+            WantedArtifact::AnyBinary
+        }
+    }
+
+    /// Whether the JSON record's `target` table describes this cargo
+    /// target. Cargo spells the kind `"bin"` or `"example"`.
+    fn matches(&self, record: &serde_json::Value) -> bool {
+        let Self::CargoTarget { name, example } = *self else {
+            return true;
+        };
+        let kind = if example { "example" } else { "bin" };
+        record.get("name").and_then(serde_json::Value::as_str) == Some(name)
+            && record
+                .get("kind")
+                .and_then(serde_json::Value::as_array)
+                .is_some_and(|kinds| kinds.iter().any(|k| k.as_str() == Some(kind)))
+    }
+}
+
 /// The executable path from one `compiler-artifact` line, when that artifact is
-/// a binary belonging to `package_name`.
+/// a binary belonging to `package_name` and is the cargo target `wanted`.
 ///
 /// cargo emits `executable` as null for every non-binary unit, and the graph
 /// contains binaries from dependencies too, so both filters are needed.
-fn executable_for_package(line: &str, package_name: &str) -> Option<PathBuf> {
+fn executable_for_package(
+    line: &str,
+    package_name: &str,
+    wanted: WantedArtifact<'_>,
+) -> Option<PathBuf> {
     let value = serde_json::from_str::<serde_json::Value>(line).ok()?;
     if value.get("reason").and_then(serde_json::Value::as_str)? != "compiler-artifact" {
         return None;
@@ -471,6 +621,14 @@ fn executable_for_package(line: &str, package_name: &str) -> Option<PathBuf> {
         .get("package_id")
         .and_then(serde_json::Value::as_str)?;
     if !package_id_names(package_id, package_name) {
+        return None;
+    }
+    // A record without a `target` table (older cargo) still serves the
+    // package-default build, which never narrowed by target anyway.
+    if !value
+        .get("target")
+        .is_none_or(|record| wanted.matches(record))
+    {
         return None;
     }
     Some(PathBuf::from(executable))
@@ -494,14 +652,14 @@ fn package_id_names(package_id: &str, package_name: &str) -> bool {
 
 /// The error text when the build succeeded but produced no executable.
 /// Almost always means the crate is a library with no `src/main.rs`.
-fn no_binary_message(spec: &ShimSpec) -> String {
+fn no_binary_message(package: &str) -> String {
     format!(
         "`{}` built, but produced no executable.\n\
          note: jackdaw runs your game as an ordinary cargo binary, so the package needs a \
          binary target.\n\
          note: add a `src/main.rs` that builds a bevy `App` and adds your game plugin, or run \
          `jd migrate` to have one written for you.",
-        spec.package_name,
+        package,
     )
 }
 
@@ -736,14 +894,218 @@ mod tests {
     fn only_binary_artifacts_of_the_game_package_are_taken() {
         let bin = r#"{"reason":"compiler-artifact","package_id":"path+file:///w/my-game#0.1.0","executable":"/w/target/debug/my-game"}"#;
         assert_eq!(
-            executable_for_package(bin, "my-game"),
+            executable_for_package(bin, "my-game", WantedArtifact::AnyBinary),
             Some(PathBuf::from("/w/target/debug/my-game"))
         );
 
         let lib = r#"{"reason":"compiler-artifact","package_id":"path+file:///w/my-game#0.1.0","executable":null}"#;
-        assert_eq!(executable_for_package(lib, "my-game"), None);
+        assert_eq!(
+            executable_for_package(lib, "my-game", WantedArtifact::AnyBinary),
+            None
+        );
 
         let other = r#"{"reason":"compiler-artifact","package_id":"path+file:///w/tool#0.1.0","executable":"/w/target/debug/tool"}"#;
-        assert_eq!(executable_for_package(other, "my-game"), None);
+        assert_eq!(
+            executable_for_package(other, "my-game", WantedArtifact::AnyBinary),
+            None
+        );
+    }
+
+    /// A run target naming one example of a multi-target package must
+    /// adopt that example's artifact and only it: without the name/kind
+    /// filter, a sibling bin reported later in the stream would win.
+    #[test]
+    fn a_targeted_build_adopts_only_its_own_artifact() {
+        let example = r#"{"reason":"compiler-artifact","package_id":"path+file:///w/my-game#0.1.0",
+            "target":{"name":"split_screen","kind":["example"]},
+            "executable":"/w/target/game/debug/examples/split_screen"}"#;
+        assert_eq!(
+            executable_for_package(
+                example,
+                "my-game",
+                WantedArtifact::CargoTarget {
+                    name: "split_screen",
+                    example: true
+                }
+            ),
+            Some(PathBuf::from("/w/target/game/debug/examples/split_screen"))
+        );
+
+        let sibling_bin = r#"{"reason":"compiler-artifact","package_id":"path+file:///w/my-game#0.1.0",
+            "target":{"name":"my-game","kind":["bin"]},
+            "executable":"/w/target/game/debug/my-game"}"#;
+        assert_eq!(
+            executable_for_package(
+                sibling_bin,
+                "my-game",
+                WantedArtifact::CargoTarget {
+                    name: "split_screen",
+                    example: true
+                }
+            ),
+            None
+        );
+
+        let wrong_kind = r#"{"reason":"compiler-artifact","package_id":"path+file:///w/my-game#0.1.0",
+            "target":{"name":"split_screen","kind":["bin"]},
+            "executable":"/w/target/game/debug/split_screen"}"#;
+        assert_eq!(
+            executable_for_package(
+                wrong_kind,
+                "my-game",
+                WantedArtifact::CargoTarget {
+                    name: "split_screen",
+                    example: true
+                }
+            ),
+            None
+        );
+
+        // The package-default build keeps adopting whatever the package
+        // reports, target table or not.
+        assert_eq!(
+            executable_for_package(sibling_bin, "my-game", WantedArtifact::AnyBinary),
+            Some(PathBuf::from("/w/target/game/debug/my-game"))
+        );
+        assert_eq!(
+            executable_for_package(example, "my-game", WantedArtifact::AnyBinary),
+            Some(PathBuf::from("/w/target/game/debug/examples/split_screen"))
+        );
+    }
+
+    #[test]
+    fn a_wanted_bin_matches_only_its_own_artifact() {
+        let server = r#"{"reason":"compiler-artifact","package_id":"path+file:///w/my-game#0.1.0",
+            "target":{"name":"server","kind":["bin"]},
+            "executable":"/w/target/game/debug/server"}"#;
+        assert_eq!(
+            executable_for_package(
+                server,
+                "my-game",
+                WantedArtifact::CargoTarget {
+                    name: "server",
+                    example: false
+                }
+            ),
+            Some(PathBuf::from("/w/target/game/debug/server"))
+        );
+        assert_eq!(
+            executable_for_package(
+                server,
+                "my-game",
+                WantedArtifact::CargoTarget {
+                    name: "client",
+                    example: false
+                }
+            ),
+            None
+        );
+    }
+
+    /// A no-target run adds no argv, so the cargo command a project has
+    /// always built with is byte-for-byte unchanged.
+    #[test]
+    fn no_target_adds_nothing_to_the_cargo_command() {
+        assert_eq!(cargo_target_args(None), Vec::<String>::new());
+        assert_eq!(
+            cargo_target_args(Some(&CargoTarget::default())),
+            Vec::<String>::new()
+        );
+    }
+
+    #[test]
+    fn a_bin_target_passes_through_bin_features_and_profile() {
+        let target = CargoTarget {
+            package: None,
+            bin: Some("server".to_string()),
+            example: None,
+            features: vec!["net".to_string(), "dedicated".to_string()],
+            profile: Some("release".to_string()),
+        };
+        assert_eq!(
+            cargo_target_args(Some(&target)),
+            [
+                "--bin",
+                "server",
+                "--features",
+                "net,dedicated",
+                "--profile",
+                "release"
+            ]
+        );
+    }
+
+    #[test]
+    fn an_example_target_passes_example_through() {
+        let target = CargoTarget {
+            example: Some("split_screen".to_string()),
+            ..CargoTarget::default()
+        };
+        assert_eq!(
+            cargo_target_args(Some(&target)),
+            ["--example", "split_screen"]
+        );
+    }
+
+    /// Both bin and example is a validation error upstream; the command
+    /// builder must never hand cargo both flags, and an empty name must
+    /// not produce an empty flag value.
+    #[test]
+    fn contradictory_or_empty_targets_add_no_flags() {
+        let both = CargoTarget {
+            bin: Some("server".to_string()),
+            example: Some("split_screen".to_string()),
+            ..CargoTarget::default()
+        };
+        assert_eq!(cargo_target_args(Some(&both)), ["--bin", "server"]);
+
+        let empty = CargoTarget {
+            bin: Some("   ".to_string()),
+            features: vec![String::new()],
+            profile: Some(String::new()),
+            ..CargoTarget::default()
+        };
+        assert_eq!(cargo_target_args(Some(&empty)), Vec::<String>::new());
+    }
+
+    #[test]
+    fn a_package_override_replaces_the_specs_package() {
+        let target = CargoTarget {
+            package: Some("game-client".to_string()),
+            ..CargoTarget::default()
+        };
+        assert_eq!(target.package_or("my-game"), "game-client");
+        assert_eq!(CargoTarget::default().package_or("my-game"), "my-game");
+        // An empty override selects nothing in cargo; fall back instead.
+        let empty = CargoTarget {
+            package: Some(String::new()),
+            ..CargoTarget::default()
+        };
+        assert_eq!(empty.package_or("my-game"), "my-game");
+    }
+
+    /// The editor keys its build cache by `CargoTarget`; equal targets
+    /// must hit one entry and different ones must not.
+    #[test]
+    fn cargo_targets_key_a_build_cache_by_value() {
+        let mut cache = std::collections::HashMap::new();
+        let bin = CargoTarget {
+            bin: Some("server".to_string()),
+            ..CargoTarget::default()
+        };
+        let example = CargoTarget {
+            example: Some("server".to_string()),
+            ..CargoTarget::default()
+        };
+        cache.insert(bin.clone(), 1);
+        // Same target hits; a same-named example, or a feature change,
+        // is a different build and must not.
+        assert_eq!(cache.get(&bin), Some(&1));
+        assert_eq!(cache.get(&example), None);
+        let featured = CargoTarget {
+            features: vec!["net".to_string()],
+            ..bin.clone()
+        };
+        assert_eq!(cache.get(&featured), None);
     }
 }
