@@ -11,7 +11,10 @@
 //! `accesses` and `access_reported == false`, which the panels use to
 //! degrade gracefully. This panel rebuilds its sections reactively when the
 //! reply changes: one bordered card per schedule, each listing its systems
-//! as boxes wrapped in run order.
+//! as boxes wrapped in run order. A system box shows the same read/write
+//! badge the graph panel shows under its node labels
+//! (`depgraph::access_badge`): `R3 W1` counts, `ALL`/`EXCL` markers, and
+//! nothing on replies without access data.
 
 use bevy::prelude::*;
 use serde::Deserialize;
@@ -19,6 +22,7 @@ use serde::Deserialize;
 use jackdaw_feathers::list_view::list_view;
 use jackdaw_feathers::tokens;
 
+use super::depgraph::access_badge;
 use super::style;
 
 /// The kind strings a `jackdaw/schedules` reply carries in its per-system
@@ -181,7 +185,9 @@ fn schedule_card(info: &ScheduleInfo) -> impl Bundle {
     )
 }
 
-/// One system box: the short system name followed by its set names as chips.
+/// One system box: the short system name followed by its read/write badge
+/// (the graph panel's node badge, so both panels read access the same way),
+/// then its set names as chips.
 fn system_box(system: &SystemInfo) -> impl Bundle {
     let chips: Vec<_> = system
         .sets
@@ -202,14 +208,7 @@ fn system_box(system: &SystemInfo) -> impl Bundle {
         BackgroundColor(tokens::INPUT_BG),
         BorderColor::all(tokens::BORDER_SUBTLE),
         children![
-            (
-                Text::new(short_system_name(&system.name)),
-                TextFont {
-                    font_size: tokens::TEXT_SIZE_SM,
-                    ..default()
-                },
-                TextColor(tokens::TEXT_PRIMARY),
-            ),
+            system_name_row(system),
             (
                 Node {
                     flex_direction: FlexDirection::Row,
@@ -221,6 +220,41 @@ fn system_box(system: &SystemInfo) -> impl Bundle {
                 Children::spawn(SpawnIter(chips.into_iter())),
             ),
         ],
+    )
+}
+
+/// The system's name and, when the reply carries access data, its read/write
+/// badge in one row. The badge is text (`R3 W1` / `ALL` / `EXCL`), exactly
+/// the string the System Graph shows under its node labels, so the two
+/// panels cannot drift; replies without access data deserialize with empty
+/// `accesses` and naturally show no badge.
+fn system_name_row(system: &SystemInfo) -> impl Bundle {
+    let name = (
+        Text::new(short_system_name(&system.name)),
+        TextFont {
+            font_size: tokens::TEXT_SIZE_SM,
+            ..default()
+        },
+        TextColor(tokens::TEXT_PRIMARY),
+    );
+    let badge = access_badge(system).map(|badge| {
+        (
+            Text::new(badge),
+            TextFont {
+                font_size: tokens::TEXT_SIZE_XS,
+                ..default()
+            },
+            TextColor(tokens::TEXT_SECONDARY),
+        )
+    });
+    (
+        Node {
+            flex_direction: FlexDirection::Row,
+            align_items: AlignItems::Center,
+            column_gap: Val::Px(tokens::SPACING_XS),
+            ..default()
+        },
+        Children::spawn(SpawnIter(std::iter::once(name).chain(badge))),
     )
 }
 
@@ -415,5 +449,49 @@ mod tests {
         let system = &reply.schedules[0].systems[0];
         assert!(system.accesses.is_empty());
         assert!(!system.exclusive);
+    }
+
+    /// A parsed reply drives the box badge through the same function the
+    /// System Graph uses: new replies badge as `R# W#`, old replies badge as
+    /// nothing, so the schedules panel degrades exactly like the graph.
+    #[test]
+    fn parsed_accesses_drive_the_box_badge() {
+        let new_reply: SchedulesReply = serde_json::from_value(serde_json::json!({
+            "access_reported": true,
+            "schedules": [
+                {
+                    "schedule": "Update",
+                    "systems": [
+                        {
+                            "name": "skybound::movement::step",
+                            "sets": [],
+                            "accesses": [
+                                { "component": "skybound::Velocity", "kind": "read" },
+                                { "component": "skybound::Health", "kind": "read" },
+                                { "component": "skybound::Transform", "kind": "write" }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }))
+        .unwrap();
+        assert_eq!(
+            access_badge(&new_reply.schedules[0].systems[0]).as_deref(),
+            Some("R2 W1")
+        );
+
+        let old_reply: SchedulesReply = serde_json::from_value(serde_json::json!({
+            "schedules": [
+                {
+                    "schedule": "Update",
+                    "systems": [
+                        { "name": "skybound::movement::step", "sets": [] }
+                    ]
+                }
+            ]
+        }))
+        .unwrap();
+        assert_eq!(access_badge(&old_reply.schedules[0].systems[0]), None);
     }
 }

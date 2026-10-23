@@ -11,9 +11,11 @@
 //! picked component must be accessed), a "From selection" button that
 //! reverse-derives the component set from the currently selected entity
 //! (OR semantics: any accessed component counts) and a clear button.
-//! Replies from older `jackdaw_remote` versions carry no access data
-//! (`access_reported == false`): the filter row degrades to a hint and the
-//! graph renders exactly as before the feature.
+//! Without access data the filter row degrades to a hint whose wording
+//! names the actual cause: no reply at all means no game is connected (a
+//! connection hint), while a reply without the capability flag means the
+//! connected game's `jackdaw_remote` predates access reporting (an upgrade
+//! hint); the graph itself then renders exactly as before the feature.
 
 use std::collections::BTreeSet;
 
@@ -171,6 +173,22 @@ pub fn access_badge(system: &SystemInfo) -> Option<String> {
         None
     } else {
         Some(format!("R{reads} W{writes}"))
+    }
+}
+
+/// The filter row's hint while access data cannot be used, worded by cause:
+/// no reply at all means no game is connected — a connection problem, so
+/// the hint says to connect, never naming `jackdaw_remote`; a reply without
+/// the `access_reported` flag means the connected game's `jackdaw_remote`
+/// is too old to report per-system access data — an upgrade hint. A reply
+/// with the flag set never shows a hint (empty string).
+pub fn degraded_filter_hint(reply: Option<&SchedulesReply>) -> &'static str {
+    match reply {
+        None => "connect to a game to filter by component access",
+        Some(reply) if !reply.access_reported => {
+            "component access data requires a newer jackdaw_remote"
+        }
+        Some(_) => "",
     }
 }
 
@@ -456,7 +474,9 @@ pub(crate) fn rebuild_depgraph(
         }
         None => "no schedules".to_string(),
     };
-    if !access_data {
+    // Only the connected-but-old case names the gap in the meta line; while
+    // disconnected the "no schedules" text already tells the story.
+    if reply.as_ref().is_some_and(|r| !r.access_reported) {
         meta_right.push_str(", access data unavailable");
     }
     for container in &meta_containers {
@@ -470,11 +490,13 @@ pub(crate) fn rebuild_depgraph(
     for container in &filter_containers {
         commands.entity(container).despawn_children();
         if !access_data {
-            // Degradation: older `jackdaw_remote` replies carry no access
-            // data, so filtering, badges, and reverse lookup are hidden.
+            // Degradation, worded by cause: either no game is connected, or
+            // the connected game's `jackdaw_remote` predates access
+            // reporting. Either way filtering, badges, and reverse lookup
+            // are hidden.
             commands.spawn((
                 (
-                    Text::new("component access data requires a newer jackdaw_remote"),
+                    Text::new(degraded_filter_hint(reply.as_deref())),
                     TextFont {
                         font_size: tokens::TEXT_SIZE_SM,
                         ..default()
@@ -902,6 +924,34 @@ mod tests {
         assert_eq!(access_badge(&empty), None);
         let archetypal = system("has", &[("sky::Tag", "archetypal")], false);
         assert_eq!(access_badge(&archetypal), None);
+    }
+
+    /// The degraded filter row is worded by cause: disconnected says to
+    /// connect (never naming `jackdaw_remote`), an old connected game says
+    /// to upgrade, and a capable reply shows no hint at all.
+    #[test]
+    fn degraded_hint_distinguishes_disconnected_from_old_game() {
+        let disconnected = degraded_filter_hint(None);
+        assert_eq!(
+            disconnected,
+            "connect to a game to filter by component access"
+        );
+        assert!(!disconnected.contains("jackdaw_remote"));
+
+        let old = SchedulesReply {
+            schedules: Vec::new(),
+            access_reported: false,
+        };
+        assert_eq!(
+            degraded_filter_hint(Some(&old)),
+            "component access data requires a newer jackdaw_remote"
+        );
+
+        let capable = SchedulesReply {
+            schedules: Vec::new(),
+            access_reported: true,
+        };
+        assert_eq!(degraded_filter_hint(Some(&capable)), "");
     }
 
     #[test]
