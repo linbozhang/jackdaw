@@ -145,6 +145,20 @@ pub fn seed_default_categories(r: &mut InspectorRegistry) {
         // Components among the computed read-only ones, and the tab the
         // inspector opens on had nothing to say about a selected screen.
         ("bevy_ui::ui_node::Node", "object"),
+        // Lights are what an entity *is* (same test as Node): a Sun is a
+        // directional light, a lamp is a point light. Exact entries only,
+        // deliberately NO `bevy_light::` prefix — the #[require]-derived
+        // companions (Cascades/CascadesFrusta, CubemapFrusta,
+        // VisibleEntities, ...) must keep falling back to Components
+        // instead of following the light into Object.
+        ("bevy_light::point_light::PointLight", "object"),
+        ("bevy_light::directional_light::DirectionalLight", "object"),
+        ("bevy_light::spot_light::SpotLight", "object"),
+        ("bevy_light::ambient_light::AmbientLight", "object"),
+        ("bevy_light::volumetric::FogVolume", "object"),
+        // Reflection Probe entities (Add menu) are the same kind of
+        // "what this entity is" component.
+        ("jackdaw_scene_types::types::ReflectionProbe", "object"),
         // Brush geometry lives in the Mesh tab. The real reflect path is
         // jackdaw_scene_types::types::Brush; the short alias is seeded as well so
         // any lookup using the unqualified form also resolves correctly.
@@ -171,6 +185,16 @@ pub fn seed_default_categories(r: &mut InspectorRegistry) {
     // All `material_card::*` cards (Preview/Surface/Textures/Settings, and future
     // advanced cards) belong to the Material tab.
     r.set_component_category_prefix("material_card::", "material");
+    // The editable camera body lives in the Object tab (Camera/Exposure/
+    // RenderTarget, Camera3d/Camera2d/Hdr, Projection variants). The
+    // `primitives::` and `visibility::` submodules are NOT covered: their
+    // derived components (Frustum, VisibleEntities) are already kept out of
+    // the card set by save-skip, and `bevy_camera::visibility::Visibility`
+    // has its own exact entry above (exact matches are checked before
+    // prefixes, so it is unaffected).
+    r.set_component_category_prefix("bevy_camera::camera::", "object");
+    r.set_component_category_prefix("bevy_camera::components::", "object");
+    r.set_component_category_prefix("bevy_camera::projection::", "object");
 }
 
 #[cfg(test)]
@@ -243,6 +267,67 @@ mod tests {
         );
         // Unrelated path still falls back to components.
         assert_eq!(r.category_for("my_game::Health"), "components");
+    }
+
+    #[test]
+    fn lights_route_to_object_by_exact_entry() {
+        let r = seeded();
+        for tp in [
+            "bevy_light::point_light::PointLight",
+            "bevy_light::directional_light::DirectionalLight",
+            "bevy_light::spot_light::SpotLight",
+            "bevy_light::ambient_light::AmbientLight",
+            "bevy_light::volumetric::FogVolume",
+            "jackdaw_scene_types::types::ReflectionProbe",
+        ] {
+            assert_eq!(r.category_for(tp), "object", "wrong category for {tp}");
+        }
+    }
+
+    #[test]
+    fn light_derived_companions_stay_in_components() {
+        let r = seeded();
+        // No `bevy_light::` prefix is seeded on purpose: the #[require]-derived
+        // companions must keep falling back to Components instead of following
+        // the light into Object.
+        for tp in [
+            "bevy_light::cascade::Cascades",
+            "bevy_light::cascade::CascadesFrusta",
+            "bevy_light::directional_light::CascadeShadowConfig",
+            "bevy_camera::primitives::Frustum",
+        ] {
+            assert_eq!(r.category_for(tp), "components", "wrong category for {tp}");
+        }
+    }
+
+    #[test]
+    fn camera_body_routes_to_object_by_submodule_prefixes() {
+        let r = seeded();
+        for tp in [
+            "bevy_camera::camera::Camera",
+            "bevy_camera::camera::Exposure",
+            "bevy_camera::camera::RenderTarget",
+            "bevy_camera::components::Camera3d",
+            "bevy_camera::components::Camera2d",
+            "bevy_camera::components::Hdr",
+            "bevy_camera::projection::Projection",
+            "bevy_camera::projection::PerspectiveProjection",
+            "bevy_camera::projection::OrthographicProjection",
+        ] {
+            assert_eq!(r.category_for(tp), "object", "wrong category for {tp}");
+        }
+        // The visibility submodule is not covered by the prefixes, and the
+        // exact Visibility entry keeps winning over any prefix.
+        assert_eq!(
+            r.category_for("bevy_camera::visibility::Visibility"),
+            "object"
+        );
+        // Camera-internal visibility plumbing falls back like any unmapped
+        // type (its cards are normally kept out by save-skip anyway).
+        assert_eq!(
+            r.category_for("bevy_camera::visibility::VisibleEntities"),
+            "components"
+        );
     }
 
     #[test]

@@ -157,12 +157,12 @@ pub(super) fn spawn_category_strip(
 /// Tabs that are not relevant to the current selection are hidden
 /// (`Display::None`). No greyed-out state exists.
 ///
-/// Visibility rules:
-/// - `object`: always shown.
+/// Visibility rules (see [`shown_categories`], the canonical rule):
+/// - `object` and `components`: always shown — every entity can receive a
+///   component, so the Components tab must stay reachable even when empty.
 /// - `mesh`: shown only when a Brush card is present.
 /// - `modifiers`, `material` and categories with header chips: shown when a
 ///   Brush is present OR when the category already has a card.
-/// - `components`: shown only when applicable (has a card).
 /// - Extension categories: shown only when applicable.
 ///
 /// Skips the repaint when neither the active category nor the displayed card
@@ -240,9 +240,15 @@ pub(super) fn paint_category_tabs(
     }
 }
 
-/// After the inspector rebuilds, keep the active category sticky (or fall back
-/// to the first applicable), then re-trigger the category filter for the new
-/// cards by writing the resource unconditionally (marking it changed).
+/// After the inspector rebuilds, resolve the active category against the
+/// categories that HAVE cards (`applicable`), not merely the shown ones:
+/// a selection switch auto-leaves a category whose tab would be empty, so
+/// the panel lands on content instead of a bare filter row. The current
+/// category stays sticky whenever it still has a card, and manually
+/// clicking an empty tab (e.g. Components to add a component) still works —
+/// clicks write the resource directly and do not trigger a rebuild. Writing
+/// the resource unconditionally also re-triggers the category filter for
+/// the new cards by marking it changed.
 pub(super) fn resolve_active_on_rebuild(
     registry: Res<InspectorRegistry>,
     cards: Query<
@@ -255,16 +261,13 @@ pub(super) fn resolve_active_on_rebuild(
     added: Query<(), Added<super::ComponentDisplay>>,
     mut removed: RemovedComponents<super::ComponentDisplay>,
     mut active: ResMut<ActiveInspectorCategory>,
-    chips: Query<&jackdaw_api_internal::inspector::InspectorChip>,
 ) {
     let changed = !added.is_empty() || removed.read().next().is_some();
     if !changed {
         return;
     }
     let applicable = applicable_categories(&registry, cards.iter().map(|t| t.0.as_str()));
-    let chip_categories: Vec<&str> = chips.iter().map(|chip| chip.category.as_ref()).collect();
-    let shown = shown_categories(&registry, &applicable, &chip_categories);
-    let resolved = resolve_active_category(active.0.as_ref(), &shown).to_string();
+    let resolved = resolve_active_category(active.0.as_ref(), &applicable).to_string();
     active.0 = std::borrow::Cow::Owned(resolved);
 }
 
@@ -286,5 +289,45 @@ mod tests {
         let got = applicable_categories(&r, present.iter().copied());
         // Strip order: object before mesh before components; only present ones returned.
         assert_eq!(got, ["object", "mesh", "components"]);
+    }
+
+    #[test]
+    fn rebuild_resolution_leaves_card_less_category() {
+        // The sticky resolver now feeds `applicable` (categories with cards),
+        // not `shown` (which always contains object/components): a Transform-
+        // only entity auto-leaves a stale "components" active category.
+        let mut r = InspectorRegistry::default();
+        seed_default_categories(&mut r);
+        let applicable = applicable_categories(
+            &r,
+            ["bevy_transform::components::transform::Transform"].into_iter(),
+        );
+        assert_eq!(applicable, ["object"]);
+        assert_eq!(resolve_active_category("components", &applicable), "object");
+    }
+
+    #[test]
+    fn rebuild_resolution_stays_sticky_when_cards_exist() {
+        // The Components tab has a card (a generic component), so the active
+        // category stays sticky across the rebuild.
+        let mut r = InspectorRegistry::default();
+        seed_default_categories(&mut r);
+        let present = [
+            "bevy_transform::components::transform::Transform",
+            "my_game::Health",
+        ];
+        let applicable = applicable_categories(&r, present.iter().copied());
+        assert_eq!(applicable, ["object", "components"]);
+        assert_eq!(
+            resolve_active_category("components", &applicable),
+            "components"
+        );
+    }
+
+    #[test]
+    fn rebuild_resolution_empty_applicable_keeps_current() {
+        // No cards at all: nothing to fall back to, keep the current tab (the
+        // strip still paints object/components, so manual clicks still land).
+        assert_eq!(resolve_active_category("components", &[]), "components");
     }
 }
