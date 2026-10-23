@@ -205,6 +205,31 @@ pub fn cargo_target_args(target: Option<&CargoTarget>) -> Vec<String> {
     args
 }
 
+/// The argv handed to cargo for a project-binary build: the base
+/// command with the run target's flags spliced in where they have
+/// always gone. Pure, so the exact argv — including the no-target one
+/// a project has always built with — is pinned by test rather than by
+/// reading the command construction.
+///
+/// The message format is plain `json`, not `json-render-diagnostics`:
+/// that variant renders diagnostics to cargo's own stderr and emits no
+/// `compiler-message` records, leaving the build-line parser with
+/// nothing to report.
+fn cargo_build_argv(
+    package: &str,
+    target: Option<&CargoTarget>,
+    target_dir: &Path,
+) -> Vec<std::ffi::OsString> {
+    let mut argv = vec!["build".into(), "-p".into(), package.into()];
+    argv.extend(cargo_target_args(target).into_iter().map(Into::into));
+    argv.extend([
+        "--target-dir".into(),
+        target_dir.as_os_str().into(),
+        "--message-format=json".into(),
+    ]);
+    argv
+}
+
 /// Build a project's game binary and extract its type schema.
 ///
 /// `jackdaw_dir` is the project's `.jackdaw/`, where the schema is persisted for
@@ -262,15 +287,7 @@ pub fn build_project_binary_with_load(
 
     let mut command = rust_env_command("cargo");
     command
-        .arg("build")
-        .args(["-p", package])
-        .args(cargo_target_args(target))
-        .arg("--target-dir")
-        .arg(&target_dir)
-        // Plain `json`, not `json-render-diagnostics`: that variant renders
-        // diagnostics to cargo's own stderr and emits no `compiler-message`
-        // records, leaving the parser below with nothing to report.
-        .arg("--message-format=json")
+        .args(cargo_build_argv(package, target, &target_dir))
         .current_dir(&spec.project_root)
         .stdout(Stdio::piped())
         // Captured rather than inherited: cargo's own failures, such as an
@@ -312,7 +329,7 @@ pub fn build_project_binary_with_load(
     let binary = executables
         .pop()
         .ok_or_else(|| ProjectBuildError::Compile {
-            log: no_binary_message(package),
+            log: no_binary_message(package, wanted),
         })?;
 
     // Ask the freshly built game for its types: a throwaway run that prints and
@@ -572,12 +589,9 @@ fn dynamic_library_path_var() -> &'static str {
 /// `bevy/dynamic_linking` does not start without it: the bevy dll it needs sits
 /// in `deps/`, not beside the executable.
 fn apply_dynamic_library_path(command: &mut Command, binary: &Path) {
-    let Some(deps) = binary.parent().map(|dir| dir.join("deps")) else {
+    let Some(deps) = build_deps_dir(binary) else {
         return;
     };
-    if !deps.is_dir() {
-        return;
-    }
     let variable = dynamic_library_path_var();
     let mut paths = vec![deps];
     if let Some(existing) = std::env::var_os(variable) {
@@ -586,6 +600,20 @@ fn apply_dynamic_library_path(command: &mut Command, binary: &Path) {
     if let Ok(joined) = std::env::join_paths(paths) {
         command.env(variable, joined);
     }
+}
+
+/// The `deps/` directory of the build that produced `binary`. Cargo
+/// places executables at `<target-dir>/<profile>/[examples/]<name>`: a
+/// bin's `deps/` is a sibling of the executable, while an example's
+/// sits one level up, beside `examples/` itself — so the nearest
+/// existing `deps/` up from the executable wins, within the two levels
+/// cargo's layout has. `None` when there is none: nothing links
+/// dynamically against that build, and the search path is left alone.
+fn build_deps_dir(binary: &Path) -> Option<PathBuf> {
+    binary.parent()?.ancestors().take(2).find_map(|dir| {
+        let deps = dir.join("deps");
+        deps.is_dir().then_some(deps)
+    })
 }
 
 /// The cargo target an artifact must be for the build to adopt it as its
@@ -687,16 +715,37 @@ fn package_id_names(package_id: &str, package_name: &str) -> bool {
 }
 
 /// The error text when the build succeeded but produced no executable.
-/// Almost always means the crate is a library with no `src/main.rs`.
-fn no_binary_message(package: &str) -> String {
-    format!(
-        "`{}` built, but produced no executable.\n\
-         note: jackdaw runs your game as an ordinary cargo binary, so the package needs a \
-         binary target.\n\
-         note: add a `src/main.rs` that builds a bevy `App` and adds your game plugin, or run \
-         `jd migrate` to have one written for you.",
-        package,
-    )
+/// For the package default that almost always means the crate is a
+/// library with no `src/main.rs`; a targeted build points at the target
+/// it asked for, which lives somewhere else than a package default.
+fn no_binary_message(package: &str, wanted: WantedArtifact<'_>) -> String {
+    match wanted {
+        WantedArtifact::AnyBinary => format!(
+            "`{}` built, but produced no executable.\n\
+             note: jackdaw runs your game as an ordinary cargo binary, so the package needs a \
+             binary target.\n\
+             note: add a `src/main.rs` that builds a bevy `App` and adds your game plugin, or run \
+             `jd migrate` to have one written for you.",
+            package,
+        ),
+        WantedArtifact::CargoTarget {
+            name,
+            example: false,
+        } => format!(
+            "`{package}` built, but bin `{name}` produced no executable.\n\
+             note: jackdaw runs a run target as an ordinary cargo binary; check that a `[[bin]]` \
+             named `{name}` (or `src/bin/{name}.rs`) still exists in the package.",
+        ),
+        WantedArtifact::CargoTarget {
+            name,
+            example: true,
+        } => format!(
+            "`{package}` built, but example `{name}` produced no executable.\n\
+             note: jackdaw runs a run target as an ordinary cargo binary; check that \
+             `examples/{name}.rs` (or an `[[example]]` entry named `{name}`) still exists in the \
+             package.",
+        ),
+    }
 }
 
 #[cfg(test)]
@@ -1186,5 +1235,161 @@ mod tests {
         );
         assert_eq!(TargetKind::Bin.as_str(), "bin");
         assert_eq!(TargetKind::Example.as_str(), "example");
+    }
+
+    /// The whole cargo command behind an editor build, spliced together
+    /// in one place so the no-target argv is pinned exactly: a project
+    /// without a run target builds with byte-for-byte the command it
+    /// always has, and a targeted build is that command plus the
+    /// target's flags in a fixed position.
+    #[test]
+    fn the_build_command_is_the_historical_one_without_a_target() {
+        let none = cargo_build_argv("my-game", None, Path::new("/jd/target/game"));
+        assert_eq!(
+            none,
+            [
+                "build",
+                "-p",
+                "my-game",
+                "--target-dir",
+                "/jd/target/game",
+                "--message-format=json",
+            ]
+        );
+
+        // The package arrives already resolved (`package_or` picked the
+        // target's override); what is pinned here is the splice: the
+        // target's flags, and nothing else, between `-p` and the rest.
+        let target = CargoTarget {
+            package: Some("game-client".to_string()),
+            example: Some("split_screen".to_string()),
+            features: vec!["net".to_string()],
+            profile: Some("release".to_string()),
+            ..CargoTarget::default()
+        };
+        assert_eq!(
+            cargo_build_argv("game-client", Some(&target), Path::new("/jd/target/game")),
+            [
+                "build",
+                "-p",
+                "game-client",
+                "--example",
+                "split_screen",
+                "--features",
+                "net",
+                "--profile",
+                "release",
+                "--target-dir",
+                "/jd/target/game",
+                "--message-format=json",
+            ]
+        );
+    }
+
+    /// An example's dynamic libraries sit in the profile dir's `deps/`,
+    /// one level up from `examples/` where cargo puts the executable;
+    /// a bin's sit beside it. Both must resolve to the same `deps/`,
+    /// and a build with none leaves the search path alone.
+    #[test]
+    fn the_deps_dir_is_found_for_bins_and_examples() {
+        let root = std::env::temp_dir().join(format!("jackdaw-deps-{}", std::process::id()));
+        let _ = std::fs::remove_dir_all(&root);
+        let deps = root.join("debug").join("deps");
+        std::fs::create_dir_all(&deps).expect("fixture deps dir");
+        std::fs::create_dir_all(root.join("debug").join("examples")).expect("fixture examples dir");
+
+        assert_eq!(
+            build_deps_dir(&root.join("debug").join("game.exe")),
+            Some(deps.clone()),
+            "a bin's deps is its sibling directory"
+        );
+        assert_eq!(
+            build_deps_dir(&root.join("debug").join("examples").join("split_screen.exe")),
+            Some(deps),
+            "an example's deps sits beside examples/ itself"
+        );
+
+        let elsewhere = std::env::temp_dir().join(format!("jackdaw-nodeps-{}", std::process::id()));
+        let _ = std::fs::remove_dir_all(&elsewhere);
+        std::fs::create_dir_all(elsewhere.join("debug").join("examples")).expect("fixture dir");
+        assert_eq!(
+            build_deps_dir(&elsewhere.join("debug").join("examples").join("x.exe")),
+            None,
+            "no deps anywhere means no directory to add"
+        );
+
+        let _ = std::fs::remove_dir_all(&root);
+        let _ = std::fs::remove_dir_all(&elsewhere);
+    }
+
+    /// The found `deps/` is prepended to the dynamic library search
+    /// path, in front of whatever the variable already carries.
+    #[test]
+    fn the_deps_dir_is_prepended_to_the_library_search_path() {
+        let root = std::env::temp_dir().join(format!("jackdaw-path-{}", std::process::id()));
+        let _ = std::fs::remove_dir_all(&root);
+        let deps = root.join("debug").join("deps");
+        std::fs::create_dir_all(&deps).expect("fixture deps dir");
+        std::fs::create_dir_all(root.join("debug").join("examples")).expect("fixture examples dir");
+
+        let example = root.join("debug").join("examples").join("split_screen.exe");
+        let mut command = Command::new(&example);
+        apply_dynamic_library_path(&mut command, &example);
+
+        let variable = dynamic_library_path_var();
+        let (_, value) = command
+            .get_envs()
+            .find(|(key, _)| *key == std::ffi::OsStr::new(variable))
+            .map(|(key, value)| (key, value.expect("the search path is set, not cleared")))
+            .expect("the search path variable is set");
+        let first = std::env::split_paths(value)
+            .next()
+            .expect("a non-empty path");
+        assert_eq!(first, deps, "deps comes first, the ambient path after");
+
+        let _ = std::fs::remove_dir_all(&root);
+    }
+
+    /// The default-build message is exactly the historical one, and a
+    /// targeted build's message names the target and where it lives
+    /// rather than telling an example author to add a main.rs.
+    #[test]
+    fn a_missing_executable_names_what_was_missing() {
+        let expected = "`my-game` built, but produced no executable.\n\
+             note: jackdaw runs your game as an ordinary cargo binary, so the package needs a \
+             binary target.\n\
+             note: add a `src/main.rs` that builds a bevy `App` and adds your game plugin, or run \
+             `jd migrate` to have one written for you.";
+        assert_eq!(
+            no_binary_message("my-game", WantedArtifact::AnyBinary),
+            expected
+        );
+
+        let example = no_binary_message(
+            "my-game",
+            WantedArtifact::CargoTarget {
+                name: "split_screen",
+                example: true,
+            },
+        );
+        assert!(
+            example.contains("example `split_screen` produced no executable"),
+            "{example}"
+        );
+        assert!(example.contains("examples/split_screen.rs"), "{example}");
+        assert!(
+            !example.contains("src/main.rs"),
+            "the package-default advice does not fit an example target: {example}"
+        );
+
+        let bin = no_binary_message(
+            "my-game",
+            WantedArtifact::CargoTarget {
+                name: "server",
+                example: false,
+            },
+        );
+        assert!(bin.contains("bin `server` produced no executable"), "{bin}");
+        assert!(bin.contains("src/bin/server.rs"), "{bin}");
     }
 }

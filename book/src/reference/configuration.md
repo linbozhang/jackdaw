@@ -98,9 +98,7 @@ applies it when the project opens; extensions it does not name follow
 the global list. Edit it from the launcher's Extensions page, where the
 global defaults are edited too.
 
-Each `[[run]]` entry is one item in the Play dropdown. Every run
-launches the same already-built game binary; entries differ only
-in launch environment, never in what gets built. Fields:
+Each `[[run]]` entry is one item in the Play dropdown. Fields:
 
 - `name`: dropdown label. Defaults to `Play`.
 - `instances`: number of individually launchable copies of this
@@ -112,8 +110,35 @@ in launch environment, never in what gets built. Fields:
 - `cwd`: working directory; defaults to the project root.
 - `mode`: engine-execution axis; the default is normal play, and
   `editor-preview` is reserved.
+- `target`: optional table naming the cargo target this run builds
+  and launches instead of the package's default binary:
 
-There is no bin or feature selection; runs don't build anything.
+  ```toml
+  [[run]]
+  name = "Server"
+  target = { bin = "server", features = ["net"], profile = "release" }
+
+  [[run]]
+  name = "Split-screen"
+  target = { example = "split_screen", package = "game-client" }
+  ```
+
+  - `bin` / `example` (exactly one): the cargo target to build and
+    launch.
+  - `package`: another workspace member to build instead of the
+    package jackdaw resolves for the project.
+  - `features`: cargo features enabled for this build.
+  - `profile`: the cargo profile to build with — `dev`, `release`,
+    or a `[profile.*]` table the manifest declares.
+
+  A run without `target` builds and launches the package default,
+  exactly as before. A run with one gets its own build cache entry,
+  a `bin:…` / `example:…` badge on its Play row, and the same
+  checks under `jd doctor`. Targets are hand-written in this
+  version — there is no discovery of the workspace's bins and
+  examples, and no prebuilt-binary management; see
+  [Play-in-editor](../user-guide/play-in-editor.md#run-targets).
+
 If the file is missing, the editor synthesizes a single default
 run.
 
@@ -138,11 +163,17 @@ toolchain.
 - `jd open [path]`
 - `jd editor <list|install|remove|default|locate|clean>`
 - `jd self update`
-- `jd build [--project <path>]`
-- `jd run [--project <path>]`
+- `jd build [--project <path>] [--config <label>]`
+- `jd run [--project <path>] [--config <label>]`
 - `jd setup`
 - `jd doctor`
 - `jd extension <keygen|pack|install|verify|list|enable|disable|uninstall>`
+
+`--config <label>` builds the named `[[run]]` entry's target and, for
+`jd run`, launches it with that run's env/args/cwd — the same launch
+the editor's Play of that row makes. Without it, `jd run` is a plain
+`cargo run` in the project root and `jd build` builds the package
+default.
 
 Import previews by default and performs no writes without `--apply`.
 Release-only `package-sdk` and `bundle` operations live under `cargo xtask`.

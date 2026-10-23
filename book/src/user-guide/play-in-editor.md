@@ -34,8 +34,55 @@ for the fields.
 
 How many configs you define is up to your game. Some games run a single
 process; others split into several that you launch together. Configs
-differ only in launch environment, never in what gets built. PIE treats
-each launched process as an instance and streams the focused one.
+differ in launch environment, and — with a run target — in what gets
+built; see [Run targets](#run-targets) below. PIE treats each launched
+process as an instance and streams the focused one.
+
+## Run targets
+
+By default every run plays the package's own game binary. A run can
+instead name a cargo target to build and play: one `[[bin]]` or
+`[[example]]`, optionally of another workspace member, with cargo
+features and a profile.
+
+```toml
+[[run]]
+name = "Server"
+target = { bin = "server", features = ["net", "dedicated"], profile = "release" }
+
+[[run]]
+name = "Split-screen"
+target = { example = "split_screen", package = "game-client" }
+```
+
+The `target` table's fields (exactly one of `bin`/`example`):
+
+- `bin` / `example`: the cargo target to build and launch. Its
+  executable's path comes from cargo itself, so wherever cargo puts an
+  example or a custom profile's artifacts is where the run finds it.
+- `package`: another workspace member to build instead of the package
+  `jackdaw.toml` resolves for the project.
+- `features`: cargo features for the build.
+- `profile`: the cargo profile to build with. `dev` and `release` are
+  always available; any other name needs a `[profile.*]` table in the
+  manifest.
+
+Each run with a target is built and cached separately from the default
+one, so playing `Play` and then `Server` launches each its own binary.
+The Play row carries a dim badge — `bin:server`,
+`example:split_screen` — so same-named rows of different targets stay
+tellable apart.
+
+You write targets by hand in this version: the editor does not discover
+your workspace's bins and examples for you, and it does not manage
+prebuilt binaries — a target is built from source through the same
+pipeline as the default game. `jd doctor` checks every target before
+anything builds: that the package exists, that the bin/example name is
+one the package declares, and that the profile is one cargo will
+accept. From the terminal, `jd run --config <label>` builds the named
+run's target and launches it with that run's env/args/cwd, exactly as
+the editor's Play of that row does; without `--config`, `jd run` keeps
+its historical behaviour of a plain `cargo run` in the project root.
 
 ## Your own launch environment
 
