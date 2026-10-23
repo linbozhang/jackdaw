@@ -227,7 +227,11 @@ pub struct BrushPreview;
 
 /// Edit mode: Object (default), brush editing, or the physics
 /// placement tool.
+///
+/// `#[reflect(Resource)]` (with the `register_type` below) exposes the mode
+/// to remote tooling over BRP; it is not part of the serialized document.
 #[derive(Resource, Default, PartialEq, Eq, Clone, Copy, Debug, Reflect)]
+#[reflect(Resource)]
 pub enum EditMode {
     #[default]
     Object,

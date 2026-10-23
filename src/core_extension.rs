@@ -353,7 +353,7 @@ pub struct CoreExtensionInputContext;
     allows_undo = false,
     is_available = is_any_modal_active
 )]
-fn cancel_modal(
+pub(crate) fn cancel_modal(
     _: In<OperatorParameters>,
     mut active: ActiveModalQuery,
     pickers: Query<Entity, With<Picker>>,

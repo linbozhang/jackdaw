@@ -393,6 +393,9 @@ fn update_status_right(
         && !modal.is_changed()
         && !edit_mode.is_changed()
         && !draw_state.is_changed()
+        // A tool's status line (e.g. the measure hint) is set from an
+        // operator, so it needs its own change signal to repaint the footer.
+        && !tool_status.is_changed()
         // An expired notice or a finished phase has to be painted over.
         && !notice.is_changed()
         && !phase.is_changed()
