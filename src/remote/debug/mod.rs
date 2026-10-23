@@ -70,12 +70,17 @@ impl Plugin for RemoteDebugPlugin {
         app.add_systems(Update, schedules::rebuild_schedules);
 
         app.init_resource::<depgraph::SelectedSchedule>();
+        app.init_resource::<depgraph::AccessFilter>();
         app.add_systems(Update, depgraph::rebuild_depgraph);
         app.add_systems(
             PostUpdate,
             graph::sync_graph_edges.after(bevy::ui::UiSystems::Layout),
         );
         app.add_observer(depgraph::on_schedule_button_clicked);
+        app.add_observer(depgraph::on_add_access_filter_clicked);
+        app.add_observer(depgraph::on_access_filter_chip_clicked);
+        app.add_observer(depgraph::on_clear_filter_clicked);
+        app.add_observer(depgraph::on_from_selection_clicked);
 
         app.add_plugins(
             poll::BrpPollPlugin::<relationships::RelationshipsReply>::new(

@@ -21,6 +21,17 @@ use jackdaw_feathers::tokens;
 
 use super::style;
 
+/// The kind strings a `jackdaw/schedules` reply carries in its per-system
+/// `accesses` tables. Plain constants rather than an enum so unknown kinds
+/// from newer servers still deserialize; these name the ones this editor
+/// interprets (the System Graph's badge and filter logic, `depgraph.rs`).
+pub const ACCESS_READ: &str = "read";
+/// See [`ACCESS_READ`].
+pub const ACCESS_WRITE: &str = "write";
+/// See [`ACCESS_READ`]. An `unbounded` entry carries an empty `component`
+/// and means the system may access any component.
+pub const ACCESS_UNBOUNDED: &str = "unbounded";
+
 /// One data-access entry for a system in a `jackdaw/schedules` reply: a
 /// component or resource type name and the kind of access. `kind` is kept as
 /// a plain string ("read", "write", "archetypal", "unbounded") so replies
