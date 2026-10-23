@@ -7,6 +7,10 @@ client and BRP to the editor. Each tool is one BRP method, and every edit to the
 open document lands on the editor's undo stack. Undo does not reach the disk:
 operators that save, export or bake are reachable here too.
 
+This chapter is about controlling the editor from outside. The reverse
+direction — the editor inspecting a running game over BRP — is the
+[Remote Debugging](../user-guide/remote-debugging.md) workspace.
+
 ## Setting it up
 
 Open a project in the editor, then register `jd mcp` with your MCP client as a
