@@ -821,6 +821,12 @@ fn cmd_export(args: &[String]) -> ExitCode {
     }
 
     let out = parse_out_arg(args).map(PathBuf::from);
+    if let Some(dir) = out.as_deref()
+        && let Err(message) = validate_export_out(dir)
+    {
+        eprintln!("jd export: {message}");
+        return ExitCode::FAILURE;
+    }
     let plan =
         jackdaw_project_build::export::plan_export(&root, &profile, &build.binary, out.as_deref());
     match jackdaw_project_build::export::stage_export(&plan) {
@@ -877,6 +883,22 @@ fn validate_export_profile(root: &Path, profile: &str) -> Result<(), String> {
 /// The `--profile <name>` value of an `export` invocation.
 fn parse_profile_arg(args: &[String]) -> Option<String> {
     value_flag(args, "--profile")
+}
+
+/// The `--out` an export accepts: an absolute path only. The staging
+/// directory is cleared on every export, so a relative one — `--out .`
+/// is the extreme — would clear whatever the current directory
+/// happens to be. The staging guard refuses one again underneath this;
+/// the check here fails before the build is paid for.
+fn validate_export_out(out: &Path) -> Result<(), String> {
+    if out.is_absolute() {
+        return Ok(());
+    }
+    Err(format!(
+        "--out needs an absolute path, not `{}`; the staging directory is cleared on every \
+         export, so a relative one would clear whatever the current directory is",
+        out.display()
+    ))
 }
 
 /// The `--out <dir>` value of an `export` invocation.
@@ -1149,7 +1171,7 @@ mod tests {
     use super::{
         BuildOutcome, SdkGrade, bare_cargo_run, configured_game_command, export_profile, grade_sdk,
         parse_config_arg, parse_out_arg, parse_profile_arg, parse_project_arg, read_run_manifest,
-        removed_feature_problems, resolve_run_config, validate_export_profile,
+        removed_feature_problems, resolve_run_config, validate_export_out, validate_export_profile,
     };
     use jackdaw_project_build::run_manifest::RunEntry;
 
@@ -1298,6 +1320,20 @@ mod tests {
         assert_eq!(export_profile(Some("dev"), None), "dev");
         assert_eq!(export_profile(Some("dev"), Some("thin")), "thin");
         assert_eq!(export_profile(None, Some("bench")), "bench");
+    }
+
+    /// `--out` takes an absolute path only: the staging directory is
+    /// cleared wholesale on every export, and a relative one — `.` and
+    /// `..` are the extremes — would clear whatever the current
+    /// directory happens to be.
+    #[test]
+    fn an_out_directory_must_be_absolute() {
+        for raw in [".", "..", "dist", "assets"] {
+            let message = validate_export_out(std::path::Path::new(raw)).unwrap_err();
+            assert!(message.contains("absolute path"), "`{raw}` gave: {message}");
+            assert!(message.contains(raw), "the message names it: {message}");
+        }
+        assert!(validate_export_out(&std::env::temp_dir()).is_ok());
     }
 
     #[test]

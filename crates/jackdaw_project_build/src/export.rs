@@ -45,7 +45,9 @@ pub struct ExportPlan {
 
 /// Where an export stages by default: `<root>/.jackdaw/dist/<profile>`,
 /// or `out` when the caller named a directory (the layout inside it is
-/// still exe-plus-assets; only the directory's location changes).
+/// still exe-plus-assets; only the directory's location changes). An
+/// `out` must be absolute — [`stage_export`] refuses a relative one,
+/// because it clears the staging directory on every run.
 pub fn plan_export(root: &Path, profile: &str, binary: &Path, out: Option<&Path>) -> ExportPlan {
     let dist_dir = out.map_or_else(
         || root.join(".jackdaw").join("dist").join(profile),
@@ -85,9 +87,20 @@ pub enum ExportError {
     /// only supported one and its whole point is the asset tree, so an
     /// assetless export is refused rather than shipped broken.
     MissingAssets { source: PathBuf },
+    /// The staging path is relative. It would be cleared wherever the
+    /// current directory happens to be, which is exactly the accident
+    /// the guard exists to prevent.
+    RelativeStagingDir { raw: PathBuf },
+    /// The staging path did not normalize to a plain absolute path —
+    /// empty, or carrying `..` components a verbatim prefix hid.
+    InvalidStagingPath { raw: PathBuf },
     /// The staging directory contains a source the export copies from,
-    /// so clearing it would delete the build or the assets themselves.
+    /// or is a filesystem root, so the clearing step would delete the
+    /// build, the assets, or a volume.
     UnsafeStagingDir { dir: PathBuf },
+    /// The staging directory sits inside a source tree, so the copy
+    /// would recurse into its own output.
+    StagingInsideSource { dir: PathBuf },
     /// A filesystem action failed; `action` names it with both paths.
     Io {
         action: String,
@@ -107,10 +120,28 @@ impl std::fmt::Display for ExportError {
                  beside its executable, so an export without them cannot run",
                 source.display()
             ),
+            Self::RelativeStagingDir { raw } => write!(
+                f,
+                "refusing to stage into {}: the output directory must be an absolute path; a \
+                 relative one would be cleared wherever the current directory happens to be",
+                raw.display()
+            ),
+            Self::InvalidStagingPath { raw } => write!(
+                f,
+                "refusing to stage into {}: it does not normalize to a plain absolute path \
+                 (empty, or with `..` components)",
+                raw.display()
+            ),
             Self::UnsafeStagingDir { dir } => write!(
                 f,
-                "refusing to stage into {}: it contains the build's own sources, and staging \
-                 would clear it first",
+                "refusing to stage into {}: it holds the build's own sources — or is a \
+                 filesystem root — and staging clears the directory first",
+                dir.display()
+            ),
+            Self::StagingInsideSource { dir } => write!(
+                f,
+                "refusing to stage into {}: it sits inside the build's own sources, and the \
+                 copy would recurse into its own output",
                 dir.display()
             ),
             Self::Io { action, error } => write!(f, "could not {action}: {error}"),
@@ -145,31 +176,40 @@ pub fn stage_export(plan: &ExportPlan) -> Result<ExportReport, ExportError> {
             source: plan.assets_source.clone(),
         });
     }
-    // `--out` accepts any directory; one that contains the executable
-    // or the assets (the project root, the build's own target
-    // directory) would be deleted by the clearing step. Refuse rather
-    // than discover.
-    if staging_is_unsafe(&plan.dist_dir, &[&plan.exe_source, &plan.assets_source]) {
-        return Err(ExportError::UnsafeStagingDir {
-            dir: plan.dist_dir.clone(),
+    // The guard compares normalized spellings, and everything after it
+    // (the clearing, the copy, the report) uses the normalized staging
+    // directory too, so what was judged is what is written.
+    let dist = normalize_staging_dir(&plan.dist_dir)?;
+    let sources = [
+        dunce::simplified(&plan.exe_source),
+        dunce::simplified(&plan.assets_source),
+    ];
+    if let Some(hazard) = staging_hazard(&dist, &sources) {
+        return Err(match hazard {
+            StagingHazard::InsideSource => ExportError::StagingInsideSource {
+                dir: plan.dist_dir.clone(),
+            },
+            StagingHazard::Root | StagingHazard::ContainsSource => ExportError::UnsafeStagingDir {
+                dir: plan.dist_dir.clone(),
+            },
         });
     }
-    if plan.dist_dir.exists() {
-        std::fs::remove_dir_all(&plan.dist_dir).map_err(io_error(format!(
+    if dist.exists() {
+        std::fs::remove_dir_all(&dist).map_err(io_error(format!(
             "clear the existing staging directory {}",
-            plan.dist_dir.display()
+            dist.display()
         )))?;
     }
-    std::fs::create_dir_all(&plan.dist_dir).map_err(io_error(format!(
+    std::fs::create_dir_all(&dist).map_err(io_error(format!(
         "create the staging directory {}",
-        plan.dist_dir.display()
+        dist.display()
     )))?;
 
-    let assets_dir = plan.dist_dir.join("assets");
+    let assets_dir = dist.join("assets");
     let files = copy_tree(&plan.assets_source, &assets_dir)?;
 
     let name = plan.exe_source.file_name().unwrap_or_default();
-    let executable = plan.dist_dir.join(name);
+    let executable = dist.join(name);
     std::fs::copy(&plan.exe_source, &executable).map_err(io_error(format!(
         "copy {} to {}",
         plan.exe_source.display(),
@@ -177,22 +217,81 @@ pub fn stage_export(plan: &ExportPlan) -> Result<ExportReport, ExportError> {
     )))?;
 
     Ok(ExportReport {
-        dist_dir: plan.dist_dir.clone(),
+        dist_dir: dist,
         executable,
         assets_dir,
         files: files + 1,
     })
 }
 
-/// Whether staging into `dir` would delete something the export needs:
-/// a filesystem root, or a directory containing one of `sources`.
+/// Why a staging directory cannot be cleared and rebuilt safely.
+enum StagingHazard {
+    /// A filesystem root: clearing it deletes a volume, which no
+    /// source containment catches across drives.
+    Root,
+    /// It contains a source: clearing it would delete the build or the
+    /// assets themselves.
+    ContainsSource,
+    /// It sits inside the assets tree: the copy would walk the tree it
+    /// is writing and recurse into its own output.
+    InsideSource,
+}
+
+/// The hazard of clearing and rebuilding `dir`, against `sources` and
+/// `dir` already in normalized form. `None` is safe to stage into.
+fn staging_hazard(dir: &Path, sources: &[&Path]) -> Option<StagingHazard> {
+    if dir.parent().is_none() {
+        return Some(StagingHazard::Root);
+    }
+    if sources.iter().any(|source| source.starts_with(dir)) {
+        return Some(StagingHazard::ContainsSource);
+    }
+    if sources.iter().any(|source| dir.starts_with(source)) {
+        return Some(StagingHazard::InsideSource);
+    }
+    None
+}
+
+/// The staging directory in the form the guard compares and the copy
+/// uses: absolute, and without a verbatim (`\\?\`) prefix, whose
+/// component-wise spelling never compares equal to the same path
+/// without it.
 ///
-/// The root check is its own clause because `starts_with` does not
-/// catch it across drives: on Windows, `C:\project` does not start
-/// with `D:\`, yet `--out D:\` would clear a whole volume. Roots spell
-/// themselves as a path whose parent is none.
-fn staging_is_unsafe(dir: &Path, sources: &[&Path]) -> bool {
-    dir.parent().is_none() || sources.iter().any(|source| source.starts_with(dir))
+/// Relative paths are refused outright rather than absolute-ized
+/// against the current directory: the clearing step would then delete
+/// whatever `cwd` happens to be (`--out .` is exactly this accident).
+/// A `..` that survives normalization — only possible behind a
+/// verbatim prefix, where the OS resolves nothing — is refused with
+/// it.
+fn normalize_staging_dir(dir: &Path) -> Result<PathBuf, ExportError> {
+    if !dir.is_absolute() {
+        return Err(ExportError::RelativeStagingDir {
+            raw: dir.to_path_buf(),
+        });
+    }
+    let absolute = std::path::absolute(dir).map_err(|error| ExportError::Io {
+        action: format!("normalize the staging directory {}", dir.display()),
+        error,
+    })?;
+    let simplified = dunce::simplified(&absolute);
+    if carries_dot_components(simplified) {
+        return Err(ExportError::InvalidStagingPath {
+            raw: dir.to_path_buf(),
+        });
+    }
+    Ok(simplified.to_path_buf())
+}
+
+/// Whether `path` still carries a `.` or `..` component. A normalized
+/// absolute path never does; one that does was not really normalized
+/// and must not be handed to a directory-clearing step.
+fn carries_dot_components(path: &Path) -> bool {
+    path.components().any(|component| {
+        matches!(
+            component,
+            std::path::Component::ParentDir | std::path::Component::CurDir
+        )
+    })
 }
 
 /// Copy a directory tree, preserving the relative layout. Returns the
@@ -410,25 +509,143 @@ mod tests {
         let _ = std::fs::remove_dir_all(&root);
     }
 
-    /// A filesystem root is refused however it is spelled, and even
-    /// though no source path starts with one across drives: clearing
-    /// it is deleting a volume. Checked purely — a real `stage_export`
-    /// against a root must never run to find out.
+    /// A filesystem root is a hazard however it is spelled — checked
+    /// purely, a real `stage_export` against a root must never run to
+    /// find out — and even when no source leads there, which is the
+    /// cross-drive shape.
     #[test]
-    fn a_filesystem_root_is_always_an_unsafe_staging_directory() {
+    fn a_filesystem_root_is_always_a_staging_hazard() {
         let sources = [
             Path::new("/elsewhere/game.exe"),
             Path::new("/elsewhere/assets"),
         ];
-        assert!(staging_is_unsafe(Path::new("/"), &sources));
-        assert!(
-            staging_is_unsafe(Path::new("C:\\"), &sources),
-            "a drive root"
-        );
+        assert!(staging_hazard(Path::new("/"), &sources).is_some());
         // A source's own ancestor directories, caught by containment.
-        assert!(staging_is_unsafe(Path::new("/elsewhere"), &sources));
+        assert!(staging_hazard(Path::new("/elsewhere"), &sources).is_some());
         // A directory beside the sources is fine.
-        assert!(!staging_is_unsafe(Path::new("/elsewhere/dist"), &sources));
+        assert!(staging_hazard(Path::new("/elsewhere/dist"), &sources).is_none());
+    }
+
+    /// A Windows drive root is refused even with every source on
+    /// another drive: `H:\` contains nothing of `C:\game`, yet clearing
+    /// it would delete a volume.
+    #[cfg(windows)]
+    #[test]
+    fn a_drive_root_is_a_hazard_across_drives() {
+        let sources = [Path::new(r"C:\game\game.exe"), Path::new(r"C:\game\assets")];
+        assert!(staging_hazard(Path::new(r"H:\"), &sources).is_some());
+        assert!(staging_hazard(Path::new(r"C:\"), &sources).is_some());
+    }
+
+    /// The staging directory must be absolute: a relative one would be
+    /// cleared wherever the current directory happens to be, and
+    /// `--out .` is exactly that accident. Refused before anything on
+    /// disk is touched.
+    #[test]
+    fn a_relative_staging_directory_is_refused_before_anything_is_touched() {
+        let (root, binary) = staged_fixture("relative-out");
+        let plan = plan_export(&root, "release", &binary, None);
+        for dir in [".", "..", "dist", "assets"] {
+            let relative = ExportPlan {
+                dist_dir: PathBuf::from(dir),
+                ..plan.clone()
+            };
+            let error = stage_export(&relative).unwrap_err();
+            assert!(
+                error.to_string().contains("must be an absolute path"),
+                "`{dir}` gave: {error}"
+            );
+        }
+        // The fixture is whole: the refusal came before any clearing.
+        assert!(binary.is_file());
+        assert!(root.join("assets/scene.bsn").is_file());
+        let _ = std::fs::remove_dir_all(&root);
+    }
+
+    /// A verbatim (`\\?\`) prefix spells the same path differently
+    /// enough that a literal comparison misses it: `C:\game\assets`
+    /// does not start with `\\?\C:\game` component-wise, so the
+    /// prefix alone would smuggle the project root past the guard.
+    /// Normalized first, it cannot.
+    #[cfg(windows)]
+    #[test]
+    fn a_verbatim_prefix_cannot_smuggle_a_directory_past_the_guard() {
+        let (root, binary) = staged_fixture("verbatim");
+        let plan = plan_export(&root, "release", &binary, None);
+
+        let verbatim_project = PathBuf::from(format!(r"\\?\{}", root.display()));
+        let smuggled = ExportPlan {
+            dist_dir: verbatim_project.clone(),
+            ..plan.clone()
+        };
+        let error = stage_export(&smuggled).unwrap_err();
+        assert!(
+            error.to_string().contains("refusing to stage"),
+            "{} was accepted: {error}",
+            verbatim_project.display()
+        );
+
+        // The prefix on a drive root is the same hazard as the bare
+        // drive root.
+        let drive = root.ancestors().last().expect("a drive root");
+        let verbatim_drive = PathBuf::from(format!(r"\\?\{}", drive.display()));
+        let smuggled_root = ExportPlan {
+            dist_dir: verbatim_drive,
+            ..plan.clone()
+        };
+        let error = stage_export(&smuggled_root).unwrap_err();
+        assert!(
+            error.to_string().contains("refusing to stage"),
+            "the verbatim drive root was accepted: {error}"
+        );
+
+        // Nothing was cleared.
+        assert!(binary.is_file());
+        assert!(root.join("assets/scene.bsn").is_file());
+        let _ = std::fs::remove_dir_all(&root);
+    }
+
+    /// The comparison form of the staging directory: a verbatim prefix
+    /// is stripped, and a `..` the prefix might hide is still detected
+    /// after the strip — the OS resolves nothing behind `\\?\`, so
+    /// neither may the guard.
+    #[cfg(windows)]
+    #[test]
+    fn verbatim_prefixes_are_stripped_and_hidden_dots_are_still_detected() {
+        assert_eq!(
+            normalize_staging_dir(Path::new(r"\\?\C:\elsewhere\dist")).unwrap(),
+            Path::new(r"C:\elsewhere\dist"),
+            "a verbatim prefix strips to the plain path"
+        );
+        let smuggled = PathBuf::from(r"\\?\C:\game\..\other\dist");
+        assert!(
+            carries_dot_components(dunce::simplified(&smuggled)),
+            "a `..` behind a verbatim prefix survives the strip and must be caught"
+        );
+        // And a plain absolute path with no dots is detected as clean.
+        assert!(!carries_dot_components(Path::new(r"C:\elsewhere\dist")));
+    }
+
+    /// Staging inside the assets tree would copy the tree into itself:
+    /// the walk reaches the directory it is writing. Refused before
+    /// the walk, and the source tree shows no pollution.
+    #[test]
+    fn a_staging_directory_inside_the_assets_tree_is_refused() {
+        let (root, binary) = staged_fixture("inside-assets");
+        let plan = plan_export(&root, "release", &binary, None);
+        let nested = ExportPlan {
+            dist_dir: root.join("assets/dist"),
+            ..plan.clone()
+        };
+        let error = stage_export(&nested).unwrap_err();
+        assert!(error.to_string().contains("sits inside"), "got {error}");
+        assert!(!root.join("assets/dist").exists(), "the copy never started");
+        assert!(root.join("assets/scene.bsn").is_file());
+        assert!(
+            root.join("assets/textures/tile/diffuse.png").is_file(),
+            "the source tree is unpolluted"
+        );
+        let _ = std::fs::remove_dir_all(&root);
     }
 
     /// A dylib in the build report refuses the export with the feature
