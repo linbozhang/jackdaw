@@ -6,7 +6,12 @@
 
 use bevy::prelude::*;
 
-#[derive(Resource, Default, PartialEq, Eq, Clone, Copy, Debug)]
+/// `Reflect` (and the `register_type` in `commands::plugin`) so remote
+/// tooling can read the active tool over BRP (`world.get_resource`), which
+/// needs the type registered with `ReflectResource` data. Not serialized
+/// into scenes: it is an editor-session resource.
+#[derive(Resource, Default, PartialEq, Eq, Clone, Copy, Debug, Reflect)]
+#[reflect(Resource)]
 pub enum ActiveTool {
     #[default]
     Select,

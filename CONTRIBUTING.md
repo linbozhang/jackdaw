@@ -252,6 +252,8 @@ fn cancel_box_select(/* ... */) { /* restore initial state */ }
 
 `ActiveModalQuery` is the convenience system param for "is a modal currently running, and which one?". Use it instead of hand-rolling an `Option<Single<...>>` query against `ActiveModalOperator`.
 
+Escape cancellation is wired for you while the modal runs: the modal input context's cancel action dispatches `modal.cancel`, which runs your `cancel` system and finalizes the modal. You can also poll `ModalInputs::cancel()` yourself for finer-grained tiers — the knife, for instance, clears the cut path on the first Escape and only exits the mode on the next one. Both paths are idempotent together; prefer the automatic chain unless the modal genuinely has something finer to cancel.
+
 ### Description guidelines
 
 The `description` is what users actually see in the editor and (later) in the command palette. Write it for an artist using the editor, not for the next developer reading the code:

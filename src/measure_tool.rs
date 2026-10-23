@@ -8,8 +8,10 @@ use jackdaw_feathers::tokens;
 
 use crate::{
     JackdawDrawSystems, default_style,
+    modal_inputs::ModalInputs,
     viewport::{MainViewportCamera, SceneViewport},
 };
+use jackdaw_api_internal::tools::ToolStatus;
 
 // -- Plugin --
 
@@ -100,6 +102,9 @@ pub(crate) fn measure_distance(
     _: In<OperatorParameters>,
     mut state: ResMut<MeasureToolState>,
     vp: crate::viewport::ViewportCursor,
+    mouse: Res<ButtonInput<MouseButton>>,
+    modal_inputs: ModalInputs,
+    mut tool_status: ResMut<ToolStatus>,
     mut ray_cast: MeshRayCast,
     editor_entities: Query<(), With<crate::EditorEntity>>,
 ) -> Option<OperatorResult> {
@@ -109,6 +114,7 @@ pub(crate) fn measure_distance(
         state.initialized = true;
         state.active = true;
         state.has_start = false;
+        tool_status.0 = Some("Measure: LMB sets points · Esc or RMB cancels".to_string());
         return Some(OperatorResult::Running);
     }
 
@@ -119,6 +125,15 @@ pub(crate) fn measure_distance(
         state.camera = None;
         state.viewport = None;
         return Some(OperatorResult::Finished);
+    }
+
+    // Cancel: Escape arrives through the modal-cancel chain (the ModalCancel
+    // action dispatches `modal.cancel`), RMB is checked here so the
+    // click-to-place tool also leaves on a right click, like every other
+    // pointer-driven modal gesture. Returning `None` cancels, which runs
+    // `cancel_measure_distance` and tears the modal down.
+    if modal_inputs.cancel() || mouse.just_pressed(MouseButton::Right) {
+        return None;
     }
 
     // Capture the viewport the modal was started on; subsequent

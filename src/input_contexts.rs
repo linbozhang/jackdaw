@@ -53,17 +53,19 @@ use jackdaw_input::{
     ContextActivity, ContextPriority, InputContext, ScrollTicks,
 };
 
+use crate::core_extension::CancelModalOp;
 use crate::modal_inputs::{
     ModalAction, ModalAxisX, ModalAxisY, ModalAxisZ, ModalCancel, ModalConfirm, ModalStepDown,
     ModalStepUp, NavBrushResizeDown, NavBrushResizeUp, NavFly, NavLook, PointerPrimary,
 };
+use jackdaw_api::prelude::Operator as _;
 
 use crate::brush::{BrushDragState, EdgeDragState, VertexDragState};
 use crate::modal_transform::ModalTransformState;
 use jackdaw_api_internal::keymap::{
     BuiltinActions, DefaultKeymap, PresetBinding, PresetContext, PresetInput, PresetPhase,
 };
-use jackdaw_api_internal::lifecycle::ActiveModalQuery;
+use jackdaw_api_internal::lifecycle::{ActiveModalQuery, OperatorAction};
 use jackdaw_camera::CameraNavInput;
 use jackdaw_commands::keybinds::{EditorAction, KeybindRegistry};
 
@@ -190,6 +192,25 @@ pub(crate) fn spawn_contexts(
     // All seven carry ModalAction, which marks them as the modal's own.
     let confirm = spawn_modal_action::<ModalConfirm>(&mut commands, modal_entity);
     let cancel = spawn_modal_action::<ModalCancel>(&mut commands, modal_entity);
+    // The cancel action doubles as an operator action for `modal.cancel`, so
+    // the `Fire` it emits while the modal context is active dispatches the
+    // cancel operator (see `dispatch_operator_actions`). Escape has two
+    // chains: the Core extension context binds Escape to the same operator
+    // for the no-modal case (open pickers, dialogs), but while any modal
+    // runs this context outranks it (priority 10, `consume_input`) and the
+    // Core chain never sees the key. Without this tag, Escape reaches only
+    // the `ModalCancel` action, which nothing polled globally — modals that
+    // did not poll `ModalInputs::cancel()` themselves (measure, draw-brush
+    // Add, gizmo drags, terrain strokes, sub-element drags) could not be
+    // cancelled at all. The two chains are complementary: with a modal
+    // running, this one fires and the Core one is shadowed; without one,
+    // this action never fires and the Core chain keeps handling dismisses.
+    // `cancel_operator` is idempotent (it no-ops without an active modal),
+    // so modals that poll `cancel()` themselves stay correct even if both
+    // fire on the same frame.
+    commands
+        .entity(cancel)
+        .insert(OperatorAction(CancelModalOp::ID));
     let axis_x = spawn_modal_action::<ModalAxisX>(&mut commands, modal_entity);
     let axis_y = spawn_modal_action::<ModalAxisY>(&mut commands, modal_entity);
     let axis_z = spawn_modal_action::<ModalAxisZ>(&mut commands, modal_entity);

@@ -162,6 +162,7 @@ pub struct TransformGizmosPlugin;
 impl Plugin for TransformGizmosPlugin {
     fn build(&self, app: &mut App) {
         app.init_resource::<ActiveTool>()
+            .register_type::<ActiveTool>()
             .init_resource::<GizmoSpace>()
             .init_resource::<GizmoDragState>()
             .init_resource::<EditGizmoDragState>()

@@ -10,6 +10,7 @@ mod util;
 mod authoring_ops;
 mod dialog_answer;
 mod light_defaults;
+mod modal_escape;
 mod operator_availability;
 mod operator_entity_params;
 mod operator_modals;
