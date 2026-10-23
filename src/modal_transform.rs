@@ -1,4 +1,5 @@
 use bevy::{
+    input::mouse::MouseMotion,
     picking::mesh_picking::ray_cast::{MeshRayCast, MeshRayCastSettings, RayCastVisibility},
     prelude::*,
     ui::UiGlobalTransform,
@@ -97,11 +98,19 @@ impl Plugin for ModalTransformPlugin {
     }
 }
 
+/// Pointer travel (px) below which a middle press-and-release still counts
+/// as a click that toggles snapping. Beyond it the gesture was a middle
+/// drag — the viewport pan (Unity Scene view alignment) — and the release
+/// that ends the pan must not also flip the snap setting.
+const SNAP_CLICK_MAX_TRAVEL: f32 = 4.0;
+
 fn snap_toggle(
     mouse: Res<ButtonInput<MouseButton>>,
     mode: Res<ActiveTool>,
     modal: Res<ModalTransformState>,
     mut snap_settings: ResMut<SnapSettings>,
+    mut motion: MessageReader<MouseMotion>,
+    mut travel: Local<f32>,
     mut commands: Commands,
 ) {
     if modal.active.is_some() {
@@ -109,6 +118,12 @@ fn snap_toggle(
     }
 
     if mouse.just_pressed(MouseButton::Middle) {
+        *travel = 0.0;
+    }
+    if mouse.pressed(MouseButton::Middle) {
+        *travel += motion.read().map(|ev| ev.delta.length()).sum::<f32>();
+    }
+    if mouse.just_released(MouseButton::Middle) && *travel <= SNAP_CLICK_MAX_TRAVEL {
         let toggled = match *mode {
             ActiveTool::Select => false,
             ActiveTool::Translate => {

@@ -47,6 +47,17 @@ pub struct NavFly;
 #[derive(Component, Default)]
 pub struct NavLook;
 
+/// Hold to pan the camera across its view plane (middle mouse button,
+/// `Down` condition) — the Unity Scene view middle-drag pan.
+///
+/// Bound code-level with the same shape as [`NavFly`]: `MouseButton::Middle`
+/// + `Condition::Down`, so the action is true every frame MMB is held. The
+/// drag delta itself comes from the shared mouse-motion feed (the `NavLook`
+/// binding); this action only decides whether that motion pans instead of
+/// looking, in `populate_camera_nav_input`. Not preset-bindable.
+#[derive(Component, Default)]
+pub struct NavPan;
+
 /// One scroll-up tick while in the nav context.
 ///
 /// Bound code-level with `Binding::mouse_wheel()` + `Condition::ScrollTick { up: true }`.

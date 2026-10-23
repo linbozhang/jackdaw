@@ -182,6 +182,12 @@ impl InteractionGuards<'_, '_> {
 #[derive(Resource, Default)]
 pub struct CameraFlyActive(pub bool);
 
+/// Tracks whether a middle-drag pan session started inside a world viewport.
+/// Like [`CameraFlyActive`], the pan sticks to the camera it started on even
+/// when the cursor leaves the viewport mid-drag.
+#[derive(Resource, Default)]
+pub struct CameraPanActive(pub bool);
+
 pub struct ViewportPlugin;
 
 impl Plugin for ViewportPlugin {
@@ -191,6 +197,7 @@ impl Plugin for ViewportPlugin {
             // the grid's shader in place. See `editor_grid_depth_patch`.
             .add_plugins(crate::editor_grid_depth_patch::plugin)
             .init_resource::<CameraFlyActive>()
+            .init_resource::<CameraPanActive>()
             .init_resource::<ActiveViewport>()
             .init_resource::<ViewportLayerCounter>()
             .insert_resource(GlobalAmbientLight::NONE)
@@ -800,28 +807,29 @@ fn hold_cursor_while_flying(
     }
 }
 
-/// End a fly session the button release will never arrive for, so the pointer
-/// is handed back. The editor is not the window with the pointer any more, and
-/// a grab that outlives the session holds it against the desktop.
+/// End a fly or pan session the button release will never arrive for, so the
+/// pointer is handed back. The editor is not the window with the pointer any
+/// more, and a grab that outlives the session holds it against the desktop.
 fn end_fly_on_focus_loss(
     mut focus_events: MessageReader<WindowFocused>,
     windows: Query<(), With<PrimaryWindow>>,
     mut fly: ResMut<CameraFlyActive>,
+    mut pan: ResMut<CameraPanActive>,
 ) {
     let lost_focus = focus_events
         .read()
         .any(|event| !event.focused && windows.get(event.window).is_ok());
-    if lost_focus && fly.0 {
+    if lost_focus {
         fly.0 = false;
+        pan.0 = false;
     }
 }
 
-/// End a fly session nothing is left watching the button for: a dialog took
-/// the release, or the editor state the viewport lives in is on its way out.
-fn end_fly(mut fly: ResMut<CameraFlyActive>) {
-    if fly.0 {
-        fly.0 = false;
-    }
+/// End a fly or pan session nothing is left watching the button for: a dialog
+/// took the release, or the editor state the viewport lives in is on its way out.
+fn end_fly(mut fly: ResMut<CameraFlyActive>, mut pan: ResMut<CameraPanActive>) {
+    fly.0 = false;
+    pan.0 = false;
 }
 
 /// Enable/disable camera controls based on viewport hover, modal state, etc.
@@ -885,9 +893,13 @@ pub(crate) fn update_active_viewport(
     blockers: Query<(), With<crate::BlocksCameraInput>>,
     mouse: Res<ButtonInput<MouseButton>>,
     mut fly_state: ResMut<CameraFlyActive>,
+    mut pan_state: ResMut<CameraPanActive>,
 ) {
     if mouse.just_released(MouseButton::Right) {
         fly_state.0 = false;
+    }
+    if mouse.just_released(MouseButton::Middle) {
+        pan_state.0 = false;
     }
 
     let cursor = windows.single().ok().and_then(Window::cursor_position);
@@ -924,10 +936,10 @@ pub(crate) fn update_active_viewport(
         }
     }
 
-    // During an active fly session, keep the existing active viewport
+    // During an active fly or pan session, keep the existing active viewport
     // pinned even when the cursor strays outside its bounds. A normal
-    // hover update only takes effect once the user releases RMB.
-    if !fly_state.0 {
+    // hover update only takes effect once the user releases the button.
+    if !fly_state.0 && !pan_state.0 {
         active.host = hovered.map(|hit| hit.host);
         active.mode = hovered.map(|hit| hit.mode);
         active.ui_node = hovered.and_then(|hit| hit.three_d).map(|(node, _)| node);
@@ -941,6 +953,12 @@ pub(crate) fn update_active_viewport(
     if mouse.just_pressed(MouseButton::Right) && hovered_world {
         fly_state.0 = true;
     }
+    // A pan session starts the same way: a middle press over a world
+    // viewport (the 2D canvas owns its own middle-drag pan, and its panels
+    // never carry `SceneViewport` cameras, so the two never fight).
+    if mouse.just_pressed(MouseButton::Middle) && hovered_world {
+        pan_state.0 = true;
+    }
 
     let modal_active = modal.active.is_some();
     let text_focused = input_focus.get().is_some();
@@ -949,10 +967,12 @@ pub(crate) fn update_active_viewport(
 
     let target_camera = active.camera;
     let fly_engaged = fly_state.0;
+    let pan_engaged = pan_state.0;
 
     for (entity, mut settings) in &mut camera_query {
         let is_target = target_camera == Some(entity);
-        let should_enable = inputs_clear && (is_target && (hovered_world || fly_engaged));
+        let should_enable =
+            inputs_clear && (is_target && (hovered_world || fly_engaged || pan_engaged));
         if settings.enabled != should_enable {
             settings.enabled = should_enable;
         }

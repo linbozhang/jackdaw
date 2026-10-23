@@ -56,7 +56,7 @@ use jackdaw_input::{
 use crate::core_extension::CancelModalOp;
 use crate::modal_inputs::{
     ModalAction, ModalAxisX, ModalAxisY, ModalAxisZ, ModalCancel, ModalConfirm, ModalStepDown,
-    ModalStepUp, NavBrushResizeDown, NavBrushResizeUp, NavFly, NavLook, PointerPrimary,
+    ModalStepUp, NavBrushResizeDown, NavBrushResizeUp, NavFly, NavLook, NavPan, PointerPrimary,
 };
 use jackdaw_api::prelude::Operator as _;
 
@@ -254,6 +254,20 @@ pub(crate) fn spawn_contexts(
         ChildOf(nav_look_entity),
     ));
 
+    // NavPan: the middle-drag pan chord (Unity Scene view alignment). Same
+    // code-level `Down` shape as NavFly: the action is true every frame MMB
+    // is held, and the drag delta itself comes from the NavLook motion
+    // feed in `populate_camera_nav_input`. Not preset-bindable, like NavFly.
+    let nav_pan_entity = commands
+        .spawn((NavPan, ActionOf(nav_entity), ChildOf(nav_entity)))
+        .id();
+    commands.spawn((
+        Binding::from(MouseButton::Middle),
+        Condition::Down,
+        BindingOf(nav_pan_entity),
+        ChildOf(nav_pan_entity),
+    ));
+
     // NavBrushResizeUp / NavBrushResizeDown: one scroll tick upward/downward.
     // Bound to the mouse wheel with a scroll tick, so each scrolling frame
     // fires once. Registered in BuiltinActions and DefaultKeymap
@@ -391,6 +405,34 @@ pub(crate) fn spawn_contexts(
 /// are never suppressed: those paths were confirmed working.
 const FLY_LOOK_SUPPRESS_FRAMES: u32 = 3;
 
+/// Pointer travel in one frame, in pixels, beyond which the delta is
+/// dropped whole: no human drag is this fast, and every observed
+/// environment-synthesized jump is far beyond it.
+///
+/// Measured on real hardware (loop/reports/r1-disc-pm-none, 2026-10-23),
+/// the pointer stack (RDP / vendor driver) reports 3.7e4–8.5e5 px in a
+/// single frame when it re-anchors the cursor around a grab transition;
+/// a fast deliberate human drag covers a few hundred pixels per frame at
+/// most, so 1000 px splits the two populations with three orders of
+/// magnitude of margin on each side.
+const MAX_PLAUSIBLE_POINTER_DELTA: f32 = 1000.0;
+
+/// Drops a single-frame pointer delta no human hand could have produced.
+///
+/// The delta is dropped, not clamped: the report this guards against is
+/// "the view moves when I click", and a clamp would still turn the view by
+/// the clamp bound. Unlike the rising-edge suppression window, this gate
+/// holds for the whole session, so it also catches synthesized jumps that
+/// arrive frames after the press — the R1b recurrence, where the first
+/// press of a session was clean and later ones still snapped the view.
+fn drop_synthetic_pointer_jump(delta: Vec2) -> Vec2 {
+    if delta.length() > MAX_PLAUSIBLE_POINTER_DELTA {
+        Vec2::ZERO
+    } else {
+        delta
+    }
+}
+
 /// Writes `CameraNavInput` from action values and the scroll each
 /// `PreUpdate` frame, after `ActionSystems` has evaluated actions for this
 /// frame.
@@ -400,8 +442,13 @@ const FLY_LOOK_SUPPRESS_FRAMES: u32 = 3;
 /// that are stable for the entire `Update` phase.
 ///
 /// On the [`FLY_LOOK_SUPPRESS_FRAMES`] frames after fly engages, look input
-/// is discarded (see that constant's docs for why); every other value passes
-/// through untouched.
+/// is discarded (see that constant's docs for why). Independently of that
+/// window, every frame's pointer motion passes [`drop_synthetic_pointer_jump`],
+/// which discards single-frame deltas beyond human hand speed no matter when
+/// they arrive; see that function's docs for the measured background.
+///
+/// While the pan chord (MMB) is held, the frame's motion feeds the pan delta
+/// alone and looking gets zero — the Unity Scene view middle-drag pan.
 ///
 /// Zoom reads [`ScrollTicks`], where a line counts one tick and a hundred
 /// pixels count one.
@@ -414,6 +461,7 @@ const FLY_LOOK_SUPPRESS_FRAMES: u32 = 3;
 /// `right_held`.
 pub(crate) fn populate_camera_nav_input(
     fly_q: Query<&ActionValue, With<NavFly>>,
+    pan_q: Query<&ActionValue, With<NavPan>>,
     look_q: Query<&ActionValue, With<NavLook>>,
     scroll: Res<ScrollTicks>,
     keyboard: Res<ButtonInput<KeyCode>>,
@@ -422,7 +470,9 @@ pub(crate) fn populate_camera_nav_input(
     mut fly_age_frames: Local<u32>,
 ) {
     let fly_active = fly_q.iter().any(|a| a.as_bool());
-    let look_delta = look_q.iter().fold(Vec2::ZERO, |acc, a| acc + a.as_axis2d());
+    let pan_active = pan_q.iter().any(|a| a.as_bool());
+    let motion =
+        drop_synthetic_pointer_jump(look_q.iter().fold(Vec2::ZERO, |acc, a| acc + a.as_axis2d()));
     let zoom_ticks = scroll.y;
 
     // Suppress look on the first frames of a fly session; see
@@ -436,10 +486,15 @@ pub(crate) fn populate_camera_nav_input(
     if !fly_active {
         *fly_age_frames = 0;
     }
-    let look_delta = if suppress_look {
-        Vec2::ZERO
+    let gated_look = if suppress_look { Vec2::ZERO } else { motion };
+
+    // While the pan chord is held the motion pans and does not look; a pan
+    // that outruns the fly window still pans (the suppression exists for
+    // grab-transition jumps, which the amplitude gate above already drops).
+    let (look_delta, pan_delta) = if pan_active {
+        (Vec2::ZERO, motion)
     } else {
-        look_delta
+        (gated_look, Vec2::ZERO)
     };
 
     // WASD/QE: keyboard only, guarded by fly_active. Raw keyboard stays
@@ -470,6 +525,8 @@ pub(crate) fn populate_camera_nav_input(
     *nav = CameraNavInput {
         fly_active,
         look_delta,
+        pan_active,
+        pan_delta,
         zoom_ticks,
         move_axes,
     };
@@ -526,10 +583,10 @@ mod tests {
         (app, modal_entity)
     }
 
-    // Build a minimal App that runs `populate_camera_nav_input` with one NavFly
-    // and one NavLook action entity whose `ActionValue`s the test drives
-    // directly, frame by frame.
-    fn make_nav_test_app() -> (App, Entity, Entity) {
+    // Build a minimal App that runs `populate_camera_nav_input` with one
+    // NavFly, one NavPan and one NavLook action entity whose `ActionValue`s
+    // the test drives directly, frame by frame.
+    fn make_nav_test_app() -> (App, Entity, Entity, Entity) {
         let mut app = App::new();
         app.init_resource::<ScrollTicks>()
             .init_resource::<ButtonInput<KeyCode>>()
@@ -539,12 +596,16 @@ mod tests {
             .world_mut()
             .spawn((NavFly, ActionValue(Vec2::ZERO)))
             .id();
+        let pan = app
+            .world_mut()
+            .spawn((NavPan, ActionValue(Vec2::ZERO)))
+            .id();
         let look = app
             .world_mut()
             .spawn((NavLook, ActionValue(Vec2::ZERO)))
             .id();
         app.add_systems(Update, populate_camera_nav_input);
-        (app, fly, look)
+        (app, fly, pan, look)
     }
 
     fn set_action_value(world: &mut World, entity: Entity, value: Vec2) {
@@ -559,7 +620,7 @@ mod tests {
     /// `FLY_LOOK_SUPPRESS_FRAMES` frames, and passes again on the next.
     #[test]
     fn look_discarded_on_fly_rising_edge_then_passes() {
-        let (mut app, fly, look) = make_nav_test_app();
+        let (mut app, fly, _, look) = make_nav_test_app();
         let giant = Vec2::new(492_988.0, 690_804.0);
 
         set_action_value(app.world_mut(), fly, Vec2::X);
@@ -578,10 +639,60 @@ mod tests {
         );
     }
 
+    /// A synthesized jump arriving past the suppression window — the R1b
+    /// recurrence, where the first press of a session was clean and later
+    /// ones still snapped — is dropped by the amplitude gate wherever it
+    /// lands.
+    #[test]
+    fn giant_delta_dropped_past_the_suppression_window() {
+        let (mut app, fly, _, look) = make_nav_test_app();
+
+        set_action_value(app.world_mut(), fly, Vec2::X);
+        // Run the session through the suppression window first...
+        for _ in 0..FLY_LOOK_SUPPRESS_FRAMES {
+            set_action_value(app.world_mut(), look, Vec2::new(15.0, 0.0));
+            app.update();
+        }
+        // ...then well past it, as a held drag.
+        for _ in 0..5 {
+            set_action_value(app.world_mut(), look, Vec2::new(15.0, 0.0));
+            app.update();
+            assert_eq!(nav(&app).look_delta, Vec2::new(15.0, 0.0));
+        }
+
+        // The environment (RDP / driver) re-anchors the cursor frames after
+        // the press; measured magnitudes are 3.7e4–8.5e5 px in one frame.
+        for giant in [Vec2::new(37_029.0, 0.0), Vec2::new(4.0, 848_674.0)] {
+            set_action_value(app.world_mut(), look, giant);
+            app.update();
+            assert_eq!(
+                nav(&app).look_delta,
+                Vec2::ZERO,
+                "synthesized jump dropped: {giant:?}"
+            );
+        }
+    }
+
+    /// The gate splits human drags from synthesized jumps: a delta just
+    /// under the threshold is a fast drag and passes untouched.
+    #[test]
+    fn plausible_delta_at_the_limit_passes() {
+        let (mut app, fly, _, look) = make_nav_test_app();
+        let fast = Vec2::new(MAX_PLAUSIBLE_POINTER_DELTA * 0.999, 0.0);
+
+        set_action_value(app.world_mut(), fly, Vec2::X);
+        for _ in 0..FLY_LOOK_SUPPRESS_FRAMES {
+            app.update();
+        }
+        set_action_value(app.world_mut(), look, fast);
+        app.update();
+        assert_eq!(nav(&app).look_delta, fast, "a human-speed drag passes");
+    }
+
     /// Releasing the button resets the window: the next press suppresses again.
     #[test]
     fn fly_release_resets_suppression_window() {
-        let (mut app, fly, look) = make_nav_test_app();
+        let (mut app, fly, _, look) = make_nav_test_app();
 
         set_action_value(app.world_mut(), fly, Vec2::X);
         set_action_value(app.world_mut(), look, Vec2::new(30_000.0, 40_000.0));
@@ -605,7 +716,7 @@ mod tests {
     /// gates on `fly_active` itself); suppression must not leak into that path.
     #[test]
     fn look_passes_through_when_not_flying() {
-        let (mut app, _fly, look) = make_nav_test_app();
+        let (mut app, _, _, look) = make_nav_test_app();
         let drift = Vec2::new(3.0, -2.0);
         set_action_value(app.world_mut(), look, drift);
         app.update();
@@ -613,11 +724,44 @@ mod tests {
         assert_eq!(nav(&app).look_delta, drift);
     }
 
+    /// While the pan chord is held, the motion feeds the pan delta alone and
+    /// looking gets zero (Unity Scene view middle-drag pan), with or without
+    /// a fly session running at the same time.
+    #[test]
+    fn middle_drag_pans_instead_of_looking() {
+        let (mut app, fly, pan, look) = make_nav_test_app();
+        let drag = Vec2::new(12.0, -5.0);
+
+        set_action_value(app.world_mut(), pan, Vec2::X);
+        set_action_value(app.world_mut(), look, drag);
+        app.update();
+        assert_eq!(nav(&app).pan_delta, drag, "the motion pans");
+        assert_eq!(nav(&app).look_delta, Vec2::ZERO, "and does not look");
+        assert!(nav(&app).pan_active);
+
+        // Same while flying: the pan chord owns the motion.
+        set_action_value(app.world_mut(), fly, Vec2::X);
+        app.update();
+        assert_eq!(nav(&app).pan_delta, drag);
+        assert_eq!(nav(&app).look_delta, Vec2::ZERO);
+    }
+
+    /// Synthesized jumps are dropped on the pan path too: the re-anchor
+    /// around a button press is not specific to the right button.
+    #[test]
+    fn giant_pan_delta_dropped() {
+        let (mut app, _, pan, look) = make_nav_test_app();
+        set_action_value(app.world_mut(), pan, Vec2::X);
+        set_action_value(app.world_mut(), look, Vec2::new(120_000.0, 0.0));
+        app.update();
+        assert_eq!(nav(&app).pan_delta, Vec2::ZERO, "synthesized jump dropped");
+    }
+
     /// Suppression only touches look: movement and zoom survive the window,
     /// since those paths were confirmed working.
     #[test]
     fn move_axes_and_zoom_survive_the_suppression_window() {
-        let (mut app, fly, _look) = make_nav_test_app();
+        let (mut app, fly, _, _) = make_nav_test_app();
         app.world_mut()
             .resource_mut::<ButtonInput<KeyCode>>()
             .press(KeyCode::KeyW);
