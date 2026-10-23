@@ -220,3 +220,37 @@ fn the_settings_template_records_version_pins() {
     let text = template("crates/jackdaw_scaffold/templates/game/jackdaw.toml.template");
     assert!(text.contains("{{jackdaw_pins}}"));
 }
+
+/// A scaffolded game builds with the toolchain this editor was built with,
+/// stated as a placeholder like every other version. The editor's Play build
+/// uses the project's own toolchain, and on Bevy's main branch the pinned
+/// Bevy needs a rustc a default toolchain may predate, which otherwise
+/// surfaces as a build failure far from its cause.
+#[test]
+fn scaffolded_games_pin_the_editors_toolchain() {
+    let path = "crates/jackdaw_scaffold/templates/game/rust-toolchain.toml.template";
+    let text = template(path);
+    assert!(
+        text.contains("channel = \"{{rust_toolchain}}\""),
+        "{path}: the toolchain must use the {{{{rust_toolchain}}}} placeholder"
+    );
+
+    let dest = std::env::temp_dir()
+        .join(format!("jackdaw_template_toolchain_{}", std::process::id()))
+        .join("pinned");
+    let _ = std::fs::remove_dir_all(&dest);
+    jackdaw::scaffold::scaffold_new_project(&dest, "pinned", TemplateKind::Game).expect("scaffold");
+    let pinned = std::fs::read_to_string(dest.join("rust-toolchain.toml"))
+        .expect("scaffolded rust-toolchain.toml");
+    let _ = std::fs::remove_dir_all(dest.parent().unwrap());
+    let toml: toml::Table = toml::from_str(&pinned).expect("the toolchain file parses");
+    assert_eq!(
+        toml["toolchain"]["channel"].as_str(),
+        Some(jackdaw_env::RUSTUP_TOOLCHAIN),
+        "the pinned channel is the editor's own, got:\n{pinned}"
+    );
+    assert!(
+        !pinned.contains("{{"),
+        "every placeholder is filled, got: {pinned}"
+    );
+}

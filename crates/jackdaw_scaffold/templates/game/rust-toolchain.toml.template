@@ -1,0 +1,8 @@
+# The rustc this project builds with: the release the jackdaw that
+# scaffolded it was built with. A project on Bevy's main branch needs a
+# rustc at least as new as that Bevy's MSRV, and the editor's Play build
+# compiles with the project's own toolchain, so an unpinned project can
+# fail far from the cause. rustup installs the release on first use;
+# delete this file to build with your default toolchain instead.
+[toolchain]
+channel = "{{rust_toolchain}}"

@@ -2479,6 +2479,10 @@ fn substitute_placeholders(
             "{{bevy_dependency}}",
             &jackdaw_project_build::bevy_source::dependency(),
         )
+        // The toolchain file pins the project's own builds (Play included)
+        // to the rustc this editor was built with: a Bevy newer than the
+        // default toolchain's MSRV support fails far from the cause.
+        .replace("{{rust_toolchain}}", jackdaw_env::RUSTUP_TOOLCHAIN)
         .replace(
             "{{jackdaw_version}}",
             &jackdaw_project_build::jackdaw_requirement(),
