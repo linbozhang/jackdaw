@@ -24,6 +24,7 @@ pub mod build_source;
 pub mod build_tools;
 pub mod cargo_meta;
 pub mod detect;
+pub mod export;
 pub mod linkage;
 pub mod modules;
 pub mod plan;
@@ -40,8 +41,8 @@ mod registry_recipe;
 
 pub use binary::{
     BuildLoad, CargoTarget, ProjectBinaryBuild, TargetKind, background_jobs, build_project_binary,
-    build_project_binary_with_load, cargo_target_args, detach_from_host_build, game_target_dir,
-    prepare_game_command,
+    build_project_binary_with_load, cargo_target_args, detach_from_host_build, dylib_artifact_in,
+    game_target_dir, prepare_game_command,
 };
 pub use build::{
     BuildEvent, ProjectBuild, ProjectBuildError, build_project_dylib, last_built_dylib, sdk_remedy,

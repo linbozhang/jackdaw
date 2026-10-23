@@ -15,6 +15,10 @@
 //!                            Build, then launch the game standalone;
 //!                            --config launches one jackdaw.toml run
 //!                            with its target and launch environment.
+//! export [--project <path>] [--config <label>] [--profile <name>] [--out <dir>]
+//!                            Build and stage the game, executable and
+//!                            assets together, into a directory that
+//!                            runs on its own (.jackdaw/dist/<profile>).
 //! setup                      Build the SDK into the cache (one-time).
 //! doctor                     Report SDK build prerequisites.
 //! ```
@@ -46,6 +50,7 @@ pub fn run_args(args: &[String]) -> ExitCode {
     match args.first().map(String::as_str) {
         Some("build") => cmd_build(&args[1..]),
         Some("run") => cmd_run(&args[1..]),
+        Some("export") => cmd_export(&args[1..]),
         Some("setup") => cmd_setup(),
         Some("doctor") => cmd_doctor(&args[1..]),
         Some("--version" | "-V" | "version") => {
@@ -697,7 +702,7 @@ fn cmd_run(args: &[String]) -> ExitCode {
     };
     let target = entry.target.as_ref().map(RunTargetSpec::cargo_target);
     let binary = match build_project(&root, target.as_ref()) {
-        Ok(binary) => binary,
+        Ok(outcome) => outcome.binary,
         Err(code) => return code,
     };
     println!("jackdaw run: launching {label} ({})", binary.display());
@@ -707,9 +712,7 @@ fn cmd_run(args: &[String]) -> ExitCode {
         Some(dir) => root.join(dir),
         None => root.clone(),
     };
-    let mut command = std::process::Command::new(&binary);
-    prepare_game_command(&mut command, &binary);
-    command.current_dir(&cwd).envs(&entry.env).args(&entry.args);
+    let mut command = configured_game_command(&binary, &cwd, &entry);
     match command.status() {
         Ok(status) if status.success() => ExitCode::SUCCESS,
         Ok(status) => ExitCode::from(u8::try_from(status.code().unwrap_or(1)).unwrap_or(1)),
@@ -720,6 +723,29 @@ fn cmd_run(args: &[String]) -> ExitCode {
     }
 }
 
+/// The launch `jd run --config` gives a built binary: the run's cwd,
+/// env and argv around the prepared game command — plus
+/// `BEVY_ASSET_ROOT`, which nothing else supplies here.
+///
+/// A terminal has neither of the first two asset-root fallbacks a game
+/// checks (`BEVY_ASSET_ROOT` from the editor's Play, or the
+/// `CARGO_MANIFEST_DIR` a `cargo run` injects), so without this the
+/// root falls to the built binary's own directory —
+/// `.jackdaw/target/game/<profile>/`, which has no `assets/` beside it
+/// and loads an empty world. The run's own env is applied after, so a
+/// run that sets `BEVY_ASSET_ROOT` explicitly wins over the default,
+/// the same way its other environment overrides the ambient one.
+fn configured_game_command(binary: &Path, cwd: &Path, entry: &RunEntry) -> std::process::Command {
+    let mut command = std::process::Command::new(binary);
+    prepare_game_command(&mut command, binary);
+    command
+        .current_dir(cwd)
+        .env("BEVY_ASSET_ROOT", cwd)
+        .envs(&entry.env)
+        .args(&entry.args);
+    command
+}
+
 /// The launch of the historical no-`--config` path: a plain
 /// `cargo run` in the project root. Split out so the exact command
 /// stays pinned by test — with no run selected, `jd run` is what it
@@ -728,6 +754,142 @@ fn bare_cargo_run(root: &Path) -> std::process::Command {
     let mut command = rust_env_command("cargo");
     command.arg("run").current_dir(root);
     command
+}
+
+/// `jd export [--project <path>] [--config <label>] [--profile <name>]
+/// [--out <dir>]`: build the game and stage it — executable and the
+/// whole `assets/` tree together — into a directory that runs when
+/// double-clicked, `.jackdaw/dist/<profile>` by default.
+///
+/// `--config` selects one `[[run]]` of `jackdaw.toml` for its target
+/// dimensions (bin/example, features, package), exactly as `jd run
+/// --config` does; `--profile` overrides the profile either side named
+/// and defaults to `release`, because an export is a release artifact
+/// unless asked otherwise. Not `jd export-terrain`, which exports a
+/// heightmap, and not the editor's `project.export_binary`, which
+/// serializes a scene.
+fn cmd_export(args: &[String]) -> ExitCode {
+    let root = match resolve_root(args) {
+        Ok(root) => root,
+        Err(code) => return code,
+    };
+    // An export is a standalone game; an extension project builds a
+    // library for the editor and has nothing to stage.
+    if bootstrap::project_needs_sdk(&root) {
+        eprintln!("jd export: this project is an editor extension; only a game can be exported");
+        return ExitCode::FAILURE;
+    }
+    let mut target = match parse_config_arg(args) {
+        Some(label) => match resolve_run_config(&root, &label) {
+            Ok(entry) => entry.target.as_ref().map(RunTargetSpec::cargo_target),
+            Err(message) => {
+                eprintln!("jd export: {message}");
+                return ExitCode::FAILURE;
+            }
+        },
+        None => None,
+    }
+    .unwrap_or_default();
+    let profile = export_profile(
+        target.profile.as_deref(),
+        parse_profile_arg(args).as_deref(),
+    );
+    if let Err(message) = validate_export_profile(&root, &profile) {
+        eprintln!("jd export: {message}");
+        return ExitCode::FAILURE;
+    }
+    // The chosen profile is what the build builds with, whatever the
+    // run's target carried.
+    target.profile = Some(profile.clone());
+
+    println!(
+        "jackdaw export: building {} with profile {profile}",
+        root.display()
+    );
+    let build = match build_project(&root, Some(&target)) {
+        Ok(build) => build,
+        Err(code) => return code,
+    };
+    // A dynamically linked game needs its dlls beside the executable,
+    // and staging cannot know the set; refuse with the remedy rather
+    // than ship a binary that will not start.
+    if let Some(rejection) =
+        jackdaw_project_build::export::dynamic_linking_rejection(&build.dylib_artifacts)
+    {
+        eprintln!("jd export: {rejection}");
+        return ExitCode::FAILURE;
+    }
+
+    let out = parse_out_arg(args).map(PathBuf::from);
+    let plan =
+        jackdaw_project_build::export::plan_export(&root, &profile, &build.binary, out.as_deref());
+    match jackdaw_project_build::export::stage_export(&plan) {
+        Ok(report) => {
+            println!(
+                "jackdaw export: staged {} ({} files) in {}",
+                report.executable.display(),
+                report.files,
+                report.dist_dir.display()
+            );
+            // The finished export is where the user looks next; failing
+            // to open the folder is not failing to export.
+            if let Err(err) =
+                jackdaw_project_build::export::reveal_in_file_manager(&report.dist_dir)
+            {
+                eprintln!("jackdaw export: could not open the folder: {err}");
+            }
+            ExitCode::SUCCESS
+        }
+        Err(err) => {
+            eprintln!("jd export: {err}");
+            ExitCode::FAILURE
+        }
+    }
+}
+
+/// The profile an export builds with: the flag wins, then the selected
+/// run's target, then `release` — an export is a release artifact
+/// unless asked otherwise.
+fn export_profile(target: Option<&str>, flag: Option<&str>) -> String {
+    flag.or(target).unwrap_or("release").to_string()
+}
+
+/// Whether cargo will accept the profile an export chose, against the
+/// project's own `[profile.*]` tables. A wrong name is cargo's instant
+/// refusal, so the export fails up front and lists what is available
+/// rather than after the compile the profile namespaced.
+fn validate_export_profile(root: &Path, profile: &str) -> Result<(), String> {
+    let declared = std::fs::read_to_string(root.join("Cargo.toml"))
+        .map(|text| run_manifest::declared_profiles(&text))
+        .unwrap_or_default();
+    if run_manifest::profile_is_available(profile, &declared) {
+        return Ok(());
+    }
+    let mut available = vec!["dev".to_string(), "release".to_string()];
+    available.extend(declared);
+    Err(format!(
+        "profile `{profile}` is neither dev, release, nor one this Cargo.toml declares; \
+         available: {}",
+        available.join(", ")
+    ))
+}
+
+/// The `--profile <name>` value of an `export` invocation.
+fn parse_profile_arg(args: &[String]) -> Option<String> {
+    value_flag(args, "--profile")
+}
+
+/// The `--out <dir>` value of an `export` invocation.
+fn parse_out_arg(args: &[String]) -> Option<String> {
+    value_flag(args, "--out")
+}
+
+/// The value after `name`, when the invocation carries one.
+fn value_flag(args: &[String], name: &str) -> Option<String> {
+    args.iter()
+        .position(|arg| arg == name)
+        .and_then(|index| args.get(index + 1))
+        .cloned()
 }
 
 /// Resolve and canonicalize the target project directory from
@@ -741,12 +903,23 @@ fn resolve_root(args: &[String]) -> Result<PathBuf, ExitCode> {
     })
 }
 
+/// What a `build_project` produced: the artifact it always handed
+/// back, plus what the build reported about how the game links —
+/// which an export needs and nothing else does.
+struct BuildOutcome {
+    binary: PathBuf,
+    /// The `dylib` crates the build produced, the signal of a
+    /// dynamically linked game; empty for a static (template-shaped)
+    /// build. Empty for an extension library, which is not exported.
+    dylib_artifacts: Vec<String>,
+}
+
 /// Build the project at `root`: a game as its own binary with its
 /// schema persisted, a project that is only an extension against the
 /// SDK. `target` narrows a game build to one run's cargo target.
-/// Returns the built artifact's path, so `jd run --config` can launch
-/// what was built.
-fn build_project(root: &Path, target: Option<&CargoTarget>) -> Result<PathBuf, ExitCode> {
+/// Returns what the build produced, so `jd run --config` can launch
+/// the binary and `jd export` can check how it linked.
+fn build_project(root: &Path, target: Option<&CargoTarget>) -> Result<BuildOutcome, ExitCode> {
     let spec = match jackdaw_project_build::shim_spec_for_project(root) {
         Ok(spec) => spec,
         Err(error) => {
@@ -795,7 +968,10 @@ fn build_project(root: &Path, target: Option<&CargoTarget>) -> Result<PathBuf, E
                 build.binary.display(),
                 schema_path(&jackdaw_dir).display()
             );
-            Ok(build.binary)
+            Ok(BuildOutcome {
+                binary: build.binary,
+                dylib_artifacts: build.dylib_artifacts,
+            })
         }
         Err(err) => {
             eprintln!("jackdaw build: failed: {err}");
@@ -810,7 +986,7 @@ fn build_extension(
     root: &Path,
     spec: &jackdaw_project_build::shim::ShimSpec,
     jackdaw_dir: &Path,
-) -> Result<PathBuf, ExitCode> {
+) -> Result<BuildOutcome, ExitCode> {
     if bootstrap::needs_setup() {
         println!(
             "jackdaw build: building the extension SDK first; this usually takes {}",
@@ -847,7 +1023,10 @@ fn build_extension(
                 "jackdaw build: ok; extension library at {}",
                 build.dylib.display()
             );
-            Ok(build.dylib)
+            Ok(BuildOutcome {
+                binary: build.dylib,
+                dylib_artifacts: Vec::new(),
+            })
         }
         Err(err) => {
             eprintln!("jackdaw build: failed: {err}");
@@ -897,9 +1076,10 @@ fn parse_project_arg(args: &[String]) -> Option<PathBuf> {
     while let Some(arg) = it.next() {
         match arg.as_str() {
             "--project" | "-p" => return it.next().map(PathBuf::from),
-            // Its value is a run label, not a project path, and must not
-            // read as a bare positional below.
-            "--config" => {
+            // Their values are a run label, a profile name and an
+            // output directory, not project paths, and must not read
+            // as bare positionals below.
+            "--config" | "--profile" | "--out" => {
                 it.next();
             }
             other if !other.starts_with('-') => return Some(PathBuf::from(other)),
@@ -909,8 +1089,9 @@ fn parse_project_arg(args: &[String]) -> Option<PathBuf> {
     None
 }
 
-/// The `--config <label>` value of a `run`/`build` invocation: the run
-/// of `jackdaw.toml` it selects, target and launch environment together.
+/// The `--config <label>` value of a `run`/`build`/`export`
+/// invocation: the run of `jackdaw.toml` it selects, target and launch
+/// environment together.
 fn parse_config_arg(args: &[String]) -> Option<String> {
     let mut it = args.iter();
     while let Some(arg) = it.next() {
@@ -966,9 +1147,11 @@ fn resolve_run_config(root: &Path, label: &str) -> Result<RunEntry, String> {
 #[cfg(test)]
 mod tests {
     use super::{
-        SdkGrade, bare_cargo_run, grade_sdk, parse_config_arg, parse_project_arg,
-        read_run_manifest, removed_feature_problems, resolve_run_config,
+        BuildOutcome, SdkGrade, bare_cargo_run, configured_game_command, export_profile, grade_sdk,
+        parse_config_arg, parse_out_arg, parse_profile_arg, parse_project_arg, read_run_manifest,
+        removed_feature_problems, resolve_run_config, validate_export_profile,
     };
+    use jackdaw_project_build::run_manifest::RunEntry;
 
     fn args(list: &[&str]) -> Vec<String> {
         list.iter().map(std::string::ToString::to_string).collect()
@@ -1025,6 +1208,126 @@ mod tests {
             parse_project_arg(&args(&["--project", "x", "--config", "Server"])),
             Some("x".into())
         );
+    }
+
+    /// `--profile` and `--out` take values too, and neither is a
+    /// project path — without this, `jd export --profile release`
+    /// would resolve the project to a directory named `release`.
+    #[test]
+    fn export_flag_values_are_not_read_as_project_paths() {
+        assert_eq!(
+            parse_project_arg(&args(&["--profile", "release", "--out", "dist"])),
+            None
+        );
+        assert_eq!(
+            parse_project_arg(&args(&["--project", "x", "--out", "dist"])),
+            Some("x".into())
+        );
+        assert_eq!(
+            parse_profile_arg(&args(&["--config", "Server", "--profile", "thin"])),
+            Some("thin".to_string())
+        );
+        assert_eq!(parse_profile_arg(&args(&["--out", "d"])), None);
+        assert_eq!(
+            parse_out_arg(&args(&["--profile", "thin", "--out", "d"])),
+            Some("d".to_string())
+        );
+        assert_eq!(parse_out_arg(&args(&[])), None);
+    }
+
+    /// A run the run-config machinery launches points its asset root
+    /// at the run's cwd: a terminal supplies neither of the other two
+    /// roots a game falls back to, so without this the built binary's
+    /// own directory — which has no assets — would win and the game
+    /// loads an empty world.
+    #[test]
+    fn a_configured_run_points_its_asset_root_at_the_run_cwd() {
+        let entry = RunEntry::default();
+        let command = configured_game_command(
+            std::path::Path::new("/game/.jackdaw/target/game/debug/game.exe"),
+            std::path::Path::new("/game"),
+            &entry,
+        );
+        assert_eq!(
+            command
+                .get_envs()
+                .find(|(key, _)| { *key == std::ffi::OsStr::new("BEVY_ASSET_ROOT") }),
+            Some((
+                std::ffi::OsStr::new("BEVY_ASSET_ROOT"),
+                Some(std::ffi::OsStr::new("/game"))
+            )),
+            "the default asset root is the run's cwd"
+        );
+        assert_eq!(
+            command.get_current_dir(),
+            Some(std::path::Path::new("/game"))
+        );
+    }
+
+    /// A run that sets `BEVY_ASSET_ROOT` itself keeps it: the run's
+    /// environment overrides the default, the same way it overrides
+    /// every other ambient variable.
+    #[test]
+    fn a_run_that_sets_its_own_asset_root_wins() {
+        let mut entry = RunEntry::default();
+        entry
+            .env
+            .insert("BEVY_ASSET_ROOT".to_string(), "/custom/assets".to_string());
+        let command = configured_game_command(
+            std::path::Path::new("/game/game.exe"),
+            std::path::Path::new("/game"),
+            &entry,
+        );
+        assert_eq!(
+            command
+                .get_envs()
+                .find(|(key, _)| { *key == std::ffi::OsStr::new("BEVY_ASSET_ROOT") }),
+            Some((
+                std::ffi::OsStr::new("BEVY_ASSET_ROOT"),
+                Some(std::ffi::OsStr::new("/custom/assets"))
+            )),
+            "the run's own value beats the cwd default"
+        );
+    }
+
+    /// The profile an export builds with: the flag wins, then the
+    /// selected run's target, then `release`.
+    #[test]
+    fn the_export_profile_flag_beats_the_target_then_defaults_to_release() {
+        assert_eq!(export_profile(None, None), "release");
+        assert_eq!(export_profile(Some("dev"), None), "dev");
+        assert_eq!(export_profile(Some("dev"), Some("thin")), "thin");
+        assert_eq!(export_profile(None, Some("bench")), "bench");
+    }
+
+    #[test]
+    fn an_unknown_export_profile_lists_what_is_available() {
+        let root =
+            std::env::temp_dir().join(format!("jackdaw_cli_profiles_{}", std::process::id()));
+        let _ = std::fs::remove_dir_all(&root);
+        std::fs::create_dir_all(&root).unwrap();
+        std::fs::write(
+            root.join("Cargo.toml"),
+            "[package]\nname = \"g\"\n\n[profile.thin]\nlto = \"thin\"\n",
+        )
+        .unwrap();
+
+        assert!(validate_export_profile(&root, "release").is_ok());
+        assert!(validate_export_profile(&root, "thin").is_ok());
+        let message = validate_export_profile(&root, "fast").unwrap_err();
+        assert!(message.contains("`fast`"), "{message}");
+        assert!(message.contains("dev, release, thin"), "{message}");
+
+        let _ = std::fs::remove_dir_all(&root);
+    }
+
+    #[test]
+    fn a_build_outcome_carries_what_an_export_checks() {
+        let outcome = BuildOutcome {
+            binary: std::path::PathBuf::from("/game/target/game.exe"),
+            dylib_artifacts: vec!["bevy_dylib".to_string()],
+        };
+        assert_eq!(outcome.dylib_artifacts, ["bevy_dylib".to_string()]);
     }
 
     fn project_with(name: &str, jackdaw_toml: &str) -> std::path::PathBuf {

@@ -21,6 +21,12 @@ pub struct ProjectBinaryBuild {
     /// schema mode. `None` when extraction could not run; the editor
     /// keeps its previous schema in that case.
     pub schema: Option<ProjectSchema>,
+    /// The crates the build produced as `dylib` artifacts, by name. A
+    /// non-empty list means the game links dynamically (bevy's
+    /// `dynamic_linking` adds a `bevy_dylib` crate): such a binary
+    /// needs the dlls in `deps/` beside it and cannot be staged for a
+    /// standalone run, so the export refuses on this signal.
+    pub dylib_artifacts: Vec<String>,
 }
 
 /// How much of the machine a build may take. A build the user asked for gets
@@ -303,9 +309,13 @@ pub fn build_project_binary_with_load(
     let mut done = 0u32;
     let mut log = String::new();
     let mut executables: Vec<PathBuf> = Vec::new();
+    let mut dylib_artifacts: Vec<String> = Vec::new();
     for line in BufReader::new(stdout).lines().map_while(Result::ok) {
         if let Some(path) = executable_for_package(&line, package, wanted) {
             executables.push(path);
+        }
+        if let Some(crate_name) = dylib_artifact_in(&line) {
+            dylib_artifacts.push(crate_name);
         }
         parse_build_line(&line, &mut done, &mut log, report);
     }
@@ -351,7 +361,11 @@ pub fn build_project_binary_with_load(
         tracing::warn!("failed to persist project schema: {err}");
     }
 
-    Ok(ProjectBinaryBuild { binary, schema })
+    Ok(ProjectBinaryBuild {
+        binary,
+        schema,
+        dylib_artifacts,
+    })
 }
 
 /// Cargo's stderr without its per-crate progress notes, which say nothing
@@ -714,6 +728,34 @@ fn package_id_names(package_id: &str, package_name: &str) -> bool {
     normalize(&name) == normalize(package_name)
 }
 
+/// The crate name one cargo JSON line reports a `dylib` artifact for,
+/// when it reports one.
+///
+/// A game built with `bevy/dynamic_linking` gains a `bevy_dylib` crate
+/// whose `compiler-artifact` record carries `target.kind: ["dylib"]`;
+/// ordinary builds never report one (plain dependencies are `lib`,
+/// proc-macros `proc-macro`), which is what makes the kind a reliable
+/// dynamic-linking signal. The name is kept, not just the fact, so the
+/// export's refusal can name what it saw.
+pub fn dylib_artifact_in(line: &str) -> Option<String> {
+    let value = serde_json::from_str::<serde_json::Value>(line).ok()?;
+    if value.get("reason").and_then(serde_json::Value::as_str)? != "compiler-artifact" {
+        return None;
+    }
+    let target = value.get("target")?;
+    let is_dylib = target
+        .get("kind")
+        .and_then(serde_json::Value::as_array)
+        .is_some_and(|kinds| kinds.iter().any(|kind| kind.as_str() == Some("dylib")));
+    if !is_dylib {
+        return None;
+    }
+    target
+        .get("name")
+        .and_then(serde_json::Value::as_str)
+        .map(str::to_string)
+}
+
 /// The error text when the build succeeded but produced no executable.
 /// For the package default that almost always means the crate is a
 /// library with no `src/main.rs`; a targeted build points at the target
@@ -994,6 +1036,41 @@ mod tests {
             executable_for_package(other, "my-game", WantedArtifact::AnyBinary),
             None
         );
+    }
+
+    /// Only a `dylib`-kind artifact is a dynamic-linking signal: plain
+    /// libraries and proc-macros appear in every build, and a `lib`
+    /// kind for a crate named like a dylib must not trip it either.
+    #[test]
+    fn only_dylib_kind_artifacts_signal_dynamic_linking() {
+        let dylib = r#"{"reason":"compiler-artifact","package_id":"registry+https://github.com/rust-lang/crates.io-index#bevy_dylib@0.19.1",
+            "target":{"name":"bevy_dylib","kind":["dylib"],"crate_types":["dylib"]},
+            "executable":null}"#;
+        assert_eq!(
+            dylib_artifact_in(dylib),
+            Some("bevy_dylib".to_string()),
+            "the dynamic-linking crate is named"
+        );
+
+        let lib = r#"{"reason":"compiler-artifact","package_id":"path+file:///w/my-game#0.1.0",
+            "target":{"name":"my-game","kind":["lib"]},"executable":null}"#;
+        assert_eq!(dylib_artifact_in(lib), None);
+
+        let proc_macro = r#"{"reason":"compiler-artifact","package_id":"registry+https://github.com/rust-lang/crates.io-index#thiserror-impl@1.0.0",
+            "target":{"name":"thiserror-impl","kind":["proc-macro"],"crate_types":["proc-macro"]},
+            "executable":null}"#;
+        assert_eq!(dylib_artifact_in(proc_macro), None);
+
+        let bin = r#"{"reason":"compiler-artifact","package_id":"path+file:///w/my-game#0.1.0",
+            "target":{"name":"my-game","kind":["bin"]},"executable":"/w/target/debug/my-game"}"#;
+        assert_eq!(dylib_artifact_in(bin), None);
+
+        // Not an artifact record at all: the build stream's other lines.
+        assert_eq!(
+            dylib_artifact_in(r#"{"reason":"compiler-message","message":{"level":"warning"}}"#),
+            None
+        );
+        assert_eq!(dylib_artifact_in("not json"), None);
     }
 
     /// A run target naming one example of a multi-target package must

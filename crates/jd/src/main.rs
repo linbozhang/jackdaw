@@ -34,7 +34,7 @@ fn main() -> ExitCode {
             print_usage();
             ExitCode::SUCCESS
         }
-        Some("build" | "run" | "setup" | "doctor" | "--version" | "-V" | "version") => {
+        Some("build" | "run" | "export" | "setup" | "doctor" | "--version" | "-V" | "version") => {
             jackdaw_cli_internal::run_args(&args)
         }
         Some(other) => {
@@ -96,6 +96,13 @@ const SPECS: &[CommandSpec] = &[
         flags: &[],
         values: &["--project", "-p", "--config"],
         usage: "jd run [--project <path>] [--config <label>]",
+    },
+    CommandSpec {
+        name: "export",
+        flags: &[],
+        values: &["--project", "-p", "--config", "--profile", "--out"],
+        usage: "jd export [--project <path>] [--config <label>] [--profile <name>] \
+                [--out <dir>]",
     },
     CommandSpec {
         name: "setup",
@@ -255,6 +262,9 @@ fn print_usage() {
          run [--project <path>] [--config <label>]\n    \
              Build and run the game; --config launches one jackdaw.toml\n    \
              run with its target and environment\n  \
+         export [--project <path>] [--config <label>] [--profile <name>] [--out <dir>]\n    \
+             Build a standalone game: executable and assets staged\n    \
+             together into .jackdaw/dist/<profile> (default profile release)\n  \
          setup                      Prepare the pinned SDK\n  \
          doctor [--project <path>]  Check build prerequisites and a project's setup\n  \
          export-terrain <scene.bsn> --out <dir>\n    \
@@ -834,6 +844,44 @@ mod tests {
         assert!(matches!(
             check_options(spec, &["--config".to_string(), "X".to_string()]),
             OptionCheck::Rejected(message) if message.contains("unknown option `--config`")
+        ));
+    }
+
+    /// `export` carries the run selector plus its own profile and
+    /// output directory, each with a value, and nothing positional is
+    /// required.
+    #[test]
+    fn export_accepts_config_profile_and_out_with_values() {
+        let spec = spec("export");
+        assert!(matches!(
+            check_options(
+                spec,
+                &[
+                    "--project".to_string(),
+                    ".".to_string(),
+                    "--config".to_string(),
+                    "Server".to_string(),
+                    "--profile".to_string(),
+                    "thin".to_string(),
+                    "--out".to_string(),
+                    "dist".to_string()
+                ]
+            ),
+            OptionCheck::Ok
+        ));
+        for flag in ["--profile", "--out", "--config"] {
+            assert!(
+                matches!(
+                    check_options(spec, &[flag.to_string()]),
+                    OptionCheck::Rejected(message) if message.contains("needs a value")
+                ),
+                "{flag} without a value must be rejected"
+            );
+        }
+        // An option no export takes fails loudly rather than being ignored.
+        assert!(matches!(
+            check_options(spec, &["--release".to_string()]),
+            OptionCheck::Rejected(message) if message.contains("unknown option `--release`")
         ));
     }
 }
