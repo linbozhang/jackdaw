@@ -88,14 +88,14 @@ const SPECS: &[CommandSpec] = &[
     CommandSpec {
         name: "build",
         flags: &[],
-        values: &["--project", "-p"],
-        usage: "jd build [--project <path>]",
+        values: &["--project", "-p", "--config"],
+        usage: "jd build [--project <path>] [--config <label>]",
     },
     CommandSpec {
         name: "run",
         flags: &[],
-        values: &["--project", "-p"],
-        usage: "jd run [--project <path>]",
+        values: &["--project", "-p", "--config"],
+        usage: "jd run [--project <path>] [--config <label>]",
     },
     CommandSpec {
         name: "setup",
@@ -249,8 +249,12 @@ fn print_usage() {
          editor <command>           Install, list and remove editors (`jd editor --help`)\n  \
          self update                Update jd to the newest stable release\n  \
          upgrade [path] [--apply]   Move a project to this Jackdaw's versions\n  \
-         build [--project <path>]   Build project code for the editor\n  \
-         run [--project <path>]     Build and run the game\n  \
+         build [--project <path>] [--config <label>]\n    \
+             Build project code for the editor; --config builds one\n    \
+             jackdaw.toml run's target\n  \
+         run [--project <path>] [--config <label>]\n    \
+             Build and run the game; --config launches one jackdaw.toml\n    \
+             run with its target and environment\n  \
          setup                      Prepare the pinned SDK\n  \
          doctor [--project <path>]  Check build prerequisites and a project's setup\n  \
          export-terrain <scene.bsn> --out <dir>\n    \
@@ -780,4 +784,56 @@ fn write_private_key(
     })?;
     std::io::Write::write_all(&mut file, bytes)
         .map_err(|error| jackdaw_package::PackageError::Io(format!("{}: {error}", path.display())))
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn spec(name: &str) -> &CommandSpec {
+        SPECS
+            .iter()
+            .find(|spec| spec.name == name)
+            .unwrap_or_else(|| panic!("`{name}` is one of the commands"))
+    }
+
+    /// The option whitelist is the CLI's front door: run and build must
+    /// take the run selector, with a value, and nothing else may.
+    #[test]
+    fn run_and_build_accept_config_with_a_value() {
+        for name in ["run", "build"] {
+            let spec = spec(name);
+            assert!(matches!(
+                check_options(spec, &["--config".to_string(), "Server".to_string()]),
+                OptionCheck::Ok
+            ));
+            assert!(matches!(
+                check_options(
+                    spec,
+                    &[
+                        "--project".to_string(),
+                        ".".to_string(),
+                        "--config".to_string(),
+                        "Server".to_string()
+                    ]
+                ),
+                OptionCheck::Ok
+            ));
+            // A valueless --config would silently shift the rest of the
+            // line; the check must reject it before any command runs.
+            assert!(matches!(
+                check_options(spec, &["--config".to_string()]),
+                OptionCheck::Rejected(message) if message.contains("needs a value")
+            ));
+        }
+    }
+
+    #[test]
+    fn a_command_without_config_rejects_it() {
+        let spec = spec("setup");
+        assert!(matches!(
+            check_options(spec, &["--config".to_string(), "X".to_string()]),
+            OptionCheck::Rejected(message) if message.contains("unknown option `--config`")
+        ));
+    }
 }

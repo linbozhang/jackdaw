@@ -7,9 +7,14 @@
 //! Commands:
 //!
 //! ```text
-//! build [--project <path>]   Build the project so a running editor
-//!                            picks up new or changed components.
-//! run   [--project <path>]   Build, then launch the game standalone.
+//! build [--project <path>] [--config <label>]
+//!                            Build the project so a running editor
+//!                            picks up new or changed components; with
+//!                            --config, one jackdaw.toml run's target.
+//! run   [--project <path>] [--config <label>]
+//!                            Build, then launch the game standalone;
+//!                            --config launches one jackdaw.toml run
+//!                            with its target and launch environment.
 //! setup                      Build the SDK into the cache (one-time).
 //! doctor                     Report SDK build prerequisites.
 //! ```
@@ -26,7 +31,12 @@ use std::process::ExitCode;
 use jackdaw_env::rust_env_command;
 use jackdaw_project_build::bootstrap::{self, SetupProgress};
 use jackdaw_project_build::build_tools::CheckStatus;
-use jackdaw_project_build::{BuildEvent, build_project_binary, build_project_dylib, sdk_paths};
+use jackdaw_project_build::cargo_meta::{self, CargoMeta};
+use jackdaw_project_build::run_manifest::{self, RunEntry, RunManifest, RunTargetSpec};
+use jackdaw_project_build::{
+    BuildEvent, BuildLoad, CargoTarget, build_project_binary_with_load, build_project_dylib,
+    prepare_game_command, sdk_paths,
+};
 use jackdaw_schema::{read_schema, schema_path};
 
 pub mod package;
@@ -338,6 +348,7 @@ fn report_project(root: &Path) -> bool {
                     ),
                 },
             }
+            ok &= report_run_targets(root, &package.name);
         }
         Err(error) => {
             ok = false;
@@ -406,6 +417,78 @@ fn report_project(root: &Path) -> bool {
         }
     }
 
+    ok
+}
+
+/// Report every `[[run]]` that names a cargo target: its bin/example
+/// exists in the project's metadata, and the profile it asks for is one
+/// cargo will accept. Returns whether nothing launch-blocking is wrong;
+/// an unavailable profile is only a warning, since cargo itself refuses
+/// it in a blink rather than mid-compile.
+fn report_run_targets(root: &Path, package_name: &str) -> bool {
+    // A missing or broken jackdaw.toml is already reported above; there
+    // are no runs in it worth checking here.
+    let Ok(manifest) = read_run_manifest(root) else {
+        return true;
+    };
+    let mut ok = true;
+    let meta = CargoMeta::load(root);
+    let declared = std::fs::read_to_string(root.join("Cargo.toml"))
+        .map(|text| run_manifest::declared_profiles(&text))
+        .unwrap_or_default();
+    for run in &manifest.runs {
+        let Some(target) = run.target.as_ref() else {
+            continue;
+        };
+        let label = run.label();
+        // Shape first: a target that cannot become a cargo command is
+        // wrong whatever the metadata says.
+        if let Err(reason) = target.validate() {
+            ok = false;
+            println!("  [fail] run `{label}`: {reason}");
+            continue;
+        }
+        // Metadata failing to run is already reported above (the
+        // `package:` line); every run of it would only repeat that.
+        if let Some(meta) = &meta {
+            match cargo_meta::check_run_target(meta, package_name, &target.cargo_target()) {
+                Ok(()) => {
+                    if let Some((kind, name)) = target.cargo_target().named() {
+                        let detail = match &target.profile {
+                            Some(profile) => {
+                                format!("{kind} `{name}` present, profile `{profile}`")
+                            }
+                            None => format!("{kind} `{name}` present"),
+                        };
+                        println!("  [ ok ] run `{label}`: {detail}");
+                    } else {
+                        // A validated target always names one; this is
+                        // the shape the package default would take.
+                        println!("  [ ok ] run `{label}`: the package's default binary");
+                    }
+                }
+                Err(reason) => {
+                    ok = false;
+                    println!("  [fail] run `{label}`: {reason}");
+                    println!(
+                        "         fix: name one of the targets the package declares, or add it \
+                         in Cargo.toml"
+                    );
+                }
+            }
+        }
+        if let Some(profile) = target
+            .profile
+            .as_deref()
+            .filter(|name| !name.trim().is_empty())
+            && !run_manifest::profile_is_available(profile, &declared)
+        {
+            println!(
+                "  [warn] run `{label}`: profile `{profile}` is neither dev, release, nor a \
+                 [profile.{profile}] Cargo.toml declares; cargo will refuse the build"
+            );
+        }
+    }
     ok
 }
 
@@ -547,37 +630,91 @@ fn resolve_dependencies(root: &Path) -> Result<(), String> {
         .to_string())
 }
 
-/// `jd build [--project <path>]`: run the same pipeline the editor runs.
-/// A game persists `.jackdaw/schema.json`, which a running editor watches
-/// and reloads; a project that is only an extension builds its library
-/// against the SDK for `jd extension pack`. Defaults to the current
-/// directory.
+/// `jd build [--project <path>] [--config <label>]`: run the same
+/// pipeline the editor runs. A game persists `.jackdaw/schema.json`,
+/// which a running editor watches and reloads; a project that is only
+/// an extension builds its library against the SDK for `jd extension
+/// pack`. `--config` selects one `[[run]]` of `jackdaw.toml` and builds
+/// its cargo target. Defaults to the current directory.
 fn cmd_build(args: &[String]) -> ExitCode {
     let root = match resolve_root(args) {
         Ok(root) => root,
         Err(code) => return code,
     };
-    build_project(&root)
+    let Some(label) = parse_config_arg(args) else {
+        return match build_project(&root, None) {
+            Ok(_) => ExitCode::SUCCESS,
+            Err(code) => code,
+        };
+    };
+    let entry = match resolve_run_config(&root, &label) {
+        Ok(entry) => entry,
+        Err(message) => {
+            eprintln!("jd build: {message}");
+            return ExitCode::FAILURE;
+        }
+    };
+    let target = entry.target.as_ref().map(RunTargetSpec::cargo_target);
+    match build_project(&root, target.as_ref()) {
+        Ok(_) => ExitCode::SUCCESS,
+        Err(code) => code,
+    }
 }
 
-/// `jd run [--project <path>]`: build the game (refreshing the schema a
-/// running editor reloads), then launch it. A build failure aborts
-/// before running, since the game would fail to compile anyway.
+/// `jd run [--project <path>] [--config <label>]`: build the game
+/// (refreshing the schema a running editor reloads), then launch it. A
+/// build failure aborts before running, since the game would fail to
+/// compile anyway. With `--config`, the selected `[[run]]` decides the
+/// whole launch — its target is what gets built, its env/args/cwd are
+/// what the built binary launches with — mirroring the editor's Play of
+/// that run (a bare process, not a `cargo run`). Without it, this is
+/// the historical behaviour: a bare `cargo run` in the project root.
 fn cmd_run(args: &[String]) -> ExitCode {
     let root = match resolve_root(args) {
         Ok(root) => root,
         Err(code) => return code,
     };
-    let built = build_project(&root);
-    if !matches!(built, ExitCode::SUCCESS) {
-        return built;
-    }
-    println!("jackdaw run: launching {}", root.display());
-    match rust_env_command("cargo")
-        .arg("run")
-        .current_dir(&root)
-        .status()
-    {
+    let Some(label) = parse_config_arg(args) else {
+        if let Err(code) = build_project(&root, None) {
+            return code;
+        }
+        println!("jackdaw run: launching {}", root.display());
+        return match rust_env_command("cargo")
+            .arg("run")
+            .current_dir(&root)
+            .status()
+        {
+            Ok(status) if status.success() => ExitCode::SUCCESS,
+            Ok(status) => ExitCode::from(u8::try_from(status.code().unwrap_or(1)).unwrap_or(1)),
+            Err(err) => {
+                eprintln!("jackdaw run: failed to launch the game: {err}");
+                ExitCode::FAILURE
+            }
+        };
+    };
+    let entry = match resolve_run_config(&root, &label) {
+        Ok(entry) => entry,
+        Err(message) => {
+            eprintln!("jd run: {message}");
+            return ExitCode::FAILURE;
+        }
+    };
+    let target = entry.target.as_ref().map(RunTargetSpec::cargo_target);
+    let binary = match build_project(&root, target.as_ref()) {
+        Ok(binary) => binary,
+        Err(code) => return code,
+    };
+    println!("jackdaw run: launching {label} ({})", binary.display());
+    // The bare-process semantics the editor's Play gives this run: the
+    // built binary with the run's cwd, env and argv, nothing else.
+    let cwd = match entry.cwd.as_ref() {
+        Some(dir) => root.join(dir),
+        None => root.clone(),
+    };
+    let mut command = std::process::Command::new(&binary);
+    prepare_game_command(&mut command, &binary);
+    command.current_dir(&cwd).envs(&entry.env).args(&entry.args);
+    match command.status() {
         Ok(status) if status.success() => ExitCode::SUCCESS,
         Ok(status) => ExitCode::from(u8::try_from(status.code().unwrap_or(1)).unwrap_or(1)),
         Err(err) => {
@@ -598,19 +735,31 @@ fn resolve_root(args: &[String]) -> Result<PathBuf, ExitCode> {
     })
 }
 
-/// Build the project at `root`: a game as its own binary with its schema
-/// persisted, a project that is only an extension against the SDK.
-fn build_project(root: &Path) -> ExitCode {
+/// Build the project at `root`: a game as its own binary with its
+/// schema persisted, a project that is only an extension against the
+/// SDK. `target` narrows a game build to one run's cargo target.
+/// Returns the built artifact's path, so `jd run --config` can launch
+/// what was built.
+fn build_project(root: &Path, target: Option<&CargoTarget>) -> Result<PathBuf, ExitCode> {
     let spec = match jackdaw_project_build::shim_spec_for_project(root) {
         Ok(spec) => spec,
         Err(error) => {
             eprintln!("jackdaw build: {error}");
-            return ExitCode::FAILURE;
+            return Err(ExitCode::FAILURE);
         }
     };
 
     let jackdaw_dir = root.join(".jackdaw");
     if bootstrap::project_needs_sdk(root) {
+        // A run target selects a game binary; an extension builds its
+        // library and has none to select.
+        if target.is_some() {
+            eprintln!(
+                "jackdaw build: --config selects a game run target, but this project is an editor \
+                 extension"
+            );
+            return Err(ExitCode::FAILURE);
+        }
         return build_extension(root, &spec, &jackdaw_dir);
     }
 
@@ -622,7 +771,13 @@ fn build_project(root: &Path) -> ExitCode {
             eprintln!("{line}");
         }
     };
-    match build_project_binary(&spec, &jackdaw_dir, &mut report) {
+    match build_project_binary_with_load(
+        &spec,
+        &jackdaw_dir,
+        target,
+        BuildLoad::Foreground,
+        &mut report,
+    ) {
         Ok(build) => {
             let components = build
                 .schema
@@ -634,11 +789,11 @@ fn build_project(root: &Path) -> ExitCode {
                 build.binary.display(),
                 schema_path(&jackdaw_dir).display()
             );
-            ExitCode::SUCCESS
+            Ok(build.binary)
         }
         Err(err) => {
             eprintln!("jackdaw build: failed: {err}");
-            ExitCode::FAILURE
+            Err(ExitCode::FAILURE)
         }
     }
 }
@@ -649,7 +804,7 @@ fn build_extension(
     root: &Path,
     spec: &jackdaw_project_build::shim::ShimSpec,
     jackdaw_dir: &Path,
-) -> ExitCode {
+) -> Result<PathBuf, ExitCode> {
     if bootstrap::needs_setup() {
         println!(
             "jackdaw build: building the extension SDK first; this usually takes {}",
@@ -662,7 +817,7 @@ fn build_extension(
         };
         if let Err(err) = bootstrap::ensure_sdk(report) {
             eprintln!("jackdaw build: SDK setup failed: {err}");
-            return ExitCode::FAILURE;
+            return Err(ExitCode::FAILURE);
         }
     }
     let dev_workspace = dev_workspace();
@@ -686,11 +841,11 @@ fn build_extension(
                 "jackdaw build: ok; extension library at {}",
                 build.dylib.display()
             );
-            ExitCode::SUCCESS
+            Ok(build.dylib)
         }
         Err(err) => {
             eprintln!("jackdaw build: failed: {err}");
-            ExitCode::FAILURE
+            Err(ExitCode::FAILURE)
         }
     }
 }
@@ -736,6 +891,11 @@ fn parse_project_arg(args: &[String]) -> Option<PathBuf> {
     while let Some(arg) = it.next() {
         match arg.as_str() {
             "--project" | "-p" => return it.next().map(PathBuf::from),
+            // Its value is a run label, not a project path, and must not
+            // read as a bare positional below.
+            "--config" => {
+                it.next();
+            }
             other if !other.starts_with('-') => return Some(PathBuf::from(other)),
             _ => {}
         }
@@ -743,9 +903,149 @@ fn parse_project_arg(args: &[String]) -> Option<PathBuf> {
     None
 }
 
+/// The `--config <label>` value of a `run`/`build` invocation: the run
+/// of `jackdaw.toml` it selects, target and launch environment together.
+fn parse_config_arg(args: &[String]) -> Option<String> {
+    let mut it = args.iter();
+    while let Some(arg) = it.next() {
+        if arg == "--config" {
+            return it.next().cloned();
+        }
+    }
+    None
+}
+
+/// The `[[run]]` entries of `jackdaw.toml`, read the way the CLI needs
+/// them: names, targets, and the launch environment `jd run --config`
+/// applies. A missing or broken file is an error naming the file, since
+/// a `--config` selects a run and without the file there is nothing to
+/// select from.
+fn read_run_manifest(root: &Path) -> Result<RunManifest, String> {
+    let path = root.join("jackdaw.toml");
+    let text = std::fs::read_to_string(&path)
+        .map_err(|_| format!("no jackdaw.toml at {} to pick a run from", path.display()))?;
+    RunManifest::parse(&text).map_err(|error| format!("jackdaw.toml does not parse: {error}"))
+}
+
+/// The run `--config <label>` names, checked to the point a build can
+/// start: present in `jackdaw.toml`, its target schema-valid, and its
+/// package and bin/example real per `cargo metadata` — so a typo fails
+/// here, with the names that are available, rather than inside a build.
+fn resolve_run_config(root: &Path, label: &str) -> Result<RunEntry, String> {
+    let manifest = read_run_manifest(root)?;
+    let Some(entry) = manifest.by_name(label) else {
+        let found = if manifest.runs.is_empty() {
+            "jackdaw.toml lists no runs".to_string()
+        } else {
+            let labels: Vec<&str> = manifest.runs.iter().map(RunEntry::label).collect();
+            format!("found: {}", labels.join(", "))
+        };
+        return Err(format!("`{label}` is not a run in jackdaw.toml ({found})"));
+    };
+    let entry = entry.clone();
+    if let Some(target) = &entry.target {
+        target.validate()?;
+        let spec = jackdaw_project_build::shim_spec_for_project(root)
+            .map_err(|error| error.to_string())?;
+        // Metadata the build would run anyway; if it cannot run, the
+        // build reports that in its own words, so the check stands down
+        // rather than failing the run for cargo's sake.
+        if let Some(meta) = CargoMeta::load(root) {
+            cargo_meta::check_run_target(&meta, &spec.package_name, &target.cargo_target())?;
+        }
+    }
+    Ok(entry)
+}
+
 #[cfg(test)]
 mod tests {
-    use super::{SdkGrade, grade_sdk, removed_feature_problems};
+    use super::{
+        SdkGrade, grade_sdk, parse_config_arg, parse_project_arg, read_run_manifest,
+        removed_feature_problems, resolve_run_config,
+    };
+
+    fn args(list: &[&str]) -> Vec<String> {
+        list.iter().map(std::string::ToString::to_string).collect()
+    }
+
+    #[test]
+    fn the_config_flag_reads_its_label() {
+        assert_eq!(
+            parse_config_arg(&args(&["--project", "x", "--config", "Server"])),
+            Some("Server".to_string())
+        );
+        assert_eq!(
+            parse_config_arg(&args(&["--config", "Play"])),
+            Some("Play".to_string())
+        );
+        assert_eq!(parse_config_arg(&args(&["--project", "x"])), None);
+        assert_eq!(parse_config_arg(&args(&[])), None);
+    }
+
+    /// The label is a label, not a project path: `--config Server` must
+    /// not make the project resolve to a directory named Server.
+    #[test]
+    fn a_config_label_is_not_read_as_a_project_path() {
+        assert_eq!(
+            parse_project_arg(&args(&["--config", "Server"])),
+            None,
+            "the label is consumed by --config"
+        );
+        assert_eq!(
+            parse_project_arg(&args(&["--project", "x", "--config", "Server"])),
+            Some("x".into())
+        );
+    }
+
+    fn project_with(name: &str, jackdaw_toml: &str) -> std::path::PathBuf {
+        let root = std::env::temp_dir().join(format!("jackdaw_cli_{name}_{}", std::process::id()));
+        let _ = std::fs::remove_dir_all(&root);
+        std::fs::create_dir_all(&root).unwrap();
+        std::fs::write(root.join("jackdaw.toml"), jackdaw_toml).unwrap();
+        root
+    }
+
+    const RUNS: &str = r#"
+[[run]]
+name = "Play"
+
+[[run]]
+name = "Server"
+target = { bin = "server" }
+"#;
+
+    #[test]
+    fn an_unknown_label_lists_the_runs_the_manifest_has() {
+        let root = project_with("cfg-labels", RUNS);
+        let message = resolve_run_config(&root, "Nope").unwrap_err();
+        assert!(message.contains("`Nope` is not a run"), "{message}");
+        assert!(message.contains("Play, Server"), "{message}");
+        let _ = std::fs::remove_dir_all(&root);
+    }
+
+    /// Validation runs before any package resolution, so an invalid
+    /// target reports its shape without invoking cargo.
+    #[test]
+    fn an_invalid_target_reports_its_shape_before_resolving_anything() {
+        let root = project_with(
+            "cfg-invalid",
+            "[[run]]\ntarget = { bin = \"a\", example = \"b\" }",
+        );
+        let message = resolve_run_config(&root, "Play").unwrap_err();
+        assert!(message.contains("both"), "{message}");
+        let _ = std::fs::remove_dir_all(&root);
+    }
+
+    #[test]
+    fn a_missing_manifest_names_the_file() {
+        let root =
+            std::env::temp_dir().join(format!("jackdaw_cli_cfg_missing_{}", std::process::id()));
+        let _ = std::fs::remove_dir_all(&root);
+        std::fs::create_dir_all(&root).unwrap();
+        let message = read_run_manifest(&root).unwrap_err();
+        assert!(message.contains("jackdaw.toml"), "{message}");
+        let _ = std::fs::remove_dir_all(&root);
+    }
 
     fn game_with_runtime(name: &str, features: &str) -> std::path::PathBuf {
         let root = std::env::temp_dir().join(format!("jackdaw_cli_{name}_{}", std::process::id()));

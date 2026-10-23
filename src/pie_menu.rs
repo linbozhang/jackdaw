@@ -9,6 +9,7 @@ use bevy::ui::ui_transform::UiGlobalTransform;
 use jackdaw_feathers::button::{ButtonProps, ButtonVariant, button};
 use jackdaw_feathers::icons::{EditorFont, Icon, IconFont};
 use jackdaw_feathers::tokens;
+use jackdaw_pie_protocol::manifest::RunConfig;
 
 use crate::pie::{InstanceKey, PieSession, launch_instance, stop_instance};
 use crate::run_config::{CargoMeta, RunConfigs, read_run_configs, scaffold_manifest};
@@ -94,6 +95,9 @@ fn on_menu_button_click(
 struct RowSpec {
     key: InstanceKey,
     label: String,
+    /// The dim cargo-target suffix (`bin:server`), when the run launches
+    /// something other than the default game binary.
+    badge: Option<String>,
     running: bool,
 }
 
@@ -144,6 +148,7 @@ fn collect_rows(world: &mut World) -> Vec<RowSpec> {
     let mut rows = Vec::new();
     for run in &runs {
         let label = run.label().to_string();
+        let badge = target_badge(run);
         for instance in 1..=run.instances {
             let key = InstanceKey {
                 config: label.clone(),
@@ -158,11 +163,24 @@ fn collect_rows(world: &mut World) -> Vec<RowSpec> {
             rows.push(RowSpec {
                 key,
                 label: display,
+                badge: badge.clone(),
                 running,
             });
         }
     }
     rows
+}
+
+/// The suffix marking which cargo target a row launches, so same-named
+/// runs with different targets tell apart at a glance: `bin:server`,
+/// `example:split_screen`. A run without a target — the default game
+/// binary — carries none. The kind and name come from the build
+/// pipeline's own reading of the target, so the badge can never name
+/// another target than the one the launch builds.
+fn target_badge(run: &RunConfig) -> Option<String> {
+    let target = crate::run_config::cargo_target(run)?;
+    let (kind, name) = target.named()?;
+    Some(format!("{kind}:{name}"))
 }
 
 fn spawn_instance_row(
@@ -195,8 +213,8 @@ fn spawn_instance_row(
         font_size: tokens::TEXT_SIZE_SM,
         ..Default::default()
     };
-    if let Some(handle) = editor_font {
-        label_font.font = handle.into();
+    if let Some(handle) = editor_font.as_ref() {
+        label_font.font = handle.clone().into();
     }
     world.spawn((
         Text::new(spec.label),
@@ -205,6 +223,23 @@ fn spawn_instance_row(
         Pickable::IGNORE,
         ChildOf(row),
     ));
+
+    if let Some(badge) = spec.badge {
+        let mut badge_font = TextFont {
+            font_size: tokens::TEXT_SIZE_XS,
+            ..Default::default()
+        };
+        if let Some(handle) = editor_font.as_ref() {
+            badge_font.font = handle.clone().into();
+        }
+        world.spawn((
+            Text::new(badge),
+            badge_font,
+            TextColor(tokens::TEXT_MUTED_COLOR.into()),
+            Pickable::IGNORE,
+            ChildOf(row),
+        ));
+    }
 }
 
 /// Fixed-width slot holding the row's checkbox, so labels stay aligned
@@ -487,5 +522,110 @@ mod tests {
             app.world().get::<Checked>(checkbox).is_none(),
             "a stopped instance reads as unchecked",
         );
+    }
+
+    fn row_spec(label: &str, badge: Option<String>) -> RowSpec {
+        RowSpec {
+            key: InstanceKey {
+                config: label.to_string(),
+                instance: 1,
+            },
+            label: label.to_string(),
+            badge,
+            running: false,
+        }
+    }
+
+    /// The texts `spawn_instance_row` put under its row, which itself
+    /// hangs under `popover`: `(text, font size, color)` per text.
+    fn spawned_row_texts(
+        app: &mut App,
+        popover: Entity,
+    ) -> Vec<(String, bevy::text::FontSize, Color)> {
+        // Collect first: the row lookup needs the world again, and the
+        // query iterator holds its borrow.
+        let candidates: Vec<Entity> = {
+            let mut rows = app
+                .world_mut()
+                .query_filtered::<Entity, With<PieInstanceRow>>();
+            rows.iter(app.world()).collect()
+        };
+        let row = candidates
+            .into_iter()
+            .find(|row| {
+                app.world()
+                    .get::<ChildOf>(*row)
+                    .is_some_and(|child_of| child_of.parent() == popover)
+            })
+            .expect("the row hangs under the popover");
+        let mut texts = app
+            .world_mut()
+            .query::<(&Text, &TextFont, &TextColor, &ChildOf)>();
+        texts
+            .iter(app.world())
+            .filter(|(_, _, _, child_of)| child_of.parent() == row)
+            .map(|(text, font, color, _)| (text.0.clone(), font.font_size, color.0))
+            .collect()
+    }
+
+    /// A targeted row's badge rides along after the label, in the muted
+    /// color and the smaller size every other dim annotation uses.
+    #[test]
+    fn a_targeted_row_carries_a_dim_badge_after_its_label() {
+        let mut app = check_slot_app();
+        let popover = app.world_mut().spawn(Node::default()).id();
+        spawn_instance_row(
+            app.world_mut(),
+            popover,
+            row_spec("Server", Some("bin:server".to_string())),
+            None,
+        );
+
+        let texts = spawned_row_texts(&mut app, popover);
+        let texts: std::collections::HashMap<String, (bevy::text::FontSize, Color)> = texts
+            .into_iter()
+            .map(|(text, size, color)| (text, (size, color)))
+            .collect();
+        let (size, color) = texts
+            .get("bin:server")
+            .expect("the badge renders after the label");
+        assert_eq!(*size, tokens::TEXT_SIZE_XS, "the badge is the small size");
+        assert_eq!(
+            *color,
+            Color::Srgba(tokens::TEXT_MUTED_COLOR),
+            "the badge is the muted annotation color"
+        );
+        assert!(texts.contains_key("Server"), "the label still renders");
+    }
+
+    #[test]
+    fn a_row_without_a_target_renders_no_badge() {
+        let mut app = check_slot_app();
+        let popover = app.world_mut().spawn(Node::default()).id();
+        spawn_instance_row(app.world_mut(), popover, row_spec("Play", None), None);
+
+        let texts = spawned_row_texts(&mut app, popover);
+        let labels: Vec<String> = texts.into_iter().map(|(text, _, _)| text).collect();
+        assert_eq!(labels, ["Play".to_string()], "the label alone");
+    }
+
+    fn run_from(toml_text: &str) -> RunConfig {
+        let manifest: jackdaw_pie_protocol::manifest::Manifest = toml::from_str(toml_text).unwrap();
+        manifest.runs.into_iter().next().unwrap()
+    }
+
+    #[test]
+    fn the_badge_names_the_cargo_target_kind() {
+        assert_eq!(
+            target_badge(&run_from("[[run]]\ntarget = { bin = \"server\" }")),
+            Some("bin:server".to_string())
+        );
+        assert_eq!(
+            target_badge(&run_from(
+                "[[run]]\ntarget = { example = \"split_screen\" }"
+            )),
+            Some("example:split_screen".to_string())
+        );
+        assert_eq!(target_badge(&run_from("[[run]]\nname = \"Play\"")), None);
     }
 }
