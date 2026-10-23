@@ -1,4 +1,5 @@
 use bevy::{
+    input::mouse::MouseMotion,
     picking::mesh_picking::ray_cast::{MeshRayCast, MeshRayCastSettings, RayCastVisibility},
     prelude::*,
     ui::UiGlobalTransform,
@@ -97,18 +98,39 @@ impl Plugin for ModalTransformPlugin {
     }
 }
 
+/// Pointer travel (px) below which a middle press-and-release still counts
+/// as a click that toggles snapping. Beyond it the gesture was a middle
+/// drag — the viewport pan (Unity Scene view alignment) — and the release
+/// that ends the pan must not also flip the snap setting.
+const SNAP_CLICK_MAX_TRAVEL: f32 = 4.0;
+
 fn snap_toggle(
     mouse: Res<ButtonInput<MouseButton>>,
     mode: Res<ActiveTool>,
     modal: Res<ModalTransformState>,
     mut snap_settings: ResMut<SnapSettings>,
+    mut motion: MessageReader<MouseMotion>,
+    mut travel: Local<f32>,
     mut commands: Commands,
 ) {
+    // Reset the click tracker on the press itself, before any early return:
+    // a modal (or leaving one) must not score the next click against a
+    // previous press's travel. The clear also drops motion that piled up
+    // unread while no button was held — it belongs to no click, and reading
+    // it on the press frame would inflate the travel and swallow the click.
+    if mouse.just_pressed(MouseButton::Middle) {
+        motion.clear();
+        *travel = 0.0;
+    }
+
     if modal.active.is_some() {
         return;
     }
 
-    if mouse.just_pressed(MouseButton::Middle) {
+    if mouse.pressed(MouseButton::Middle) {
+        *travel += motion.read().map(|ev| ev.delta.length()).sum::<f32>();
+    }
+    if mouse.just_released(MouseButton::Middle) && *travel <= SNAP_CLICK_MAX_TRAVEL {
         let toggled = match *mode {
             ActiveTool::Select => false,
             ActiveTool::Translate => {
@@ -465,5 +487,126 @@ fn viewport_drag_finish(
     // Release cursor confinement
     if let Ok(mut cursor_opts) = cursor_query.single_mut() {
         cursor_opts.grab_mode = CursorGrabMode::None;
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::active_tool::ActiveTool;
+    use crate::snapping::SnapSettings;
+    use bevy::input::mouse::MouseMotion;
+
+    /// Minimal app running `snap_toggle` each Update, with the inputs the
+    /// system reads driven directly: `ButtonInput` for the button edges,
+    /// `Messages<MouseMotion>` for the drag travel.
+    fn make_snap_app() -> App {
+        let mut app = App::new();
+        app.init_resource::<ButtonInput<MouseButton>>()
+            .init_resource::<ModalTransformState>()
+            .init_resource::<SnapSettings>()
+            .insert_resource(ActiveTool::Translate)
+            .add_message::<MouseMotion>()
+            .add_systems(Update, snap_toggle);
+        app
+    }
+
+    fn translate_snap(app: &App) -> bool {
+        app.world().resource::<SnapSettings>().translate_snap
+    }
+
+    fn press_middle(app: &mut App) {
+        app.world_mut()
+            .resource_mut::<ButtonInput<MouseButton>>()
+            .press(MouseButton::Middle);
+    }
+
+    fn release_middle(app: &mut App) {
+        app.world_mut()
+            .resource_mut::<ButtonInput<MouseButton>>()
+            .release(MouseButton::Middle);
+    }
+
+    fn travel(app: &mut App, delta: Vec2) {
+        app.world_mut().write_message(MouseMotion { delta });
+    }
+
+    /// One frame: run the schedule, then stand in for `InputSystems` by
+    /// ending the just-press/just-release edges (the bare test app has no
+    /// input plugin doing it). The held state survives the edge reset.
+    fn frame(app: &mut App) {
+        app.update();
+        app.world_mut()
+            .resource_mut::<ButtonInput<MouseButton>>()
+            .clear();
+    }
+
+    /// Motion that piled up unread while no button was held belongs to no
+    /// click: the press frame clears the backlog, so a still click right
+    /// after a moving cursor still toggles.
+    #[test]
+    fn stale_motion_backlog_does_not_swallow_a_middle_click() {
+        let mut app = make_snap_app();
+        let initial = translate_snap(&app);
+
+        // Motion with no button held: nobody reads it this frame.
+        travel(&mut app, Vec2::new(80.0, 0.0));
+        frame(&mut app);
+
+        // Press on the next frame: the backlog is dropped, not scored.
+        press_middle(&mut app);
+        frame(&mut app);
+
+        release_middle(&mut app);
+        frame(&mut app);
+        assert_ne!(
+            translate_snap(&app),
+            initial,
+            "the click toggled despite the stale backlog"
+        );
+    }
+
+    /// A middle drag past the click travel is a viewport pan; the release
+    /// that ends it must not toggle the snap setting.
+    #[test]
+    fn a_middle_drag_beyond_the_click_travel_does_not_toggle() {
+        let mut app = make_snap_app();
+        let initial = translate_snap(&app);
+
+        press_middle(&mut app);
+        frame(&mut app);
+        travel(&mut app, Vec2::new(30.0, 0.0));
+        frame(&mut app);
+        release_middle(&mut app);
+        frame(&mut app);
+
+        assert_eq!(
+            translate_snap(&app),
+            initial,
+            "a drag's release does not toggle"
+        );
+    }
+
+    /// A plain middle click toggles, and a second plain click toggles back.
+    #[test]
+    fn a_plain_middle_click_toggles_and_toggles_back() {
+        let mut app = make_snap_app();
+        let initial = translate_snap(&app);
+
+        press_middle(&mut app);
+        frame(&mut app);
+        release_middle(&mut app);
+        frame(&mut app);
+        assert_ne!(translate_snap(&app), initial, "the first click toggles");
+
+        press_middle(&mut app);
+        frame(&mut app);
+        release_middle(&mut app);
+        frame(&mut app);
+        assert_eq!(
+            translate_snap(&app),
+            initial,
+            "the second click toggles back"
+        );
     }
 }

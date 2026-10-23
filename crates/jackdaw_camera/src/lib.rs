@@ -24,6 +24,12 @@ pub struct CameraNavInput {
     pub fly_active: bool,
     /// Pointer delta this frame while navigating.
     pub look_delta: Vec2,
+    /// Pan mode engaged (the editor binds this to MMB hold via a code-level
+    /// `Down` condition; see `src/input_contexts.rs`).
+    pub pan_active: bool,
+    /// Pointer delta this frame while panning, in screen pixels with y
+    /// growing downward.
+    pub pan_delta: Vec2,
     /// Wheel movement this frame (positive = zoom in / forward).
     pub zoom_ticks: f32,
     /// Normalized movement intent in camera-local axes while flying
@@ -36,6 +42,7 @@ pub struct CameraNavInput {
 ///
 /// Controls:
 /// - Right-click + drag: look around (yaw/pitch)
+/// - Middle-click + drag: pan across the view plane (scene follows cursor)
 /// - Right-click + WASD: move forward/back/left/right (view-relative)
 /// - Right-click + Q / E: move up / down (world-space Y)
 /// - Scroll wheel: move forward/back along view direction
@@ -70,6 +77,12 @@ impl Default for JackdawCameraSettings {
     }
 }
 
+/// World units of pan per dragged pixel, per unit of [`JackdawCameraSettings::speed`].
+///
+/// A deliberate drag covers a few hundred pixels per second, so at the
+/// default speed of 10 this pans roughly as fast as flying forward.
+const PAN_UNITS_PER_SPEED_PER_PIXEL: f32 = 0.002;
+
 fn camera_system(
     // Shift raw read is intentionally kept: it is a speed modifier that
     // compounds with `move_axes` but is not a navigation trigger, so it
@@ -91,6 +104,13 @@ fn camera_system(
             continue;
         }
 
+        let ortho_scale = projection
+            .as_ref()
+            .and_then(|p| match p.as_ref() {
+                Projection::Orthographic(ortho) => Some(ortho.scale),
+                _ => None,
+            })
+            .unwrap_or(1.0);
         let is_ortho = projection
             .as_ref()
             .is_some_and(|p| matches!(p.as_ref(), Projection::Orthographic(_)));
@@ -106,6 +126,20 @@ fn camera_system(
                 std::f32::consts::FRAC_PI_2 - 0.01,
             );
             transform.rotation = Quat::from_euler(EulerRot::YXZ, yaw, pitch, 0.0);
+        }
+
+        // Middle-drag pan: the scene follows the cursor across the view
+        // plane (Unity Scene view). Pointer x grows rightward and y grows
+        // downward, so the camera moves against the drag along `right` and
+        // with it along `up`. Unlike look, pan works in ortho too — an
+        // axis-locked view still pans — with the drag scaled by the ortho
+        // scale so the same pixel travel moves the same share of the view
+        // at any zoom (the same reasoning as the ortho zoom below).
+        if nav.pan_active && nav.pan_delta != Vec2::ZERO {
+            let pan = -transform.right().as_vec3() * nav.pan_delta.x
+                + transform.up().as_vec3() * nav.pan_delta.y;
+            transform.translation +=
+                pan * settings.speed * PAN_UNITS_PER_SPEED_PER_PIXEL * ortho_scale;
         }
 
         // Scroll zoom. Ctrl+Alt (grid size shortcut) and Shift (brush/grid
@@ -184,6 +218,85 @@ mod tests {
         pitch
     }
 
+    /// Where a middle-drag pan of `delta` leaves the camera, from identity,
+    /// with the given speed and optional projection.
+    fn position_after_pan(delta: Vec2, speed: f32, projection: Option<Projection>) -> Vec3 {
+        let mut app = App::new();
+        app.add_plugins((MinimalPlugins, JackdawCameraPlugin))
+            .init_resource::<ButtonInput<KeyCode>>();
+        app.insert_resource(CameraNavInput {
+            pan_active: true,
+            pan_delta: delta,
+            ..Default::default()
+        });
+        let settings = JackdawCameraSettings {
+            speed,
+            ..Default::default()
+        };
+        let camera = match projection {
+            Some(projection) => app
+                .world_mut()
+                .spawn((settings, Transform::IDENTITY, projection))
+                .id(),
+            None => app.world_mut().spawn((settings, Transform::IDENTITY)).id(),
+        };
+        app.update();
+        app.world()
+            .get::<Transform>(camera)
+            .expect("the camera kept its transform")
+            .translation
+    }
+
+    /// Pointer coordinates grow rightward and downward, and the scene
+    /// follows the cursor: a rightward drag moves the camera left along
+    /// `right`, a downward drag moves it up along `up`.
+    #[test]
+    fn pan_drag_moves_the_camera_against_the_drag() {
+        let right = position_after_pan(Vec2::new(100.0, 0.0), 10.0, None);
+        assert!(right.x < 0.0, "camera moved left: {right:?}");
+        assert_eq!(right.y, 0.0);
+        assert_eq!(right.z, 0.0, "pan stays in the view plane");
+
+        let down = position_after_pan(Vec2::new(0.0, 100.0), 10.0, None);
+        assert!(down.y > 0.0, "camera moved up: {down:?}");
+        assert_eq!(down.x, 0.0);
+        assert_eq!(down.z, 0.0);
+    }
+
+    /// Pan length scales with the speed setting, like every other motion.
+    #[test]
+    fn pan_scales_with_speed() {
+        let slow = position_after_pan(Vec2::new(100.0, 0.0), 5.0, None);
+        let fast = position_after_pan(Vec2::new(100.0, 0.0), 10.0, None);
+        assert!((fast.x - 2.0 * slow.x).abs() < 1e-6, "{slow:?} vs {fast:?}");
+    }
+
+    /// An ortho view covers more world per pixel the larger its scale, so
+    /// the pan is scaled with it: the same drag moves the same share of
+    /// the view at any zoom (mirroring the ortho zoom handling).
+    #[test]
+    fn ortho_pan_scales_with_ortho_scale() {
+        let mut base = OrthographicProjection::default_3d();
+        base.scale = 1.0;
+        let mut zoomed = OrthographicProjection::default_3d();
+        zoomed.scale = 4.0;
+
+        let at_one = position_after_pan(
+            Vec2::new(100.0, 0.0),
+            10.0,
+            Some(Projection::Orthographic(base)),
+        );
+        let at_four = position_after_pan(
+            Vec2::new(100.0, 0.0),
+            10.0,
+            Some(Projection::Orthographic(zoomed)),
+        );
+        assert!(
+            (at_four.x - 4.0 * at_one.x).abs() < 1e-5,
+            "{at_one:?} vs {at_four:?}"
+        );
+    }
+
     /// Pointer coordinates grow downward, so a drag away from the user
     /// pitches the view up unless the setting says otherwise.
     #[test]
@@ -201,6 +314,8 @@ mod tests {
         let nav = CameraNavInput::default();
         assert!(!nav.fly_active);
         assert_eq!(nav.look_delta, Vec2::ZERO);
+        assert!(!nav.pan_active);
+        assert_eq!(nav.pan_delta, Vec2::ZERO);
         assert_eq!(nav.zoom_ticks, 0.0);
         assert_eq!(nav.move_axes, Vec3::ZERO);
     }
