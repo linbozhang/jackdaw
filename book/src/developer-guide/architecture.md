@@ -109,6 +109,11 @@ that shows on `+ Add Component` enumerates the type registry,
 filters out anything tagged `@EditorHidden`, and sorts by
 category.
 
+The cards sit behind category tabs, a strip of icons on the
+panel's left edge: hovering a tab shows its name and a one-line
+description, and the tab whose cards are in view is named by a
+small header above the list.
+
 A field holding a handle is an asset field: the row shows the path
 of the file behind it, with Pick, Clear and New beside it, and takes
 a file dragged onto it from the Project window. Pick lists the files

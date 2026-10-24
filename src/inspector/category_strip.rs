@@ -67,6 +67,42 @@ pub(super) fn shown_categories<'a>(
 #[derive(Component)]
 pub(crate) struct InspectorCategoryStripMount;
 
+/// Marker on the text node at the top of the inspector content column that
+/// always names the category being viewed (e.g. "Object"). The strip tells
+/// *which* category is active with a left accent, but a 30px icon carries no
+/// words; this header makes the current page legible without hovering.
+/// [`update_active_category_label`] writes the text.
+#[derive(Component)]
+pub(crate) struct ActiveCategoryLabel;
+
+/// Write the active category's label into every [`ActiveCategoryLabel`] text
+/// node. Deliberately NOT part of `rebuild_add_header`: that respawns the whole
+/// add-UI per category change, while this only rewrites one string, and the
+/// two share the same trigger (`ActiveInspectorCategory` changing).
+pub(super) fn update_active_category_label(
+    registry: Res<InspectorRegistry>,
+    active: Res<ActiveInspectorCategory>,
+    added_labels: Query<(), Added<ActiveCategoryLabel>>,
+    mut labels: Query<&mut Text, With<ActiveCategoryLabel>>,
+) {
+    if !active.is_changed() && !registry.is_changed() && added_labels.is_empty() {
+        return;
+    }
+    let Some(cat) = registry
+        .categories_sorted()
+        .into_iter()
+        .find(|c| c.id == active.0.as_ref())
+    else {
+        return;
+    };
+    let label = cat.label.clone();
+    for mut text in &mut labels {
+        if text.0.as_str() != label.as_ref() {
+            text.0 = label.to_string();
+        }
+    }
+}
+
 /// Marker on the strip rail container (the vertical icon column).
 #[derive(Component)]
 pub(super) struct InspectorCategoryStrip;
@@ -114,7 +150,7 @@ pub(super) fn spawn_category_strip(
         let cell = commands
             .spawn((
                 InspectorCategoryTab(cat_id.clone()),
-                Tooltip::title(label.as_ref()),
+                Tooltip::title(label.as_ref()).with_description(cat.description.as_ref()),
                 bevy::picking::hover::Hovered::default(),
                 Node {
                     width: Val::Px(tokens::SIDEBAR_WIDTH),

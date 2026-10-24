@@ -10,6 +10,7 @@ mod util;
 mod asset_row;
 mod bindings_card;
 mod bindings_link;
+mod category_strip;
 mod definition_card;
 mod field_targeting;
 mod inspector_panel_width;

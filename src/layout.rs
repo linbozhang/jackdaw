@@ -980,6 +980,31 @@ pub fn inspector_components_content(icon_font: Handle<Font>) -> impl Bundle {
                     ..Default::default()
                 },
                 children![
+                    // Always-on category header: names the tab whose cards the
+                    // list below belongs to. The strip only marks the active
+                    // tab with an accent; `update_active_category_label`
+                    // writes this text whenever the active category changes.
+                    (
+                        crate::inspector::category_strip::ActiveCategoryLabel,
+                        Text::new(String::new()),
+                        TextFont {
+                            font_size: tokens::TEXT_SIZE_SM,
+                            weight: FontWeight::SEMIBOLD,
+                            ..default()
+                        },
+                        TextColor(tokens::TEXT_SECONDARY),
+                        Node {
+                            width: percent(100),
+                            padding: UiRect {
+                                left: px(tokens::SPACING_SM),
+                                right: px(tokens::SPACING_SM),
+                                top: px(tokens::SPACING_SM),
+                                ..default()
+                            },
+                            flex_shrink: 0.0,
+                            ..default()
+                        },
+                    ),
                     // Add-header mount: per-category add UI populated by
                     // `rebuild_add_header` whenever `ActiveInspectorCategory` changes.
                     (crate::inspector::add_header::InspectorAddHeaderMount,),

@@ -195,6 +195,15 @@ impl Plugin for InspectorPlugin {
                     persist_inspector_collapse,
                 )
                     .run_if(in_state(crate::AppState::Editor)),
+            )
+            // Kept out of the tuple above (which is already at the max
+            // system arity): reads what `resolve_active_on_rebuild` writes,
+            // so it runs right after it in the same frame.
+            .add_systems(
+                Update,
+                category_strip::update_active_category_label
+                    .after(category_strip::resolve_active_on_rebuild)
+                    .run_if(in_state(crate::AppState::Editor)),
             );
     }
 }
@@ -391,6 +400,26 @@ pub fn field_edited_by(world: &World, widget: Entity) -> Option<(&str, &str)> {
     world
         .get::<FieldBinding>(widget)
         .map(|binding| (binding.type_path.as_str(), binding.field_path.as_str()))
+}
+
+/// The text the always-on category header above the card list shows, or
+/// `None` while the inspector panel has not spawned its content column.
+pub fn active_category_label(world: &mut World) -> Option<String> {
+    let mut labels = world.query_filtered::<&Text, With<category_strip::ActiveCategoryLabel>>();
+    labels.iter(world).next().map(|text| text.0.clone())
+}
+
+/// The `(title, description)` hover-tooltip pair each category tab carries,
+/// in no particular order. Empty while the strip has not spawned. Tests
+/// match it against the seeded category table as a set.
+pub fn category_tab_tooltips(world: &mut World) -> Vec<(String, String)> {
+    let mut tabs = world.query_filtered::<
+        &jackdaw_feathers::tooltip::Tooltip,
+        With<category_strip::InspectorCategoryTab>,
+    >();
+    tabs.iter(world)
+        .map(|tip| (tip.title.clone(), tip.description.clone()))
+        .collect()
 }
 
 /// The entity a field control was built for, or `None` when the entity is no
