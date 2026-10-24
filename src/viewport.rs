@@ -179,13 +179,22 @@ impl InteractionGuards<'_, '_> {
 
 /// Tracks whether a right-click fly session started inside the viewport.
 /// While active, the camera keeps responding even when the cursor leaves the viewport.
-#[derive(Resource, Default)]
+///
+/// `Reflect` (and the `register_type` in `ViewportPlugin::build`) so remote QA
+/// tooling can read fly activation over BRP (`world.get_resource`), which
+/// needs the type registered with `ReflectResource` data. Not serialized into
+/// scenes: an editor-session resource, like `ActiveTool`.
+#[derive(Resource, Default, Reflect)]
+#[reflect(Resource)]
 pub struct CameraFlyActive(pub bool);
 
 /// Tracks whether a middle-drag pan session started inside a world viewport.
 /// Like [`CameraFlyActive`], the pan sticks to the camera it started on even
 /// when the cursor leaves the viewport mid-drag.
-#[derive(Resource, Default)]
+///
+/// Registered for BRP reads the same way as [`CameraFlyActive`].
+#[derive(Resource, Default, Reflect)]
+#[reflect(Resource)]
 pub struct CameraPanActive(pub bool);
 
 pub struct ViewportPlugin;
@@ -200,6 +209,12 @@ impl Plugin for ViewportPlugin {
             .init_resource::<CameraPanActive>()
             .init_resource::<ActiveViewport>()
             .init_resource::<ViewportLayerCounter>()
+            // BRP reads (`world.get_resource`) need `ReflectResource` data in
+            // the type registry. QA asserts fly/pan activation (the L1 probe)
+            // and the steady-state text-focus gate (D5#1) through these.
+            .register_type::<CameraFlyActive>()
+            .register_type::<CameraPanActive>()
+            .register_type::<bevy::input_focus::InputFocus>()
             .insert_resource(GlobalAmbientLight::NONE)
             .add_systems(Startup, init_axis_indicator_asset)
             .add_systems(
@@ -222,7 +237,14 @@ impl Plugin for ViewportPlugin {
             )
             .add_systems(
                 Update,
+                // `update_active_viewport` cannot see plain `EditorDialog`
+                // entities (only `BlocksCameraInput` overlays), so while a
+                // dialog is open the two systems disagree about
+                // `JackdawCameraSettings.enabled`. Ordering the dialog kill
+                // last makes the frame end disabled either way instead of
+                // flashing enabled depending on ambient system order.
                 disable_camera_on_dialog
+                    .after(update_active_viewport)
                     .run_if(in_state(crate::AppState::Editor))
                     .run_if(not(crate::no_dialog_open)),
             )
@@ -889,7 +911,7 @@ pub(crate) fn update_active_viewport(
     mut active: ResMut<ActiveViewport>,
     mut camera_query: Query<(Entity, &mut JackdawCameraSettings)>,
     modal: Res<crate::modal_transform::ModalTransformState>,
-    input_focus: Res<bevy::input_focus::InputFocus>,
+    focus: crate::keybind_focus::KeybindFocus,
     blockers: Query<(), With<crate::BlocksCameraInput>>,
     mouse: Res<ButtonInput<MouseButton>>,
     mut fly_state: ResMut<CameraFlyActive>,
@@ -961,7 +983,15 @@ pub(crate) fn update_active_viewport(
     }
 
     let modal_active = modal.active.is_some();
-    let text_focused = input_focus.get().is_some();
+    // Only a focused text edit should hand the camera to the UI. The raw
+    // `input_focus.get().is_some()` read this replaced is always true in the
+    // post-startup steady state: bevy's `set_initial_focus` assigns the
+    // PrimaryWindow entity as focus when nothing else claimed it, so the
+    // camera sat disabled (`inputs_clear == false`) until the first viewport
+    // click cleared focus — fly/pan/zoom/WASD were all dead on a fresh start.
+    // `KeybindFocus::is_typing` asks whether the focused entity actually
+    // holds an editable text buffer (see `src/keybind_focus.rs`).
+    let text_focused = focus.is_typing();
     let overlay_blocking = !blockers.is_empty();
     let inputs_clear = !modal_active && !text_focused && !overlay_blocking;
 
@@ -1178,5 +1208,117 @@ mod tests {
                 "{view} renders in a format of its own"
             );
         }
+    }
+
+    /// World with every resource `update_active_viewport` reads, one camera
+    /// targeted by [`ActiveViewport`], and a fly session already engaged, so
+    /// the gate (`inputs_clear`) is the only thing that can keep the camera
+    /// disabled. `hovered_world` is false here (no windows or hosts), which
+    /// the engaged fly session compensates for in `should_enable`.
+    fn gate_app_with_fly() -> (App, Entity) {
+        let mut app = App::new();
+        app.init_resource::<ButtonInput<MouseButton>>()
+            .init_resource::<bevy::input_focus::InputFocus>()
+            .init_resource::<crate::modal_transform::ModalTransformState>()
+            .init_resource::<CameraFlyActive>()
+            .init_resource::<CameraPanActive>()
+            .init_resource::<ActiveViewport>();
+        let camera = app.world_mut().spawn(JackdawCameraSettings::default()).id();
+        app.world_mut().resource_mut::<ActiveViewport>().camera = Some(camera);
+        app.world_mut().resource_mut::<CameraFlyActive>().0 = true;
+        (app, camera)
+    }
+
+    fn camera_enabled(app: &mut App, camera: Entity) -> bool {
+        run_active_viewport_update(app.world_mut());
+        app.world()
+            .get::<JackdawCameraSettings>(camera)
+            .expect("the camera kept its settings")
+            .enabled
+    }
+
+    /// bevy's `set_initial_focus` assigns the primary window entity as the
+    /// focused entity at startup. The window is not a text input, so the
+    /// camera gate must treat the steady state as "not typing" — otherwise
+    /// fly/pan/zoom stay dead until the first viewport click clears focus.
+    #[test]
+    fn the_startup_window_focus_does_not_disable_the_camera() {
+        let (mut app, camera) = gate_app_with_fly();
+        let window = app.world_mut().spawn_empty().id();
+        app.world_mut()
+            .resource_mut::<bevy::input_focus::InputFocus>()
+            .set(window, bevy::input_focus::FocusCause::Navigated);
+        assert!(
+            camera_enabled(&mut app, camera),
+            "a fly session must engage while only the startup window focus is held"
+        );
+    }
+
+    /// A focused editable text field is the one focus state that belongs to
+    /// the UI: the camera gate has to keep disabling the camera for it.
+    #[test]
+    fn a_focused_text_edit_still_disables_the_camera() {
+        let (mut app, camera) = gate_app_with_fly();
+        let field = app
+            .world_mut()
+            .spawn(bevy::text::EditableText::default())
+            .id();
+        app.world_mut()
+            .resource_mut::<bevy::input_focus::InputFocus>()
+            .set(field, bevy::input_focus::FocusCause::Navigated);
+        assert!(
+            !camera_enabled(&mut app, camera),
+            "a focused text edit must keep the camera disabled"
+        );
+    }
+
+    /// `node_contains` mixes physical `ComputedNode` sizes with logical
+    /// transforms, folding them together with the inverse scale factor. The
+    /// same on-screen rect has to answer identically at 100%, 150% and 200%
+    /// DPI: a logical cursor hit is a hit everywhere, a miss a miss.
+    #[test]
+    fn node_contains_agrees_across_dpi_scales() {
+        // The shared logical rect: centre (200, 100), logical size (200, 100)
+        // → x in [100, 300], y in [50, 150].
+        let inside = Vec2::new(150.0, 100.0);
+        let outside = Vec2::new(320.0, 100.0);
+        for (dpi, inverse) in [(1.0f32, 1.0f32), (1.5, 1.0 / 1.5), (2.0, 0.5)] {
+            let computed = ComputedNode {
+                size: Vec2::new(200.0, 100.0) * dpi,
+                inverse_scale_factor: inverse,
+                ..Default::default()
+            };
+            let transform = UiGlobalTransform::from_translation(Vec2::new(200.0, 100.0) * dpi);
+            assert!(
+                node_contains(inside, &computed, &transform),
+                "logical hit at dpi {dpi}"
+            );
+            assert!(
+                !node_contains(outside, &computed, &transform),
+                "logical miss at dpi {dpi}"
+            );
+        }
+    }
+
+    /// The rect edges themselves are inclusive: the top-left corner and the
+    /// bottom-right corner of the logical rect both count as inside.
+    #[test]
+    fn node_contains_includes_the_rect_edges() {
+        let computed = ComputedNode {
+            size: Vec2::new(200.0, 100.0),
+            ..Default::default()
+        };
+        let transform = UiGlobalTransform::from_translation(Vec2::new(200.0, 100.0));
+        for corner in [Vec2::new(100.0, 50.0), Vec2::new(300.0, 150.0)] {
+            assert!(
+                node_contains(corner, &computed, &transform),
+                "corner {corner:?} is inside"
+            );
+        }
+        assert!(!node_contains(
+            Vec2::new(99.9, 100.0),
+            &computed,
+            &transform
+        ));
     }
 }

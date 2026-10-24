@@ -5,6 +5,10 @@ pub struct JackdawCameraPlugin;
 impl Plugin for JackdawCameraPlugin {
     fn build(&self, app: &mut App) {
         app.init_resource::<CameraNavInput>()
+            // Registered so remote QA tooling can read the per-camera enable
+            // over BRP (`world.query` on `JackdawCameraSettings`), the L2
+            // assertion channel. Not serialized into scenes.
+            .register_type::<JackdawCameraSettings>()
             .add_systems(Update, camera_system);
     }
 }
@@ -48,7 +52,8 @@ pub struct CameraNavInput {
 /// - Scroll wheel: move forward/back along view direction
 /// - Right-click + scroll: adjust camera speed
 /// - Shift (held): run speed multiplier while flying
-#[derive(Component)]
+#[derive(Component, Reflect)]
+#[reflect(Component)]
 pub struct JackdawCameraSettings {
     /// Mouse look sensitivity (radians per pixel).
     pub sensitivity: f32,
