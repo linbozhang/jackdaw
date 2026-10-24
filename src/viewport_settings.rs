@@ -31,6 +31,8 @@ pub(crate) fn plugin(app: &mut App) {
 pub(crate) fn add_to_extension(ctx: &mut ExtensionContext) {
     ctx.register_operator::<ViewportQualityPresetOp>()
         .register_operator::<ViewportQualitySetOp>()
+        .register_operator::<ViewportSsaoSetOp>()
+        .register_operator::<ViewportSharpenSetOp>()
         .register_operator::<ViewportShowToggleOp>()
         .register_operator::<ViewportRealtimeToggleOp>()
         .register_operator::<ViewportStatsToggleOp>()
@@ -106,6 +108,8 @@ impl QualityPreset {
             post_processing: at_least(Self::Medium),
             bloom: at_least(Self::High),
             ambient_occlusion: at_least(Self::Full),
+            // Only Full draws ambient occlusion, and it draws it well sampled.
+            ssao_quality: SsaoQuality::High,
         }
     }
 }
@@ -118,16 +122,42 @@ pub enum AntiAliasing {
     #[default]
     Fxaa,
     Taa,
+    Smaa,
 }
 
 impl AntiAliasing {
-    pub const ALL: [Self; 3] = [Self::Off, Self::Fxaa, Self::Taa];
+    pub const ALL: [Self; 4] = [Self::Off, Self::Fxaa, Self::Taa, Self::Smaa];
 
     pub fn label(self) -> &'static str {
         match self {
             Self::Off => "Off",
             Self::Fxaa => "FXAA",
             Self::Taa => "TAA",
+            Self::Smaa => "SMAA",
+        }
+    }
+}
+
+/// How many samples the viewport's ambient occlusion takes while it is on.
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum SsaoQuality {
+    Low,
+    Medium,
+    #[default]
+    High,
+    Ultra,
+}
+
+impl SsaoQuality {
+    pub const ALL: [Self; 4] = [Self::Low, Self::Medium, Self::High, Self::Ultra];
+
+    pub fn label(self) -> &'static str {
+        match self {
+            Self::Low => "Low",
+            Self::Medium => "Medium",
+            Self::High => "High",
+            Self::Ultra => "Ultra",
         }
     }
 }
@@ -193,6 +223,8 @@ pub struct ViewportQuality {
     pub post_processing: bool,
     pub bloom: bool,
     pub ambient_occlusion: bool,
+    /// How many samples the ambient occlusion takes while it is on.
+    pub ssao_quality: SsaoQuality,
 }
 
 impl Default for ViewportQuality {
@@ -218,6 +250,10 @@ pub struct ViewportSettings {
     pub stats: bool,
     /// The frame time graph under the stats readout.
     pub frame_graph: bool,
+    /// Contrast-adaptive sharpening over the viewport's finished frame.
+    pub sharpen: bool,
+    /// How much sharpening, from none at 0 to the most at 1.
+    pub sharpen_strength: f32,
 }
 
 impl Default for ViewportSettings {
@@ -229,6 +265,8 @@ impl Default for ViewportSettings {
             realtime: true,
             stats: false,
             frame_graph: false,
+            sharpen: false,
+            sharpen_strength: 0.6,
         }
     }
 }
@@ -337,14 +375,15 @@ pub(crate) fn viewport_quality_preset(
 #[operator(
     id = "viewport.quality.set",
     label = "Set Viewport Quality",
-    description = "Change the viewport's render scale, anti-aliasing, shadow quality or detail \
-                   distance. Editor only: the scene is unchanged.",
+    description = "Change the viewport's render scale, anti-aliasing, shadow quality, ambient \
+                   occlusion quality or detail distance. Editor only: the scene is unchanged.",
     allows_undo = false,
     params(
         render_scale(i64, doc = "Percent of the viewport's size to draw at, 25 to 100."),
-        anti_aliasing(String, doc = "`off`, `fxaa` or `taa`."),
+        anti_aliasing(String, doc = "`off`, `fxaa`, `taa` or `smaa`."),
         shadow_quality(String, doc = "`low`, `medium` or `high`."),
         detail_distance(String, doc = "`near`, `medium` or `far`."),
+        ssao_quality(String, doc = "`low`, `medium`, `high` or `ultra`."),
     )
 )]
 pub(crate) fn viewport_quality_set(
@@ -365,7 +404,7 @@ pub(crate) fn viewport_quality_set(
     }
     if let Some(name) = params.as_str("anti_aliasing") {
         let Some(choice) = find_by_label(AntiAliasing::ALL, AntiAliasing::label, name) else {
-            warn!("{id}: 'anti_aliasing' must be off, fxaa or taa");
+            warn!("{id}: 'anti_aliasing' must be off, fxaa, taa or smaa");
             return OperatorResult::Cancelled;
         };
         quality.anti_aliasing = choice;
@@ -384,6 +423,13 @@ pub(crate) fn viewport_quality_set(
         };
         quality.detail_distance = choice;
     }
+    if let Some(name) = params.as_str("ssao_quality") {
+        let Some(choice) = find_by_label(SsaoQuality::ALL, SsaoQuality::label, name) else {
+            warn!("{id}: 'ssao_quality' must be low, medium, high or ultra");
+            return OperatorResult::Cancelled;
+        };
+        quality.ssao_quality = choice;
+    }
     if settings.quality != quality {
         settings.quality = quality;
     }
@@ -397,6 +443,75 @@ fn find_by_label<T: Copy>(
 ) -> Option<T> {
     all.into_iter()
         .find(|choice| label(*choice).eq_ignore_ascii_case(name))
+}
+
+/// Turn the viewport's ambient occlusion on or off and pick its quality.
+#[operator(
+    id = "viewport.ssao.set",
+    label = "Set Viewport Ambient Occlusion",
+    description = "Turn the viewport's ambient occlusion on or off and choose how many samples it \
+                   takes. Editor only: the scene is unchanged.",
+    allows_undo = false,
+    params(
+        on(bool, doc = "On or off. Omit to leave it whichever way it is."),
+        quality(String, doc = "`low`, `medium`, `high` or `ultra`. Omit to keep it."),
+    )
+)]
+pub(crate) fn viewport_ssao_set(
+    params: In<OperatorParameters>,
+    mut settings: ResMut<ViewportSettings>,
+) -> OperatorResult {
+    let id = "viewport.ssao.set";
+    if let Some(name) = params.as_str("quality") {
+        let Some(choice) = find_by_label(SsaoQuality::ALL, SsaoQuality::label, name) else {
+            warn!("{id}: 'quality' must be low, medium, high or ultra");
+            return OperatorResult::Cancelled;
+        };
+        if settings.quality.ssao_quality != choice {
+            settings.quality.ssao_quality = choice;
+        }
+    }
+    if let Some(on) = params.as_bool("on")
+        && settings.quality.ambient_occlusion != on
+    {
+        settings.quality.ambient_occlusion = on;
+    }
+    OperatorResult::Finished
+}
+
+/// Turn contrast-adaptive sharpening of the viewport's frame on or off.
+#[operator(
+    id = "viewport.sharpen.set",
+    label = "Set Viewport Sharpening",
+    description = "Turn contrast-adaptive sharpening of the viewport's finished frame on or off, \
+                   and choose how much. Editor only: the scene is unchanged.",
+    allows_undo = false,
+    params(
+        on(bool, doc = "On or off. Omit to leave it whichever way it is."),
+        strength(f64, doc = "How much sharpening, from 0 to 1. Omit to keep it."),
+    )
+)]
+pub(crate) fn viewport_sharpen_set(
+    params: In<OperatorParameters>,
+    mut settings: ResMut<ViewportSettings>,
+) -> OperatorResult {
+    let id = "viewport.sharpen.set";
+    if let Some(strength) = params.as_float("strength") {
+        if !(0.0..=1.0).contains(&strength) {
+            warn!("{id}: 'strength' must be from 0 to 1");
+            return OperatorResult::Cancelled;
+        }
+        let strength = strength as f32;
+        if settings.sharpen_strength != strength {
+            settings.sharpen_strength = strength;
+        }
+    }
+    if let Some(on) = params.as_bool("on")
+        && settings.sharpen != on
+    {
+        settings.sharpen = on;
+    }
+    OperatorResult::Finished
 }
 
 /// Show or hide one kind of thing the viewport draws.
@@ -559,6 +674,35 @@ mod tests {
             ViewportQuality::default().render_scale
         );
         assert!(loaded.realtime);
+    }
+
+    #[test]
+    fn a_file_from_before_ssao_quality_and_sharpening_takes_their_defaults() {
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("viewport.json");
+        std::fs::write(
+            &path,
+            r#"{"quality": {"render_scale": 50, "anti_aliasing": "taa", "ambient_occlusion": true}}"#,
+        )
+        .unwrap();
+        let loaded = load(&path);
+        assert_eq!(loaded.quality.anti_aliasing, AntiAliasing::Taa);
+        assert!(loaded.quality.ambient_occlusion);
+        assert_eq!(loaded.quality.ssao_quality, SsaoQuality::High);
+        assert!(!loaded.sharpen);
+        assert_eq!(loaded.sharpen_strength, 0.6);
+    }
+
+    #[test]
+    fn the_presets_keep_the_choices_they_already_made() {
+        let full = QualityPreset::Full.quality();
+        assert_eq!(full.render_scale, 100);
+        assert_eq!(full.anti_aliasing, AntiAliasing::Taa);
+        assert!(full.ambient_occlusion);
+        let low = QualityPreset::Low.quality();
+        assert_eq!(low.render_scale, 50);
+        assert_eq!(low.anti_aliasing, AntiAliasing::Off);
+        assert!(!low.ambient_occlusion && !low.fog && !low.post_processing);
     }
 
     #[test]

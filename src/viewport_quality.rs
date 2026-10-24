@@ -6,16 +6,21 @@
 //! while those are hidden. No scene component is written, so the saved scene
 //! and Play keep the scene's own lights and effects.
 
+use bevy::anti_alias::contrast_adaptive_sharpening::ContrastAdaptiveSharpening;
 use bevy::anti_alias::fxaa::{Fxaa, Sensitivity};
 use bevy::anti_alias::smaa::Smaa;
 use bevy::anti_alias::taa::TemporalAntiAliasing;
 use bevy::core_pipeline::prepass::{MotionVectorPrepass, NormalPrepass};
 use bevy::image::ToExtents;
 use bevy::light::{DirectionalLightShadowMap, PointLightShadowMap};
-use bevy::pbr::{ExtractedDirectionalLight, ExtractedPointLight, ScreenSpaceAmbientOcclusion};
+use bevy::pbr::{
+    ExtractedDirectionalLight, ExtractedPointLight, ScreenSpaceAmbientOcclusion,
+    ScreenSpaceAmbientOcclusionQualityLevel,
+};
 use bevy::prelude::*;
 use bevy::render::camera::{MipBias, TemporalJitter};
 use bevy::render::extract_resource::{ExtractResource, ExtractResourcePlugin};
+use bevy::render::view::Msaa;
 use bevy::render::{Render, RenderApp, RenderSystems};
 use bevy::ui::widget::ViewportNode;
 use jackdaw_surface::EnvironmentOptOut;
@@ -23,7 +28,7 @@ use jackdaw_terrain::render::{DetailSettings, DetailTile};
 
 use crate::viewport::MainViewportCamera;
 use crate::viewport_settings::{
-    AntiAliasing, DetailDistance, ShadowQuality, ViewportQuality, ViewportSettings,
+    AntiAliasing, DetailDistance, ShadowQuality, SsaoQuality, ViewportQuality, ViewportSettings,
 };
 
 pub(crate) fn plugin(app: &mut App) {
@@ -109,11 +114,23 @@ type ViewportCameraParts = (
     Has<Fxaa>,
     Has<Smaa>,
     Has<TemporalAntiAliasing>,
-    Has<ScreenSpaceAmbientOcclusion>,
+    Option<&'static ScreenSpaceAmbientOcclusion>,
+    Option<&'static ContrastAdaptiveSharpening>,
     Has<NormalPrepass>,
     Has<MotionVectorPrepass>,
+    Option<&'static Msaa>,
     Option<&'static EffectPrepasses>,
 );
+
+/// The samples bevy's ambient occlusion takes at each quality level.
+pub fn ssao_quality_level(quality: SsaoQuality) -> ScreenSpaceAmbientOcclusionQualityLevel {
+    match quality {
+        SsaoQuality::Low => ScreenSpaceAmbientOcclusionQualityLevel::Low,
+        SsaoQuality::Medium => ScreenSpaceAmbientOcclusionQualityLevel::Medium,
+        SsaoQuality::High => ScreenSpaceAmbientOcclusionQualityLevel::High,
+        SsaoQuality::Ultra => ScreenSpaceAmbientOcclusionQualityLevel::Ultra,
+    }
+}
 
 /// Give each viewport camera the effects and edge smoothing the settings ask
 /// for, writing only what differs.
@@ -124,7 +141,9 @@ fn dress_viewport_cameras(
 ) {
     let quality = settings.quality;
     let opt_out = environment_opt_out(&settings);
-    for (entity, current, fxaa, smaa, taa, ssao, normal, motion, added) in &cameras {
+    for (entity, current, fxaa, smaa, taa, ssao, sharpening, normal, motion, msaa, added) in
+        &cameras
+    {
         let mut camera = commands.entity(entity);
         if current != Some(&opt_out) {
             camera.insert(opt_out);
@@ -134,7 +153,15 @@ fn dress_viewport_cameras(
             motion_vectors: added.is_some_and(|added| added.motion_vectors),
         };
         let wants_taa = quality.anti_aliasing == AntiAliasing::Taa;
+        let wants_smaa = quality.anti_aliasing == AntiAliasing::Smaa;
         let wants_fxaa = quality.anti_aliasing == AntiAliasing::Fxaa;
+        // TAA and SMAA smooth one sample per pixel, so multisampling has to be
+        // off while either is on. The viewport cameras are spawned with it off
+        // (order-independent transparency needs that); this holds it off
+        // should anything turn sampling back on.
+        if (wants_taa || wants_smaa) && msaa != Some(&Msaa::Off) {
+            camera.insert(Msaa::Off);
+        }
         if wants_fxaa != fxaa {
             if wants_fxaa {
                 camera.insert(viewport_fxaa());
@@ -142,8 +169,12 @@ fn dress_viewport_cameras(
                 camera.remove::<Fxaa>();
             }
         }
-        if smaa {
-            camera.remove::<Smaa>();
+        if wants_smaa != smaa {
+            if wants_smaa {
+                camera.insert(Smaa::default());
+            } else {
+                camera.remove::<Smaa>();
+            }
         }
         if wants_taa && !taa {
             added_prepasses.motion_vectors |= !motion;
@@ -155,15 +186,32 @@ fn dress_viewport_cameras(
                 added_prepasses.motion_vectors = false;
             }
         }
-        if quality.ambient_occlusion && !ssao {
+        let ssao_quality = ssao_quality_level(quality.ssao_quality);
+        if quality.ambient_occlusion && ssao.map(|ssao| ssao.quality_level) != Some(ssao_quality) {
             added_prepasses.normal |= !normal;
-            camera.insert(ScreenSpaceAmbientOcclusion::default());
-        } else if !quality.ambient_occlusion && ssao {
+            camera.insert(ScreenSpaceAmbientOcclusion {
+                quality_level: ssao_quality,
+                ..default()
+            });
+        } else if !quality.ambient_occlusion && ssao.is_some() {
             camera.remove::<ScreenSpaceAmbientOcclusion>();
             if added_prepasses.normal {
                 camera.remove::<NormalPrepass>();
                 added_prepasses.normal = false;
             }
+        }
+        let wants_sharpening = settings.sharpen;
+        if wants_sharpening
+            && sharpening.map(|sharpening| sharpening.sharpening_strength)
+                != Some(settings.sharpen_strength)
+        {
+            camera.insert(ContrastAdaptiveSharpening {
+                enabled: true,
+                sharpening_strength: settings.sharpen_strength,
+                ..default()
+            });
+        } else if !wants_sharpening && sharpening.is_some() {
+            camera.remove::<ContrastAdaptiveSharpening>();
         }
         let was = (
             added.is_some_and(|added| added.normal),

@@ -4,12 +4,18 @@
 use crate::util;
 use crate::util::OperatorResultExt as _;
 
+use bevy::anti_alias::contrast_adaptive_sharpening::ContrastAdaptiveSharpening;
 use bevy::anti_alias::fxaa::Fxaa;
+use bevy::anti_alias::smaa::Smaa;
 use bevy::anti_alias::taa::TemporalAntiAliasing;
 use bevy::core_pipeline::prepass::{MotionVectorPrepass, NormalPrepass};
 use bevy::light::{DirectionalLightShadowMap, PointLightShadowMap};
-use bevy::pbr::{DistanceFog, ScreenSpaceAmbientOcclusion};
+use bevy::pbr::{
+    DistanceFog, ScreenSpaceAmbientOcclusion, ScreenSpaceAmbientOcclusionQualityLevel,
+};
 use bevy::prelude::*;
+use bevy::render::camera::{MipBias, TemporalJitter};
+use bevy::render::view::Msaa;
 use bevy::ui::widget::ViewportNode;
 use bevy::window::{PrimaryWindow, WindowResolution};
 use jackdaw::viewport::MainViewportCamera;
@@ -162,6 +168,114 @@ fn the_scenes_fog_leaves_the_viewport_while_fog_is_hidden() {
         has::<DistanceFog>(&mut app),
         "shown again, the scene's fog is back"
     );
+}
+
+#[test]
+fn each_anti_aliasing_choice_dresses_the_viewport_camera_alone() {
+    let dir = tempfile::tempdir().unwrap();
+    let mut app = app_with_viewport(dir.path());
+
+    run(&mut app, "viewport.quality.set anti_aliasing=off");
+    assert!(
+        !has::<Fxaa>(&mut app) && !has::<Smaa>(&mut app) && !has::<TemporalAntiAliasing>(&mut app)
+    );
+
+    run(&mut app, "viewport.quality.set anti_aliasing=smaa");
+    assert!(has::<Smaa>(&mut app));
+    assert!(!has::<Fxaa>(&mut app) && !has::<TemporalAntiAliasing>(&mut app));
+    assert!(
+        !has::<TemporalJitter>(&mut app) && !has::<MipBias>(&mut app),
+        "smaa leaves taa's jitter and mip bias behind"
+    );
+
+    run(&mut app, "viewport.quality.set anti_aliasing=taa");
+    assert!(has::<TemporalAntiAliasing>(&mut app));
+    assert!(!has::<Smaa>(&mut app) && !has::<Fxaa>(&mut app));
+    assert!(has::<TemporalJitter>(&mut app) && has::<MipBias>(&mut app));
+
+    run(&mut app, "viewport.quality.set anti_aliasing=fxaa");
+    assert!(has::<Fxaa>(&mut app));
+    assert!(
+        !has::<TemporalAntiAliasing>(&mut app)
+            && !has::<TemporalJitter>(&mut app)
+            && !has::<MipBias>(&mut app)
+            && !has::<MotionVectorPrepass>(&mut app),
+        "taa and the prepass it brought go together"
+    );
+}
+
+#[test]
+fn taa_and_smaa_hold_multisampling_off() {
+    let dir = tempfile::tempdir().unwrap();
+    let mut app = app_with_viewport(dir.path());
+    for choice in ["smaa", "taa"] {
+        run(
+            &mut app,
+            &format!("viewport.quality.set anti_aliasing={choice}"),
+        );
+        let camera = camera(&mut app);
+        assert_eq!(
+            app.world().get::<Msaa>(camera),
+            Some(&Msaa::Off),
+            "{choice} smooths one sample per pixel"
+        );
+    }
+}
+
+#[test]
+fn the_ssao_quality_reaches_the_camera_and_off_takes_the_prepass_back() {
+    let dir = tempfile::tempdir().unwrap();
+    let mut app = app_with_viewport(dir.path());
+    let camera = camera(&mut app);
+    let quality_level = |app: &App| {
+        app.world()
+            .get::<ScreenSpaceAmbientOcclusion>(camera)
+            .map(|ssao| ssao.quality_level)
+    };
+
+    run(&mut app, "viewport.ssao.set on=true quality=ultra");
+    assert_eq!(
+        quality_level(&app),
+        Some(ScreenSpaceAmbientOcclusionQualityLevel::Ultra)
+    );
+    assert!(has::<NormalPrepass>(&mut app), "ssao needs normal vectors");
+
+    run(&mut app, "viewport.ssao.set quality=low");
+    assert_eq!(
+        quality_level(&app),
+        Some(ScreenSpaceAmbientOcclusionQualityLevel::Low)
+    );
+
+    run(&mut app, "viewport.ssao.set on=false");
+    assert!(
+        !has::<ScreenSpaceAmbientOcclusion>(&mut app) && !has::<NormalPrepass>(&mut app),
+        "off, the effect and the prepass it brought go together"
+    );
+}
+
+#[test]
+fn sharpening_dresses_the_viewport_camera_with_its_strength() {
+    let dir = tempfile::tempdir().unwrap();
+    let mut app = app_with_viewport(dir.path());
+
+    let cas = |app: &mut App| {
+        let camera = camera(app);
+        app.world()
+            .get::<ContrastAdaptiveSharpening>(camera)
+            .cloned()
+    };
+
+    run(&mut app, "viewport.sharpen.set on=true strength=0.8");
+    let sharpening = cas(&mut app).expect("sharpening dresses the camera");
+    assert!(sharpening.enabled);
+    assert_eq!(sharpening.sharpening_strength, 0.8);
+
+    run(&mut app, "viewport.sharpen.set strength=0.25");
+    let sharpening = cas(&mut app).expect("the strength changes in place");
+    assert_eq!(sharpening.sharpening_strength, 0.25);
+
+    run(&mut app, "viewport.sharpen.set on=false");
+    assert!(!has::<ContrastAdaptiveSharpening>(&mut app));
 }
 
 #[test]
