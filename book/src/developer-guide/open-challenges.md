@@ -193,3 +193,49 @@ names.
 Where to dig in: the name-path walk and its refusal on
 ambiguous siblings, which is where the design either holds or
 needs a stable per-node id from the loader instead.
+
+## Pointer-delta gate headroom
+
+Every frame's accumulated pointer motion passes a gate
+(`drop_synthetic_pointer_jump` in `src/input_contexts.rs`) that
+drops the whole frame's delta when it exceeds
+`MAX_PLAUSIBLE_POINTER_DELTA`, 1000 px per frame. It exists
+because the pointer stack itself lies: RDP sessions and some
+vendor drivers re-anchor the cursor around a grab transition and
+report 37k-850k px in a single frame, which fed straight into the
+camera is the "the view snaps when I right-click" report. The
+gate is measured against that observed population (remote-desktop
+and vendor-driver sessions, measured 2026-10-23 on real hardware).
+
+The gate judges the frame-accumulated sum, after the per-event
+deltas are folded, and it drops rather than clamps -- a clamp
+would still turn the view by the clamp bound. That choice has two
+known corners where a real gesture can be dropped whole:
+
+- High-DPI fast swipes. At 800 DPI a 1 m/s swipe is ~525 px/frame
+  at 60 fps (safe); at 1600 DPI and 2 m/s it is ~2100 px/frame,
+  past the gate. Hardware that fast is unusual for editor work,
+  but not impossible.
+- Hitch-frame backlog. Because the sum grows with frame time, a
+  200 ms hitch that batches a merely moderate swipe accumulates
+  on the order of 1300 px into one frame, past the gate -- and
+  the drop is not recovered afterwards.
+
+For calibration, the safe side of the line: a normal editor swipe
+(0.25 s across a 2560 px screen at 150% DPI) is ~171 px/frame,
+5.8x under the gate; an aggressive full-screen flick (0.1 s) is
+~427 px/frame, 2.3x under. A measured 600 px/frame drag releases
+cleanly, and a single 50000 px synthetic jump is dropped whole --
+both ends verified live against the editor build. Any threshold
+change should keep both of those pinned.
+
+If the corners above start mattering, the candidate shapes are:
+gate each event before the fold (a backlog of small real deltas
+then sums through), or scale the threshold by the frame duration
+so a hitch frame does not shrink it. Clamping is not on the table
+-- it reintroduces the press-snap this gate fixed.
+
+Where to dig in: `src/input_contexts.rs`
+(`MAX_PLAUSIBLE_POINTER_DELTA`, `drop_synthetic_pointer_jump`)
+and the constant's doc comment, which records the measured
+background.

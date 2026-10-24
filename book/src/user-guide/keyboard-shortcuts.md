@@ -58,12 +58,13 @@
 | 2 | Edge mode |
 | 3 | Face mode |
 | 4 | Clip mode |
+| K | Knife mode |
 | X / Y / Z | Constrain axis |
 | Shift+Click | Multi-select |
 | Delete | Delete selected element |
 | PageUp/PageDown | Nudge selected vertices/edges/faces up/down |
 | Enter | Apply clip plane |
-| Esc | Exit brush edit |
+| Esc | Exit brush edit (and deselect; press `1`-`4` again after re-clicking an entity) |
 
 ## Brush Draw
 
