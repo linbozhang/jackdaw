@@ -13,6 +13,9 @@ use lucide_icons::Icon;
 pub struct InspectorCategory {
     pub id: Cow<'static, str>,
     pub label: Cow<'static, str>,
+    /// One-line description surfaced by the strip tab's hover tooltip
+    /// (after the long-hover delay). Empty = no description line.
+    pub description: Cow<'static, str>,
     pub icon: Icon,
     pub order: i32,
 }
@@ -119,17 +122,54 @@ pub fn resolve_active_category<'a>(current: &'a str, applicable: &[&'a str]) -> 
 
 /// Seed the six built-in categories and their component type-path mappings.
 pub fn seed_default_categories(r: &mut InspectorRegistry) {
-    for (id, label, icon, order) in [
-        ("object", "Object", Icon::Box, 0),
-        ("mesh", "Mesh", Icon::Grid3x3, 10),
-        ("modifiers", "Modifiers", Icon::Wrench, 20),
-        ("material", "Material", Icon::Palette, 30),
-        ("physics", "Physics", Icon::Orbit, 40),
-        ("components", "Components", Icon::Component, 50),
+    for (id, label, description, icon, order) in [
+        (
+            "object",
+            "Object",
+            "Identity, transform and visibility: what this entity is.",
+            Icon::Box,
+            0,
+        ),
+        (
+            "mesh",
+            "Mesh",
+            "Brush geometry for this entity.",
+            Icon::Grid3x3,
+            10,
+        ),
+        (
+            "modifiers",
+            "Modifiers",
+            "Geometry modifiers applied to the brush.",
+            Icon::Wrench,
+            20,
+        ),
+        (
+            "material",
+            "Material",
+            "The material assets this entity's surfaces wear.",
+            Icon::Palette,
+            30,
+        ),
+        (
+            "physics",
+            "Physics",
+            "Colliders and rigid bodies.",
+            Icon::Orbit,
+            40,
+        ),
+        (
+            "components",
+            "Components",
+            "Every other component on this entity. Add one here.",
+            Icon::Component,
+            50,
+        ),
     ] {
         r.register_category(InspectorCategory {
             id: id.into(),
             label: label.into(),
+            description: description.into(),
             icon,
             order,
         });
@@ -339,11 +379,24 @@ mod tests {
     }
 
     #[test]
+    fn builtin_categories_carry_descriptions() {
+        let r = seeded();
+        for cat in r.categories_sorted() {
+            assert!(
+                !cat.description.is_empty(),
+                "builtin category {} must carry a tooltip description",
+                cat.id
+            );
+        }
+    }
+
+    #[test]
     fn register_category_and_mapping() {
         let mut r = seeded();
         r.register_category(InspectorCategory {
             id: "gameplay".into(),
             label: "Gameplay".into(),
+            description: String::new().into(),
             icon: Icon::Gamepad2,
             order: 25,
         });
