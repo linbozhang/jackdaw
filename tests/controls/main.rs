@@ -18,3 +18,4 @@ mod popovers;
 mod segmented_controls;
 mod synthetic_click;
 mod text_fields;
+mod ui_probe_click;
