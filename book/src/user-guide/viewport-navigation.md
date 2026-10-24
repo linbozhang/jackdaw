@@ -25,6 +25,28 @@ If you don't want to lift your hand, scrolling without RMB
 held dollies the camera forward and back along the look axis.
 Useful for small framing tweaks while a tool is active.
 
+## Pan with the middle mouse button
+
+Hold the middle mouse button and drag to pan the view, the same
+gesture as the Unity Scene view. Panning moves the camera in the
+plane of the screen; the yaw and pitch never change.
+
+A middle click without dragging means something else: it toggles
+snapping for the active tool (the same as the toolbar magnet).
+Whether it reads as a click or a pan is decided by how far the
+pointer travels while the button is down, so a deliberate
+middle-click won't pan, and a pan won't flip your snap setting on
+release.
+
+## Typing keeps the camera still
+
+Clicking into a text field -- an Inspector number, a filter --
+hands the keyboard to that field. While you type, the viewport
+camera ignores `W`/`A`/`S`/`D`, the wheel, and even the
+right-mouse look mode, so typos can't fly you off into the void.
+`Escape` leaves the field first; the next `Escape` is the one
+that cancels the active tool. One layer at a time.
+
 ## Focus selection
 
 Press `F` with one or more entities selected to recenter the
