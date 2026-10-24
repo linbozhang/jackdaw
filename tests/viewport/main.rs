@@ -9,6 +9,7 @@ mod util;
 
 mod extension_tooling;
 mod fly_cursor;
+mod graphics_panel;
 mod multi_viewport;
 mod preview_context;
 mod view_modes;
