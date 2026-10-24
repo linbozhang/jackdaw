@@ -32,5 +32,6 @@ graphics-exposure = Exposure (EV100)
 graphics-bloom-intensity = Bloom Intensity
 graphics-bloom-threshold = Bloom Threshold
 graphics-opt-out-hint = The viewport opts out of the scene's post-processing. Turn Viewport quality's Post-processing on to preview these.
+graphics-scene-empty-hint = This scene has no environment, so these controls write nothing. Add an Environment component to the scene to start authoring its look.
 graphics-realtime-gi = Realtime GI
 graphics-realtime-gi-tooltip = Bevy's realtime global illumination (Solari) is experimental, needs hardware ray tracing and its own cargo feature, and jackdaw has not adopted it. Substitutes: ambient occlusion, sky reflections (Environment, Ambient, Reflections: Sky), baked reflection probes, and volumetric light.

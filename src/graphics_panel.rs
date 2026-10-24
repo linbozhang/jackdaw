@@ -72,6 +72,7 @@ pub(crate) fn plugin(app: &mut App) {
             sync_viewport_fields,
             sync_scene_fields,
             update_opt_out_hint,
+            update_scene_empty_hint,
         ),
     )
     .add_observer(on_segment_pick)
@@ -177,6 +178,12 @@ pub struct GraphicsTonemapperField;
 #[derive(Component)]
 pub struct GraphicsOptOutHint;
 
+/// The note that the scene carries no `Environment`, so the Scene section's
+/// controls have nothing to write — shown instead of them sitting silently
+/// inert, and hidden once an environment exists.
+#[derive(Component)]
+pub struct GraphicsSceneEmptyHint;
+
 /// The disabled Realtime GI row.
 #[derive(Component)]
 pub struct GraphicsRealtimeGi;
@@ -216,12 +223,16 @@ fn populate_graphics_panel(
     mut commands: Commands,
 ) {
     for panel in &panels {
-        let post = environments
-            .iter()
-            .next()
-            .map_or_else(PostProcess::default, |env| env.post.clone());
+        let scene_environment = environments.iter().next();
+        let post = scene_environment.map_or_else(PostProcess::default, |env| env.post.clone());
         build_viewport_section(&mut commands, panel, &settings, &localization);
-        build_scene_section(&mut commands, panel, &post, &localization);
+        build_scene_section(
+            &mut commands,
+            panel,
+            &post,
+            scene_environment.is_some(),
+            &localization,
+        );
         build_realtime_gi_row(&mut commands, panel, &localization);
     }
 }
@@ -398,10 +409,13 @@ fn build_viewport_section(
 }
 
 /// The Scene section: the environment every camera in the game is dressed by.
+/// `scene_has_environment` seeds the empty note's visibility so it is right on
+/// the first frame; `update_scene_empty_hint` keeps it right afterwards.
 fn build_scene_section(
     commands: &mut Commands,
     panel: Entity,
     post: &PostProcess,
+    scene_has_environment: bool,
     localization: &Localization,
 ) {
     let section = spawn_section(
@@ -467,6 +481,27 @@ fn build_scene_section(
             slider,
         );
     }
+
+    let empty_display = if scene_has_environment {
+        Display::None
+    } else {
+        Display::Flex
+    };
+    commands.spawn((
+        GraphicsSceneEmptyHint,
+        Text::new(text(localization, "graphics-scene-empty-hint")),
+        TextFont {
+            font_size: tokens::TEXT_SIZE_XS,
+            ..default()
+        },
+        TextColor(tokens::TEXT_SECONDARY),
+        Node {
+            display: empty_display,
+            width: percent(100),
+            ..default()
+        },
+        ChildOf(section),
+    ));
 
     commands.spawn((
         GraphicsOptOutHint,
@@ -715,6 +750,24 @@ fn update_opt_out_hint(
         Display::None
     } else {
         Display::Flex
+    };
+    for mut node in &mut hints {
+        if node.display != wanted {
+            node.display = wanted;
+        }
+    }
+}
+
+/// Show the empty note while no environment exists for the Scene section to
+/// write, and hide it again once one does — however it came to be.
+fn update_scene_empty_hint(
+    environments: Query<(), With<Environment>>,
+    mut hints: Query<&mut Node, With<GraphicsSceneEmptyHint>>,
+) {
+    let wanted = if environments.is_empty() {
+        Display::Flex
+    } else {
+        Display::None
     };
     for mut node in &mut hints {
         if node.display != wanted {

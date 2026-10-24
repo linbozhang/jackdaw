@@ -10,8 +10,9 @@ use bevy::prelude::*;
 use bevy::ui::{Checked, InteractionDisabled};
 use bevy::ui_widgets::{SliderValue, ValueChange};
 use jackdaw::graphics_panel::{
-    GRAPHICS_WINDOW_ID, GraphicsOptOutHint, GraphicsPanel, GraphicsRealtimeGi, GraphicsSegment,
-    GraphicsSlider, GraphicsToggle, GraphicsTonemapperField,
+    GRAPHICS_WINDOW_ID, GraphicsOptOutHint, GraphicsPanel, GraphicsRealtimeGi,
+    GraphicsSceneEmptyHint, GraphicsSegment, GraphicsSlider, GraphicsToggle,
+    GraphicsTonemapperField,
 };
 use jackdaw::viewport_settings::{
     AntiAliasing, QualityPreset, SsaoQuality, ViewportSettings, ViewportSettingsFile,
@@ -422,5 +423,47 @@ fn the_opt_out_hint_follows_the_viewport_setting() {
         wanted(&mut app),
         Display::Flex,
         "the note appears once opted out"
+    );
+}
+
+/// With no environment in the scene the Scene section says so instead of its
+/// controls sitting silently inert, and the note leaves — however the state
+/// came about — once an environment exists again.
+#[test]
+fn the_scene_empty_hint_follows_the_scenes_environment() {
+    let mut app = editor_on_a_panel();
+    open_panel(&mut app);
+
+    let wanted = |app: &mut App| -> Display {
+        let world = app.world_mut();
+        let mut query = world.query_filtered::<&Node, With<GraphicsSceneEmptyHint>>();
+        query.single(world).expect("the scene-empty hint").display
+    };
+
+    assert_eq!(
+        wanted(&mut app),
+        Display::Flex,
+        "a scene without an environment shows the note"
+    );
+    let page = panel_text(&mut app);
+    assert!(
+        page.contains("no environment"),
+        "the note names the missing environment; it reads\n{page}"
+    );
+
+    let environment = app.world_mut().spawn(Environment::default()).id();
+    settle(&mut app);
+    assert_eq!(
+        wanted(&mut app),
+        Display::None,
+        "an environment in the scene hides the note"
+    );
+
+    app.world_mut().despawn(environment);
+    settle(&mut app);
+    assert_eq!(
+        wanted(&mut app),
+        Display::Flex,
+        "losing the environment brings the note back"
     );
 }
