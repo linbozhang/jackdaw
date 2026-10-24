@@ -19,6 +19,7 @@
 - [Physics](user-guide/physics.md)
 - [Scene Management](user-guide/scene-management.md)
 - [Resources](user-guide/resources.md)
+- [Graphics Panel](user-guide/graphics-panel.md)
 - [Play-in-editor](user-guide/play-in-editor.md)
 - [Remote Debugging](user-guide/remote-debugging.md)
 - [Keyboard Shortcuts](user-guide/keyboard-shortcuts.md)
