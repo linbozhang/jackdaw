@@ -205,6 +205,19 @@ impl JackdawExtension for CoreWindowsExtension {
                     window.spawn(crate::remote::remote_inspector::remote_inspector());
                 }),
         );
+
+        ctx.register_window(
+            WindowDescriptor::new(crate::graphics_panel::GRAPHICS_WINDOW_ID)
+                .with_name("Graphics")
+                .with_icon(Icon::Aperture.unicode())
+                .with_default_area(DefaultArea::RightSidebar)
+                // Behind the sidebar's own panels: the panel is opened on
+                // purpose (command palette, Window menu) rather than fronted.
+                .with_priority(6)
+                .with_build(|window| {
+                    window.spawn(crate::graphics_panel::graphics_panel_root());
+                }),
+        );
     }
 }
 

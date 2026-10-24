@@ -43,6 +43,7 @@ pub use jackdaw_runtime::frame_work;
 pub mod game_panel;
 pub mod gizmo_ops;
 pub mod gizmos;
+pub mod graphics_panel;
 pub mod grid_ops;
 pub mod hierarchy;
 pub mod history_ops;
@@ -503,6 +504,7 @@ impl Plugin for EditorCorePlugin {
         .add_plugins((
             viewport_settings::plugin,
             viewport_quality::plugin,
+            graphics_panel::plugin,
             viewport_redraw::plugin,
             toolbar_overflow::plugin,
             extension_slots::plugin,
