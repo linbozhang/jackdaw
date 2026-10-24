@@ -138,6 +138,7 @@ pub mod reference_image;
 pub mod reflect_default;
 pub mod remote;
 pub mod remote_ops;
+pub mod render_backend;
 pub mod render_diagnostics;
 pub mod restart;
 pub mod run_config;

@@ -11,8 +11,8 @@
 //! ```
 //!
 //! Off unless asked for: the timestamp queries cost GPU time and reading them
-//! back stalls the frame. [`wgpu_settings`] is the other half -- timestamps are
-//! a device feature requested at device creation, long before this plugin
+//! back stalls the frame. [`timestamp_features`] is the other half -- timestamps
+//! are a device feature requested at device creation, long before this plugin
 //! builds.
 
 use core::time::Duration;
@@ -20,7 +20,7 @@ use core::time::Duration;
 use bevy::diagnostic::{LogDiagnosticsPlugin, SystemInformationDiagnosticsPlugin};
 use bevy::prelude::*;
 use bevy::render::diagnostic::RenderDiagnosticsPlugin;
-use bevy::render::settings::{WgpuFeatures, WgpuSettings};
+use bevy::render::settings::WgpuFeatures;
 
 /// Turns the per-pass timings on when set to anything but `0`.
 pub const ENV_RENDER_DIAGNOSTICS: &str = "JACKDAW_RENDER_DIAGNOSTICS";
@@ -44,15 +44,15 @@ fn enabled(raw: Option<&str>) -> bool {
     raw.is_some_and(|value| !matches!(value.trim(), "" | "0" | "false"))
 }
 
-/// The wgpu settings a diagnostics run needs, or `None` for an ordinary launch.
-/// Requesting the timestamp features unconditionally would fail on a backend
-/// that lacks them.
-pub fn wgpu_settings() -> Option<WgpuSettings> {
-    requested().then(|| WgpuSettings {
-        features: WgpuFeatures::TIMESTAMP_QUERY
+/// The timestamp features a diagnostics run needs, or `None` for an
+/// ordinary launch. Requesting them unconditionally would fail on a
+/// backend that lacks them. `render_backend::wgpu_settings` folds them
+/// into the settings the editor builds its renderer from.
+pub fn timestamp_features() -> Option<WgpuFeatures> {
+    requested().then(|| {
+        WgpuFeatures::TIMESTAMP_QUERY
             | WgpuFeatures::TIMESTAMP_QUERY_INSIDE_ENCODERS
-            | WgpuFeatures::TIMESTAMP_QUERY_INSIDE_PASSES,
-        ..default()
+            | WgpuFeatures::TIMESTAMP_QUERY_INSIDE_PASSES
     })
 }
 
