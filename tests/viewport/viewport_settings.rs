@@ -5,7 +5,7 @@ use crate::util;
 
 use bevy::prelude::*;
 use jackdaw::viewport_settings::{
-    AntiAliasing, QualityPreset, ViewportSettings, ViewportSettingsFile,
+    AntiAliasing, QualityPreset, SsaoQuality, ViewportSettings, ViewportSettingsFile,
 };
 use jackdaw_api::prelude::*;
 
@@ -102,6 +102,9 @@ fn names_the_settings_do_not_have_are_refused() {
         ("viewport.quality.preset", [("preset", "ultra")]),
         ("viewport.quality.set", [("render_scale", "10")]),
         ("viewport.quality.set", [("anti_aliasing", "msaa")]),
+        ("viewport.quality.set", [("ssao_quality", "extreme")]),
+        ("viewport.ssao.set", [("quality", "extreme")]),
+        ("viewport.sharpen.set", [("strength", "1.5")]),
         ("viewport.show.toggle", [("flag", "everything")]),
     ] {
         assert_eq!(
@@ -128,6 +131,35 @@ fn a_changed_setting_is_kept_in_the_users_settings_file() {
     assert_eq!(kept, *settings(&app));
     assert_eq!(kept.preset(), Some(QualityPreset::Medium));
     assert!(!kept.realtime && kept.stats);
+}
+
+#[test]
+fn the_smaa_ssao_and_sharpening_choices_round_trip_through_the_users_file() {
+    let dir = tempfile::tempdir().unwrap();
+    let mut app = app_keeping_settings_in(dir.path());
+    run(
+        &mut app,
+        "viewport.quality.set",
+        &[("anti_aliasing", "smaa"), ("ssao_quality", "ultra")],
+    );
+    run(
+        &mut app,
+        "viewport.ssao.set",
+        &[("on", "true"), ("quality", "medium")],
+    );
+    run(
+        &mut app,
+        "viewport.sharpen.set",
+        &[("on", "true"), ("strength", "0.75")],
+    );
+
+    let kept = jackdaw::viewport_settings::load(&dir.path().join("viewport.json"));
+    assert_eq!(kept, *settings(&app));
+    assert_eq!(kept.quality.anti_aliasing, AntiAliasing::Smaa);
+    assert_eq!(kept.quality.ssao_quality, SsaoQuality::Medium);
+    assert!(kept.quality.ambient_occlusion);
+    assert!(kept.sharpen);
+    assert_eq!(kept.sharpen_strength, 0.75);
 }
 
 #[test]
