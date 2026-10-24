@@ -212,6 +212,11 @@ fn jd_mcp_initializes_and_reaches_a_running_editor() {
         "wait",
         "cancel",
         "assets",
+        "ui_tree",
+        "ui_click",
+        "ui_drag",
+        "ui_input",
+        "camera_state",
     ] {
         assert!(names.contains(&wanted), "no `{wanted}` tool: {names:?}");
     }
@@ -252,6 +257,24 @@ fn jd_mcp_initializes_and_reaches_a_running_editor() {
         reported["project"].as_str().map(PathBuf::from),
         Some(project.path().to_path_buf()),
         "status names another project: {status}"
+    );
+
+    // The UI tree is the tool a client reads before driving the screen; it
+    // has to answer over the wire with the editor's own chrome in it.
+    let ui = request(
+        &mut stdin,
+        &mut stdout,
+        4,
+        "tools/call",
+        json!({ "name": "ui_tree", "arguments": { "depth": 1 } }),
+    );
+    let nodes = ui["result"]["structuredContent"]["nodes"]
+        .as_array()
+        .cloned()
+        .unwrap_or_default();
+    assert!(
+        !nodes.is_empty(),
+        "ui_tree answered nothing over the wire: {ui}"
     );
 
     drop(stdin);

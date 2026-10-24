@@ -98,7 +98,7 @@ pub fn track_remote_enabled(world: &mut World) {
 
 /// The refusal every method gives while the open project has turned the
 /// surface off.
-fn check_enabled(world: &World) -> Result<(), BrpError> {
+pub(crate) fn check_enabled(world: &World) -> Result<(), BrpError> {
     if world.get_resource::<RemoteEnabled>().is_none_or(|e| e.0) {
         return Ok(());
     }
@@ -153,6 +153,14 @@ impl Plugin for JackdawEditorRemotePlugin {
                     .with_method_main("jackdaw/entity", entity_handler)
                     .with_method_main("jackdaw/apply_bsn", apply_bsn_handler)
                     .with_method_main("jackdaw/scene_bsn", scene_bsn_handler)
+                    .with_method_main("jackdaw/ui_tree", super::ui_probe::ui_tree_handler)
+                    .with_method_main("jackdaw/ui_click", super::ui_probe::ui_click_handler)
+                    .with_method_main("jackdaw/ui_drag", super::ui_probe::ui_drag_handler)
+                    .with_method_main("jackdaw/ui_input", super::ui_probe::ui_input_handler)
+                    .with_method_main(
+                        "jackdaw/camera_state",
+                        super::ui_probe::camera_state_handler,
+                    )
                     .with_watching_method_main("jackdaw/assets", assets_handler)
                     .with_watching_method_main("jackdaw/screenshot", screenshot_handler)
                     .with_watching_method_main("jackdaw/wait", wait_handler),
@@ -257,7 +265,7 @@ fn active_scene_path(world: &World) -> Option<&Path> {
 
 // --- Shared helpers ---
 
-fn invalid_params(message: impl Into<String>) -> BrpError {
+pub(crate) fn invalid_params(message: impl Into<String>) -> BrpError {
     BrpError {
         code: error_codes::INVALID_PARAMS,
         message: message.into(),
@@ -1568,6 +1576,14 @@ fn pie_wait(
 
 /// Work the editor started on its own and has not finished.
 fn editor_is_busy(world: &mut World) -> bool {
+    // A gesture is a list of beats spread over frames, so the editor is still
+    // busy until the last beat has played — the same reading
+    // `crate::boot_ops` gives its own queue. This is what makes
+    // `wait(until: "idle")` answer after a `ui_click`'s click has landed,
+    // rather than after the call that queued it returned.
+    let gesture_playing = !world
+        .get_resource::<crate::test_input::SyntheticInput>()
+        .is_none_or(crate::test_input::SyntheticInput::is_idle);
     let building = world
         .get_resource::<crate::build_status::BuildStatus>()
         .is_some_and(|status| {
@@ -1590,6 +1606,7 @@ fn editor_is_busy(world: &mut World) -> bool {
     building
         || placing
         || refining
+        || gesture_playing
         || world
             .query::<&jackdaw_api_internal::BackgroundTask>()
             .iter(world)

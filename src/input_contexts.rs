@@ -415,7 +415,10 @@ const FLY_LOOK_SUPPRESS_FRAMES: u32 = 3;
 /// a fast deliberate human drag covers a few hundred pixels per frame at
 /// most, so 1000 px splits the two populations with three orders of
 /// magnitude of margin on each side.
-const MAX_PLAUSIBLE_POINTER_DELTA: f32 = 1000.0;
+///
+/// Read by `input.motion` (`src/test_input.rs`) so a synthetic gesture can
+/// warn before its beats hit the gate.
+pub(crate) const MAX_PLAUSIBLE_POINTER_DELTA: f32 = 1000.0;
 
 /// Drops a single-frame pointer delta no human hand could have produced.
 ///

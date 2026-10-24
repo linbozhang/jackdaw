@@ -63,6 +63,11 @@ lives in the target lib dir that command prints.
 | `wait` | Let frames pass, or wait for a state the editor has reached |
 | `cancel` | End the modal operator holding the editor |
 | `assets` | Asset paths under `assets/`, by substring or `*` glob |
+| `ui_tree` | The UI as a tree of controls: kinds, labels, boxes, checked state |
+| `ui_click` | Click a control by entity id, operator prefix or label |
+| `ui_drag` | Drag across a control by fractions of its box |
+| `ui_input` | Click a field focused, type into it, and commit |
+| `camera_state` | The active viewport's camera: yaw, pitch, projection, fly/pan |
 
 Two read-only resources: `jackdaw://operators` is the operator catalogue, and
 `jackdaw://scene` is the open document as BSN.
@@ -157,6 +162,71 @@ captures:
 select(names: ["Village"], frame: true)
 screenshot(look_at: { eye: [120, 90, 120], target: [0, 0, 0] })
 ```
+
+## Driving the screen
+
+The `ui_*` tools click what a person would click. `ui_tree` is how you find
+what is on screen: each node reports its kind (`button`, `menu_item`,
+`checkbox`, `slider`, `text_input`, `picker`, `dialog`, `text`, `node`), its
+label, the operator a button dispatches, its box in pixels, and its
+checked/disabled state. Filter it rather than walking it — the editor's own
+chrome is a thousand nodes deep:
+
+```text
+ui_tree(text: "Wireframe")
+ui_tree(operator: "light.", kind: "button")
+```
+
+`ui_click` takes what `ui_tree` gave you — an `entity` id, an `operator`
+prefix, or `text` plus an `index` when more than one control matches — and
+queues a click through the editor's real picking chain. A disabled or hidden
+control is refused with the reason, and an ambiguous name is refused with the
+candidates listed. The click lands where the control is drawn; if something
+else is drawn over it, that something takes the click, as it would a person's.
+
+```text
+ui_click(text: "3D Objects")
+ui_click(text: "Cube", index: 0)
+```
+
+`ui_drag` moves across a control by fractions of its box — a slider to 85%:
+
+```text
+ui_drag(entity: 4294967301, from: [0.05, 0.5], to: [0.85, 0.5])
+```
+
+`ui_input` is one gesture: the click that focuses a field, a select-all, the
+typing one key at a time, and the commit — Enter by default, or `blur`, a
+click beside the field. There is no timing window between the focus and the
+first key. `text` is what gets typed, so the field itself is named by `entity`
+or `operator`:
+
+```text
+ui_input(entity: 4294967315, text: "12.5")
+```
+
+Every gesture runs on the same queue the `input.*` operators feed, and
+`wait(until: "idle")` holds until it has played out — a call that returns has
+queued the click, not landed it, so wait before reading what the click did.
+
+## Turning the camera
+
+`input.pointer` moves the cursor, but looking and panning read raw relative
+motion, which a `CursorMoved` never carries. `input.motion` feeds that stream
+directly, split across `steps` beats:
+
+```text
+call_operator(id: "input.motion", params: { dx: 320, dy: 0, steps: 16 })
+camera_state()
+```
+
+Two gates shape a look gesture. Single-frame deltas beyond 1000 px are
+dropped whole, so split large travels across `steps`; and the first frames
+after a right-button press are suppressed, so after
+`input.pointer action=press button=secondary` queue a `rest` of 3 or more
+beats before the motion. `camera_state` answers in the same terms
+`view.orbit` takes — compass yaw and pitch in degrees — so an assertion is a
+comparison, not a quaternion unpacking.
 
 ## Playing the game from a client
 

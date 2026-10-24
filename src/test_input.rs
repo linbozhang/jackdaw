@@ -9,7 +9,11 @@
 //! Nothing here triggers a `PointerClick` or a `FocusedInput`. Each operator
 //! queues the [`WindowEvent`]s winit would have delivered, which `bevy_window`
 //! splits into their own message streams and moves the window's cursor with,
-//! so everything downstream behaves as it does for a user.
+//! so everything downstream behaves as it does for a user. The one exception
+//! is [`Emit::Motion`]: raw relative motion arrives from winit as a
+//! `DeviceEvent`, never a `WindowEvent`, so it is written straight to the
+//! `MouseMotion` stream `bevy_winit` maintains — the stream camera looking
+//! and panning read, which a `CursorMoved` never feeds.
 //!
 //! A gesture is a list of beats, one emitted per pass with `frames` frames
 //! before the next, so a press lands on a hover the editor has already seen.
@@ -22,7 +26,7 @@ use bevy::{
     input::{
         ButtonState,
         keyboard::{Key, KeyboardInput, NativeKey},
-        mouse::{MouseButtonInput, MouseScrollUnit, MouseWheel},
+        mouse::{MouseButtonInput, MouseMotion, MouseScrollUnit, MouseWheel},
         touch::TouchPhase,
     },
     math::DVec2,
@@ -60,7 +64,8 @@ impl JackdawExtension for TestInputExtension {
     fn register(&self, ctx: &mut ExtensionContext) {
         ctx.register_operator::<InputPointerOp>()
             .register_operator::<InputKeyOp>()
-            .register_operator::<InputTextOp>();
+            .register_operator::<InputTextOp>()
+            .register_operator::<InputMotionOp>();
     }
 }
 
@@ -84,9 +89,9 @@ const DEFAULT_FRAMES: i64 = 1;
 const MAX_STEPS: i64 = 512;
 const MAX_FRAMES: i64 = 600;
 
-/// One window event to deliver, in the form the window system delivers it.
+/// One input to deliver, in the form the window system delivers it.
 #[derive(Clone, Debug)]
-enum Emit {
+pub(crate) enum Emit {
     /// Move the cursor to a position in window logical pixels.
     Cursor(Vec2),
     Button {
@@ -95,6 +100,9 @@ enum Emit {
     },
     /// Turn the wheel by this many lines, `y` positive toward the top.
     Wheel(Vec2),
+    /// Raw relative motion in pixels, as a `DeviceEvent` delivers it. Not a
+    /// [`WindowEvent`]: see [`Emit`] and the `input.motion` operator.
+    Motion(Vec2),
     Key {
         key: KeyCode,
         logical: Key,
@@ -104,10 +112,14 @@ enum Emit {
 }
 
 /// The events of one frame, and how many frames to let pass afterwards.
+///
+/// Public within the crate so the remote UI methods (`jackdaw/ui_click` and
+/// friends) can queue the same gestures the operators do, into the same queue,
+/// rather than trigger anything by hand.
 #[derive(Clone, Debug)]
-struct Beat {
-    events: Vec<Emit>,
-    frames: u32,
+pub(crate) struct Beat {
+    pub(crate) events: Vec<Emit>,
+    pub(crate) frames: u32,
 }
 
 /// The gesture still being played out. Public so [`crate::boot_ops`] can hold
@@ -124,7 +136,7 @@ impl SyntheticInput {
         self.beats.is_empty() && self.wait == 0
     }
 
-    fn queue(&mut self, beats: Vec<Beat>) {
+    pub(crate) fn queue(&mut self, beats: Vec<Beat>) {
         self.beats.extend(beats);
     }
 }
@@ -167,6 +179,17 @@ fn drive_synthetic_input(world: &mut World) {
 /// `bevy_window` splits into its own message stream and uses to move the
 /// window's cursor.
 fn emit(world: &mut World, window: Entity, event: Emit) {
+    if let Emit::Motion(delta) = event {
+        // Raw motion is the one input that is not a window event: winit
+        // delivers it as a `DeviceEvent` and `bevy_winit` writes it to the
+        // `MouseMotion` stream, which `accumulate_mouse_motion_system` reads in
+        // `PreUpdate` — after this runs in `First`, so a beat queued here is
+        // this frame's motion, the same frame relationship a real drag has.
+        world
+            .get_resource_or_init::<Messages<MouseMotion>>()
+            .write(MouseMotion { delta });
+        return;
+    }
     let event = match event {
         Emit::Cursor(logical) => {
             let Some(win) = world.get::<Window>(window) else {
@@ -190,6 +213,9 @@ fn emit(world: &mut World, window: Entity, event: Emit) {
             window,
             phase: TouchPhase::Moved,
         }),
+        // Handled above; spelled out so this match stays exhaustive as
+        // `Emit` grows.
+        Emit::Motion(_) => return,
         Emit::Key {
             key,
             logical,
@@ -441,6 +467,151 @@ fn with_mods(mods: &[KeyCode], frames: u32, gesture: Vec<Beat>) -> Vec<Beat> {
     beats
 }
 
+/// A click at a window-logical position: move, press, release. The move first
+/// is what makes it a *click on* the position — the hover a menu needs to open
+/// arrives before the press.
+pub(crate) fn click_gesture(at: Vec2, double: bool, frames: u32) -> Vec<Beat> {
+    let move_to = Beat {
+        events: vec![Emit::Cursor(at)],
+        frames,
+    };
+    let press = Beat {
+        events: vec![Emit::Button {
+            button: MouseButton::Left,
+            state: ButtonState::Pressed,
+        }],
+        frames,
+    };
+    let release = Beat {
+        events: vec![Emit::Button {
+            button: MouseButton::Left,
+            state: ButtonState::Released,
+        }],
+        frames,
+    };
+    if double {
+        vec![move_to, press.clone(), release.clone(), press, release]
+    } else {
+        vec![move_to, press, release]
+    }
+}
+
+/// A drag between window-logical positions: move to `from` first — a press
+/// with no cursor position hits nothing — then press, a move per
+/// interpolation step, and release at `to`.
+pub(crate) fn drag_gesture(from: Vec2, to: Vec2, steps: u32, frames: u32) -> Vec<Beat> {
+    let steps = steps.max(1);
+    let mut beats = vec![
+        Beat {
+            events: vec![Emit::Cursor(from)],
+            frames,
+        },
+        Beat {
+            events: vec![Emit::Button {
+                button: MouseButton::Left,
+                state: ButtonState::Pressed,
+            }],
+            frames,
+        },
+    ];
+    for step in 1..=steps {
+        #[expect(
+            clippy::cast_precision_loss,
+            reason = "a drag is at most MAX_STEPS steps"
+        )]
+        let t = step as f32 / steps as f32;
+        beats.push(Beat {
+            events: vec![Emit::Cursor(from.lerp(to, t))],
+            frames,
+        });
+    }
+    beats.push(Beat {
+        events: vec![Emit::Button {
+            button: MouseButton::Left,
+            state: ButtonState::Released,
+        }],
+        frames,
+    });
+    beats
+}
+
+/// A string typed one key at a time, the shape `input.text` queues.
+pub(crate) fn typing_gesture(text: &str, frames: u32) -> Vec<Beat> {
+    let mut beats = Vec::with_capacity(text.chars().count() * 2);
+    for character in text.chars() {
+        let key = key_code_for(character);
+        let typed = character.to_string();
+        let logical = if character == ' ' {
+            Key::Space
+        } else {
+            Key::Character(typed.clone().into())
+        };
+        for state in [ButtonState::Pressed, ButtonState::Released] {
+            beats.push(Beat {
+                events: vec![Emit::Key {
+                    key,
+                    logical: logical.clone(),
+                    text: Some(typed.clone()),
+                    state,
+                }],
+                frames,
+            });
+        }
+    }
+    beats
+}
+
+/// An Enter press and release, the commit a text field's keyboard path takes.
+pub(crate) fn enter_gesture(frames: u32) -> Vec<Beat> {
+    let beat = |state| Beat {
+        events: vec![Emit::Key {
+            key: KeyCode::Enter,
+            logical: Key::Enter,
+            text: None,
+            state,
+        }],
+        frames,
+    };
+    vec![beat(ButtonState::Pressed), beat(ButtonState::Released)]
+}
+
+/// A Ctrl+A tap: the way a person replaces what a field holds. A click that
+/// focuses positions the caret — it does not select — so typing after one
+/// appends unless everything is selected first.
+pub(crate) fn select_all_gesture(frames: u32) -> Vec<Beat> {
+    let key = |state| Beat {
+        events: vec![Emit::Key {
+            key: KeyCode::KeyA,
+            logical: Key::Character("a".into()),
+            text: None,
+            state,
+        }],
+        frames,
+    };
+    vec![
+        Beat {
+            events: vec![Emit::Key {
+                key: KeyCode::ControlLeft,
+                logical: Key::Control,
+                text: None,
+                state: ButtonState::Pressed,
+            }],
+            frames,
+        },
+        key(ButtonState::Pressed),
+        key(ButtonState::Released),
+        Beat {
+            events: vec![Emit::Key {
+                key: KeyCode::ControlLeft,
+                logical: Key::Control,
+                text: None,
+                state: ButtonState::Released,
+            }],
+            frames,
+        },
+    ]
+}
+
 /// A count parameter, clamped to something a session can finish.
 fn bounded(params: &OperatorParameters, key: &str, default: i64, max: i64) -> u32 {
     let raw = params.as_int(key).unwrap_or(default);
@@ -504,6 +675,110 @@ fn pointer_button(world: &mut World, name: &str) -> Option<MouseButton> {
             None
         }
     }
+}
+
+/// Feed raw relative mouse motion, the stream camera looking and panning read.
+///
+/// This is the one input a `WindowEvent` cannot spell: `CursorMoved` moves the
+/// cursor but the editor's `NavLook` reads accumulated `MouseMotion`, so
+/// `input.pointer` can turn a drag into nothing. Each beat writes one frame's
+/// worth of delta, the same frame relationship a real drag has.
+#[operator(
+    id = "input.motion",
+    label = "Synthetic Motion",
+    description = "Feed raw mouse motion (the relative stream looking and panning read), \
+                   split across `steps` beats.",
+    allows_undo = false,
+    params(
+        dx(
+            f64,
+            doc = "Horizontal motion in pixels over the whole gesture; positive is a \
+                   rightward drag of the mouse."
+        ),
+        dy(
+            f64,
+            doc = "Vertical motion in pixels over the whole gesture; positive is a \
+                   downward drag of the mouse."
+        ),
+        steps(
+            i64,
+            doc = "Beats the motion is split over. One beat is one frame's delta, so \
+                   more beats mean smaller per-frame deltas. Defaults to 1."
+        ),
+        frames(i64, doc = "Frames between one beat and the next. Defaults to 1.")
+    )
+)]
+pub(crate) fn input_motion(
+    params: In<OperatorParameters>,
+    mut commands: Commands,
+) -> OperatorResult {
+    let params = params.0;
+    commands.queue(move |world: &mut World| {
+        let frames = bounded(&params, "frames", DEFAULT_FRAMES, MAX_FRAMES);
+        let steps = bounded(&params, "steps", 1, MAX_STEPS).max(1);
+        let (Some(dx), Some(dy)) = (params.as_float("dx"), params.as_float("dy")) else {
+            warn!("input.motion: no `dx=`/`dy=` to move by");
+            return;
+        };
+        #[expect(
+            clippy::cast_possible_truncation,
+            reason = "a pixel delta is an f32 everywhere downstream"
+        )]
+        let gesture = motion_beats(Vec2::new(dx as f32, dy as f32), steps, frames);
+        if let Some(delta) = per_frame_delta(&gesture)
+            && delta.length() > crate::input_contexts::MAX_PLAUSIBLE_POINTER_DELTA
+        {
+            jackdaw_api_internal::operator::warn_caller(
+                world,
+                format!(
+                    "input.motion: {} px in one frame is beyond the {} px the camera \
+                     treats as plausible, so the beat would be dropped whole. Raise \
+                     `steps` to split the travel smaller.",
+                    delta.length().round(),
+                    crate::input_contexts::MAX_PLAUSIBLE_POINTER_DELTA
+                ),
+            );
+        }
+        if !world
+            .get_resource::<SyntheticInput>()
+            .is_none_or(SyntheticInput::is_idle)
+        {
+            jackdaw_api_internal::operator::warn_caller(
+                world,
+                "input.motion: queued behind a gesture still playing. A look that lands \
+                 within the first frames of a right-button press is suppressed, so after \
+                 `input.pointer action=press` queue a `rest` of 3 or more beats before \
+                 the motion.",
+            );
+        }
+        world.resource_mut::<SyntheticInput>().queue(gesture);
+    });
+    OperatorResult::Finished
+}
+
+/// The beats a motion gesture is cut into: one `MouseMotion` per frame, each
+/// carrying `total` split across them.
+fn motion_beats(total: Vec2, steps: u32, frames: u32) -> Vec<Beat> {
+    let steps = steps.max(1);
+    #[expect(clippy::cast_precision_loss, reason = "steps is at most MAX_STEPS")]
+    let per_frame = total / steps as f32;
+    vec![
+        Beat {
+            events: vec![Emit::Motion(per_frame)],
+            frames,
+        };
+        steps as usize
+    ]
+}
+
+/// The per-frame delta a `motion_beats` list carries, when it carries one.
+fn per_frame_delta(beats: &[Beat]) -> Option<Vec2> {
+    beats.first().and_then(|beat| {
+        beat.events.first().and_then(|event| match event {
+            Emit::Motion(delta) => Some(*delta),
+            _ => None,
+        })
+    })
 }
 
 /// Move, click or drag the mouse.
@@ -901,6 +1176,106 @@ mod tests {
         assert_eq!(turned[0].unit, MouseScrollUnit::Line);
         assert_eq!((turned[0].x, turned[0].y), (0.0, -3.0));
         assert_eq!(turned[0].window, window);
+    }
+
+    /// Raw motion is the one input that never was a window event: it has to
+    /// land on the `MouseMotion` stream the accumulator reads, or a synthetic
+    /// look moves nothing.
+    #[test]
+    fn raw_motion_reaches_the_accumulator_stream_not_the_window() {
+        let mut world = World::new();
+        world.init_resource::<Messages<WindowEvent>>();
+        world.init_resource::<Messages<MouseMotion>>();
+        let window = world.spawn_empty().id();
+        emit(&mut world, window, Emit::Motion(Vec2::new(12.0, -4.0)));
+
+        let window_events = world
+            .run_system_once(|mut events: MessageReader<WindowEvent>| events.read().count())
+            .expect("the reader runs");
+        assert_eq!(window_events, 0, "motion masqueraded as a window event");
+
+        let moved = world
+            .run_system_once(|mut events: MessageReader<MouseMotion>| {
+                events.read().map(|motion| motion.delta).collect::<Vec<_>>()
+            })
+            .expect("the reader runs");
+        assert_eq!(moved, vec![Vec2::new(12.0, -4.0)]);
+    }
+
+    /// A motion gesture is split into one delta per beat, so a large travel
+    /// does not arrive as one frame's jump the camera would drop.
+    #[test]
+    fn a_motion_gesture_splits_its_travel_across_its_beats() {
+        let beats = motion_beats(Vec2::new(300.0, -90.0), 10, 1);
+        assert_eq!(beats.len(), 10);
+        assert_eq!(per_frame_delta(&beats), Some(Vec2::new(30.0, -9.0)));
+        for beat in &beats {
+            assert!(matches!(beat.events.as_slice(), [Emit::Motion(_)]));
+        }
+
+        // One beat is the default shape, and zero steps cannot shrink a
+        // gesture to nothing.
+        assert_eq!(
+            per_frame_delta(&motion_beats(Vec2::new(8.0, 0.0), 1, 1)),
+            Some(Vec2::new(8.0, 0.0))
+        );
+        assert_eq!(
+            per_frame_delta(&motion_beats(Vec2::new(8.0, 0.0), 0, 1)),
+            Some(Vec2::new(8.0, 0.0))
+        );
+    }
+
+    /// The gestures the remote UI methods queue are the same shapes the
+    /// operators build, starting where a user's would.
+    #[test]
+    fn the_shared_gesture_builders_shape_clicks_drags_and_typing() {
+        let click = click_gesture(Vec2::new(10.0, 10.0), false, 1);
+        assert_eq!(click.len(), 3);
+        assert!(matches!(click[0].events.as_slice(), [Emit::Cursor(_)]));
+        assert!(matches!(
+            click[1].events.as_slice(),
+            [Emit::Button {
+                state: ButtonState::Pressed,
+                ..
+            }]
+        ));
+        assert_eq!(click_gesture(Vec2::ZERO, true, 1).len(), 5);
+
+        let drag = drag_gesture(Vec2::new(0.0, 0.0), Vec2::new(8.0, 0.0), 4, 1);
+        assert_eq!(drag.len(), 7);
+        assert!(matches!(drag[0].events.as_slice(), [Emit::Cursor(_)]));
+        assert!(matches!(
+            drag[1].events.as_slice(),
+            [Emit::Button {
+                state: ButtonState::Pressed,
+                ..
+            }]
+        ));
+        assert!(matches!(
+            drag.last().unwrap().events.as_slice(),
+            [Emit::Button {
+                state: ButtonState::Released,
+                ..
+            }]
+        ));
+
+        let typed = typing_gesture("a", 1);
+        assert_eq!(typed.len(), 2);
+        assert!(
+            typed
+                .iter()
+                .all(|beat| matches!(beat.events.as_slice(), [Emit::Key { text: Some(_), .. }]))
+        );
+
+        let enter = enter_gesture(1);
+        assert_eq!(enter.len(), 2);
+        assert!(enter.iter().all(|beat| matches!(
+            beat.events.as_slice(),
+            [Emit::Key {
+                key: KeyCode::Enter,
+                ..
+            }]
+        )));
     }
 
     #[test]
