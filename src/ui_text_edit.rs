@@ -235,6 +235,7 @@ fn write_text_edit(world: &mut World, value: String) {
     crate::selection::select_only(world, node);
     crate::commands::field_edit_commit(
         world,
+        None,
         Text::type_path(),
         "0",
         &serde_json::Value::String(value),

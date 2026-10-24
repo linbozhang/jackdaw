@@ -42,6 +42,12 @@ const SKIP_COMPONENT_PREFIXES: &[&str] = &[
     "bevy_ecs::observer::",
     "bevy_camera::primitives::",
     "bevy_camera::visibility::",
+    // Editor viewport camera settings (`JackdawCameraSettings`): the viewport
+    // camera wears them and never enters the document, but they are a
+    // registered `Reflect` component, so anything that puts one on a document
+    // entity must not drag editor-session camera state into the save. Same
+    // shape as the `jackdaw_camera_rig::ActiveCameraRig` skip below.
+    "jackdaw_camera::",
     // AnimationPlayer / AnimationGraphHandle / AnimationTargetId / AnimatedBy
     // are installed on targets at runtime by the animation plugin.
     // They're derived from the authored clip components and must not be
@@ -373,6 +379,20 @@ mod camera_tests {
         assert!(
             is_active(&world, editor),
             "non-document cameras keep rendering"
+        );
+    }
+
+    /// The skip list is matched by string, so a typo silently disables the
+    /// skip. `JackdawCameraSettings` is a registered `Reflect` component; if
+    /// one ever lands on a document entity, the save must not carry the
+    /// editor-session camera state.
+    #[test]
+    fn editor_camera_settings_stay_out_of_the_save() {
+        use bevy::reflect::TypePath;
+        assert!(
+            should_skip_component(jackdaw_camera::JackdawCameraSettings::type_path()),
+            "JackdawCameraSettings type path is {:?}, which the skip list does not match",
+            jackdaw_camera::JackdawCameraSettings::type_path()
         );
     }
 }

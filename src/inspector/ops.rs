@@ -398,6 +398,7 @@ pub(crate) fn field_set(
         crate::selection::select_for_edit(world, entity);
         crate::commands::field_edit_commit(
             world,
+            None,
             &type_path,
             &field_path,
             &value,

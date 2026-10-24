@@ -490,6 +490,7 @@ pub(crate) fn commit_asset_row(world: &mut World, row: Entity, path: &str) -> bo
             select_source(world, *source);
             crate::commands::field_edit_commit(
                 world,
+                None,
                 type_path,
                 &field.field_path,
                 &json,

@@ -1848,7 +1848,7 @@ pub(crate) fn on_color_slider_change(
 /// Apply a color change with undo support (propagates to all selected entities).
 fn apply_color_with_undo(
     world: &mut World,
-    _entity: Entity,
+    entity: Entity,
     type_path: &str,
     field_path: &str,
     new_rgba: [f32; 4],
@@ -1865,7 +1865,7 @@ fn apply_color_with_undo(
 
     // A resource's color field is editor-session state: write the resource,
     // never the document pipeline and never the PIE stream.
-    if super::resource_commands::is_resource_entity(world, _entity) {
+    if super::resource_commands::is_resource_entity(world, entity) {
         super::resource_commands::resource_field_commit(world, type_path, field_path, &new_json);
         return;
     }
@@ -1874,12 +1874,13 @@ fn apply_color_with_undo(
     // enum like `{"LinearRgba": {..}}`), not the picker's raw sRGBA
     // array, so the game can deserialize the full component.
     if *world.resource::<crate::pie_mirror::PieViewMode>() == crate::pie_mirror::PieViewMode::Live {
-        try_route_pie_live_field_edit(world, _entity, type_path, field_path, new_json);
+        try_route_pie_live_field_edit(world, entity, type_path, field_path, new_json);
         return;
     }
 
     crate::commands::field_edit_commit(
         world,
+        Some(entity),
         type_path,
         field_path,
         &new_json,
@@ -2184,6 +2185,7 @@ fn apply_field_json_with_undo(
 
     crate::commands::field_edit_commit(
         world,
+        Some(entity),
         type_path,
         field_path,
         &new_json,
@@ -2685,7 +2687,13 @@ fn apply_field_value_live(
     ) {
         return;
     }
-    crate::commands::field_edit_preview(world, type_path, field_path, &new_json);
+    crate::commands::field_edit_preview(
+        world,
+        Some(source_entity),
+        type_path,
+        field_path,
+        &new_json,
+    );
 }
 
 /// Write path for float drag-scrub fields. The widget emits
@@ -3499,6 +3507,7 @@ pub(super) fn apply_enum_variant_with_undo(
 
     crate::commands::field_edit_commit(
         world,
+        None,
         type_path,
         field_path,
         &new_json,
@@ -3893,6 +3902,7 @@ fn edit_reflect_list(
     } else {
         crate::commands::field_edit_commit(
             world,
+            None,
             type_path,
             field_path,
             &serde_json::Value::Array(items),

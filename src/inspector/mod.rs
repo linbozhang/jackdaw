@@ -393,6 +393,15 @@ pub fn field_edited_by(world: &World, widget: Entity) -> Option<(&str, &str)> {
         .map(|binding| (binding.type_path.as_str(), binding.field_path.as_str()))
 }
 
+/// The entity a field control was built for, or `None` when the entity is no
+/// field control. The panel-rebuild invariant: every live control binds an
+/// entity that is still selected.
+pub fn field_binding_entity(world: &World, widget: Entity) -> Option<Entity> {
+    world
+        .get::<FieldBinding>(widget)
+        .map(|binding| binding.source_entity)
+}
+
 /// The list a control edits, as the type path and field path of that list, or
 /// `None` when the entity is no list control. Addresses Add, Remove and the
 /// move arrows by the list they act on rather than by their position.
