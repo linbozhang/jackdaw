@@ -9,8 +9,10 @@ use jackdaw::remote::server::{
     entity_handler, operators_handler, publish_endpoint, retract_endpoint, scene_tree_handler,
     screenshot_handler, status_handler, wait_handler,
 };
+use jackdaw::remote::ui_probe::{camera_state_handler, ui_click_handler, ui_tree_handler};
 use jackdaw_api_internal::operator::OperatorWorldExt as _;
 use jackdaw_commands::CommandHistory;
+use jackdaw_feathers::button::{ButtonOperatorCall, ButtonProps};
 use serde_json::{Value, json};
 
 use crate::util;
@@ -1422,5 +1424,130 @@ fn a_call_reports_only_the_entities_it_spawned_itself() {
         app.world().get::<Name>(entity).map(Name::as_str),
         Some("Sphere"),
         "a call was handed an entity another one spawned"
+    );
+}
+
+/// `ui_tree` reports what a caller needs to aim a click: the kind, the label,
+/// the operator a control dispatches, and the box it is drawn into — with a
+/// filter, so a thousand-node chrome walk is not the only shape.
+#[test]
+fn ui_tree_reports_the_controls_the_screen_holds() {
+    let mut app = editor_with_a_scene();
+    // `button(...)` brings its own Node; sizing rides on the props' variant.
+    app.world_mut().spawn((
+        jackdaw_feathers::button::button(ButtonProps::new("Bake Lighting")),
+        ButtonOperatorCall::new("light.bake"),
+    ));
+    for _ in 0..8 {
+        app.update();
+    }
+
+    let filtered = call(
+        &mut app,
+        ui_tree_handler,
+        json!({ "text": "bake lighting" }),
+    );
+    let nodes = filtered["nodes"].as_array().expect("an array");
+    assert_eq!(nodes.len(), 1, "{filtered}");
+    let node = &nodes[0];
+    assert_eq!(node["kind"], json!("button"), "{node}");
+    assert_eq!(node["text"], json!("Bake Lighting"), "{node}");
+    assert_eq!(node["operator"], json!("light.bake"), "{node}");
+    assert_eq!(node["disabled"], json!(false), "{node}");
+    assert_eq!(node["visible"], json!(true), "{node}");
+    let rect = node["rect"].as_array().expect("a rect");
+    assert_eq!(rect.len(), 4, "{node}");
+    assert!(
+        rect.iter().filter_map(Value::as_f64).all(f64::is_finite),
+        "the rect is not drawable: {node}"
+    );
+
+    // The unfiltered walk answers too, bounded by its default depth.
+    let all = call(&mut app, ui_tree_handler, json!({ "depth": 1 }));
+    assert!(
+        all["nodes"]
+            .as_array()
+            .is_some_and(|nodes| !nodes.is_empty()),
+        "the editor's own chrome reached no caller: {all}"
+    );
+}
+
+/// A call that queued a gesture is not over when it returned, and
+/// `until: "idle"` has to say so — that is what retires the timing sleeps.
+#[test]
+fn a_queued_gesture_holds_idle_until_it_has_played() {
+    let mut app = util::editor_test_app();
+
+    call(
+        &mut app,
+        call_operator_handler,
+        json!({ "id": "input.pointer", "params": { "action": "rest", "steps": 6 } }),
+    );
+
+    let held = app
+        .world_mut()
+        .run_system_cached_with(wait_handler, Some(json!({ "until": "idle" })))
+        .expect("the handler ran")
+        .expect("the handler did not refuse");
+    assert_eq!(
+        held, None,
+        "idle answered while a queued gesture was still to play"
+    );
+
+    for _ in 0..40 {
+        app.update();
+        if app
+            .world()
+            .get_resource::<jackdaw::test_input::SyntheticInput>()
+            .is_none_or(jackdaw::test_input::SyntheticInput::is_idle)
+        {
+            break;
+        }
+    }
+    let answer = app
+        .world_mut()
+        .run_system_cached_with(wait_handler, Some(json!({ "until": "idle" })))
+        .expect("the handler ran")
+        .expect("the handler answered")
+        .expect("idle answers once the gesture has played");
+    assert_eq!(answer["idle"], json!(true), "{answer}");
+}
+
+/// `camera_state` answers even where there is no viewport to hover: the fly
+/// and pan flags ride along, and the camera slot says `null` rather than
+/// refusing, so a poll loop needs no special case.
+#[test]
+fn camera_state_answers_with_no_camera_rather_than_refusing() {
+    let mut app = util::editor_test_app();
+    let state = call(&mut app, camera_state_handler, json!({}));
+    assert_eq!(state["camera"], Value::Null, "{state}");
+    assert_eq!(state["fly"], json!(false), "{state}");
+    assert_eq!(state["pan"], json!(false), "{state}");
+}
+
+/// `jackdaw/ui_click` lives on the same gate as the rest of the surface: a
+/// project that turned the remote off is answered by nothing, tools included.
+#[test]
+fn the_ui_methods_refuse_when_the_project_turns_the_surface_off() {
+    let (mut app, project) = editor_with_a_project();
+    let root = project.path().to_path_buf();
+    jackdaw::project_settings::store_section(
+        &root,
+        jackdaw::project_settings::Section::Key("remote"),
+        &json!({ "enabled": false }),
+    );
+    app.world_mut()
+        .run_system_cached(jackdaw::remote::server::track_remote_enabled)
+        .expect("the tracker ran");
+
+    let refusal = app
+        .world_mut()
+        .run_system_cached_with(ui_click_handler, Some(json!({ "text": "anything" })))
+        .expect("the handler ran")
+        .expect_err("a locked-down project still answered a ui method");
+    assert!(
+        refusal.message.contains("remote.enabled"),
+        "the refusal does not say why: {}",
+        refusal.message
     );
 }

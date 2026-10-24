@@ -273,6 +273,104 @@ pub struct AssetsArgs {
     pub details: Option<bool>,
 }
 
+/// How one of the UI tools names the control it means: an `entity` id from
+/// `ui_tree`, an `operator` id prefix, or `text` plus an `index`.
+#[derive(Debug, Deserialize, Serialize, JsonSchema)]
+pub struct UiLocator {
+    /// Entity id, as reported by `ui_tree`.
+    #[serde(default)]
+    pub entity: Option<u64>,
+    /// Prefix of the operator id the control dispatches.
+    #[serde(default)]
+    pub operator: Option<String>,
+    /// Substring of the control's label.
+    #[serde(default)]
+    pub text: Option<String>,
+    /// Which match to take when more than one control matches; 0 is the first.
+    #[serde(default)]
+    pub index: Option<u64>,
+}
+
+/// The locator `ui_input` takes: like [`UiLocator`] without `text`, which is
+/// what gets typed and so cannot also name the field.
+#[derive(Debug, Deserialize, Serialize, JsonSchema)]
+pub struct UiInputLocator {
+    /// Entity id, as reported by `ui_tree`.
+    #[serde(default)]
+    pub entity: Option<u64>,
+    /// Prefix of the operator id the control dispatches.
+    #[serde(default)]
+    pub operator: Option<String>,
+    /// Which match to take when more than one control matches; 0 is the first.
+    #[serde(default)]
+    pub index: Option<u64>,
+}
+
+/// Arguments for `ui_tree`.
+#[derive(Debug, Deserialize, Serialize, JsonSchema)]
+pub struct UiTreeArgs {
+    /// Entity id to start from. The UI roots when omitted.
+    #[serde(default)]
+    pub root: Option<u64>,
+    /// Generations of children to include. Defaults to 6, so a full chrome
+    /// walk has to be asked for by name.
+    #[serde(default)]
+    pub depth: Option<u32>,
+    /// Only nodes whose label contains this substring.
+    #[serde(default)]
+    pub text: Option<String>,
+    /// Only controls dispatching an operator id with this prefix.
+    #[serde(default)]
+    pub operator: Option<String>,
+    /// Only nodes of this kind: `button`, `menu_item`, `checkbox`, `slider`,
+    /// `text_input`, `picker`, `dialog`, `text` or `node`.
+    #[serde(default)]
+    pub kind: Option<String>,
+    /// Drop nodes that are not drawn.
+    #[serde(default)]
+    pub visible_only: Option<bool>,
+}
+
+/// Arguments for `ui_click`.
+#[derive(Debug, Deserialize, Serialize, JsonSchema)]
+pub struct UiClickArgs {
+    /// How the control is named; one field is enough.
+    #[serde(flatten)]
+    pub locator: UiLocator,
+    /// Click twice, as a rename or a title edit opens.
+    #[serde(default)]
+    pub double: Option<bool>,
+}
+
+/// Arguments for `ui_drag`.
+#[derive(Debug, Deserialize, Serialize, JsonSchema)]
+pub struct UiDragArgs {
+    /// Entity id of the control to drag within.
+    pub entity: u64,
+    /// Where the drag starts, as fractions `[x, y]` across the control's box.
+    pub from: [f64; 2],
+    /// Where the drag ends, in the same fractions.
+    pub to: [f64; 2],
+    /// Moves the drag is cut into. Defaults to 8.
+    #[serde(default)]
+    pub steps: Option<u32>,
+}
+
+/// Arguments for `ui_input`.
+#[derive(Debug, Deserialize, Serialize, JsonSchema)]
+pub struct UiInputArgs {
+    /// How the field is named. `text` is what gets typed, so it cannot also
+    /// locate: use `entity` or `operator`.
+    #[serde(flatten)]
+    pub locator: UiInputLocator,
+    /// What to type; it replaces whatever the field held.
+    pub text: String,
+    /// How to commit: `enter` (default), `blur` (a click beside the field),
+    /// or `none`.
+    #[serde(default)]
+    pub commit: Option<String>,
+}
+
 // --- Tools ---
 
 #[tool_router(router = tool_router)]
@@ -561,6 +659,114 @@ impl JackdawMcp {
             compact(json!({ "glob": args.glob, "details": args.details })),
         )
         .await
+    }
+
+    /// The panel and control tree as the screen shows it.
+    #[tool(
+        description = "The editor's UI as a tree of controls: kind, label, the operator a \
+                       button dispatches, its box in pixels, checked/disabled state. Filter by \
+                       text, operator prefix or kind rather than walking a thousand nodes; \
+                       this is how you find the entity id the other ui_* tools take."
+    )]
+    pub async fn ui_tree(
+        &self,
+        Parameters(args): Parameters<UiTreeArgs>,
+    ) -> Result<CallToolResult, ErrorData> {
+        self.brp_text(
+            "jackdaw/ui_tree",
+            compact(json!({
+                "root": args.root,
+                "depth": args.depth,
+                "text": args.text,
+                "operator": args.operator,
+                "kind": args.kind,
+                "visible_only": args.visible_only,
+            })),
+        )
+        .await
+    }
+
+    /// Click a control by name.
+    #[tool(
+        description = "Click a control the way a person does: name it by entity id, operator \
+                       prefix or label text (plus index to pick between matches), and the \
+                       editor works out where it is and queues the click through the real \
+                       picking chain. Disabled or hidden controls are refused with the reason; \
+                       ambiguous names list their candidates. Follow with wait(until: \"idle\") \
+                       so the click has landed before you read what it did."
+    )]
+    pub async fn ui_click(
+        &self,
+        Parameters(args): Parameters<UiClickArgs>,
+    ) -> Result<CallToolResult, ErrorData> {
+        self.brp_text(
+            "jackdaw/ui_click",
+            compact(json!({
+                "entity": args.locator.entity,
+                "operator": args.locator.operator,
+                "text": args.locator.text,
+                "index": args.locator.index,
+                "double": args.double,
+            })),
+        )
+        .await
+    }
+
+    /// Drag inside a control.
+    #[tool(
+        description = "Drag across a control — a slider to a value, a number field's scrub, a \
+                       split bar — from one fraction of its box to another (each `[x, y]` in \
+                       0..1). The gesture runs through the real picking chain, like ui_click."
+    )]
+    pub async fn ui_drag(
+        &self,
+        Parameters(args): Parameters<UiDragArgs>,
+    ) -> Result<CallToolResult, ErrorData> {
+        self.brp_text(
+            "jackdaw/ui_drag",
+            compact(json!({
+                "entity": args.entity,
+                "from": args.from,
+                "to": args.to,
+                "steps": args.steps,
+            })),
+        )
+        .await
+    }
+
+    /// Type into a field and commit.
+    #[tool(
+        description = "Click a text field focused, select what it holds, type the text one key \
+                       at a time, and commit — enter by default, or blur. One call, one \
+                       gesture: there is no timing window between focusing and typing. Name \
+                       the field by entity id or operator prefix (`text` is what gets typed)."
+    )]
+    pub async fn ui_input(
+        &self,
+        Parameters(args): Parameters<UiInputArgs>,
+    ) -> Result<CallToolResult, ErrorData> {
+        self.brp_text(
+            "jackdaw/ui_input",
+            compact(json!({
+                "entity": args.locator.entity,
+                "operator": args.locator.operator,
+                "index": args.locator.index,
+                "text": args.text,
+                "commit": args.commit,
+            })),
+        )
+        .await
+    }
+
+    /// The active viewport's camera.
+    #[tool(
+        description = "The active viewport's camera: translation, compass yaw and pitch in \
+                       degrees, projection (and scale, when orthographic), and whether a fly \
+                       or pan session is active. This is what you assert against after \
+                       driving the camera with call_operator(id: \"input.motion\")."
+    )]
+    pub async fn camera_state(&self) -> Result<CallToolResult, ErrorData> {
+        self.brp_text("jackdaw/camera_state", json!({})).await
     }
 }
 
