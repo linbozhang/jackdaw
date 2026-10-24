@@ -388,13 +388,20 @@ fn commit_val_to_field(
     if is_final {
         crate::commands::field_edit_commit(
             world,
+            Some(source_entity),
             type_path,
             field_path,
             &json,
             "Set length on multiple entities",
         );
     } else {
-        crate::commands::field_edit_preview(world, type_path, field_path, &json);
+        crate::commands::field_edit_preview(
+            world,
+            Some(source_entity),
+            type_path,
+            field_path,
+            &json,
+        );
     }
 }
 

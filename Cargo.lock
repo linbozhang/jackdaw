@@ -4259,6 +4259,8 @@ dependencies = [
  "test_fixture_extension",
  "toml",
  "toml_edit",
+ "tracing",
+ "tracing-subscriber",
  "windows-sys 0.61.2",
  "winit",
 ]

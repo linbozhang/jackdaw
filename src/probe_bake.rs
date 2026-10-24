@@ -364,6 +364,7 @@ fn finish_probe_bakes(world: &mut World) {
                 crate::selection::select_for_edit(world, bake.probe);
                 crate::commands::field_edit_commit(
                     world,
+                    None,
                     PROBE_TYPE_PATH,
                     "baked",
                     &serde_json::Value::String(bake.asset_path.clone()),

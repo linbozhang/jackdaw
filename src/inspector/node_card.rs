@@ -1126,13 +1126,14 @@ fn commit_optional_number(world: &mut World, root: Entity, is_final: bool) {
     if is_final {
         crate::commands::field_edit_commit(
             world,
+            None,
             node_type_path(),
             field.path,
             &json,
             "Set layout on multiple entities",
         );
     } else {
-        crate::commands::field_edit_preview(world, node_type_path(), field.path, &json);
+        crate::commands::field_edit_preview(world, None, node_type_path(), field.path, &json);
     }
 }
 

@@ -58,6 +58,25 @@ fn field_edit_session_targets(world: &World) -> Vec<Entity> {
         .unwrap_or_default()
 }
 
+/// What the editor says when it drops an edit because the entity the editing
+/// widget was bound to is no longer selected. The commit arrived in the same
+/// frame the selection moved; writing the new selection would edit an entity
+/// the user never aimed at, so the edit goes nowhere -- loudly.
+pub const STALE_FIELD_EDIT_DROPPED: &str = "field edit dropped: its entity left the selection";
+
+/// The entity an edit was bound to when it has left the selection, meaning the
+/// edit must not be written against the selection it would resolve to now.
+/// `None` names no binding (edits aimed at the selection itself) or one that
+/// still holds. A missing selection resource reads as stale too: there is no
+/// selection the edit could aim at.
+fn stale_bound_entity(world: &World, bound: Option<Entity>) -> Option<Entity> {
+    bound.filter(|&entity| {
+        !world
+            .get_resource::<Selection>()
+            .is_some_and(|selection| selection.entities.contains(&entity))
+    })
+}
+
 fn document_has_component_patch(world: &World, entity: Entity, type_path: &str) -> bool {
     let ast = world.resource::<jackdaw_bsn::SceneBsnAst>();
     ast.ast_for(entity)
@@ -159,11 +178,20 @@ pub(crate) fn field_edit_begin(world: &mut World, type_path: &str, field_path: &
 /// so a baseline exists before the first write.
 pub(crate) fn field_edit_preview(
     world: &mut World,
+    bound: Option<Entity>,
     type_path: &str,
     field_path: &str,
     value: &serde_json::Value,
 ) {
     if crate::definition_assets::preview_definition_field(world, type_path, field_path, value) {
+        return;
+    }
+    if let Some(bound) = stale_bound_entity(world, bound) {
+        warn!(
+            "{}: `{type_path}.{field_path}` bound to {bound}",
+            STALE_FIELD_EDIT_DROPPED
+        );
+        clear_field_edit_session(world, type_path, field_path);
         return;
     }
     field_edit_begin(world, type_path, field_path);
@@ -182,12 +210,21 @@ pub(crate) fn field_edit_preview(
 /// here: the evaluator rewrites that value every frame.
 pub(crate) fn field_edit_commit(
     world: &mut World,
+    bound: Option<Entity>,
     type_path: &str,
     field_path: &str,
     new_json: &serde_json::Value,
     group_label: &str,
 ) {
     if crate::definition_assets::commit_definition_field(world, type_path, field_path, new_json) {
+        return;
+    }
+    if let Some(bound) = stale_bound_entity(world, bound) {
+        warn!(
+            "{}: `{type_path}.{field_path}` bound to {bound}",
+            STALE_FIELD_EDIT_DROPPED
+        );
+        clear_field_edit_session(world, type_path, field_path);
         return;
     }
     // Immediate commits (no prior preview) still need a derived baseline.
@@ -209,6 +246,10 @@ pub(crate) fn field_edit_commit(
         let Some((path, new_value)) =
             field_edit_to_bsn_value(world, target, type_path, field_path, new_json)
         else {
+            warn!(
+                "field edit did not convert: `{type_path}.{field_path}` on {target} \
+                 has no field taking {new_json}"
+            );
             continue;
         };
         let old_value = resolve_field_edit_old_value(world, target, type_path, &path);
@@ -1480,6 +1521,10 @@ impl EditorCommand for SetBsnField {
             let registry = registry.read();
             let mut ast = world.resource_mut::<jackdaw_bsn::SceneBsnAst>();
             let Some(patches_entity) = ast.ast_for(self.entity) else {
+                warn!(
+                    "field write skipped: {} is not in the scene document (`{}`)",
+                    self.entity, self.type_path
+                );
                 return;
             };
             if is_project {
@@ -1658,16 +1703,31 @@ pub(crate) fn apply_json_field_to_ecs(
         //  - Normal mutable components (insert replaces in-place)
         let deserializer =
             bevy::reflect::serde::TypedReflectDeserializer::new(registration, &registry);
-        if let Ok(reflected) = deserializer.deserialize(value) {
-            reflect_component.insert(&mut world.entity_mut(entity), reflected.as_ref(), &registry);
+        match deserializer.deserialize(value) {
+            Ok(reflected) => {
+                reflect_component.insert(
+                    &mut world.entity_mut(entity),
+                    reflected.as_ref(),
+                    &registry,
+                );
+            }
+            Err(error) => {
+                warn!(
+                    "live write skipped: `{type_path}` on {entity} did not deserialize ({error})"
+                );
+            }
         }
     } else {
         // Field-level update via reflect_path_mut
         let Some(reflected) = reflect_component.reflect_mut(world.entity_mut(entity)) else {
             return;
         };
-        if let Ok(field) = reflected.into_inner().reflect_path_mut(field_path) {
-            apply_json_to_reflect(field, value, &registry);
+        let component = reflected.into_inner();
+        match component.reflect_path_mut(field_path) {
+            Ok(field) => apply_json_to_reflect(field, value, &registry),
+            Err(error) => warn!(
+                "live write skipped: `{type_path}.{field_path}` on {entity} did not resolve ({error})"
+            ),
         }
     }
 }
@@ -2532,6 +2592,7 @@ mod set_bsn_field_tests {
         let (mut app, entity, type_path) = worn_app();
         field_edit_commit(
             app.world_mut(),
+            None,
             &type_path,
             r#"materials["Leaves"]"#,
             &serde_json::json!("pine.bsn"),
@@ -2571,6 +2632,7 @@ mod set_bsn_field_tests {
         let (mut app, entity, type_path) = worn_app();
         field_edit_commit(
             app.world_mut(),
+            None,
             &type_path,
             r#"tints["Leaves"].y"#,
             &serde_json::json!(0.5),
@@ -2585,6 +2647,7 @@ mod set_bsn_field_tests {
         let (mut app, entity, type_path) = worn_app();
         field_edit_commit(
             app.world_mut(),
+            None,
             &type_path,
             r#"materials["Moss"]"#,
             &serde_json::json!("moss.bsn"),
@@ -2889,6 +2952,7 @@ mod set_bsn_field_tests {
         // Preview ticks capture begin baseline then mutate live ECS.
         field_edit_preview(
             app.world_mut(),
+            None,
             type_path,
             field_path,
             &serde_json::json!(7.0),
@@ -2901,6 +2965,7 @@ mod set_bsn_field_tests {
         // Commit must use the session baseline, not the post-preview live value.
         field_edit_commit(
             app.world_mut(),
+            None,
             type_path,
             field_path,
             &serde_json::json!(7.0),
@@ -2951,12 +3016,14 @@ mod set_bsn_field_tests {
         // not write the live default back into the sparse patch.
         field_edit_preview(
             app.world_mut(),
+            None,
             type_path,
             "scale.x",
             &serde_json::json!(3.0),
         );
         field_edit_commit(
             app.world_mut(),
+            None,
             type_path,
             "scale.x",
             &serde_json::json!(3.0),
