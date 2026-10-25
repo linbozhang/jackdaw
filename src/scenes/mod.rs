@@ -139,12 +139,27 @@ pub struct SceneTab {
     /// Extensions' [`SceneResource`] values owned by this tab while it is
     /// inactive, like the terrain data.
     pub scene_resources: TabResources,
-    /// Recorded `CommandHistory.undo_stack.len()` as of the last time
-    /// the dirty-tracking system ran (or the tab was activated, or
-    /// saved). If the live history is deeper than this, the user has
-    /// made a change since the last check, and the tab is marked
-    /// `dirty`.
-    pub history_depth_at_last_check: usize,
+    /// Undo-stack state the dirty watcher last observed for this tab. Both
+    /// are compared before anything else happens: when neither moved since
+    /// the last look, the frame costs nothing, no matter what the stack's
+    /// depth is relative to the save point.
+    pub observed_undo_len: usize,
+    /// [`Self::observed_undo_len`]'s companion: the history's monotonic
+    /// push counter as the watcher last saw it. It moves on new edits even
+    /// when budget trimming keeps the stack's length flat, so growth is
+    /// never missed.
+    pub observed_pushes: u64,
+    /// The undo stack's length at the last save or load: the depth the
+    /// document on disk corresponds to.
+    pub saved_undo_len: usize,
+    /// Fingerprint of the document content as it was written at the last
+    /// save (or read at load), hashed from the same emitter a save uses.
+    /// When the stack returns to `saved_undo_len`, the current document is
+    /// re-emitted and compared against this, so "undo back to the saved
+    /// content" reads clean while "undo then a different edit at the same
+    /// depth" reads dirty. `None` until the tab has a baseline (a fresh
+    /// untitled tab), where growth alone decides.
+    pub saved_doc_hash: Option<u64>,
     /// Why the tab is in front without its contents in the world, if it is.
     /// Set, the world is not the file's contents and must not be written back.
     pub refusal: Option<TabRefusal>,
@@ -186,9 +201,20 @@ impl SceneTab {
             history: CommandHistory::default(),
             terrain_data_store: TerrainDataStore::default(),
             scene_resources: TabResources::default(),
-            history_depth_at_last_check: 0,
+            observed_undo_len: 0,
+            observed_pushes: 0,
+            saved_undo_len: 0,
+            saved_doc_hash: None,
             refusal: None,
         }
+    }
+
+    /// Record `history`'s current state as what the watcher last observed,
+    /// so the next frame's fast path skips. Call when a tab is activated or
+    /// a baseline (save / load) is written.
+    pub fn observe_history(&mut self, history: &CommandHistory) {
+        self.observed_undo_len = history.undo_stack.len();
+        self.observed_pushes = history.total_pushes();
     }
 }
 
@@ -263,33 +289,96 @@ pub fn persist_tabs_to_project_config(
     }
 }
 
-/// Per-frame system: compare the active tab's recorded history depth
-/// with the live `CommandHistory`. Any growth means the user did
-/// something; mark the tab dirty. Shrinkage (undo) is ignored. Save
-/// resets the recorded depth.
+/// Per-frame system: keep the active tab's `dirty` flag in step with its
+/// history.
+///
+/// The fast path compares the stack's length and the history's monotonic
+/// push counter against what the tab last observed; when neither moved, the
+/// frame costs nothing. When either moved, the flag is re-decided:
+///
+/// - With a save baseline (`saved_doc_hash`), the flag is `len !=
+///   saved_undo_len`, or — when the stack sits exactly at the saved depth —
+///   a content comparison: the document is emitted the way a save emits it
+///   and hashed against the fingerprint the save left. Undoing back to the
+///   saved content reads clean; undoing *past* a save, or landing on the
+///   same depth with different content, reads dirty. The emit only happens
+///   on the frame the stack arrived at the saved depth, so the steady state
+///   stays O(1).
+/// - Without a baseline (a fresh untitled tab), growth alone decides: new
+///   pushes dirty the tab and nothing undirties it, the pre-existing
+///   behaviour.
+///
+/// The push counter, not the length, is what growth is read from, so budget
+/// trimming dropping the oldest entries can never hide a real edit. And the
+/// baseline lives on the tab, so a tab switch can never judge one tab's
+/// stack against another tab's save point.
+///
+/// The content comparison needs `&mut World` (the emit suspends preview
+/// writes), so it runs in a queued command at the frame's sync point rather
+/// than making this system exclusive; an exclusive system would reshape the
+/// whole Update schedule for every unrelated system.
 pub fn mark_active_dirty_on_history_growth(
     history: Res<CommandHistory>,
     mut scenes: ResMut<Scenes>,
+    mut commands: Commands,
 ) {
     if scenes.tabs.is_empty() {
         return;
     }
     let active = scenes.active;
-    let current_depth = history.undo_stack.len();
+    let current_len = history.undo_stack.len();
+    let current_pushes = history.total_pushes();
     let tab = scenes.bypass_change_detection().tabs.get_mut(active);
     let Some(tab) = tab else { return };
-    let recorded = tab.history_depth_at_last_check;
-    let needs_dirty_flip = current_depth > recorded && !tab.dirty;
-    let needs_depth_update = current_depth != recorded;
-    if !needs_dirty_flip && !needs_depth_update {
+    if current_len == tab.observed_undo_len && current_pushes == tab.observed_pushes {
+        return;
+    }
+    let saved_undo_len = tab.saved_undo_len;
+    let saved_doc_hash = tab.saved_doc_hash;
+    let was_dirty = tab.dirty;
+    let grew = current_pushes > tab.observed_pushes;
+
+    if let Some(saved_hash) = saved_doc_hash
+        && current_len == saved_undo_len
+    {
+        // Back at the saved depth: equal content means clean, anything else
+        // (a different edit at the same depth) means dirty. Decided by a
+        // queued emit, so this system stays out of the schedule's way. If
+        // the emit is impossible the flag stays where it is.
+        commands.queue(move |world: &mut World| {
+            let Some(current) = crate::scene_io::document_fingerprint(world) else {
+                return;
+            };
+            let Some(mut scenes) = world.get_resource_mut::<Scenes>() else {
+                return;
+            };
+            if scenes.tabs.len() <= active {
+                return;
+            }
+            scenes.set_changed();
+            scenes.tabs[active].dirty = current != saved_hash;
+        });
+        scenes.bypass_change_detection().tabs[active].observed_undo_len = current_len;
+        scenes.bypass_change_detection().tabs[active].observed_pushes = current_pushes;
+        return;
+    }
+
+    // Away from the saved depth — unsaved edits above it, an undo past it,
+    // or no baseline at all (where growth dirties and nothing cleans).
+    let needs_dirty_flip = match saved_doc_hash {
+        Some(_) => !was_dirty,
+        None => grew && !was_dirty,
+    };
+    if !needs_dirty_flip {
+        scenes.bypass_change_detection().tabs[active].observed_undo_len = current_len;
+        scenes.bypass_change_detection().tabs[active].observed_pushes = current_pushes;
         return;
     }
     scenes.set_changed();
     let tab = &mut scenes.tabs[active];
-    if needs_dirty_flip {
-        tab.dirty = true;
-    }
-    tab.history_depth_at_last_check = current_depth;
+    tab.dirty = true;
+    tab.observed_undo_len = current_len;
+    tab.observed_pushes = current_pushes;
 }
 
 #[derive(Default, Clone)]

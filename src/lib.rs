@@ -1189,9 +1189,10 @@ impl jackdaw_commands::EditorCommand for DespawnKeyframeCmd {
             | Self::Quat { keyframe, .. }
             | Self::F32 { keyframe, .. } => *keyframe,
         };
-        if let Ok(ent) = world.get_entity_mut(entity) {
-            ent.despawn();
-        }
+        // Despawn through the document-aware path: a bare ECS despawn would
+        // leave the keyframe's node in the AST, so a later document respawn
+        // (any snapshot-entry undo) would resurrect the deleted keyframe.
+        commands::despawn_scene_entity(world, entity);
     }
 
     fn undo(&mut self, world: &mut World) {
@@ -1231,6 +1232,11 @@ impl jackdaw_commands::EditorCommand for DespawnKeyframeCmd {
                 ))
                 .id(),
         };
+        // Register the revived keyframe in the document now, not on the
+        // next frame's watcher: without this the watcher's registration
+        // races whoever emits the document next, and an undo that respawns
+        // the whole scene would mint a second node for the same keyframe.
+        scene_io::register_entity_in_ast(world, new_id);
         match self {
             Self::Vec3 { keyframe, .. }
             | Self::Quat { keyframe, .. }
@@ -1945,6 +1951,10 @@ impl jackdaw_commands::EditorCommand for SpawnKeyframeCmd {
                 ))
                 .id(),
         };
+        // Registered now rather than by the next frame's watcher, for the
+        // same reason as `DespawnKeyframeCmd::undo`: the pasted keyframe
+        // belongs to the document from the moment it exists.
+        scene_io::register_entity_in_ast(world, new_id);
         match self {
             Self::Vec3 { keyframe, .. }
             | Self::Quat { keyframe, .. }
@@ -1959,10 +1969,11 @@ impl jackdaw_commands::EditorCommand for SpawnKeyframeCmd {
             | Self::Quat { keyframe, .. }
             | Self::F32 { keyframe, .. } => *keyframe,
         };
-        if let Some(entity) = entity
-            && let Ok(ent) = world.get_entity_mut(entity)
-        {
-            ent.despawn();
+        if let Some(entity) = entity {
+            // Document-aware despawn: undoing a paste takes the keyframe
+            // out of the AST too, or a later document respawn would bring
+            // it back.
+            commands::despawn_scene_entity(world, entity);
         }
     }
 
@@ -2885,7 +2896,6 @@ fn cleanup_editor(world: &mut World) {
     // 5. Reset resources. The catalog, the asset index and the material
     // registry all describe the project being closed.
     world.insert_resource(scene_io::SceneFilePath::default());
-    world.insert_resource(scene_io::SceneDirtyState::default());
     world.insert_resource(Selection::default());
     world.insert_resource(commands::CommandHistory::default());
     world.insert_resource(asset_catalog::AssetCatalog::default());

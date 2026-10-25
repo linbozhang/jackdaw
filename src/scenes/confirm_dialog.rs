@@ -604,7 +604,6 @@ mod apply_confirm_dialog_action_tests {
     fn world_with_dirty_tab_at(path: std::path::PathBuf) -> World {
         let mut world = World::new();
         world.init_resource::<jackdaw_commands::CommandHistory>();
-        world.init_resource::<crate::scene_io::SceneDirtyState>();
         world.init_resource::<SceneFilePath>();
 
         let mut tab = SceneTab::new_untitled(1);

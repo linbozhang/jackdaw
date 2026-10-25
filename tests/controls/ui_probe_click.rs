@@ -127,9 +127,12 @@ fn a_ui_click_located_by_text_activates_the_button() {
 #[test]
 fn a_ui_click_refuses_what_it_cannot_honestly_click() {
     let mut app = editor_window();
+    // The disabled button carries no operator: the availability driver owns
+    // `InteractionDisabled` on every operator button and re-enables one
+    // whose operator is available, so a disabled operator button does not
+    // stay disabled. A plain button keeps its marker for good.
     app.world_mut().spawn((
         button(ButtonProps::new("Save World")),
-        ButtonOperatorCall::new(TOGGLE_WIREFRAME),
         bevy::ui::InteractionDisabled,
     ));
     app.world_mut().spawn((

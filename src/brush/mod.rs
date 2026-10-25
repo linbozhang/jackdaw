@@ -445,9 +445,14 @@ pub fn sync_brush_to_ast(world: &mut World, entity: Entity, brush: &Brush) {
 /// would wipe the prior Brush edit (e.g. undoing a new brush would
 /// also strip a material that had been applied beforehand).
 ///
+/// Also callable inline (`run_system_cached`), which the numeric
+/// transform's brush branch does so the framework's after-snapshot --
+/// taken the moment the operator returns, before this system's next
+/// scheduled run -- already sees the edited brush in the AST.
+///
 /// Cloning the Brush per change is cheap (a small `Vec<BrushFaceData>`),
 /// and in practice `Changed<Brush>` is near-empty every frame.
-fn sync_changed_brushes_to_ast(
+pub(crate) fn sync_changed_brushes_to_ast(
     changed: Query<(Entity, &Brush), Changed<Brush>>,
     mut commands: Commands,
 ) {

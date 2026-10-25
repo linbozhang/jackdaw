@@ -8,8 +8,11 @@
 mod util;
 
 mod batch_undo;
+mod dirty_matrix;
 mod editor_remote;
 mod feathers_composition;
+mod keyframe_undo;
+mod numeric_transform_undo;
 mod remote_debug_smoke;
 mod scaffolded_component_flow;
 mod undo_history;

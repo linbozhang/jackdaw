@@ -574,7 +574,7 @@ mod tests {
         app.init_resource::<crate::asset_catalog::AssetCatalog>();
         app.init_resource::<crate::material_assets::MaterialRegistry>();
         app.init_resource::<jackdaw_commands::CommandHistory>();
-        app.init_resource::<crate::scene_io::SceneDirtyState>();
+        app.init_resource::<crate::scenes::Scenes>();
         app.init_resource::<AssetKinds>();
         app.world_mut()
             .resource_mut::<AssetKinds>()
@@ -857,9 +857,14 @@ mod tests {
     fn a_project_with_unsaved_edits_open_is_refused() {
         let (mut app, tmp) = migration_app();
         headerless_material(&tmp, "materials/slate.material.bsn", "slate");
-        app.world_mut()
-            .resource_mut::<crate::scene_io::SceneDirtyState>()
-            .undo_len_at_save = 1;
+        {
+            let mut scenes = app.world_mut().resource_mut::<crate::scenes::Scenes>();
+            if scenes.tabs.is_empty() {
+                scenes.push_tab(crate::scenes::SceneTab::new_untitled(1));
+            }
+            let active = scenes.active;
+            scenes.tabs[active].dirty = true;
+        }
 
         let reports = run(&mut app);
 

@@ -536,8 +536,37 @@ pub(crate) fn open_read_scene(world: &mut World, read: ReadScene) {
 
     let target = world.resource_mut::<Scenes>().push_tab(tab);
     activate_pushed_tab(world, target);
+    let had_upgrade = upgrade.is_some();
     if let Some(upgrade) = upgrade {
         crate::lod_upgrade::finish_upgrade(world, upgrade);
+    }
+
+    // A fresh open is the tab's clean baseline: the stack depth as it
+    // stands (the activation cleared the history into the previous tab)
+    // and a fingerprint of the document the way a save writes it, so an
+    // undo back to this state reads clean again.
+    //
+    // An opened-and-upgraded scene is the exception: the upgrade rewrote
+    // the document in memory while the file on disk still holds the old
+    // form, so the tab stays dirty (no fingerprint baseline -- the clean
+    // state is the file, not the upgraded document) until it is saved.
+    let fingerprint = if had_upgrade {
+        None
+    } else {
+        crate::scene_io::document_fingerprint(world)
+    };
+    let (history_len, history_pushes) = {
+        let history = world.resource::<jackdaw_commands::CommandHistory>();
+        (history.undo_stack.len(), history.total_pushes())
+    };
+    if let Some(mut scenes) = world.get_resource_mut::<Scenes>()
+        && let Some(tab) = scenes.tabs.get_mut(target)
+    {
+        tab.dirty = had_upgrade;
+        tab.saved_undo_len = history_len;
+        tab.saved_doc_hash = fingerprint;
+        tab.observed_undo_len = history_len;
+        tab.observed_pushes = history_pushes;
     }
     crate::scenes::load_progress::scene_spawned(world, target);
 }
@@ -708,10 +737,12 @@ pub fn active_tab_modified(world: &World) -> bool {
     let Some(tab) = scenes.tabs.get(scenes.active) else {
         return false;
     };
-    let depth = world
+    let pushes = world
         .get_resource::<jackdaw_commands::CommandHistory>()
-        .map_or(0, |history| history.undo_stack.len());
-    tab.dirty || depth > tab.history_depth_at_last_check
+        .map_or(0, jackdaw_commands::CommandHistory::total_pushes);
+    // The push counter, not the stack length: budget trimming can hold the
+    // length flat across a real edit.
+    tab.dirty || pushes > tab.observed_pushes
 }
 
 /// Save the tabs at `indices`, switching to each in turn, then return to the

@@ -8,7 +8,7 @@ use bevy::{ecs::reflect::AppTypeRegistry, prelude::*, tasks::AsyncComputeTaskPoo
 
 use super::asset_fields::AbsoluteAssetField;
 use super::load::SceneDialogTask;
-use super::{SceneDirtyState, SceneFilePath, doc_skip_type_ids, should_skip_component};
+use super::{SceneFilePath, doc_skip_type_ids, should_skip_component};
 
 pub(crate) use jackdaw_api_internal::document::write_atomic;
 
@@ -81,6 +81,51 @@ pub enum SaveOutcome {
     DialogOpened,
     /// The save was attempted and failed.
     Failed,
+}
+
+/// Hash emitted scene text into the fingerprint a tab keeps of its saved
+/// content. Any stable-in-process hasher serves: the fingerprint never
+/// leaves memory, it is only compared against another emit from the same
+/// session.
+pub(crate) fn document_hash(text: &str) -> u64 {
+    use std::hash::{Hash as _, Hasher as _};
+
+    let mut hasher = std::hash::DefaultHasher::new();
+    text.hash(&mut hasher);
+    hasher.finish()
+}
+
+/// The live document of the active tab, hashed through the same emitter its
+/// save branch uses: `emit_bsn_scene_for_file` for a scene tab,
+/// `emit_bsn_scene_with_inline_assets` for a prefab tab. The dirty watcher
+/// compares this against `SceneTab::saved_doc_hash` when the undo stack
+/// sits exactly at its saved depth.
+///
+/// `None` when there is no active tab, no path to relativize against, a
+/// refused tab, or an emission the file pipeline would refuse.
+pub fn document_fingerprint(world: &mut World) -> Option<u64> {
+    let (is_prefab, parent, refused) = {
+        let scenes = world.get_resource::<crate::scenes::Scenes>()?;
+        let tab = scenes.tabs.get(scenes.active)?;
+        let parent = tab
+            .path
+            .as_ref()
+            .and_then(|path| path.parent().map(std::path::Path::to_path_buf))?;
+        (
+            matches!(tab.content, crate::scenes::TabContent::Prefab(_)),
+            parent,
+            tab.is_refused(),
+        )
+    };
+    if refused {
+        return None;
+    }
+    let text = if is_prefab {
+        emit_bsn_scene_with_inline_assets(world, &parent)
+    } else {
+        emit_bsn_scene_for_file(world, &parent).ok()?
+    };
+    Some(document_hash(&text))
 }
 
 /// Save the active scene, returning whether its authoritative files
@@ -256,18 +301,22 @@ pub(crate) fn save_scene_inner(world: &mut World) -> Result<(), BevyError> {
         crate::prefab::operators::save_prefab_to_disk(world, &path)
             .map_err(|err| BevyError::from(format!("prefab save failed: {err}")))?;
         write_alongside(world, &path.to_string_lossy())?;
-        // Clear dirty bit + sync history depth so the tab stops showing
-        // as unsaved.
-        let history_len = world
-            .resource::<jackdaw_commands::CommandHistory>()
-            .undo_stack
-            .len();
-        world.resource_mut::<SceneDirtyState>().undo_len_at_save = history_len;
+        // Clear the dirty bit and record the save baseline: the stack depth
+        // and the content fingerprint the dirty watcher compares against
+        // when the stack returns to that depth.
+        let (history_len, history_pushes) = {
+            let history = world.resource::<jackdaw_commands::CommandHistory>();
+            (history.undo_stack.len(), history.total_pushes())
+        };
+        let fingerprint = document_hash(&text);
         if let Some(mut scenes) = world.get_resource_mut::<crate::scenes::Scenes>() {
             let active = scenes.active;
             if let Some(tab) = scenes.tabs.get_mut(active) {
                 tab.dirty = false;
-                tab.history_depth_at_last_check = history_len;
+                tab.saved_undo_len = history_len;
+                tab.saved_doc_hash = Some(fingerprint);
+                tab.observed_undo_len = history_len;
+                tab.observed_pushes = history_pushes;
             }
         }
         return Ok(());
@@ -305,7 +354,7 @@ pub(crate) fn save_scene_inner(world: &mut World) -> Result<(), BevyError> {
         scene_path.metadata.name = "Untitled".to_string();
     }
 
-    let contents = {
+    let (saved_body, contents) = {
         let parent_path = Path::new(&path)
             .parent()
             .map(Path::to_path_buf)
@@ -315,7 +364,8 @@ pub(crate) fn save_scene_inner(world: &mut World) -> Result<(), BevyError> {
         // Record the jackdaw + Bevy version at the disk boundary only, so
         // the in-memory undo / tab-swap snapshots from the same emitter stay
         // stamp-free.
-        crate::scene_io::stamp::with_stamp(&body)
+        let stamped = crate::scene_io::stamp::with_stamp(&body);
+        (body, stamped)
     };
 
     // Terrain heights and paint channels are authoritative authored data.
@@ -356,12 +406,15 @@ pub(crate) fn save_scene_inner(world: &mut World) -> Result<(), BevyError> {
     write_alongside(world, &path)?;
 
     // The authoritative scene and sidecars are now on disk. Only now clear
-    // dirty state and retarget a redirected tab at its new `.bsn` path.
-    let history_len = world
-        .resource::<jackdaw_commands::CommandHistory>()
-        .undo_stack
-        .len();
-    world.resource_mut::<SceneDirtyState>().undo_len_at_save = history_len;
+    // dirty state and retarget a redirected tab at its new `.bsn` path. The
+    // save baseline records the stack depth and a fingerprint of the emitted
+    // body, so the dirty watcher can tell "undo back to the saved content"
+    // (clean) from "a different edit at the same depth" (dirty).
+    let (history_len, history_pushes) = {
+        let history = world.resource::<jackdaw_commands::CommandHistory>();
+        (history.undo_stack.len(), history.total_pushes())
+    };
+    let fingerprint = document_hash(&saved_body);
     if legacy_backup.is_some() {
         world.resource_mut::<SceneFilePath>().path = Some(path.clone());
     }
@@ -369,7 +422,10 @@ pub(crate) fn save_scene_inner(world: &mut World) -> Result<(), BevyError> {
         let active = scenes.active;
         if let Some(tab) = scenes.tabs.get_mut(active) {
             tab.dirty = false;
-            tab.history_depth_at_last_check = history_len;
+            tab.saved_undo_len = history_len;
+            tab.saved_doc_hash = Some(fingerprint);
+            tab.observed_undo_len = history_len;
+            tab.observed_pushes = history_pushes;
             if legacy_backup.is_some() {
                 tab.path = Some(PathBuf::from(&path));
             }
@@ -1524,7 +1580,6 @@ mod tests {
         }
         world.init_resource::<jackdaw_commands::CommandHistory>();
         world.init_resource::<SceneFilePath>();
-        world.init_resource::<SceneDirtyState>();
 
         // Authored node: Transform translation [1, 2, 3], bound to a preview
         // entity whose live ECS Transform is the [9, 9, 9] overlay.
@@ -1591,6 +1646,8 @@ mod tests {
         let mut tab = crate::scenes::SceneTab::new_untitled(1);
         tab.path = Some(scene_path.clone());
         tab.dirty = true;
+        tab.saved_undo_len = 0;
+        tab.saved_doc_hash = Some(42);
         world.insert_resource(crate::scenes::Scenes {
             tabs: vec![tab],
             active: 0,
@@ -1616,15 +1673,19 @@ mod tests {
             ..default()
         });
 
-        let baseline = world.resource::<SceneDirtyState>().undo_len_at_save;
         let error = save_scene_inner(&mut world).expect_err("the blocked sidecar fails the save");
 
         assert!(error.to_string().contains(data_path));
-        assert!(world.resource::<crate::scenes::Scenes>().tabs[0].dirty);
+        let tab = &world.resource::<crate::scenes::Scenes>().tabs[0];
+        assert!(tab.dirty);
         assert_eq!(
-            world.resource::<SceneDirtyState>().undo_len_at_save,
-            baseline,
+            tab.saved_undo_len, 0,
             "failed saves must not advance the clean-history baseline",
+        );
+        assert_eq!(
+            tab.saved_doc_hash,
+            Some(42),
+            "failed saves must not replace the content baseline",
         );
     }
 

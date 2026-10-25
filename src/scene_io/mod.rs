@@ -27,8 +27,9 @@ pub(crate) use load::{
 };
 pub use registration::{register_entities_in_ast, register_entity_in_ast};
 pub use save::{
-    SaveOutcome, emit_bsn_scene_for_file, emit_bsn_scene_with_inline_assets, retarget_active_scene,
-    save_layout_to_project, save_scene, save_scene_as, save_scene_with_outcome,
+    SaveOutcome, document_fingerprint, emit_bsn_scene_for_file, emit_bsn_scene_with_inline_assets,
+    retarget_active_scene, save_layout_to_project, save_scene, save_scene_as,
+    save_scene_with_outcome,
 };
 pub(crate) use save::{emit_bsn_entities_with_inline_assets, save_scene_inner};
 
@@ -294,7 +295,6 @@ pub struct SceneIoPlugin;
 impl Plugin for SceneIoPlugin {
     fn build(&self, app: &mut App) {
         app.init_resource::<SceneFilePath>()
-            .init_resource::<SceneDirtyState>()
             .add_systems(
                 Update,
                 poll_scene_dialog.run_if(in_state(crate::AppState::Editor)),
@@ -322,18 +322,17 @@ fn deactivate_document_cameras(
     }
 }
 
-/// Tracks whether the scene has unsaved changes by comparing the current
-/// undo stack length against the length at the time of last save/load/new.
-#[derive(Resource, Default)]
-pub struct SceneDirtyState {
-    pub undo_len_at_save: usize,
-}
-
 /// Returns `true` when the scene has unsaved changes.
+///
+/// The active tab's `dirty` flag is the one source of truth — the flag the
+/// tab strip, the close prompts and the save-all sweep read. This is the
+/// same answer expressed for callers that hold a world rather than the
+/// `Scenes` resource, so no second, drift-prone dirty track exists.
 pub fn is_scene_dirty(world: &World) -> bool {
-    let history = world.resource::<jackdaw_commands::CommandHistory>();
-    let dirty_state = world.resource::<SceneDirtyState>();
-    history.undo_stack.len() != dirty_state.undo_len_at_save
+    world
+        .get_resource::<crate::scenes::Scenes>()
+        .and_then(|scenes| scenes.tabs.get(scenes.active))
+        .is_some_and(|tab| tab.dirty)
 }
 
 pub use jackdaw_api_internal::document::{SceneFilePath, SceneMetadata};

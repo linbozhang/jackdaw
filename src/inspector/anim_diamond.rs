@@ -131,37 +131,52 @@ pub fn on_diamond_click(
 
 /// Spawn (or replace) a keyframe at the current cursor time on the
 /// given entity's clip/track for the named property.
+///
+/// Returns the entities it spawned (clip / track / keyframe, in that
+/// order, only the ones that did not already exist) so the caller can
+/// register them in the document synchronously: the update watcher
+/// would only find them next frame, after an enclosing operator's
+/// after-snapshot was already taken.
 pub(crate) fn toggle_keyframe(
     In((source_entity, component_type_path, field_path)): In<(Entity, String, String)>,
     world: &mut World,
-) {
+) -> Vec<Entity> {
     let cursor_time = world
         .get_resource::<TimelineCursor>()
         .map(|c| c.seek_time)
         .unwrap_or(0.0);
 
-    let Some(clip_entity) = find_or_create_clip(world, source_entity) else {
+    let mut spawned: Vec<Entity> = Vec::new();
+
+    let Some((clip_entity, clip_created)) = find_or_create_clip(world, source_entity) else {
         warn!(
             "toggle_keyframe: source entity {source_entity} has no Name - \
              give it one in the inspector first so the clip's target can \
              resolve"
         );
-        return;
+        return spawned;
     };
+    if clip_created {
+        spawned.push(clip_entity);
+    }
 
-    let track_entity = find_or_create_track(world, clip_entity, &component_type_path, &field_path);
-    world
-        .run_system_cached_with(
-            spawn_typed_keyframe,
-            (
-                source_entity,
-                track_entity,
-                component_type_path.clone(),
-                field_path.clone(),
-                cursor_time,
-            ),
-        )
-        .ok();
+    let (track_entity, track_created) =
+        find_or_create_track(world, clip_entity, &component_type_path, &field_path);
+    if track_created {
+        spawned.push(track_entity);
+    }
+    if let Ok(keyframe) = world.run_system_cached_with(
+        spawn_typed_keyframe,
+        (
+            source_entity,
+            track_entity,
+            component_type_path.clone(),
+            field_path.clone(),
+            cursor_time,
+        ),
+    ) {
+        spawned.extend(keyframe);
+    }
 
     if let Some(mut clip) = world.get_mut::<Clip>(clip_entity)
         && cursor_time > clip.duration
@@ -175,13 +190,14 @@ pub(crate) fn toggle_keyframe(
     if let Some(mut dirty) = world.get_resource_mut::<TimelineDirty>() {
         dirty.0 = true;
     }
+    spawned
 }
 
 /// Return an existing `Clip` child of `source_entity`, or spawn one
-/// and return its entity. Returns `None` if the source entity has no
-/// `Name`, because name is required for the compile step to derive
-/// the `AnimationTargetId`.
-fn find_or_create_clip(world: &mut World, source_entity: Entity) -> Option<Entity> {
+/// and return its entity paired with `true`. Returns `None` if the
+/// source entity has no `Name`, because name is required for the
+/// compile step to derive the `AnimationTargetId`.
+fn find_or_create_clip(world: &mut World, source_entity: Entity) -> Option<(Entity, bool)> {
     let target_name = world
         .get::<Name>(source_entity)
         .map(|n| n.as_str().to_string())?;
@@ -191,7 +207,7 @@ fn find_or_create_clip(world: &mut World, source_entity: Entity) -> Option<Entit
         let children_vec: Vec<Entity> = children.iter().collect();
         for child in children_vec {
             if world.get::<Clip>(child).is_some() {
-                return Some(child);
+                return Some((child, false));
             }
         }
     }
@@ -204,17 +220,18 @@ fn find_or_create_clip(world: &mut World, source_entity: Entity) -> Option<Entit
             ChildOf(source_entity),
         ))
         .id();
-    Some(clip)
+    Some((clip, true))
 }
 
 /// Return an existing `AnimationTrack` child of `clip_entity` matching
-/// `(component_type_path, field_path)`, or spawn a new one.
+/// `(component_type_path, field_path)`, or spawn a new one, paired
+/// with whether it was spawned here.
 fn find_or_create_track(
     world: &mut World,
     clip_entity: Entity,
     component_type_path: &str,
     field_path: &str,
-) -> Entity {
+) -> (Entity, bool) {
     if let Some(children) = world.get::<Children>(clip_entity) {
         let children_vec: Vec<Entity> = children.iter().collect();
         for child in children_vec {
@@ -222,23 +239,25 @@ fn find_or_create_track(
                 && track.component_type_path == component_type_path
                 && track.field_path == field_path
             {
-                return child;
+                return (child, false);
             }
         }
     }
 
     let label = format!("/ {field_path}");
-    world
+    let track = world
         .spawn((
             AnimationTrack::new(component_type_path.to_string(), field_path.to_string()),
             Name::new(label),
             ChildOf(clip_entity),
         ))
-        .id()
+        .id();
+    (track, true)
 }
 
 /// Snapshot the current value of the animated field on the source
-/// entity and spawn the appropriate typed keyframe component.
+/// entity and spawn the appropriate typed keyframe component,
+/// returning it.
 ///
 /// This is the dispatch mirror of
 /// `jackdaw_animation::compile::build_curve_for_track` and
@@ -255,50 +274,63 @@ fn spawn_typed_keyframe(
     )>,
     transforms: Query<&Transform>,
     mut commands: Commands,
-) {
+) -> Option<Entity> {
     match (component_type_path.as_str(), field_path.as_str()) {
         (TRANSFORM, "translation") => {
             let Ok(&transform) = transforms.get(source_entity) else {
                 warn!("Diamond click: source has no Transform");
-                return;
+                return None;
             };
-            commands.spawn((
-                Vec3Keyframe {
-                    time,
-                    value: transform.translation,
-                },
-                ChildOf(track_entity),
-            ));
+            Some(
+                commands
+                    .spawn((
+                        Vec3Keyframe {
+                            time,
+                            value: transform.translation,
+                        },
+                        ChildOf(track_entity),
+                    ))
+                    .id(),
+            )
         }
         (TRANSFORM, "rotation") => {
             let Ok(&transform) = transforms.get(source_entity) else {
                 warn!("Diamond click: source has no Transform");
-                return;
+                return None;
             };
-            commands.spawn((
-                QuatKeyframe {
-                    time,
-                    value: transform.rotation,
-                },
-                ChildOf(track_entity),
-            ));
+            Some(
+                commands
+                    .spawn((
+                        QuatKeyframe {
+                            time,
+                            value: transform.rotation,
+                        },
+                        ChildOf(track_entity),
+                    ))
+                    .id(),
+            )
         }
         (TRANSFORM, "scale") => {
             let Ok(&transform) = transforms.get(source_entity) else {
                 warn!("Diamond click: source has no Transform");
-                return;
+                return None;
             };
-            commands.spawn((
-                Vec3Keyframe {
-                    time,
-                    value: transform.scale,
-                },
-                ChildOf(track_entity),
-            ));
+            Some(
+                commands
+                    .spawn((
+                        Vec3Keyframe {
+                            time,
+                            value: transform.scale,
+                        },
+                        ChildOf(track_entity),
+                    ))
+                    .id(),
+            )
         }
         _ => {
             let _ = F32Keyframe::default();
             warn!("Diamond click: no snapshot dispatch for {component_type_path}.{field_path}",);
+            None
         }
     }
 }

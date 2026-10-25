@@ -175,6 +175,17 @@ impl CommandHistory {
         }
     }
 
+    /// How many entries were ever pushed, a counter that only grows.
+    ///
+    /// `undo_stack.len()` moves with pushes, undos, redos *and* budget
+    /// trimming, so a watcher asking "did anything new happen since I last
+    /// looked" cannot read it: a trim can shrink the stack below a depth a
+    /// real push had just reached. This counter answers that question. It
+    /// saturates only past `u64::MAX` pushes in one tab's lifetime.
+    pub fn total_pushes(&self) -> u64 {
+        self.pushes
+    }
+
     pub fn redo(&mut self, world: &mut World) {
         if let Some(mut command) = self.redo_stack.pop() {
             command.execute(world);
