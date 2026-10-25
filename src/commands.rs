@@ -2990,6 +2990,64 @@ mod set_bsn_field_tests {
         );
     }
 
+    /// Dirty-matrix case 9: a whole scrub gesture is one entry and lights the
+    /// tab dirty. Previews leave nothing; the commit is the single entry; the
+    /// per-frame dirty watcher, run once, marks the tab.
+    #[test]
+    fn scrub_gesture_is_one_entry_and_lights_the_tab_dirty() {
+        let mut app = field_app();
+        let entity = app
+            .world_mut()
+            .spawn(Transform::from_xyz(2.0, 5.0, 8.0))
+            .id();
+        create_entity_in_ast(app.world_mut(), entity, None);
+        app.world_mut().resource_mut::<Selection>().entities = vec![entity];
+        {
+            let mut scenes = crate::scenes::Scenes::default();
+            scenes.push_tab(crate::scenes::SceneTab::new_untitled(1));
+            app.world_mut().insert_resource(scenes);
+        }
+
+        let type_path = "bevy_transform::components::transform::Transform";
+        // Two preview ticks: a drag across the row, then the commit at rest.
+        field_edit_preview(
+            app.world_mut(),
+            None,
+            type_path,
+            "translation.x",
+            &serde_json::json!(7.0),
+        );
+        field_edit_preview(
+            app.world_mut(),
+            None,
+            type_path,
+            "translation.x",
+            &serde_json::json!(9.0),
+        );
+        field_edit_commit(
+            app.world_mut(),
+            None,
+            type_path,
+            "translation.x",
+            &serde_json::json!(9.0),
+            "test",
+        );
+
+        assert_eq!(
+            app.world().resource::<CommandHistory>().undo_stack.len(),
+            1,
+            "the whole gesture is one entry: previews leave nothing"
+        );
+        app.world_mut()
+            .run_system_cached(crate::scenes::mark_active_dirty_on_history_growth)
+            .expect("the dirty watcher runs");
+        let scenes = app.world().resource::<crate::scenes::Scenes>();
+        assert!(
+            scenes.tabs[scenes.active].dirty,
+            "the gesture dirties the tab"
+        );
+    }
+
     #[test]
     fn sparse_missing_field_commit_undo_removes_field() {
         let mut app = field_app();

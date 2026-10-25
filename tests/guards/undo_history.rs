@@ -147,7 +147,6 @@ fn a_move_undoes_after_switching_away_from_the_tab_and_back() {
 }
 
 #[test]
-#[ignore = "a tab is marked dirty when its history grows and undo never clears it"]
 fn undoing_back_to_the_saved_scene_leaves_the_tab_clean() {
     let (mut app, dir) = editor();
     cube(&mut app);

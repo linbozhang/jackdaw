@@ -461,12 +461,19 @@ pub(crate) fn animation_toggle_keyframe(
     let type_path = params.as_str("component_type_path").map(str::to_string)?;
     let field_path = params.as_str("field_path").map(str::to_string)?;
     commands.queue(move |world: &mut World| {
-        world
+        let spawned = world
             .run_system_cached_with(
                 super::anim_diamond::toggle_keyframe,
                 (entity, type_path, field_path),
             )
-            .ok();
+            .ok()
+            .unwrap_or_default();
+        // Register the new clip / track / keyframe in the document now,
+        // inside the operator's span, so a history-creating dispatch's
+        // after-snapshot diff catches the keyframe and the toggle carries
+        // its own undo entry. Waiting for the update watcher would leave
+        // the change to fold silently into whatever entry runs next.
+        crate::scene_io::register_entities_in_ast(world, &spawned);
     });
     Some(OperatorResult::Finished)
 }

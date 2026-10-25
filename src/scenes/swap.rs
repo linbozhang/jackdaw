@@ -283,8 +283,11 @@ pub fn activate_tab(world: &mut World, target: usize) {
         scenes.tabs[target].refusal = refusal;
     }
 
-    let history_depth = history.undo_stack.len();
-    *world.resource_mut::<CommandHistory>() = history;
+    let (history_depth, history_pushes) = {
+        let depths = (history.undo_stack.len(), history.total_pushes());
+        *world.resource_mut::<CommandHistory>() = history;
+        depths
+    };
     apply_view_state(world, &view_state, spawned_ok);
 
     // Critical: sync the global `SceneFilePath` to whichever tab is now
@@ -316,7 +319,11 @@ pub fn activate_tab(world: &mut World, target: usize) {
 
     let mut scenes = world.resource_mut::<Scenes>();
     scenes.active = target;
-    scenes.tabs[target].history_depth_at_last_check = history_depth;
+    // The watcher's observation baseline moves with the tab's own history,
+    // so the first frame after a switch re-evaluates this tab against this
+    // tab's save point, never the previous tab's.
+    scenes.tabs[target].observed_undo_len = history_depth;
+    scenes.tabs[target].observed_pushes = history_pushes;
     world.trigger(jackdaw_api_internal::document::SceneOpened { path: tab_path });
 }
 

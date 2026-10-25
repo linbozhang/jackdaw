@@ -23,6 +23,7 @@
 use bevy::ecs::system::SystemParam;
 use bevy::prelude::*;
 use jackdaw_api::prelude::*;
+use jackdaw_commands::EditorCommand as _;
 
 use crate::active_tool::ActiveTool;
 use crate::brush::{BrushSelection, BrushSubSelection, EditMode};
@@ -437,9 +438,10 @@ pub fn numeric_transform_apply(
     edit_mode: Res<EditMode>,
     selection: Res<Selection>,
     parents: Query<&ChildOf>,
-    transforms: Query<&mut Transform, With<Selected>>,
+    transforms: Query<&Transform, With<Selected>>,
     brush_selection: Res<BrushSelection>,
     brush_params: NumericBrushParams,
+    mut commands: Commands,
 ) -> OperatorResult {
     let Some(axis) = state.axis else {
         return OperatorResult::Cancelled;
@@ -459,10 +461,36 @@ pub fn numeric_transform_apply(
 
     match *edit_mode {
         EditMode::Object => {
-            apply_object(&op, axis_dir, value, &selection, &parents, transforms);
+            // Plan the transforms here, then write them through
+            // `SetTransform::execute` in a queued command: the ECS write and
+            // its AST sync both land before the framework takes its
+            // after-snapshot, so the whole gesture -- one entry, multi
+            // selection included -- is the snapshot diff. Nothing is pushed
+            // by hand.
+            let plan = plan_object(&op, axis_dir, value, &selection, &parents, &transforms);
+            if !plan.is_empty() {
+                commands.queue(move |world: &mut World| {
+                    for (entity, old_transform, new_transform) in plan {
+                        crate::commands::SetTransform {
+                            entity,
+                            old_transform,
+                            new_transform,
+                        }
+                        .execute(world);
+                    }
+                });
+            }
         }
         EditMode::BrushEdit(_) => {
             apply_sub_elements(&op, axis_dir, value, &brush_selection, brush_params);
+            // The brush edits landed in the ECS, but the AST only hears
+            // about them from the per-frame `Changed<Brush>` watcher --
+            // after the framework's after-snapshot. Run it inline so the
+            // snapshot diff sees the edited brushes and the gesture is one
+            // entry rather than zero.
+            commands.queue(|world: &mut World| {
+                let _ = world.run_system_cached(crate::brush::sync_changed_brushes_to_ast);
+            });
         }
     }
 
@@ -470,42 +498,44 @@ pub fn numeric_transform_apply(
     OperatorResult::Finished
 }
 
-/// Object-mode apply: mirror the `gizmo_drag` arms about the selection's
+/// Object-mode plan: the `SetTransform` pairs (entity, old, new) the apply
+/// will execute, mirroring the `gizmo_drag` arms about the selection's
 /// world / local pivots.
-fn apply_object(
+fn plan_object(
     mode: &ActiveTool,
     axis_dir: Vec3,
     value: f32,
     selection: &Selection,
     parents: &Query<&ChildOf>,
-    mut transforms: Query<&mut Transform, With<Selected>>,
-) {
+    transforms: &Query<&Transform, With<Selected>>,
+) -> Vec<(Entity, Transform, Transform)> {
     let targets = topmost_selected(selection, parents);
-    let local_positions: Vec<Vec3> = targets
+    let old: Vec<(Entity, Transform)> = targets
         .iter()
-        .filter_map(|&e| transforms.get(e).ok().map(|t| t.translation))
+        .filter_map(|&e| transforms.get(e).ok().map(|t| (e, *t)))
         .collect();
-    if local_positions.is_empty() {
-        return;
+    if old.is_empty() {
+        return Vec::new();
     }
-    let pivot_local = centroid(&local_positions);
+    let pivot_local = centroid(&old.iter().map(|(_, t)| t.translation).collect::<Vec<_>>());
 
+    let mut plan = Vec::with_capacity(old.len());
     match mode {
         ActiveTool::Translate => {
             let delta = axis_dir * value;
-            for &e in &targets {
-                if let Ok(mut tf) = transforms.get_mut(e) {
-                    tf.translation += delta;
-                }
+            for (e, old) in old {
+                let mut new = old;
+                new.translation += delta;
+                plan.push((e, old, new));
             }
         }
         ActiveTool::Rotate => {
             let r = Quat::from_axis_angle(axis_dir, value.to_radians());
-            for &e in &targets {
-                if let Ok(mut tf) = transforms.get_mut(e) {
-                    tf.translation = pivot_local + r * (tf.translation - pivot_local);
-                    tf.rotation = r * tf.rotation;
-                }
+            for (e, old) in old {
+                let mut new = old;
+                new.translation = pivot_local + r * (old.translation - pivot_local);
+                new.rotation = r * old.rotation;
+                plan.push((e, old, new));
             }
         }
         ActiveTool::Scale => {
@@ -516,15 +546,16 @@ fn apply_object(
                 d if d == Vec3::Z => factor.z = value,
                 _ => {}
             }
-            for &e in &targets {
-                if let Ok(mut tf) = transforms.get_mut(e) {
-                    tf.translation = pivot_local + factor * (tf.translation - pivot_local);
-                    tf.scale = (tf.scale * factor).max(Vec3::splat(MIN_SCALE));
-                }
+            for (e, old) in old {
+                let mut new = old;
+                new.translation = pivot_local + factor * (old.translation - pivot_local);
+                new.scale = (old.scale * factor).max(Vec3::splat(MIN_SCALE));
+                plan.push((e, old, new));
             }
         }
         ActiveTool::Select => {}
     }
+    plan
 }
 
 /// Brush-edit apply: transform the selected sub-elements across every edit

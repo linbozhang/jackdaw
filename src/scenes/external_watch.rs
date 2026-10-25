@@ -327,6 +327,18 @@ fn adopt_reloaded_document(world: &mut World, index: usize) {
             .insert(path.as_path(), doc.deep_clone());
     }
 
+    // The load cleared the undo stacks, so the tab's baseline is zero. The
+    // content fingerprint can only be taken the way a save takes it while
+    // the document is live in the world, i.e. for the active tab; an
+    // inactive tab keeps no baseline and falls back to growth-only dirty
+    // tracking until it next saves.
+    let active_tab = world.resource::<Scenes>().active == index;
+    let fingerprint = if active_tab {
+        crate::scene_io::document_fingerprint(world)
+    } else {
+        None
+    };
+
     let mut scenes = world.resource_mut::<Scenes>();
     let Some(tab) = scenes.tabs.get_mut(index) else {
         return;
@@ -343,8 +355,10 @@ fn adopt_reloaded_document(world: &mut World, index: usize) {
         (None, None) => {}
     }
     tab.dirty = false;
-    // The load cleared the undo stacks, so the tab's baseline is zero.
-    tab.history_depth_at_last_check = 0;
+    tab.saved_undo_len = 0;
+    tab.saved_doc_hash = fingerprint;
+    tab.observed_undo_len = 0;
+    tab.observed_pushes = 0;
     // The entities the stored selection named were despawned with the document.
     tab.view_state.selection.clear();
     tab.view_state.brush_sub_selection = crate::brush::BrushSelection::default();

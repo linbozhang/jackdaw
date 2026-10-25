@@ -1105,17 +1105,18 @@ pub fn save_scene_as_prefab(world: &mut World, target_path: &Path) {
     if let Some(mut spath) = world.get_resource_mut::<crate::scene_io::SceneFilePath>() {
         spath.path = Some(target_path.to_string_lossy().into_owned());
     }
-    let history_len = world
-        .resource::<jackdaw_commands::CommandHistory>()
-        .undo_stack
-        .len();
-    world
-        .resource_mut::<crate::scene_io::SceneDirtyState>()
-        .undo_len_at_save = history_len;
+    let (history_len, history_pushes) = {
+        let history = world.resource::<jackdaw_commands::CommandHistory>();
+        (history.undo_stack.len(), history.total_pushes())
+    };
+    let fingerprint = crate::scene_io::document_fingerprint(world);
     if let Some(mut scenes) = world.get_resource_mut::<crate::scenes::Scenes>() {
         let active = scenes.active;
         if let Some(tab) = scenes.tabs.get_mut(active) {
-            tab.history_depth_at_last_check = history_len;
+            tab.saved_undo_len = history_len;
+            tab.saved_doc_hash = fingerprint;
+            tab.observed_undo_len = history_len;
+            tab.observed_pushes = history_pushes;
         }
     }
 }

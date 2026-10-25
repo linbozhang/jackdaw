@@ -11,7 +11,8 @@ use crate::{
     gizmos::{GizmoAxis, GizmoSpace},
     modal_transform::{ModalOp, ModalTransformState},
     numeric_transform::NumericTransformState,
-    scene_io::{SceneDirtyState, SceneFilePath},
+    scene_io::SceneFilePath,
+    scenes::Scenes,
 };
 
 /// Git branch + short commit hash, read once at startup.
@@ -221,11 +222,11 @@ fn update_status_left(
 
 fn update_status_center(
     scene_path: Res<SceneFilePath>,
-    scene_dirty: Res<SceneDirtyState>,
     history: Res<jackdaw_commands::CommandHistory>,
+    scenes: Res<Scenes>,
     mut text_query: Query<&mut Text, With<StatusBarCenter>>,
 ) {
-    if !scene_path.is_changed() && !scene_dirty.is_changed() && !history.is_changed() {
+    if !scene_path.is_changed() && !history.is_changed() && !scenes.is_changed() {
         return;
     }
     let Ok(mut text) = text_query.single_mut() else {
@@ -233,7 +234,9 @@ fn update_status_center(
     };
 
     let version = env!("CARGO_PKG_VERSION");
-    let dirty = history.undo_stack.len() != scene_dirty.undo_len_at_save;
+    // The active tab's own flag: the one source of truth, kept in step with
+    // the history by the scenes plugin's dirty watcher.
+    let dirty = scenes.tabs.get(scenes.active).is_some_and(|tab| tab.dirty);
     let dirty_marker = if dirty { "*" } else { "" };
     let path_str = scene_path
         .path

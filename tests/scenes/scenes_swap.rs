@@ -587,7 +587,6 @@ fn make_app_with_n_tabs(n: usize) -> bevy::app::App {
     app.init_resource::<jackdaw::selection::Selection>();
     app.init_resource::<jackdaw::scenes::operators::UntitledCounter>();
     app.init_resource::<jackdaw::scene_io::SceneFilePath>();
-    app.init_resource::<jackdaw::scene_io::SceneDirtyState>();
     {
         let mut scenes = app.world_mut().resource_mut::<jackdaw::scenes::Scenes>();
         for i in 0..n {
@@ -966,7 +965,10 @@ fn swap_does_not_keep_a_jsn_scene_snapshot_field() {
         history: jackdaw::commands::CommandHistory::default(),
         terrain_data_store: jackdaw::terrain::TerrainDataStore::default(),
         scene_resources: Default::default(),
-        history_depth_at_last_check: 0,
+        observed_undo_len: 0,
+        observed_pushes: 0,
+        saved_undo_len: 0,
+        saved_doc_hash: None,
         refusal: None,
     };
 }
@@ -996,7 +998,6 @@ fn tab_swap_preserves_entity_ordering_and_components() {
     app.init_resource::<jackdaw_bsn::SceneBsnAst>();
     app.init_resource::<jackdaw::selection::Selection>();
     app.init_resource::<jackdaw::scene_io::SceneFilePath>();
-    app.init_resource::<jackdaw::scene_io::SceneDirtyState>();
     {
         let mut scenes = app.world_mut().resource_mut::<jackdaw::scenes::Scenes>();
         scenes.tabs.push(jackdaw::scenes::SceneTab::new_untitled(1));
@@ -1300,7 +1301,6 @@ fn finish_load_scene_entities_and_ast_share_ids_after_heal() {
     app.init_resource::<jackdaw_bsn::SceneBsnAst>();
     app.init_resource::<jackdaw::selection::Selection>();
     app.init_resource::<jackdaw::scene_io::SceneFilePath>();
-    app.init_resource::<jackdaw::scene_io::SceneDirtyState>();
     app.init_resource::<jackdaw::prefab::PrefabAstCache>();
     {
         let mut scenes = app.world_mut().resource_mut::<jackdaw::scenes::Scenes>();

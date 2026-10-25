@@ -13,9 +13,9 @@ use jackdaw_api_internal::operator::warn_caller;
 
 use crate::EditorEntity;
 
+use super::SceneFilePath;
 use super::registration::{register_entities_in_ast, register_entity_in_ast};
 use super::save::save_scene_inner;
-use super::{SceneDirtyState, SceneFilePath};
 
 pub(crate) fn prefab_cache_epoch(world: &World) -> Option<u64> {
     world
@@ -434,8 +434,24 @@ fn finish_load_scene(world: &mut World, chosen: &std::path::Path) -> LoadOutcome
     // content, and every placement then resolves against that box.
     crate::ui_palette::backfill_ui_root_size(world);
 
-    // Stacks were cleared by clear_scene_entities, so dirty baseline is 0
-    world.resource_mut::<SceneDirtyState>().undo_len_at_save = 0;
+    // Stacks were cleared by clear_scene_entities, so the clean baseline is
+    // this fresh load: depth zero, and a content fingerprint taken from the
+    // same emitter a save uses, so undoing back to what the file says reads
+    // clean.
+    let fingerprint = super::save::document_fingerprint(world);
+    let pushes = world
+        .get_resource::<jackdaw_commands::CommandHistory>()
+        .map_or(0, jackdaw_commands::CommandHistory::total_pushes);
+    if let Some(mut scenes) = world.get_resource_mut::<crate::scenes::Scenes>() {
+        let active = scenes.active;
+        if let Some(tab) = scenes.tabs.get_mut(active) {
+            tab.dirty = false;
+            tab.saved_undo_len = 0;
+            tab.saved_doc_hash = fingerprint;
+            tab.observed_undo_len = 0;
+            tab.observed_pushes = pushes;
+        }
+    }
     if let Some(upgrade) = pending_upgrade {
         crate::lod_upgrade::finish_upgrade(world, upgrade);
     }
