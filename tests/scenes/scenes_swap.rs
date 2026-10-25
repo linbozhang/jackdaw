@@ -969,6 +969,7 @@ fn swap_does_not_keep_a_jsn_scene_snapshot_field() {
         observed_pushes: 0,
         saved_undo_len: 0,
         saved_doc_hash: None,
+        saved_at: None,
         refusal: None,
     };
 }

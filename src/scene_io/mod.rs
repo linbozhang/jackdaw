@@ -13,6 +13,7 @@ mod legacy;
 mod load;
 mod registration;
 pub(crate) mod save;
+pub mod session_journal;
 pub mod stamp;
 
 pub use legacy::{load_inline_assets, load_scene_from_jsn};
@@ -297,8 +298,11 @@ impl Plugin for SceneIoPlugin {
         app.init_resource::<SceneFilePath>()
             .add_systems(
                 Update,
-                poll_scene_dialog.run_if(in_state(crate::AppState::Editor)),
+                (poll_scene_dialog, session_journal::session_journal_system)
+                    .chain()
+                    .run_if(in_state(crate::AppState::Editor)),
             )
+            .add_systems(Last, session_journal::end_session_on_app_exit)
             .add_systems(PostUpdate, deactivate_document_cameras);
     }
 }

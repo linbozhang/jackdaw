@@ -554,6 +554,11 @@ pub fn transition_to_editor(world: &mut World, root: PathBuf) {
         info!("removed {swept} orphan temp file(s) left by interrupted saves");
     }
 
+    // The crash journal's session starts with the project: a directory
+    // under the state tree that periodic snapshots of dirty tabs fill and
+    // a clean exit removes.
+    crate::scene_io::session_journal::begin_session(world, &root);
+
     project::touch_recent(&root, &config.name);
     crate::launcher::record_open(root.clone());
 

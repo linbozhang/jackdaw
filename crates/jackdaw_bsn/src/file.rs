@@ -12,6 +12,42 @@ use crate::binary::{self, BinaryError};
 use crate::header::read_asset_header;
 use crate::{BsnLoadError, SceneBsnAst, emit_scene, parse_bsn_text};
 
+/// Write `bytes` to `path` through a same-directory temp file renamed over
+/// it, so an interrupted conversion leaves the previous file rather than
+/// half of the new one. The editor's own saves write this way; this crate
+/// cannot depend on the crate that implements it, so the pattern is
+/// repeated here rather than linked.
+fn write_atomic(path: &Path, bytes: &[u8]) -> std::io::Result<()> {
+    use std::io::Write as _;
+
+    let parent = path.parent().unwrap_or_else(|| Path::new("."));
+    let Some(file_name) = path.file_name() else {
+        return Err(std::io::Error::other(format!(
+            "{} has no file name",
+            path.display()
+        )));
+    };
+    let temp_path = parent.join(format!(
+        ".{}.tmp-{}",
+        file_name.to_string_lossy(),
+        std::process::id()
+    ));
+    let staged = (|| -> std::io::Result<()> {
+        let mut file = std::fs::File::create(&temp_path)?;
+        file.write_all(bytes)?;
+        file.sync_all()
+    })();
+    if let Err(err) = staged {
+        let _ = std::fs::remove_file(&temp_path);
+        return Err(err);
+    }
+    if let Err(err) = std::fs::rename(&temp_path, path) {
+        let _ = std::fs::remove_file(&temp_path);
+        return Err(err);
+    }
+    Ok(())
+}
+
 /// The extension a text document carries.
 pub const TEXT_EXTENSION: &str = "bsn";
 
@@ -232,7 +268,7 @@ fn convert(path: &Path, to: DocumentForm) -> Result<PathBuf, DocumentError> {
     if target != path && target.exists() {
         return Err(DocumentError::TwinExists(target, path.to_path_buf()));
     }
-    std::fs::write(&target, bytes).map_err(|err| DocumentError::Write(target.clone(), err))?;
+    write_atomic(&target, &bytes).map_err(|err| DocumentError::Write(target.clone(), err))?;
     if target != path {
         std::fs::remove_file(path).map_err(|err| DocumentError::Write(path.to_path_buf(), err))?;
     }

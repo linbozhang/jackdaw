@@ -17,6 +17,7 @@ mod numeric_transform_undo;
 mod record_counts;
 mod remote_debug_smoke;
 mod scaffolded_component_flow;
+mod session_journal;
 mod undo_history;
 mod user_config;
 mod widget_purity;

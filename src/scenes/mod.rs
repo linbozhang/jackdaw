@@ -160,6 +160,10 @@ pub struct SceneTab {
     /// depth" reads dirty. `None` until the tab has a baseline (a fresh
     /// untitled tab), where growth alone decides.
     pub saved_doc_hash: Option<u64>,
+    /// When this tab's document last reached disk, as a UTC RFC 3339
+    /// string. `None` until a save does (the crash journal reports it, so
+    /// a recovery preview can say how far back the journaled edit is).
+    pub saved_at: Option<String>,
     /// Why the tab is in front without its contents in the world, if it is.
     /// Set, the world is not the file's contents and must not be written back.
     pub refusal: Option<TabRefusal>,
@@ -205,6 +209,7 @@ impl SceneTab {
             observed_pushes: 0,
             saved_undo_len: 0,
             saved_doc_hash: None,
+            saved_at: None,
             refusal: None,
         }
     }

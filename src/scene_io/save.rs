@@ -315,10 +315,14 @@ pub(crate) fn save_scene_inner(world: &mut World) -> Result<(), BevyError> {
                 tab.dirty = false;
                 tab.saved_undo_len = history_len;
                 tab.saved_doc_hash = Some(fingerprint);
+                tab.saved_at = Some(crate::timestamps::utc_rfc3339_now());
                 tab.observed_undo_len = history_len;
                 tab.observed_pushes = history_pushes;
             }
         }
+        // The journal's entry for this tab is spent: its document is on
+        // disk, so there is nothing left to recover.
+        super::session_journal::on_tab_saved(world, &path);
         return Ok(());
     }
 
@@ -424,6 +428,7 @@ pub(crate) fn save_scene_inner(world: &mut World) -> Result<(), BevyError> {
             tab.dirty = false;
             tab.saved_undo_len = history_len;
             tab.saved_doc_hash = Some(fingerprint);
+            tab.saved_at = Some(crate::timestamps::utc_rfc3339_now());
             tab.observed_undo_len = history_len;
             tab.observed_pushes = history_pushes;
             if legacy_backup.is_some() {
@@ -431,6 +436,10 @@ pub(crate) fn save_scene_inner(world: &mut World) -> Result<(), BevyError> {
             }
         }
     }
+    // The journal's entry for this tab is spent: its document is on disk,
+    // so there is nothing left to recover. At the same boundary as the
+    // baseline above, so the two never disagree.
+    super::session_journal::on_tab_saved(world, Path::new(&path));
 
     // Persist current editor layout to project.jsn
     save_layout_to_project(world);
@@ -1793,7 +1802,9 @@ mod tests {
 
     /// C2: `write_atomic` must fully replace an existing file's content
     /// (proving the write goes through a rename, not an in-place
-    /// truncate) and must not leave its temp file behind.
+    /// truncate) and must not leave its temp file behind. Since the
+    /// single-slot backup rotation, the previous version legitimately
+    /// sits beside it as `<name>.bak` and nothing else may.
     #[test]
     fn write_atomic_replaces_existing_content_and_cleans_up_its_temp_file() {
         let tmp = tempfile::tempdir().expect("temp directory");
@@ -1804,10 +1815,16 @@ mod tests {
         write_atomic(&target, b"new").expect("atomic write succeeds");
 
         assert_eq!(std::fs::read(&target).expect("read back"), b"new");
+        let backup = tmp.path().join("scene.bsn.bak");
+        assert_eq!(
+            std::fs::read(&backup).expect("the backup is there"),
+            b"old contents, much longer than the new ones",
+            "the rotated-out version is the backup"
+        );
         let stray_temp = std::fs::read_dir(tmp.path())
             .expect("read temp dir")
             .filter_map(Result::ok)
-            .any(|entry| entry.path() != target);
+            .any(|entry| entry.path() != target && entry.path() != backup);
         assert!(!stray_temp, "no temp file may remain beside the target");
     }
 
