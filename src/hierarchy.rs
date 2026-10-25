@@ -1938,6 +1938,10 @@ fn on_tree_row_dropped(
                     ast.ast_for(dragged).is_some() && ast.ast_for(target).is_some()
                 };
                 if both_in_ast {
+                    // One dispatch, one undo entry: the operator's own
+                    // framework snapshot spans the AST unpack and the ECS
+                    // reparent its body executes, so no second history
+                    // entry is pushed here.
                     let _ = world
                         .operator("prefab.unpack_child")
                         .settings(CallOperatorSettings {
@@ -1947,17 +1951,6 @@ fn on_tree_row_dropped(
                         .param("child_entity", dragged)
                         .param("drop_target_entity", target)
                         .call();
-                    let old_parent = world.get::<ChildOf>(dragged).map(|c| c.0);
-                    let mut cmd = ReparentEntity {
-                        entity: dragged,
-                        old_parent,
-                        new_parent: Some(target),
-                        old_index: None,
-                    };
-                    cmd.execute(world);
-                    world
-                        .resource_mut::<CommandHistory>()
-                        .push_executed(Box::new(cmd));
                     return;
                 }
             }
@@ -2421,8 +2414,19 @@ fn on_context_menu_action(
             }
         }
         "hierarchy.duplicate" => {
+            // Ctrl+D dispatches `entity.duplicate`, whose framework snapshot
+            // is the duplicate's one undo entry. Going through the operator
+            // here too (rather than calling `duplicate_selected` directly)
+            // keeps the context menu a peer of the keybind: one entry, the
+            // right label, and an undo that takes the copy back.
             commands.queue(|world: &mut World| {
-                entity_ops::duplicate_selected(world);
+                let _ = world
+                    .operator("entity.duplicate")
+                    .settings(CallOperatorSettings {
+                        execution_context: ExecutionContext::Invoke,
+                        creates_history_entry: true,
+                    })
+                    .call();
             });
         }
         "hierarchy.delete" => {

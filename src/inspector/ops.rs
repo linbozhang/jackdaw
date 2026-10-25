@@ -183,6 +183,7 @@ fn component_id_for_path(
     id = "component.add",
     label = "Add Component",
     description = "Add a component to the selected entity.",
+    allows_undo = false,
     is_available = has_primary_selection,
     params(
         entity(Entity, doc = "Entity that receives the component."),
@@ -285,6 +286,7 @@ pub(crate) fn component_add(
     id = "component.remove",
     label = "Remove Component",
     description = "Remove a component from the selected entity.",
+    allows_undo = false,
     is_available = has_primary_selection,
     params(
         entity(Entity, doc = "Entity that loses the component."),

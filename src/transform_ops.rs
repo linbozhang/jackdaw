@@ -121,6 +121,7 @@ pub(crate) fn add_to_extension(ctx: &mut ExtensionContext) {
 #[operator(
     id = "transform.reset_position",
     label = "Reset Position",
+    allows_undo = false,
     is_available = can_act_on_entities
 )]
 fn transform_reset_position(_: In<OperatorParameters>, mut commands: Commands) -> OperatorResult {
@@ -133,6 +134,7 @@ fn transform_reset_position(_: In<OperatorParameters>, mut commands: Commands) -
 #[operator(
     id = "transform.reset_rotation",
     label = "Reset Rotation",
+    allows_undo = false,
     is_available = can_act_on_entities
 )]
 fn transform_reset_rotation(_: In<OperatorParameters>, mut commands: Commands) -> OperatorResult {
@@ -145,6 +147,7 @@ fn transform_reset_rotation(_: In<OperatorParameters>, mut commands: Commands) -
 #[operator(
     id = "transform.reset_scale",
     label = "Reset Scale",
+    allows_undo = false,
     is_available = can_act_on_entities
 )]
 fn transform_reset_scale(_: In<OperatorParameters>, mut commands: Commands) -> OperatorResult {
@@ -186,6 +189,7 @@ fn rotate_by_camera_axis(world: &mut World, axis: CameraAxis, direction: f32) {
 #[operator(
     id = "transform.rotate_90_yaw_ccw",
     label = "Rotate 90 deg Yaw CCW",
+    allows_undo = false,
     is_available = can_act_on_entities
 )]
 fn transform_rotate_90_yaw_ccw(
@@ -199,6 +203,7 @@ fn transform_rotate_90_yaw_ccw(
 #[operator(
     id = "transform.rotate_90_yaw_cw",
     label = "Rotate 90 deg Yaw CW",
+    allows_undo = false,
     is_available = can_act_on_entities
 )]
 fn transform_rotate_90_yaw_cw(_: In<OperatorParameters>, mut commands: Commands) -> OperatorResult {
@@ -209,6 +214,7 @@ fn transform_rotate_90_yaw_cw(_: In<OperatorParameters>, mut commands: Commands)
 #[operator(
     id = "transform.rotate_90_pitch_ccw",
     label = "Rotate 90 deg Pitch CCW",
+    allows_undo = false,
     is_available = can_act_on_entities
 )]
 fn transform_rotate_90_pitch_ccw(
@@ -222,6 +228,7 @@ fn transform_rotate_90_pitch_ccw(
 #[operator(
     id = "transform.rotate_90_pitch_cw",
     label = "Rotate 90 deg Pitch CW",
+    allows_undo = false,
     is_available = can_act_on_entities
 )]
 fn transform_rotate_90_pitch_cw(
@@ -235,6 +242,7 @@ fn transform_rotate_90_pitch_cw(
 #[operator(
     id = "transform.rotate_90_roll_ccw",
     label = "Rotate 90 deg Roll CCW",
+    allows_undo = false,
     is_available = can_act_on_entities
 )]
 fn transform_rotate_90_roll_ccw(
@@ -248,6 +256,7 @@ fn transform_rotate_90_roll_ccw(
 #[operator(
     id = "transform.rotate_90_roll_cw",
     label = "Rotate 90 deg Roll CW",
+    allows_undo = false,
     is_available = can_act_on_entities
 )]
 fn transform_rotate_90_roll_cw(
@@ -322,6 +331,7 @@ pub(crate) fn can_nudge(
 #[operator(
     id = "transform.nudge_x_neg",
     label = "Nudge -X",
+    allows_undo = false,
     is_available = can_nudge
 )]
 fn transform_nudge_x_neg(_: In<OperatorParameters>, mut commands: Commands) -> OperatorResult {
@@ -332,6 +342,7 @@ fn transform_nudge_x_neg(_: In<OperatorParameters>, mut commands: Commands) -> O
 #[operator(
     id = "transform.nudge_x_pos",
     label = "Nudge +X",
+    allows_undo = false,
     is_available = can_nudge
 )]
 fn transform_nudge_x_pos(_: In<OperatorParameters>, mut commands: Commands) -> OperatorResult {
@@ -342,6 +353,7 @@ fn transform_nudge_x_pos(_: In<OperatorParameters>, mut commands: Commands) -> O
 #[operator(
     id = "transform.nudge_y_neg",
     label = "Nudge -Y",
+    allows_undo = false,
     is_available = can_nudge
 )]
 fn transform_nudge_y_neg(_: In<OperatorParameters>, mut commands: Commands) -> OperatorResult {
@@ -352,6 +364,7 @@ fn transform_nudge_y_neg(_: In<OperatorParameters>, mut commands: Commands) -> O
 #[operator(
     id = "transform.nudge_y_pos",
     label = "Nudge +Y",
+    allows_undo = false,
     is_available = can_nudge
 )]
 fn transform_nudge_y_pos(_: In<OperatorParameters>, mut commands: Commands) -> OperatorResult {
@@ -362,6 +375,7 @@ fn transform_nudge_y_pos(_: In<OperatorParameters>, mut commands: Commands) -> O
 #[operator(
     id = "transform.nudge_z_neg",
     label = "Nudge -Z",
+    allows_undo = false,
     is_available = can_nudge
 )]
 fn transform_nudge_z_neg(_: In<OperatorParameters>, mut commands: Commands) -> OperatorResult {
@@ -372,6 +386,7 @@ fn transform_nudge_z_neg(_: In<OperatorParameters>, mut commands: Commands) -> O
 #[operator(
     id = "transform.nudge_z_pos",
     label = "Nudge +Z",
+    allows_undo = false,
     is_available = can_nudge
 )]
 fn transform_nudge_z_pos(_: In<OperatorParameters>, mut commands: Commands) -> OperatorResult {

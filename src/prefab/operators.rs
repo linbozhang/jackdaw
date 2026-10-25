@@ -14,6 +14,7 @@ use jackdaw_bsn::{
     BsnField, BsnPatch, BsnStructData, BsnStructFields, BsnValue, SceneBsnAst, emit_scene,
     get_bsn_field, patch_type_path, set_bsn_field,
 };
+use jackdaw_commands::EditorCommand as _;
 use jackdaw_prefab::source::{peid_value, synthetic_root_patches};
 use jackdaw_scene_types::SceneNodeId;
 use std::path::{Path, PathBuf};
@@ -1876,7 +1877,12 @@ pub fn apply_to_prefab_source(
 /// Remove an inherited child from its prefab instance and re-parent it under
 /// `drop_target_node` as a standalone (non-instance) entity. The parent
 /// instance's `IsA.deleted` list is extended with the child's `PrefabEntityId`
-/// so the resolver no longer re-materializes it.
+/// so the resolver no longer re-materializes it, and the child's own AST node
+/// — the one its live ECS entity is linked to — is the node that moves, so
+/// the document holds the unpacked child exactly once. Its
+/// `PrefabEntityId` patch is dropped on the way out: outside the instance
+/// the marker means nothing, and leaving it would invite a resolver pass to
+/// match the node against the prefab again.
 pub fn unpack_child(world: &mut World, child_node: Entity, drop_target_node: Entity) {
     let mut live = world.resource_mut::<SceneBsnAst>();
 
@@ -1903,19 +1909,14 @@ pub fn unpack_child(world: &mut World, child_node: Entity, drop_target_node: Ent
         isa_value(&source.to_string_lossy(), &deleted),
     );
 
-    // Copy the child's non-marker components under the drop target as a
-    // standalone child.
-    let component_pairs: Vec<(String, BsnValue)> = live
-        .component_type_paths(child_node)
-        .into_iter()
-        .filter(|tp| tp != PREFAB_ENTITY_ID_TYPE)
-        .filter_map(|tp| get_bsn_field(&live, child_node, &tp, "").map(|v| (tp, v)))
-        .collect();
-    let new_child = live.create_entity_node(Vec::new());
-    live.add_child_to_ast(drop_target_node, new_child);
-    for (tp, value) in component_pairs {
-        set_whole_component(&mut live, new_child, &tp, value);
-    }
+    // Detach the child itself. The one node becomes the standalone entity
+    // under the drop target, carrying its own patches, its descendants and
+    // its link to the live ECS entity. (Copying components into a fresh node
+    // instead — as this once did — both loses grandchildren and leaves a
+    // second, nameless node behind once the caller re-parents the original.)
+    let old_parent = live.ast_parent_of(child_node);
+    live.move_to_parent_at(child_node, old_parent, Some(drop_target_node), usize::MAX);
+    live.remove_component_patch(child_node, PREFAB_ENTITY_ID_TYPE);
 }
 
 /// Walk every entity in the prefab-instance subtree rooted at
@@ -2490,6 +2491,20 @@ pub fn prefab_unpack_child(
             return;
         };
         unpack_child(world, child_node, drop_target_node);
+        // The gesture that drives this op — dragging an inherited child out
+        // of its instance — also moves the live ECS entity under the drop
+        // target. Doing that here, executed but not pushed, keeps the whole
+        // gesture inside this operator's span: the framework's one snapshot
+        // covers the AST unpack and the ECS reparent as a single undo entry,
+        // where the caller used to push a second `ReparentEntity` of its own.
+        let old_parent = world.get::<ChildOf>(child_entity).map(ChildOf::parent);
+        let mut reparent = crate::commands::ReparentEntity {
+            entity: child_entity,
+            old_parent,
+            new_parent: Some(drop_target_entity),
+            old_index: None,
+        };
+        reparent.execute(world);
     });
     OperatorResult::Finished
 }

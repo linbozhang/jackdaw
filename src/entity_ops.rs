@@ -2568,6 +2568,7 @@ pub(crate) fn entity_copy_components(
 #[operator(
     id = "entity.paste_components",
     label = "Paste Components",
+    allows_undo = false,
     is_available = can_act_on_entities
 )]
 pub(crate) fn entity_paste_components(
@@ -2629,7 +2630,7 @@ pub(crate) fn entity_unhide_all(
 
 // -- Add menu ----------------------------------------------------
 
-#[operator(id = "entity.add.cube", label = "Cube")]
+#[operator(id = "entity.add.cube", label = "Cube", allows_undo = false)]
 pub(crate) fn entity_add_cube(_: In<OperatorParameters>, mut commands: Commands) -> OperatorResult {
     commands.queue(|world: &mut World| {
         create_entity_in_world(world, EntityTemplate::Cube);
@@ -2637,7 +2638,7 @@ pub(crate) fn entity_add_cube(_: In<OperatorParameters>, mut commands: Commands)
     OperatorResult::Finished
 }
 
-#[operator(id = "entity.add.sphere", label = "Sphere")]
+#[operator(id = "entity.add.sphere", label = "Sphere", allows_undo = false)]
 pub(crate) fn entity_add_sphere(
     _: In<OperatorParameters>,
     mut commands: Commands,
@@ -2648,7 +2649,11 @@ pub(crate) fn entity_add_sphere(
     OperatorResult::Finished
 }
 
-#[operator(id = "entity.add.point_light", label = "Point Light")]
+#[operator(
+    id = "entity.add.point_light",
+    label = "Point Light",
+    allows_undo = false
+)]
 pub(crate) fn entity_add_point_light(
     _: In<OperatorParameters>,
     mut commands: Commands,
@@ -2659,7 +2664,11 @@ pub(crate) fn entity_add_point_light(
     OperatorResult::Finished
 }
 
-#[operator(id = "entity.add.directional_light", label = "Directional Light")]
+#[operator(
+    id = "entity.add.directional_light",
+    label = "Directional Light",
+    allows_undo = false
+)]
 pub(crate) fn entity_add_directional_light(
     _: In<OperatorParameters>,
     mut commands: Commands,
@@ -2670,7 +2679,11 @@ pub(crate) fn entity_add_directional_light(
     OperatorResult::Finished
 }
 
-#[operator(id = "entity.add.spot_light", label = "Spot Light")]
+#[operator(
+    id = "entity.add.spot_light",
+    label = "Spot Light",
+    allows_undo = false
+)]
 pub(crate) fn entity_add_spot_light(
     _: In<OperatorParameters>,
     mut commands: Commands,
@@ -2681,7 +2694,7 @@ pub(crate) fn entity_add_spot_light(
     OperatorResult::Finished
 }
 
-#[operator(id = "entity.add.camera", label = "Camera")]
+#[operator(id = "entity.add.camera", label = "Camera", allows_undo = false)]
 pub(crate) fn entity_add_camera(
     _: In<OperatorParameters>,
     mut commands: Commands,
@@ -2693,7 +2706,11 @@ pub(crate) fn entity_add_camera(
 }
 
 #[cfg(feature = "camera_rig")]
-#[operator(id = "entity.add.camera_rig", label = "Camera Rig")]
+#[operator(
+    id = "entity.add.camera_rig",
+    label = "Camera Rig",
+    allows_undo = false
+)]
 pub(crate) fn entity_add_camera_rig(
     _: In<OperatorParameters>,
     mut commands: Commands,
@@ -2710,7 +2727,7 @@ pub fn entity_add_image(_: In<OperatorParameters>, mut commands: Commands) -> Op
     OperatorResult::Finished
 }
 
-#[operator(id = "entity.add.empty", label = "Empty")]
+#[operator(id = "entity.add.empty", label = "Empty", allows_undo = false)]
 pub(crate) fn entity_add_empty(
     _: In<OperatorParameters>,
     mut commands: Commands,
@@ -2721,7 +2738,7 @@ pub(crate) fn entity_add_empty(
     OperatorResult::Finished
 }
 
-#[operator(id = "entity.add.plane", label = "Plane")]
+#[operator(id = "entity.add.plane", label = "Plane", allows_undo = false)]
 pub(crate) fn entity_add_plane(
     _: In<OperatorParameters>,
     mut commands: Commands,
@@ -2732,7 +2749,7 @@ pub(crate) fn entity_add_plane(
     OperatorResult::Finished
 }
 
-#[operator(id = "entity.add.cylinder", label = "Cylinder")]
+#[operator(id = "entity.add.cylinder", label = "Cylinder", allows_undo = false)]
 pub(crate) fn entity_add_cylinder(
     _: In<OperatorParameters>,
     mut commands: Commands,
@@ -2743,7 +2760,7 @@ pub(crate) fn entity_add_cylinder(
     OperatorResult::Finished
 }
 
-#[operator(id = "entity.add.wedge", label = "Wedge")]
+#[operator(id = "entity.add.wedge", label = "Wedge", allows_undo = false)]
 pub(crate) fn entity_add_wedge(
     _: In<OperatorParameters>,
     mut commands: Commands,
@@ -2754,7 +2771,7 @@ pub(crate) fn entity_add_wedge(
     OperatorResult::Finished
 }
 
-#[operator(id = "entity.add.cone", label = "Cone")]
+#[operator(id = "entity.add.cone", label = "Cone", allows_undo = false)]
 pub(crate) fn entity_add_cone(_: In<OperatorParameters>, mut commands: Commands) -> OperatorResult {
     commands.queue(|world: &mut World| {
         create_entity_in_world(world, EntityTemplate::Cone);
@@ -2762,7 +2779,7 @@ pub(crate) fn entity_add_cone(_: In<OperatorParameters>, mut commands: Commands)
     OperatorResult::Finished
 }
 
-#[operator(id = "entity.add.pyramid", label = "Pyramid")]
+#[operator(id = "entity.add.pyramid", label = "Pyramid", allows_undo = false)]
 pub(crate) fn entity_add_pyramid(
     _: In<OperatorParameters>,
     mut commands: Commands,
@@ -2773,7 +2790,11 @@ pub(crate) fn entity_add_pyramid(
     OperatorResult::Finished
 }
 
-#[operator(id = "entity.add.animation_player", label = "Animation Player")]
+#[operator(
+    id = "entity.add.animation_player",
+    label = "Animation Player",
+    allows_undo = false
+)]
 pub(crate) fn entity_add_animation_player(
     _: In<OperatorParameters>,
     mut commands: Commands,
@@ -2784,7 +2805,11 @@ pub(crate) fn entity_add_animation_player(
     OperatorResult::Finished
 }
 
-#[operator(id = "entity.add.audio_source", label = "Audio Source")]
+#[operator(
+    id = "entity.add.audio_source",
+    label = "Audio Source",
+    allows_undo = false
+)]
 pub(crate) fn entity_add_audio_source(
     _: In<OperatorParameters>,
     mut commands: Commands,
@@ -2795,7 +2820,11 @@ pub(crate) fn entity_add_audio_source(
     OperatorResult::Finished
 }
 
-#[operator(id = "entity.add.fog_volume", label = "Fog Volume")]
+#[operator(
+    id = "entity.add.fog_volume",
+    label = "Fog Volume",
+    allows_undo = false
+)]
 pub(crate) fn entity_add_fog_volume(
     _: In<OperatorParameters>,
     mut commands: Commands,
@@ -2806,7 +2835,11 @@ pub(crate) fn entity_add_fog_volume(
     OperatorResult::Finished
 }
 
-#[operator(id = "entity.add.reflection_probe", label = "Reflection Probe")]
+#[operator(
+    id = "entity.add.reflection_probe",
+    label = "Reflection Probe",
+    allows_undo = false
+)]
 pub(crate) fn entity_add_reflection_probe(
     _: In<OperatorParameters>,
     mut commands: Commands,
@@ -2837,7 +2870,11 @@ pub(crate) fn entity_add_reflection_probe(
 }
 
 #[cfg(feature = "multiplayer")]
-#[operator(id = "entity.add.spawn_point", label = "Spawn Point")]
+#[operator(
+    id = "entity.add.spawn_point",
+    label = "Spawn Point",
+    allows_undo = false
+)]
 pub(crate) fn entity_add_spawn_point(
     _: In<OperatorParameters>,
     mut commands: Commands,
@@ -2867,7 +2904,11 @@ pub(crate) fn entity_add_spawn_point(
 }
 
 #[cfg(feature = "multiplayer")]
-#[operator(id = "entity.add.zone_transition", label = "Zone Transition")]
+#[operator(
+    id = "entity.add.zone_transition",
+    label = "Zone Transition",
+    allows_undo = false
+)]
 pub(crate) fn entity_add_zone_transition(
     _: In<OperatorParameters>,
     mut commands: Commands,
@@ -2900,7 +2941,11 @@ pub(crate) fn entity_add_zone_transition(
 }
 
 #[cfg(feature = "multiplayer")]
-#[operator(id = "entity.add.network_room", label = "Network Room")]
+#[operator(
+    id = "entity.add.network_room",
+    label = "Network Room",
+    allows_undo = false
+)]
 pub(crate) fn entity_add_network_room(
     _: In<OperatorParameters>,
     mut commands: Commands,
@@ -2929,7 +2974,7 @@ pub(crate) fn entity_add_network_room(
     OperatorResult::Finished
 }
 
-#[operator(id = "entity.add.terrain", label = "Terrain")]
+#[operator(id = "entity.add.terrain", label = "Terrain", allows_undo = false)]
 pub(crate) fn entity_add_terrain(
     _: In<OperatorParameters>,
     mut commands: Commands,

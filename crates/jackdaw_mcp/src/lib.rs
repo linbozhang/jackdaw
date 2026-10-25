@@ -273,6 +273,14 @@ pub struct AssetsArgs {
     pub details: Option<bool>,
 }
 
+/// Arguments for `history`.
+#[derive(Debug, Deserialize, Serialize, JsonSchema)]
+pub struct HistoryArgs {
+    /// How many of the newest undo and redo entries to list. Defaults to 8.
+    #[serde(default)]
+    pub entries: Option<u64>,
+}
+
 /// How one of the UI tools names the control it means: an `entity` id from
 /// `ui_tree`, an `operator` id prefix, or `text` plus an `index`.
 #[derive(Debug, Deserialize, Serialize, JsonSchema)]
@@ -767,6 +775,25 @@ impl JackdawMcp {
     )]
     pub async fn camera_state(&self) -> Result<CallToolResult, ErrorData> {
         self.brp_text("jackdaw/camera_state", json!({})).await
+    }
+
+    /// The undo/redo stacks of the open scene.
+    #[tool(
+        description = "The open scene's undo/redo state: stack lengths, save-point depth, the \
+                       scene's dirty flag, and the newest entries' labels (`top` is the single \
+                       latest). This is what you assert a gesture against: one user action \
+                       should leave exactly one new undo entry, and undoing back to the saved \
+                       document should read dirty=false."
+    )]
+    pub async fn history(
+        &self,
+        Parameters(args): Parameters<HistoryArgs>,
+    ) -> Result<CallToolResult, ErrorData> {
+        self.brp_text(
+            "jackdaw/history",
+            compact(json!({ "entries": args.entries })),
+        )
+        .await
     }
 }
 
