@@ -198,6 +198,85 @@ fn the_join_keybind_is_one_user_entry() {
     );
 }
 
+/// The Ctrl+E keybind extends a brush face as one entry, the same shape as
+/// the J join: the operator queues a closure into an impl that pushes its
+/// own rebuild command, so a history-creating dispatch must not wrap the
+/// same document change in a framework snapshot beside it.
+///
+/// The Face-edit-mode entry path drives it: a face picked on the active
+/// brush and the target brush in the selection, the way a click in face
+/// mode leaves them. (The Object-mode path needs a remembered or hovered
+/// face, which a headless run cannot honestly produce.)
+#[test]
+fn the_extend_face_keybind_is_one_user_entry() {
+    let (mut app, _tmp) = editor();
+    let primary = app
+        .world_mut()
+        .spawn((
+            Name::new("ExtendBrush"),
+            jackdaw_scene_types::Brush::cuboid(0.5, 0.5, 0.5),
+            Transform::default(),
+            Visibility::default(),
+        ))
+        .id();
+    let target = app
+        .world_mut()
+        .spawn((
+            Name::new("TargetBrush"),
+            jackdaw_scene_types::Brush::cuboid(0.5, 0.5, 0.5),
+            // A wall square to the extension direction: its oblique faces are
+            // the "angled" constraints the extend resolves against (the flat
+            // axis-aligned faces of a cuboid pair constrain nothing here).
+            Transform::from_rotation(Quat::from_rotation_y(std::f32::consts::FRAC_PI_4))
+                .with_translation(Vec3::new(3.0, 0.0, 0.0)),
+            Visibility::default(),
+        ))
+        .id();
+    jackdaw::scene_io::register_entity_in_ast(app.world_mut(), primary);
+    jackdaw::scene_io::register_entity_in_ast(app.world_mut(), target);
+    app.update();
+    app.update();
+    // Face mode with face 0 picked on the primary, and both brushes
+    // selected so the impl has a target to conform to.
+    *app.world_mut().resource_mut::<jackdaw::brush::EditMode>() =
+        jackdaw::brush::EditMode::BrushEdit(jackdaw::brush::BrushEditMode::Face);
+    {
+        let mut brush_selection = app
+            .world_mut()
+            .resource_mut::<jackdaw::brush::BrushSelection>();
+        brush_selection.active_brush = Some(primary);
+        brush_selection.sub_mut(primary).faces = vec![0];
+    }
+    jackdaw::selection::select_many(app.world_mut(), &[primary, target]);
+    app.update();
+    app.update();
+
+    let before_text = scene_text(&mut app);
+    let before = depth(&app);
+    user(&mut app, "brush.extend_face_to_brush");
+    assert_eq!(
+        depth(&app),
+        before + 1,
+        "the extend keybind is one entry: the impl pushes its own command, \
+         with no framework snapshot beside it"
+    );
+    let extended = scene_text(&mut app);
+    assert_ne!(extended, before_text, "the brush changed in the document");
+
+    undo(&mut app);
+    let restored = scene_text(&mut app);
+    assert_eq!(
+        restored.matches("#ExtendBrush").count(),
+        1,
+        "the extended brush is back in the document"
+    );
+    assert_eq!(
+        restored.matches("#TargetBrush").count(),
+        1,
+        "the target brush survived untouched"
+    );
+}
+
 /// A transform chord (Alt+G reset) is the one `CommandGroup` the reset
 /// pushes, not that group plus a snapshot.
 #[test]
@@ -373,8 +452,12 @@ const SELF_PUSHING: &[&str] = &[
     "clip.paste_keyframes",
     // The join keybind (J) pushes its own SetBrush + Despawn group.
     "brush.join",
+    // The extend keybind (Ctrl+E) pushes its own rebuild command.
+    "brush.extend_face_to_brush",
     // The PIE "Apply All" buttons push the edit group they build.
     "pie.live_edits_apply_all",
+    // The PIE tray's single-edit save pushes its own save command.
+    "pie.live_edit_save",
     // Terrain panel buttons push their own SetTerrainHeights entries.
     "terrain.generate",
     "terrain.erode",
