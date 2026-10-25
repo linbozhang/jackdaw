@@ -178,6 +178,37 @@ pub fn note_known_hash(world: &mut World, path: &Path, hash: u64) {
     }
 }
 
+/// Stop watching the open tabs whose files sit at or under `moved`, so a
+/// rename or a move can carry the folder past the watcher: Windows refuses
+/// to rename a directory whose subtree holds an open watch. The next change
+/// to the tab strip rebuilds the watcher on whatever paths the tabs hold
+/// then.
+pub(crate) fn release_watch_under(world: &mut World, moved: &Path) {
+    let moved = canonical(moved);
+    let Some(mut state) = world.get_resource_mut::<ExternalWatchState>() else {
+        return;
+    };
+    let leaving: Vec<PathBuf> = state
+        .watched
+        .iter()
+        .filter(|watched| **watched == moved || watched.starts_with(&moved))
+        .cloned()
+        .collect();
+    if leaving.is_empty() {
+        return;
+    }
+    if let Some(watcher) = state.watcher.as_mut() {
+        use notify::Watcher as _;
+        for file in &leaving {
+            // The watch sits on the folder, not the file.
+            if let Some(folder) = file.parent() {
+                let _ = watcher.unwatch(folder);
+            }
+        }
+    }
+    state.watched.retain(|watched| !leaving.contains(watched));
+}
+
 /// Answer the prompt raised for `path`. An answer for a path with no open
 /// prompt is dropped: the queue can move under a dialog that is already up.
 pub fn answer_external_change(world: &mut World, path: &Path, choice: ExternalReloadChoice) {

@@ -141,6 +141,23 @@ fn handle_file_drops(
     let placement = image_placement_under_cursor(&vp, &mut ray_cast, &editor_entities);
 
     for path in dropped {
+        // A file already inside the project's assets is not imported again —
+        // a copy would only spawn `name-1.png` beside the original (W8). It
+        // is selected, so the drop still shows where the file is.
+        let already_inside = (|| {
+            let assets = dunce::canonicalize(&assets_dir).ok()?;
+            let dropped = dunce::canonicalize(&path).ok()?;
+            Some(dropped.starts_with(&assets))
+        })()
+        .unwrap_or(false);
+        if already_inside {
+            info!("{} is already in the project; selecting it", path.display());
+            let inside = dunce::canonicalize(&path).unwrap_or_else(|_| path.clone());
+            commands.queue(move |world: &mut World| {
+                crate::project_window::select_path(world, &inside);
+            });
+            continue;
+        }
         let rel = match import_to_assets(&assets_dir, &path) {
             Ok(rel) => rel,
             Err(err) => {

@@ -339,6 +339,15 @@ struct ProjectWatcher {
 #[derive(Resource)]
 struct ProjectFolderTask(Task<Option<rfd::FileHandle>>);
 
+/// A folder-pick a "Move to..." context action has open, waiting on the
+/// native dialog. The picked folder feeds `file.move` for the path the menu
+/// was raised on.
+#[derive(Resource)]
+struct MovePickTask {
+    from: PathBuf,
+    task: Task<Option<rfd::FileHandle>>,
+}
+
 /// Where the context menu was opened, so the action observer can resolve the
 /// click against the row rather than the selection.
 #[derive(Resource, Default)]
@@ -358,6 +367,7 @@ impl Plugin for ProjectWindowPlugin {
                 (
                     check_project_watcher,
                     poll_project_folder_pick,
+                    poll_move_pick,
                     refresh_folder_tree,
                     mark_the_shown_folder.after(refresh_folder_tree),
                     read_the_folder,
@@ -1639,6 +1649,7 @@ const NEW_SCENE_ACTION: &str = "project.new_scene";
 const NEW_ASSET_ACTION: &str = "project.new_asset";
 const DUPLICATE_ACTION: &str = "project.duplicate";
 const RENAME_ACTION: &str = "project.rename";
+const MOVE_ACTION: &str = "project.move_to";
 const REVEAL_ACTION: &str = "project.reveal";
 const DELETE_ACTION: &str = "project.delete";
 const CONVERT_TO_BINARY_ACTION: &str = "project.convert_to_binary";
@@ -1678,6 +1689,9 @@ fn open_context_menu(
         items.push((DUPLICATE_ACTION, "Duplicate"));
     }
     items.push((RENAME_ACTION, "Rename"));
+    if !is_directory {
+        items.push((MOVE_ACTION, "Move to..."));
+    }
     items.push((REVEAL_ACTION, "Reveal in File Manager"));
     items.push((DELETE_ACTION, "Delete"));
 
@@ -1699,6 +1713,12 @@ fn on_context_action(
     if action == RENAME_ACTION {
         state.renaming = Some(target.path.clone());
         state.needs_refresh = true;
+    } else if action == MOVE_ACTION {
+        // The folder is asked for through the same native dialog the assets
+        // folder picker uses; the move itself goes through `file.move`, so it
+        // follows with the whole reference-rewrite chain.
+        let path = target.path.clone();
+        commands.queue(move |world: &mut World| start_move_pick(world, &path));
     } else {
         let Some(operator) = operator_for_action(action) else {
             return;
@@ -2187,14 +2207,38 @@ fn rename_file(world: &mut World, path: &Path, name: &str) {
         clear_rename(world);
         return;
     }
-    if target.exists() {
-        crate::status_bar::notify_error(world, format!("'{name}' is already taken"));
-        return;
+    // The referrers table the rewrite matches against is read before the
+    // file moves: once the old path is gone, a reference spelling it no
+    // longer resolves, and the table would lose its holders.
+    crate::asset_index::rescan_asset_index(world);
+    // A folder the open-tab watcher holds a handle inside cannot be renamed
+    // on Windows; the watches under it are let go first, and the next tab
+    // change rebuilds them wherever the tabs land.
+    if path.is_dir() {
+        crate::scenes::external_watch::release_watch_under(world, &path);
     }
-    if let Err(err) = std::fs::rename(&path, &target) {
-        crate::status_bar::notify_error(world, format!("'{name}' could not be written: {err}"));
-        return;
+    // A name the file already answers to under another casing reads as taken
+    // on a filesystem that ignores case, so the rename goes through a
+    // momentary in-between name to land it (W11).
+    let only_case_differs = dunce::canonicalize(&target).ok() == dunce::canonicalize(&path).ok();
+    if only_case_differs {
+        if let Err(err) = rename_through_a_middleman(&path, &target) {
+            crate::status_bar::notify_error(world, format!("'{name}' could not be written: {err}"));
+            return;
+        }
+    } else {
+        if target.exists() {
+            crate::status_bar::notify_error(world, format!("'{name}' is already taken"));
+            return;
+        }
+        if let Err(err) = std::fs::rename(&path, &target) {
+            crate::status_bar::notify_error(world, format!("'{name}' could not be written: {err}"));
+            return;
+        }
     }
+    // The documents that spelled the old path are rewritten, the tabs and
+    // cards standing on the file retargeted, and the index brought forward.
+    crate::reference_rewrite::follow_a_move(world, &path, &target, "renamed");
     if let Some(mut state) = world.get_resource_mut::<ProjectWindowState>() {
         if state.current_directory.starts_with(&path) {
             state.current_directory = target.clone();
@@ -2208,10 +2252,94 @@ fn rename_file(world: &mut World, path: &Path, name: &str) {
     select_path(world, &target);
 }
 
+/// Rename `path` to `target` when the two differ only by case, through a
+/// name nothing else holds: `path` → in-between → `target`. A failure on the
+/// second step puts the file back where it started.
+fn rename_through_a_middleman(path: &Path, target: &Path) -> std::io::Result<()> {
+    let parent = target.parent().unwrap_or_else(|| Path::new("."));
+    let mut middleman = None;
+    for counter in 0..1000 {
+        let candidate = parent.join(format!(
+            ".{}.case-{}-{counter}",
+            target
+                .file_name()
+                .map(|name| name.to_string_lossy().into_owned())
+                .unwrap_or_default(),
+            std::process::id()
+        ));
+        if !candidate.exists() {
+            middleman = Some(candidate);
+            break;
+        }
+    }
+    let Some(middleman) = middleman else {
+        return Err(std::io::Error::other("no free in-between name"));
+    };
+    std::fs::rename(path, &middleman)?;
+    match std::fs::rename(&middleman, target) {
+        Ok(()) => Ok(()),
+        Err(err) => {
+            if std::fs::rename(&middleman, path).is_err() {
+                warn!(
+                    "rename: {} was left at {} after failing: {err}",
+                    path.display(),
+                    middleman.display()
+                );
+            }
+            Err(err)
+        }
+    }
+}
+
 fn clear_rename(world: &mut World) {
     if let Some(mut state) = world.get_resource_mut::<ProjectWindowState>() {
         state.renaming = None;
         state.needs_refresh = true;
+    }
+}
+
+/// Open the native folder dialog for a "Move to..." action, remembering the
+/// file the menu was raised on.
+fn start_move_pick(world: &mut World, from: &Path) {
+    if world.contains_resource::<MovePickTask>() {
+        return;
+    }
+    let current = world
+        .get_resource::<ProjectWindowState>()
+        .and_then(|state| state.current_directory.parent().map(Path::to_path_buf));
+    let dialog =
+        crate::native_dialog::dialog_starting_at(world, current).set_title("Move into folder");
+    let task = AsyncComputeTaskPool::get().spawn(async move { dialog.pick_folder().await });
+    world.insert_resource(MovePickTask {
+        from: from.to_path_buf(),
+        task,
+    });
+}
+
+/// Take the folder a "Move to..." pick answered with and move the file
+/// through `file.move`, which rewrites what referred to it.
+fn poll_move_pick(world: &mut World) {
+    let Some(mut pick) = world.get_resource_mut::<MovePickTask>() else {
+        return;
+    };
+    let Some(result) = bevy::tasks::futures_lite::future::block_on(
+        bevy::tasks::futures_lite::future::poll_once(&mut pick.task),
+    ) else {
+        return;
+    };
+    let from = pick.from.clone();
+    world.remove_resource::<MovePickTask>();
+    let Some(handle) = result else {
+        return;
+    };
+    let folder = handle.path().to_path_buf();
+    let call = world
+        .operator("file.move")
+        .param("path", from.to_string_lossy().into_owned())
+        .param("folder", folder.to_string_lossy().into_owned())
+        .call();
+    if let Err(err) = call {
+        warn!("file.move: the move could not be dispatched: {err}");
     }
 }
 

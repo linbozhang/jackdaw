@@ -11,7 +11,6 @@ use std::path::{Path, PathBuf};
 use bevy::prelude::*;
 use jackdaw_api::prelude::*;
 use jackdaw_api_internal::operator::report_to_caller;
-use jackdaw_bsn::{BsnPatch, BsnValue, SceneBsnAst};
 use path_slash::PathExt as _;
 
 use crate::asset_index::{AssetIndex, AssetValue, assets_dir, rescan_asset_index};
@@ -287,6 +286,11 @@ fn with_header_below_the_stamp(text: &str, type_path: &str) -> String {
 
 /// Rewrite every name a scene or a prefab spells for an asset as the path of
 /// the file that answers to it.
+///
+/// The replacement is a value replacement on the document's AST, through the
+/// same rewriter a rename or a move follows with: only a field whose type
+/// names an asset by path (or a string under the `@` sigil) is touched, so a
+/// string elsewhere that happens to spell the same name is left as it is.
 fn rewrite_documents(world: &mut World, assets: &Path, report: &mut MigrationReport) {
     let documents: Vec<PathBuf> = jackdaw_bsn::walk_document_files(assets)
         .into_iter()
@@ -296,29 +300,27 @@ fn rewrite_documents(world: &mut World, assets: &Path, report: &mut MigrationRep
         .collect();
 
     for path in documents {
-        let file = assets.join(&path);
-        let Ok(text) = std::fs::read_to_string(&file) else {
+        let file =
+            jackdaw_bsn::existing_form(&assets.join(&path)).unwrap_or_else(|| assets.join(&path));
+        let Ok(ast_text) = jackdaw_bsn::read_document_text(&file) else {
             continue;
         };
-        let Ok(ast) = jackdaw_bsn::parse_bsn_text(&text) else {
+        let Ok(ast) = jackdaw_bsn::parse_bsn_text(&ast_text) else {
             continue;
         };
-        let named = name_references(world, &ast);
+        let named = crate::reference_rewrite::spelled_references(world, &ast);
         if named.is_empty() {
             continue;
         }
-        let mut rewritten = text.clone();
-        let mut count = 0usize;
-        for (field, reference) in named {
+        let mut moves: Vec<crate::reference_rewrite::ReferenceMove> = Vec::new();
+        for reference in named {
             match resolve_reference(world, &reference) {
                 Resolved::Path(target) if target == reference => {}
                 Resolved::Path(target) => {
-                    let was = format!("{field}: \"{reference}\"");
-                    let now = format!("{field}: \"{target}\"");
-                    if rewritten.contains(&was) {
-                        rewritten = rewritten.replace(&was, &now);
-                        count += 1;
-                    }
+                    moves.push(crate::reference_rewrite::ReferenceMove::Spelled {
+                        from: reference,
+                        to: target,
+                    });
                 }
                 Resolved::Ambiguous(first, second) => report.unresolved.push(format!(
                     "{} names '{reference}', which is both {first} and {second}",
@@ -331,115 +333,18 @@ fn rewrite_documents(world: &mut World, assets: &Path, report: &mut MigrationRep
                 Resolved::AlreadyAPath => {}
             }
         }
-        if count == 0 {
+        if moves.is_empty() {
             continue;
         }
-        match crate::scene_io::save::write_atomic(&file, rewritten.as_bytes()) {
-            Ok(()) => {
-                note_written(world, &file);
-                report
-                    .rewritten
-                    .push(format!("{} ({count})", path.to_slash_lossy()));
-            }
-            Err(err) => report
-                .unresolved
-                .push(format!("{} ({err})", path.to_slash_lossy())),
+        match crate::reference_rewrite::rewrite_document(world, &file, &moves) {
+            Some(replaced) => report
+                .rewritten
+                .push(format!("{} ({replaced})", path.to_slash_lossy())),
+            None => report.unresolved.push(format!(
+                "{} (could not be rewritten)",
+                path.to_slash_lossy()
+            )),
         }
-    }
-}
-
-/// What a document spells for an asset, as the field holding it and the text
-/// it holds.
-///
-/// Only a field whose type names an asset by path counts, so a string that
-/// happens to read like a name is left alone; a string under the `@` sigil
-/// counts wherever it sits, since nothing else spells one. Nested values name
-/// their own type, so a reference inside a brush face is found the same way as
-/// one on a component.
-fn name_references(world: &World, ast: &SceneBsnAst) -> Vec<(String, String)> {
-    let Some(registry) = world.get_resource::<AppTypeRegistry>() else {
-        return Vec::new();
-    };
-    let registry = registry.read();
-    let mut found: Vec<(String, String)> = Vec::new();
-    for patch in ast.world.iter_entities() {
-        let Some(BsnPatch::Struct(data)) = patch.get::<BsnPatch>() else {
-            continue;
-        };
-        scan_struct(&registry, data, &mut found);
-    }
-    found
-}
-
-/// Read the fields of one struct, by the type it names.
-fn scan_struct(
-    registry: &bevy::reflect::TypeRegistry,
-    data: &jackdaw_bsn::BsnStructData,
-    found: &mut Vec<(String, String)>,
-) {
-    let info = registry
-        .get_with_type_path(&data.type_path)
-        .map(bevy::reflect::TypeRegistration::type_info);
-    for field in &data.fields.0 {
-        let field_type = match info {
-            Some(bevy::reflect::TypeInfo::Struct(info)) => info
-                .field(&field.name)
-                .map(bevy::reflect::NamedField::type_id),
-            _ => None,
-        };
-        scan_value(registry, field_type, &field.name, &field.value, found);
-    }
-}
-
-/// The type the items of a list or an array hold.
-fn item_type(
-    registry: &bevy::reflect::TypeRegistry,
-    type_id: std::any::TypeId,
-) -> Option<std::any::TypeId> {
-    match registry.get(type_id)?.type_info() {
-        bevy::reflect::TypeInfo::List(info) => Some(info.item_ty().id()),
-        bevy::reflect::TypeInfo::Array(info) => Some(info.item_ty().id()),
-        _ => None,
-    }
-}
-
-fn scan_value(
-    registry: &bevy::reflect::TypeRegistry,
-    field_type: Option<std::any::TypeId>,
-    field_name: &str,
-    value: &BsnValue,
-    found: &mut Vec<(String, String)>,
-) {
-    match value {
-        BsnValue::String(reference) => {
-            let takes_path = field_type
-                .is_some_and(|type_id| crate::typed_values::takes_asset_path(registry, type_id));
-            let pair = (field_name.to_string(), reference.clone());
-            if (takes_path || reference.starts_with('@'))
-                && !reference.is_empty()
-                && !found.contains(&pair)
-            {
-                found.push(pair);
-            }
-        }
-        BsnValue::Struct(data) => scan_struct(registry, data, found),
-        BsnValue::TupleStruct(data) => {
-            for value in &data.values {
-                scan_value(registry, None, field_name, value, found);
-            }
-        }
-        BsnValue::List(values) => {
-            let item = field_type.and_then(|type_id| item_type(registry, type_id));
-            for value in values {
-                scan_value(registry, item, field_name, value, found);
-            }
-        }
-        BsnValue::Map(pairs) => {
-            for (_, value) in pairs {
-                scan_value(registry, field_type, field_name, value, found);
-            }
-        }
-        _ => {}
     }
 }
 
