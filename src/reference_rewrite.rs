@@ -291,7 +291,7 @@ pub(crate) fn rewrite_ast(world: &World, ast: &mut SceneBsnAst, moves: &[Referen
             BsnPatch::TupleStruct(data) => {
                 let held = tuple_held_type(&registry, &data.type_path, 0);
                 for value in &mut data.values {
-                    rewrite_value(&registry, held, value, moves, index, &mut replaced);
+                    rewrite_value(&registry, held, false, value, moves, index, &mut replaced);
                 }
             }
             BsnPatch::Template(_, Some(fields)) => {
@@ -299,6 +299,7 @@ pub(crate) fn rewrite_ast(world: &World, ast: &mut SceneBsnAst, moves: &[Referen
                     rewrite_value(
                         &registry,
                         None,
+                        false,
                         &mut field.value,
                         moves,
                         index,
@@ -328,6 +329,10 @@ fn rewrite_struct(
     let info = registry
         .get_with_type_path(&data.type_path)
         .map(bevy::reflect::TypeRegistration::type_info);
+    // A prefab instance's source is a reference the same way a typed handle
+    // field is, whatever the field's type — the save guard reads it the same
+    // way (asset_fields' IsA.source special case).
+    let is_source = data.type_path == crate::scene_io::asset_fields::ISA_TYPE;
     for field in &mut data.fields.0 {
         let field_type = match info {
             Some(bevy::reflect::TypeInfo::Struct(info)) => info
@@ -335,9 +340,15 @@ fn rewrite_struct(
                 .map(bevy::reflect::NamedField::type_id),
             _ => None,
         };
+        let held = if is_source && field.name == "source" {
+            None
+        } else {
+            field_type
+        };
         rewrite_value(
             registry,
-            field_type,
+            held,
+            is_source && field.name == "source",
             &mut field.value,
             moves,
             index,
@@ -349,6 +360,7 @@ fn rewrite_struct(
 fn rewrite_value(
     registry: &bevy::reflect::TypeRegistry,
     field_type: Option<std::any::TypeId>,
+    is_source: bool,
     value: &mut BsnValue,
     moves: &[ReferenceMove],
     index: &AssetIndex,
@@ -358,7 +370,7 @@ fn rewrite_value(
         BsnValue::String(reference) => {
             let takes_path = field_type
                 .is_some_and(|type_id| crate::typed_values::takes_asset_path(registry, type_id));
-            if !takes_path && !reference.starts_with('@') {
+            if !takes_path && !is_source && !reference.starts_with('@') {
                 return;
             }
             if let Some(now) = replacement(reference, moves, index) {
@@ -370,18 +382,18 @@ fn rewrite_value(
         BsnValue::TupleStruct(data) => {
             let held = tuple_held_type(registry, &data.type_path, 0);
             for value in &mut data.values {
-                rewrite_value(registry, held, value, moves, index, replaced);
+                rewrite_value(registry, held, false, value, moves, index, replaced);
             }
         }
         BsnValue::List(values) => {
             let item = field_type.and_then(|type_id| item_type(registry, type_id));
             for value in values {
-                rewrite_value(registry, item, value, moves, index, replaced);
+                rewrite_value(registry, item, false, value, moves, index, replaced);
             }
         }
         BsnValue::Map(pairs) => {
             for (_, value) in pairs.iter_mut() {
-                rewrite_value(registry, field_type, value, moves, index, replaced);
+                rewrite_value(registry, field_type, false, value, moves, index, replaced);
             }
         }
         _ => {}
