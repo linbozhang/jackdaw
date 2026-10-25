@@ -92,6 +92,11 @@ pub struct SceneRenamed {
 /// staged write is flushed to the storage device (`sync_all`) before the
 /// rename, so a power loss after the rename cannot surface a half-written
 /// file either.
+///
+/// A file that is already there is rotated to `<name>.bak` first (a single
+/// slot: the rename overwrites the previous backup), so a save that landed
+/// something unwanted can be walked back exactly one version -- the same
+/// convention the legacy `.jsn.bak` migration established.
 pub fn write_atomic(path: &std::path::Path, contents: &[u8]) -> std::io::Result<()> {
     use std::io::Write as _;
 
@@ -112,6 +117,25 @@ pub fn write_atomic(path: &std::path::Path, contents: &[u8]) -> std::io::Result<
     if let Err(err) = staged {
         let _ = std::fs::remove_file(&temp_path);
         return Err(err);
+    }
+    if path.exists() {
+        // Two renames with a roll-back: if the second one fails, the old
+        // file comes back from the backup rather than being lost. Between
+        // the two, a killed process leaves the previous version intact
+        // under the `.bak` name rather than half a file anywhere.
+        let mut backup_name = file_name.to_os_string();
+        backup_name.push(".bak");
+        let backup = parent.join(backup_name);
+        if let Err(err) = std::fs::rename(path, &backup) {
+            let _ = std::fs::remove_file(&temp_path);
+            return Err(err);
+        }
+        if let Err(err) = std::fs::rename(&temp_path, path) {
+            let _ = std::fs::rename(&backup, path);
+            let _ = std::fs::remove_file(&temp_path);
+            return Err(err);
+        }
+        return Ok(());
     }
     if let Err(err) = std::fs::rename(&temp_path, path) {
         let _ = std::fs::remove_file(&temp_path);
@@ -278,6 +302,37 @@ mod tests {
 
         assert!(result.is_err(), "the occupied slot fails the write");
         assert_eq!(std::fs::read(&path).unwrap(), b"old");
+    }
+
+    /// An existing file is rotated to a single `.bak` slot before the new
+    /// one takes its place, so the previous version is always one step
+    /// back and the backup never accumulates beyond that.
+    #[test]
+    fn write_atomic_rotates_the_previous_version_to_one_bak() {
+        let dir = tempfile::tempdir().expect("temp dir");
+        let path = dir.path().join("zone.bsn");
+        let backup = dir.path().join("zone.bsn.bak");
+        std::fs::write(&path, b"v1").expect("seed the first version");
+
+        write_atomic(&path, b"v2").expect("the first rewrite lands");
+        assert_eq!(std::fs::read(&path).unwrap(), b"v2");
+        assert_eq!(
+            std::fs::read(&backup).unwrap(),
+            b"v1",
+            "the backup holds exactly the pre-write bytes"
+        );
+
+        write_atomic(&path, b"v3").expect("the second rewrite lands");
+        assert_eq!(std::fs::read(&path).unwrap(), b"v3");
+        assert_eq!(
+            std::fs::read(&backup).unwrap(),
+            b"v2",
+            "the single slot rolls forward, not into a pile"
+        );
+        assert!(
+            !dir.path().join("zone.bsn.bak.bak").exists(),
+            "no second-order backups appear"
+        );
     }
 
     /// The sweep takes exactly the editor's own dead temp files: old ones

@@ -2859,6 +2859,10 @@ where
 }
 
 fn cleanup_editor(world: &mut World) {
+    // The journal's session ends with the editor state: a clean leave
+    // removes the directory, so anything left over means a crash.
+    scene_io::session_journal::end_session(world);
+
     // 1. Clear scene entities
     scene_io::clear_scene_entities(world);
 
