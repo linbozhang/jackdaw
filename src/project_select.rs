@@ -559,6 +559,32 @@ pub fn transition_to_editor(world: &mut World, root: PathBuf) {
     // a clean exit removes.
     crate::scene_io::session_journal::begin_session(world, &root);
 
+    // Crash leftovers become the recovery queue: sessions holding a
+    // journal that are not this one. The recovery dialog asks about them
+    // before the tab restore opens the project's scenes, and never blocks
+    // this transition itself.
+    {
+        let own = crate::scene_io::session_journal::session_dir(world);
+        let leftovers: std::collections::VecDeque<std::path::PathBuf> =
+            crate::scene_io::session_journal::sessions_root(&root)
+                .map(|sessions| crate::scene_io::session_journal::list_sessions(&sessions))
+                .unwrap_or_default()
+                .into_iter()
+                .filter(|dir| Some(dir) != own.as_ref() && dir.join("journal.json").is_file())
+                .collect();
+        if !leftovers.is_empty() {
+            info!(
+                "recovery: {} leftover session(s) from a crash; the recovery \
+                 dialog will offer them",
+                leftovers.len()
+            );
+            world.insert_resource(crate::scenes::recovery_dialog::PendingRecovery {
+                queue: leftovers,
+                current: None,
+            });
+        }
+    }
+
     project::touch_recent(&root, &config.name);
     crate::launcher::record_open(root.clone());
 
@@ -635,6 +661,14 @@ enum SceneOpenStep {
 }
 
 fn open_pending_scenes(world: &mut World) {
+    // The recovery dialog owns the foreground until the user has decided
+    // what to do with the crashed session's work; the tab restore waits.
+    if world
+        .get_resource::<crate::scenes::recovery_dialog::PendingRecovery>()
+        .is_some()
+    {
+        return;
+    }
     let step = std::mem::replace(
         &mut world.resource_mut::<PendingSceneOpens>().step,
         SceneOpenStep::Next,

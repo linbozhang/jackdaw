@@ -19,13 +19,19 @@ use jackdaw::scenes::{Scenes, confirm_dialog::PendingSaveAsClose};
 
 use crate::util::{self, OperatorResultExt as _};
 
-/// Where `write_atomic` stages this process's writes for `file`, occupied
-/// with a directory so the staged write fails without any filesystem
-/// trickery that depends on the platform.
+/// Where `write_atomic` stages this process's writes for `file`, every
+/// slot of it occupied with a directory so the staged write fails without
+/// any filesystem trickery that depends on the platform. The base name
+/// plus all eight collision-suffix retries are held: a write that cannot
+/// stage must fail, not write around the staging step.
 fn occupy_temp_slot(parent: &Path, file: &str) -> std::path::PathBuf {
-    let slot = parent.join(format!(".{file}.tmp-{}", std::process::id()));
-    std::fs::create_dir(&slot).expect("occupy the temp slot");
-    slot
+    let mut first = None;
+    for suffix in std::iter::once(String::new()).chain((1..=8).map(|n| format!("-{n}"))) {
+        let slot = parent.join(format!(".{file}.tmp-{}{suffix}", std::process::id()));
+        std::fs::create_dir(&slot).expect("occupy the temp slot");
+        first.get_or_insert(slot);
+    }
+    first.expect("at least the base slot")
 }
 
 /// An editor on a project holding a saved scene (open in front) and a

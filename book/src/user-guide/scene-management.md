@@ -31,6 +31,47 @@ read in `git diff` without making you cry. Legacy `.jsn` scenes
 still open (import-only); see
 [BSN Format](../developer-guide/bsn-format.md).
 
+## Crash recovery
+
+While you edit, the editor keeps a crash journal: every couple of
+seconds of quiet after an edit, every unsaved tab is snapshotted
+under your config directory
+(`<config>/state/sessions/<project>/<pid>-<time>/journal.json`).
+Closing the editor normally removes the journal; anything that
+kills the editor -- a crash, a power loss, `taskkill` -- cannot,
+and that leftover is exactly what the next session looks for.
+
+Reopen the project and the editor offers what it found, one
+recovered session at a time: each row names the scene, when it was
+captured, how many entities it holds and how it differs from the
+file on disk, with a preview of the recovered text. **Restore**
+opens it as an unsaved tab -- dirty from the start, so nothing
+reaches the file until you save it -- **Discard** drops that one
+entry, and **Discard All** clears the session. Restoring never
+writes a file; your saved scene is only ever replaced by an
+explicit `Ctrl+S`.
+
+Two limits worth knowing:
+
+- Terrain bulk data is not journaled. A recovered scene re-reads
+  its terrain from the last save, so unsaved terrain sculpting is
+  lost even when the scene text comes back.
+- The journal keeps the newest few sessions (five) and no history
+  beyond that.
+
+Remote tooling reaches the same place: `jackdaw/recovery` lists
+what is available, and the `recovery.restore` / `recovery.dismiss`
+operators act on it; see
+[Remote debugging](remote-debugging.md).
+
+### Backups beside your files
+
+Every save rotates the previous file to `<name>.bak` (one slot)
+before the new one takes its place -- scenes, prefabs and
+`.jackdaw/project.json` alike. A damaged `project.json` is never
+silently overwritten: it is kept as `project.json.corrupt-<time>`
+and the editor tells you, then starts from defaults.
+
 ## Project select screen
 
 The launcher (`AppState::ProjectSelect`) is the first thing
