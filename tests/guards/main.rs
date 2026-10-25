@@ -7,6 +7,7 @@
 #[path = "../util/mod.rs"]
 mod util;
 
+mod atomic_writes;
 mod batch_undo;
 mod dirty_matrix;
 mod editor_remote;

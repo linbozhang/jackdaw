@@ -503,7 +503,7 @@ pub fn enter_project_with(world: &mut World, root: PathBuf, skip_build: bool) {
 /// Every open funnels through here, so the asset-root check lives here: no
 /// other path can install a [`ProjectRoot`] whose asset folder the asset
 /// server is not reading from.
-pub(crate) fn transition_to_editor(world: &mut World, root: PathBuf) {
+pub fn transition_to_editor(world: &mut World, root: PathBuf) {
     let plan = world
         .get_resource::<crate::restart::AssetProjectRoot>()
         .map(|asset_root| {
@@ -521,8 +521,38 @@ pub(crate) fn transition_to_editor(world: &mut World, root: PathBuf) {
         }
     }
 
-    let config = project::load_project_config(&root)
-        .unwrap_or_else(|| project::create_default_project(&root));
+    let config = match project::load_project_config(&root) {
+        Some(config) => config,
+        None => {
+            // A project.json that exists but does not parse (a crash left
+            // half a JSON) is kept under a `.corrupt-<ts>` name before the
+            // default replaces it, so the damaged bytes -- the user's last
+            // layout, however broken -- are never silently overwritten.
+            if let Some(backup) = project::back_up_corrupt_project_config(&root) {
+                let kept = backup
+                    .file_name()
+                    .map(|name| name.to_string_lossy().into_owned())
+                    .unwrap_or_else(|| "project.json.corrupt".to_string());
+                warn!("damaged project config kept as {kept}");
+                crate::status_bar::notify_info(
+                    world,
+                    format!(
+                        "The project config was damaged; it was kept as {kept} and \
+                         settings were reset to defaults"
+                    ),
+                );
+            }
+            project::create_default_project(&root)
+        }
+    };
+
+    // Remove the `.<name>.tmp-<pid>` files a killed save left behind. They
+    // are harmless but dirty; a fresh one (written within the last minute)
+    // stays, in case another editor instance is mid-write on this project.
+    let swept = jackdaw_api_internal::document::sweep_orphan_temp_files(&root);
+    if swept > 0 {
+        info!("removed {swept} orphan temp file(s) left by interrupted saves");
+    }
 
     project::touch_recent(&root, &config.name);
     crate::launcher::record_open(root.clone());

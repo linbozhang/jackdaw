@@ -48,8 +48,11 @@ pub(crate) fn forget_prefab_cache_bump(world: &mut World, before: Option<u64>) {
     }
 }
 
+/// The file dialog the editor currently has up. `pub` so tests and tooling
+/// can observe that a dialog was opened (and drop it again) without driving
+/// the UI chain.
 #[derive(Resource)]
-pub(super) enum SceneDialogTask {
+pub enum SceneDialogTask {
     Open(Task<Option<FileHandle>>),
     Save(Task<Option<FileHandle>>),
 }
@@ -974,6 +977,9 @@ pub(super) fn poll_scene_dialog(world: &mut World) {
                         world,
                         "Not saved: this tab's scene was not loaded".to_string(),
                     );
+                    // Nothing was saved, so a close deferred on this dialog
+                    // must not outlive it.
+                    crate::scenes::confirm_dialog::cancel_pending_save_as_close(world);
                     return;
                 }
 
@@ -991,9 +997,21 @@ pub(super) fn poll_scene_dialog(world: &mut World) {
                 );
 
                 match save_scene_inner(world) {
-                    Ok(()) => {}
-                    Err(err) => error!("scene save (after Save As dialog) failed: {err}"),
+                    Ok(()) => {
+                        // A close-confirm Save on an untitled tab deferred
+                        // its close to this moment: the document now has a
+                        // path and is on disk, so the close happens.
+                        crate::scenes::confirm_dialog::finish_pending_save_as_close(world);
+                    }
+                    Err(err) => {
+                        error!("scene save (after Save As dialog) failed: {err}");
+                        crate::scenes::confirm_dialog::cancel_pending_save_as_close(world);
+                    }
                 }
+            } else {
+                // Dismissed without a path: a deferred close is released
+                // back to "open and dirty", exactly where it started.
+                crate::scenes::confirm_dialog::cancel_pending_save_as_close(world);
             }
         }
     }

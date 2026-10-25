@@ -92,7 +92,9 @@ fn write_document(root: &Path, document: &Map<String, Value>) {
     }
     match serde_json::to_vec_pretty(document) {
         Ok(bytes) => {
-            if let Err(error) = std::fs::write(&path, bytes) {
+            // Atomic like every other authoritative write, so a crash
+            // mid-write cannot corrupt the settings.
+            if let Err(error) = jackdaw_api_internal::document::write_atomic(&path, &bytes) {
                 warn!("could not persist the project settings: {error}");
             }
         }

@@ -17,9 +17,9 @@ pub mod stamp;
 
 pub use legacy::{load_inline_assets, load_scene_from_jsn};
 pub use load::{
-    LoadOutcome, LoadRefusal, RefusalCategory, declared_scene_kind, declares_ui_scene_root,
-    is_ui_scene_root_type_path, load_scene_from_file, load_scene_from_file_with_outcome,
-    spawn_default_lighting, spawn_open_dialog,
+    LoadOutcome, LoadRefusal, RefusalCategory, SceneDialogTask, declared_scene_kind,
+    declares_ui_scene_root, is_ui_scene_root_type_path, load_scene_from_file,
+    load_scene_from_file_with_outcome, spawn_default_lighting, spawn_open_dialog,
 };
 pub(crate) use load::{
     SidecarImport, clear_scene_entities, despawn_scene_entities, forget_prefab_cache_bump,

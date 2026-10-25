@@ -3,9 +3,10 @@
 //! dialogs can be opened from any operator and resolved by any of three
 //! buttons.
 //!
-//! If the tab being saved has no path (untitled), the Save action falls
-//! back to Discard with a warning log; there is no `rfd::FileDialog`
-//! sub-flow to pick a path for an untitled tab.
+//! Saving an untitled tab has no file to write, so its Save opens the Save
+//! As dialog instead; the close the user confirmed is held in
+//! [`PendingSaveAsClose`] until that dialog resolves with a path (and
+//! dropped when it is dismissed), rather than being mistaken for Discard.
 
 use bevy::picking::events::PointerClick;
 use bevy::prelude::*;
@@ -29,6 +30,16 @@ pub struct PendingQuit {
     /// than exiting. Both discard the editor's live scene and ask the same
     /// question with different wording.
     pub leaving_project: bool,
+}
+
+/// The tab whose Save As dialog, once it resolves with a path, is closed.
+/// Set by the close-confirm dialog's Save action on an untitled tab (there
+/// is no file to save to, so the pick comes first); the dialog's polling
+/// system finishes or cancels the close as the pick resolves.
+#[derive(Resource, Debug, PartialEq, Eq)]
+pub struct PendingSaveAsClose {
+    /// Which tab the confirmed close targets.
+    pub tab_index: usize,
 }
 
 /// Marker on the dialog root (the scrim node). Used to despawn the whole
@@ -526,7 +537,7 @@ pub fn on_dialog_button_click(
 /// The Save / Discard / Cancel decision for a pending tab close, factored
 /// out of the click observer so it is callable (and testable) directly
 /// with a target index rather than only through `PendingTabClose`.
-fn apply_confirm_dialog_action(world: &mut World, action: ConfirmDialogButton, target: usize) {
+pub fn apply_confirm_dialog_action(world: &mut World, action: ConfirmDialogButton, target: usize) {
     match action {
         ConfirmDialogButton::Save => {
             let tab_count = world.resource::<crate::scenes::Scenes>().tabs.len();
@@ -568,15 +579,23 @@ fn apply_confirm_dialog_action(world: &mut World, action: ConfirmDialogButton, t
                     warn!("confirm_dialog: save failed; keeping tab {target} open");
                 }
             } else {
-                // Untitled tab: no path available.
-                // Deviation: falling back to Discard with a warning.
-                // A full file-save-dialog sub-flow for this case is deferred.
-                warn!(
-                    "confirm_dialog: tab {} is untitled; treating Save as Discard (deferred)",
-                    target
-                );
+                // Untitled tab: Save means give it a path first, through the
+                // Save As dialog. The close the user confirmed is deferred
+                // until that dialog saves (finish_pending_save_as_close); a
+                // dismissed dialog cancels it and the tab stays open and
+                // dirty (cancel_pending_save_as_close). Save never discards.
                 world.resource_mut::<PendingTabClose>().tab_index = None;
-                crate::scenes::operators::scene_close_system_unprompted(world, target);
+                let active = world.resource::<crate::scenes::Scenes>().active;
+                if active != target {
+                    crate::scenes::swap::swap_active_tab(world, target);
+                }
+                if crate::scene_io::save::save_scene_with_outcome(world)
+                    == crate::scene_io::save::SaveOutcome::DialogOpened
+                {
+                    world.insert_resource(PendingSaveAsClose { tab_index: target });
+                }
+                // Any other outcome (a refused tab, a failed dialog spawn)
+                // has already reported itself; the tab stays open and dirty.
             }
         }
         ConfirmDialogButton::Discard => {
@@ -587,6 +606,22 @@ fn apply_confirm_dialog_action(world: &mut World, action: ConfirmDialogButton, t
             world.resource_mut::<PendingTabClose>().tab_index = None;
         }
     }
+}
+
+/// The Save As dialog an untitled tab's close-confirmation Save opened has
+/// resolved with a path and the save landed: close the tab the user
+/// confirmed closing. Called from the dialog poller's Save branch.
+pub fn finish_pending_save_as_close(world: &mut World) {
+    if let Some(pending) = world.remove_resource::<PendingSaveAsClose>() {
+        crate::scenes::operators::scene_close_system_unprompted(world, pending.tab_index);
+    }
+}
+
+/// The Save As dialog was dismissed without a path (or its save failed):
+/// back to before the close was asked for -- the tab stays open and dirty.
+/// Called from the dialog poller's Save branch.
+pub fn cancel_pending_save_as_close(world: &mut World) {
+    world.remove_resource::<PendingSaveAsClose>();
 }
 
 #[cfg(test)]

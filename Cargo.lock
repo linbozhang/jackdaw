@@ -4322,6 +4322,7 @@ dependencies = [
  "lucide-icons",
  "serde",
  "serde_json",
+ "tempfile",
 ]
 
 [[package]]
