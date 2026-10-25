@@ -421,6 +421,32 @@ fn persist(journal_dir: &Path, document: &JournalFile) {
     }
 }
 
+/// The document an inactive tab holds, emitted the way its save branch
+/// would write it. The same emitter the journal snapshots with, lent to a
+/// baseline being recomputed outside the save boundary — a clean tab that
+/// the editor itself rewrote (a reference rewrite, say) stays clean against
+/// the text it would now save.
+pub(crate) fn stashed_document(world: &mut World, index: usize) -> Option<String> {
+    let info = {
+        let scenes = world.resource::<Scenes>();
+        let tab = scenes.tabs.get(index)?;
+        TabInfo {
+            path: tab.path.clone(),
+            display_name: tab.display_name.clone(),
+            kind: matches!(tab.kind, TabKind::Prefab),
+            dirty: tab.dirty,
+            refused: tab.is_refused(),
+            saved_at: tab.saved_at.clone(),
+        }
+    };
+    let parent = info
+        .path
+        .as_ref()
+        .and_then(|path| path.parent().map(Path::to_path_buf))
+        .unwrap_or_else(|| PathBuf::from("."));
+    stashed_emit(world, index, &info, &parent).map(|(text, _)| text)
+}
+
 /// What the snapshot collector needs to know about a tab, copied out so
 /// the world can be borrowed for the emit.
 struct TabInfo {

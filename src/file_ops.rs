@@ -46,6 +46,7 @@ pub(crate) fn add_to_extension(ctx: &mut ExtensionContext) {
     ctx.register_operator::<FileDeleteOp>();
     ctx.register_operator::<AssetDuplicateOp>();
     ctx.register_operator::<AssetReferencesOp>();
+    ctx.register_operator::<FileMoveOp>();
     ctx.register_operator::<FileConvertToBinaryOp>();
     ctx.register_operator::<FileConvertToTextOp>();
     ctx.register_operator::<ProjectExportBinaryOp>();
@@ -107,9 +108,36 @@ pub fn file_delete(
 
 /// Put a file up for deletion: straight away when it was forced, and behind a
 /// confirmation otherwise. A file other documents reference says so, and a
-/// caller with no dialog to answer is told to force it. A confirmation already
-/// on screen is the one that stands, so nothing else is queued behind it.
+/// caller with no dialog to answer is told to force it. A file a tab or a
+/// card is standing on is refused outright unless forced 鈥?deleting it would
+/// leave the tab's next save writing the deleted file back (N3). A
+/// confirmation already on screen is the one that stands, so nothing else is
+/// queued behind it.
 fn ask_to_delete(world: &mut World, path: PathBuf, forced: bool) {
+    if let Some(holder) = open_holder(world, &path) {
+        if !forced {
+            warn_caller(
+                world,
+                format!(
+                    "file.delete: {} is {}; close it first, or pass force to delete it anyway",
+                    path.display(),
+                    holder
+                ),
+            );
+            return;
+        }
+        if !close_open_holders(world, &path) {
+            warn_caller(
+                world,
+                format!(
+                    "file.delete: {} is {} and could not be closed; open another scene first",
+                    path.display(),
+                    holder
+                ),
+            );
+            return;
+        }
+    }
     if forced {
         delete_path(world, &path);
         return;
@@ -156,17 +184,186 @@ fn ask_to_delete(world: &mut World, path: PathBuf, forced: bool) {
 
 /// The documents referring to a file, as the index keys them. A directory
 /// answers with what refers to anything it holds, from outside it.
-fn referrers_of(world: &World, path: &Path) -> Vec<PathBuf> {
+///
+/// Beyond the index 鈥?which reads the last walk of the files on disk 鈥?the
+/// references held by the tabs that are open are scanned too, so a delete
+/// names the document an unsaved edit is about to save as well (N4).
+fn referrers_of(world: &mut World, path: &Path) -> Vec<PathBuf> {
     let Some(indexed) = crate::asset_index::indexed_path(world, path) else {
         return Vec::new();
     };
-    let Some(index) = world.get_resource::<AssetIndex>() else {
+    if world.get_resource::<AssetIndex>().is_none() {
+        return Vec::new();
+    }
+    let mut found = match path.is_dir() {
+        true => world.resource::<AssetIndex>().referrers_under(&indexed),
+        false => world.resource::<AssetIndex>().referrers(&indexed).to_vec(),
+    };
+    found.extend(open_tab_referrers(world, &indexed, path.is_dir()));
+    found.sort();
+    found.dedup();
+    found
+}
+
+/// The open tabs whose document 鈥?held in a snapshot, in the prefab cache, or
+/// live in the world 鈥?spells a reference to `target` (or, when `dir`, to
+/// anything under it), as the paths the index keys them by.
+fn open_tab_referrers(world: &mut World, target: &Path, dir: bool) -> Vec<PathBuf> {
+    let Some(assets) = crate::asset_index::assets_dir(world) else {
         return Vec::new();
     };
-    match path.is_dir() {
-        true => index.referrers_under(&indexed),
-        false => index.referrers(&indexed).to_vec(),
+    let tabs: Vec<(usize, Option<PathBuf>)> = {
+        let scenes = world.resource::<crate::scenes::Scenes>();
+        scenes
+            .tabs
+            .iter()
+            .enumerate()
+            .map(|(index, tab)| (index, tab.path.clone()))
+            .collect()
+    };
+    let mut found = Vec::new();
+    for (index, path) in tabs {
+        let Some(references) = references_of_tab(world, index) else {
+            continue;
+        };
+        let hit = references.iter().any(|reference| {
+            let Some(named) = crate::asset_index::referenced_path(
+                world.resource::<AssetIndex>(),
+                &assets,
+                reference,
+            ) else {
+                return false;
+            };
+            named == *target || (dir && named.starts_with(target))
+        });
+        if hit
+            && let Some(keyed) = path
+                .as_deref()
+                .and_then(|path| crate::asset_index::indexed_path(world, path))
+        {
+            found.push(keyed);
+        }
     }
+    found
+}
+
+/// The references one open tab's document spells. An inactive scene tab
+/// answers from the snapshot it holds, a prefab tab from the cache either
+/// way, and the active scene tab from the live world, emitted the way a save
+/// would write it; a tab that cannot be read costs nothing to ask.
+fn references_of_tab(world: &mut World, index: usize) -> Option<Vec<String>> {
+    let held = {
+        let scenes = world.resource::<crate::scenes::Scenes>();
+        match &scenes.tabs.get(index)?.content {
+            crate::scenes::TabContent::Scene(Some(ast)) => Some(ast.deep_clone()),
+            _ => None,
+        }
+    };
+    if let Some(ast) = held {
+        return Some(crate::reference_rewrite::spelled_references(world, &ast));
+    }
+    let (kind, path) = {
+        let scenes = world.resource::<crate::scenes::Scenes>();
+        let tab = scenes.tabs.get(index)?;
+        (
+            matches!(tab.kind, crate::scenes::TabKind::Prefab),
+            tab.path.clone()?,
+        )
+    };
+    if kind {
+        let canonical = crate::prefab::canonical_prefab_path(&path);
+        let ast = world
+            .resource::<crate::prefab::PrefabAstCache>()
+            .get_canonical(&canonical)
+            .map(crate::prefab::resolver_bsn::clone_scene)?;
+        return Some(crate::reference_rewrite::spelled_references(world, &ast));
+    }
+    // The active scene tab: its document is the live world.
+    let parent = path.parent().map(Path::to_path_buf)?;
+    let text = crate::scene_io::emit_bsn_scene_for_file(world, &parent).ok()?;
+    let ast = jackdaw_bsn::parse_bsn_text(&text).ok()?;
+    Some(crate::reference_rewrite::spelled_references(world, &ast))
+}
+
+/// Whether `path` names `held` itself or sits under it, compared
+/// case-insensitively: the filesystem a delete lands on may not care about
+/// case, and a tab on `Rat.bsn` stands on `rat.bsn` just the same.
+fn stands_on(path: &Path, held: &Path, folder: bool) -> bool {
+    let open = dunce::canonicalize(path).unwrap_or_else(|_| path.to_path_buf());
+    let open = open.to_slash_lossy().to_lowercase();
+    let held = held.to_slash_lossy().to_lowercase();
+    open == held || (folder && crate::reference_rewrite::folder_tail(&open, &held).is_some())
+}
+
+/// What stands on `path`, if a tab or an editing card does: the tab or card
+/// would write the deleted file back at its next save.
+fn open_holder(world: &World, path: &Path) -> Option<&'static str> {
+    let held = dunce::canonicalize(path).unwrap_or_else(|_| path.to_path_buf());
+    let folder = path.is_dir();
+    if world
+        .get_resource::<crate::scenes::Scenes>()
+        .is_some_and(|scenes| {
+            scenes.tabs.iter().any(|tab| {
+                tab.path
+                    .as_deref()
+                    .is_some_and(|open| stands_on(open, &held, folder))
+            })
+        })
+    {
+        return Some("open in a tab");
+    }
+    let card = world
+        .get_resource::<crate::definition_assets::OpenDefinition>()
+        .and_then(|open| open.0)
+        .and_then(|entity| world.get::<crate::definition_assets::DefinitionAssetEdit>(entity));
+    if let Some(card) = card {
+        let editing = crate::asset_index::absolute_path(world, &card.path);
+        if stands_on(&editing, &held, folder) {
+            return Some("open on a card");
+        }
+    }
+    None
+}
+
+/// Close every tab and card standing on `path`, for a forced delete.
+/// Answers whether they are all closed: a lone tab cannot be closed (the tab
+/// strip always keeps one), and deleting under it would resurrect the file at
+/// its next save, so the caller refuses the delete instead.
+fn close_open_holders(world: &mut World, path: &Path) -> bool {
+    let held = dunce::canonicalize(path).unwrap_or_else(|_| path.to_path_buf());
+    let folder = path.is_dir();
+    // The card first: closing it writes nothing.
+    if let Some(entity) = world
+        .get_resource::<crate::definition_assets::OpenDefinition>()
+        .and_then(|open| open.0)
+        && let Some(edit) = world.get::<crate::definition_assets::DefinitionAssetEdit>(entity)
+        && stands_on(
+            &crate::asset_index::absolute_path(world, &edit.path),
+            &held,
+            folder,
+        )
+    {
+        crate::definition_assets::close_open_definition(world);
+    }
+    let holding: Vec<usize> = world
+        .resource::<crate::scenes::Scenes>()
+        .tabs
+        .iter()
+        .enumerate()
+        .filter(|(_, tab)| {
+            tab.path
+                .as_deref()
+                .is_some_and(|open| stands_on(open, &held, folder))
+        })
+        .map(|(index, _)| index)
+        .collect();
+    if world.resource::<crate::scenes::Scenes>().tabs.len() == holding.len() && holding.len() == 1 {
+        return false;
+    }
+    for index in holding.into_iter().rev() {
+        crate::scenes::operators::scene_close_system_unprompted(world, index);
+    }
+    true
 }
 
 /// What a file's referrers read as: how many there are and the first few by
@@ -508,6 +705,97 @@ pub fn asset_references(params: In<OperatorParameters>, mut commands: Commands) 
         report_to_caller(world, message);
     });
     OperatorResult::Finished
+}
+
+/// Move a file into another folder in the project's assets, following it
+/// with the whole chain a rename does: the documents that spelled the old
+/// path are rewritten, the tabs and cards standing on the file are
+/// retargeted, and the report says how much was rewritten (N2).
+#[operator(
+    id = "file.move",
+    label = "Move",
+    description = "Move a file or folder into another folder under the project's assets.",
+    allows_undo = false,
+    params(
+        path(String, doc = "The file or folder to move."),
+        folder(
+            String,
+            doc = "The folder to move it into, under the project's assets."
+        )
+    )
+)]
+pub fn file_move(params: In<OperatorParameters>, mut commands: Commands) -> OperatorResult {
+    let Some(path) = params.as_str("path").map(PathBuf::from) else {
+        warn!("file.move: no path given");
+        return OperatorResult::Cancelled;
+    };
+    let Some(folder) = params.as_str("folder").map(PathBuf::from) else {
+        warn!("file.move: no folder given");
+        return OperatorResult::Cancelled;
+    };
+    commands.queue(move |world: &mut World| {
+        move_file(world, &path, &folder);
+    });
+    OperatorResult::Finished
+}
+
+/// Move `path` under `folder`. Both are resolved against the project; the
+/// destination must be a folder in the project's assets, and the move keeps
+/// the file's own name.
+fn move_file(world: &mut World, path: &Path, folder: &Path) {
+    let path = crate::definition_assets::resolve_project_path(world, path);
+    let folder = crate::definition_assets::resolve_project_path(world, folder);
+    if !path.exists() {
+        warn_caller(
+            world,
+            format!("file.move: {} does not exist", path.display()),
+        );
+        return;
+    }
+    if !folder.is_dir() {
+        warn_caller(
+            world,
+            format!("file.move: {} is not a folder", folder.display()),
+        );
+        return;
+    }
+    if crate::asset_index::indexed_path(world, &folder).is_none() {
+        warn_caller(
+            world,
+            format!(
+                "file.move: {} is outside the project's assets",
+                folder.display()
+            ),
+        );
+        return;
+    }
+    let Some(name) = path.file_name() else {
+        return;
+    };
+    let target = folder.join(name);
+    if target.exists() {
+        warn_caller(
+            world,
+            format!("file.move: {} is already there", target.display()),
+        );
+        return;
+    }
+    // The referrers table the rewrite matches against is the one from before
+    // the move.
+    crate::asset_index::rescan_asset_index(world);
+    if let Err(err) = std::fs::rename(&path, &target) {
+        warn_caller(
+            world,
+            format!("file.move: {} could not be moved: {err}", path.display()),
+        );
+        return;
+    }
+    crate::reference_rewrite::follow_a_move(world, &path, &target, "moved");
+    if let Some(mut state) = world.get_resource_mut::<crate::project_window::ProjectWindowState>() {
+        state.needs_refresh = true;
+        state.needs_tree_refresh = true;
+    }
+    crate::project_window::select_path(world, &target);
 }
 
 /// Rewrite one document as its binary twin, in place.

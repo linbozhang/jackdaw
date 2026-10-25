@@ -185,6 +185,25 @@ impl AssetIndex {
         found
     }
 
+    /// The documents whose patches reference a file under `dir`, from
+    /// wherever they sit — including under `dir` itself, which a folder
+    /// rename rewrites along with the rest.
+    pub fn referrers_including_within(&self, dir: &Path) -> Vec<PathBuf> {
+        let mut found: Vec<PathBuf> = Vec::new();
+        for (target, holders) in &self.referrers {
+            if !target.starts_with(dir) {
+                continue;
+            }
+            for holder in holders {
+                if !found.contains(holder) {
+                    found.push(holder.clone());
+                }
+            }
+        }
+        found.sort();
+        found
+    }
+
     /// Take what a walk read as the documents referring to each file.
     fn set_referrers(&mut self, referrers: BTreeMap<PathBuf, Vec<PathBuf>>) {
         self.referrers = referrers;
@@ -644,7 +663,11 @@ fn record_referrers(world: &mut World, spelled: Vec<(PathBuf, Vec<String>)>) {
 /// names the project's documents carry, and anything else as a path under the
 /// assets, in whichever form that document is held. A name two documents carry
 /// stands for neither, so nothing spelling it counts as referring to either.
-fn referenced_path(index: &AssetIndex, assets: &Path, reference: &str) -> Option<PathBuf> {
+pub(crate) fn referenced_path(
+    index: &AssetIndex,
+    assets: &Path,
+    reference: &str,
+) -> Option<PathBuf> {
     if let Some(name) = reference.strip_prefix('@') {
         return index.stems().unique(name).map(Path::to_path_buf);
     }
