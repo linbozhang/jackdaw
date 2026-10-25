@@ -212,7 +212,9 @@ fn color_of(kind: FindingKind) -> Color {
 }
 
 /// A plain button whose marker says what it does, answering with the entity
-/// the caller hangs its observer on.
+/// the caller hangs its observer on. Padded generously: the list's rows are
+/// dense and the buttons small, and both a person and an automated click
+/// have an easier time landing on a roomy one.
 fn spawn_text_button<M: Component>(
     world: &mut World,
     parent: Entity,
@@ -225,7 +227,7 @@ fn spawn_text_button<M: Component>(
         .spawn((
             marker,
             Node {
-                padding: UiRect::axes(Val::Px(10.0), Val::Px(4.0)),
+                padding: UiRect::axes(Val::Px(16.0), Val::Px(8.0)),
                 border_radius: BorderRadius::all(Val::Px(tokens::BORDER_RADIUS_MD)),
                 ..Default::default()
             },
@@ -301,11 +303,26 @@ fn open_rebind_picker(world: &mut World, finding: &AuditFinding) {
         return;
     }
     crate::inspector::asset_row::close_open_asset_picker(world);
-    let items: Vec<String> = world
-        .resource::<crate::asset_index::AssetIndex>()
-        .iter()
-        .map(|entry| entry.path.to_slash_lossy().into_owned())
-        .collect();
+    // Every document the project holds, not only the files the index carries
+    // as assets of their own: a reference names a document — a prefab a
+    // scene instances, a material a mesh wears — and the prefab and the
+    // scene are not assets in the index's sense, so listing entries alone
+    // would offer nothing to rebind a broken prefab source to.
+    let assets = crate::asset_index::assets_dir(world);
+    let mut items: Vec<String> = match assets.as_deref() {
+        Some(assets) => jackdaw_bsn::walk_document_files(assets)
+            .into_iter()
+            .filter_map(|file| {
+                let relative = file.strip_prefix(assets).ok()?;
+                if crate::asset_index::is_catalog_file(relative) {
+                    return None;
+                }
+                Some(relative.to_slash_lossy().into_owned())
+            })
+            .collect(),
+        None => Vec::new(),
+    };
+    items.sort();
     if items.is_empty() {
         crate::status_bar::notify_warn(world, "this project holds no assets to rebind to");
         return;
@@ -367,7 +384,7 @@ fn on_missing_pick(
 }
 
 /// Rewrite one reference in the open tab's document and dirty the tab.
-fn rebind(world: &mut World, finding: &AuditFinding, chosen: &str) {
+pub(crate) fn rebind(world: &mut World, finding: &AuditFinding, chosen: &str) {
     let Some(index) = tab_holding(world, finding) else {
         return;
     };
@@ -400,6 +417,10 @@ fn rewrite_tab_reference(
     finding: &AuditFinding,
     chosen: &str,
 ) -> bool {
+    // A tab's document spells its prefab sources absolutely (the load made
+    // them so), while the finding names them the way a save would — so both
+    // sides meet on the relative spelling before the rewrite.
+    let assets = crate::asset_index::assets_dir(world);
     let snapshot = {
         let scenes = world.resource::<crate::scenes::Scenes>();
         match scenes.tabs.get(index).map(|tab| &tab.content) {
@@ -408,6 +429,7 @@ fn rewrite_tab_reference(
         }
     };
     if let Some(mut ast) = snapshot {
+        fold_sources_to_relative(&mut ast, assets.as_deref());
         let replaced = rewrite_ast_reference(&mut ast, finding, chosen);
         if replaced {
             let mut scenes = world.resource_mut::<crate::scenes::Scenes>();
@@ -430,11 +452,18 @@ fn rewrite_tab_reference(
         else {
             return false;
         };
+        fold_sources_to_relative(&mut ast, assets.as_deref());
         let replaced = rewrite_ast_reference(&mut ast, finding, chosen);
         if replaced {
             world
                 .resource_mut::<crate::prefab::PrefabAstCache>()
                 .insert(held.as_path(), ast);
+            // The world still shows the cache entry it was spawned from:
+            // activating the tab again installs the rewritten one, the way
+            // reopening the document would.
+            if world.resource::<crate::scenes::Scenes>().active == index {
+                crate::scenes::swap::activate_tab(world, index);
+            }
         }
         return replaced;
     }
@@ -444,19 +473,51 @@ fn rewrite_tab_reference(
     let Some(mut ast) = live else {
         return false;
     };
+    fold_sources_to_relative(&mut ast, assets.as_deref());
     let replaced = rewrite_ast_reference(&mut ast, finding, chosen);
     if replaced {
         let entities: Vec<Entity> = ast.ecs_to_ast.keys().copied().collect();
         world.insert_resource(ast);
+        let chosen_path = Path::new(chosen);
         for entity in entities {
-            if world.get_entity_mut(entity).is_ok() {
-                crate::scene_io::resync_entity_from_ast(world, entity);
+            // The world the next save emits from reads the component, not
+            // the patch: an `IsA` whose source was rebound takes the new
+            // file directly, spelled absolutely the way the load left it.
+            if let Ok(mut held) = world.get_entity_mut(entity) {
+                if let Some(mut isa) = held.get_mut::<jackdaw_prefab::IsA>() {
+                    let was = isa.source.clone();
+                    let folded = match assets.as_deref() {
+                        Some(assets) if was.is_absolute() => {
+                            pathdiff::diff_paths(&was, assets).unwrap_or(was)
+                        }
+                        _ => was,
+                    };
+                    if folded == chosen_path {
+                        // matched the new value already
+                    } else if folded == Path::new(&finding.reference) {
+                        isa.source = match assets.as_deref() {
+                            Some(assets) => assets.join(chosen),
+                            None => chosen_path.to_path_buf(),
+                        };
+                    }
+                }
+                if world.get::<jackdaw_bsn::AstNodeRef>(entity).is_some() {
+                    crate::scene_io::resync_entity_from_ast(world, entity);
+                }
             }
         }
     } else {
         world.insert_resource(ast);
     }
     replaced
+}
+
+/// Fold a document's absolute prefab sources to their relative spellings,
+/// the way a save does, so a rewrite matches what the finding names.
+fn fold_sources_to_relative(ast: &mut jackdaw_bsn::SceneBsnAst, assets: Option<&Path>) {
+    if let Some(assets) = assets {
+        jackdaw_prefab::relativize_isa_sources_under(ast, assets);
+    }
 }
 
 /// Find the node and field a finding names, in an AST, and rewrite the

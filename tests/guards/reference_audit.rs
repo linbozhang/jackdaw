@@ -157,7 +157,7 @@ fn asset_missing_list_gathers_the_findings_headless() {
 /// not a warning per field (N5), on the chain a real load takes.
 #[test]
 fn a_loaded_scene_leaves_one_summary_warning() {
-    let (mut app, _tmp) = editor();
+    let (app, _tmp) = editor();
     let warnings = app
         .world()
         .get_resource::<OperatorWarnings>()
@@ -182,5 +182,112 @@ fn a_loaded_scene_leaves_one_summary_warning() {
         app.world().resource::<Scenes>().tabs.len(),
         1,
         "the load itself was untouched"
+    );
+}
+
+/// An open tab's `IsA.source` is spelled absolutely in memory (the load
+/// absolutizes; the save folds back), so the audit judges it the way a save
+/// would spell it: a missing prefab reads as Missing, and a held one reads
+/// as no finding at all — never as a machine path (the QA 🟡).
+#[test]
+fn an_open_tabs_isa_source_is_judged_by_its_relative_spelling() {
+    let tmp = tempfile::Builder::new()
+        .prefix("jackdaw-audit-isa-")
+        .tempdir()
+        .expect("temp dir");
+    write(
+        tmp.path(),
+        "props/keeper.bsn",
+        "#keeper\nbevy_transform::components::transform::Transform\n",
+    );
+    write(
+        tmp.path(),
+        "zones/one.bsn",
+        "#A\njackdaw::prefab::components::Prefab\n\
+         jackdaw::prefab::components::IsA { source: \"props/gone.bsn\" }\n",
+    );
+    write(
+        tmp.path(),
+        "zones/two.bsn",
+        "#B\njackdaw::prefab::components::Prefab\n\
+         jackdaw::prefab::components::IsA { source: \"props/keeper.bsn\" }\n",
+    );
+    let mut app = util::editor_test_app();
+    app.world_mut()
+        .insert_resource(jackdaw::project::ProjectRoot {
+            root: tmp.path().to_path_buf(),
+            config: default(),
+        });
+    app.world_mut()
+        .resource_mut::<NextState<jackdaw::AppState>>()
+        .set(jackdaw::AppState::Editor);
+    app.update();
+    jackdaw::asset_index::rescan_asset_index(app.world_mut());
+    for scene in ["zones/one.bsn", "zones/two.bsn"] {
+        run_op_clause(app.world_mut(), &format!("scene.open path=assets/{scene}"))
+            .expect("the scene opens")
+            .assert_finished();
+        util::settle_scene_load(&mut app);
+    }
+
+    let findings = jackdaw::reference_audit::audit_references(app.world_mut());
+    let isa: Vec<_> = findings
+        .iter()
+        .filter(|finding| finding.component == "IsA")
+        .collect();
+    assert_eq!(
+        isa.len(),
+        1,
+        "the missing prefab is a finding and the held one is not: {findings:?}"
+    );
+    assert_eq!(
+        isa[0].kind,
+        jackdaw::reference_audit::FindingKind::Missing,
+        "judged by its relative spelling, not as a machine path: {:?}",
+        isa[0].line()
+    );
+    assert_eq!(isa[0].document, std::path::PathBuf::from("zones/one.bsn"));
+}
+
+/// The startup walk fills the index on its own — no test rescan asked for
+/// it. This is the guard that keeps the real-machine path (OnEnter the
+/// editor state, the async walk, the apply) from silently going dark while
+/// the tests keep it alive by hand (the QA 🔴).
+#[test]
+fn the_startup_walk_fills_the_index_without_a_manual_rescan() {
+    let tmp = tempfile::Builder::new()
+        .prefix("jackdaw-audit-startup-")
+        .tempdir()
+        .expect("temp dir");
+    write(
+        tmp.path(),
+        "materials/rust.material.bsn",
+        "#rust\nbevy_pbr::pbr_material::StandardMaterial { metallic: 0.25 }\n",
+    );
+
+    let mut app = util::editor_test_app();
+    app.register_asset_reflect::<StandardMaterial>();
+    app.world_mut()
+        .insert_resource(jackdaw::project::ProjectRoot {
+            root: tmp.path().to_path_buf(),
+            config: default(),
+        });
+    // Entering the editor state is what a real launch does; no rescan is
+    // called by hand anywhere in this test.
+    app.world_mut()
+        .resource_mut::<NextState<jackdaw::AppState>>()
+        .set(jackdaw::AppState::Editor);
+    // The walk sets out on enter, lands a frame later, applies the frame
+    // after that; a few frames is what the real machine pays.
+    for _ in 0..30 {
+        app.update();
+    }
+
+    let index = app.world().resource::<jackdaw::asset_index::AssetIndex>();
+    assert!(
+        index
+            .get(std::path::Path::new("materials/rust.material.bsn"))
+            .is_some(),
+        "the startup walk indexed the material on its own"
     );
 }

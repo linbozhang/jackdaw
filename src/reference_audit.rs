@@ -131,7 +131,14 @@ fn open_tab_documents(world: &mut World) -> Vec<(PathBuf, SceneBsnAst)> {
         else {
             continue;
         };
-        if let Some(ast) = stashed_ast(world, index) {
+        if let Some(mut ast) = stashed_ast(world, index) {
+            // An open tab's document spells its prefab sources absolutely —
+            // the load made them so, and the save folds them back — so the
+            // audit judges them the way a save would spell them, not as
+            // machine paths they never were.
+            if let Some(assets) = assets_dir(world) {
+                jackdaw_prefab::relativize_isa_sources_under(&mut ast, &assets);
+            }
             held.push((indexed, ast));
         }
     }
@@ -275,6 +282,34 @@ fn collect_entity(
                                     entity_name: name.clone(),
                                     type_path: data.type_path.clone(),
                                     field: field.name.clone(),
+                                    reference: reference.to_string(),
+                                });
+                            }
+                        }
+                    }
+                }
+                BsnPatch::TupleStruct(data) => {
+                    // A newtype component — a mesh's material — holds its
+                    // reference in the value at index zero.
+                    let held = registry
+                        .get_with_type_path(&data.type_path)
+                        .map(bevy::reflect::TypeRegistration::type_info)
+                        .and_then(|info| match info {
+                            bevy::reflect::TypeInfo::TupleStruct(info) => {
+                                info.field_at(0).map(bevy::reflect::UnnamedField::type_id)
+                            }
+                            _ => None,
+                        });
+                    let takes_path = held.is_some_and(|type_id| {
+                        crate::typed_values::takes_asset_path(registry, type_id)
+                    });
+                    for value in data.values.iter().take(1) {
+                        for reference in strings_under(value) {
+                            if (takes_path || reference.starts_with('@')) && !reference.is_empty() {
+                                candidates.push(Candidate {
+                                    entity_name: name.clone(),
+                                    type_path: data.type_path.clone(),
+                                    field: "0".to_string(),
                                     reference: reference.to_string(),
                                 });
                             }
@@ -539,6 +574,63 @@ pub fn warn_on_dangling_entity_fields(world: &mut World) {
     }
 }
 
+/// Rebind one broken reference, by the finding that names it, to a path the
+/// caller chose — the same write the list's Rebind button makes, said as an
+/// operator so a script (or a remote caller asserting the chain) can drive
+/// it without landing a click. The document's tab must be open; the tab
+/// turns dirty and nothing reaches a file until its own save.
+#[operator(
+    id = "asset.rebind",
+    label = "Rebind Reference",
+    description = "Rewrite one reference a finding names to a chosen path, in the open tab's \
+                   document.",
+    allows_undo = false,
+    params(
+        document(
+            String,
+            doc = "The document holding the reference, as the index keys it."
+        ),
+        component(String, doc = "The component's type path or short name."),
+        field(String, doc = "The field holding the reference."),
+        reference(String, doc = "The reference as spelled."),
+        to(String, doc = "The path to rebind to.")
+    )
+)]
+pub fn asset_rebind(params: In<OperatorParameters>, mut commands: Commands) -> OperatorResult {
+    let Some(document) = params.as_str("document").map(PathBuf::from) else {
+        warn!("asset.rebind: no document given");
+        return OperatorResult::Cancelled;
+    };
+    let Some(component) = params.as_str("component").map(str::to_owned) else {
+        warn!("asset.rebind: no component given");
+        return OperatorResult::Cancelled;
+    };
+    let Some(field) = params.as_str("field").map(str::to_owned) else {
+        warn!("asset.rebind: no field given");
+        return OperatorResult::Cancelled;
+    };
+    let Some(reference) = params.as_str("reference").map(str::to_owned) else {
+        warn!("asset.rebind: no reference given");
+        return OperatorResult::Cancelled;
+    };
+    let Some(to) = params.as_str("to").map(str::to_owned) else {
+        warn!("asset.rebind: no target path given");
+        return OperatorResult::Cancelled;
+    };
+    let finding = AuditFinding {
+        document,
+        entity_name: None,
+        component,
+        field,
+        reference,
+        kind: FindingKind::Missing,
+    };
+    commands.queue(move |world: &mut World| {
+        crate::inspector::missing_list::rebind(world, &finding, &to);
+    });
+    OperatorResult::Finished
+}
+
 /// Bring the audit's findings up as the Missing References list, where each
 /// one can be located and rebound from.
 #[operator(
@@ -558,6 +650,7 @@ pub fn asset_missing_list(_: In<OperatorParameters>, mut commands: Commands) -> 
 pub(crate) fn add_to_extension(ctx: &mut ExtensionContext) {
     ctx.register_operator::<AssetAuditOp>();
     ctx.register_operator::<AssetMissingListOp>();
+    ctx.register_operator::<AssetRebindOp>();
 }
 
 #[cfg(test)]
@@ -640,7 +733,7 @@ mod tests {
     fn findings_for(world: &mut World, document: &str) -> Vec<AuditFinding> {
         audit_references(world)
             .into_iter()
-            .filter(|finding| finding.document == PathBuf::from(document))
+            .filter(|finding| finding.document == Path::new(document))
             .collect()
     }
 
@@ -885,7 +978,6 @@ mod tests {
         );
         match read {
             Some(value) => {
-                let mut value = value;
                 let taken = value.try_take::<Entity>();
                 assert!(
                     taken.is_ok() || !spelled.is_empty(),
