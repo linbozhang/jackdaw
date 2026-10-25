@@ -750,13 +750,14 @@ mod tests {
             to: "b/patinated.material.bsn".to_string(),
             folder: false,
         };
+        let one_move = std::slice::from_ref(&moved);
         assert_eq!(
-            replacement("a/rust.material.bsb", &[moved.clone()], &index),
+            replacement("a/rust.material.bsb", one_move, &index),
             Some("b/patinated.material.bsb".to_string()),
             "not b/patinated.material.bsn.bsb"
         );
         assert_eq!(
-            replacement("a/rust.material.bsn", &[moved], &index),
+            replacement("a/rust.material.bsn", one_move, &index),
             Some("b/patinated.material.bsn".to_string()),
             "the exact path replaces with its own spelling"
         );

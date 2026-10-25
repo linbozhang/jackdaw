@@ -151,6 +151,7 @@ impl Plugin for JackdawEditorRemotePlugin {
                     .with_method_main("jackdaw/cancel", cancel_handler)
                     .with_method_main("jackdaw/history", history_handler)
                     .with_method_main("jackdaw/recovery", recovery_handler)
+                    .with_method_main("jackdaw/audit", audit_handler)
                     .with_method_main("jackdaw/scene_tree", scene_tree_handler)
                     .with_method_main("jackdaw/entity", entity_handler)
                     .with_method_main("jackdaw/apply_bsn", apply_bsn_handler)
@@ -574,6 +575,34 @@ pub fn recovery_handler(In(_): In<Option<Value>>, world: &mut World) -> BrpResul
     Ok(json!({
         "available": available,
         "sessions": sessions,
+    }))
+}
+
+/// The missing-reference audit as a structured list: one entry per reference
+/// the project's documents hold that does not resolve, with the document,
+/// entity, component and field holding it, the reference as spelled, and
+/// what is wrong with it. What `asset.audit` reports in a line, a caller
+/// asserts against here.
+pub fn audit_handler(In(_): In<Option<Value>>, world: &mut World) -> BrpResult {
+    check_enabled(world)?;
+    let findings = crate::reference_audit::audit_references(world);
+    let entries: Vec<Value> = findings
+        .iter()
+        .map(|finding| {
+            json!({
+                "document": finding.document.to_slash_lossy(),
+                "entity": finding.entity_name,
+                "component": finding.component,
+                "field": finding.field,
+                "reference": finding.reference,
+                "kind": finding.kind.as_str(),
+            })
+        })
+        .collect();
+    Ok(json!({
+        "summary": crate::reference_audit::summarize(&findings),
+        "count": findings.len(),
+        "findings": entries,
     }))
 }
 

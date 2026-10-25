@@ -556,11 +556,18 @@ fn apply_walk(world: &mut World, walk: AssetWalk) -> AssetRescan {
             .collect::<Vec<_>>()
     };
 
+    // The walk's findings as a set, so a gone check is a lookup rather than
+    // a pass over everything for every entry (W7).
+    let found_set: HashSet<PathBuf> = found
+        .iter()
+        .map(|(relative, _, _)| relative)
+        .cloned()
+        .collect();
     let gone: Vec<PathBuf> = world
         .resource::<AssetIndex>()
         .iter()
         .map(|entry| entry.path.clone())
-        .filter(|path| !found.iter().any(|(relative, _, _)| relative == path))
+        .filter(|path| !found_set.contains(path))
         .collect();
     for path in gone {
         if crate::definition_assets::card_has_unsaved_edits(world, &path) {

@@ -319,6 +319,7 @@ fn fill_body(world: &mut World, body: Entity, path: &Path, kind: &AssetFileKind)
         spawn_model_lod_rows(world, body, path);
     }
     spawn_references(world, body, path);
+    spawn_action(world, body, "Missing References…", "asset.missing_list", "");
 }
 
 fn is_model_file(path: &Path) -> bool {
@@ -768,11 +769,12 @@ fn spawn_action(world: &mut World, body: Entity, label: &str, operator: &'static
             ChildOf(body),
         ))
         .id();
+    let mut call = ButtonOperatorCall::new(operator);
+    if !path.is_empty() {
+        call = call.with_param("path", path.to_string());
+    }
     let action = world
-        .spawn((
-            button(ButtonProps::new(label.to_string())),
-            ButtonOperatorCall::new(operator).with_param("path", path.to_string()),
-        ))
+        .spawn((button(ButtonProps::new(label.to_string())), call))
         .id();
     world.entity_mut(action).insert(ChildOf(slot));
 }

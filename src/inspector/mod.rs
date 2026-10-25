@@ -15,6 +15,7 @@ mod live_edit_dots;
 pub(crate) mod material_card_routing;
 mod material_display;
 pub(crate) mod material_row;
+pub(crate) mod missing_list;
 mod modifier_display;
 pub mod node_card;
 pub(crate) mod ops;
@@ -106,6 +107,7 @@ impl Plugin for InspectorPlugin {
         app.register_type_data::<Name, ReflectDisplayable>()
             .add_plugins(component_tooltip::plugin)
             .add_plugins(file_card::plugin)
+            .add_plugins(missing_list::plugin)
             .add_plugins(prefab_menu::plugin)
             .add_plugins(type_metadata_pane::plugin)
             .add_observer(component_display::on_inspector_dirty)
