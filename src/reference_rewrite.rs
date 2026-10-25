@@ -194,8 +194,14 @@ fn replacement(reference: &str, moves: &[ReferenceMove], index: &AssetIndex) -> 
                     return Some(to.clone());
                 }
                 if is_twin_spelling(reference, path) {
-                    let dot = reference.rfind('.').unwrap_or(reference.len());
-                    return Some(format!("{to}{}", &reference[dot..]));
+                    // The reference spells the binary twin; the replacement
+                    // spells the new path's own twin, not a second extension
+                    // stacked on it.
+                    return Some(
+                        jackdaw_bsn::binary_twin(Path::new(to))
+                            .to_slash_lossy()
+                            .into_owned(),
+                    );
                 }
                 if *folder && let Some(rest) = folder_tail(reference, path) {
                     return Some(format!("{to}/{rest}"));
@@ -502,14 +508,30 @@ fn retarget_tabs(world: &mut World, old: &Path, new: &Path, moves: &[ReferenceMo
             .collect()
     };
     for &index in &holding {
+        // Where the tab's file lands: the new path itself when the tab stood
+        // on it, or the same place under the folder's new name when it stood
+        // inside — the tail the file kept under the folder moves with it,
+        // the same join the index entries and the card take.
+        let now = {
+            let scenes = world.resource::<crate::scenes::Scenes>();
+            let held = scenes.tabs[index]
+                .path
+                .clone()
+                .unwrap_or_else(|| new_canonical.clone());
+            let held = dunce::canonicalize(&held).unwrap_or(held);
+            match held.strip_prefix(&old_canonical) {
+                Ok(tail) if !tail.as_os_str().is_empty() => new_canonical.join(tail),
+                _ => new_canonical.clone(),
+            }
+        };
         {
             let mut scenes = world.resource_mut::<crate::scenes::Scenes>();
             scenes.set_changed();
             let Some(tab) = scenes.tabs.get_mut(index) else {
                 continue;
             };
-            tab.path = Some(new_canonical.clone());
-            if let Some(stem) = new_canonical.file_stem() {
+            tab.path = Some(now.clone());
+            if let Some(stem) = now.file_stem() {
                 tab.display_name = stem.to_string_lossy().into_owned();
             }
         }
@@ -553,7 +575,9 @@ fn retarget_tabs(world: &mut World, old: &Path, new: &Path, moves: &[ReferenceMo
             // moves to the new key with its references rewritten, keeping
             // the saved fingerprint the watcher compares against.
             Some(held) => {
-                let moved = crate::prefab::canonical_prefab_path(&new_canonical);
+                // The cache keys by the tab's own file, which keeps its
+                // place under the folder the way the path above does.
+                let moved = crate::prefab::canonical_prefab_path(&now);
                 let entry = world
                     .resource::<crate::prefab::PrefabAstCache>()
                     .get(held.as_path())
@@ -714,5 +738,27 @@ mod tests {
             "a/rust.material.bsn",
             "a/rust.material.bsn"
         ));
+    }
+
+    /// A reference spelled as the binary twin is rewritten as the new path's
+    /// own twin — never a second extension stacked on the new path.
+    #[test]
+    fn a_twin_spelling_is_rewritten_as_the_new_paths_own_twin() {
+        let index = AssetIndex::default();
+        let moved = ReferenceMove::Names {
+            path: "a/rust.material.bsn".to_string(),
+            to: "b/patinated.material.bsn".to_string(),
+            folder: false,
+        };
+        assert_eq!(
+            replacement("a/rust.material.bsb", &[moved.clone()], &index),
+            Some("b/patinated.material.bsb".to_string()),
+            "not b/patinated.material.bsn.bsb"
+        );
+        assert_eq!(
+            replacement("a/rust.material.bsn", &[moved], &index),
+            Some("b/patinated.material.bsn".to_string()),
+            "the exact path replaces with its own spelling"
+        );
     }
 }

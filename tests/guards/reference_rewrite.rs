@@ -185,7 +185,7 @@ fn renaming_a_referenced_file_rewrites_its_referrers_and_nothing_else() {
             .any(|line| line.contains("rewrote 1 references in 1 documents")),
         "the rename reports its rewrite: {reports:?}"
     );
-    run_op_clause(app.world_mut(), "scene.close").expect("the tab closes");
+    let _ = run_op_clause(app.world_mut(), "scene.close").expect("the tab closes");
     app.update();
     open(&mut app, "zones/hedgerow.bsn");
     let board = signpost_board(&mut app);
@@ -575,7 +575,7 @@ fn moving_a_file_rewrites_references_and_retargets_the_card() {
         .map(|edit| edit.path.clone())
         .expect("the card is open");
     assert_eq!(card, PathBuf::from("mats/rust.material.bsn"));
-    run_op_clause(app.world_mut(), "asset.save").expect("the card saves");
+    let _ = run_op_clause(app.world_mut(), "asset.save").expect("the card saves");
     app.update();
     assert!(
         tmp.path().join("assets/mats/rust.material.bsn").is_file(),
@@ -706,4 +706,136 @@ fn a_dirty_tab_journals_under_the_renamed_path() {
 fn read_journal(app: &mut App) -> Option<jackdaw::scene_io::session_journal::JournalFile> {
     let dir = jackdaw::scene_io::session_journal::session_dir(app.world())?;
     jackdaw::scene_io::session_journal::read_session_journal(&dir)
+}
+
+// ---------------------------------------------------- rework round 1 guards --
+
+/// Renaming a folder an open tab's scene sits under retargets the tab onto
+/// the same place under the new name: the tail the file kept under the
+/// folder moves with it (Y8 in the folder combination).
+#[test]
+fn renaming_a_folder_retargets_a_tab_under_it_onto_the_same_tail() {
+    let tmp = tempfile::Builder::new()
+        .prefix("jackdaw-reference-folder-tab-")
+        .tempdir()
+        .expect("temp dir");
+    write(
+        tmp.path(),
+        "props/sub/scene.bsn",
+        "#Scene\nbevy_transform::components::transform::Transform\n",
+    );
+    let mut app = util::editor_test_app();
+    app.world_mut()
+        .insert_resource(jackdaw::project::ProjectRoot {
+            root: tmp.path().to_path_buf(),
+            config: default(),
+        });
+    app.world_mut()
+        .resource_mut::<NextState<jackdaw::AppState>>()
+        .set(jackdaw::AppState::Editor);
+    app.update();
+    open(&mut app, "props/sub/scene.bsn");
+    rescan(&mut app);
+
+    run_op_clause(app.world_mut(), "file.rename path=assets/props name=prop")
+        .expect("the folder renames")
+        .assert_finished();
+
+    let path = active_path(&app).expect("the tab keeps a path");
+    assert!(
+        path.ends_with(
+            Path::new("assets")
+                .join("prop")
+                .join("sub")
+                .join("scene.bsn")
+        ),
+        "the tab keeps its place under the renamed folder: {}",
+        path.display()
+    );
+    assert!(
+        !tmp.path().join("assets/props").exists() && tmp.path().join("assets/prop").is_dir(),
+        "the folder itself moved"
+    );
+    assert!(
+        jackdaw::scene_io::save_scene(app.world_mut()),
+        "the scene saves through the retargeted tab"
+    );
+    app.update();
+    assert!(
+        tmp.path().join("assets/prop/sub/scene.bsn").is_file(),
+        "the save lands where the tail says it should"
+    );
+}
+
+/// A forced delete of a folder every open tab stands under is refused with
+/// a reason: closing those tabs would close the last open tab, which the
+/// strip never does, and the delete would leave a tab standing on a deleted
+/// path ready to write it back (N3 in the all-tabs combination).
+#[test]
+fn a_forced_delete_that_would_close_the_last_tab_is_refused() {
+    let tmp = tempfile::Builder::new()
+        .prefix("jackdaw-reference-delete-all-")
+        .tempdir()
+        .expect("temp dir");
+    write(
+        tmp.path(),
+        "props/a/one.bsn",
+        "#One\nbevy_transform::components::transform::Transform\n",
+    );
+    write(
+        tmp.path(),
+        "props/b/two.bsn",
+        "#Two\nbevy_transform::components::transform::Transform\n",
+    );
+    let mut app = util::editor_test_app();
+    app.world_mut()
+        .insert_resource(jackdaw::project::ProjectRoot {
+            root: tmp.path().to_path_buf(),
+            config: default(),
+        });
+    app.world_mut()
+        .resource_mut::<NextState<jackdaw::AppState>>()
+        .set(jackdaw::AppState::Editor);
+    app.update();
+    open(&mut app, "props/a/one.bsn");
+    open(&mut app, "props/b/two.bsn");
+    assert_eq!(
+        app.world().resource::<Scenes>().tabs.len(),
+        2,
+        "two tabs stand under the folder"
+    );
+
+    fresh_reports(&mut app);
+    run_op_clause(
+        app.world_mut(),
+        &format!(
+            "file.delete path={} force=true",
+            tmp.path().join("assets/props").display()
+        ),
+    )
+    .expect("the forced delete is asked for")
+    .assert_finished();
+    app.update();
+
+    assert!(
+        tmp.path().join("assets/props/a/one.bsn").is_file()
+            && tmp.path().join("assets/props/b/two.bsn").is_file(),
+        "nothing was deleted behind the refusal"
+    );
+    assert_eq!(
+        app.world().resource::<Scenes>().tabs.len(),
+        2,
+        "no tab was closed either"
+    );
+    let refused = app
+        .world()
+        .get_resource::<OperatorWarnings>()
+        .map(|warnings| warnings.0.to_vec())
+        .unwrap_or_default();
+    assert!(
+        refused
+            .iter()
+            .any(|line| line.contains("would close the last open tab")),
+        "the refusal says why: {refused:?}"
+    );
 }

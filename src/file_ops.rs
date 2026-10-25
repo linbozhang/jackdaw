@@ -109,7 +109,7 @@ pub fn file_delete(
 /// Put a file up for deletion: straight away when it was forced, and behind a
 /// confirmation otherwise. A file other documents reference says so, and a
 /// caller with no dialog to answer is told to force it. A file a tab or a
-/// card is standing on is refused outright unless forced 鈥?deleting it would
+/// card is standing on is refused outright unless forced - deleting it would
 /// leave the tab's next save writing the deleted file back (N3). A
 /// confirmation already on screen is the one that stands, so nothing else is
 /// queued behind it.
@@ -130,7 +130,8 @@ fn ask_to_delete(world: &mut World, path: PathBuf, forced: bool) {
             warn_caller(
                 world,
                 format!(
-                    "file.delete: {} is {} and could not be closed; open another scene first",
+                    "file.delete: {} is {} and closing it would close the last open tab, \
+                     so nothing was deleted; close it first",
                     path.display(),
                     holder
                 ),
@@ -185,7 +186,7 @@ fn ask_to_delete(world: &mut World, path: PathBuf, forced: bool) {
 /// The documents referring to a file, as the index keys them. A directory
 /// answers with what refers to anything it holds, from outside it.
 ///
-/// Beyond the index 鈥?which reads the last walk of the files on disk 鈥?the
+/// Beyond the index - which reads the last walk of the files on disk - the
 /// references held by the tabs that are open are scanned too, so a delete
 /// names the document an unsaved edit is about to save as well (N4).
 fn referrers_of(world: &mut World, path: &Path) -> Vec<PathBuf> {
@@ -326,9 +327,10 @@ fn open_holder(world: &World, path: &Path) -> Option<&'static str> {
 }
 
 /// Close every tab and card standing on `path`, for a forced delete.
-/// Answers whether they are all closed: a lone tab cannot be closed (the tab
-/// strip always keeps one), and deleting under it would resurrect the file at
-/// its next save, so the caller refuses the delete instead.
+/// Answers whether they are all closed: when every open tab stands on the
+/// path, closing them would close the last open tab, which the tab strip
+/// never does — and deleting under a tab that stayed would resurrect the
+/// file at its next save, so the caller refuses the delete instead.
 fn close_open_holders(world: &mut World, path: &Path) -> bool {
     let held = dunce::canonicalize(path).unwrap_or_else(|_| path.to_path_buf());
     let folder = path.is_dir();
@@ -357,7 +359,9 @@ fn close_open_holders(world: &mut World, path: &Path) -> bool {
         })
         .map(|(index, _)| index)
         .collect();
-    if world.resource::<crate::scenes::Scenes>().tabs.len() == holding.len() && holding.len() == 1 {
+    // No tab may survive the close: the last one the strip always keeps
+    // would stay standing on the deleted path, whatever the tab count.
+    if holding.len() == world.resource::<crate::scenes::Scenes>().tabs.len() {
         return false;
     }
     for index in holding.into_iter().rev() {
@@ -783,6 +787,11 @@ fn move_file(world: &mut World, path: &Path, folder: &Path) {
     // The referrers table the rewrite matches against is the one from before
     // the move.
     crate::asset_index::rescan_asset_index(world);
+    // A folder the open-tab watcher holds a handle inside cannot be moved on
+    // Windows; the watches under it are let go first.
+    if path.is_dir() {
+        crate::scenes::external_watch::release_watch_under(world, &path);
+    }
     if let Err(err) = std::fs::rename(&path, &target) {
         warn_caller(
             world,

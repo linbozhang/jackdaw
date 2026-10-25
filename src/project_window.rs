@@ -2211,6 +2211,12 @@ fn rename_file(world: &mut World, path: &Path, name: &str) {
     // file moves: once the old path is gone, a reference spelling it no
     // longer resolves, and the table would lose its holders.
     crate::asset_index::rescan_asset_index(world);
+    // A folder the open-tab watcher holds a handle inside cannot be renamed
+    // on Windows; the watches under it are let go first, and the next tab
+    // change rebuilds them wherever the tabs land.
+    if path.is_dir() {
+        crate::scenes::external_watch::release_watch_under(world, &path);
+    }
     // A name the file already answers to under another casing reads as taken
     // on a filesystem that ignores case, so the rename goes through a
     // momentary in-between name to land it (W11).
