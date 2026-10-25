@@ -22,7 +22,9 @@ pub(crate) fn add_to_extension(ctx: &mut ExtensionContext) {
         .register_operator::<SceneSwitchOp>()
         .register_operator::<SceneSaveAllOp>()
         .register_operator::<SceneCycleNextOp>()
-        .register_operator::<SceneCyclePrevOp>();
+        .register_operator::<SceneCyclePrevOp>()
+        .register_operator::<crate::scenes::recovery_dialog::RecoveryRestoreOp>()
+        .register_operator::<crate::scenes::recovery_dialog::RecoveryDismissOp>();
     ctx.register_menu_entry::<SceneNewOp>(TopLevelMenu::File)
         .register_menu_entry::<SceneOpenOp>(TopLevelMenu::File)
         .register_menu_entry::<SceneSaveAllOp>(TopLevelMenu::File)
@@ -165,7 +167,10 @@ pub fn scene_new_configured(world: &mut World, kind: SceneKind, path: Option<&st
 /// Activate a tab that was just appended. The first tab cannot go through
 /// `swap_active_tab`: `Scenes.active` defaults to 0, so swap would see
 /// `current == target` and no-op without loading the document.
-fn activate_pushed_tab(world: &mut World, target: usize) {
+/// Activate the tab just pushed at `target`, capturing whatever was in
+/// front. `pub(crate)` for the recovery dialog, which pushes restored
+/// tabs the same way an open does.
+pub(crate) fn activate_pushed_tab(world: &mut World, target: usize) {
     let tab_count = world.resource::<Scenes>().tabs.len();
     if tab_count == 1 {
         world.resource_mut::<Scenes>().active = target;

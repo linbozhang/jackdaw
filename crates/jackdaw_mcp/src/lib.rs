@@ -795,6 +795,20 @@ impl JackdawMcp {
         )
         .await
     }
+
+    /// What a crashed session left behind, ready to restore.
+    #[tool(
+        description = "The crash journal's leftovers for the open project: every session a \
+                       killed editor left (`available=false` when there is nothing to restore), \
+                       each tab summarized (path, kind, captured/saved times, entity count, \
+                       line diff against the file on disk). Restore a tab with \
+                       call_operator(id: \"recovery.restore\", params: {session, tab}), drop \
+                       one or all with \"recovery.dismiss\". Restoring opens an unsaved dirty \
+                       tab; nothing is written until an explicit save."
+    )]
+    pub async fn recovery(&self) -> Result<CallToolResult, ErrorData> {
+        self.brp_text("jackdaw/recovery", json!({})).await
+    }
 }
 
 #[tool_handler(router = self.tool_router)]

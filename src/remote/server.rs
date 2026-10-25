@@ -150,6 +150,7 @@ impl Plugin for JackdawEditorRemotePlugin {
                     .with_method_main("jackdaw/batch", batch_handler)
                     .with_method_main("jackdaw/cancel", cancel_handler)
                     .with_method_main("jackdaw/history", history_handler)
+                    .with_method_main("jackdaw/recovery", recovery_handler)
                     .with_method_main("jackdaw/scene_tree", scene_tree_handler)
                     .with_method_main("jackdaw/entity", entity_handler)
                     .with_method_main("jackdaw/apply_bsn", apply_bsn_handler)
@@ -508,6 +509,74 @@ pub fn status_handler(In(_): In<Option<Value>>, world: &mut World) -> BrpResult 
 /// The undo/redo state of the active scene tab: stack lengths, the tab's
 /// dirty flag and save-point depth, and the newest entries' labels.
 ///
+/// What the crash journal can offer to restore: every leftover session of
+/// the open project, its tabs summarized. Restoring and dismissing go
+/// through the `recovery.restore` / `recovery.dismiss` operators.
+pub fn recovery_handler(In(_): In<Option<Value>>, world: &mut World) -> BrpResult {
+    check_enabled(world)?;
+    let own = crate::scene_io::session_journal::session_dir(world);
+    let Some(root) = crate::scenes::recovery_dialog::leftover_root(world) else {
+        return Ok(json!({ "available": false, "sessions": [] }));
+    };
+    let mut sessions = Vec::new();
+    for dir in crate::scene_io::session_journal::list_sessions(&root) {
+        if Some(&dir) == own.as_ref() || !dir.join("journal.json").is_file() {
+            continue;
+        }
+        // `read_session_journal` warns and reads as absent on damage; the
+        // directory is still listed so a caller can dismiss it.
+        let name = dir
+            .file_name()
+            .map(|name| name.to_string_lossy().into_owned())
+            .unwrap_or_default();
+        let updated = std::fs::metadata(&dir)
+            .and_then(|meta| meta.modified())
+            .ok()
+            .and_then(|time| time.duration_since(std::time::UNIX_EPOCH).ok())
+            .map(|since| since.as_secs());
+        let Some(journal) = crate::scene_io::session_journal::read_session_journal(&dir) else {
+            sessions.push(json!({
+                "session": name,
+                "updated": updated,
+                "damaged": true,
+                "tabs": [],
+            }));
+            continue;
+        };
+        let tabs: Vec<Value> = journal
+            .tabs
+            .iter()
+            .enumerate()
+            .map(|(index, tab)| {
+                json!({
+                    "index": index,
+                    "path": tab.path,
+                    "kind": tab.kind,
+                    "display_name": tab.display_name,
+                    "captured_at": tab.captured_at,
+                    "saved_at": tab.saved_at,
+                    "entity_count": tab.entity_count,
+                    "diff": crate::scenes::recovery_dialog::diff_summary(tab),
+                })
+            })
+            .collect();
+        sessions.push(json!({
+            "session": name,
+            "started": journal.started,
+            "updated": updated,
+            "damaged": false,
+            "tabs": tabs,
+        }));
+    }
+    let available = sessions
+        .iter()
+        .any(|session| !session["damaged"].as_bool().unwrap_or(false));
+    Ok(json!({
+        "available": available,
+        "sessions": sessions,
+    }))
+}
+
 /// This is what a caller asserts a gesture against: one user action — a
 /// click, a chord, a drag that commits — should leave exactly one new undo
 /// entry, and an undo that returns to the saved document should read clean.

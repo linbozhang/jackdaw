@@ -15,6 +15,7 @@ mod feathers_composition;
 mod keyframe_undo;
 mod numeric_transform_undo;
 mod record_counts;
+mod recovery;
 mod remote_debug_smoke;
 mod scaffolded_component_flow;
 mod session_journal;

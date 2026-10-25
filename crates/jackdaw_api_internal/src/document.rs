@@ -97,6 +97,11 @@ pub struct SceneRenamed {
 /// slot: the rename overwrites the previous backup), so a save that landed
 /// something unwanted can be walked back exactly one version -- the same
 /// convention the legacy `.jsn.bak` migration established.
+///
+/// The temp name is unique per in-flight write in this process (`-1`,
+/// `-2`, ... on collision), so a save writing synchronously beside a
+/// journal snapshot writing on the IO pool never stage through the same
+/// file.
 pub fn write_atomic(path: &std::path::Path, contents: &[u8]) -> std::io::Result<()> {
     use std::io::Write as _;
 
@@ -104,20 +109,43 @@ pub fn write_atomic(path: &std::path::Path, contents: &[u8]) -> std::io::Result<
     let file_name = path
         .file_name()
         .ok_or_else(|| std::io::Error::other(format!("{} has no file name", path.display())))?;
-    let temp_path = parent.join(format!(
-        ".{}.tmp-{}",
-        file_name.to_string_lossy(),
-        std::process::id()
-    ));
-    let staged = (|| -> std::io::Result<()> {
-        let mut file = std::fs::File::create(&temp_path)?;
-        file.write_all(contents)?;
-        file.sync_all()
-    })();
-    if let Err(err) = staged {
-        let _ = std::fs::remove_file(&temp_path);
-        return Err(err);
+    // The un-suffixed name first, then one attempt per retry slot. A test
+    // occupies every slot to prove a write that cannot stage fails rather
+    // than writing around the staging step.
+    static RETRIES: u32 = 8;
+    let mut staged = Err(std::io::Error::other("no staging attempt was made"));
+    let mut temp_path = None;
+    for attempt in 0..=RETRIES {
+        let suffix = if attempt == 0 {
+            String::new()
+        } else {
+            format!("-{attempt}")
+        };
+        let candidate = parent.join(format!(
+            ".{}.tmp-{}{suffix}",
+            file_name.to_string_lossy(),
+            std::process::id()
+        ));
+        let result = (|| -> std::io::Result<()> {
+            let mut file = std::fs::File::create(&candidate)?;
+            file.write_all(contents)?;
+            file.sync_all()
+        })();
+        match result {
+            Ok(()) => {
+                temp_path = Some(candidate);
+                staged = Ok(());
+                break;
+            }
+            Err(err) if attempt == RETRIES => {
+                staged = Err(err);
+            }
+            Err(_) => continue,
+        }
     }
+    let Some(temp_path) = temp_path else {
+        return staged;
+    };
     if path.exists() {
         // Two renames with a roll-back: if the second one fails, the old
         // file comes back from the backup rather than being lost. Between
@@ -155,9 +183,10 @@ const TEMP_FRESH_WINDOW: std::time::Duration = std::time::Duration::from_secs(60
 const TEMP_SWEEP_SKIPPED_DIRS: &[&str] = &[".git", "target"];
 
 /// Whether `name` is the shape [`write_atomic`] names its staged files:
-/// `.<document name>.tmp-<pid of the writer>`. The pattern is deliberately
-/// narrow -- a leading dot, a `.tmp-` separator, and a decimal pid -- so
-/// nothing a user or another tool named is ever mistaken for one.
+/// `.<document name>.tmp-<pid of the writer>` with an optional collision
+/// suffix (`-1`, `-2`, ...). The pattern is deliberately narrow -- a leading
+/// dot, a `.tmp-` separator, and decimal digits -- so nothing a user or
+/// another tool named is ever mistaken for one.
 fn is_temp_file_name(name: &std::ffi::OsStr) -> bool {
     let Some(name) = name.to_str() else {
         return false;
@@ -169,7 +198,7 @@ fn is_temp_file_name(name: &std::ffi::OsStr) -> bool {
         && at > 1 // a document name sits between the dot and the separator
         && name[at + 5..]
             .bytes()
-            .all(|byte| byte.is_ascii_digit())
+            .all(|byte| byte.is_ascii_digit() || byte == b'-')
         && !name[at + 5..].is_empty()
 }
 
@@ -285,23 +314,50 @@ mod tests {
         assert_eq!(leftover, 0, "no temp file survives a successful write");
     }
 
-    /// A write whose staging fails (the temp slot is occupied) must leave
-    /// the old file untouched and report the error.
+    /// A write whose staging fails (every temp slot is occupied) must
+    /// leave the old file untouched and report the error.
     #[test]
     fn write_atomic_failure_leaves_the_old_file() {
         let dir = tempfile::tempdir().expect("temp dir");
         let path = dir.path().join("zone.bsn");
         std::fs::write(&path, b"old").expect("seed the old file");
-        std::fs::create_dir(
-            dir.path()
-                .join(format!(".zone.bsn.tmp-{}", std::process::id())),
-        )
-        .expect("occupy the temp slot");
+        for suffix in
+            std::iter::once(String::new()).chain((1..=8).map(|attempt| format!("-{attempt}")))
+        {
+            std::fs::create_dir(
+                dir.path()
+                    .join(format!(".zone.bsn.tmp-{}{suffix}", std::process::id())),
+            )
+            .expect("occupy every temp slot");
+        }
 
         let result = write_atomic(&path, b"new contents");
 
-        assert!(result.is_err(), "the occupied slot fails the write");
+        assert!(result.is_err(), "the occupied slots fail the write");
         assert_eq!(std::fs::read(&path).unwrap(), b"old");
+    }
+
+    /// Two writes racing through the same directory stage through distinct
+    /// temp names: the collision suffix keeps one from truncating the
+    /// other's staged file.
+    #[test]
+    fn write_atomic_names_distinct_temps_per_call() {
+        let dir = tempfile::tempdir().expect("temp dir");
+        let path = dir.path().join("zone.bsn");
+        write_atomic(&path, b"first").expect("the first write lands");
+        // The second write stages beside whatever the first left (nothing,
+        // on success) and must not collide with a held slot of the first's
+        // name.
+        let held = dir
+            .path()
+            .join(format!(".zone.bsn.tmp-{}", std::process::id()));
+        std::fs::create_dir(&held).expect("hold the base slot with a directory");
+        write_atomic(&path, b"second").expect("the retried write lands through a suffix");
+        assert_eq!(std::fs::read(&path).unwrap(), b"second");
+        assert!(
+            held.is_dir(),
+            "the held slot is never written into or removed"
+        );
     }
 
     /// An existing file is rotated to a single `.bak` slot before the new
