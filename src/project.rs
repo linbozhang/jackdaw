@@ -308,7 +308,35 @@ pub fn save_project_config(root: &Path, config: &ProjectConfig) -> std::io::Resu
     let path = dir.join("project.json");
     let data = serde_json::to_string_pretty(config)
         .map_err(|e| std::io::Error::new(std::io::ErrorKind::InvalidData, e))?;
-    std::fs::write(&path, data)
+    // The config is rewritten on every scene save, so a crash mid-write
+    // would otherwise corrupt the layout the user actually has.
+    jackdaw_api_internal::document::write_atomic(&path, data.as_bytes())
+}
+
+/// Rename a `.jackdaw/project.json` that is present but does not parse out
+/// of the way (`project.json.corrupt-<millis>`), so a default config can
+/// replace it without destroying the damaged bytes. Returns the backup
+/// path, or `None` when there is nothing damaged to move. Call after
+/// [`load_project_config`] came back `None` and before
+/// [`create_default_project`] writes over the location.
+pub fn back_up_corrupt_project_config(root: &Path) -> Option<std::path::PathBuf> {
+    let path = root.join(".jackdaw").join("project.json");
+    if !path.is_file() {
+        return None;
+    }
+    // A file that cannot even be read counts as damaged too.
+    let damaged = std::fs::read_to_string(&path)
+        .map(|data| parse_project_config(&data).is_none())
+        .unwrap_or(true);
+    if !damaged {
+        return None;
+    }
+    let millis = std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .map(|since| since.as_millis())
+        .unwrap_or_default();
+    let backup = path.with_file_name(format!("project.json.corrupt-{millis}"));
+    std::fs::rename(&path, &backup).ok().map(|_| backup)
 }
 
 pub fn load_project_config(root: &Path) -> Option<ProjectConfig> {
@@ -356,7 +384,7 @@ pub fn create_default_project(root: &Path) -> ProjectConfig {
     let _ = std::fs::create_dir_all(&dir);
     let path = dir.join("project.json");
     if let Ok(data) = serde_json::to_string_pretty(&config) {
-        let _ = std::fs::write(&path, data);
+        let _ = jackdaw_api_internal::document::write_atomic(&path, data.as_bytes());
     }
 
     config

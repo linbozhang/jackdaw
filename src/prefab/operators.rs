@@ -2019,7 +2019,10 @@ pub fn save_prefab_to_disk(world: &mut World, prefab_path: &Path) -> std::io::Re
     if write_path != prefab_path {
         back_up_legacy_prefab(prefab_path);
     }
-    std::fs::write(&write_path, text)?;
+    // The prefab is authoritative authored data: it lands through the same
+    // temp-and-rename write the scene text uses, so an interrupted save
+    // cannot truncate the file the project already has.
+    jackdaw_api_internal::document::write_atomic(&write_path, text.as_bytes())?;
 
     let fingerprint = crate::prefab::cache::compute_file_fingerprint(&write_path)?;
     world

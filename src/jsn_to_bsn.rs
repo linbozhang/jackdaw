@@ -297,7 +297,11 @@ pub fn convert_scene_file_pending(
 /// Write an accepted conversion out: the `.bsn` sibling, the original kept
 /// as `.jsn.bak`, and any legacy prefabs the scene inherits from.
 pub fn commit_conversion(world: &mut World, pending: PendingConversion) -> Result<(), BevyError> {
-    std::fs::write(&pending.bsn_path, &pending.scene_bsn)?;
+    // The converted scene is authoritative authored data: it lands through
+    // the atomic write the editor's own save uses, stamped with the same
+    // provenance line that save records at its disk boundary.
+    let stamped = crate::scene_io::stamp::with_stamp(&pending.scene_bsn);
+    jackdaw_api_internal::document::write_atomic(&pending.bsn_path, stamped.as_bytes())?;
     std::fs::rename(&pending.source, backup_path(&pending.source))?;
     convert_prefab_dependencies(world, &pending);
     Ok(())
@@ -372,7 +376,12 @@ fn convert_catalog_file(world: &mut World, path: &Path) -> Result<(), BevyError>
     let refs = catalog_refs(&local_assets);
     let catalog_bsn = serialize_assets_to_bsn(world, &refs);
 
-    std::fs::write(path.with_extension("bsn"), catalog_bsn)?;
+    // The catalog is an asset document rather than a scene, so it takes the
+    // atomic write but not the scene's provenance stamp.
+    jackdaw_api_internal::document::write_atomic(
+        &path.with_extension("bsn"),
+        catalog_bsn.as_bytes(),
+    )?;
     std::fs::rename(path, backup_path(path))?;
     Ok(())
 }

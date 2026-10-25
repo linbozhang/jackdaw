@@ -88,8 +88,13 @@ pub struct SceneRenamed {
 /// The editor writes scenes this way.
 ///
 /// The temporary file sits in `path`'s own directory: a rename across
-/// filesystems is not atomic, and fails outright on most platforms.
+/// filesystems is not atomic, and fails outright on most platforms. The
+/// staged write is flushed to the storage device (`sync_all`) before the
+/// rename, so a power loss after the rename cannot surface a half-written
+/// file either.
 pub fn write_atomic(path: &std::path::Path, contents: &[u8]) -> std::io::Result<()> {
+    use std::io::Write as _;
+
     let parent = path.parent().unwrap_or_else(|| std::path::Path::new("."));
     let file_name = path
         .file_name()
@@ -99,7 +104,12 @@ pub fn write_atomic(path: &std::path::Path, contents: &[u8]) -> std::io::Result<
         file_name.to_string_lossy(),
         std::process::id()
     ));
-    if let Err(err) = std::fs::write(&temp_path, contents) {
+    let staged = (|| -> std::io::Result<()> {
+        let mut file = std::fs::File::create(&temp_path)?;
+        file.write_all(contents)?;
+        file.sync_all()
+    })();
+    if let Err(err) = staged {
         let _ = std::fs::remove_file(&temp_path);
         return Err(err);
     }
@@ -108,6 +118,73 @@ pub fn write_atomic(path: &std::path::Path, contents: &[u8]) -> std::io::Result<
         return Err(err);
     }
     Ok(())
+}
+
+/// How recently a temp file must have been touched before the sweep will
+/// take it. A concurrent editor instance mid-write holds a fresh one; a
+/// killed save's leftover is minutes old.
+const TEMP_FRESH_WINDOW: std::time::Duration = std::time::Duration::from_secs(60);
+
+/// Directories the sweep does not enter: version control and build output
+/// never hold an editor temp file, and skipping them keeps the startup walk
+/// proportional to the project's assets, not its history.
+const TEMP_SWEEP_SKIPPED_DIRS: &[&str] = &[".git", "target"];
+
+/// Whether `name` is the shape [`write_atomic`] names its staged files:
+/// `.<document name>.tmp-<pid of the writer>`. The pattern is deliberately
+/// narrow -- a leading dot, a `.tmp-` separator, and a decimal pid -- so
+/// nothing a user or another tool named is ever mistaken for one.
+fn is_temp_file_name(name: &std::ffi::OsStr) -> bool {
+    let Some(name) = name.to_str() else {
+        return false;
+    };
+    let Some(at) = name.rfind(".tmp-") else {
+        return false;
+    };
+    name.starts_with('.')
+        && at > 1 // a document name sits between the dot and the separator
+        && name[at + 5..]
+            .bytes()
+            .all(|byte| byte.is_ascii_digit())
+        && !name[at + 5..].is_empty()
+}
+
+/// Delete the `.<name>.tmp-<pid>` files a killed save left under `root`,
+/// so interrupted writes do not litter the project forever. Files touched
+/// within [`TEMP_FRESH_WINDOW`] are left alone (another editor instance may
+/// be mid-write); nothing that does not match the editor's own temp naming
+/// is touched. Returns how many files were removed.
+pub fn sweep_orphan_temp_files(root: &std::path::Path) -> usize {
+    let mut removed = 0;
+    let mut stack = vec![root.to_path_buf()];
+    while let Some(dir) = stack.pop() {
+        let Ok(entries) = std::fs::read_dir(&dir) else {
+            continue;
+        };
+        for entry in entries.flatten() {
+            let Ok(file_type) = entry.file_type() else {
+                continue;
+            };
+            let path = entry.path();
+            if file_type.is_dir() {
+                if TEMP_SWEEP_SKIPPED_DIRS.contains(&entry.file_name().to_string_lossy().as_ref()) {
+                    continue;
+                }
+                stack.push(path);
+            } else if is_temp_file_name(&entry.file_name())
+                && entry
+                    .metadata()
+                    .and_then(|meta| meta.modified())
+                    .is_ok_and(|modified| {
+                        modified.elapsed().is_ok_and(|age| age >= TEMP_FRESH_WINDOW)
+                    })
+                && std::fs::remove_file(&path).is_ok()
+            {
+                removed += 1;
+            }
+        }
+    }
+    removed
 }
 
 /// A stashed [`SceneResource`] value, held by an inactive scene tab.
@@ -158,5 +235,91 @@ impl SceneResource {
     /// Put back a value [`Self::take`] gave, or the default for `None`.
     pub fn restore(&self, world: &mut World, value: Option<SceneResourceValue>) {
         (self.restore)(world, value);
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    /// The staged write replaces the target wholesale and leaves no temp
+    /// file behind on success.
+    #[test]
+    fn write_atomic_replaces_and_cleans_up() {
+        let dir = tempfile::tempdir().expect("temp dir");
+        let path = dir.path().join("zone.bsn");
+        std::fs::write(&path, b"old").expect("seed the old file");
+
+        write_atomic(&path, b"new contents").expect("the write lands");
+
+        assert_eq!(std::fs::read(&path).unwrap(), b"new contents");
+        let leftover = std::fs::read_dir(dir.path())
+            .unwrap()
+            .flatten()
+            .filter(|entry| is_temp_file_name(&entry.file_name()))
+            .count();
+        assert_eq!(leftover, 0, "no temp file survives a successful write");
+    }
+
+    /// A write whose staging fails (the temp slot is occupied) must leave
+    /// the old file untouched and report the error.
+    #[test]
+    fn write_atomic_failure_leaves_the_old_file() {
+        let dir = tempfile::tempdir().expect("temp dir");
+        let path = dir.path().join("zone.bsn");
+        std::fs::write(&path, b"old").expect("seed the old file");
+        std::fs::create_dir(
+            dir.path()
+                .join(format!(".zone.bsn.tmp-{}", std::process::id())),
+        )
+        .expect("occupy the temp slot");
+
+        let result = write_atomic(&path, b"new contents");
+
+        assert!(result.is_err(), "the occupied slot fails the write");
+        assert_eq!(std::fs::read(&path).unwrap(), b"old");
+    }
+
+    /// The sweep takes exactly the editor's own dead temp files: old ones
+    /// go, fresh ones (a possible concurrent writer) and lookalikes stay,
+    /// and skipped directories are not entered.
+    #[test]
+    fn sweep_takes_only_stale_editor_temps() {
+        let dir = tempfile::tempdir().expect("temp dir");
+        let assets = dir.path().join("assets");
+        std::fs::create_dir_all(assets.join("sub")).expect("folders");
+        std::fs::create_dir_all(dir.path().join(".git")).expect("git dir");
+
+        let stale = assets.join(".zone.bsn.tmp-999999");
+        std::fs::write(&stale, b"half a save").expect("seed");
+        let fresh = assets.join(".zone.bsn.tmp-888888");
+        std::fs::write(&fresh, b"mid-save").expect("seed");
+        let dot_keeping = assets.join(".zone.bsn.tmp-7777"); // four-digit pid
+        std::fs::write(&dot_keeping, b"also a temp").expect("seed");
+        let user_file = assets.join("zone.bsn.tmp-1");
+        std::fs::write(&user_file, b"user's file").expect("seed");
+        let not_a_pid = assets.join(".zone.bsn.tmp-not-a-pid");
+        std::fs::write(&not_a_pid, b"user's file").expect("seed");
+        let in_git = dir.path().join(".git/.pack.tmp-12345");
+        std::fs::write(&in_git, b"git's file").expect("seed");
+
+        for (path, age) in [(&stale, 120), (&dot_keeping, 120), (&in_git, 120)] {
+            let file = std::fs::OpenOptions::new()
+                .write(true)
+                .open(path)
+                .expect("open for mtime");
+            file.set_modified(std::time::SystemTime::now() - std::time::Duration::from_secs(age))
+                .expect("backdate");
+        }
+
+        let removed = sweep_orphan_temp_files(dir.path());
+
+        assert_eq!(removed, 2, "the stale editor temps under assets/");
+        assert!(!stale.exists(), "stale temp swept");
+        assert!(!dot_keeping.exists(), "stale temp in the subdir swept");
+        assert!(fresh.exists(), "fresh temp kept for a concurrent writer");
+        assert!(user_file.exists(), "no leading dot: not ours");
+        assert!(not_a_pid.exists(), "suffix is not a pid: not ours");
+        assert!(in_git.exists(), "skipped directories are not entered");
     }
 }
