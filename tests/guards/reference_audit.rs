@@ -250,9 +250,9 @@ fn an_open_tabs_isa_source_is_judged_by_its_relative_spelling() {
 }
 
 /// The startup walk fills the index on its own — no test rescan asked for
-/// it. This is the guard that keeps the real-machine path (OnEnter the
+/// it. This is the guard that keeps the real-machine path (`OnEnter` the
 /// editor state, the async walk, the apply) from silently going dark while
-/// the tests keep it alive by hand (the QA 🔴).
+/// the tests keep it alive by hand (the QA finding).
 #[test]
 fn the_startup_walk_fills_the_index_without_a_manual_rescan() {
     let tmp = tempfile::Builder::new()

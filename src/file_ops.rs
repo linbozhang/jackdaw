@@ -788,9 +788,11 @@ fn move_file(world: &mut World, path: &Path, folder: &Path) {
     // the move.
     crate::asset_index::rescan_asset_index(world);
     // A folder the open-tab watcher holds a handle inside cannot be moved on
-    // Windows; the watches under it are let go first.
+    // Windows; the watches under it are let go first, and the prefab watcher
+    // lets go the same way.
     if path.is_dir() {
         crate::scenes::external_watch::release_watch_under(world, &path);
+        crate::prefab::watcher::release_watch_under(world, &path);
     }
     if let Err(err) = std::fs::rename(&path, &target) {
         warn_caller(

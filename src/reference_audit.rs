@@ -131,6 +131,18 @@ fn open_tab_documents(world: &mut World) -> Vec<(PathBuf, SceneBsnAst)> {
         else {
             continue;
         };
+        // Only a tab with unsaved edits stands in for its file; a clean
+        // tab's document is the file on disk, which a rename or a move has
+        // already rewritten (a prefab tab's cache snapshot lags the disk
+        // until it is reopened, and would name references gone from it).
+        let dirty = world
+            .resource::<crate::scenes::Scenes>()
+            .tabs
+            .get(index)
+            .is_some_and(|tab| tab.dirty);
+        if !dirty {
+            continue;
+        }
         if let Some(mut ast) = stashed_ast(world, index) {
             // An open tab's document spells its prefab sources absolutely —
             // the load made them so, and the save folds them back — so the

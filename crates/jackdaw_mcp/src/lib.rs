@@ -809,6 +809,22 @@ impl JackdawMcp {
     pub async fn recovery(&self) -> Result<CallToolResult, ErrorData> {
         self.brp_text("jackdaw/recovery", json!({})).await
     }
+
+    /// Every reference the project holds that does not resolve.
+    #[tool(
+        description = "The missing-reference audit: one entry per reference the project's \
+                       documents hold that does not resolve ({document, entity, component, \
+                       field, reference, kind}), a `kind` of `Missing`, `Ambiguous` (two files \
+                       carry the bare name) or `MachinePath` (a path on one machine), plus a \
+                       one-line `summary`. Put the list on screen with \
+                       call_operator(id: \"asset.missing_list\"), rebind one entry with \
+                       call_operator(id: \"asset.rebind\", params: {document, component, \
+                       field, reference, to}); the document's tab must be open, and the tab \
+                       turns dirty until its own save."
+    )]
+    pub async fn audit(&self) -> Result<CallToolResult, ErrorData> {
+        self.brp_text("jackdaw/audit", json!({})).await
+    }
 }
 
 #[tool_handler(router = self.tool_router)]

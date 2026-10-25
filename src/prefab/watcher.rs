@@ -81,6 +81,61 @@ fn open_prefab_tab_paths(world: &World) -> Vec<PathBuf> {
         .collect()
 }
 
+/// Drop the watches on prefab files at or under `moved`, so a rename or a
+/// move can carry the folder past this watcher too — Windows refuses to
+/// rename a directory whose subtree holds one (the same release the open-tab
+/// watcher makes). The watch is rebuilt over the paths that stay; the next
+/// change to the cache, the live document or the tabs rebuilds it again
+/// wherever the moved files land.
+pub fn release_watch_under(world: &mut World, moved: &Path) {
+    let moved = dunce::canonicalize(moved).unwrap_or_else(|_| moved.to_path_buf());
+    let Some(mut state) = world.get_resource_mut::<PrefabWatchState>() else {
+        return;
+    };
+    let kept: Vec<PathBuf> = state
+        .watched
+        .iter()
+        .filter(|watched| {
+            let held = dunce::canonicalize(watched).unwrap_or_else(|_| (*watched).clone());
+            !(held == moved || held.starts_with(&moved))
+        })
+        .cloned()
+        .collect();
+    if kept.len() == state.watched.len() {
+        return;
+    }
+    let pending = state.pending.clone();
+    let Ok(mut watcher) = notify::recommended_watcher(move |res: notify::Result<Event>| {
+        if let Ok(ev) = res
+            && matches!(
+                ev.kind,
+                EventKind::Modify(_) | EventKind::Create(_) | EventKind::Remove(_)
+            )
+            && let Ok(mut lock) = pending.lock()
+        {
+            for p in ev.paths {
+                lock.push(p);
+            }
+        }
+    }) else {
+        return;
+    };
+    let mut folders: Vec<&Path> = Vec::new();
+    for path in &kept {
+        if let Some(folder) = path.parent()
+            && !folders.contains(&folder)
+        {
+            folders.push(folder);
+        }
+    }
+    for folder in folders {
+        let _ = watcher.watch(folder, RecursiveMode::NonRecursive);
+    }
+    state.watched_canonical.clear();
+    state.watcher = Some(watcher);
+    state.watched = kept;
+}
+
 /// Watch the folder of every prefab file rather than the file: a save by
 /// rename puts a new file where the watched one stood, and a watch on the file
 /// stays with the one replaced. [`drain_changes`] keeps the events for watched

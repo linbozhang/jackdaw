@@ -18,6 +18,7 @@
 - [Terrain](user-guide/terrain.md)
 - [Physics](user-guide/physics.md)
 - [Scene Management](user-guide/scene-management.md)
+- [Asset References](user-guide/asset-references.md)
 - [Resources](user-guide/resources.md)
 - [Graphics Panel](user-guide/graphics-panel.md)
 - [Play-in-editor](user-guide/play-in-editor.md)
