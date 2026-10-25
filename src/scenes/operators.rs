@@ -573,6 +573,16 @@ pub(crate) fn open_read_scene(world: &mut World, read: ReadScene) {
         tab.observed_undo_len = history_len;
         tab.observed_pushes = history_pushes;
     }
+    // A freshly loaded scene says once which of its references name nothing
+    // the project holds, instead of the per-field silence the materials and
+    // textures otherwise load with (N5). A prefab keeps its own per-source
+    // complaints.
+    if kind == crate::scenes::TabKind::Scene
+        && let Some(live) = world.get_resource::<jackdaw_bsn::SceneBsnAst>()
+    {
+        let live = live.deep_clone();
+        crate::reference_audit::warn_on_load(world, &canonical, &live);
+    }
     crate::scenes::load_progress::scene_spawned(world, target);
 }
 

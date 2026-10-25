@@ -267,6 +267,11 @@ pub(crate) fn save_scene_inner(world: &mut World) -> Result<(), BevyError> {
         )));
     }
 
+    // Entity fields are saved as raw ids (the N6 probe among the audit
+    // tests pins the spelling); a save says so when one points outside the
+    // document, before the id outlives the world that minted it.
+    crate::reference_audit::warn_on_dangling_entity_fields(world);
+
     // If the active tab is a prefab, flush the live AST into the cache
     // and persist via the prefab-aware writer. Reflect-serializing the
     // live world would drop the `Prefab` marker (its deserializer fails,

@@ -47,6 +47,13 @@ pub struct CatalogAssetRef {
 /// (as [`serialize_assets_to_bsn`] emits) or hold a single flat entry.
 /// [`parse_bsn_text`] normalizes both into `SceneBsnAst::roots`, so each root
 /// is one entry here.
+///
+/// Loading is two-phase, so an entry may reference a sibling by its `#Name`:
+/// the first pass stands every entry up in its store under its own handle
+/// (resolving nothing), the second re-reads each value with the siblings'
+/// handles at hand and moves it into the handle the first pass made. An
+/// asset's reference to one defined beside it in the same document therefore
+/// survives the load (Y31).
 pub fn load_bsn_assets(
     world: &mut World,
     bsn_text: &str,
@@ -55,14 +62,10 @@ pub fn load_bsn_assets(
 
     let registry = world.resource::<AppTypeRegistry>().clone();
     let server = world.get_resource::<AssetServer>().cloned();
-    let assets_ctx = server.as_ref().map(|s| crate::BsnApplyAssets {
-        server: s,
-        local: None,
-    });
     let reg = registry.read();
 
-    let mut entries = Vec::new();
-
+    // What one root holds, and the handle the first pass stood it up under.
+    let mut parsed: Vec<(String, UntypedHandle, std::any::TypeId, BsnValue)> = Vec::new();
     for &root in &ast.roots {
         let Some(name) = ast.get_name(root).map(str::to_owned) else {
             continue;
@@ -70,7 +73,6 @@ pub fn load_bsn_assets(
         let Some((type_path, asset_value)) = asset_value_from_root(&ast, root) else {
             continue;
         };
-
         let Some(registration) = reg.get_with_type_path(&type_path) else {
             continue;
         };
@@ -79,12 +81,43 @@ pub fn load_bsn_assets(
         };
         let type_id = registration.type_id();
 
-        let Some(value) = bsn_value_to_reflect(&asset_value, type_id, &reg, assets_ctx.as_ref())
-        else {
-            continue;
-        };
+        // First pass: no assets at hand, so a field naming a sibling holds
+        // the default handle for now — the handle this entry answers to is
+        // what the pass is for.
+        let stood_up = bsn_value_to_reflect(&asset_value, type_id, &reg, None)
+            .map(|value| reflect_asset.add(world, &*value));
+        if let Some(handle) = stood_up {
+            parsed.push((name, handle, type_id, asset_value));
+        }
+    }
 
-        let handle = reflect_asset.add(world, &*value);
+    // The siblings' handles, under both spellings a reference may use.
+    let mut local: bevy::platform::collections::HashMap<String, UntypedHandle> =
+        bevy::platform::collections::HashMap::default();
+    for (name, handle, _, _) in &parsed {
+        local.insert(format!("#{name}"), handle.clone());
+        local.insert(format!("@{name}"), handle.clone());
+    }
+
+    // Second pass: the value again, with the siblings' handles at hand,
+    // moved into the handle the first pass made — a reference to a sibling
+    // now points at it.
+    let mut entries = Vec::new();
+    for (name, handle, type_id, asset_value) in parsed {
+        if let Some(registration) = reg.get(type_id)
+            && let Some(server) = server.as_ref()
+        {
+            let assets_ctx = crate::BsnApplyAssets {
+                server,
+                local: Some(&local),
+            };
+            if let Some(reflect_asset) = registration.data::<ReflectAsset>()
+                && let Some(value) =
+                    bsn_value_to_reflect(&asset_value, type_id, &reg, Some(&assets_ctx))
+            {
+                let _ = reflect_asset.insert(world, handle.id(), &*value);
+            }
+        }
         entries.push(CatalogEntry { name, handle });
     }
 
@@ -313,9 +346,15 @@ fn load_asset_value(
     let type_id = registration.type_id();
 
     let server = world.get_resource::<AssetServer>().cloned();
+    // A single entry has no siblings of its own to resolve against, but the
+    // document it belongs to may have embedded others already loaded, so
+    // those stand in (Y31).
+    let embedded = world
+        .get_resource::<crate::BsnSceneAssets>()
+        .map(|assets| assets.0.clone());
     let assets_ctx = server.as_ref().map(|s| crate::BsnApplyAssets {
         server: s,
-        local: None,
+        local: embedded.as_ref(),
     });
     let value = bsn_value_to_reflect(asset_value, type_id, reg, assets_ctx.as_ref())?;
     Some(reflect_asset.add(world, &*value))

@@ -2223,7 +2223,7 @@ fn rename_file(world: &mut World, path: &Path, name: &str) {
     let only_case_differs = dunce::canonicalize(&target).ok() == dunce::canonicalize(&path).ok();
     if only_case_differs {
         if let Err(err) = rename_through_a_middleman(&path, &target) {
-            crate::status_bar::notify_error(world, format!("'{name}' could not be written: {err}"));
+            rename_failed(world, name, &err);
             return;
         }
     } else {
@@ -2232,7 +2232,7 @@ fn rename_file(world: &mut World, path: &Path, name: &str) {
             return;
         }
         if let Err(err) = std::fs::rename(&path, &target) {
-            crate::status_bar::notify_error(world, format!("'{name}' could not be written: {err}"));
+            rename_failed(world, name, &err);
             return;
         }
     }
@@ -2250,6 +2250,16 @@ fn rename_file(world: &mut World, path: &Path, name: &str) {
     // The card was standing for the old path, and a definition card holds that
     // path to save through, so both are put back on the file under its new name.
     select_path(world, &target);
+}
+
+/// Report a rename that did not land. The watches a folder rename released
+/// ahead of the move are brought back by the refresh this marks the tab
+/// strip for, so outside edits under them are not silently missed.
+fn rename_failed(world: &mut World, name: &str, err: &std::io::Error) {
+    crate::status_bar::notify_error(world, format!("'{name}' could not be written: {err}"));
+    if let Some(mut scenes) = world.get_resource_mut::<crate::scenes::Scenes>() {
+        scenes.set_changed();
+    }
 }
 
 /// Rename `path` to `target` when the two differ only by case, through a

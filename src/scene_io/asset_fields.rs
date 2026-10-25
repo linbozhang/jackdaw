@@ -13,7 +13,7 @@ use jackdaw_scene_types::AssetRef;
 
 use crate::project_types::ProjectTypes;
 
-const ISA_TYPE: &str = "jackdaw::prefab::components::IsA";
+pub(crate) const ISA_TYPE: &str = "jackdaw::prefab::components::IsA";
 const ISA_SOURCE_FIELD: &str = "source";
 
 /// A field naming a file by an absolute path, as the emitter reports it.
@@ -123,7 +123,10 @@ fn names_one_machine(spelling: &str) -> bool {
     }
     let mut chars = spelling.chars();
     let drive = chars.next().is_some_and(|c| c.is_ascii_alphabetic());
-    drive && chars.next() == Some(':') && matches!(chars.next(), Some('/' | '\\'))
+    // `C:x` — a drive letter with whatever follows — names a place on that
+    // machine even without a separator, so it is caught here rather than read
+    // as a file the project holds (W12).
+    drive && chars.next() == Some(':')
 }
 
 fn spelled_paths(value: &BsnValue) -> Vec<String> {
@@ -285,5 +288,27 @@ mod tests {
         assert!(names_one_machine("\\\\host\\share\\crate.bsn"));
         assert!(!names_one_machine("props/crate.bsn"));
         assert!(!names_one_machine("c/crate.bsn"));
+    }
+
+    /// `C:props/x.bsn` — the drive letter with no separator after it — is
+    /// drive-relative on Windows and names a place on that machine, so a
+    /// field spelling it is reported rather than saved (W12).
+    #[test]
+    fn a_drive_relative_spelling_is_a_machine_path_without_a_separator() {
+        assert!(names_one_machine("C:props/x.bsn"));
+        assert!(names_one_machine("z:whatever"));
+        // A colon that does not follow a lone drive letter is still a name
+        // the project could hold.
+        assert!(!names_one_machine("a1:props/x.bsn"));
+        assert!(!names_one_machine(":props/x.bsn"));
+
+        let ast = scene_with(
+            ISA_TYPE,
+            "source",
+            BsnValue::String("C:props/crate.bsn".to_string()),
+        );
+        let found = absolute_asset_fields(&ast, &TypeRegistry::default(), None);
+        assert_eq!(found.len(), 1, "the drive-relative spelling is caught");
+        assert!(refusal(&found).contains("C:props/crate.bsn"));
     }
 }

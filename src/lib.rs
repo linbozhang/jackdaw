@@ -134,6 +134,7 @@ pub mod project_select;
 pub mod project_settings;
 pub mod project_types;
 pub mod project_window;
+pub mod reference_audit;
 pub mod reference_image;
 pub mod reference_rewrite;
 pub mod reflect_default;

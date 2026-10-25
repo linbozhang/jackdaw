@@ -87,8 +87,12 @@ pub(crate) fn spelled_references(world: &World, ast: &SceneBsnAst) -> Vec<String
                 scan_struct(&registry, data, &mut found);
             }
             BsnPatch::TupleStruct(data) => {
+                // A newtype component — a mesh's material, worn as
+                // `MeshMaterial3d(handle)` — holds its reference in the
+                // value at index zero, typed by the tuple's own field.
+                let held = tuple_held_type(&registry, &data.type_path, 0);
                 for value in &data.values {
-                    scan_value(&registry, None, value, &mut found);
+                    scan_value(&registry, held, value, &mut found);
                 }
             }
             BsnPatch::Template(_, Some(fields)) => {
@@ -157,8 +161,9 @@ fn scan_value(
         }
         BsnValue::Struct(data) => scan_struct(registry, data, found),
         BsnValue::TupleStruct(data) => {
+            let held = tuple_held_type(registry, &data.type_path, 0);
             for value in &data.values {
-                scan_value(registry, None, value, found);
+                scan_value(registry, held, value, found);
             }
         }
         BsnValue::List(values) => {
@@ -173,6 +178,24 @@ fn scan_value(
             }
         }
         _ => {}
+    }
+}
+
+/// The type the item at `index` of a tuple struct holds, for a newtype whose
+/// one value is a reference-bearing field.
+fn tuple_held_type(
+    registry: &bevy::reflect::TypeRegistry,
+    type_path: &str,
+    index: usize,
+) -> Option<std::any::TypeId> {
+    match registry
+        .get_with_type_path(type_path)
+        .map(bevy::reflect::TypeRegistration::type_info)?
+    {
+        bevy::reflect::TypeInfo::TupleStruct(info) => info
+            .field_at(index)
+            .map(bevy::reflect::UnnamedField::type_id),
+        _ => None,
     }
 }
 
@@ -266,8 +289,9 @@ pub(crate) fn rewrite_ast(world: &World, ast: &mut SceneBsnAst, moves: &[Referen
                 rewrite_struct(&registry, data, moves, index, &mut replaced);
             }
             BsnPatch::TupleStruct(data) => {
+                let held = tuple_held_type(&registry, &data.type_path, 0);
                 for value in &mut data.values {
-                    rewrite_value(&registry, None, value, moves, index, &mut replaced);
+                    rewrite_value(&registry, held, value, moves, index, &mut replaced);
                 }
             }
             BsnPatch::Template(_, Some(fields)) => {
@@ -344,8 +368,9 @@ fn rewrite_value(
         }
         BsnValue::Struct(data) => rewrite_struct(registry, data, moves, index, replaced),
         BsnValue::TupleStruct(data) => {
+            let held = tuple_held_type(registry, &data.type_path, 0);
             for value in &mut data.values {
-                rewrite_value(registry, None, value, moves, index, replaced);
+                rewrite_value(registry, held, value, moves, index, replaced);
             }
         }
         BsnValue::List(values) => {
@@ -740,6 +765,74 @@ mod tests {
         ));
     }
 
+    /// A newtype component — the shape a mesh's material takes, its handle
+    /// the one value the tuple holds — is rewritten on a rename the same way
+    /// a named field is (the `MeshMaterial3d` probe).
+    #[test]
+    fn a_reference_worn_through_a_newtype_component_is_rewritten_on_rename() {
+        use bevy::asset::AssetPlugin;
+
+        #[derive(Component, Reflect, Default)]
+        #[reflect(Component, Default)]
+        struct Wearer(pub Handle<StandardMaterial>);
+
+        let tmp = tempfile::tempdir().expect("tempdir");
+        let mut app = bevy::app::App::new();
+        app.add_plugins((bevy::app::TaskPoolPlugin::default(), AssetPlugin::default()));
+        app.init_asset::<StandardMaterial>();
+        app.register_asset_reflect::<StandardMaterial>();
+        app.register_type::<StandardMaterial>();
+        app.register_type::<Wearer>();
+        app.insert_resource(crate::project::ProjectRoot {
+            root: tmp.path().to_path_buf(),
+            config: crate::project::ProjectConfig::default(),
+        });
+        app.init_resource::<AssetIndex>();
+        app.init_resource::<crate::asset_files::AssetKindCache>();
+        app.init_resource::<crate::asset_catalog::AssetCatalog>();
+        app.init_resource::<crate::material_assets::MaterialRegistry>();
+        app.init_resource::<crate::scenes::Scenes>();
+
+        std::fs::create_dir_all(tmp.path().join("assets/materials")).expect("the folder is made");
+        std::fs::create_dir_all(tmp.path().join("assets/zones")).expect("the folder is made");
+        std::fs::write(
+            tmp.path().join("assets/materials/rust.material.bsn"),
+            "#rust\nbevy_pbr::pbr_material::StandardMaterial { metallic: 0.25 }\n",
+        )
+        .expect("the material is written");
+        std::fs::write(
+            tmp.path().join("assets/zones/hedgerow.bsn"),
+            format!(
+                "#Mesh\n{}(\"materials/rust.material.bsn\")\n",
+                Wearer::type_path()
+            ),
+        )
+        .expect("the scene is written");
+        crate::asset_index::rescan_asset_index(app.world_mut());
+
+        let file = tmp.path().join("assets/zones/hedgerow.bsn");
+        let moves = [ReferenceMove::Names {
+            path: "materials/rust.material.bsn".to_string(),
+            to: "materials/patinated.material.bsn".to_string(),
+            folder: false,
+        }];
+        let replaced = rewrite_document(app.world_mut(), &file, &moves);
+        assert_eq!(
+            replaced,
+            Some(1),
+            "the newtype's held reference is found and rewritten"
+        );
+        let rewritten = std::fs::read_to_string(&file).expect("the scene reads back");
+        assert!(
+            rewritten.contains("materials/patinated.material.bsn"),
+            "the new value is written: {rewritten}"
+        );
+        assert!(
+            !rewritten.contains("materials/rust.material.bsn"),
+            "the old value is gone: {rewritten}"
+        );
+    }
+
     /// A reference spelled as the binary twin is rewritten as the new path's
     /// own twin — never a second extension stacked on the new path.
     #[test]
@@ -750,13 +843,14 @@ mod tests {
             to: "b/patinated.material.bsn".to_string(),
             folder: false,
         };
+        let one_move = std::slice::from_ref(&moved);
         assert_eq!(
-            replacement("a/rust.material.bsb", &[moved.clone()], &index),
+            replacement("a/rust.material.bsb", one_move, &index),
             Some("b/patinated.material.bsb".to_string()),
             "not b/patinated.material.bsn.bsb"
         );
         assert_eq!(
-            replacement("a/rust.material.bsn", &[moved], &index),
+            replacement("a/rust.material.bsn", one_move, &index),
             Some("b/patinated.material.bsn".to_string()),
             "the exact path replaces with its own spelling"
         );

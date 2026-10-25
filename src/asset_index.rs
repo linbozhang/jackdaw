@@ -556,11 +556,18 @@ fn apply_walk(world: &mut World, walk: AssetWalk) -> AssetRescan {
             .collect::<Vec<_>>()
     };
 
+    // The walk's findings as a set, so a gone check is a lookup rather than
+    // a pass over everything for every entry (W7).
+    let found_set: HashSet<PathBuf> = found
+        .iter()
+        .map(|(relative, _, _)| relative)
+        .cloned()
+        .collect();
     let gone: Vec<PathBuf> = world
         .resource::<AssetIndex>()
         .iter()
         .map(|entry| entry.path.clone())
-        .filter(|path| !found.iter().any(|(relative, _, _)| relative == path))
+        .filter(|path| !found_set.contains(path))
         .collect();
     for path in gone {
         if crate::definition_assets::card_has_unsaved_edits(world, &path) {
@@ -856,12 +863,16 @@ fn start_asset_walk(world: &mut World) {
         return;
     }
     let Some(assets) = assets_dir(world) else {
+        info!("asset index: walk asked with no assets directory open");
         crate::status_bar::finish_phase(world, ASSET_WALK_PHASE);
         return;
     };
+    info!("asset index: walking {} recursively", assets.display());
     let mut cache = std::mem::take(&mut *world.get_resource_or_init::<AssetKindCache>());
     if let Some(kinds) = world.get_resource::<AssetKinds>() {
         cache.follow(kinds);
+    } else {
+        info!("asset index: walking with no kinds registered yet");
     }
     let task = IoTaskPool::get().spawn(async move {
         let walk = walk_assets(&assets, &mut cache);
@@ -890,16 +901,33 @@ fn finish_asset_walk(world: &mut World) {
         return;
     };
     *world.resource_mut::<AssetKindCache>() = cache;
+    let (walked, named, references) = (
+        walk.documents.len(),
+        walk.named.len(),
+        walk.references.len(),
+    );
+    info!("asset index: walk landed (documents {walked}, typed {named}, referencing {references})");
     if world.resource::<AssetIndex>().writes() != task.writes {
         // Something wrote the index while the walk was out -- a file the editor
         // saved, or a rescan asked for outright -- so what the walk found is
         // already behind it. Applying it would take that write back out.
+        info!(
+            "asset index: walk out of date (writes {} -> {}), walking again",
+            task.writes,
+            world.resource::<AssetIndex>().writes()
+        );
         start_asset_walk(world);
         return;
     }
     let scan = apply_walk(world, walk);
     if !scan.added.is_empty() {
         info!("Indexed {} asset files", scan.added.len());
+    } else {
+        info!(
+            "asset index: applied with nothing added (removed {}, reloaded {})",
+            scan.removed.len(),
+            scan.reloaded.len()
+        );
     }
     crate::status_bar::finish_phase(world, ASSET_WALK_PHASE);
 }
