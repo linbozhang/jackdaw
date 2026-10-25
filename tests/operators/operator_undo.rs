@@ -318,21 +318,44 @@ fn entity_toggle_visibility_round_trip() {
 }
 
 /// The history's 256 MiB budget can only trim entries that say what they weigh.
-/// A `SnapshotDiff` holds the whole scene as text twice, and while it answered
+/// A snapshot entry holds the document units it changed, and while it answered
 /// zero the budget never trimmed and a long session grew until the editor died.
-#[test]
-fn a_snapshot_entry_reports_the_document_it_holds() {
+///
+/// The duplicate stands in for any snapshot-backed (mode B) operator: it takes
+/// no asset and always changes the document, unlike the Add family, whose own
+/// `SpawnEntity` push is metadata-only and undo-transparent since the Y1 fix.
+fn one_authored_entity_selected() -> (App, Entity) {
     let mut app = util::editor_test_app();
-
+    let entity = app.world_mut().spawn(Name::new("Doubled")).id();
+    // The snapshot is the emitted document, so an entity outside it would diff
+    // to nothing.
+    jackdaw::scene_io::register_entity_in_ast(app.world_mut(), entity);
     app.world_mut()
-        .operator("entity.add.empty")
+        .resource_mut::<jackdaw::selection::Selection>()
+        .entities = vec![entity];
+    app.update();
+    (app, entity)
+}
+
+fn duplicate_as_user(app: &mut App) {
+    app.world_mut()
+        .operator("entity.duplicate")
         .settings(CallOperatorSettings {
             execution_context: ExecutionContext::Invoke,
             creates_history_entry: true,
         })
         .call()
         .expect("dispatch")
-        .assert_finished_or_panic("entity.add.empty");
+        .assert_finished_or_panic("entity.duplicate");
+    // The duplicate becomes the selection, so the next round copies the copy:
+    // every entry holds a document unit of its own.
+    app.update();
+}
+
+#[test]
+fn a_snapshot_entry_reports_the_document_it_holds() {
+    let (mut app, _entity) = one_authored_entity_selected();
+    duplicate_as_user(&mut app);
 
     let history = app.world().resource::<CommandHistory>();
     let newest = history.undo_stack.last().expect("an entry was pushed");
@@ -346,21 +369,13 @@ fn a_snapshot_entry_reports_the_document_it_holds() {
 /// the whole point of the entries reporting a size.
 #[test]
 fn snapshot_entries_are_trimmed_once_they_pass_the_budget() {
-    let mut app = util::editor_test_app();
+    let (mut app, _entity) = one_authored_entity_selected();
     app.world_mut()
         .resource_mut::<CommandHistory>()
         .budget_bytes = 1;
 
     for _ in 0..4 {
-        app.world_mut()
-            .operator("entity.add.empty")
-            .settings(CallOperatorSettings {
-                execution_context: ExecutionContext::Invoke,
-                creates_history_entry: true,
-            })
-            .call()
-            .expect("dispatch")
-            .assert_finished_or_panic("entity.add.empty");
+        duplicate_as_user(&mut app);
     }
 
     assert_eq!(

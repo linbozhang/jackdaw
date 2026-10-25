@@ -69,6 +69,7 @@ fn can_run_extend_face(
                    tries to resolve a hovered face via raycast once invoked; \
                    if that also fails it returns `Cancelled`.",
     is_available = can_run_extend_face,
+    allows_undo = false,
 )]
 pub(crate) fn brush_extend_face_to_brush(
     _: In<OperatorParameters>,

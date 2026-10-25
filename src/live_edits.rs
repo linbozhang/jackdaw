@@ -628,7 +628,8 @@ fn live_edit_log_has_entries(log: Res<LiveEditLog>) -> bool {
     id = "pie.live_edit_save",
     label = "Save Live Edit",
     description = "Write the pending live edit into the authored scene.",
-    is_available = live_edit_action_pending
+    is_available = live_edit_action_pending,
+    allows_undo = false,
 )]
 pub(crate) fn pie_live_edit_save(
     _: In<OperatorParameters>,
@@ -678,7 +679,8 @@ pub(crate) fn pie_live_edit_revert(
     id = "pie.live_edits_apply_all",
     label = "Apply All Live Edits",
     description = "Write every tracked live edit into the authored scene.",
-    is_available = live_edit_log_has_entries
+    is_available = live_edit_log_has_entries,
+    allows_undo = false,
 )]
 pub(crate) fn pie_live_edits_apply_all(
     _: In<OperatorParameters>,

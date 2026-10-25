@@ -217,6 +217,7 @@ fn jd_mcp_initializes_and_reaches_a_running_editor() {
         "ui_drag",
         "ui_input",
         "camera_state",
+        "history",
     ] {
         assert!(names.contains(&wanted), "no `{wanted}` tool: {names:?}");
     }

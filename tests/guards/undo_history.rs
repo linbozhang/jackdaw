@@ -580,32 +580,52 @@ fn an_edit_on_a_prefab_instance_redoes_after_the_spawn_is_undone_and_redone() {
 #[test]
 fn a_trimmed_history_still_undoes_every_entry_it_kept() {
     let (mut app, _dir) = editor();
+    // The trim needs entries that hold heap: the cube's own `SpawnEntity`
+    // push is metadata-only, so the run places rock instances, whose
+    // framework-snapshot entries carry the document units they changed.
+    let place_rock = |app: &mut App, x: f64| {
+        app.world_mut()
+            .operator("prefab.spawn_instance")
+            .param("path", "prefabs/rock.bsn")
+            .param("pos_x", x)
+            .param("pos_y", 0.0)
+            .param("pos_z", 0.0)
+            .settings(CallOperatorSettings {
+                execution_context: ExecutionContext::Execute,
+                creates_history_entry: true,
+            })
+            .call()
+            .expect("prefab.spawn_instance dispatches")
+            .assert_finished();
+        app.update();
+    };
     let start = depth(&app);
-    cube(&mut app);
-    let per_cube = depth(&app) - start;
-    let one_cube = app.world().resource::<CommandHistory>().heap_bytes();
+    place_rock(&mut app, 1.0);
+    let per_rock = depth(&app) - start;
+    assert_eq!(per_rock, 1, "one placement is one entry");
+    let one_rock = app.world().resource::<CommandHistory>().heap_bytes();
     app.world_mut()
         .resource_mut::<CommandHistory>()
-        .budget_bytes = one_cube * 6;
+        .budget_bytes = one_rock * 6;
     let mut texts = vec![scene_text(&mut app)];
-    for _ in 0..12 {
-        cube(&mut app);
+    for index in 0..12 {
+        place_rock(&mut app, f64::from(index) + 2.0);
         texts.push(scene_text(&mut app));
     }
     let kept = depth(&app);
     assert!(
-        kept < 13 * per_cube,
+        kept < 13 * per_rock,
         "the budget trimmed the oldest entries"
     );
 
-    for undone in 1..kept / per_cube {
-        for _ in 0..per_cube {
+    for undone in 1..kept / per_rock {
+        for _ in 0..per_rock {
             history(&mut app, "history.undo");
         }
         assert_same_scene(
             &scene_text(&mut app),
             &texts[texts.len() - 1 - undone],
-            &format!("{undone} cubes undone"),
+            &format!("{undone} rocks undone"),
         );
     }
 }

@@ -237,3 +237,95 @@ fn the_delete_gate_accepts_a_focused_timeline() {
         "a focused timeline with a selected keyframe makes the delete available"
     );
 }
+
+// ------------------------------------------------------- keybind paths ---
+
+/// Dispatch the way the Delete/Backspace and Ctrl+V keybinds do (the F3
+/// palette and command entries take the same road): `Invoke` with
+/// `creates_history_entry: true`, the setting a self-pushing operator must
+/// stay single-record under.
+fn keybind(app: &mut App, id: &'static str) {
+    app.world_mut()
+        .operator(id)
+        .settings(jackdaw_api_internal::operator::CallOperatorSettings {
+            execution_context: jackdaw_api_internal::operator::ExecutionContext::Invoke,
+            creates_history_entry: true,
+        })
+        .call()
+        .unwrap_or_else(|err| panic!("{id}: {err}"))
+        .assert_finished();
+    app.update();
+    app.update();
+}
+
+/// The Delete keybind is one entry, and undoing everything it left behind
+/// restores exactly the one keyframe that was there. A second record (a
+/// framework snapshot beside the operator's own command group) would undo
+/// into a duplicate keyframe — the R1 symptom on a real user path.
+#[test]
+fn the_delete_keybind_is_one_entry_and_undoes_to_one_keyframe() {
+    let mut app = editor();
+    let (_target, keyframe) = entity_with_key(&mut app);
+    select(&mut app, keyframe);
+    focus_timeline(&mut app);
+    let before = depth(&app);
+
+    keybind(&mut app, "clip.delete_keyframes");
+    assert_eq!(live_keyframes(&mut app), 0, "the keyframe is deleted");
+    assert_eq!(
+        depth(&app),
+        before + 1,
+        "the keybind delete is ONE entry: the operator pushes its own group, \
+         and the framework must not snapshot the same change beside it"
+    );
+
+    // Undo every entry the delete left. Two entries restore the keyframe
+    // twice (the snapshot respawns the document copy while the command
+    // group respawns its own), which is the duplicate the QA probe saw.
+    while depth(&app) > before {
+        undo(&mut app);
+    }
+    assert_eq!(
+        live_keyframes(&mut app),
+        1,
+        "undoing the whole delete leaves exactly the one keyframe"
+    );
+    assert_eq!(keyframe_count(&mut app), 1, "and one document node");
+}
+
+/// The Ctrl+V keybind pastes the clipboard as one entry whose single undo
+/// takes the pasted keyframe back out.
+#[test]
+fn the_paste_keybind_is_one_entry_and_undoes_cleanly() {
+    let mut app = editor();
+    let (_target, keyframe) = entity_with_key(&mut app);
+    select(&mut app, keyframe);
+    focus_timeline(&mut app);
+    keybind(&mut app, "clip.copy_keyframes");
+    assert_eq!(depth(&app), 0, "the copy records nothing");
+    let before = depth(&app);
+
+    keybind(&mut app, "clip.paste_keyframes");
+    assert_eq!(
+        live_keyframes(&mut app),
+        2,
+        "the pasted keyframe exists beside the original"
+    );
+    assert_eq!(
+        depth(&app),
+        before + 1,
+        "the keybind paste is ONE entry: the operator pushes its own group"
+    );
+
+    undo(&mut app);
+    assert_eq!(
+        live_keyframes(&mut app),
+        1,
+        "one undo takes only the pasted keyframe away"
+    );
+    assert_eq!(
+        keyframe_count(&mut app),
+        1,
+        "and the document holds one node"
+    );
+}

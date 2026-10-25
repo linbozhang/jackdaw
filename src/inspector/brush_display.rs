@@ -808,7 +808,8 @@ fn brush_face_with_selection(
     id = "brush.face.clear_material",
     label = "Clear Material",
     description = "Remove the material/texture from the selected faces.",
-    is_available = brush_face_with_selection,
+    allows_undo = false,
+    is_available = brush_face_with_selection
 )]
 pub(crate) fn brush_face_clear_material(
     _: In<OperatorParameters>,
@@ -846,7 +847,8 @@ pub(crate) fn brush_face_clear_material(
     id = "brush.face.apply_texture_to_all",
     label = "Apply Material to All Faces",
     description = "Copy the first selected face's material and UV transform onto every face of the brush.",
-    is_available = brush_face_with_selection,
+    allows_undo = false,
+    is_available = brush_face_with_selection
 )]
 pub(crate) fn brush_face_apply_texture_to_all(
     _: In<OperatorParameters>,
@@ -888,6 +890,7 @@ pub(crate) fn brush_face_apply_texture_to_all(
     id = "brush.face.set_uv_scale_preset",
     label = "Set UV Scale",
     description = "Set the UV scale of the selected faces to the given uniform value.",
+    allows_undo = false,
     is_available = brush_face_with_selection,
     params(scale(f64, doc = "Uniform UV scale (the same value for U and V).")),
 )]
@@ -926,7 +929,8 @@ pub(crate) fn brush_face_set_uv_scale_preset(
 #[operator(
     id = "brush.clear_all_materials",
     label = "Clear All Materials",
-    description = "Clear materials from every face of the selected brushes (expanding any selected non-brush parents into their child brushes)."
+    description = "Clear materials from every face of the selected brushes (expanding any selected non-brush parents into their child brushes).",
+    allows_undo = false
 )]
 pub(crate) fn brush_clear_all_materials(
     _: In<OperatorParameters>,

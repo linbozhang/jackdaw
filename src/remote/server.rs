@@ -149,6 +149,7 @@ impl Plugin for JackdawEditorRemotePlugin {
                     .with_method_main("jackdaw/call_operator", call_operator_handler)
                     .with_method_main("jackdaw/batch", batch_handler)
                     .with_method_main("jackdaw/cancel", cancel_handler)
+                    .with_method_main("jackdaw/history", history_handler)
                     .with_method_main("jackdaw/scene_tree", scene_tree_handler)
                     .with_method_main("jackdaw/entity", entity_handler)
                     .with_method_main("jackdaw/apply_bsn", apply_bsn_handler)
@@ -501,6 +502,68 @@ pub fn status_handler(In(_): In<Option<Value>>, world: &mut World) -> BrpResult 
         // `building`, `running` or `stopped`: what play-in-editor is
         // doing, which `jackdaw/wait` can be held on.
         "pie": crate::pie::play_status(world),
+    }))
+}
+
+/// The undo/redo state of the active scene tab: stack lengths, the tab's
+/// dirty flag and save-point depth, and the newest entries' labels.
+///
+/// This is what a caller asserts a gesture against: one user action — a
+/// click, a chord, a drag that commits — should leave exactly one new undo
+/// entry, and an undo that returns to the saved document should read clean.
+pub fn history_handler(In(params): In<Option<Value>>, world: &mut World) -> BrpResult {
+    check_enabled(world)?;
+    const DEFAULT_ENTRIES: usize = 8;
+    const MAX_ENTRIES: usize = 64;
+    let wanted = params
+        .as_ref()
+        .and_then(|params| params.get("entries"))
+        .and_then(Value::as_u64)
+        .map_or(DEFAULT_ENTRIES, |entries| {
+            entries.min(MAX_ENTRIES as u64) as usize
+        });
+
+    fn newest_labels(stack: &[Box<dyn EditorCommand>], wanted: usize) -> Vec<Value> {
+        stack
+            .iter()
+            .rev()
+            .take(wanted)
+            .map(|command| json!({ "label": command.description() }))
+            .collect()
+    }
+
+    let history = world.resource::<CommandHistory>();
+    let undo_len = history.undo_stack.len();
+    let redo_len = history.redo_stack.len();
+    let top = history
+        .undo_stack
+        .last()
+        .map(|command| json!(command.description()))
+        .unwrap_or(Value::Null);
+    let undo_entries = newest_labels(&history.undo_stack, wanted);
+    let redo_entries = newest_labels(&history.redo_stack, wanted);
+
+    let (dirty, saved_len, has_save_baseline) = world
+        .get_resource::<Scenes>()
+        .and_then(|scenes| scenes.tabs.get(scenes.active))
+        .map_or((false, 0, false), |tab| {
+            (tab.dirty, tab.saved_undo_len, tab.saved_doc_hash.is_some())
+        });
+
+    Ok(json!({
+        "undo_len": undo_len,
+        "redo_len": redo_len,
+        // What the undo stack's length was when this tab last saved or
+        // loaded: the depth the document on disk corresponds to.
+        "saved_len": saved_len,
+        // False until the tab has saved once (or opened a file), where only
+        // stack growth can decide dirtiness.
+        "has_save_baseline": has_save_baseline,
+        "dirty": dirty,
+        "top": top,
+        // Newest first.
+        "undo": undo_entries,
+        "redo": redo_entries,
     }))
 }
 
