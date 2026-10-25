@@ -1305,6 +1305,7 @@ impl DespawnKeyframeCmd {
     label = "Delete Keyframes",
     description = "Remove the selected animation keyframes.",
     is_available = has_selected_keyframes,
+    allows_undo = false,
 )]
 pub(crate) fn clip_delete_keyframes(
     _: In<OperatorParameters>,
@@ -1531,6 +1532,7 @@ pub(crate) fn clip_copy_keyframes(
     label = "Paste Keyframes",
     description = "Paste keyframes from the clipboard at the playhead.",
     is_available = timeline_paste_available,
+    allows_undo = false,
 )]
 pub(crate) fn clip_paste_keyframes(
     _: In<OperatorParameters>,

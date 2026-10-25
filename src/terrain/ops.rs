@@ -215,15 +215,17 @@ pub(crate) fn terrain_tool_quantize(
 /// Reads the noise and octave settings from the Terrain panel's Generation
 /// section ([`TerrainGenerateState`]).
 ///
-/// `allows_undo` stays at its default of `true`: this op pushes its own
-/// [`SetTerrainHeights`] entry, and that entry touches only heights, which
-/// live outside the AST, so the framework's snapshot diff sees no change
-/// and records no duplicate.
+/// This op pushes its own [`SetTerrainHeights`] entry, so it declares
+/// `allows_undo = false`: a history-creating dispatch must not wrap the
+/// same change in a framework snapshot beside it. (The snapshot diff is
+/// empty today because heights live outside the AST, but that is an
+/// accident of what the document covers, not a contract to lean on.)
 #[operator(
     id = "terrain.generate",
     label = "Generate Terrain",
     description = "Generate a fresh heightmap for the selected terrain.",
-    is_available = has_selected_terrain
+    is_available = has_selected_terrain,
+    allows_undo = false,
 )]
 pub(crate) fn terrain_generate(
     _: In<OperatorParameters>,
@@ -281,15 +283,15 @@ pub(crate) fn terrain_generate(
 /// Uses the erosion settings from the Terrain panel's Generation section
 /// ([`TerrainGenerateState::erosion`]).
 ///
-/// `allows_undo` stays at its default of `true`: this op pushes its own
-/// [`SetTerrainHeights`] entry, and that entry touches only heights, which
-/// live outside the AST, so the framework's snapshot diff sees no change
-/// and records no duplicate.
+/// Like [`terrain_generate`], this pushes its own [`SetTerrainHeights`]
+/// entry and so declares `allows_undo = false`; the empty snapshot diff of
+/// today is not a contract to lean on.
 #[operator(
     id = "terrain.erode",
     label = "Erode Terrain",
     description = "Apply hydraulic erosion to the selected terrain.",
-    is_available = has_selected_terrain
+    is_available = has_selected_terrain,
+    allows_undo = false,
 )]
 pub(crate) fn terrain_erode(
     _: In<OperatorParameters>,

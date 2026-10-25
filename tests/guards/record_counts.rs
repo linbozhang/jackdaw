@@ -131,6 +131,73 @@ fn a_spawn_undoable_add_is_one_user_entry() {
     assert_eq!(named(&mut app, "Reflection Probe"), 0);
 }
 
+/// The J keybind joins the selected brushes as one entry: the operator's
+/// own `SetBrush` + `Despawn` group, with no framework snapshot beside it.
+/// Its one undo takes the join back.
+#[test]
+fn the_join_keybind_is_one_user_entry() {
+    let (mut app, _tmp) = editor();
+    let left = app
+        .world_mut()
+        .spawn((
+            Name::new("LeftBrush"),
+            jackdaw_scene_types::Brush::cuboid(0.5, 0.5, 0.5),
+            Transform::default(),
+            Visibility::default(),
+        ))
+        .id();
+    let right = app
+        .world_mut()
+        .spawn((
+            Name::new("RightBrush"),
+            jackdaw_scene_types::Brush::cuboid(0.5, 0.5, 0.5),
+            Transform::from_translation(Vec3::new(2.0, 0.0, 0.0)),
+            Visibility::default(),
+        ))
+        .id();
+    jackdaw::scene_io::register_entity_in_ast(app.world_mut(), left);
+    jackdaw::scene_io::register_entity_in_ast(app.world_mut(), right);
+    jackdaw::selection::select_many(app.world_mut(), &[left, right]);
+    app.update();
+    app.update();
+
+    let before_text = scene_text(&mut app);
+    let before = depth(&app);
+    user(&mut app, "brush.join");
+    assert_eq!(depth(&app), before + 1, "the join keybind is one entry");
+    let joined = scene_text(&mut app);
+    assert_ne!(joined, before_text, "the brushes merged in the document");
+
+    // One undo takes the join back: both brushes exist again, each with its
+    // own document node. (Byte equality is deliberately not asserted: the
+    // async `recenter_brush_origins` pass shifts the kept brush's Transform
+    // the frame after the join, and the join's own command group does not
+    // record that shift — a pre-existing undo gap in the join itself, out
+    // of scope for the record-count fix this test pins.)
+    undo(&mut app);
+    let named_after: std::collections::HashSet<&str> = app
+        .world_mut()
+        .query::<&Name>()
+        .iter(app.world())
+        .map(Name::as_str)
+        .collect();
+    assert!(
+        named_after.contains("LeftBrush") && named_after.contains("RightBrush"),
+        "one undo restores both brushes, got {named_after:?}"
+    );
+    let restored = scene_text(&mut app);
+    assert_eq!(
+        restored.matches("#LeftBrush").count(),
+        1,
+        "left is back in the document"
+    );
+    assert_eq!(
+        restored.matches("#RightBrush").count(),
+        1,
+        "right is back in the document"
+    );
+}
+
 /// A transform chord (Alt+G reset) is the one `CommandGroup` the reset
 /// pushes, not that group plus a snapshot.
 #[test]
@@ -301,9 +368,23 @@ const SELF_PUSHING: &[&str] = &[
     "brush.face.apply_texture_to_all",
     "brush.face.set_uv_scale_preset",
     "brush.clear_all_materials",
+    // Keyframe chords push their own keyframe command groups.
+    "clip.delete_keyframes",
+    "clip.paste_keyframes",
+    // The join keybind (J) pushes its own SetBrush + Despawn group.
+    "brush.join",
+    // The PIE "Apply All" buttons push the edit group they build.
+    "pie.live_edits_apply_all",
+    // Terrain panel buttons push their own SetTerrainHeights entries.
+    "terrain.generate",
+    "terrain.erode",
+    // The Resources panel's commands are their own history entries.
+    "resource.insert",
+    "resource.remove",
+    "resource.set_field",
 ];
 
-/// Operators that stay mode B 鈥?no push of their own, the framework's
+/// Operators that stay mode B — no push of their own, the framework's
 /// snapshot is their one entry. Flipping any of these to `false` would
 /// strip them of undo entirely.
 const SNAPSHOT_BACKED: &[&str] = &[

@@ -678,7 +678,8 @@ pub(crate) fn pie_live_edit_revert(
     id = "pie.live_edits_apply_all",
     label = "Apply All Live Edits",
     description = "Write every tracked live edit into the authored scene.",
-    is_available = live_edit_log_has_entries
+    is_available = live_edit_log_has_entries,
+    allows_undo = false,
 )]
 pub(crate) fn pie_live_edits_apply_all(
     _: In<OperatorParameters>,

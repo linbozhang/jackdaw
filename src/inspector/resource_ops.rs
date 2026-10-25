@@ -45,11 +45,15 @@ fn param_json(params: &OperatorParameters, key: &str) -> Option<serde_json::Valu
     }
 }
 
-/// Add a resource of this type.
+/// Add a resource of this type. Pushes its own [`ResourceInsert`] history
+/// entry, so it declares `allows_undo = false` (the module's commands are
+/// their own undo records; resources are session state the document does
+/// not hold, an empty diff that is no contract to lean on).
 #[operator(
     id = "resource.insert",
     label = "Add Resource",
     description = "Add a resource of this type.",
+    allows_undo = false,
     params(type_path(
         String,
         doc = "Fully-qualified reflect type path of the resource to add."
@@ -85,12 +89,14 @@ pub(crate) fn resource_insert(
     Some(OperatorResult::Finished)
 }
 
-/// Remove this resource.
+/// Remove this resource. Pushes its own [`ResourceRemove`] history entry,
+/// so it declares `allows_undo = false`.
 #[operator(
     id = "resource.remove",
     label = "Remove Resource",
     description = "Remove this resource.",
     is_available = has_visible_resource,
+    allows_undo = false,
     params(
         type_path(String, default = "", doc = "Fully-qualified reflect type path of the resource to remove; empty removes the one selected in the Resources panel."),
     ),
@@ -122,12 +128,15 @@ pub(crate) fn resource_remove(
     Some(OperatorResult::Finished)
 }
 
-/// Set one field on a resource.
+/// Set one field on a resource. The commit pushes its own
+/// `ResourceSetField` history entry (and pushes nothing when the value
+/// did not change), so the op declares `allows_undo = false`.
 #[operator(
     id = "resource.set_field",
     label = "Set Resource Field",
     description = "Set one field on a resource.",
     is_available = has_visible_resource,
+    allows_undo = false,
     params(
         type_path(String, doc = "Fully-qualified reflect type path of the resource that owns the field."),
         field(String, doc = "Dotted path to the field within the resource (e.g. \"points\")."),
