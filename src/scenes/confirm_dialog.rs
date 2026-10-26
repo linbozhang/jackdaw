@@ -283,12 +283,24 @@ pub fn spawn_confirm_quit_dialog(world: &mut World) {
         ChildOf(card),
     ));
 
-    // Body.
-    let body = if world.resource::<PendingQuit>().leaving_project {
-        "You have unsaved changes. Save all before closing this project?"
+    // Body. The dirty list names what a discard would drop: the scene
+    // tabs, then any definition-asset cards holding unsaved edits.
+    let mut body = if world.resource::<PendingQuit>().leaving_project {
+        "You have unsaved changes. Save all before closing this project?".to_string()
     } else {
-        "You have unsaved changes. Save all before quitting?"
+        "You have unsaved changes. Save all before quitting?".to_string()
     };
+    {
+        let mut asset_edits = world.query::<&crate::definition_assets::DefinitionAssetEdit>();
+        let assets: Vec<String> = asset_edits
+            .iter(world)
+            .filter(|edit| edit.dirty)
+            .filter_map(|edit| edit.path.file_stem().map(|stem| stem.display().to_string()))
+            .collect();
+        if !assets.is_empty() {
+            body.push_str(&format!("\nUnsaved assets: {}", assets.join(", ")));
+        }
+    }
     world.spawn((
         Text::new(body),
         TextFont {
@@ -416,10 +428,25 @@ pub(crate) fn apply_confirm_quit_action(world: &mut World, action: ConfirmQuitBu
 
     match action {
         ConfirmQuitButton::SaveAll => {
-            if crate::scenes::operators::scene_save_all_system(world) {
+            // Scenes first, then the definition-asset cards holding
+            // unsaved edits: both are authored state a quit would drop.
+            let scenes_saved = crate::scenes::operators::scene_save_all_system(world);
+            let assets_saved = if scenes_saved {
+                crate::definition_assets::save_dirty_assets(world)
+            } else {
+                Vec::new()
+            };
+            if scenes_saved && assets_saved.is_empty() {
                 confirmed_leave(world, leaving_project);
             } else {
-                warn!("leaving cancelled because one or more scenes could not be saved");
+                if !assets_saved.is_empty() {
+                    warn!(
+                        "leaving cancelled because assets could not be saved: {}",
+                        assets_saved.join(", ")
+                    );
+                } else {
+                    warn!("leaving cancelled because one or more scenes could not be saved");
+                }
                 // A failed save leaves the editor where it was, so it disarms what
                 // the confirmed path would have acted on.
                 disarm_leave(world);

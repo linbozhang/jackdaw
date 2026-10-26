@@ -45,13 +45,15 @@ impl Plugin for ScenesPlugin {
     }
 }
 
-/// Intercept `WindowCloseRequested`. If any tab is dirty, show the
-/// confirm-quit dialog and consume the event. Otherwise emit `AppExit::Success`
+/// Intercept `WindowCloseRequested`. If any tab is dirty — or a
+/// definition-asset card holds unsaved edits — show the confirm-quit
+/// dialog and consume the event. Otherwise emit `AppExit::Success`
 /// so the normal X-click flow still works.
 pub fn intercept_window_close(
     mut close_events: bevy::ecs::message::MessageReader<bevy::window::WindowCloseRequested>,
     mut exit: bevy::ecs::message::MessageWriter<bevy::app::AppExit>,
     scenes: Res<Scenes>,
+    asset_edits: Query<&crate::definition_assets::DefinitionAssetEdit>,
     mut commands: Commands,
     mut pending: ResMut<confirm_dialog::PendingQuit>,
 ) {
@@ -63,7 +65,8 @@ pub fn intercept_window_close(
         return;
     }
 
-    let any_dirty = scenes.tabs.iter().any(|t| t.dirty);
+    let any_dirty =
+        scenes.tabs.iter().any(|t| t.dirty) || asset_edits.iter().any(|edit| edit.dirty);
     if !any_dirty {
         exit.write(bevy::app::AppExit::Success);
         return;
@@ -147,9 +150,11 @@ pub struct SceneTab {
     /// depth is relative to the save point.
     pub observed_undo_len: usize,
     /// [`Self::observed_undo_len`]'s companion: the history's monotonic
-    /// push counter as the watcher last saw it. It moves on new edits even
-    /// when budget trimming keeps the stack's length flat, so growth is
-    /// never missed.
+    /// **scene-document** push counter as the watcher last saw it. It
+    /// moves on new scene edits even when budget trimming keeps the
+    /// stack's length flat, so growth is never missed; entries that do
+    /// not write the scene document (asset fields, session resources)
+    /// do not move it, so sharing the history cannot mark the tab dirty.
     pub observed_pushes: u64,
     /// The undo stack's length at the last save or load: the depth the
     /// document on disk corresponds to.
@@ -218,10 +223,11 @@ impl SceneTab {
 
     /// Record `history`'s current state as what the watcher last observed,
     /// so the next frame's fast path skips. Call when a tab is activated or
-    /// a baseline (save / load) is written.
+    /// a baseline (save / load) is written. The push counter is the
+    /// scene-document one: the watcher judges tab dirtiness against it.
     pub fn observe_history(&mut self, history: &CommandHistory) {
         self.observed_undo_len = history.undo_stack.len();
-        self.observed_pushes = history.total_pushes();
+        self.observed_pushes = history.scene_pushes();
     }
 }
 
@@ -334,7 +340,10 @@ pub fn mark_active_dirty_on_history_growth(
     }
     let active = scenes.active;
     let current_len = history.undo_stack.len();
-    let current_pushes = history.total_pushes();
+    // The scene-document counter: an asset-field or session-resource
+    // entry shares this history and moves the stack, but it is not a
+    // scene edit and must not flip this tab's dirty flag.
+    let current_pushes = history.scene_pushes();
     let tab = scenes.bypass_change_detection().tabs.get_mut(active);
     let Some(tab) = tab else { return };
     if current_len == tab.observed_undo_len && current_pushes == tab.observed_pushes {
