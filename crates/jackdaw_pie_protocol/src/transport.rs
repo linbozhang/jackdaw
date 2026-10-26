@@ -8,7 +8,12 @@ use crate::event::PieChannel;
 pub trait PieTransport {
     /// Queue `bytes` for delivery on `channel`.
     fn send(&mut self, channel: PieChannel, bytes: &[u8]);
-    /// Take all messages received since the last call.
+    /// Take the messages received since the last call, as a bounded batch:
+    /// an implementation facing a producer that can outrun this consumer
+    /// returns a limited amount per call so the caller (the editor's main
+    /// thread) never spins unboundedly inside one drain, and whatever stays
+    /// queued arrives on the next call. Channels are reliable-ordered, so a
+    /// bounded batch delays later messages but never drops or reorders them.
     fn drain_received(&mut self) -> Vec<(PieChannel, Vec<u8>)>;
     /// Whether the peer has hung up, so nothing more will arrive.
     fn peer_gone(&self) -> bool {
