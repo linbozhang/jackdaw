@@ -842,6 +842,21 @@ impl JackdawMcp {
     pub async fn pie(&self) -> Result<CallToolResult, ErrorData> {
         self.brp_text("jackdaw/pie", json!({})).await
     }
+
+    /// The export state as a structured face.
+    #[tool(
+        description = "The game export's state: `state` (idle|building|ready|failed), the \
+                       `outcome` line, where the last export landed (`dist_dir`, `manifest`), \
+                       its `files`/`skipped` counts, the `profile`, and `started_at` (unix \
+                       seconds). This is what you assert a Build Game round against: start it \
+                       with call_operator(id: \"game.export\"), wait out the build with \
+                       jackdaw/wait(until: \"idle\"), then read here — `ready` with the dist \
+                       path and file count, or `failed` with the reason; no file-system \
+                       polling."
+    )]
+    pub async fn export(&self) -> Result<CallToolResult, ErrorData> {
+        self.brp_text("jackdaw/export", json!({})).await
+    }
 }
 
 #[tool_handler(router = self.tool_router)]

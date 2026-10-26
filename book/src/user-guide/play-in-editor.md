@@ -157,9 +157,10 @@ its historical behaviour of a plain `cargo run` in the project root.
 An export turns the project into a directory that runs on its own —
 no editor, no cargo, no terminal: double-click the executable and the
 game starts. **File > Build Game...** builds the game with the release
-profile, stages the executable beside a copy of the whole `assets/`
-tree, and opens the folder when it finishes. The footer shows the same
-compiling progress a Play build does; a failure lands in the Build
+profile, stages the executable beside a copy of the whole asset tree
+(the folder your `jackdaw.toml` names with `assets_dir`, `assets/` by
+default), and opens the folder when it finishes. The footer shows the
+same compiling progress a Play build does; a failure lands in the Build
 panel with the compiler output.
 
 The same export is on the terminal, with a say in what and where:
@@ -168,32 +169,43 @@ The same export is on the terminal, with a say in what and where:
     jd export --profile dev               # another profile, staged side by side
     jd export --config Server             # a run's target dimensions (bin, features...)
     jd export --out D:\ Builds\game       # an absolute directory of your own
+    jd export --out D:\ Builds\game --force  # ...that something else lives in
 
 `--profile` defaults to `release` and overrides whatever the selected
 run's target carried; `--config` reuses a `[[run]]` target exactly as
 `jd run --config` does, then applies the profile on top. `--out` must
-name an absolute path: the staging directory is cleared on every
-export, so a relative one — `--out .` is the extreme — is refused
-rather than clearing whatever the current directory happens to be.
+name an absolute path: the output directory is replaced wholesale on
+every export, so a relative one — `--out .` is the extreme — is refused
+rather than replacing whatever the current directory happens to be.
 
 The staged layout is the one thing a standalone run needs:
 
 ```text
 <project>/.jackdaw/dist/release/
     my-game.exe
-    assets/...
+    assets/...            <- your assets_dir, staged under its own name
+    .jackdaw-export       <- "this directory is ours" marker
+    export-manifest.json  <- every shipped file, hashed (see below)
 ```
 
 A game resolves its asset root by `BEVY_ASSET_ROOT`, then
 `CARGO_MANIFEST_DIR`, then its own executable's directory — and a
 double-clicked executable has none of the first two, so the
-executable with `assets/` beside it is the only supported layout. The
-whole tree is staged (a game loads its scene and every sidecar from
-there), a re-export replaces rather than merges, and moving or copying
+executable with the asset folder beside it is the only supported
+layout. A project whose `assets_dir` names another folder (`content/`,
+say) stages it under that name, matching what the game's own
+`AssetPlugin` resolves.
+
+**A failed export keeps the old one.** The new export is assembled in
+full beside the output and swapped in only when complete: if anything
+fails — a full disk, a locked file, the game from the last export
+still running — the previous export stays exactly as it was, byte for
+byte. A re-export replaces rather than merges (assets the project
+dropped do not survive beside the new executable), and moving or copying
 the directory elsewhere works unchanged — the assets follow the
 executable.
 
-Two things an export refuses, rather than shipping a game that will
+Three things an export refuses, rather than shipping a game that will
 not start:
 
 - A project built with bevy's `dynamic_linking` feature. Its
@@ -202,12 +214,57 @@ not start:
   and export again. The `jd new` template never sets it.
 - An editor extension project. An extension builds a library for the
   editor and has no game to export.
+- An `--out` that holds something no jackdaw export wrote: a
+  non-empty directory without the `.jackdaw-export` marker is not ours
+  to delete, so the export refuses and says so. Write into an empty
+  directory, or pass `--force` — explicit consent on the command line —
+  to replace it. (The editor's Build Game entry has no force; its
+  default directory is always one jackdaw created.)
+
+### What ships, and what stays behind
+
+The asset copy filters the editor's own private files out of the
+package: scene save rotations (`*.bak`), atomic-write leftovers
+(`*.tmp-*`, `*.corrupt-*`), and the play-in-editor temp directory
+(`.jackdaw-pie/`, which holds unsaved scene content while a session
+runs). Everything else — including any dotfile you own — ships, and
+the export report counts what was kept out, so a package that filtered
+something says so instead of being silently thinner. Exporting while a
+play session runs is fine: its temp copies are filtered, not staged.
+
+### The export manifest
+
+Every export writes `export-manifest.json` at the root of its output:
+each shipped file's path, SHA-256 and size, plus the profile, the
+jackdaw version, and the Bevy commit the editor was built against.
+Two exports of the same input produce the same manifest (the
+generation time is the only field allowed to differ), which is what
+"same input, same output" means in practice: re-export, compare, ship.
+The manifest is also a verifier — a moved or copied package can be
+checked file by file against it.
+
+### Reproducible builds
+
+Every build the editor runs — Play, `jd build`, `jd run`, export —
+passes `--locked` to cargo: the lockfile is the contract, and a silent
+dependency re-resolution is how an upstream crate update turns into a
+wall of errors nobody asked for. A project without a `Cargo.lock`
+gets one generated on the first build, with a note to commit it. When
+the lockfile is out of date with `Cargo.toml` (a dependency added or
+changed by hand), the build fails with the remedy in its log: run
+`cargo update`, or delete `Cargo.lock` to regenerate it, and commit
+the result. A project without `rust-toolchain.toml` is told so in the
+same log — new jackdaw projects pin one, and `jd doctor` reports both
+files' presence for the project in scope.
 
 The staged game still carries the `pie` feature the template adds to
 `jackdaw_runtime`. It is inert outside the editor (nothing connects to
 it without the editor's environment variables), but a release can drop
 it from `jackdaw_runtime`'s features in the game's `Cargo.toml` — a
-one-line edit that is yours to make, not the tool's.
+one-line edit that is yours to make, not the tool's. (Before shipping,
+running the asset audit once — the References panel's missing-reference
+check — is cheap insurance: an export stages exactly what the project
+holds, references that do not resolve included.)
 
 Not to be confused with two other exports: `jd export-terrain` writes
 a heightmap, and the `project.export_binary` operator converts scene

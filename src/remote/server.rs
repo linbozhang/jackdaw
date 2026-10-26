@@ -153,6 +153,7 @@ impl Plugin for JackdawEditorRemotePlugin {
                     .with_method_main("jackdaw/recovery", recovery_handler)
                     .with_method_main("jackdaw/audit", audit_handler)
                     .with_method_main("jackdaw/pie", pie_handler)
+                    .with_method_main("jackdaw/export", export_handler)
                     .with_method_main("jackdaw/selection.set", selection_set_handler)
                     .with_method_main("jackdaw/scene_tree", scene_tree_handler)
                     .with_method_main("jackdaw/entity", entity_handler)
@@ -692,6 +693,40 @@ pub fn pie_handler(In(_): In<Option<Value>>, world: &mut World) -> BrpResult {
             "ephemeral": ephemeral,
         },
         "live_edits": live_edits,
+    }))
+}
+
+/// The export state as a structured face: whether one is building, and
+/// where/how the last one landed (`state` idle|building|ready|failed,
+/// the outcome line, the dist and manifest paths, the file and skipped
+/// counts, the profile, when it started). This is what a QA caller
+/// asserts a Build Game round against — `jackdaw/wait(until: "idle")`
+/// waits out the build, this answers how it ended, and the file system
+/// never has to be polled to learn either.
+pub fn export_handler(In(_): In<Option<Value>>, world: &mut World) -> BrpResult {
+    check_enabled(world)?;
+    let face = world
+        .get_resource::<crate::game_export::GameExports>()
+        .map(crate::game_export::GameExports::face)
+        .unwrap_or_else(|| crate::game_export::ExportFace {
+            state: "idle",
+            outcome: None,
+            dist_dir: None,
+            manifest: None,
+            files: None,
+            skipped: None,
+            profile: None,
+            started_unix: None,
+        });
+    Ok(json!({
+        "state": face.state,
+        "outcome": face.outcome,
+        "dist_dir": face.dist_dir.as_ref().map(|path| path.display().to_string()),
+        "manifest": face.manifest.as_ref().map(|path| path.display().to_string()),
+        "files": face.files,
+        "skipped": face.skipped,
+        "profile": face.profile,
+        "started_at": face.started_unix,
     }))
 }
 
@@ -2284,6 +2319,67 @@ mod tests {
         assert_eq!(projection["authored"], 1, "the mapped one is authored");
         assert_eq!(projection["ephemeral"], 1, "one ephemeral, unmapped");
         assert_eq!(face["view_mode"], "scene");
+    }
+
+    /// The export face's four states, driven the way the editor drives
+    /// them: nothing exported, a report latched from a finished export,
+    /// an error latched from a failed one, and a task in flight.
+    #[test]
+    fn the_export_face_reports_idle_ready_failed_and_building() {
+        let mut world = World::new();
+        world.init_resource::<crate::game_export::GameExports>();
+
+        let answer = export_handler(In(None), &mut world).expect("the face answers");
+        assert_eq!(answer["state"], "idle", "nothing exported yet: {answer}");
+
+        // A finished export latches its report: where, how much, manifest.
+        {
+            let mut exports = world.resource_mut::<crate::game_export::GameExports>();
+            exports.last_report = Some(jackdaw_project_build::export::ExportReport {
+                dist_dir: std::path::PathBuf::from("my-game/.jackdaw/dist/release"),
+                executable: std::path::PathBuf::from("my-game/.jackdaw/dist/release/my-game.exe"),
+                assets_dir: std::path::PathBuf::from("my-game/.jackdaw/dist/release/assets"),
+                manifest: std::path::PathBuf::from(
+                    "my-game/.jackdaw/dist/release/export-manifest.json",
+                ),
+                files: 12,
+                skipped: 2,
+            });
+            exports.started_unix = Some(1790000000);
+        }
+        let answer = export_handler(In(None), &mut world).expect("the face answers");
+        assert_eq!(answer["state"], "ready", "{answer}");
+        assert_eq!(answer["files"], 12);
+        assert_eq!(answer["skipped"], 2);
+        assert_eq!(answer["profile"], "release");
+        assert_eq!(answer["started_at"], 1790000000);
+        assert!(
+            answer["dist_dir"]
+                .as_str()
+                .is_some_and(|path| path.contains(".jackdaw/dist/release")),
+            "{answer}"
+        );
+        assert!(
+            answer["manifest"]
+                .as_str()
+                .is_some_and(|path| path.ends_with("export-manifest.json")),
+            "{answer}"
+        );
+
+        // A failed export latches its reason instead.
+        {
+            let mut exports = world.resource_mut::<crate::game_export::GameExports>();
+            exports.last_report = None;
+            exports.last_error = Some("no assets directory".to_string());
+        }
+        let answer = export_handler(In(None), &mut world).expect("the face answers");
+        assert_eq!(answer["state"], "failed", "{answer}");
+        assert!(
+            answer["outcome"]
+                .as_str()
+                .is_some_and(|outcome| outcome.contains("no assets directory")),
+            "{answer}"
+        );
     }
 
     /// The selection face: set by bits, by name, and clear.

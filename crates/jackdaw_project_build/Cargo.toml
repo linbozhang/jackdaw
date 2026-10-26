@@ -34,6 +34,8 @@ tracing = { workspace = true }
 jackdaw_schema.workspace = true
 jackdaw_env.workspace = true
 path-slash.workspace = true
+# The export manifest hashes every staged file (SHA-256).
+sha2.workspace = true
 
 # `setpriority` for background builds; nothing in std reaches it.
 [target.'cfg(unix)'.dependencies]

@@ -220,6 +220,8 @@ fn jd_mcp_initializes_and_reaches_a_running_editor() {
         "history",
         "recovery",
         "audit",
+        "pie",
+        "export",
     ] {
         assert!(names.contains(&wanted), "no `{wanted}` tool: {names:?}");
     }
