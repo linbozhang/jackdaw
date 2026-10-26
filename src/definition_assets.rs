@@ -672,6 +672,29 @@ pub fn open_card_has_unsaved_edits(world: &World) -> bool {
         .is_some_and(|edit| edit.dirty)
 }
 
+/// Write every definition asset whose card holds unsaved edits, so what
+/// the editor shows is what a launch (Play, export) runs. Returns the
+/// display names that failed; empty means everything is on disk. A
+/// failed write leaves the card dirty, so the next attempt retries.
+pub fn save_dirty_assets(world: &mut World) -> Vec<String> {
+    let mut dirty = world.query::<&DefinitionAssetEdit>();
+    let paths: Vec<PathBuf> = dirty
+        .iter(world)
+        .filter(|edit| edit.dirty)
+        .map(|edit| edit.path.clone())
+        .collect();
+    let mut failures = Vec::new();
+    for path in paths {
+        match save_indexed_asset(world, &path) {
+            Some(_) => {}
+            // The message save_indexed_asset already reported named the
+            // file; report the failure by its path here.
+            None => failures.push(path.display().to_string()),
+        }
+    }
+    failures
+}
+
 /// The file the open card is editing, while it holds edits that are not on
 /// disk.
 fn open_file_with_unsaved_edits(world: &World) -> Option<String> {
@@ -779,6 +802,12 @@ impl EditorCommand for SetDefinitionField {
 
     fn description(&self) -> &str {
         "Set definition field"
+    }
+
+    /// An asset file's field, not the scene document: sharing the tab's
+    /// undo history must not mark the scene tab dirty.
+    fn touches_scene_document(&self) -> bool {
+        false
     }
 }
 

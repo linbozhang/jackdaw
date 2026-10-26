@@ -958,9 +958,10 @@ fn save_before_play(world: &mut World) -> Result<(), String> {
 }
 
 /// Refuse a modified scene that has never been saved, then save every
-/// modified scene, so what the editor shows is on disk before something
-/// else consumes the project — Play launching the game, an export
-/// staging its `assets/`. The `action` names what asked ("playing",
+/// modified scene and every definition asset card holding unsaved
+/// edits, so what the editor shows is on disk before something else
+/// consumes the project — Play launching the game, an export staging
+/// its `assets/`. The `action` names what asked ("playing",
 /// "exporting"), for the refusal messages.
 pub(crate) fn save_scenes_before_launch(world: &mut World, action: &str) -> Result<(), String> {
     let untitled_in_front = world
@@ -970,7 +971,12 @@ pub(crate) fn save_scenes_before_launch(world: &mut World, action: &str) -> Resu
     if untitled_in_front && crate::scenes::operators::active_tab_modified(world) {
         return Err(format!("Save the scene before {action}"));
     }
-    let failures = crate::scenes::operators::save_modified_scenes(world);
+    let mut failures = crate::scenes::operators::save_modified_scenes(world);
+    // Definition assets edited in the editor are part of what a launch
+    // runs (the game reads their files): dirty cards save on the same
+    // chain, and one that cannot write blocks the launch rather than
+    // silently running the value that is on disk.
+    failures.extend(crate::definition_assets::save_dirty_assets(world));
     if failures.is_empty() {
         Ok(())
     } else {
@@ -2690,6 +2696,41 @@ mod play_status_tests {
         );
         world.insert_non_send(session);
         assert_eq!(play_status(&world), "stopped");
+    }
+}
+
+#[cfg(test)]
+mod save_before_launch_tests {
+    use super::*;
+
+    /// The launch chain saves dirty asset cards along with modified
+    /// scenes (the red half of the pair: main had no asset leg at all,
+    /// so a dirty card sailed through and the launch ran the file on
+    /// disk). Driven with a card the index does not know, so the asset
+    /// save fails and the whole chain must refuse.
+    #[test]
+    fn a_dirty_asset_the_chain_cannot_save_refuses_the_launch() {
+        let mut world = World::new();
+        world.init_resource::<crate::scenes::Scenes>();
+        world.init_resource::<crate::asset_index::AssetIndex>();
+        world.spawn(crate::definition_assets::DefinitionAssetEdit {
+            kind: "game_config".to_string(),
+            name: "game-config".to_string(),
+            type_path: "my_game::GameConfig".to_string(),
+            path: PathBuf::from("game-config.bsn"),
+            dirty: true,
+        });
+
+        let outcome = save_scenes_before_launch(&mut world, "playing");
+        let message = outcome.expect_err("a card the index does not know blocks the launch");
+        assert!(
+            message.contains("Not playing"),
+            "the refusal names the action: {message}"
+        );
+        assert!(
+            message.contains("game-config"),
+            "the refusal names the asset it could not save: {message}"
+        );
     }
 }
 

@@ -58,6 +58,16 @@ pub trait EditorCommand: Send + Sync + 'static {
     fn heap_bytes(&self) -> usize {
         0
     }
+
+    /// Whether this command writes the scene document the active tab's
+    /// dirty flag describes. True for everything except the edits that
+    /// live outside it — definition-asset fields, editor-session
+    /// resources — whose undo entries share the history but must not
+    /// mark a scene tab dirty. The default keeps every existing
+    /// command's behavior unchanged.
+    fn touches_scene_document(&self) -> bool {
+        true
+    }
 }
 
 /// Bytes of entry payload the history may hold before its oldest entries
@@ -85,6 +95,13 @@ pub struct CommandHistory {
     /// so an enclosing span counts an inner span once rather than once
     /// per entry the inner span collapsed.
     pushes: u64,
+    /// [`Self::pushes`], counting only the commands that write the scene
+    /// document ([`EditorCommand::touches_scene_document`]). The tab
+    /// dirty watcher compares against this one, so an undo entry for an
+    /// asset field or a session resource — which shares this history —
+    /// does not mark a scene tab dirty. Never decremented, like
+    /// `pushes`.
+    scene_pushes: u64,
 }
 
 /// Where the undo stack stood when a span was opened. Hand it back to
@@ -99,6 +116,7 @@ impl Default for CommandHistory {
             redo_stack: Vec::new(),
             budget_bytes: HISTORY_BUDGET_BYTES,
             pushes: 0,
+            scene_pushes: 0,
         }
     }
 }
@@ -106,6 +124,7 @@ impl Default for CommandHistory {
 impl CommandHistory {
     pub fn execute(&mut self, mut command: Box<dyn EditorCommand>, world: &mut World) {
         command.execute(world);
+        self.count_push(command.as_ref());
         self.undo_stack.push(command);
         self.pushes += 1;
         self.redo_stack.clear();
@@ -186,6 +205,14 @@ impl CommandHistory {
         self.pushes
     }
 
+    /// [`Self::total_pushes`], counting only the pushes that wrote the
+    /// scene document: what a scene tab's dirty watcher compares
+    /// against, so an asset-field or session-resource entry sharing this
+    /// history does not read as a scene edit.
+    pub fn scene_pushes(&self) -> u64 {
+        self.scene_pushes
+    }
+
     pub fn redo(&mut self, world: &mut World) {
         if let Some(mut command) = self.redo_stack.pop() {
             command.execute(world);
@@ -194,10 +221,19 @@ impl CommandHistory {
     }
 
     pub fn push_executed(&mut self, command: Box<dyn EditorCommand>) {
+        self.count_push(command.as_ref());
         self.undo_stack.push(command);
         self.pushes += 1;
         self.redo_stack.clear();
         self.trim_to_budget();
+    }
+
+    /// Count one pushed command: both counters tick, the scene-document
+    /// one only for commands that write it.
+    fn count_push(&mut self, command: &(dyn EditorCommand + '_)) {
+        if command.touches_scene_document() {
+            self.scene_pushes += 1;
+        }
     }
 }
 
@@ -256,6 +292,13 @@ impl EditorCommand for CommandGroup {
             .map(|command| command.heap_bytes())
             .sum()
     }
+
+    fn touches_scene_document(&self) -> bool {
+        // A span mixed of scene and non-scene edits counts as a scene
+        // edit: erring towards dirty costs a re-look, erring away costs
+        // a lost change marker.
+        self.commands.iter().any(|cmd| cmd.touches_scene_document())
+    }
 }
 
 #[cfg(test)]
@@ -301,6 +344,37 @@ mod tests {
         }
         assert_eq!(history.undo_stack.len(), 3);
         assert_eq!(history.heap_bytes(), 90);
+    }
+
+    /// A command that does not write the scene document shares the
+    /// history (undo reaches it, the stack grew) without counting as a
+    /// scene push — the counter the tab dirty watcher judges by.
+    #[test]
+    fn non_scene_commands_share_the_history_without_counting_as_scene_pushes() {
+        struct NonScene;
+        impl EditorCommand for NonScene {
+            fn execute(&mut self, _world: &mut World) {}
+            fn undo(&mut self, _world: &mut World) {}
+            fn description(&self) -> &str {
+                "non-scene"
+            }
+            fn touches_scene_document(&self) -> bool {
+                false
+            }
+        }
+
+        let mut history = CommandHistory::default();
+        let mut world = World::new();
+        history.execute(Box::new(NonScene), &mut world);
+        history.push_executed(Box::new(Weighty(1)));
+
+        assert_eq!(history.undo_stack.len(), 2, "both are undoable");
+        assert_eq!(history.total_pushes(), 2, "the total counts both");
+        assert_eq!(
+            history.scene_pushes(),
+            1,
+            "only the scene-writing push counts for the dirty watcher"
+        );
     }
 
     /// One entry bigger than the whole budget stays undoable.

@@ -30,14 +30,25 @@ const NOTICE_SECONDS: f32 = 6.0;
 #[derive(Resource, Default)]
 pub struct StatusNotice {
     text: String,
-    error: bool,
+    level: NoticeLevel,
     remaining: f32,
 }
 
+/// How loudly a [`StatusNotice`] speaks, deciding its color: a refusal
+/// in the error color, a partial result in the warning color, a note in
+/// the same color the rest of the bar uses.
+#[derive(Clone, Copy, Default, PartialEq, Eq, Debug)]
+pub enum NoticeLevel {
+    #[default]
+    Info,
+    Warning,
+    Error,
+}
+
 impl StatusNotice {
-    fn set(&mut self, text: String, error: bool) {
+    fn set(&mut self, text: String, level: NoticeLevel) {
         self.text = text;
-        self.error = error;
+        self.level = level;
         self.remaining = NOTICE_SECONDS;
     }
 
@@ -53,7 +64,7 @@ impl StatusNotice {
 
     /// Put a line about something the editor did in front of the user.
     pub fn show(&mut self, text: impl Into<String>) {
-        self.set(text.into(), false);
+        self.set(text.into(), NoticeLevel::Info);
     }
 }
 
@@ -116,24 +127,25 @@ pub fn finish_phase(world: &mut World, owner: &'static str) {
 
 /// Put a refusal in front of the user: the editor did not do what was asked.
 pub fn notify_error(world: &mut World, text: impl Into<String>) {
-    notify(world, text.into(), true);
+    notify(world, text.into(), NoticeLevel::Error);
 }
 
 /// Put a note about something the editor did in front of the user.
 pub fn notify_info(world: &mut World, text: impl Into<String>) {
-    notify(world, text.into(), false);
+    notify(world, text.into(), NoticeLevel::Info);
 }
 
-/// Put a partial result in front of the user: it did some of what was asked.
+/// Put a partial result in front of the user: it did some of what was
+/// asked — the warning color, not the refusal color.
 pub fn notify_warn(world: &mut World, text: impl Into<String>) {
-    notify(world, text.into(), false);
+    notify(world, text.into(), NoticeLevel::Warning);
 }
 
-fn notify(world: &mut World, text: String, error: bool) {
+fn notify(world: &mut World, text: String, level: NoticeLevel) {
     // The launcher has no status bar, and tests build worlds without one, so
     // a missing resource is not an error.
     if let Some(mut notice) = world.get_resource_mut::<StatusNotice>() {
-        notice.set(text, error);
+        notice.set(text, level);
     }
 }
 
@@ -368,10 +380,10 @@ fn update_status_right(
     if notice.is_active() {
         if let Ok((mut text, mut color)) = text_query.single_mut() {
             text.0 = notice.text.clone();
-            color.0 = if notice.error {
-                jackdaw_feathers::tokens::TEXT_ERROR
-            } else {
-                jackdaw_feathers::tokens::TEXT_WARNING
+            color.0 = match notice.level {
+                NoticeLevel::Error => jackdaw_feathers::tokens::TEXT_ERROR,
+                NoticeLevel::Warning => jackdaw_feathers::tokens::TEXT_WARNING,
+                NoticeLevel::Info => jackdaw_feathers::tokens::TEXT_SECONDARY,
             };
         }
         return;
@@ -647,5 +659,34 @@ fn update_build_bar(
             node.left = Val::Percent(sweep * (100.0 - BUILD_BAR_SEGMENT));
             node.width = Val::Percent(BUILD_BAR_SEGMENT);
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    /// The three notice tiers are distinct (W13): a warn is a warning,
+    /// an info is not, and an error stays an error. On main, warn and
+    /// info were the same call and everything not an error rendered in
+    /// the warning color.
+    #[test]
+    fn notices_carry_their_level() {
+        let mut world = World::new();
+        world.init_resource::<StatusNotice>();
+
+        notify_info(&mut world, "did a thing");
+        assert_eq!(world.resource::<StatusNotice>().level, NoticeLevel::Info);
+
+        notify_warn(&mut world, "did some of it");
+        assert_eq!(
+            world.resource::<StatusNotice>().level,
+            NoticeLevel::Warning,
+            "a partial result speaks in the warning color"
+        );
+
+        notify_error(&mut world, "refused");
+        assert_eq!(world.resource::<StatusNotice>().level, NoticeLevel::Error);
+        assert_eq!(world.resource::<StatusNotice>().text(), "refused");
     }
 }

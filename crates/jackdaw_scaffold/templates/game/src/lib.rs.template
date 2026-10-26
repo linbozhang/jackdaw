@@ -136,9 +136,12 @@ fn spawn_falling_cube(
     mut meshes: ResMut<Assets<Mesh>>,
     mut materials: ResMut<Assets<StandardMaterial>>,
 ) {
+    // No `SpinningCube` here: two systems rotating one entity stack
+    // their rates, which reads as the config having no effect. The
+    // falling cube's spin belongs to `move_speed` alone, so one value
+    // changes one behavior.
     commands.spawn((
         FallingCube { speed: 1.0 },
-        SpinningCube { speed: 1.0 },
         Mesh3d(meshes.add(Cuboid::new(0.6, 0.6, 0.6))),
         MeshMaterial3d(materials.add(StandardMaterial {
             base_color: Color::srgb(0.9, 0.9, 0.9),

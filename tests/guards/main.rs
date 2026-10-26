@@ -14,6 +14,7 @@ mod util;
 /// turns — with each other, not just within themselves.
 pub(crate) static HEAVY_EDITOR_LOCK: std::sync::Mutex<()> = std::sync::Mutex::new(());
 
+mod asset_lifecycle;
 mod atomic_writes;
 mod batch_undo;
 mod config_injection;

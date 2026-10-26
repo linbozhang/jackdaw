@@ -562,13 +562,14 @@ pub(crate) fn open_read_scene(world: &mut World, read: ReadScene) {
     };
     let (history_len, history_pushes) = {
         let history = world.resource::<jackdaw_commands::CommandHistory>();
-        (history.undo_stack.len(), history.total_pushes())
+        (history.undo_stack.len(), history.scene_pushes())
     };
     if let Some(mut scenes) = world.get_resource_mut::<Scenes>()
         && let Some(tab) = scenes.tabs.get_mut(target)
     {
         tab.dirty = had_upgrade;
         tab.saved_undo_len = history_len;
+        tab.saved_scene_pushes = history_pushes;
         tab.saved_doc_hash = fingerprint;
         tab.observed_undo_len = history_len;
         tab.observed_pushes = history_pushes;
@@ -752,11 +753,13 @@ pub fn active_tab_modified(world: &World) -> bool {
     let Some(tab) = scenes.tabs.get(scenes.active) else {
         return false;
     };
+    // The scene-document push counter, not the stack length and not the
+    // total: budget trimming can hold the length flat across a real
+    // edit, and an asset-field or session-resource entry shares this
+    // history without touching the scene document.
     let pushes = world
         .get_resource::<jackdaw_commands::CommandHistory>()
-        .map_or(0, jackdaw_commands::CommandHistory::total_pushes);
-    // The push counter, not the stack length: budget trimming can hold the
-    // length flat across a real edit.
+        .map_or(0, jackdaw_commands::CommandHistory::scene_pushes);
     tab.dirty || pushes > tab.observed_pushes
 }
 

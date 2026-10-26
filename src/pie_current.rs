@@ -278,11 +278,15 @@ pub(crate) fn resolve_override_for_launch(
     // modified-untitled refusal gate can never fire: the scene in front is
     // named here); an untitled scene in front saves the named background
     // tabs without that gate, since it itself is about to run as a copy.
+    // Definition-asset cards save on both branches: the game reads their
+    // files whatever scene it runs, so the editor's card values must be
+    // on disk before the launch (QA T2 §七, ruling A).
     if save_first {
         if named {
             crate::pie::save_scenes_before_launch(world, action)?;
         } else {
-            let failures = crate::scenes::operators::save_modified_scenes(world);
+            let mut failures = crate::scenes::operators::save_modified_scenes(world);
+            failures.extend(crate::definition_assets::save_dirty_assets(world));
             if !failures.is_empty() {
                 return Err(format!(
                     "Not {action}: could not save {}",

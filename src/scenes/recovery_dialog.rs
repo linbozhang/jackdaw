@@ -628,13 +628,14 @@ pub fn restore_tab(world: &mut World, dir: &Path, index: usize) -> Result<(), St
     crate::scenes::operators::activate_pushed_tab(world, target);
     let (history_len, history_pushes) = {
         let history = world.resource::<jackdaw_commands::CommandHistory>();
-        (history.undo_stack.len(), history.total_pushes())
+        (history.undo_stack.len(), history.scene_pushes())
     };
     if let Some(mut scenes) = world.get_resource_mut::<Scenes>()
         && let Some(tab) = scenes.tabs.get_mut(target)
     {
         tab.dirty = true;
         tab.saved_undo_len = history_len;
+        tab.saved_scene_pushes = history_pushes;
         tab.saved_doc_hash = baseline;
         tab.observed_undo_len = history_len;
         tab.observed_pushes = history_pushes;

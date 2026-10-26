@@ -189,6 +189,11 @@ impl EditorCommand for ResourceSetField {
     fn description(&self) -> &str {
         "Set resource field"
     }
+
+    /// A session resource, not the scene document.
+    fn touches_scene_document(&self) -> bool {
+        false
+    }
 }
 
 /// Insert a default-constructed resource, or replace the value of one that
@@ -265,6 +270,11 @@ impl EditorCommand for ResourceInsert {
     fn description(&self) -> &str {
         "Insert resource"
     }
+
+    /// A session resource, not the scene document.
+    fn touches_scene_document(&self) -> bool {
+        false
+    }
 }
 
 /// Remove an instantiated resource; undo re-inserts the captured value.
@@ -303,6 +313,11 @@ impl EditorCommand for ResourceRemove {
 
     fn description(&self) -> &str {
         "Remove resource"
+    }
+
+    /// A session resource, not the scene document.
+    fn touches_scene_document(&self) -> bool {
+        false
     }
 }
 

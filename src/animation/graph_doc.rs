@@ -519,6 +519,13 @@ impl EditorCommand for GraphDefEdit {
     fn description(&self) -> &str {
         self.label
     }
+
+    /// The animation graph's own document, not the scene document:
+    /// sharing the scene tab's undo history must not mark the tab
+    /// dirty.
+    fn touches_scene_document(&self) -> bool {
+        false
+    }
 }
 
 /// Read what the canvas did back into the definition.
@@ -1001,6 +1008,20 @@ pub fn parameter<'a>(def: &'a AnimationGraphDef, name: &str) -> Option<&'a Anima
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    /// The graph edit writes the animation graph's own document file,
+    /// never the scene document: it shares the scene tab's undo
+    /// history without counting as a scene push (the tab dirty watcher
+    /// judges by those).
+    #[test]
+    fn a_graph_edit_does_not_count_as_a_scene_document_push() {
+        let edit = GraphDefEdit {
+            before: AnimationGraphDef::default(),
+            after: AnimationGraphDef::default(),
+            label: "edit graph",
+        };
+        assert!(!edit.touches_scene_document());
+    }
 
     #[test]
     fn a_graph_name_becomes_a_file_stem_that_can_be_written() {

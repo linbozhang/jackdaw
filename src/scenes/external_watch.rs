@@ -387,6 +387,7 @@ fn adopt_reloaded_document(world: &mut World, index: usize) {
     }
     tab.dirty = false;
     tab.saved_undo_len = 0;
+    tab.saved_scene_pushes = 0;
     tab.saved_doc_hash = fingerprint;
     tab.observed_undo_len = 0;
     tab.observed_pushes = 0;

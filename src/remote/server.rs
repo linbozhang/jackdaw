@@ -154,6 +154,14 @@ impl Plugin for JackdawEditorRemotePlugin {
                     .with_method_main("jackdaw/audit", audit_handler)
                     .with_method_main("jackdaw/pie", pie_handler)
                     .with_method_main("jackdaw/export", export_handler)
+                    // The same snapshot the game's own remote serves, over
+                    // the editor's port: QA drives behavior assertions
+                    // against the editor-side mirror of a play session
+                    // (the projected entities), which only exists here.
+                    .with_method_main(
+                        "jackdaw/scene_snapshot",
+                        jackdaw_remote::scene_snapshot::scene_snapshot_handler,
+                    )
                     .with_method_main("jackdaw/selection.set", selection_set_handler)
                     .with_method_main("jackdaw/scene_tree", scene_tree_handler)
                     .with_method_main("jackdaw/entity", entity_handler)

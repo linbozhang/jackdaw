@@ -284,7 +284,7 @@ pub fn activate_tab(world: &mut World, target: usize) {
     }
 
     let (history_depth, history_pushes) = {
-        let depths = (history.undo_stack.len(), history.total_pushes());
+        let depths = (history.undo_stack.len(), history.scene_pushes());
         *world.resource_mut::<CommandHistory>() = history;
         depths
     };
