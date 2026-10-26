@@ -213,14 +213,22 @@ pub fn cargo_target_args(target: Option<&CargoTarget>) -> Vec<String> {
 
 /// The argv handed to cargo for a project-binary build: the base
 /// command with the run target's flags spliced in where they have
-/// always gone. Pure, so the exact argv — including the no-target one
-/// a project has always built with — is pinned by test rather than by
-/// reading the command construction.
+/// always gone, then the flags every build carries. Pure, so the exact
+/// argv — including the no-target one — is pinned by test rather than
+/// by reading the command construction.
 ///
 /// The message format is plain `json`, not `json-render-diagnostics`:
 /// that variant renders diagnostics to cargo's own stderr and emits no
 /// `compiler-message` records, leaving the build-line parser with
 /// nothing to report.
+///
+/// `--locked` is the reproducibility stance every entry point (Play,
+/// `jd build`, `jd run`, export) builds with: the lockfile is the
+/// contract, and a silent re-resolution is how an upstream crate
+/// update becomes a wall of errors nobody asked for. A missing
+/// lockfile is generated before the build ([`ensure_lockfile`]); a
+/// stale one fails with a hint ([`locked_failure_hint`]) instead of
+/// drifting.
 fn cargo_build_argv(
     package: &str,
     target: Option<&CargoTarget>,
@@ -232,8 +240,77 @@ fn cargo_build_argv(
         "--target-dir".into(),
         target_dir.as_os_str().into(),
         "--message-format=json".into(),
+        "--locked".into(),
     ]);
     argv
+}
+
+/// The build's reproducibility posture for the project at `root`,
+/// reported to the build log rather than enforced: which of the two
+/// files that make a build repeatable — `rust-toolchain.toml` and
+/// `Cargo.lock` — are missing, in one line each. Scaffolded projects
+/// carry both; an imported or hand-written one may carry neither, and
+/// the user should learn that from the build rather than from a
+/// failure only upstream drift happens to trigger.
+fn reproducibility_notices(root: &Path) -> Vec<String> {
+    let mut notices = Vec::new();
+    if !root.join("rust-toolchain.toml").is_file() {
+        notices.push(format!(
+            "no rust-toolchain.toml in {}; builds use the default toolchain — add one to pin the \
+             compiler (new jackdaw projects do)",
+            root.display()
+        ));
+    }
+    notices
+}
+
+/// Make sure the project at `root` has a lockfile before a `--locked`
+/// build needs one: generate it with `cargo generate-lockfile` and say
+/// so, because a lockfile nobody commits is a reproducibility gate
+/// that silently re-arms itself. A generation failure is reported and
+/// swallowed — the `--locked` build then fails in cargo's own words,
+/// which name the actual resolution problem.
+fn ensure_lockfile(root: &Path, report: &mut dyn FnMut(BuildEvent)) {
+    let Ok(lockfile) = crate::bevy_source::workspace_lockfile(root) else {
+        return; // pin_project already reported why cargo could not be asked
+    };
+    if lockfile.is_file() {
+        return;
+    }
+    let mut command = rust_env_command("cargo");
+    command
+        .arg("generate-lockfile")
+        .current_dir(root)
+        .stdout(Stdio::null())
+        .stderr(Stdio::piped());
+    crate::detach_from_host_build(&mut command);
+    match command.output() {
+        Ok(output) if output.status.success() => report(BuildEvent::Log(format!(
+            "generated {}; commit it for reproducible builds",
+            lockfile.display()
+        ))),
+        Ok(output) => report(BuildEvent::Log(format!(
+            "warning: could not generate {}: {}",
+            lockfile.display(),
+            String::from_utf8_lossy(&output.stderr).trim()
+        ))),
+        Err(error) => report(BuildEvent::Log(format!(
+            "warning: could not run cargo to generate {}: {error}",
+            lockfile.display()
+        ))),
+    }
+}
+
+/// The one-line remedy appended to a build log when cargo rejected the
+/// build because of `--locked`: the lockfile is out of date with
+/// `Cargo.toml` (a dependency added or changed by hand), and the fix
+/// is one command, not a mystery.
+fn locked_failure_hint(stderr: &str) -> Option<&'static str> {
+    stderr.contains("--locked was passed").then_some(
+        "note: the lock file is out of date with Cargo.toml and the build locks it; run \
+             `cargo update` to refresh it (or delete Cargo.lock to regenerate), then commit the \
+             result for reproducible builds",
+    )
 }
 
 /// Build a project's game binary and extract its type schema.
@@ -281,6 +358,9 @@ pub fn build_project_binary_with_load(
         spec.project_root.display(),
         target_dir.display()
     )));
+    for notice in reproducibility_notices(&spec.project_root) {
+        report(BuildEvent::Log(notice));
+    }
 
     // A build on Bevy's main branch hands the game its own Bevy commit; a
     // lockfile at another commit would build a game whose types are not
@@ -290,6 +370,9 @@ pub fn build_project_binary_with_load(
         Ok(None) => {}
         Err(error) => report(BuildEvent::Log(format!("warning: {error}"))),
     }
+    // With the pin settled, the lockfile the `--locked` build will use
+    // is the one that should exist: generate it here if it does not.
+    ensure_lockfile(&spec.project_root, report);
 
     let mut command = rust_env_command("cargo");
     command
@@ -330,6 +413,9 @@ pub fn build_project_binary_with_load(
         // panel line by line the way rustc's diagnostics do.
         for line in stderr.lines() {
             report(BuildEvent::Log(line.to_string()));
+        }
+        if let Some(hint) = locked_failure_hint(&stderr) {
+            report(BuildEvent::Log(hint.to_string()));
         }
         return Err(ProjectBuildError::Compile {
             log: compile_failure_log(log, &stderr),
@@ -913,6 +999,71 @@ mod tests {
         assert_eq!(String::from_utf8_lossy(&output.stdout).trim(), "hello");
     }
 
+    /// A lockfile out of date with Cargo.toml is a failure with a
+    /// remedy, not a silent re-resolution: the build runs `--locked`,
+    /// cargo refuses, and the appended note names the command that
+    /// fixes it. Before T07-T2 the same build quietly re-resolved the
+    /// graph and succeeded on whatever the registry served that day —
+    /// the drift the acceptance contrast (old silent vs new refused
+    /// with guidance) is about. Real cargo, no dependencies: the whole
+    /// build is a second.
+    #[test]
+    fn a_stale_lockfile_fails_locked_with_the_remedy_in_the_log() {
+        let root = std::env::temp_dir().join(format!("jackdaw-stale-lock-{}", std::process::id()));
+        let _ = std::fs::remove_dir_all(&root);
+        std::fs::create_dir_all(root.join("src")).expect("fixture dirs");
+        std::fs::write(
+            root.join("Cargo.toml"),
+            "[package]\nname = \"stale-game\"\nversion = \"0.1.0\"\nedition = \"2021\"\n\n\
+             [workspace]\n[dependencies]\n",
+        )
+        .expect("fixture manifest");
+        std::fs::write(root.join("src/main.rs"), "fn main() {}\n").expect("fixture source");
+        let generated = rust_env_command("cargo")
+            .arg("generate-lockfile")
+            .current_dir(&root)
+            .output()
+            .expect("seed a lockfile");
+        assert!(generated.status.success(), "the seed lockfile generates");
+        // The manifest moves on; the lockfile stays. What the build
+        // locks is now stale.
+        std::fs::write(
+            root.join("Cargo.toml"),
+            "[package]\nname = \"stale-game\"\nversion = \"0.2.0\"\nedition = \"2021\"\n\n\
+             [workspace]\n[dependencies]\n",
+        )
+        .expect("bump the manifest");
+
+        let spec = ShimSpec {
+            package_name: "stale-game".to_string(),
+            crate_name: "stale_game".to_string(),
+            project_root: root.clone(),
+            extension_type: None,
+        };
+        let jackdaw_dir = root.join(".jackdaw");
+        std::fs::create_dir_all(&jackdaw_dir).expect("jackdaw dir");
+
+        let mut reported: Vec<String> = Vec::new();
+        let result = build_project_binary(&spec, &jackdaw_dir, &mut |event| {
+            if let BuildEvent::Log(line) = event {
+                reported.push(line);
+            }
+        });
+        let Err(ProjectBuildError::Compile { log }) = result else {
+            panic!("a stale lockfile must fail the --locked build");
+        };
+        assert!(
+            log.contains("--locked"),
+            "cargo's own refusal survives the trip:\n{log}"
+        );
+        assert!(
+            reported.iter().any(|line| line.contains("cargo update")),
+            "the remedy is appended to the build log:\n{}",
+            reported.join("\n")
+        );
+        let _ = std::fs::remove_dir_all(&root);
+    }
+
     /// A project that does not compile fails with the compiler's own errors
     /// in it. The editor shows this text and nothing else, so a build that
     /// drops them leaves only "project failed to compile".
@@ -1314,13 +1465,15 @@ mod tests {
         assert_eq!(TargetKind::Example.as_str(), "example");
     }
 
-    /// The whole cargo command behind an editor build, spliced together
-    /// in one place so the no-target argv is pinned exactly: a project
-    /// without a run target builds with byte-for-byte the command it
-    /// always has, and a targeted build is that command plus the
-    /// target's flags in a fixed position.
+    /// The whole cargo command behind a build, spliced together in one
+    /// place so the no-target argv is pinned exactly. T07-T2 changed
+    /// it on purpose: every build now carries `--locked`, so the four
+    /// entry points (Play, `jd build`, `jd run`, export) share one
+    /// dependency-resolution stance — the lockfile is the contract, a
+    /// missing one is generated first, a stale one fails with a hint
+    /// rather than drifting.
     #[test]
-    fn the_build_command_is_the_historical_one_without_a_target() {
+    fn the_build_command_locks_the_dependency_resolution() {
         let none = cargo_build_argv("my-game", None, Path::new("/jd/target/game"));
         assert_eq!(
             none,
@@ -1331,6 +1484,7 @@ mod tests {
                 "--target-dir",
                 "/jd/target/game",
                 "--message-format=json",
+                "--locked",
             ]
         );
 
@@ -1359,8 +1513,100 @@ mod tests {
                 "--target-dir",
                 "/jd/target/game",
                 "--message-format=json",
+                "--locked",
             ]
         );
+    }
+
+    /// The `--locked` refusal gets its remedy appended to the build log:
+    /// cargo names the lockfile, but only the hint names the fix. Any
+    /// other stderr is left alone. The refusal text is cargo's own
+    /// wording, captured from a real stale-lockfile build.
+    #[test]
+    fn a_locked_failure_is_translated_into_a_remedy() {
+        let stderr = "error: cannot update the lock file /game/Cargo.lock because --locked was \
+                      passed to prevent this";
+        let hint = locked_failure_hint(stderr).expect("the locked refusal is recognized");
+        assert!(hint.contains("cargo update"), "{hint}");
+        assert!(hint.contains("commit"), "{hint}");
+        assert_eq!(
+            locked_failure_hint("error[E0560]: no field `x`"),
+            None,
+            "an ordinary compile error is not a lock problem"
+        );
+    }
+
+    /// The reproducibility notices fire on the missing pieces only: a
+    /// project with a toolchain file (every scaffolded one) says
+    /// nothing; one without it is told, once, in the build log.
+    #[test]
+    fn a_project_without_a_toolchain_file_is_told_so_in_the_build_log() {
+        let root =
+            std::env::temp_dir().join(format!("jackdaw-repro-notice-{}", std::process::id()));
+        let _ = std::fs::remove_dir_all(&root);
+        std::fs::create_dir_all(&root).unwrap();
+        assert!(
+            reproducibility_notices(&root)
+                .iter()
+                .any(|notice| notice.contains("no rust-toolchain.toml")),
+            "the missing toolchain file is the notice"
+        );
+
+        std::fs::write(
+            root.join("rust-toolchain.toml"),
+            "[toolchain]\nchannel = \"stable\"\n",
+        )
+        .unwrap();
+        assert!(
+            reproducibility_notices(&root).is_empty(),
+            "a pinned project needs no notices"
+        );
+        let _ = std::fs::remove_dir_all(&root);
+    }
+
+    /// A missing lockfile is generated before a `--locked` build needs
+    /// one, and the generation is said out loud so the user knows to
+    /// commit it. A project that already has one is not touched — the
+    /// build log says nothing and the file keeps its bytes.
+    #[test]
+    fn a_missing_lockfile_is_generated_and_an_existing_one_is_left_alone() {
+        let root = std::env::temp_dir().join(format!("jackdaw-lockgen-{}", std::process::id()));
+        let _ = std::fs::remove_dir_all(&root);
+        std::fs::create_dir_all(&root).unwrap();
+        std::fs::create_dir_all(root.join("src")).unwrap();
+        std::fs::write(root.join("src/main.rs"), "fn main() {}\n").unwrap();
+        std::fs::write(
+            root.join("Cargo.toml"),
+            "[package]\nname = \"tiny\"\nversion = \"0.1.0\"\nedition = \"2021\"\n",
+        )
+        .unwrap();
+        let mut log = Vec::new();
+        ensure_lockfile(&root, &mut |event| log.push(format!("{event:?}")));
+        assert!(
+            root.join("Cargo.lock").is_file(),
+            "the lockfile exists after the call: {:?}",
+            log
+        );
+        assert!(
+            log.iter()
+                .any(|line| line.contains("generated") && line.contains("commit it")),
+            "the generation is reported: {log:?}"
+        );
+
+        // An existing lockfile is not regenerated or even mentioned.
+        let before = std::fs::read(root.join("Cargo.lock")).unwrap();
+        let mut log = Vec::new();
+        ensure_lockfile(&root, &mut |event| log.push(format!("{event:?}")));
+        assert!(
+            log.is_empty(),
+            "nothing to say about a present lockfile: {log:?}"
+        );
+        assert_eq!(
+            std::fs::read(root.join("Cargo.lock")).unwrap(),
+            before,
+            "the existing lockfile keeps its bytes"
+        );
+        let _ = std::fs::remove_dir_all(&root);
     }
 
     /// An example's dynamic libraries sit in the profile dir's `deps/`,

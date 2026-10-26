@@ -300,6 +300,28 @@ fn report_project(root: &Path) -> bool {
             let detected =
                 jackdaw_project_build::detect::detect_plugin(&package.dir, &package.crate_name)
                     .and_then(|path| path.split_once("::").map(|(_, name)| name.to_string()));
+            // Reproducibility posture: both files a repeatable build
+            // stands on, reported — not enforced — so a project that
+            // builds today can still be built the same way next year.
+            // Builds lock whatever lockfile exists and generate a
+            // missing one with a note; doctor says which case applies.
+            if root.join("Cargo.lock").is_file() {
+                pass("Cargo.lock: present (builds run --locked)".to_string());
+            } else {
+                println!("  [warn] Cargo.lock: missing");
+                println!(
+                    "         note: the first build generates one; commit it for reproducible builds"
+                );
+            }
+            if root.join("rust-toolchain.toml").is_file() {
+                pass("rust-toolchain.toml: present".to_string());
+            } else {
+                println!("  [warn] rust-toolchain.toml: missing");
+                println!(
+                    "         note: builds use the default toolchain; new jackdaw projects pin \
+                     one"
+                );
+            }
             if extension.is_none() {
                 ok &= report_runtime_wiring(root, &package.dir);
             }
