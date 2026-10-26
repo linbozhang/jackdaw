@@ -22,7 +22,7 @@ use crate::HEAVY_EDITOR_LOCK as STOP_RESTORE_LOCK;
 fn stop_lock() -> std::sync::MutexGuard<'static, ()> {
     STOP_RESTORE_LOCK
         .lock()
-        .unwrap_or_else(|poisoned| poisoned.into_inner())
+        .unwrap_or_else(std::sync::PoisonError::into_inner)
 }
 
 const ZONE_SCENE: &str = "#Zone\njackdaw_scene_types::node_id::SceneNodeId(4242)\nbevy_transform::components::transform::Transform\n";

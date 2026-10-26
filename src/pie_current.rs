@@ -203,78 +203,14 @@ fn launch_current_scene(world: &mut World, tab_index: usize, save_first: bool) {
     let Some(run) = first_run_config(world) else {
         return;
     };
-    let Some(root) = crate::pie::project_root(world) else {
-        return;
-    };
 
-    let (named, was_modified) = {
-        let scenes = world.resource::<Scenes>();
-        let Some(tab) = scenes.tabs.get(tab_index) else {
-            return;
-        };
-        (tab.path.is_some(), tab_modified(world, tab_index))
-    };
-
-    // The Save policy: what the game may load must be on disk first. The
-    // named-scene case runs the ordinary launch-save chain (its
-    // modified-untitled refusal gate can never fire: the scene in front is
-    // named here); an untitled scene in front saves the named background
-    // tabs without that gate, since it itself is about to run as a copy.
-    if save_first {
-        let saved = if named {
-            crate::pie::save_scenes_before_launch(world, "playing")
-        } else {
-            let failures = crate::scenes::operators::save_modified_scenes(world);
-            if failures.is_empty() {
-                Ok(())
-            } else {
-                Err(format!(
-                    "Not playing: could not save {}",
-                    failures.join("; ")
-                ))
-            }
-        };
-        if let Err(reason) = saved {
+    let scene_override = match resolve_override_for_launch(world, tab_index, save_first, "playing")
+    {
+        Ok(scene_override) => scene_override,
+        Err(reason) => {
             warn!("PIE: not playing: {reason}");
             crate::status_bar::notify_error(world, reason);
             return;
-        }
-    }
-
-    // The override: the tab's file when it is named and (under the Save
-    // policy) freshly saved, a temporary copy when it is not — an untitled
-    // scene, or unsaved work under the copy policy.
-    let use_temp_copy = !named || (was_modified && !save_first);
-    let launch_assets_root = run_launch_asset_root(&root, &run);
-    let scene_override = if use_temp_copy {
-        match write_pie_temp_copy(world, tab_index, &launch_assets_root) {
-            Ok(override_launch) => override_launch,
-            Err(reason) => {
-                warn!("PIE: not playing: {reason}");
-                crate::status_bar::notify_error(world, reason);
-                return;
-            }
-        }
-    } else {
-        let path = {
-            let scenes = world.resource::<Scenes>();
-            scenes
-                .tabs
-                .get(tab_index)
-                .and_then(|tab| tab.path.clone())
-                .expect("the tab was checked named above")
-        };
-        match assets_relative_scene_path(&launch_assets_root, &path) {
-            Ok(assets_relative) => SceneOverrideLaunch {
-                assets_relative,
-                temp_copy: None,
-                from_temp_copy: false,
-            },
-            Err(reason) => {
-                warn!("PIE: not playing: {reason}");
-                crate::status_bar::notify_error(world, reason);
-                return;
-            }
         }
     };
 
@@ -305,6 +241,106 @@ fn launch_current_scene(world: &mut World, tab_index: usize, save_first: bool) {
         instance: 1,
     };
     launch_instance_with_override(world, key, run, Some(scene_override));
+}
+
+/// The override a current-scene launch runs with, for the tab at
+/// `tab_index`. `save_first` applies the Save policy first (the caller's
+/// answer to Ask included); `action` names what asked, for the refusal
+/// messages. Nothing here notifies or launches — the caller owns the
+/// user-facing outcome.
+pub(crate) fn resolve_override_for_launch(
+    world: &mut World,
+    tab_index: usize,
+    save_first: bool,
+    action: &str,
+) -> Result<SceneOverrideLaunch, String> {
+    let Some(root) = crate::pie::project_root(world) else {
+        return Err("no project is open".to_string());
+    };
+    let Some(run) = world
+        .get_resource::<crate::run_config::RunConfigs>()
+        .map(|configs| configs.manifest.runs.clone())
+        .and_then(|runs| runs.into_iter().next())
+    else {
+        return Err("no run configurations".to_string());
+    };
+
+    let (named, was_modified) = {
+        let scenes = world.resource::<Scenes>();
+        let Some(tab) = scenes.tabs.get(tab_index) else {
+            return Err("the scene tab is gone".to_string());
+        };
+        (tab.path.is_some(), tab_modified(world, tab_index))
+    };
+
+    // The Save policy: what the game may load must be on disk first. The
+    // named-scene case runs the ordinary launch-save chain (its
+    // modified-untitled refusal gate can never fire: the scene in front is
+    // named here); an untitled scene in front saves the named background
+    // tabs without that gate, since it itself is about to run as a copy.
+    if save_first {
+        if named {
+            crate::pie::save_scenes_before_launch(world, action)?;
+        } else {
+            let failures = crate::scenes::operators::save_modified_scenes(world);
+            if !failures.is_empty() {
+                return Err(format!(
+                    "Not {action}: could not save {}",
+                    failures.join("; ")
+                ));
+            }
+        }
+    }
+
+    // The override: the tab's file when it is named and (under the Save
+    // policy) freshly saved, a temporary copy when it is not — an untitled
+    // scene, or unsaved work under the copy policy.
+    let use_temp_copy = !named || (was_modified && !save_first);
+    let launch_assets_root = run_launch_asset_root(&root, &run);
+    if use_temp_copy {
+        write_pie_temp_copy(world, tab_index, &launch_assets_root)
+    } else {
+        let path = {
+            let scenes = world.resource::<Scenes>();
+            scenes
+                .tabs
+                .get(tab_index)
+                .and_then(|tab| tab.path.clone())
+                .expect("the tab was checked named above")
+        };
+        assets_relative_scene_path(&launch_assets_root, &path).map(|assets_relative| {
+            SceneOverrideLaunch {
+                assets_relative,
+                temp_copy: None,
+                from_temp_copy: false,
+            }
+        })
+    }
+}
+
+/// The override a Reload of a current-scene session relaunches with,
+/// resolved fresh against the scene in front: edited since the launch, the
+/// relaunch writes a new temporary copy; still clean, the same file. A
+/// reload never writes disk on its own — it replays what is in front, not
+/// what a save policy would do — and it never asks: the rebuild is already
+/// the user's explicit answer. `None` when no scene tab is in front (the
+/// relaunch falls back to the game's own startup scene) or the resolution
+/// refused.
+pub fn override_for_reload(world: &mut World) -> Option<SceneOverrideLaunch> {
+    let tab_index = world.get_resource::<Scenes>().and_then(current_scene_tab)?;
+    match resolve_override_for_launch(world, tab_index, false, "reloading") {
+        Ok(scene_override) => {
+            info!(
+                "PIE: reload runs the current scene '{}'",
+                scene_override.assets_relative
+            );
+            Some(scene_override)
+        }
+        Err(reason) => {
+            warn!("PIE: reload falls back to the startup scene: {reason}");
+            None
+        }
+    }
 }
 
 /// The first run config, refused the way `pie.play` refuses when there is
@@ -755,7 +791,13 @@ pub(crate) fn pie_play_current(
 #[operator(
     id = "project.set_save_before_play",
     label = "Set Save Before Play",
-    description = "Set how Play handles unsaved scenes: save, ask, or play an unsaved copy."
+    description = "Set how Play handles unsaved scenes: save, ask, or play an unsaved copy.",
+    params(mode(
+        String,
+        doc = "The policy: \"save\" (save modified scenes, then launch), \"ask\" \
+                   (a dialog before launching), or \"play_unsaved_copy\" (run a \
+                   temporary copy; nothing written)."
+    ),)
 )]
 pub(crate) fn project_set_save_before_play(
     In(params): In<OperatorParameters>,
@@ -863,8 +905,10 @@ mod tests {
             kind: TabKind::Scene,
             ..crate::scenes::SceneTab::new_untitled(n)
         };
-        let mut scenes = Scenes::default();
-        scenes.tabs = vec![scene(1), prefab(2), prefab(3), scene(4)];
+        let mut scenes = Scenes {
+            tabs: vec![scene(1), prefab(2), prefab(3), scene(4)],
+            active: 0,
+        };
         scenes.active = 2;
         // The prefab in front falls back to the nearest scene tab, one
         // step to its right (the tab to its left is also a prefab).

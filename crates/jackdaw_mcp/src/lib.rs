@@ -825,6 +825,23 @@ impl JackdawMcp {
     pub async fn audit(&self) -> Result<CallToolResult, ErrorData> {
         self.brp_text("jackdaw/audit", json!({})).await
     }
+
+    /// The play-in-editor session as a structured face.
+    #[tool(
+        description = "The play-in-editor session: `status` (building|running|failed|stopped), \
+                       `view_mode` (scene|live), the focused instance, every launched instance \
+                       ({key, config, instance, stage: connecting|live, scene_override, \
+                       scene_source: named|unsaved-copy|none}), the projection's shape \
+                       ({entities, authored, ephemeral}), and the pending `live_edits` count. \
+                       This is what you assert a play/stop round against: after \
+                       call_operator(id: \"pie.play_current\") and jackdaw/wait(until: \
+                       \"pie_running\"), `scene_override` names the scene the game actually \
+                       loads and `scene_source` says whether it reads the tab's file or an \
+                       unsaved copy; a stop leaves `instances` empty."
+    )]
+    pub async fn pie(&self) -> Result<CallToolResult, ErrorData> {
+        self.brp_text("jackdaw/pie", json!({})).await
+    }
 }
 
 #[tool_handler(router = self.tool_router)]

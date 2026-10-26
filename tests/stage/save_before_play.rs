@@ -79,10 +79,14 @@ fn play_saves_the_edited_scene_before_the_game_starts() {
 #[test]
 fn with_save_before_play_off_play_leaves_the_file_alone() {
     let (mut app, _tmp, scene) = edited_scene();
-    run_op_clause(app.world_mut(), "project.toggle_save_before_play")
-        .expect("the toggle dispatches")
-        .assert_finished();
-    app.update();
+    // The toggle cycles save -> ask -> play_unsaved_copy: the old boolean
+    // "off" is the copy mode, two toggles from the default save.
+    for _ in 0..2 {
+        run_op_clause(app.world_mut(), "project.toggle_save_before_play")
+            .expect("the toggle dispatches")
+            .assert_finished();
+        app.update();
+    }
 
     play(&mut app);
 

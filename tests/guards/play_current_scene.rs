@@ -1,9 +1,9 @@
-//! The current-scene play channel (pie.play_current): resolving the
+//! The current-scene play channel (`pie.play_current`): resolving the
 //! scene tab in front, the three save policies, the temporary run copy
-//! under assets/.jackdaw-pie/, and the prefab fallback. Headless half:
+//! under `assets/.jackdaw-pie/`, and the prefab fallback. Headless half:
 //! the resolution and its file effects, asserted through the operator
-//! surface and LastPlayCurrent; the child process itself (the override
-//! traveling through JACKDAW_PIE_SCENE into the game) is covered by the
+//! surface and `LastPlayCurrent`; the child process itself (the override
+//! traveling through `JACKDAW_PIE_SCENE` into the game) is covered by the
 //! runtime override tests and the live QA script.
 
 use bevy::prelude::*;
@@ -22,7 +22,7 @@ use crate::HEAVY_EDITOR_LOCK as PLAY_CURRENT_LOCK;
 fn play_lock() -> std::sync::MutexGuard<'static, ()> {
     PLAY_CURRENT_LOCK
         .lock()
-        .unwrap_or_else(|poisoned| poisoned.into_inner())
+        .unwrap_or_else(std::sync::PoisonError::into_inner)
 }
 
 const ZONE_SCENE: &str = "#Zone\nbevy_transform::components::transform::Transform\n";
@@ -103,7 +103,7 @@ fn set_mode(app: &mut App, mode: &str) {
     app.update();
 }
 
-/// pie.play_current through the operator surface, then a frame for the
+/// `pie.play_current` through the operator surface, then a frame for the
 /// queued resolution.
 fn play_current(app: &mut App) {
     run_op_clause(app.world_mut(), "pie.play_current")
@@ -497,5 +497,51 @@ fn background_unsaved_tabs_keep_their_state() {
             .unwrap()
             .contains("rock.bsn"),
         "the background named tab's edit was saved, not dropped"
+    );
+}
+
+// ---------------------------------------------------------------- reload --
+
+/// A reload resolves the override fresh (matrix #8): an edited scene
+/// reloads onto a new temporary copy, a clean named scene onto its file,
+/// and neither writes disk — the reload replays what is in front.
+#[test]
+fn reload_resolves_the_override_fresh_without_writing_disk() {
+    let _guard = play_lock();
+    let (mut app, tmp) = editor();
+
+    // A clean named scene: the reload override is its file path.
+    open_zone(&mut app);
+    let override_clean = jackdaw::pie_current::override_for_reload(app.world_mut())
+        .expect("a clean named scene resolves");
+    assert_eq!(override_clean.assets_relative, "zone.bsn");
+    assert!(!override_clean.from_temp_copy);
+    assert!(
+        temp_copies(&tmp, "zone").is_empty(),
+        "a clean scene writes no copy"
+    );
+
+    // The same scene edited: the reload override is a fresh temp copy of
+    // the unsaved work, and the disk file keeps its old content.
+    place_rock(&mut app);
+    let override_dirty = jackdaw::pie_current::override_for_reload(app.world_mut())
+        .expect("an edited scene resolves");
+    assert!(override_dirty.from_temp_copy);
+    let copy = std::fs::read_to_string(
+        override_dirty
+            .temp_copy
+            .as_ref()
+            .expect("the override owns its copy"),
+    )
+    .unwrap();
+    assert!(
+        copy.contains("rock.bsn"),
+        "the reload copy carries the unsaved edit"
+    );
+    assert!(
+        !std::fs::read_to_string(tmp.path().join("assets/zone.bsn"))
+            .unwrap()
+            .contains("rock.bsn"),
+        "the reload never writes disk"
     );
 }

@@ -1,4 +1,4 @@
-#![expect(clippy::print_stdout, reason = "test prints progress diagnostics")]
+#![allow(clippy::print_stdout, reason = "test prints progress diagnostics")]
 //! Can the editor adopt a CHANGED component shape by swapping registry
 //! entries, with no restart and no ECS involvement?
 //!

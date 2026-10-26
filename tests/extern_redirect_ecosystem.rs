@@ -1,4 +1,4 @@
-#![expect(clippy::print_stdout, reason = "test prints progress diagnostics")]
+#![allow(clippy::print_stdout, reason = "test prints progress diagnostics")]
 //! Whole-graph extern redirect with an ecosystem dependency.
 //!
 //! Builds `tests/fixtures/ecosystem_game` (bevy +
