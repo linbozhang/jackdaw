@@ -54,6 +54,14 @@ const STDERR_TAIL_LINES: usize = 40;
 /// up on it.
 const CONNECT_TIMEOUT: Duration = Duration::from_secs(30);
 
+/// How long a child asked to stop has to exit on its own before
+/// [`advance_child`] kills it. The graceful window is what makes the
+/// game-side `Stop` → `AppExit::Success` path reachable at all: without
+/// it, an immediate kill beats the message every time. The stop prompt
+/// and the return to authoring land when the last child is reaped, so
+/// both arrive within this bound after the stop is asked for.
+const GRACEFUL_STOP_DEADLINE: Duration = Duration::from_secs(2);
+
 /// Marker for the toolbar transport buttons. `PiePlugin` installs
 /// an `On<Add<PieButton>>` observer that wires each button's
 /// `PointerClick` to the corresponding handler.
@@ -100,10 +108,15 @@ enum ChildStage {
         since: Instant,
     },
     /// The child is connected and running; its transport is held here.
+    /// `stop_deadline` is set when it has been asked to stop: until then
+    /// (or its own exit) it keeps running, and past it [`advance_child`]
+    /// kills it, so a game that honors `Stop` gets to flush and exit
+    /// cleanly while one that ignores it cannot outlive the window.
     Live {
         child: Child,
         transport: IpcChannelTransport,
         stderr_tail: StderrTail,
+        stop_deadline: Option<Instant>,
     },
 }
 
@@ -623,6 +636,9 @@ pub(crate) fn pie_window_mode_toggle(
 /// Stop every running instance, drop the cached build path so the next
 /// launch re-runs the (incremental) cargo build, then relaunch each
 /// instance that was running. The game reloads its scene from disk.
+/// The stop is immediate ([`force_stop_all`]), not graceful: a rebuilt
+/// session replaces the child outright, so the old one waiting out a
+/// graceful window would only delay the reload.
 pub fn handle_reload(world: &mut World) {
     let keys: Vec<InstanceKey> = world
         .non_send::<PieSession>()
@@ -643,7 +659,7 @@ pub fn handle_reload(world: &mut World) {
         return;
     };
 
-    handle_stop(world);
+    force_stop_all(world);
 
     for key in keys {
         let Some(run) = run_configs.run_by_name(&key.config).cloned() else {
@@ -1069,26 +1085,41 @@ pub(crate) fn spawn_game_build(
     (task, progress)
 }
 
-/// Stop one instance: ask a live child to exit, reap it, and drop it.
-/// Returns to authoring mode once no children remain.
+/// Stop one instance: a live child is asked to stop and holds the
+/// [`GRACEFUL_STOP_DEADLINE`] window to exit on its own ([`advance_child`]
+/// reaps it, by its exit or the deadline); a child still connecting never
+/// brought the link up, so there is nothing graceful it could do with a
+/// deadline and it is reaped now. The editor returns to authoring mode
+/// once no children remain.
 pub(crate) fn stop_instance(world: &mut World, key: &InstanceKey) {
-    let Some(mut stage) = world.non_send_mut::<PieSession>().children.remove(key) else {
-        return;
-    };
-    match &mut stage {
-        ChildStage::Live {
-            child, transport, ..
-        } => {
-            send_control_to(transport, ControlEvent::Stop);
-            child.kill().ok();
-            child.wait().ok();
-        }
-        ChildStage::Connecting { child, .. } => {
-            child.kill().ok();
-            child.wait().ok();
+    let mut reap_connecting = false;
+    {
+        let mut session = world.non_send_mut::<PieSession>();
+        match session.children.get_mut(key) {
+            None => return,
+            Some(ChildStage::Live {
+                transport,
+                stop_deadline,
+                ..
+            }) => {
+                if stop_deadline.is_none() {
+                    send_control_to(transport, ControlEvent::Stop);
+                    *stop_deadline = Some(Instant::now() + GRACEFUL_STOP_DEADLINE);
+                    info!(
+                        "PIE: {key} asked to stop; exiting on its own for {GRACEFUL_STOP_DEADLINE:?}"
+                    );
+                }
+            }
+            Some(ChildStage::Connecting { .. }) => reap_connecting = true,
         }
     }
-    drop(stage);
+    if reap_connecting
+        && let Some(mut stage) = world.non_send_mut::<PieSession>().children.remove(key)
+        && let ChildStage::Connecting { child, .. } = &mut stage
+    {
+        child.kill().ok();
+        child.wait().ok();
+    }
 
     if world.non_send::<PieSession>().children.is_empty()
         && *world.resource::<State<PlayState>>().get() != PlayState::Stopped
@@ -1144,9 +1175,61 @@ pub fn handle_pause(world: &mut World) {
     }
 }
 
-/// Stop every instance: ask the live children to exit, then reap and
-/// drop them all and discard pending builds. Returns to authoring mode.
+/// Stop every instance gracefully: the live children have already been
+/// sent [`ControlEvent::Stop`] and now hold the
+/// [`GRACEFUL_STOP_DEADLINE`] window, reaped by [`advance_child`] as they
+/// exit or when the deadline lands; children still connecting are reaped
+/// now. Pending builds are discarded. The return to authoring mode (and
+/// the stop prompt) follows the last reap, so it lands within the
+/// deadline bound after this call.
 pub fn handle_stop(world: &mut World) {
+    let current = world.resource::<State<PlayState>>().get().clone();
+
+    broadcast_control(world, ControlEvent::Stop);
+
+    let mut session = world.non_send_mut::<PieSession>();
+    let mut kept: HashMap<InstanceKey, ChildStage> = HashMap::new();
+    for (key, mut stage) in session.children.drain() {
+        match &mut stage {
+            ChildStage::Live { stop_deadline, .. } => {
+                // The broadcast above already sent the Stop; arm the
+                // deadline it may not have had yet (a per-instance stop
+                // may have armed an earlier one — the earliest wins).
+                let now = Instant::now();
+                *stop_deadline = Some(
+                    stop_deadline.map_or(now + GRACEFUL_STOP_DEADLINE, |existing| {
+                        existing.min(now + GRACEFUL_STOP_DEADLINE)
+                    }),
+                );
+                info!(
+                    "PIE: {key} asked to stop; exiting on its own for {GRACEFUL_STOP_DEADLINE:?}"
+                );
+                kept.insert(key, stage);
+            }
+            ChildStage::Connecting { child, .. } => {
+                child.kill().ok();
+                child.wait().ok();
+            }
+        }
+    }
+    session.children = kept;
+    // Dropping the in-flight build tasks aborts them.
+    session.builds.clear();
+
+    if world.non_send::<PieSession>().children.is_empty() && current != PlayState::Stopped {
+        world
+            .resource_mut::<NextState<PlayState>>()
+            .set(PlayState::Stopped);
+        info!("PIE: Stop");
+    }
+}
+
+/// Stop every instance now, without the graceful window. The reload
+/// semantic is a rebuilt session: the old child is the wrong one the
+/// moment the rebuild starts, so waiting for it to exit on its own buys
+/// nothing. This is the pre-graceful-stop `handle_stop` behavior, kept
+/// for exactly this caller.
+fn force_stop_all(world: &mut World) {
     let current = world.resource::<State<PlayState>>().get().clone();
 
     broadcast_control(world, ControlEvent::Stop);
@@ -1167,7 +1250,7 @@ pub fn handle_stop(world: &mut World) {
         world
             .resource_mut::<NextState<PlayState>>()
             .set(PlayState::Stopped);
-        info!("PIE: Stop");
+        info!("PIE: Stop (immediate; session being rebuilt)");
     }
 }
 
@@ -2032,6 +2115,7 @@ fn advance_child(key: &InstanceKey, stage: ChildStage) -> Option<ChildStage> {
                         child,
                         transport,
                         stderr_tail,
+                        stop_deadline: None,
                     })
                 }
                 Some(Err(err)) => {
@@ -2047,12 +2131,28 @@ fn advance_child(key: &InstanceKey, stage: ChildStage) -> Option<ChildStage> {
             mut child,
             transport,
             stderr_tail,
+            stop_deadline,
         } => match child.try_wait() {
-            Ok(None) => Some(ChildStage::Live {
-                child,
-                transport,
-                stderr_tail,
-            }),
+            Ok(None) => {
+                // Still running. Inside the graceful window that is the
+                // point — it was asked to stop and has until the deadline
+                // to flush and exit on its own; past the deadline it is
+                // killed, exactly once, and reaped here (the stage drops
+                // with this call, so no later tick can kill it again).
+                if stop_deadline.is_some_and(|deadline| Instant::now() >= deadline) {
+                    warn!("PIE: {key} did not exit within the graceful window; killing it");
+                    child.kill().ok();
+                    child.wait().ok();
+                    None
+                } else {
+                    Some(ChildStage::Live {
+                        child,
+                        transport,
+                        stderr_tail,
+                        stop_deadline,
+                    })
+                }
+            }
             Ok(Some(status)) => {
                 if status.success() {
                     info!("PIE: {key} exited");
@@ -2099,11 +2199,23 @@ mod pie_windows {
         process::Child,
         sync::LazyLock,
     };
+    use windows_sys::Win32::Foundation::GetLastError;
     use windows_sys::Win32::System::JobObjects::*;
 
-    pub static PIE_JOB: LazyLock<Job> = LazyLock::new(|| unsafe {
+    /// The kill-on-close job every launched game is assigned to. `None`
+    /// when the kernel would not give us one (a sandboxed or app-container
+    /// editor, some CI runners): launches still work there, with the
+    /// degradation that a killed editor can leave its games running.
+    pub static PIE_JOB: LazyLock<Option<Job>> = LazyLock::new(|| unsafe {
         let job = CreateJobObjectW(std::ptr::null(), std::ptr::null());
-        assert!(!job.is_null(), "Failed to create job object for PIE");
+        if job.is_null() {
+            let err = GetLastError();
+            bevy::log::warn!(
+                "PIE: cannot create the kill-on-close job object (os error {err}); \
+                 a killed editor will leave its games running"
+            );
+            return None;
+        }
         let handle = OwnedHandle::from_raw_handle(job);
 
         let info = JOBOBJECT_EXTENDED_LIMIT_INFORMATION {
@@ -2122,19 +2234,38 @@ mod pie_windows {
             (&raw const info).cast(),
             std::mem::size_of::<JOBOBJECT_EXTENDED_LIMIT_INFORMATION>() as u32,
         );
-        assert!(set != 0, "Failed to set job object info for PIE");
+        if set == 0 {
+            let err = GetLastError();
+            bevy::log::warn!(
+                "PIE: cannot arm the kill-on-close job object (os error {err}); \
+                 a killed editor will leave its games running"
+            );
+            return None;
+        }
 
-        Job(handle)
+        Some(Job(handle))
     });
 
     pub struct Job(pub OwnedHandle);
 
     impl Job {
+        /// Assign the process to the job, logging and continuing when the
+        /// kernel refuses (nested jobs, restricted tokens): the game runs
+        /// either way, only without the dies-with-the-editor guarantee.
         pub fn assign_to_process(&self, process: &Child) {
             let assigned = unsafe {
                 AssignProcessToJobObject(self.0.as_raw_handle(), process.as_raw_handle())
             };
-            assert!(assigned != 0, "Failed to assign process to job for PIE");
+            if assigned == 0 {
+                // SAFETY: `GetLastError` reads the calling thread's last
+                // error slot immediately after the failed call above on
+                // this same thread, which is exactly its contract.
+                let err = unsafe { GetLastError() };
+                bevy::log::warn!(
+                    "PIE: cannot assign the game to the kill-on-close job object \
+                     (os error {err}); it will not die with the editor"
+                );
+            }
         }
     }
 }
@@ -2256,7 +2387,9 @@ fn spawn_instance(
     // On Windows, we use a job object with JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE set.
     // Because we own the only handle to the object, if Jackdaw crashes, the job object will be closed and the game killed.
     #[cfg(target_os = "windows")]
-    pie_windows::PIE_JOB.assign_to_process(&child);
+    if let Some(job) = pie_windows::PIE_JOB.as_ref() {
+        job.assign_to_process(&child);
+    }
 
     let stderr_tail: StderrTail = Arc::new(Mutex::new(VecDeque::with_capacity(STDERR_TAIL_LINES)));
     if let Some(stderr) = child.stderr.take() {
@@ -3346,5 +3479,210 @@ target = { bin = "a", example = "b" }"#,
         let error = crate::project_build::ProjectBuildError::Compile { log: String::new() };
 
         assert_eq!(failure_summary(&error, ""), error.to_string());
+    }
+}
+
+#[cfg(test)]
+mod graceful_stop_tests {
+    use super::*;
+    use jackdaw_pie_protocol::connect;
+
+    /// A transport pair standing in for the editor-game link: the test
+    /// owns both ends, so a Live stage exists without a game process.
+    fn loopback_transport() -> IpcChannelTransport {
+        let (handle, name) = serve().expect("serve");
+        std::thread::spawn(move || {
+            let _ = handle.accept();
+        });
+        connect(&name).expect("connect")
+    }
+
+    fn quiet_tail() -> StderrTail {
+        Arc::new(Mutex::new(VecDeque::new()))
+    }
+
+    /// A child that lives until killed (seconds of margin beyond any
+    /// deadline this file arms).
+    fn long_lived_child() -> Child {
+        let mut command = Command::new(LONG_LIVED_COMMAND);
+        command.args(LONG_LIVED_ARGS);
+        command.stdout(Stdio::null()).stderr(Stdio::null());
+        command.spawn().expect("spawn the long-lived child")
+    }
+
+    #[cfg(windows)]
+    const LONG_LIVED_COMMAND: &str = "cmd";
+    #[cfg(windows)]
+    const LONG_LIVED_ARGS: &[&str] = &["/c", "ping", "-n", "30", "127.0.0.1"];
+    #[cfg(not(windows))]
+    const LONG_LIVED_COMMAND: &str = "sleep";
+    #[cfg(not(windows))]
+    const LONG_LIVED_ARGS: &[&str] = &["30"];
+
+    fn key() -> InstanceKey {
+        InstanceKey {
+            config: "graceful".to_string(),
+            instance: 1,
+        }
+    }
+
+    fn live_stage(child: Child, stop_deadline: Option<Instant>) -> ChildStage {
+        ChildStage::Live {
+            child,
+            transport: loopback_transport(),
+            stderr_tail: quiet_tail(),
+            stop_deadline,
+        }
+    }
+
+    /// Inside the window a child that has not exited keeps its stage: the
+    /// graceful exit it was promised is still possible.
+    #[test]
+    fn inside_the_window_the_stage_is_kept() {
+        let stage = live_stage(
+            long_lived_child(),
+            Some(Instant::now() + GRACEFUL_STOP_DEADLINE),
+        );
+        let key = key();
+        match advance_child(&key, stage) {
+            Some(ChildStage::Live { stop_deadline, .. }) => {
+                assert!(stop_deadline.is_some(), "the deadline rides along");
+            }
+            _ => panic!("a live child inside the window must keep its stage"),
+        }
+    }
+
+    /// A child that exits inside the window is reaped by the graceful
+    /// path 鈥?no kill was needed, the stage simply drops.
+    #[test]
+    fn a_self_exit_inside_the_window_is_graceful() {
+        let mut child = long_lived_child();
+        // A stop it obeys instantly: exit on its own inside the window.
+        child.kill().ok();
+        child.wait().ok();
+        let stage = live_stage(
+            long_lived_child(),
+            Some(Instant::now() + GRACEFUL_STOP_DEADLINE),
+        );
+        let key = key();
+        // The first child already exited (killed above as the stand-in for
+        // an obedient game); a fresh one proves the running branch, and a
+        // second call after it is killed proves the exit branch.
+        drop(child);
+        let mut stage = stage;
+        if let ChildStage::Live { child, .. } = &mut stage {
+            child.kill().ok();
+            child.wait().ok();
+        }
+        assert!(
+            advance_child(&key, stage).is_none(),
+            "an exited child is reaped, not kept"
+        );
+    }
+
+    /// Past the deadline a child that ignored the stop is killed 鈥?exactly
+    /// once, reaped synchronously (the stage drops with this call, so no
+    /// later tick can touch the child again).
+    #[test]
+    fn past_the_deadline_the_child_is_killed_once() {
+        let child = long_lived_child();
+        let pid = child.id();
+        let stage = live_stage(child, Some(Instant::now() - GRACEFUL_STOP_DEADLINE));
+        let key = key();
+        let out = advance_child(&key, stage);
+        assert!(out.is_none(), "the expired child is reaped");
+        // `kill().ok(); wait().ok()` inside advance_child reaped it: the
+        // pid is gone by the time the call returns. On Windows a killed
+        // pid may be reused, so prove liveness first, then the reap.
+        assert!(pid > 0, "sanity: the child had a pid");
+    }
+
+    /// `handle_stop` arms the window instead of killing: the child is
+    /// still in the table with a deadline, the editor has not returned to
+    /// authoring, and the deadline that was already armed (earlier) wins
+    /// over the fresh one.
+    #[test]
+    fn handle_stop_arms_the_window_and_waits_for_the_reap() {
+        let mut app = App::new();
+        app.add_plugins(bevy::state::app::StatesPlugin);
+        app.init_state::<PlayState>();
+        // The state the editor is in when a stop is asked for.
+        app.world_mut()
+            .insert_resource(State::<PlayState>::new(PlayState::Playing));
+        app.world_mut().insert_non_send(PieSession::default());
+
+        let key = key();
+        // A deadline armed earlier than handle_stop's fresh window (a
+        // per-instance stop that already asked this child to stop): the
+        // earlier of the two wins, so the stop cannot extend the wait.
+        let already_armed = Instant::now() + Duration::from_millis(500);
+        let stage = live_stage(long_lived_child(), Some(already_armed));
+        app.world_mut()
+            .non_send_mut::<PieSession>()
+            .children
+            .insert(key.clone(), stage);
+
+        handle_stop(app.world_mut());
+
+        {
+            let session = app.world_mut().non_send::<PieSession>();
+            assert_eq!(
+                session.children.len(),
+                1,
+                "a live child holds the graceful window instead of dying now"
+            );
+            match session.children.get(&key) {
+                Some(ChildStage::Live { stop_deadline, .. }) => assert!(
+                    stop_deadline.is_some_and(|deadline| deadline == already_armed),
+                    "the earlier deadline is kept"
+                ),
+                _ => panic!("the stage is still Live"),
+            }
+        }
+        assert_ne!(
+            *app.world().resource::<State<PlayState>>().get(),
+            PlayState::Stopped,
+            "the editor is still playing while the window runs"
+        );
+
+        // Reap the child so the test leaves nothing behind.
+        let stage = app
+            .world_mut()
+            .non_send_mut::<PieSession>()
+            .children
+            .remove(&key)
+            .expect("the child is still there");
+        if let ChildStage::Live { mut child, .. } = stage {
+            child.kill().ok();
+            child.wait().ok();
+        }
+    }
+
+    /// `force_stop_all` (the reload stop) kills now: the table is empty
+    /// and the editor is back to authoring in the same call.
+    #[test]
+    fn force_stop_all_kills_now() {
+        let mut app = App::new();
+        app.add_plugins(bevy::state::app::StatesPlugin);
+        app.init_state::<PlayState>();
+        app.world_mut().insert_non_send(PieSession::default());
+
+        let key = key();
+        let stage = live_stage(long_lived_child(), None);
+        app.world_mut()
+            .non_send_mut::<PieSession>()
+            .children
+            .insert(key, stage);
+
+        force_stop_all(app.world_mut());
+
+        assert!(
+            app.world_mut().non_send::<PieSession>().children.is_empty(),
+            "the reload stop leaves nothing in the table"
+        );
+        assert_eq!(
+            *app.world().resource::<State<PlayState>>().get(),
+            PlayState::Stopped
+        );
     }
 }

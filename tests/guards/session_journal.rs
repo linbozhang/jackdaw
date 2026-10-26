@@ -335,6 +335,14 @@ fn generated_scene(count: usize) -> String {
 /// whose document carries a Terrain patch, and holds each under 5 ms.
 #[test]
 fn the_journal_write_costs_no_more_than_five_milliseconds() {
+    // A timing gate this tight needs the machine to itself: this module was
+    // its own test binary once (one process, no neighbors) and the merged
+    // binary's other editor-booting tests, running in parallel, can push
+    // the write over the budget all by themselves. Take the heavy-editor
+    // lock so the measurement runs the way the budget was set: alone.
+    let _heavy = crate::HEAVY_EDITOR_LOCK
+        .lock()
+        .unwrap_or_else(|poisoned| poisoned.into_inner());
     for (name, scene_text) in [
         ("400-entity generated", generated_scene(400)),
         (
