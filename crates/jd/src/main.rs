@@ -99,10 +99,10 @@ const SPECS: &[CommandSpec] = &[
     },
     CommandSpec {
         name: "export",
-        flags: &[],
+        flags: &["--force"],
         values: &["--project", "-p", "--config", "--profile", "--out"],
         usage: "jd export [--project <path>] [--config <label>] [--profile <name>] \
-                [--out <dir>]",
+                [--out <dir>] [--force]",
     },
     CommandSpec {
         name: "setup",
@@ -262,9 +262,10 @@ fn print_usage() {
          run [--project <path>] [--config <label>]\n    \
              Build and run the game; --config launches one jackdaw.toml\n    \
              run with its target and environment\n  \
-         export [--project <path>] [--config <label>] [--profile <name>] [--out <dir>]\n    \
+         export [--project <path>] [--config <label>] [--profile <name>] [--out <dir>] [--force]\n    \
              Build a standalone game: executable and assets staged\n    \
-             together into .jackdaw/dist/<profile> (default profile release)\n  \
+             together into .jackdaw/dist/<profile> (default profile release);\n    \
+             --force replaces a non-empty --out no jackdaw export wrote\n  \
          setup                      Prepare the pinned SDK\n  \
          doctor [--project <path>]  Check build prerequisites and a project's setup\n  \
          export-terrain <scene.bsn> --out <dir>\n    \

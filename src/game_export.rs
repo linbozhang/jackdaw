@@ -31,7 +31,10 @@ const EXPORT_PROFILE: &str = "release";
 
 /// The one export the editor runs at a time: the build-and-stage task,
 /// the progress sink the footer and Build panel read while it runs, and
-/// the project it builds.
+/// the project it builds. The structured face of the latest outcome —
+/// what the BRP `jackdaw/export` method answers — stays behind after
+/// the task ends, so a QA caller (or a user wondering where the export
+/// went) can ask long after the notification has faded.
 #[derive(Resource, Default)]
 pub struct GameExports {
     /// The export task. `None` is no export in flight.
@@ -39,7 +42,15 @@ pub struct GameExports {
     /// The progress sink, kept beside the task and dropped with it.
     progress: Option<Arc<Mutex<BuildProgress>>>,
     /// The project the export builds, for the staging step's plan.
-    root: PathBuf,
+    pub(crate) root: PathBuf,
+    /// When the current (or latest) export started, Unix seconds.
+    pub(crate) started_unix: Option<u64>,
+    /// The report of the export that finished last, kept until the next
+    /// one starts.
+    pub(crate) last_report: Option<ExportReport>,
+    /// The error of the export that failed last, kept until the next
+    /// one starts.
+    pub(crate) last_error: Option<String>,
 }
 
 impl GameExports {
@@ -48,6 +59,61 @@ impl GameExports {
     pub(crate) fn progress(&self) -> Option<Arc<Mutex<BuildProgress>>> {
         self.progress.clone()
     }
+
+    /// The structured face of the export state for the BRP method and
+    /// its MCP tool: what is running, or how the last one ended.
+    pub fn face(&self) -> ExportFace {
+        let (state, outcome) = if self.task.is_some() {
+            ("building", None)
+        } else if let Some(report) = &self.last_report {
+            (
+                "ready",
+                Some(report.executable.file_name().map_or_else(
+                    || report.executable.display().to_string(),
+                    |name| name.display().to_string(),
+                )),
+            )
+        } else if let Some(error) = &self.last_error {
+            ("failed", Some(error.clone()))
+        } else {
+            ("idle", None)
+        };
+        ExportFace {
+            state,
+            outcome,
+            dist_dir: self
+                .last_report
+                .as_ref()
+                .map(|report| report.dist_dir.clone()),
+            manifest: self
+                .last_report
+                .as_ref()
+                .map(|report| report.manifest.clone()),
+            files: self.last_report.as_ref().map(|report| report.files),
+            skipped: self.last_report.as_ref().map(|report| report.skipped),
+            profile: self
+                .last_report
+                .is_some()
+                .then(|| EXPORT_PROFILE.to_string()),
+            started_unix: self.started_unix,
+        }
+    }
+}
+
+/// The answer of the `jackdaw/export` BRP method (and the `export` MCP
+/// tool): one glance at whether an export runs, and where the last one
+/// landed. [`ExportFace::state`] is `idle` (never exported), `building`
+/// (in flight), `ready` (last succeeded) or `failed` (last failed).
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct ExportFace {
+    pub state: &'static str,
+    pub outcome: Option<String>,
+    pub dist_dir: Option<PathBuf>,
+    pub manifest: Option<PathBuf>,
+    pub files: Option<usize>,
+    pub skipped: Option<usize>,
+    pub profile: Option<String>,
+    pub started_unix: Option<u64>,
 }
 
 /// Whether the Build Game entry can run: a project is open, and no
@@ -104,6 +170,16 @@ fn start_game_export(world: &mut World) {
             exports.task = Some(task);
             exports.progress = Some(progress);
             exports.root = root;
+            // The structured face answers for this run from its start;
+            // the previous run's outcome retires with it.
+            exports.started_unix = Some(
+                std::time::SystemTime::now()
+                    .duration_since(std::time::UNIX_EPOCH)
+                    .map(|elapsed| elapsed.as_secs())
+                    .unwrap_or(0),
+            );
+            exports.last_report = None;
+            exports.last_error = None;
         }
         Err(err) => crate::status_bar::notify_error(world, format!("Cannot export: {err}")),
     }
@@ -171,6 +247,11 @@ fn poll_game_export(world: &mut World) {
     match future::block_on(task) {
         Ok(report) => {
             let outcome = export_outcome(&report);
+            {
+                let mut exports = world.resource_mut::<GameExports>();
+                exports.last_report = Some(report.clone());
+                exports.last_error = None;
+            }
             report_export_success(world, &outcome);
             // Failing to open the folder is not failing to export.
             if let Err(err) = export::reveal_in_file_manager(&report.dist_dir) {
@@ -179,6 +260,11 @@ fn poll_game_export(world: &mut World) {
         }
         Err(message) => {
             let log = progress.and_then(|p| p.lock().ok().map(|g| g.full_log.clone()));
+            {
+                let mut exports = world.resource_mut::<GameExports>();
+                exports.last_error = Some(message.clone());
+                exports.last_report = None;
+            }
             report_export_failure(world, message, log);
         }
     }
@@ -293,6 +379,7 @@ mod tests {
                 dist_dir: PathBuf::from("dist"),
                 executable: PathBuf::from("dist/game.exe"),
                 assets_dir: PathBuf::from("dist/assets"),
+                manifest: PathBuf::from("dist/export-manifest.json"),
                 files: 1,
                 skipped: 0,
             })));
@@ -352,6 +439,7 @@ mod tests {
                 dist_dir: PathBuf::from("my-game/.jackdaw/dist/release"),
                 executable: PathBuf::from("my-game/.jackdaw/dist/release/my-game.exe"),
                 assets_dir: PathBuf::from("my-game/.jackdaw/dist/release/assets"),
+                manifest: PathBuf::from("my-game/.jackdaw/dist/release/export-manifest.json"),
                 files: 12,
                 skipped: 2,
             }),

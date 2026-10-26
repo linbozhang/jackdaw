@@ -29,12 +29,20 @@
 
 use std::path::{Path, PathBuf};
 
+use path_slash::PathExt as _;
+use std::borrow::Cow;
+
 /// The marker file an export leaves at the root of its output: proof
 /// the directory belongs to a jackdaw export. [`stage_export`] refuses
 /// to replace a non-empty directory without one (see
 /// [`ExportError::ForeignOutputDir`]), so a mistyped `--out` into a
 /// user directory is stopped by a second gate beyond the path guards.
 const EXPORT_MARKER: &str = ".jackdaw-export";
+
+/// The manifest file an export writes at the root of its output: every
+/// shipped file with its SHA-256, plus what built it. See
+/// [`ExportManifest`] and [`manifest_for`].
+const EXPORT_MANIFEST: &str = "export-manifest.json";
 
 /// Directory names the asset copy refuses to descend into: the PIE
 /// temp copies live in `assets/.jackdaw-pie/` while a play session
@@ -111,6 +119,11 @@ pub struct ExportReport {
     pub executable: PathBuf,
     /// The staged asset directory.
     pub assets_dir: PathBuf,
+    /// The export manifest written at the dist root: every shipped
+    /// file's relative path, SHA-256 and size, plus what built it. Two
+    /// exports of the same input produce the same manifest except for
+    /// its generation time.
+    pub manifest: PathBuf,
     /// Files copied: every asset, plus the executable. The export
     /// marker is not counted.
     pub files: usize,
@@ -119,6 +132,80 @@ pub struct ExportReport {
     /// corrupt leftovers, PIE copies), so what did not ship is
     /// auditable rather than silent.
     pub skipped: usize,
+}
+
+/// One shipped file in the export manifest.
+#[derive(serde::Serialize, serde::Deserialize, Debug, Clone, PartialEq, Eq)]
+pub struct ManifestEntry {
+    /// The file's path inside the export, `/`-separated.
+    pub path: String,
+    /// The file's SHA-256, hex.
+    pub sha256: String,
+    /// The file's size in bytes.
+    pub size: u64,
+}
+
+/// The export's own manifest, written to `<dist>/export-manifest.json`
+/// (see [`EXPORT_MANIFEST`]): the receipt that makes "same input, same
+/// output" checkable and a shipped package verifiable file by file.
+/// The marker and the manifest itself are metadata, not payload, and
+/// are excluded from `files` — so two exports of the same input differ
+/// only in `generated_unix`.
+#[derive(serde::Serialize, serde::Deserialize, Debug, Clone, PartialEq, Eq)]
+pub struct ExportManifest {
+    /// The cargo profile the export was built with.
+    pub profile: String,
+    /// The jackdaw version that staged the export.
+    pub jackdaw: String,
+    /// The Bevy commit the editor was built against, when it tracks
+    /// main (`None` on a release build of jackdaw).
+    pub bevy_rev: Option<String>,
+    /// When the manifest was generated, Unix seconds. The one field
+    /// allowed to differ between two exports of the same input.
+    pub generated_unix: u64,
+    /// Every shipped file, sorted by path.
+    pub files: Vec<ManifestEntry>,
+}
+
+/// Hash a staged tree into its manifest. Pure over the directory's
+/// current contents, so a test (or a suspicious user) can regenerate
+/// and compare it against what shipped.
+pub fn manifest_for(dist: &Path, profile: &str) -> Result<ExportManifest, ExportError> {
+    fn walk(dir: &Path, prefix: &Path, files: &mut Vec<ManifestEntry>) -> std::io::Result<()> {
+        for entry in std::fs::read_dir(dir)? {
+            let entry = entry?;
+            let path = entry.path();
+            let rel = prefix.join(entry.file_name());
+            if entry.file_type()?.is_dir() {
+                walk(&path, &rel, files)?;
+            } else {
+                let bytes = std::fs::read(&path)?;
+                use sha2::{Digest, Sha256};
+                let digest = Sha256::digest(&bytes);
+                files.push(ManifestEntry {
+                    path: rel
+                        .to_slash()
+                        .map(Cow::into_owned)
+                        .unwrap_or_else(|| rel.display().to_string()),
+                    sha256: format!("{digest:x}"),
+                    size: bytes.len() as u64,
+                });
+            }
+        }
+        Ok(())
+    }
+    let mut files = Vec::new();
+    walk(dist, Path::new(""), &mut files)
+        .map_err(io_error(format!("hash the export at {}", dist.display())))?;
+    files.retain(|entry| entry.path != EXPORT_MARKER && entry.path != EXPORT_MANIFEST);
+    files.sort_by(|a, b| a.path.cmp(&b.path));
+    Ok(ExportManifest {
+        profile: profile.to_string(),
+        jackdaw: crate::VERSION.to_string(),
+        bevy_rev: crate::BEVY_REV.map(str::to_string),
+        generated_unix: unix_time_secs(),
+        files,
+    })
 }
 
 /// Why an export could not stage. Both ends of a failed copy are always
@@ -310,6 +397,7 @@ pub fn stage_export(plan: &ExportPlan) -> Result<ExportReport, ExportError> {
     let executable = dist.join(plan.exe_source.file_name().unwrap_or_default());
     Ok(ExportReport {
         assets_dir: dist.join(&plan.assets_staged_subdir),
+        manifest: dist.join(EXPORT_MANIFEST),
         dist_dir: dist,
         executable,
         files: copied.files + 1,
@@ -335,8 +423,9 @@ fn output_dir_is_foreign(dist: &Path) -> bool {
 }
 
 /// Assemble the complete export inside `staging`: the asset tree, the
-/// executable, the export marker. Nothing here touches the output
-/// directory, which is what makes every failure in it recoverable.
+/// executable, the export marker, the manifest. Nothing here touches
+/// the output directory, which is what makes every failure in it
+/// recoverable.
 fn stage_into(plan: &ExportPlan, staging: &Path) -> Result<Copied, ExportError> {
     std::fs::create_dir_all(staging).map_err(io_error(format!(
         "create the staging directory {}",
@@ -359,6 +448,15 @@ fn stage_into(plan: &ExportPlan, staging: &Path) -> Result<Copied, ExportError> 
     .map_err(io_error(format!(
         "write the export marker {}",
         staging.join(EXPORT_MARKER).display()
+    )))?;
+    let manifest = manifest_for(staging, &plan.profile)?;
+    let serialized = serde_json::to_string_pretty(&manifest).map_err(|error| ExportError::Io {
+        action: "serialize the export manifest".to_string(),
+        error: std::io::Error::other(error),
+    })?;
+    std::fs::write(staging.join(EXPORT_MANIFEST), serialized).map_err(io_error(format!(
+        "write the export manifest {}",
+        staging.join(EXPORT_MANIFEST).display()
     )))?;
     Ok(copied)
 }
@@ -987,7 +1085,7 @@ mod tests {
         }
         let mut files = Vec::new();
         walk(dir, Path::new(""), &mut files);
-        files.retain(|(path, _)| path != ".jackdaw-export");
+        files.retain(|(path, _)| path != ".jackdaw-export" && path != "export-manifest.json");
         files.sort();
         files
     }
@@ -1059,7 +1157,7 @@ mod tests {
     }
 
     /// The swap itself can fail: the previous export's game can still
-    /// be running, and a handle without FILE_SHARE_DELETE makes the OS
+    /// be running, and a handle without `FILE_SHARE_DELETE` makes the OS
     /// refuse to move its directory aside. The refusal must bubble up
     /// as an error — never fall back to deleting — and the locked
     /// export stays where it was, byte for byte.
@@ -1275,7 +1373,7 @@ mod tests {
     /// The trash deletion failure itself can no longer be injected on
     /// Windows: any open handle in the previous export also blocks the
     /// rename that moves it aside (probed both with and without
-    /// FILE_SHARE_DELETE), and a read-only file no longer stops
+    /// `FILE_SHARE_DELETE`), and a read-only file no longer stops
     /// `remove_dir_all`. The warn-and-leave-it branch in the swap is
     /// defensive; this test pins its user-visible half — a leftover
     /// trash directory never outlives the next export.
@@ -1357,6 +1455,91 @@ mod tests {
         assert!(marker.contains(crate::VERSION), "{marker}");
         assert!(marker.contains("release"), "{marker}");
         assert!(marker.contains("at "), "{marker}");
+        let _ = std::fs::remove_dir_all(&root);
+    }
+
+    /// The manifest is the receipt: every shipped file with its path,
+    /// size and SHA-256 (verified against an independent hash here), the
+    /// build's identity, and nothing else — the marker and the manifest
+    /// itself are metadata, not payload. Two exports of the same input
+    /// agree on every field but the generation time.
+    #[test]
+    fn the_manifest_lists_every_file_and_repeats_identically_except_time() {
+        let (root, binary) = staged_fixture("manifest");
+        let plan = plan_export(&root, "release", &binary, None);
+        let report = stage_export(&plan).expect("the export stages");
+
+        let manifest_path = report.dist_dir.join(EXPORT_MANIFEST);
+        assert_eq!(report.manifest, manifest_path);
+        let manifest: ExportManifest =
+            serde_json::from_str(&std::fs::read_to_string(&manifest_path).unwrap()).unwrap();
+        assert_eq!(manifest.profile, "release");
+        assert_eq!(manifest.jackdaw, crate::VERSION);
+        assert_eq!(manifest.bevy_rev, crate::BEVY_REV.map(str::to_string));
+        let paths: Vec<&str> = manifest.files.iter().map(|f| f.path.as_str()).collect();
+        assert_eq!(
+            paths,
+            [
+                "assets/scene.bsn",
+                "assets/textures/tile/diffuse.png",
+                "my-game.exe"
+            ],
+            "sorted, `/`-separated, marker and manifest excluded"
+        );
+        assert!(
+            manifest.files.iter().all(|f| f.sha256.len() == 64),
+            "hex sha256"
+        );
+        assert_eq!(manifest.files[2].size, b"exe bytes".len() as u64);
+
+        // "Same input, same output": the second export's manifest equals
+        // the first's with the generation time removed.
+        let strip_time = |manifest: &ExportManifest| {
+            let mut value = serde_json::to_value(manifest).unwrap();
+            value.as_object_mut().unwrap().remove("generated_unix");
+            value
+        };
+        let first = strip_time(&manifest);
+        stage_export(&plan).expect("the second export stages");
+        let second: ExportManifest =
+            serde_json::from_str(&std::fs::read_to_string(&manifest_path).unwrap()).unwrap();
+        assert_eq!(
+            strip_time(&second),
+            first,
+            "two exports of the same input, one manifest"
+        );
+        let _ = std::fs::remove_dir_all(&root);
+    }
+
+    /// The manifest hashes the tree as it stands, so it doubles as the
+    /// verifier: regenerating it over a tampered export disagrees with
+    /// what shipped.
+    #[test]
+    fn a_tampered_export_disagrees_with_its_manifest() {
+        let (root, binary) = staged_fixture("manifest-tamper");
+        let plan = plan_export(&root, "release", &binary, None);
+        let report = stage_export(&plan).expect("the export stages");
+        let scene_sha = |manifest: &ExportManifest| {
+            manifest
+                .files
+                .iter()
+                .find(|f| f.path == "assets/scene.bsn")
+                .expect("the scene is in the manifest")
+                .sha256
+                .clone()
+        };
+        let shipped: ExportManifest =
+            serde_json::from_str(&std::fs::read_to_string(&report.manifest).unwrap()).unwrap();
+
+        // Tamper with the staged scene; the receipt keeps naming what
+        // shipped, and a fresh hash names what is there now.
+        std::fs::write(plan.dist_dir.join("assets/scene.bsn"), b"tampered").unwrap();
+        let regenerated = manifest_for(&plan.dist_dir, "release").unwrap();
+        assert_ne!(
+            scene_sha(&regenerated),
+            scene_sha(&shipped),
+            "the receipt and the tree disagree after tampering"
+        );
         let _ = std::fs::remove_dir_all(&root);
     }
 

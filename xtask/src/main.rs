@@ -70,7 +70,8 @@ const SDK_BINARIES: &str = "binary(bsn_game_run) | binary(editor_journey) \
     | binary(stress_reload) | binary(scaffold_e2e) \
     | binary(reflect_auto_register) \
     | binary(component_shape_refresh) | binary(dylib_linkage_identity) \
-    | binary(extern_redirect_ecosystem) | binary(mcp_smoke)";
+    | binary(extern_redirect_ecosystem) | binary(mcp_smoke) \
+    | binary(export)";
 
 /// Where [`archive`] gathers the Rust dylibs the test binaries load. nextest
 /// archives the binaries and the standard library but not `deps/*.so`, whose
@@ -229,6 +230,8 @@ fn heavy() -> bool {
                 "editor_journey",
                 "--test",
                 "mcp_smoke",
+                "--test",
+                "export",
             ],
         )
 }

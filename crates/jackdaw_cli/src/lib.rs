@@ -881,6 +881,11 @@ fn cmd_export(args: &[String]) -> ExitCode {
                     report.skipped
                 );
             }
+            println!(
+                "jackdaw export: manifest written: {} ({} files with sha256)",
+                report.manifest.display(),
+                report.files
+            );
             // The finished export is where the user looks next; failing
             // to open the folder is not failing to export.
             if let Err(err) =
