@@ -1108,13 +1108,14 @@ pub fn save_scene_as_prefab(world: &mut World, target_path: &Path) {
     }
     let (history_len, history_pushes) = {
         let history = world.resource::<jackdaw_commands::CommandHistory>();
-        (history.undo_stack.len(), history.total_pushes())
+        (history.undo_stack.len(), history.scene_pushes())
     };
     let fingerprint = crate::scene_io::document_fingerprint(world);
     if let Some(mut scenes) = world.get_resource_mut::<crate::scenes::Scenes>() {
         let active = scenes.active;
         if let Some(tab) = scenes.tabs.get_mut(active) {
             tab.saved_undo_len = history_len;
+            tab.saved_scene_pushes = history_pushes;
             tab.saved_doc_hash = fingerprint;
             tab.observed_undo_len = history_len;
             tab.observed_pushes = history_pushes;

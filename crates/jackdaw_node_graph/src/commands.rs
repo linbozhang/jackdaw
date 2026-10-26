@@ -39,6 +39,13 @@ impl EditorCommand for MoveGraphNodesCmd {
     fn description(&self) -> &str {
         "Move graph nodes"
     }
+
+    /// The node canvas's data layer, mirrored into the animation
+    /// graph's own document — never the scene document: sharing the
+    /// scene tab's undo history must not mark the tab dirty.
+    fn touches_scene_document(&self) -> bool {
+        false
+    }
 }
 
 /// Add a new graph node to a graph at a canvas-space position.
@@ -132,6 +139,12 @@ impl EditorCommand for AddGraphNodeCmd {
     fn description(&self) -> &str {
         "Add graph node"
     }
+
+    /// The canvas data layer, not the scene document (see
+    /// [`MoveGraphNodesCmd::touches_scene_document`]).
+    fn touches_scene_document(&self) -> bool {
+        false
+    }
 }
 
 /// Create a new connection between two terminals.
@@ -192,6 +205,12 @@ impl EditorCommand for CreateConnectionCmd {
 
     fn description(&self) -> &str {
         "Create connection"
+    }
+
+    /// The canvas data layer, not the scene document (see
+    /// [`MoveGraphNodesCmd::touches_scene_document`]).
+    fn touches_scene_document(&self) -> bool {
+        false
     }
 }
 
@@ -363,6 +382,12 @@ impl EditorCommand for RemoveGraphNodesCmd {
     fn description(&self) -> &str {
         "Remove graph nodes"
     }
+
+    /// The canvas data layer, not the scene document (see
+    /// [`MoveGraphNodesCmd::touches_scene_document`]).
+    fn touches_scene_document(&self) -> bool {
+        false
+    }
 }
 
 /// Remove a single connection.
@@ -398,5 +423,11 @@ impl EditorCommand for RemoveConnectionCmd {
 
     fn description(&self) -> &str {
         "Remove connection"
+    }
+
+    /// The canvas data layer, not the scene document (see
+    /// [`MoveGraphNodesCmd::touches_scene_document`]).
+    fn touches_scene_document(&self) -> bool {
+        false
     }
 }

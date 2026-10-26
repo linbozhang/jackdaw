@@ -311,7 +311,7 @@ pub(crate) fn save_scene_inner(world: &mut World) -> Result<(), BevyError> {
         // when the stack returns to that depth.
         let (history_len, history_pushes) = {
             let history = world.resource::<jackdaw_commands::CommandHistory>();
-            (history.undo_stack.len(), history.total_pushes())
+            (history.undo_stack.len(), history.scene_pushes())
         };
         let fingerprint = document_hash(&text);
         if let Some(mut scenes) = world.get_resource_mut::<crate::scenes::Scenes>() {
@@ -319,6 +319,7 @@ pub(crate) fn save_scene_inner(world: &mut World) -> Result<(), BevyError> {
             if let Some(tab) = scenes.tabs.get_mut(active) {
                 tab.dirty = false;
                 tab.saved_undo_len = history_len;
+                tab.saved_scene_pushes = history_pushes;
                 tab.saved_doc_hash = Some(fingerprint);
                 tab.saved_at = Some(crate::timestamps::utc_rfc3339_now());
                 tab.observed_undo_len = history_len;
@@ -421,7 +422,7 @@ pub(crate) fn save_scene_inner(world: &mut World) -> Result<(), BevyError> {
     // (clean) from "a different edit at the same depth" (dirty).
     let (history_len, history_pushes) = {
         let history = world.resource::<jackdaw_commands::CommandHistory>();
-        (history.undo_stack.len(), history.total_pushes())
+        (history.undo_stack.len(), history.scene_pushes())
     };
     let fingerprint = document_hash(&saved_body);
     if legacy_backup.is_some() {
@@ -432,6 +433,7 @@ pub(crate) fn save_scene_inner(world: &mut World) -> Result<(), BevyError> {
         if let Some(tab) = scenes.tabs.get_mut(active) {
             tab.dirty = false;
             tab.saved_undo_len = history_len;
+            tab.saved_scene_pushes = history_pushes;
             tab.saved_doc_hash = Some(fingerprint);
             tab.saved_at = Some(crate::timestamps::utc_rfc3339_now());
             tab.observed_undo_len = history_len;

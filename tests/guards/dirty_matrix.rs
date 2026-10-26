@@ -440,10 +440,15 @@ fn dirty_state_survives_tab_switches_per_tab() {
     assert!(scene_dirty(&app), "is_scene_dirty reads tab A");
 }
 
-/// Case 14: a Resources-panel field edit is one undo entry whose undo rolls
-/// the value back; with the unified dirty semantics the scene tab is clean
-/// again once the undo lands back on the saved stack depth and the document
-/// is unchanged (ruling 3 keeps the edit itself dirtying the tab).
+/// Case 14: a Resources-panel field edit is one undo entry whose undo
+/// rolls the value back. Since the T08-T2 scene-document filter
+/// (decision 4-A) a resource edit is editor-session state: it takes an
+/// undo slot but does not dirty the scene tab, and undoing it rolls
+/// the value back with the tab never having left clean. (The earlier
+/// "ruling 3" expectation — the edit dirties the tab — was the very
+/// coupling decision 4-A removed; it survived the first T2 pass only
+/// because the saved-baseline watcher arm still flipped dirty on any
+/// depth change, the QA-1 defect this rework closes.)
 #[test]
 fn resource_field_edit_undone_rolls_back_and_settles_clean() {
     #[derive(Resource, Reflect, Default, Debug)]
@@ -482,7 +487,10 @@ fn resource_field_edit_undone_rolls_back_and_settles_clean() {
         app.world().resource::<TestScore>().points == 42,
         "the edit landed"
     );
-    assert!(tab_dirty(&app), "the edit dirties the tab (ruling 3)");
+    assert!(
+        !tab_dirty(&app),
+        "a session-resource edit shares the history without dirtying the scene tab"
+    );
 
     undo(&mut app);
     app.update();
@@ -492,7 +500,7 @@ fn resource_field_edit_undone_rolls_back_and_settles_clean() {
     );
     assert!(
         !tab_dirty(&app),
-        "the document never changed, so the tab is clean again"
+        "the document never changed, so the tab is clean throughout"
     );
     assert!(!scene_dirty(&app), "is_scene_dirty agrees");
 }

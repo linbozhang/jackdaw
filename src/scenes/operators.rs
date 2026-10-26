@@ -569,6 +569,7 @@ pub(crate) fn open_read_scene(world: &mut World, read: ReadScene) {
     {
         tab.dirty = had_upgrade;
         tab.saved_undo_len = history_len;
+        tab.saved_scene_pushes = history_pushes;
         tab.saved_doc_hash = fingerprint;
         tab.observed_undo_len = history_len;
         tab.observed_pushes = history_pushes;

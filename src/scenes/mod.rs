@@ -159,6 +159,13 @@ pub struct SceneTab {
     /// The undo stack's length at the last save or load: the depth the
     /// document on disk corresponds to.
     pub saved_undo_len: usize,
+    /// [`Self::saved_undo_len`]'s companion: the scene-document push
+    /// counter as it stood at the last save or load. A stack sitting
+    /// above the saved depth because of non-scene pushes (asset
+    /// fields, session resources) has not moved this — so the watcher
+    /// reads "the document itself did not change" and leaves the tab
+    /// clean.
+    pub saved_scene_pushes: u64,
     /// Fingerprint of the document content as it was written at the last
     /// save (or read at load), hashed from the same emitter a save uses.
     /// When the stack returns to `saved_undo_len`, the current document is
@@ -215,6 +222,7 @@ impl SceneTab {
             observed_undo_len: 0,
             observed_pushes: 0,
             saved_undo_len: 0,
+            saved_scene_pushes: 0,
             saved_doc_hash: None,
             saved_at: None,
             refusal: None,
@@ -350,6 +358,7 @@ pub fn mark_active_dirty_on_history_growth(
         return;
     }
     let saved_undo_len = tab.saved_undo_len;
+    let saved_scene_pushes = tab.saved_scene_pushes;
     let saved_doc_hash = tab.saved_doc_hash;
     let was_dirty = tab.dirty;
     let grew = current_pushes > tab.observed_pushes;
@@ -381,8 +390,17 @@ pub fn mark_active_dirty_on_history_growth(
 
     // Away from the saved depth — unsaved edits above it, an undo past it,
     // or no baseline at all (where growth dirties and nothing cleans).
+    // Above the saved depth, only scene-document pushes can have moved
+    // the document: a stack that climbed on asset-field or
+    // session-resource entries alone (scene_pushes still at its saved
+    // baseline) leaves the tab clean. Below it, an undo withdrew a
+    // scene command, which changed the document — dirty.
     let needs_dirty_flip = match saved_doc_hash {
-        Some(_) => !was_dirty,
+        Some(_) => {
+            let below = current_len < saved_undo_len;
+            let scene_grew_since_save = current_pushes > saved_scene_pushes;
+            (below || scene_grew_since_save) && !was_dirty
+        }
         None => grew && !was_dirty,
     };
     if !needs_dirty_flip {

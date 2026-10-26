@@ -392,6 +392,7 @@ fn converting_a_document_a_tab_has_open_is_refused() {
             observed_undo_len: 0,
             observed_pushes: 0,
             saved_undo_len: 0,
+            saved_scene_pushes: 0,
             saved_doc_hash: None,
             saved_at: None,
             refusal: None,

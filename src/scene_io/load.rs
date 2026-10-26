@@ -444,12 +444,13 @@ fn finish_load_scene(world: &mut World, chosen: &std::path::Path) -> LoadOutcome
     let fingerprint = super::save::document_fingerprint(world);
     let pushes = world
         .get_resource::<jackdaw_commands::CommandHistory>()
-        .map_or(0, jackdaw_commands::CommandHistory::total_pushes);
+        .map_or(0, jackdaw_commands::CommandHistory::scene_pushes);
     if let Some(mut scenes) = world.get_resource_mut::<crate::scenes::Scenes>() {
         let active = scenes.active;
         if let Some(tab) = scenes.tabs.get_mut(active) {
             tab.dirty = false;
             tab.saved_undo_len = 0;
+            tab.saved_scene_pushes = pushes;
             tab.saved_doc_hash = fingerprint;
             tab.observed_undo_len = 0;
             tab.observed_pushes = pushes;
