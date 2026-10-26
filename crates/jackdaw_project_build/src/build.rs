@@ -86,6 +86,7 @@ impl From<PlanError> for ProjectBuildError {
 /// dylib). Bevy-light so the pipeline crate stays independent of the
 /// editor; the editor maps these onto its `BuildProgress` sink for the
 /// footer bar and the build log.
+#[derive(Debug)]
 pub enum BuildEvent {
     /// cargo finished one compile unit; `crate_name` is the unit it just
     /// produced, `done` the running count, and `fresh` whether it was a

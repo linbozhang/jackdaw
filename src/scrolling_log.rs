@@ -81,6 +81,11 @@ pub fn spawn(world: &mut World, parent: Entity, props: ScrollingLogProps) -> Ent
                 ..Default::default()
             },
             BackgroundColor(props.background),
+            // The refresh query matches on this component; spelled out
+            // here rather than left to `Node`'s required components so
+            // the widget's own contract is visible — and survives bevy
+            // changing what Node requires (bug R9's shape).
+            ScrollPosition::default(),
             ChildOf(parent),
         ))
         .id();
@@ -127,5 +132,43 @@ pub fn refresh_scrolling_logs(
                 scroll.y = f32::MAX;
             }
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use bevy::ecs::system::RunSystemOnce;
+
+    /// The widget must actually display its content: a changed
+    /// `ScrollingLog::content` reaches the inner text child and pins
+    /// the scroll position to the bottom. The refresh query requires a
+    /// `ScrollPosition` on the container, so a `spawn` that leaves it
+    /// out never matches — the Build panel shows an empty log forever
+    /// (bug R9). Driven headless: the widget spawned as in the panel,
+    /// the content set as the panel sets it, the refresh system run
+    /// once as the schedule would.
+    #[test]
+    fn changed_content_reaches_the_inner_text_and_pins_to_the_bottom() {
+        let mut world = World::new();
+        let parent = world.spawn(Node::default()).id();
+        let widget = spawn(&mut world, parent, ScrollingLogProps::default());
+        {
+            let mut log = world.get_mut::<ScrollingLog>(widget).unwrap();
+            log.content = "error[E0560]: no field `x` (src/lib.rs:40:13)".to_string();
+        }
+
+        world.run_system_once(refresh_scrolling_logs).unwrap();
+
+        let children: Vec<Entity> = world.get::<Children>(widget).unwrap().iter().collect();
+        let text = world.get::<Text>(children[0]).unwrap();
+        assert_eq!(
+            text.0, "error[E0560]: no field `x` (src/lib.rs:40:13)",
+            "the changed content is what the widget displays"
+        );
+        let scroll = world
+            .get::<ScrollPosition>(widget)
+            .expect("the container carries a scroll position");
+        assert!(scroll.y > 0.0, "new content pins the panel to the bottom");
     }
 }

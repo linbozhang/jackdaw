@@ -98,8 +98,10 @@ pub fn pin_project(root: &Path) -> Result<Option<String>, String> {
     }))
 }
 
-/// The lockfile of the workspace `root` belongs to.
-fn workspace_lockfile(root: &Path) -> Result<PathBuf, String> {
+/// The lockfile of the workspace `root` belongs to. Shared with the
+/// build pipeline, which generates the lockfile a `--locked` build
+/// needs when it is missing.
+pub(crate) fn workspace_lockfile(root: &Path) -> Result<PathBuf, String> {
     let output = rust_env_command("cargo")
         .args(["locate-project", "--workspace", "--message-format", "plain"])
         .current_dir(root)
