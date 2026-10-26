@@ -98,6 +98,11 @@ mod pie_windowless;
 #[cfg(feature = "pie")]
 pub use pie_windowless::{maybe_windowless, windowless_requested};
 
+mod config;
+pub use config::{
+    AssetsWalked, ConfigLoader, ConfigPlugin, DEFAULT_CONFIG_PATH, apply_config_defaults,
+};
+
 pub mod frame_work;
 #[cfg(feature = "render")]
 mod live_levels;
@@ -149,8 +154,8 @@ pub mod prelude {
     #[cfg(feature = "navmesh")]
     pub use crate::JackdawNavmesh;
     pub use crate::{
-        DetailPresser, EditorCategory, EditorDescription, EditorHidden, EditorPreview,
-        JackdawAssetSourcePlugin, JackdawCatalog, JackdawCatalogPath, JackdawPlugin,
+        ConfigLoader, ConfigPlugin, DetailPresser, EditorCategory, EditorDescription, EditorHidden,
+        EditorPreview, JackdawAssetSourcePlugin, JackdawCatalog, JackdawCatalogPath, JackdawPlugin,
         JackdawSceneMember, JackdawSceneRoot, SceneRefused, SkipSerialization,
     };
     #[cfg(feature = "terrain")]
@@ -352,6 +357,13 @@ impl JackdawCatalog {
     /// path of the file holding it, or its `@Name`.
     pub fn get(&self, name: &str) -> Option<&UntypedHandle> {
         self.handles.get(name).or_else(|| self.files.get(name))
+    }
+
+    /// File one asset under the path a document would spell for it —
+    /// what the startup walk does for every asset it loads; public for
+    /// a game (or test) that loads one of its own outside the walk.
+    pub fn register_file(&mut self, key: impl Into<String>, handle: UntypedHandle) {
+        self.files.insert(key.into(), handle);
     }
 
     /// Number of references the catalog answers to.
@@ -1688,6 +1700,9 @@ fn load_walked_assets(world: &mut World, root: &Path, catalog_path: Option<&Path
     if count > 0 {
         info!("Loaded {count} asset files from {}", root.display());
     }
+    // From here on, what the catalog does not hold is not coming: the
+    // signal config loaders wait for before deciding a file is missing.
+    world.insert_resource(AssetsWalked);
 }
 
 /// The types the walk passed over, so a project whose materials this app does
