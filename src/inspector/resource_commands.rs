@@ -53,7 +53,10 @@ fn resource_component_id(world: &mut World, type_path: &str) -> Option<Component
 
 /// The entity the world holds the resource of `type_path` on, with its
 /// `ComponentId`, or `None` when the resource is not instantiated.
-fn live_resource_entity(world: &mut World, type_path: &str) -> Option<(ComponentId, Entity)> {
+pub(crate) fn live_resource_entity(
+    world: &mut World,
+    type_path: &str,
+) -> Option<(ComponentId, Entity)> {
     let component_id = resource_component_id(world, type_path)?;
     let entity = world.resource_entities().get(component_id)?;
     let entity = world.get_entity(entity).ok()?.id();

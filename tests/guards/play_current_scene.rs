@@ -13,11 +13,11 @@ use jackdaw::scenes::Scenes;
 
 use crate::util::{self, OperatorResultExt as _};
 
-/// Each test runs a full editor, a scene load, and a play resolution whose
-/// emit/write work is heavy enough that twelve of them in parallel push the
-/// binary's timing-sensitive tests (the journal write budget) over their
-/// limits. They share this lock and run one at a time.
-static PLAY_CURRENT_LOCK: std::sync::Mutex<()> = std::sync::Mutex::new(());
+/// Each test runs a full editor, a scene load, and a play resolution: heavy
+/// enough that a parallel pile of them pushes the binary's timing-sensitive
+/// tests (the journal write budget) over their limits. They share the
+/// binary-wide heavy-editor lock and run one at a time.
+use crate::HEAVY_EDITOR_LOCK as PLAY_CURRENT_LOCK;
 
 fn play_lock() -> std::sync::MutexGuard<'static, ()> {
     PLAY_CURRENT_LOCK

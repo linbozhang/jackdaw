@@ -220,3 +220,46 @@ fn only_the_first_scene_root_is_overridden() {
         "the first root must not also spawn the named scene: {names:?}"
     );
 }
+
+/// The swap is once per process, not once per frame: a root the game's own
+/// systems add while running — levels loading, streaming, a second scene
+/// the gameplay spawns — keeps the scene it names. Red on a swap that keys
+/// on whichever roots are `Added` this frame (the later root would be
+/// swapped too, `Second` never spawning, N-QA1).
+#[test]
+fn a_root_added_while_running_keeps_its_own_scene() {
+    let _guard = env_lock();
+    set_scene_env(None);
+
+    let dir = tempfile::tempdir().expect("tempdir");
+    write(dir.path(), "scene.bsn", SCENE_A);
+    write(dir.path(), "other.bsn", SCENE_B);
+    write(dir.path(), "second.bsn", SCENE_C);
+
+    let mut app = app_reading(dir.path());
+    let server = app.world().resource::<AssetServer>().clone();
+    app.world_mut()
+        .spawn(JackdawSceneRoot(server.load::<JackdawScene>("scene.bsn")));
+
+    set_scene_env(Some("other.bsn"));
+
+    // Let the first root be swapped and the override scene spawn.
+    let names = pump_until(&mut app, |names| names.iter().any(|n| n == "Overridee"));
+    assert!(
+        names.iter().any(|n| n == "Overridee"),
+        "the first root plays the override: {names:?}"
+    );
+
+    // A later frame's gameplay spawn: its root must not be swapped.
+    app.world_mut()
+        .spawn(JackdawSceneRoot(server.load::<JackdawScene>("second.bsn")));
+    let names = pump_until(&mut app, |names| names.iter().any(|n| n == "Second"));
+    assert!(
+        names.iter().any(|n| n == "Second"),
+        "a root added while running keeps its own scene: {names:?}"
+    );
+    assert!(
+        !names.iter().any(|n| n == "Anchor"),
+        "the later root must not fall back to the first root's named scene: {names:?}"
+    );
+}

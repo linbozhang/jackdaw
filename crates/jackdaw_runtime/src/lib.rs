@@ -604,8 +604,10 @@ pub fn pie_scene_or(default: &str) -> String {
 /// Swap the first scene root's handle for the editor's override scene,
 /// before the spawn loop runs, so a game launched from the editor loads
 /// the scene the editor has in front rather than the one its own code
-/// named. Only the first added root is swapped (the game's "main scene" by
-/// convention); further roots keep the scenes the game's own code named.
+/// named. Only the first root ever added is swapped (the game's "main
+/// scene" by convention): the swap is once per process, so a root the
+/// game's own systems add while running keeps the scene it names, exactly
+/// like the roots spawned beside the first at startup.
 ///
 /// No-op without [`PIE_SCENE_ENV`]: nothing is queried beyond the added
 /// roots and no command is issued, so a standalone run's behavior is
@@ -613,11 +615,15 @@ pub fn pie_scene_or(default: &str) -> String {
 fn apply_pie_scene_override(
     added: Query<(Entity, &JackdawSceneRoot), Added<JackdawSceneRoot>>,
     server: Res<AssetServer>,
+    mut swapped: Local<bool>,
     mut commands: Commands,
 ) {
     let Some(path) = pie_scene_override() else {
         return;
     };
+    if *swapped {
+        return;
+    }
     // Lowest entity index: spawn order, so "first" is deterministic
     // however the query iterates.
     let Some((entity, root)) = added.iter().min_by_key(|(entity, _)| entity.index()) else {
@@ -631,6 +637,7 @@ fn apply_pie_scene_override(
         }
         None => info!("PIE: playing the editor's scene '{path}'"),
     }
+    *swapped = true;
     commands
         .entity(entity)
         .insert(JackdawSceneRoot(replacement));

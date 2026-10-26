@@ -367,6 +367,14 @@ fn spawn_val_cell(
 
 /// Commit to the reflect field: a drag tick previews on live ECS, a settled
 /// value mints one undo-backed document write.
+///
+/// A resource card's Val field edits the resource itself, through the
+/// resource commands (the same split the numeric fields take): the document
+/// pipeline's targets are the scene selection, and the PIE live stream is
+/// for scene entities, so routing a resource tick through either would aim
+/// the edit at an entity the user never chose — or, with the resource
+/// entity outside the selection, drop it on the floor without even
+/// previewing onto the resource.
 fn commit_val_to_field(
     world: &mut World,
     source_entity: Entity,
@@ -376,6 +384,14 @@ fn commit_val_to_field(
     is_final: bool,
 ) {
     let json = val_to_json(value);
+    if super::resource_commands::is_resource_entity(world, source_entity) {
+        if is_final {
+            super::resource_commands::resource_field_commit(world, type_path, field_path, &json);
+        } else {
+            super::resource_commands::resource_field_preview(world, type_path, field_path, &json);
+        }
+        return;
+    }
     if crate::inspector::reflect_fields::try_route_pie_live_field_edit(
         world,
         source_entity,
@@ -642,5 +658,120 @@ pub fn refresh_val_fields(
             state.magnitude = val_magnitude(live);
         }
         sync_val_widgets(world, root);
+    }
+}
+
+#[cfg(test)]
+mod val_resource_guard_tests {
+    use super::super::resource_commands::{
+        ResourceFieldEditSessions, is_resource_entity, live_resource_entity,
+    };
+    use super::*;
+    use jackdaw_commands::CommandHistory;
+
+    /// A resource holding a `Val` field, the way the Resources panel shows
+    /// one: the world holds it as a component on its resource entity.
+    #[derive(Resource, Reflect, Default)]
+    #[reflect(Resource, Default)]
+    #[type_path = "val_resource_guard_tests::TestValResource"]
+    struct TestValResource {
+        size: Val,
+    }
+
+    fn world_with_resource_card() -> (World, String) {
+        let mut world = World::new();
+        world.init_resource::<AppTypeRegistry>();
+        {
+            let registry = world.resource::<AppTypeRegistry>().clone();
+            let mut reg = registry.write();
+            reg.register::<TestValResource>();
+            reg.register::<Val>();
+        }
+        world.init_resource::<CommandHistory>();
+        world.init_resource::<ResourceFieldEditSessions>();
+        world.insert_resource(TestValResource { size: Val::Auto });
+        world.insert_resource(crate::selection::Selection::default());
+        (world, TestValResource::type_path().to_string())
+    }
+
+    /// The resource entity the world holds the card on: the entity the
+    /// inspector's field rows are bound to.
+    fn card_entity(world: &mut World, type_path: &str) -> Entity {
+        live_resource_entity(world, type_path)
+            .expect("the world holds the resource on an entity")
+            .1
+    }
+
+    fn card_size(world: &mut World, type_path: &str) -> Val {
+        let entity = card_entity(world, type_path);
+        let registry = world.resource::<AppTypeRegistry>().clone();
+        let reg = registry.read();
+        let registration = reg.get_with_type_path(type_path).unwrap();
+        let reflected = registration
+            .data::<bevy::ecs::reflect::ReflectComponent>()
+            .unwrap()
+            .reflect(world.get_entity(entity).ok().unwrap())
+            .unwrap();
+        let field = crate::commands::read_field_path(reflected.as_partial_reflect(), "size")
+            .expect("the size field");
+        field
+            .try_downcast_ref::<Val>()
+            .copied()
+            .expect("the field is a Val")
+    }
+
+    /// A resource card's Val drag tick previews onto the resource itself.
+    /// Red without the guard: the tick fell through to the document
+    /// pipeline, whose selection the resource entity is not part of, so
+    /// the resource's value never moved (W17).
+    #[test]
+    fn a_resource_val_tick_previews_onto_the_resource() {
+        let (mut world, type_path) = world_with_resource_card();
+        let entity = card_entity(&mut world, &type_path);
+        assert!(is_resource_entity(&world, entity));
+
+        commit_val_to_field(&mut world, entity, &type_path, "size", Val::Px(10.0), false);
+
+        assert_eq!(
+            card_size(&mut world, &type_path),
+            Val::Px(10.0),
+            "the tick previews onto the resource entity"
+        );
+        assert_eq!(
+            world.resource::<CommandHistory>().undo_stack.len(),
+            0,
+            "a tick is a preview: no undo yet"
+        );
+    }
+
+    /// The settled value is one resource undo entry, and undo returns the
+    /// resource to its pre-gesture value.
+    #[test]
+    fn a_resource_val_commit_is_one_resource_undo_entry() {
+        let (mut world, type_path) = world_with_resource_card();
+        let entity = card_entity(&mut world, &type_path);
+
+        commit_val_to_field(&mut world, entity, &type_path, "size", Val::Px(24.0), false);
+        commit_val_to_field(&mut world, entity, &type_path, "size", Val::Px(24.0), true);
+
+        assert_eq!(
+            card_size(&mut world, &type_path),
+            Val::Px(24.0),
+            "the commit lands on the resource"
+        );
+        assert_eq!(
+            world.resource::<CommandHistory>().undo_stack.len(),
+            1,
+            "the commit is exactly one undo entry"
+        );
+
+        let mut history = world.remove_resource::<CommandHistory>().unwrap();
+        history.undo(&mut world);
+        world.insert_resource(history);
+        assert_eq!(
+            card_size(&mut world, &type_path),
+            Val::Auto,
+            "undo returns the resource to its pre-gesture value"
+        );
     }
 }
