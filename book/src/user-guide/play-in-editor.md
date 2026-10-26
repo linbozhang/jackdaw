@@ -11,6 +11,74 @@ PIE keeps two surfaces strictly separate:
 - The **Viewport** is always an editing surface for the authored scene.
   It never composites the game frame over your scene.
 
+## Which scene Play runs
+
+The **Play button (F5) plays the scene in front of the editor** — any
+open scene, saved or not. The Play dropdown's first row, **Play Startup
+Scene**, keeps the other meaning: launch the game and let it load
+whatever its own code loads (`scene.bsn` in the template), and the run
+rows below it stay that way too.
+
+Playing the current scene hands the game the scene through the
+`JACKDAW_PIE_SCENE` environment variable: the runtime swaps the first
+scene root it finds for the named scene, so a game that loads its scene
+through `jackdaw_runtime`'s scene root plays it without any code of its
+own changing. Two limits worth knowing:
+
+- Only the **first** scene root a game spawns is swapped — the game's
+  "main scene" by convention. Roots the game's own systems add while
+  running (a level loader, a second world) keep the scenes they name.
+- A game that spawns its scene some other way than a
+  `JackdawSceneRoot` does not follow the override; it plays its own
+  scene.
+
+## Unsaved changes: the three policies
+
+What Play does with unsaved work before launching is a project setting
+(`project.set_save_before_play`, or the toggle in the editor):
+
+- **save** (default): every modified scene that has a file is saved
+  first, so the game loads exactly what the editor shows.
+- **ask**: a dialog before launching — **Save**, **Play Unsaved Copy**,
+  or **Cancel**.
+- **play_unsaved_copy**: the game runs against a temporary copy of the
+  unsaved work; nothing reaches disk and the tab keeps its dirty flag.
+
+A scene that has never been saved (an untitled tab) never blocks Play
+and is never written: it always runs as a temporary copy, whatever the
+policy. A settings file from before the three policies carried a bool;
+it reads back as `true` = save and `false` = play a copy — the old
+`false` ran the game against whatever was last on disk, a silent
+wrong-scene the copy mode ends.
+
+### The temporary copies
+
+A play of unsaved work writes a copy under `assets/.jackdaw-pie/`
+(`current-<scene>-<editor pid>.bsn`). The dot-prefixed directory is
+skipped by every asset walk, so the copy never shows up in the asset
+index, the reference audit, or a referrers search. It is deleted when
+play stops and swept away the next time the project opens, so a killed
+editor leaves nothing behind that matters; the copy itself is
+regenerable — its source is the tab in the editor that wrote it.
+
+## Stopping and reloading
+
+- **Stop** asks the game to exit and gives it a two-second window to do
+  so cleanly — flushing, saving what it means to save, running its exit
+  hooks — before the editor kills it. The editor returns to authoring
+  mode when the game is gone.
+- **Stop restores the edit state**: the running game's state was only
+  ever a projection over the preview world, and the authored scene
+  comes back exactly as it was — same entities, same file on disk, same
+  dirty flags, same undo stack. What the game did while running never
+  reaches the document; the only way runtime changes come back is the
+  explicit gates (Save to Scene, the Live Changes tray, the stop
+  prompt's Apply).
+- **Reload** rebuilds and relaunches. A current-scene session reloads
+  onto a freshly resolved scene: edited since the launch, the relaunch
+  writes a new temporary copy; still clean, the same file. A reload
+  never writes disk on its own.
+
 ## What you need
 
 Nothing compiles at play time once the project is built. The editor
@@ -244,10 +312,12 @@ scene, and the Viewport keeps showing that scene with gizmos, fully
 editable. You can select and edit authored entities in the Viewport or
 Scene tab at any time without disturbing the running game's frame.
 
-## Stopping and reloading
+## The stop prompt and live changes
 
-- **Stop** ends the game process. The Game panel returns to its idle state,
-  the panel that was in front before Play comes back, and the **LIVE** badge
-  clears.
-- **Reload** relaunches with the current window-mode setting, which is how
-  you apply a change to the **Embedded** / **Windowed** button.
+An edit made to a live entity (the Components panel over a projected
+entity in Live view) does not touch the document; it goes to the game
+and is remembered in the **Live Changes** tray. When Play stops with
+changes pending, a prompt offers **Apply All** (each pending edit
+becomes a real document edit — one undo entry for the batch), or
+**Discard** (nothing reaches the document). See the tray for one-at-a-time
+save and revert.

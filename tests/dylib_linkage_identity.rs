@@ -1,4 +1,4 @@
-#![expect(clippy::print_stdout, reason = "test prints progress diagnostics")]
+#![allow(clippy::print_stdout, reason = "test prints progress diagnostics")]
 //! Compat verification with no user-authored tags, via
 //! [`jackdaw::project_build::linkage`].
 //!

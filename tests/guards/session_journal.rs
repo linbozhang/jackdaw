@@ -342,7 +342,7 @@ fn the_journal_write_costs_no_more_than_five_milliseconds() {
     // lock so the measurement runs the way the budget was set: alone.
     let _heavy = crate::HEAVY_EDITOR_LOCK
         .lock()
-        .unwrap_or_else(|poisoned| poisoned.into_inner());
+        .unwrap_or_else(std::sync::PoisonError::into_inner);
     for (name, scene_text) in [
         ("400-entity generated", generated_scene(400)),
         (

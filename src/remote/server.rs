@@ -152,6 +152,8 @@ impl Plugin for JackdawEditorRemotePlugin {
                     .with_method_main("jackdaw/history", history_handler)
                     .with_method_main("jackdaw/recovery", recovery_handler)
                     .with_method_main("jackdaw/audit", audit_handler)
+                    .with_method_main("jackdaw/pie", pie_handler)
+                    .with_method_main("jackdaw/selection.set", selection_set_handler)
                     .with_method_main("jackdaw/scene_tree", scene_tree_handler)
                     .with_method_main("jackdaw/entity", entity_handler)
                     .with_method_main("jackdaw/apply_bsn", apply_bsn_handler)
@@ -604,6 +606,169 @@ pub fn audit_handler(In(_): In<Option<Value>>, world: &mut World) -> BrpResult {
         "count": findings.len(),
         "findings": entries,
     }))
+}
+
+/// The play-in-editor session as a structured face: what the session is
+/// doing, which instance is focused, every launched instance (its stage
+/// and the scene override it carries, if any), the projection's shape,
+/// and how many live edits are pending. This is what a QA caller asserts
+/// a play/stop round against — the alternative, reading the editor's
+/// logs, says what happened but not what is.
+pub fn pie_handler(In(_): In<Option<Value>>, world: &mut World) -> BrpResult {
+    check_enabled(world)?;
+    let instances: Vec<Value> = world
+        .get_non_send::<crate::pie::PieSession>()
+        .map(|session| {
+            session
+                .instance_faces()
+                .into_iter()
+                .map(|face| {
+                    let scene_source = match &face.scene_override {
+                        Some(override_launch) if override_launch.from_temp_copy => "unsaved-copy",
+                        Some(_) => "named",
+                        None => "none",
+                    };
+                    json!({
+                        "key": face.key.to_string(),
+                        "config": face.key.config,
+                        "instance": face.key.instance,
+                        "stage": face.stage,
+                        "scene_override": face
+                            .scene_override
+                            .as_ref()
+                            .map(|override_launch| &override_launch.assets_relative),
+                        "scene_source": scene_source,
+                    })
+                })
+                .collect()
+        })
+        .unwrap_or_default();
+
+    let view_mode = world
+        .get_resource::<crate::pie_mirror::PieViewMode>()
+        .map(|mode| match *mode {
+            crate::pie_mirror::PieViewMode::Live => "live",
+            crate::pie_mirror::PieViewMode::Scene => "scene",
+        })
+        .unwrap_or("scene");
+    let focused = world
+        .get_resource::<crate::pie_mirror::PieInstances>()
+        .and_then(|instances| instances.focused.as_ref())
+        .map(std::string::ToString::to_string);
+
+    let (entities, authored) = world
+        .get_resource::<crate::pie_projection::PieProjection>()
+        .map(|projection| {
+            let mapped: Vec<Entity> = projection.by_bits.values().copied().collect();
+            let authored = mapped
+                .iter()
+                .filter(|entity| {
+                    world
+                        .get::<crate::pie_projection::PieEphemeral>(**entity)
+                        .is_none()
+                })
+                .count();
+            (mapped.len(), authored)
+        })
+        .unwrap_or((0, 0));
+    let ephemeral = world
+        .query_filtered::<Entity, With<crate::pie_projection::PieEphemeral>>()
+        .iter(world)
+        .count();
+
+    let live_edits = world
+        .get_resource::<crate::live_edits::LiveEditLog>()
+        .map(|log| log.entries.len())
+        .unwrap_or(0);
+
+    Ok(json!({
+        "status": crate::pie::play_status(world),
+        "view_mode": view_mode,
+        "focused": focused,
+        "instances": instances,
+        "projection": {
+            "entities": entities,
+            "authored": authored,
+            "ephemeral": ephemeral,
+        },
+        "live_edits": live_edits,
+    }))
+}
+
+/// Set the object selection: by entity bits (the ids `jackdaw/scene_tree`
+/// reports), by scene-unique name, or cleared outright. This is the QA
+/// surface's way to aim the Components panel at an entity the usual
+/// surfaces cannot reach — a projected live entity, say, which the
+/// outliner's live rows do not expose to `ui_tree` and the viewport does
+/// not pick.
+pub fn selection_set_handler(In(params): In<Option<Value>>, world: &mut World) -> BrpResult {
+    check_enabled(world)?;
+    let params =
+        params.ok_or_else(|| invalid_params("expected `entities` (bits), `names`, or `clear`"))?;
+
+    let mut entities: Vec<Entity> = Vec::new();
+    if params.get("clear").and_then(Value::as_bool) == Some(true) {
+        // An explicit clear: nothing to resolve.
+    } else if let Some(Value::Array(bits)) = params.get("entities") {
+        for bits in bits {
+            let bits = bits.as_u64().ok_or_else(|| {
+                invalid_params("`entities` holds the ids `scene_tree` reports (u64 bits)")
+            })?;
+            let entity = bevy::ecs::entity::Entity::from_bits(bits);
+            world
+                .get_entity(entity)
+                .map_err(|_| invalid_params(format!("no entity with id {bits}")))?;
+            entities.push(entity);
+        }
+    } else if let Some(Value::Array(names)) = params.get("names") {
+        for name in names {
+            let name = name
+                .as_str()
+                .ok_or_else(|| invalid_params("`names` holds strings"))?;
+            entities.push(entity_from_params(world, &json!({ "name": name }))?);
+        }
+    } else {
+        return Err(invalid_params(
+            "expected `entities` (bits), `names`, or `clear`",
+        ));
+    }
+
+    // The same re-marking a pick goes through: the resource lists the
+    // selection, the `Selected` marker follows it onto the entities.
+    let old: Vec<Entity> = world
+        .get_resource::<Selection>()
+        .map(|selection| selection.entities.clone())
+        .unwrap_or_default();
+    if let Some(mut selection) = world.get_resource_mut::<Selection>() {
+        selection.entities.clone_from(&entities);
+    } else {
+        world.insert_resource(Selection {
+            entities: entities.clone(),
+        });
+    }
+    for entity in old {
+        if !entities.contains(&entity)
+            && let Ok(mut entity_mut) = world.get_entity_mut(entity)
+        {
+            entity_mut.remove::<crate::selection::Selected>();
+        }
+    }
+    for entity in &entities {
+        if let Ok(mut entity_mut) = world.get_entity_mut(*entity) {
+            entity_mut.insert(crate::selection::Selected);
+        }
+    }
+
+    let selection: Vec<Value> = entities
+        .into_iter()
+        .map(|entity| {
+            json!({
+                "entity": entity.to_bits(),
+                "name": world.get::<Name>(entity).map(|name| name.as_str().to_string()),
+            })
+        })
+        .collect();
+    Ok(json!({ "selection": selection }))
 }
 
 /// This is what a caller asserts a gesture against: one user action — a
@@ -1694,12 +1859,19 @@ fn pie_wait(
         .and_then(Value::as_u64)
         .map_or(PIE_WAIT_FRAMES, |frames| frames as u32);
 
+    let launch_baseline = world
+        .get_non_send::<crate::pie::PieSession>()
+        .map_or(0, crate::pie::PieSession::launches);
+    // Read the current count before the waits borrow: it moves with every
+    // launch, so this is the count as of this poll.
+    let launches_now = launch_baseline;
     let mut waits = world.get_resource_or_init::<PendingWaits>();
     let pending = waits.requests.entry(key.clone()).or_insert(PendingRequest {
         last_seen: frame,
         state: PendingState::Pie(PieWait {
             wanted,
             seen_active: false,
+            launch_baseline,
             until: frame.saturating_add(cap),
         }),
     });
@@ -1710,9 +1882,14 @@ fn pie_wait(
         )));
     };
     wait.seen_active |= status != "stopped";
+    // A session counts even when the wait never observed it: a stop that
+    // completes before the first poll still moved the launch count, and
+    // holding for `seen_active` alone would hang that wait forever (the
+    // race the live QA worked around by polling `jackdaw/status`).
+    let session_ran = wait.seen_active || launches_now > wait.launch_baseline;
     let reached = match wait.wanted {
         "running" => status == "running",
-        _ => wait.seen_active && status == "stopped",
+        _ => session_ran && status == "stopped",
     };
     let out_of_frames = frame >= wait.until;
 
@@ -1893,6 +2070,9 @@ struct PieWait {
     wanted: &'static str,
     /// Whether a game has been seen building or up since the wait began.
     seen_active: bool,
+    /// The session's launch count when the wait began. A stop that lands
+    /// entirely between two polls is still provable: the count moved.
+    launch_baseline: u64,
     /// The frame the wait gives up on.
     until: u32,
 }
@@ -2038,5 +2218,178 @@ mod tests {
     #[test]
     fn the_editor_port_is_not_the_game_port() {
         assert_ne!(DEFAULT_PORT, jackdaw_remote::DEFAULT_PORT);
+    }
+
+    // ------------------------------------------------- T3: pie + selection --
+
+    /// A world with the resources the new faces read: a selection, a PIE
+    /// projection with one ephemeral and one mapped authored entity, a
+    /// pending live edit, and a session that never launched anything.
+    fn pie_face_world() -> World {
+        let mut world = World::new();
+        world.init_resource::<crate::selection::Selection>();
+        world.init_resource::<crate::pie_projection::PieProjection>();
+        world.init_resource::<crate::pie_mirror::PieInstances>();
+        world.init_resource::<crate::pie_mirror::PieViewMode>();
+        world.init_resource::<crate::live_edits::LiveEditLog>();
+
+        let authored = world
+            .spawn((
+                bevy::prelude::Name::new("Authored"),
+                bevy::prelude::Transform::default(),
+            ))
+            .id();
+        world.spawn((
+            crate::pie_projection::PieEphemeral,
+            bevy::prelude::Name::new("GameActor"),
+        ));
+        let mut projection = world.resource_mut::<crate::pie_projection::PieProjection>();
+        projection.by_bits.insert(0xA0, authored);
+        world.insert_non_send(crate::pie::PieSession::default());
+        world
+    }
+
+    /// The face over a stopped session: stopped, no instances, and the
+    /// projection's shape counted from the world itself.
+    #[test]
+    fn pie_face_reports_a_stopped_session() {
+        let mut world = pie_face_world();
+
+        // One pending live edit, so the count is exercised.
+        {
+            let key = crate::live_edits::LiveEditKey {
+                bits: 0xA0,
+                type_path: "T".to_string(),
+                field_path: String::new(),
+            };
+            let entry = crate::live_edits::LiveEditEntry {
+                node_id: None,
+                baseline: None,
+                live_value: serde_json::json!(null),
+                label: "probe".to_string(),
+            };
+            world
+                .resource_mut::<crate::live_edits::LiveEditLog>()
+                .entries
+                .push((key, entry));
+        }
+
+        let answer = pie_handler(In(None), &mut world).expect("the face answers");
+        let face = answer.as_object().expect("an object");
+        assert_eq!(face["status"], "stopped");
+        assert_eq!(face["instances"].as_array().map(Vec::len), Some(0));
+        assert_eq!(face["live_edits"], 1);
+        let projection = face["projection"].as_object().expect("an object");
+        assert_eq!(projection["entities"], 1, "one mapped preview entity");
+        assert_eq!(projection["authored"], 1, "the mapped one is authored");
+        assert_eq!(projection["ephemeral"], 1, "one ephemeral, unmapped");
+        assert_eq!(face["view_mode"], "scene");
+    }
+
+    /// The selection face: set by bits, by name, and clear.
+    #[test]
+    fn selection_set_takes_bits_names_and_clears() {
+        let mut world = pie_face_world();
+        let entity = world
+            .query_filtered::<Entity, With<bevy::prelude::Name>>()
+            .iter(&world)
+            .find(|e| {
+                world
+                    .get::<bevy::prelude::Name>(*e)
+                    .is_some_and(|n| n.as_str() == "Authored")
+            })
+            .expect("the authored entity");
+
+        // By bits: the id `scene_tree` would report.
+        let answer = selection_set_handler(
+            In(Some(json!({ "entities": [entity.to_bits()] }))),
+            &mut world,
+        )
+        .expect("set by bits");
+        assert_eq!(
+            answer["selection"][0]["name"], "Authored",
+            "the answer names what it selected"
+        );
+        assert_eq!(
+            world.resource::<crate::selection::Selection>().entities,
+            vec![entity]
+        );
+        assert!(world.get::<crate::selection::Selected>(entity).is_some());
+
+        // By name.
+        selection_set_handler(In(Some(json!({ "names": ["Authored"] }))), &mut world)
+            .expect("set by name");
+        assert_eq!(
+            world.resource::<crate::selection::Selection>().entities,
+            vec![entity]
+        );
+
+        // Clear: the resource empties and the marker goes.
+        selection_set_handler(In(Some(json!({ "clear": true }))), &mut world).expect("cleared");
+        assert!(
+            world
+                .resource::<crate::selection::Selection>()
+                .entities
+                .is_empty()
+        );
+        assert!(world.get::<crate::selection::Selected>(entity).is_none());
+
+        // A dead id is refused, not silently dropped: an index nothing holds
+        // (legal bits, no entity behind them).
+        let refused =
+            selection_set_handler(In(Some(json!({ "entities": [4294901760u64] }))), &mut world);
+        assert!(refused.is_err(), "an unknown id must refuse");
+    }
+
+    /// The `pie_stopped` wait over a session that began and ended entirely
+    /// between two polls: the wait began before the launch (its baseline is
+    /// the pre-launch count), the launch moved the count, and the next poll
+    /// satisfies — the race the live QA worked around by polling the status
+    /// face (T1 deviation 1, closed here).
+    #[test]
+    fn a_pie_stopped_wait_satisfies_when_the_session_already_ended() {
+        let mut world = pie_face_world();
+        // The wait begins while nothing has run: it holds.
+        let held = pie_wait(
+            &mut world,
+            &json!({ "until": "pie_stopped" }),
+            "pie_stopped",
+            1,
+        )
+        .expect("the wait answers");
+        assert!(held.is_none(), "nothing has run: the wait holds");
+
+        // The session launches and ends entirely between two polls: the count
+        // moved past the wait's baseline.
+        world
+            .non_send_mut::<crate::pie::PieSession>()
+            .note_launch_for_test();
+
+        let answer = pie_wait(
+            &mut world,
+            &json!({ "until": "pie_stopped" }),
+            "pie_stopped",
+            2,
+        )
+        .expect("the wait answers");
+        assert!(
+            answer.is_some(),
+            "a stopped status over a counted session satisfies immediately"
+        );
+    }
+
+    /// The same wait over a world where nothing ever launched still holds:
+    /// the count is the proof, and it did not move.
+    #[test]
+    fn a_pie_stopped_wait_holds_when_nothing_ever_ran() {
+        let mut world = pie_face_world();
+        let answer = pie_wait(
+            &mut world,
+            &json!({ "until": "pie_stopped" }),
+            "pie_stopped",
+            1,
+        )
+        .expect("the wait answers");
+        assert!(answer.is_none(), "nothing ran: the wait keeps holding");
     }
 }

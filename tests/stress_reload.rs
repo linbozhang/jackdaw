@@ -1,4 +1,4 @@
-#![expect(clippy::print_stdout, reason = "test prints progress diagnostics")]
+#![allow(clippy::print_stdout, reason = "test prints progress diagnostics")]
 //! Stress test: measure the resident-memory cost of reloading a
 //! dylib repeatedly (the edit-mode live-reload leak).
 //!

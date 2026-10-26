@@ -175,6 +175,11 @@ pub struct PieSession {
     /// `<assets>/.jackdaw-pie/`, removed when play stops and swept at
     /// project open when a crash beat the cleanup to it.
     temp_copies: Vec<PathBuf>,
+    /// Monotonic count of instances ever launched. A `pie_stopped` wait
+    /// reads it as its baseline, so a session that began and ended
+    /// entirely between two polls still satisfies the wait — observing
+    /// the session while it is up is no longer the only proof it ran.
+    launches: u64,
 }
 
 impl Drop for PieSession {
@@ -237,6 +242,44 @@ impl PieSession {
             .values()
             .any(|build| matches!(build, BuildState::Failed { launch: true }))
     }
+
+    /// Monotonic count of instances ever launched, the `pie_stopped`
+    /// wait's session-proof baseline.
+    pub fn launches(&self) -> u64 {
+        self.launches
+    }
+
+    /// Bump the launch count without launching anything: a test's way of
+    /// standing in for a session that already came and went.
+    #[cfg(test)]
+    pub fn note_launch_for_test(&mut self) {
+        self.launches += 1;
+    }
+
+    /// One launched instance as the BRP face summarizes it.
+    pub fn instance_faces(&self) -> Vec<PieInstanceFace> {
+        self.children
+            .iter()
+            .map(|(key, stage)| PieInstanceFace {
+                key: key.clone(),
+                stage: match stage {
+                    ChildStage::Connecting { .. } => "connecting",
+                    ChildStage::Live { .. } => "live",
+                },
+                scene_override: self.scene_overrides.get(key).cloned(),
+            })
+            .collect()
+    }
+}
+
+/// One launched instance, for the `jackdaw/pie` face.
+pub struct PieInstanceFace {
+    pub key: InstanceKey,
+    /// `connecting` or `live`.
+    pub stage: &'static str,
+    /// The scene override this instance runs with, when it plays the
+    /// editor's scene rather than the game's own startup scene.
+    pub scene_override: Option<SceneOverrideLaunch>,
 }
 
 /// What play-in-editor is doing: `building` while a launch waits on its
@@ -659,6 +702,20 @@ pub fn handle_reload(world: &mut World) {
         return;
     };
 
+    // A current-scene session reloads on a freshly resolved override: the
+    // scene may have moved on since the launch, and the relaunch owes the
+    // game what is in front now (a new temp copy when it was edited, the
+    // same file when it was not). Which instances were playing the current
+    // scene is read before the stop clears the table.
+    let had_override: Vec<InstanceKey> = {
+        let session = world.non_send::<PieSession>();
+        keys.iter()
+            .filter(|key| session.scene_override(key).is_some())
+            .cloned()
+            .collect()
+    };
+    let reload_override = crate::pie_current::override_for_reload(world);
+
     force_stop_all(world);
 
     for key in keys {
@@ -666,7 +723,16 @@ pub fn handle_reload(world: &mut World) {
             warn!("PIE: Reload could not find run config '{}'", key.config);
             continue;
         };
-        launch_instance(world, key, run);
+        let scene_override = had_override
+            .contains(&key)
+            .then(|| reload_override.clone())
+            .flatten();
+        match scene_override {
+            Some(scene_override) => {
+                launch_instance_with_override(world, key, run, Some(scene_override));
+            }
+            None => launch_instance(world, key, run),
+        }
     }
 
     info!("PIE: Reload (rebuild + relaunch)");
@@ -789,10 +855,9 @@ fn launch_instance_inner(
             let path = path.clone();
             if let Some(stage) = spawn_instance(world, &key, &run, &path, scene_override.as_ref()) {
                 record_scene_override(world, &key, scene_override.as_ref());
-                world
-                    .non_send_mut::<PieSession>()
-                    .children
-                    .insert(key, stage);
+                let mut session = world.non_send_mut::<PieSession>();
+                session.launches += 1;
+                session.children.insert(key, stage);
             }
             return;
         }
@@ -2040,6 +2105,7 @@ fn poll_builds(world: &mut World) {
     let mut session = world.non_send_mut::<PieSession>();
     session.builds = builds;
     for (key, stage) in spawned {
+        session.launches += 1;
         session.children.insert(key, stage);
     }
 }
@@ -2174,6 +2240,14 @@ fn advance_child(key: &InstanceKey, stage: ChildStage) -> Option<ChildStage> {
 /// `Playing` (unless already `Paused`); zero children implies `Stopped`.
 fn reconcile_play_state(world: &mut World) {
     let session = world.non_send::<PieSession>();
+    // A live child implies playing; a child still connecting does not:
+    // counting one there would open the stop gate into the connect window,
+    // and the stop-that-kills-a-connecting-child path spins the main
+    // thread (reproduced 100%: stop inside the window freezes the editor
+    // at full CPU, stop after connect does not; the deep cause is its own
+    // investigation). The gate staying closed means a stop fired into the
+    // window comes back cancelled — callers retry, which the QA recipes
+    // already do.
     let any_live = session
         .children
         .values()
@@ -3553,7 +3627,7 @@ mod graceful_stop_tests {
     }
 
     /// A child that exits inside the window is reaped by the graceful
-    /// path 鈥?no kill was needed, the stage simply drops.
+    /// path — no kill was needed, the stage simply drops.
     #[test]
     fn a_self_exit_inside_the_window_is_graceful() {
         let mut child = long_lived_child();
@@ -3577,6 +3651,48 @@ mod graceful_stop_tests {
         assert!(
             advance_child(&key, stage).is_none(),
             "an exited child is reaped, not kept"
+        );
+    }
+
+    /// A connecting child does not put the editor into Playing: the stop
+    /// gate stays closed over the connect window (a stop fired into it
+    /// comes back cancelled — callers retry), because the
+    /// stop-that-kills-a-connecting-child path is the one that spins the
+    /// main thread (see `reconcile_play_state`). Regression anchor for
+    /// that conservative choice.
+    #[test]
+    fn a_connecting_child_keeps_the_editor_stopped() {
+        use bevy::tasks::AsyncComputeTaskPool;
+        let mut app = App::new();
+        app.add_plugins(bevy::app::TaskPoolPlugin::default());
+        app.add_plugins(bevy::state::app::StatesPlugin);
+        app.init_state::<PlayState>();
+        app.world_mut().insert_non_send(PieSession::default());
+
+        let (handle, name) = serve().expect("serve");
+        drop(handle);
+        drop(name);
+        let accept = AsyncComputeTaskPool::get()
+            .spawn(std::future::pending::<io::Result<IpcChannelTransport>>());
+        let child = long_lived_child();
+        let stage = ChildStage::Connecting {
+            child,
+            accept,
+            stderr_tail: quiet_tail(),
+            since: Instant::now(),
+        };
+        app.world_mut()
+            .non_send_mut::<PieSession>()
+            .children
+            .insert(key(), stage);
+
+        reconcile_play_state(app.world_mut());
+        app.update();
+
+        assert_eq!(
+            *app.world().resource::<State<PlayState>>().get(),
+            PlayState::Stopped,
+            "the stop gate stays closed over the connect window"
         );
     }
 
