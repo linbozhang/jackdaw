@@ -1240,10 +1240,35 @@ pub fn scaffold_new_project_with(
     // worked on rather than the last release.
     crate::dev_checkout::rewrite_jackdaw_dep_for_dev_checkout(dest);
 
+    // A game builds the same bevy/wgpu/windows tree this jackdaw was
+    // built and tested with; a lock resolved fresh from the registry
+    // picks whatever the index serves today, which in a bad upstream
+    // window does not even compile (the wgpu-hal 30.0.1 dx12 /
+    // windows-core macro clash, T08-T1 QA §六-②). Seed the project
+    // with this workspace's own lock as the starting point: the
+    // resolve step that follows (`check_new_project`'s `cargo
+    // metadata`, which writes the lock when it is absent) then only
+    // adds this project's own entry and prunes unused ones — cargo
+    // keeps already-locked versions — instead of resolving 800 crates
+    // at their newest.
+    if kind == TemplateKind::Game {
+        std::fs::write(dest.join("Cargo.lock"), workspace_lock_snapshot())
+            .map_err(|e| ScaffoldError::Io(format!("{e}")))?;
+    }
+
     Ok(ScaffoldReport {
         actions: vec![format!("scaffolded {written} files")],
         created_lib_stub: false,
     })
+}
+
+/// The workspace's own `Cargo.lock`, embedded at compile time: the
+/// dependency tree this build was verified against. Embedded rather
+/// than read from disk because a shipped `jd` runs far from this
+/// checkout; a checkout build re-embeds on every compile, the same
+/// freshness rule the template directory has.
+fn workspace_lock_snapshot() -> &'static str {
+    include_str!("../../../Cargo.lock")
 }
 
 /// Plan integration of an existing Bevy project without changing it.
@@ -2656,6 +2681,17 @@ const RESERVED_CRATE_NAMES: [&str; 55] = [
 /// the launcher modal) share this so they reject the same inputs with
 /// the same message.
 pub fn validated_project_name(raw: &str) -> Result<String, ScaffoldError> {
+    // A path is not a name: `jd new E:\games\my-game` would otherwise
+    // sanitize to a mangled directory name created wherever the shell
+    // happens to be, and the user finds out from a wrong path, not a
+    // message. Say where the path belongs instead.
+    if raw.contains(['/', '\\']) || Path::new(raw).file_name().is_some_and(|name| name != raw) {
+        return Err(ScaffoldError::ProjectName {
+            raw: raw.to_string(),
+            reason: "a name cannot be a path; pass the directory with --path and only the \
+                     name here",
+        });
+    }
     let name = sanitize_project_name(raw);
     let reject = |reason| {
         Err(ScaffoldError::ProjectName {
@@ -2866,6 +2902,45 @@ mod tests {
         assert!(manifest.contains("jackdaw_extension"));
         let lib = std::fs::read_to_string(dest.join("src/lib.rs")).unwrap();
         assert!(lib.contains("JackdawExtension"));
+    }
+
+    /// A new game starts from this workspace's own lock, so its first
+    /// resolve inherits the bevy/wgpu/windows tree this jackdaw was
+    /// verified against instead of whatever the registry serves today
+    /// (the fresh-lock drift that broke every new project's editor
+    /// prebuild in a bad upstream window).
+    #[test]
+    fn a_new_game_carries_the_workspace_lock_snapshot() {
+        let dest = temp_dir("newgame-lock").join("my-game");
+        scaffold_new_project(&dest, "my-game", TemplateKind::Game).unwrap();
+        let lock = std::fs::read_to_string(dest.join("Cargo.lock"))
+            .expect("a new game project carries a Cargo.lock");
+        assert_eq!(
+            lock,
+            workspace_lock_snapshot(),
+            "the file is this workspace's lock verbatim, not a fresh resolve"
+        );
+        // The resolve step after scaffolding must be a prune-and-add on
+        // this snapshot, not a re-resolve: cargo keeps already-locked
+        // versions when the manifest admits them. That property is what
+        // makes the seeded lock worth carrying; the editor's first
+        // `--locked` build then passes on the first try. (Live behavior
+        // is pinned by the real-machine leg, `loop/qa`.)
+    }
+
+    /// A path is not a project name: `jd new E:\games\my-game` used to
+    /// sanitize into a mangled directory created in whatever directory
+    /// the shell was in — silent, wrong, and nowhere near the message
+    /// that would have helped.
+    #[test]
+    fn a_project_name_that_is_really_a_path_is_refused_with_guidance() {
+        for raw in ["E:\\games\\my-game", "/home/me/my-game", "games/my-game"] {
+            let error = validated_project_name(raw).expect_err("a path is not a name");
+            assert!(
+                error.to_string().contains("--path"),
+                "{raw}: the refusal points at --path: {error}"
+            );
+        }
     }
 
     /// The game template teaches the config-asset pattern: a type that
