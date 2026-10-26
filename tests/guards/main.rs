@@ -16,6 +16,7 @@ pub(crate) static HEAVY_EDITOR_LOCK: std::sync::Mutex<()> = std::sync::Mutex::ne
 
 mod atomic_writes;
 mod batch_undo;
+mod config_injection;
 mod dirty_matrix;
 mod editor_remote;
 mod feathers_composition;

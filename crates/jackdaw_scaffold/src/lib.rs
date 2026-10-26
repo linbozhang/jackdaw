@@ -2868,6 +2868,35 @@ mod tests {
         assert!(lib.contains("JackdawExtension"));
     }
 
+    /// The game template teaches the config-asset pattern: a type that
+    /// is both Asset and Resource, the registration lines that make the
+    /// editor offer it, the one-line loader plugin, and a consumer —
+    /// so every new project ships with the tuning-parameters path in
+    /// place.
+    #[test]
+    fn new_game_project_teaches_the_config_pattern() {
+        let dest = temp_dir("newgame-config").join("my-game");
+        scaffold_new_project(&dest, "my-game", TemplateKind::Game).unwrap();
+        let lib = std::fs::read_to_string(dest.join("src/lib.rs")).unwrap();
+        for needle in [
+            "struct GameConfig",
+            "Asset, Resource, Reflect",
+            "player_health",
+            "move_speed",
+            "gravity",
+            "init_asset::<GameConfig>()",
+            "register_asset_reflect::<GameConfig>()",
+            "ConfigPlugin::<GameConfig>::default()",
+            "falling_cubes",
+            "Tuning parameters",
+        ] {
+            assert!(
+                lib.contains(needle),
+                "the template must teach `{needle}`; the config pattern drifted"
+            );
+        }
+    }
+
     #[test]
     fn import_adds_the_runtime_alongside_its_own_files() {
         let root = temp_dir("import");

@@ -21,6 +21,25 @@
 //! `#[reflect(Component, Default)]`, like `SpinningCube` below. After you
 //! save, click Rebuild in jackdaw (or run `jd build`) and it
 //! appears in `Add Component`. No registration code is needed.
+//!
+//! # Tuning parameters (game-wide, saved as an asset)
+//!
+//! `GameConfig` below is the other half of the pattern: a *Resource*
+//! whole systems read (`falling_cubes` uses `gravity` and
+//! `move_speed`) whose value comes from an asset file,
+//! `assets/game-config.bsn`. To change the tuning:
+//!
+//! 1. In jackdaw, `Project window > New Asset...` and pick
+//!    `GameConfig` (after one Rebuild) — the editor creates
+//!    `game-config.bsn` and opens its card.
+//! 2. Edit `move_speed` (say `2.5`), `Save`.
+//! 3. Play: the falling cube falls and spins by the file's numbers.
+//!    `cargo run` and an exported build read the same file.
+//!
+//! Until that file exists the game runs on the `Default` values — a
+//! missing config is not an error. Per-entity numbers (one cube's
+//! `speed`) stay as components; game-wide numbers (gravity, move
+//! speed, player health) belong in a config like this.
 
 use bevy::prelude::*;
 use jackdaw_runtime::prelude::*;
@@ -33,7 +52,15 @@ pub struct GamePlugin;
 impl Plugin for GamePlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(Startup, spawn_scene)
-            .add_systems(Update, spin_cubes);
+            .add_systems(Update, spin_cubes)
+            // One line per config type: register it as an asset (so the
+            // editor offers it in New Asset) and load `game-config.bsn`
+            // as the starting value of the `GameConfig` resource.
+            .init_asset::<GameConfig>()
+            .register_asset_reflect::<GameConfig>()
+            .add_plugins(ConfigPlugin::<GameConfig>::default())
+            .add_systems(Startup, spawn_falling_cube)
+            .add_systems(Update, falling_cubes);
     }
 }
 
@@ -62,5 +89,73 @@ fn spin_cubes(time: Res<Time>, mut cubes: Query<(&SpinningCube, &mut Transform)>
     let dt = time.delta_secs();
     for (cube, mut transform) in &mut cubes {
         transform.rotate_y(cube.speed * dt);
+    }
+}
+
+/// Game-wide tuning parameters. Both an `Asset` (the editor authors
+/// `game-config.bsn` files of it) and a `Resource` (systems read it),
+/// so the value can be edited in the editor, saved to disk, and loaded
+/// back as the starting value in every run — see "Tuning parameters"
+/// above. `player_health` has no system yet; a HUD or player module
+/// reads it when you write one.
+#[derive(Asset, Resource, Reflect, Clone)]
+#[reflect(Resource, Default, @EditorCategory::new("Game Config"))]
+pub struct GameConfig {
+    /// A player system's starting health (yours to consume).
+    pub player_health: f32,
+    /// Multiplies how fast things move and spin.
+    pub move_speed: f32,
+    /// Downward acceleration, in units per second squared.
+    pub gravity: f32,
+}
+
+impl Default for GameConfig {
+    /// Sensible numbers a game runs on before anyone has authored
+    /// `game-config.bsn` — a missing config is not an error.
+    fn default() -> Self {
+        Self {
+            player_health: 100.0,
+            move_speed: 1.0,
+            gravity: -9.81,
+        }
+    }
+}
+
+/// A cube the config drives, spawned so there is something to watch:
+/// it falls under `GameConfig::gravity` and spins at its component's
+/// `speed` scaled by `GameConfig::move_speed` — the per-entity number
+/// and the game-wide number working together.
+#[derive(Component, Reflect, Default)]
+#[reflect(Component, Default, @EditorCategory::new("Actor"))]
+pub struct FallingCube {
+    pub speed: f32,
+}
+
+fn spawn_falling_cube(
+    mut commands: Commands,
+    mut meshes: ResMut<Assets<Mesh>>,
+    mut materials: ResMut<Assets<StandardMaterial>>,
+) {
+    commands.spawn((
+        FallingCube { speed: 1.0 },
+        SpinningCube { speed: 1.0 },
+        Mesh3d(meshes.add(Cuboid::new(0.6, 0.6, 0.6))),
+        MeshMaterial3d(materials.add(StandardMaterial {
+            base_color: Color::srgb(0.9, 0.9, 0.9),
+            ..default()
+        })),
+        Transform::from_xyz(0.0, 3.0, 0.0),
+    ));
+}
+
+fn falling_cubes(
+    time: Res<Time>,
+    config: Res<GameConfig>,
+    mut cubes: Query<(&FallingCube, &mut Transform)>,
+) {
+    let dt = time.delta_secs();
+    for (cube, mut transform) in &mut cubes {
+        transform.translation.y += config.gravity * dt;
+        transform.rotate_y(cube.speed * config.move_speed * dt);
     }
 }
