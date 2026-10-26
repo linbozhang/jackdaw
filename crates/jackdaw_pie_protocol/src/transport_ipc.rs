@@ -91,6 +91,22 @@ pub fn connect(name: &str) -> std::io::Result<IpcChannelTransport> {
     })
 }
 
+/// How many frames one `drain_received` call takes at most before handing
+/// the rest back to the next call. The drain loop runs on the editor's main
+/// thread once per frame; against a game that streams state every one of its
+/// own frames, an unbounded "until the channel is empty" loop can outrun the
+/// producer exactly when a backlog has piled up (a save chain, a projection
+/// rebuild, any long frame) — the loop then never sees the channel empty and
+/// the editor freezes at full CPU with the log and BRP dead silent (the N10
+/// freeze family). A bounded batch keeps each frame's drain work finite, so
+/// a backlog digests over frames instead of pinning the main thread.
+const DRAIN_FRAME_BUDGET: usize = 256;
+
+/// Wall-clock cap for one `drain_received` call, checked periodically, so a
+/// flood of large frames cannot hold the loop for long even under the frame
+/// count budget.
+const DRAIN_TIME_BUDGET: std::time::Duration = std::time::Duration::from_millis(4);
+
 impl PieTransport for IpcChannelTransport {
     fn send(&mut self, channel: PieChannel, bytes: &[u8]) {
         let frame = Frame {
@@ -104,7 +120,8 @@ impl PieTransport for IpcChannelTransport {
 
     fn drain_received(&mut self) -> Vec<(PieChannel, Vec<u8>)> {
         let mut out = Vec::new();
-        loop {
+        let started = std::time::Instant::now();
+        while out.len() < DRAIN_FRAME_BUDGET {
             match self.rx.try_recv() {
                 Ok(frame) => out.push((frame.channel, frame.bytes)),
                 Err(TryRecvError::Empty) => break,
@@ -116,6 +133,9 @@ impl PieTransport for IpcChannelTransport {
                     warn!("PIE ipc transport: receive failed: {err}");
                     break;
                 }
+            }
+            if out.len() % 32 == 0 && started.elapsed() >= DRAIN_TIME_BUDGET {
+                break;
             }
         }
         out
@@ -182,6 +202,53 @@ fn ipc_error_to_io(err: IpcError) -> std::io::Error {
 mod tests {
     use super::*;
     use crate::event::PieChannel;
+
+    /// A producer flooding the pipe cannot pin one drain call: the first
+    /// drain returns a bounded batch, the rest stays queued and later drains
+    /// collect every frame — the reliability contract holds under backlog,
+    /// which is what keeps the editor's main thread finite per frame (the
+    /// N10 freeze guard).
+    #[test]
+    fn one_drain_is_bounded_under_backlog_and_nothing_is_lost() {
+        let (handle, name) = serve().unwrap();
+        let sender = std::thread::spawn(move || {
+            let mut t = connect(&name).unwrap();
+            let flood = DRAIN_FRAME_BUDGET * 4;
+            for i in 0..flood {
+                t.send(PieChannel::Reliable, &[i as u8; 16]);
+            }
+            t
+        });
+        let mut server = handle.accept().unwrap();
+        let mut game = sender.join().unwrap();
+        // Let the flood land before draining.
+        std::thread::sleep(std::time::Duration::from_millis(200));
+
+        let first = server.drain_received();
+        assert!(
+            !first.is_empty() && first.len() <= DRAIN_FRAME_BUDGET,
+            "one drain must return a bounded batch, got {}",
+            first.len()
+        );
+        let mut total = first.len();
+        loop {
+            let batch = server.drain_received();
+            if batch.is_empty() {
+                break;
+            }
+            assert!(
+                batch.len() <= DRAIN_FRAME_BUDGET,
+                "every drain batch is bounded"
+            );
+            total += batch.len();
+        }
+        assert_eq!(
+            total,
+            DRAIN_FRAME_BUDGET * 4,
+            "backlog digests over drains with nothing dropped"
+        );
+        game.drain_received();
+    }
 
     #[test]
     fn ipc_round_trips_in_both_directions() {
