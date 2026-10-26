@@ -294,6 +294,7 @@ mod tests {
                 executable: PathBuf::from("dist/game.exe"),
                 assets_dir: PathBuf::from("dist/assets"),
                 files: 1,
+                skipped: 0,
             })));
         }
         assert!(
@@ -352,6 +353,7 @@ mod tests {
                 executable: PathBuf::from("my-game/.jackdaw/dist/release/my-game.exe"),
                 assets_dir: PathBuf::from("my-game/.jackdaw/dist/release/assets"),
                 files: 12,
+                skipped: 2,
             }),
         );
 

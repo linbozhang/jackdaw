@@ -15,10 +15,13 @@
 //!                            Build, then launch the game standalone;
 //!                            --config launches one jackdaw.toml run
 //!                            with its target and launch environment.
-//! export [--project <path>] [--config <label>] [--profile <name>] [--out <dir>]
+//! export [--project <path>] [--config <label>] [--profile <name>] [--out <dir>] [--force]
 //!                            Build and stage the game, executable and
 //!                            assets together, into a directory that
 //!                            runs on its own (.jackdaw/dist/<profile>).
+//!                            --force replaces a non-empty --out that no
+//!                            jackdaw export wrote; without it, one is
+//!                            refused rather than deleted.
 //! setup                      Build the SDK into the cache (one-time).
 //! doctor                     Report SDK build prerequisites.
 //! ```
@@ -757,9 +760,13 @@ fn bare_cargo_run(root: &Path) -> std::process::Command {
 }
 
 /// `jd export [--project <path>] [--config <label>] [--profile <name>]
-/// [--out <dir>]`: build the game and stage it — executable and the
-/// whole `assets/` tree together — into a directory that runs when
-/// double-clicked, `.jackdaw/dist/<profile>` by default.
+/// [--out <dir>] [--force]`: build the game and stage it — executable
+/// and the whole assets tree together — into a directory that runs
+/// when double-clicked, `.jackdaw/dist/<profile>` by default. A
+/// previous export is replaced atomically: the new one is assembled
+/// beside it and swapped in, so a failed export keeps the old one.
+/// `--force` is the explicit consent to replace a non-empty `--out`
+/// directory no jackdaw export wrote; without it that is a refusal.
 ///
 /// `--config` selects one `[[run]]` of `jackdaw.toml` for its target
 /// dimensions (bin/example, features, package), exactly as `jd run
@@ -831,8 +838,12 @@ fn cmd_export(args: &[String]) -> ExitCode {
         return ExitCode::FAILURE;
     }
 
-    let plan =
+    let mut plan =
         jackdaw_project_build::export::plan_export(&root, &profile, &build.binary, out.as_deref());
+    // `--force` walks past the gate that refuses to replace a non-empty
+    // directory no jackdaw export wrote (the `.jackdaw-export` marker's
+    // absence). Explicit intent on the command line, nowhere else.
+    plan.force = args.iter().any(|arg| arg == "--force");
     match jackdaw_project_build::export::stage_export(&plan) {
         Ok(report) => {
             println!(
@@ -841,6 +852,13 @@ fn cmd_export(args: &[String]) -> ExitCode {
                 report.files,
                 report.dist_dir.display()
             );
+            if report.skipped > 0 {
+                println!(
+                    "jackdaw export: kept {} editor-private entries out of the package \
+                     (scene backups, PIE copies, temp leftovers)",
+                    report.skipped
+                );
+            }
             // The finished export is where the user looks next; failing
             // to open the folder is not failing to export.
             if let Err(err) =
@@ -889,11 +907,11 @@ fn parse_profile_arg(args: &[String]) -> Option<String> {
     value_flag(args, "--profile")
 }
 
-/// The `--out` an export accepts: an absolute path only. The staging
-/// directory is cleared on every export, so a relative one — `--out .`
-/// is the extreme — would clear whatever the current directory
-/// happens to be. The staging guard refuses one again underneath this;
-/// the check here fails before the build is paid for.
+/// The `--out` an export accepts: an absolute path only. The output
+/// directory is replaced wholesale on every export, so a relative one
+/// — `--out .` is the extreme — would replace whatever the current
+/// directory happens to be. The staging guard refuses one again
+/// underneath this; the check here fails before the build is paid for.
 fn validate_export_out(out: &Path) -> Result<(), String> {
     if out.is_absolute() {
         return Ok(());
@@ -1239,6 +1257,7 @@ mod tests {
     /// `--profile` and `--out` take values too, and neither is a
     /// project path — without this, `jd export --profile release`
     /// would resolve the project to a directory named `release`.
+    /// `--force` takes none: it must not read as a path either.
     #[test]
     fn export_flag_values_are_not_read_as_project_paths() {
         assert_eq!(
@@ -1249,6 +1268,7 @@ mod tests {
             parse_project_arg(&args(&["--project", "x", "--out", "dist"])),
             Some("x".into())
         );
+        assert_eq!(parse_project_arg(&args(&["--force"])), None);
         assert_eq!(
             parse_profile_arg(&args(&["--config", "Server", "--profile", "thin"])),
             Some("thin".to_string())
