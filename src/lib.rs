@@ -116,6 +116,7 @@ pub mod numeric_transform;
 pub mod operator_tooltip;
 pub mod perf_probe;
 pub mod pie;
+pub mod pie_current;
 pub mod pie_menu;
 pub mod pie_mirror;
 pub mod pie_projection;

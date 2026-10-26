@@ -554,6 +554,11 @@ pub fn transition_to_editor(world: &mut World, root: PathBuf) {
         info!("removed {swept} orphan temp file(s) left by interrupted saves");
     }
 
+    // The same for the temporary run copies a killed editor left under
+    // `assets/.jackdaw-pie/`: every copy is regenerable and named for the
+    // editor pid that wrote it, so a fresh open owes them nothing.
+    crate::pie_current::sweep_orphan_pie_copies(&root);
+
     // The crash journal's session starts with the project: a directory
     // under the state tree that periodic snapshots of dirty tabs fill and
     // a clean exit removes.

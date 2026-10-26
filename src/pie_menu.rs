@@ -24,6 +24,7 @@ impl Plugin for PieMenuPlugin {
         app.init_resource::<PieMenuState>()
             .add_observer(on_menu_button_click)
             .add_observer(on_instance_row_click)
+            .add_observer(on_startup_row_click)
             .add_observer(on_scaffold_row_click)
             .add_systems(Update, close_menu_on_outside_click);
     }
@@ -47,6 +48,11 @@ pub struct PieInstanceRow(pub InstanceKey);
 /// `jackdaw.toml`; clicking it scaffolds one.
 #[derive(Component)]
 pub struct PieScaffoldRow;
+
+/// Marker on the first row, which launches the game on its own startup
+/// scene — the scene the game's own code loads, no editor override.
+#[derive(Component)]
+pub struct PieStartupRow;
 
 #[derive(Resource, Default)]
 pub struct PieMenuState {
@@ -128,6 +134,11 @@ fn spawn_menu(world: &mut World, right_x: f32, top_y: f32) -> Entity {
         ))
         .id();
 
+    // First group: the game's own startup scene (the pre-current-scene
+    // meaning of Play), separated from the per-instance rows below.
+    spawn_startup_row(world, popover, editor_font.clone());
+    spawn_menu_divider(world, popover);
+
     if rows.is_empty() {
         spawn_scaffold_row(world, popover, editor_font, icon_font);
     } else {
@@ -137,6 +148,67 @@ fn spawn_menu(world: &mut World, right_x: f32, top_y: f32) -> Entity {
     }
 
     popover
+}
+
+/// The first group of the dropdown: the game's own startup scene, which is
+/// what the main Play button launched before "play the current scene"
+/// existed. Kept as an explicit row so the old path stays one click away,
+/// above the per-instance rows it always led to.
+fn spawn_startup_row(world: &mut World, popover: Entity, editor_font: Option<Handle<Font>>) {
+    let row = world
+        .spawn((
+            PieStartupRow,
+            button(
+                ButtonProps::new("")
+                    .with_variant(ButtonVariant::Ghost)
+                    .align_left(),
+            ),
+            ChildOf(popover),
+        ))
+        .id();
+
+    if let Some(handle) = editor_font.clone() {
+        world.spawn((
+            Text::new(String::from(Icon::Play.unicode())),
+            TextFont {
+                font: handle.into(),
+                font_size: tokens::TEXT_SIZE,
+                ..Default::default()
+            },
+            TextColor(tokens::DOC_TAB_INACTIVE_LABEL),
+            Pickable::IGNORE,
+            ChildOf(row),
+        ));
+    }
+
+    let mut label_font = TextFont {
+        font_size: tokens::TEXT_SIZE_SM,
+        ..Default::default()
+    };
+    if let Some(handle) = editor_font {
+        label_font.font = handle.into();
+    }
+    world.spawn((
+        Text::new("Play Startup Scene".to_string()),
+        label_font,
+        TextColor(tokens::DOC_TAB_INACTIVE_LABEL),
+        Pickable::IGNORE,
+        ChildOf(row),
+    ));
+}
+
+/// The hairline between the startup-scene group and the instance rows.
+fn spawn_menu_divider(world: &mut World, popover: Entity) {
+    world.spawn((
+        Node {
+            height: Val::Px(1.0),
+            margin: UiRect::axes(Val::Px(4.0), Val::Px(2.0)),
+            ..Default::default()
+        },
+        BackgroundColor(tokens::BORDER_SUBTLE),
+        Pickable::IGNORE,
+        ChildOf(popover),
+    ));
 }
 
 /// Collect one `RowSpec` per launchable instance. Single-instance configs
@@ -338,6 +410,29 @@ fn on_instance_row_click(
         close_menu(world);
     });
     Ok(())
+}
+
+fn on_startup_row_click(
+    mut click: On<PointerClick>,
+    rows: Query<(), With<PieStartupRow>>,
+    parents: Query<&ChildOf>,
+    mut commands: Commands,
+) {
+    if click.event().button != PointerButton::Primary {
+        return;
+    }
+    if find_ancestor_with(click.event_target(), &parents, |e| rows.contains(e)).is_none() {
+        return;
+    }
+    click.propagate(false);
+
+    // The game's own startup scene: the same first-run launch the main
+    // Play button used before "play the current scene" existed, with no
+    // scene override in the child's environment.
+    commands.queue(|world: &mut World| {
+        crate::pie::handle_play(world);
+        close_menu(world);
+    });
 }
 
 fn on_scaffold_row_click(
