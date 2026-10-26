@@ -31,6 +31,9 @@ use jackdaw_pie_protocol::{
 
 use crate::build_status::BuildStatus;
 use crate::ext_build::BuildProgress;
+use crate::pie_current::{
+    PiePlayCurrentOp, ProjectSetSaveBeforePlayOp, SaveBeforePlay, SceneOverrideLaunch,
+};
 use crate::pie_mirror::{PieInstances, PieViewMode};
 use crate::project_build::shim::ShimSpec;
 use crate::project_build::{BuildLoad, CargoTarget};
@@ -140,6 +143,10 @@ enum BuildState {
 struct PendingSpawn {
     key: InstanceKey,
     run: RunConfig,
+    /// The scene override this launch carries through the build, handed to
+    /// the child through `JACKDAW_PIE_SCENE` when it spawns. `None` for a
+    /// startup-scene launch, whose save gate ran before the build instead.
+    scene_override: Option<SceneOverrideLaunch>,
 }
 
 /// Editor-side play orchestration. `NonSend` because ipc transports
@@ -148,6 +155,13 @@ struct PendingSpawn {
 pub struct PieSession {
     children: HashMap<InstanceKey, ChildStage>,
     builds: HashMap<BuildKey, BuildState>,
+    /// The scene override each launched instance runs with, recorded for
+    /// the launch log, stop cleanup, and the BRP face.
+    scene_overrides: HashMap<InstanceKey, SceneOverrideLaunch>,
+    /// Temporary run copies this session wrote under
+    /// `<assets>/.jackdaw-pie/`, removed when play stops and swept at
+    /// project open when a crash beat the cleanup to it.
+    temp_copies: Vec<PathBuf>,
 }
 
 impl Drop for PieSession {
@@ -155,7 +169,9 @@ impl Drop for PieSession {
     /// so this resource; take the running games down with it. Hard kills that
     /// skip destructors (SIGKILL skips everything) are covered by the game
     /// itself, which exits once its link to the editor closes, and on Linux
-    /// and Windows by the kernel as well.
+    /// and Windows by the kernel as well. The temporary run copies go the
+    /// same way; ones a hard kill stranded are swept at the next project
+    /// open.
     fn drop(&mut self) {
         for (_key, mut stage) in self.children.drain() {
             match &mut stage {
@@ -165,6 +181,7 @@ impl Drop for PieSession {
                 }
             }
         }
+        remove_temp_copies(&mut self.temp_copies);
     }
 }
 
@@ -172,6 +189,11 @@ impl PieSession {
     /// Whether an instance is currently launched (connecting or live).
     pub fn is_running(&self, key: &InstanceKey) -> bool {
         self.children.contains_key(key)
+    }
+
+    /// The scene override an instance was launched with, if it carried one.
+    pub fn scene_override(&self, key: &InstanceKey) -> Option<&SceneOverrideLaunch> {
+        self.scene_overrides.get(key)
     }
 
     /// Keys of all launched instances, for the dropdown checks.
@@ -239,6 +261,7 @@ impl Plugin for PiePlugin {
             .init_resource::<crate::live_highlight::LastHighlight>()
             .init_resource::<PieWindowMode>()
             .init_resource::<PiePrebuildState>()
+            .init_resource::<crate::pie_current::LastPlayCurrent>()
             .init_resource::<crate::project_types::ProjectTypes>()
             .init_resource::<crate::project_definitions::ProjectDefinitionKinds>()
             .init_resource::<ProjectSchemaWatch>()
@@ -284,13 +307,65 @@ fn reset_view_mode_on_stop(mut mode: ResMut<PieViewMode>) {
     *mode = PieViewMode::Scene;
 }
 
+/// Delete every temporary run copy in `copies`, tolerating ones already
+/// gone (another editor on the same project may have swept them).
+fn remove_temp_copies(copies: &mut Vec<PathBuf>) {
+    for copy in copies.drain(..) {
+        match std::fs::remove_file(&copy) {
+            Ok(()) => info!("PIE: removed the temporary run copy {}", copy.display()),
+            Err(err) if err.kind() == std::io::ErrorKind::NotFound => {}
+            Err(err) => warn!(
+                "PIE: cannot remove the temporary run copy {}: {err}",
+                copy.display()
+            ),
+        }
+    }
+}
+
+/// Record what one spawned launch overrode the game's startup scene with:
+/// the session's answer for stop cleanup and the BRP face, and the launch
+/// log line that says which scene the game was handed.
+fn record_scene_override(
+    world: &mut World,
+    key: &InstanceKey,
+    scene_override: Option<&SceneOverrideLaunch>,
+) {
+    let Some(scene_override) = scene_override else {
+        return;
+    };
+    let mut session = world.non_send_mut::<PieSession>();
+    session
+        .scene_overrides
+        .insert(key.clone(), scene_override.clone());
+    if let Some(temp_copy) = &scene_override.temp_copy
+        && !session.temp_copies.contains(temp_copy)
+    {
+        session.temp_copies.push(temp_copy.clone());
+    }
+    let source = if scene_override.from_temp_copy {
+        "an unsaved copy"
+    } else {
+        "the editor's scene"
+    };
+    info!(
+        "PIE: {key} launched with scene override '{}' ({source})",
+        scene_override.assets_relative
+    );
+}
+
 /// Shared cleanup for every path into `Stopped`: the stop button, a crashed
 /// or self-exited child being reaped, and the last per-instance stop. Drops
-/// the buffered snapshots and focus, then reverts the preview to the authored
-/// scene. Without this on the reap path, ghost previews and a dead focus key
-/// survive a crash, and the dead key blocks the next session's auto-enter
-/// (focus is only established when none exists).
+/// the buffered snapshots and focus, deletes this session's temporary run
+/// copies, then reverts the preview to the authored scene. Without this on
+/// the reap path, ghost previews and a dead focus key survive a crash, and
+/// the dead key blocks the next session's auto-enter (focus is only
+/// established when none exists).
 fn cleanup_session_on_stop(world: &mut World) {
+    {
+        let mut session = world.non_send_mut::<PieSession>();
+        remove_temp_copies(&mut session.temp_copies);
+        session.scene_overrides.clear();
+    }
     if let Some(mut instances) = world.get_resource_mut::<PieInstances>() {
         instances.buffers.clear();
         instances.focused = None;
@@ -311,6 +386,7 @@ pub(crate) fn enter_live_view(world: &mut World) {
 }
 
 pub(crate) fn add_to_extension(ctx: &mut ExtensionContext) {
+    use jackdaw_api_internal::keymap::PresetInput;
     ctx.register_operator::<PiePlayOp>()
         .register_operator::<PiePauseOp>()
         .register_operator::<PieStopOp>()
@@ -319,12 +395,18 @@ pub(crate) fn add_to_extension(ctx: &mut ExtensionContext) {
         .register_operator::<ProjectToggleAutoBuildOp>()
         .register_operator::<ProjectTogglePrebuildOp>()
         .register_operator::<ProjectToggleSaveBeforePlayOp>()
+        .register_operator::<ProjectSetSaveBeforePlayOp>()
         .register_operator::<PieWindowModeToggleOp>()
         .register_operator::<crate::live_input::PiePlayInputToggleOp>()
         .register_operator::<crate::live_edits::PieLiveEditSaveOp>()
         .register_operator::<crate::live_edits::PieLiveEditRevertOp>()
         .register_operator::<crate::live_edits::PieLiveEditsApplyAllOp>()
-        .register_operator::<crate::live_edits::PieLiveEditsDiscardAllOp>();
+        .register_operator::<crate::live_edits::PieLiveEditsDiscardAllOp>()
+        .register_operator::<PiePlayCurrentOp>()
+        // F5 runs the scene in front, the main Play button's action. The
+        // startup-scene launch stays a dropdown pick (Shift+F5 can follow
+        // when someone asks for it).
+        .bind_operator_host::<PiePlayCurrentOp>([PresetInput::key("F5")]);
 }
 
 fn play_is_stopped_or_paused(state: Res<State<PlayState>>) -> bool {
@@ -465,28 +547,30 @@ pub(crate) fn project_toggle_prebuild(
     OperatorResult::Finished
 }
 
-/// Turn saving the modified scenes before Play starts the game on or off.
-/// On by default, so the game loads what the editor shows.
+/// Cycle how Play handles unsaved scene changes: save → ask → play an
+/// unsaved copy → save. Kept for the operator registry and older scripts;
+/// `project.set_save_before_play` names the mode directly.
 #[operator(
     id = "project.toggle_save_before_play",
     label = "Toggle Save Before Play",
-    description = "Turn saving modified scenes before Play starts the game on or off."
+    description = "Cycle how Play handles unsaved scenes: save, ask, or play an unsaved copy."
 )]
 pub(crate) fn project_toggle_save_before_play(
     _: In<OperatorParameters>,
     mut commands: Commands,
 ) -> OperatorResult {
     commands.queue(|world: &mut World| {
-        let enabled = {
+        let next = {
             let mut settings = world.resource_mut::<EditorBuildSettings>();
-            settings.save_before_play = !settings.save_before_play;
+            settings.save_before_play = match settings.save_before_play {
+                SaveBeforePlay::Save => SaveBeforePlay::Ask,
+                SaveBeforePlay::Ask => SaveBeforePlay::PlayUnsavedCopy,
+                SaveBeforePlay::PlayUnsavedCopy => SaveBeforePlay::Save,
+            };
             settings.save_before_play
         };
         persist_project_build_settings(world);
-        info!(
-            "PIE: save before play {}",
-            if enabled { "enabled" } else { "disabled" }
-        );
+        info!("PIE: save before play set to {}", next.as_log());
     });
     OperatorResult::Finished
 }
@@ -584,7 +668,10 @@ fn wire_pie_button(
         return;
     };
     let op_id = match kind {
-        PieButton::Play => PiePlayOp::ID,
+        // The main button plays the scene in front; the dropdown's
+        // "Play Startup Scene" row and the run rows hold the game's own
+        // startup scene.
+        PieButton::Play => PiePlayCurrentOp::ID,
         PieButton::Pause => PiePauseOp::ID,
         PieButton::Stop => PieStopOp::ID,
         PieButton::Reload => PieReloadOp::ID,
@@ -615,11 +702,33 @@ pub(crate) fn project_root(world: &World) -> Option<PathBuf> {
     }
 }
 
-/// Launch one run-config instance. No-op if it is already running.
-/// Resolves the build spec, then either spawns immediately from a
-/// cached binary, joins an in-flight build's pending list, or starts a
-/// new build keyed by the spec.
+/// Launch one run-config instance on the game's own startup scene. No-op if
+/// it is already running. Resolves the build spec, then either spawns
+/// immediately from a cached binary, joins an in-flight build's pending
+/// list, or starts a new build keyed by the spec.
 pub(crate) fn launch_instance(world: &mut World, key: InstanceKey, run: RunConfig) {
+    launch_instance_inner(world, key, run, None);
+}
+
+/// [`launch_instance`] carrying a scene override: the child is handed
+/// `JACKDAW_PIE_SCENE` and the unsaved-scenes gate is the caller's to have
+/// applied already — `pie.play_current` resolves the save policy before it
+/// gets here.
+pub(crate) fn launch_instance_with_override(
+    world: &mut World,
+    key: InstanceKey,
+    run: RunConfig,
+    scene_override: Option<SceneOverrideLaunch>,
+) {
+    launch_instance_inner(world, key, run, scene_override);
+}
+
+fn launch_instance_inner(
+    world: &mut World,
+    key: InstanceKey,
+    run: RunConfig,
+    scene_override: Option<SceneOverrideLaunch>,
+) {
     {
         let session = world.non_send::<PieSession>();
         if session.is_running(&key) || session.is_pending(&key) {
@@ -642,7 +751,12 @@ pub(crate) fn launch_instance(world: &mut World, key: InstanceKey, run: RunConfi
         return;
     };
 
-    if let Err(reason) = save_before_play(world) {
+    // The startup-scene launch saves what it can first, exactly as before;
+    // a scene-override launch already applied the project's save policy in
+    // resolving the override, so saving here would double-apply it.
+    if scene_override.is_none()
+        && let Err(reason) = save_before_play(world)
+    {
         warn!("PIE: not playing: {reason}");
         crate::status_bar::notify_error(world, reason);
         return;
@@ -657,7 +771,8 @@ pub(crate) fn launch_instance(world: &mut World, key: InstanceKey, run: RunConfi
     if let Some(BuildState::Done(path)) = world.non_send::<PieSession>().builds.get(&build) {
         if source_is_current(&root, path) {
             let path = path.clone();
-            if let Some(stage) = spawn_instance(world, &key, &run, &path) {
+            if let Some(stage) = spawn_instance(world, &key, &run, &path, scene_override.as_ref()) {
+                record_scene_override(world, &key, scene_override.as_ref());
                 world
                     .non_send_mut::<PieSession>()
                     .children
@@ -692,7 +807,11 @@ pub(crate) fn launch_instance(world: &mut World, key: InstanceKey, run: RunConfi
     let mut session = world.non_send_mut::<PieSession>();
     match session.builds.get_mut(&build) {
         Some(BuildState::Running { pending, .. }) => {
-            pending.push(PendingSpawn { key, run });
+            pending.push(PendingSpawn {
+                key,
+                run,
+                scene_override,
+            });
         }
         Some(BuildState::Done(_)) => unreachable!("handled above"),
         Some(BuildState::Failed { .. }) | None => {
@@ -703,7 +822,11 @@ pub(crate) fn launch_instance(world: &mut World, key: InstanceKey, run: RunConfi
                 build,
                 BuildState::Running {
                     task,
-                    pending: vec![PendingSpawn { key, run }],
+                    pending: vec![PendingSpawn {
+                        key,
+                        run,
+                        scene_override,
+                    }],
                     progress,
                 },
             );
@@ -735,14 +858,19 @@ fn preflight_run_target(
     }
 }
 
-/// Save the modified scenes the game may load, unless the project turned
-/// that off. Refuses when the scene in front has never been saved, since
-/// the game cannot load it.
+/// Save the modified scenes a startup-scene launch may load, unless the
+/// project's save-before-play mode says otherwise. The mode is really the
+/// current-scene play's policy; for the startup-scene path it keeps its
+/// old shape: `save` (and `ask`, which has no dialog on this path and
+/// errs on the safe side) saves, `play_unsaved_copy` skips saving the way
+/// the pre-enum `false` did. A current-scene launch never comes through
+/// here — it applies the policy itself before launching, and an untitled
+/// scene in front runs as a copy rather than being refused.
 fn save_before_play(world: &mut World) -> Result<(), String> {
-    if !world
+    let saves = world
         .get_resource::<EditorBuildSettings>()
-        .is_none_or(|settings| settings.save_before_play)
-    {
+        .is_none_or(|settings| settings.save_before_play != SaveBeforePlay::PlayUnsavedCopy);
+    if !saves {
         return Ok(());
     }
     save_scenes_before_launch(world, "playing")
@@ -1461,20 +1589,21 @@ impl Default for EditRebuildThrottle {
 /// [`crate::project_settings`].
 #[derive(Resource, serde::Serialize, serde::Deserialize)]
 #[serde(default)]
-struct EditorBuildSettings {
+pub(crate) struct EditorBuildSettings {
     /// When true, the editor rebuilds the project automatically on source
     /// change. Opt-in and off by default: otherwise a rebuild fires
     /// behind the user's back and competes with a `cargo build` they may
     /// have started themselves. When off, rebuilds come from the Rebuild
     /// action or an out-of-editor `jackdaw build`.
-    auto_build: bool,
+    pub(crate) auto_build: bool,
     /// When true, the editor compiles the game once in the background as
     /// the project opens, so the first Play is instant. On by default.
-    prebuild: bool,
-    /// When true, Play saves every modified scene that has a file before it
-    /// starts the game, so the game loads what the editor shows. On by
-    /// default.
-    save_before_play: bool,
+    pub(crate) prebuild: bool,
+    /// What Play does with unsaved scene changes before starting the game:
+    /// save them, ask first, or play a temporary copy. `save` by default;
+    /// a pre-enum settings file's bool reads back as `true` = save and
+    /// `false` = play a copy.
+    pub(crate) save_before_play: SaveBeforePlay,
 }
 
 impl Default for EditorBuildSettings {
@@ -1482,7 +1611,7 @@ impl Default for EditorBuildSettings {
         Self {
             auto_build: false,
             prebuild: true,
-            save_before_play: true,
+            save_before_play: SaveBeforePlay::default(),
         }
     }
 }
@@ -1505,7 +1634,7 @@ fn sync_project_build_settings(
     );
 }
 
-fn persist_project_build_settings(world: &World) {
+pub(crate) fn persist_project_build_settings(world: &World) {
     let (Some(project), Some(settings)) = (
         world.get_resource::<crate::project::ProjectRoot>(),
         world.get_resource::<EditorBuildSettings>(),
@@ -1783,9 +1912,14 @@ fn poll_builds(world: &mut World) {
                 // game reported about itself, and Play runs that same
                 // binary in a fresh process below.
                 for spawn in pending.drain(..) {
-                    if let Some(stage) =
-                        spawn_instance(world, &spawn.key, &spawn.run, &result.binary)
-                    {
+                    if let Some(stage) = spawn_instance(
+                        world,
+                        &spawn.key,
+                        &spawn.run,
+                        &result.binary,
+                        spawn.scene_override.as_ref(),
+                    ) {
+                        record_scene_override(world, &spawn.key, spawn.scene_override.as_ref());
                         spawned.push((spawn.key, stage));
                     }
                 }
@@ -2021,12 +2155,14 @@ fn apply_run_env(
 /// fresh rendezvous, start draining its stderr, and begin awaiting its
 /// connection on a task pool. Returns the `Connecting` stage; on
 /// rendezvous or spawn failure logs and returns `None` so the caller
-/// skips it.
+/// skips it. A `scene_override` additionally points the child at the
+/// editor's scene through `JACKDAW_PIE_SCENE`.
 fn spawn_instance(
     world: &World,
     key: &InstanceKey,
     run: &RunConfig,
     binary: &Path,
+    scene_override: Option<&SceneOverrideLaunch>,
 ) -> Option<ChildStage> {
     let root = project_root(world)?;
 
@@ -2054,6 +2190,12 @@ fn spawn_instance(
         .env("JACKDAW_PIE", &server_name)
         .args(&run.args)
         .stderr(Stdio::piped());
+    if let Some(scene_override) = scene_override {
+        command.env(
+            jackdaw_runtime::PIE_SCENE_ENV,
+            &scene_override.assets_relative,
+        );
+    }
 
     if let Some(settings) = world.get_resource::<crate::play_settings::PlaySettings>() {
         command.envs(&settings.env).args(&settings.args);
@@ -2622,6 +2764,7 @@ mod stop_cleanup_tests {
         world.init_resource::<CommandHistory>();
         world.init_resource::<Scenes>();
         world.init_resource::<PieInstances>();
+        world.insert_non_send(PieSession::default());
         world
     }
 
@@ -2691,6 +2834,108 @@ mod stop_cleanup_tests {
         // Unresolvable bits and None are no-ops, not panics.
         crate::pie::handle_pick_result(&mut world, Some(0xDEAD));
         crate::pie::handle_pick_result(&mut world, None);
+    }
+
+    /// Stop deletes the temporary run copies the session wrote and forgets
+    /// every scene override it recorded, so the next session starts clean
+    /// and nothing accumulates under `assets/.jackdaw-pie/`.
+    #[test]
+    fn stop_cleanup_deletes_temp_copies_and_scene_overrides() {
+        let mut world = build_focus_world();
+        let dir = tempfile::tempdir().expect("tempdir");
+        let copy = dir.path().join("current-untitled-0-4242.bsn");
+        std::fs::write(&copy, "#Unsaved\n").expect("the temp copy");
+        {
+            let mut session = world.non_send_mut::<PieSession>();
+            session.temp_copies.push(copy.clone());
+            session.scene_overrides.insert(
+                instance_key("game"),
+                crate::pie_current::SceneOverrideLaunch {
+                    assets_relative: ".jackdaw-pie/current-untitled-0-4242.bsn".to_string(),
+                    temp_copy: Some(copy.clone()),
+                    from_temp_copy: true,
+                },
+            );
+        }
+
+        cleanup_session_on_stop(&mut world);
+
+        assert!(
+            !copy.exists(),
+            "the temporary run copy is deleted when play stops"
+        );
+        let session = world.non_send::<PieSession>();
+        assert!(session.temp_copies.is_empty());
+        assert!(session.scene_overrides.is_empty());
+    }
+
+    /// A temp copy that is already gone (another editor on the project
+    /// swept it, or the user deleted it) is not an error: the rest of the
+    /// cleanup still runs.
+    #[test]
+    fn stop_cleanup_tolerates_an_already_missing_temp_copy() {
+        let mut world = build_focus_world();
+        let missing = std::env::temp_dir().join("jackdaw-no-such-pie-copy-4242.bsn");
+        {
+            let mut session = world.non_send_mut::<PieSession>();
+            session.temp_copies.push(missing.clone());
+        }
+        cleanup_session_on_stop(&mut world);
+        assert!(world.non_send::<PieSession>().temp_copies.is_empty());
+    }
+
+    /// `record_scene_override` is the one choke point both spawn paths
+    /// (cached binary and build-completion) go through: the override lands
+    /// under its instance key, and a temp copy is registered once no
+    /// matter how many instances share it.
+    #[test]
+    fn recording_an_override_dedupes_shared_temp_copies() {
+        let mut world = build_focus_world();
+        let dir = tempfile::tempdir().expect("tempdir");
+        let copy = dir.path().join("current-zone-0-4242.bsn");
+        let launch = crate::pie_current::SceneOverrideLaunch {
+            assets_relative: ".jackdaw-pie/current-zone-0-4242.bsn".to_string(),
+            temp_copy: Some(copy.clone()),
+            from_temp_copy: true,
+        };
+        let first = InstanceKey {
+            config: "Play".to_string(),
+            instance: 1,
+        };
+        let second = InstanceKey {
+            config: "Play".to_string(),
+            instance: 2,
+        };
+        record_scene_override(&mut world, &first, Some(&launch));
+        record_scene_override(&mut world, &second, Some(&launch));
+
+        let session = world.non_send::<PieSession>();
+        assert_eq!(
+            session
+                .scene_override(&first)
+                .map(|o| o.assets_relative.as_str()),
+            Some(".jackdaw-pie/current-zone-0-4242.bsn")
+        );
+        assert!(session.scene_override(&second).is_some());
+        assert_eq!(
+            session.temp_copies.len(),
+            1,
+            "two instances sharing one copy register it once"
+        );
+
+        // A startup-scene launch records nothing: the override map stays
+        // the current-scene launches' alone.
+        let third = InstanceKey {
+            config: "Play".to_string(),
+            instance: 3,
+        };
+        record_scene_override(&mut world, &third, None);
+        assert!(
+            world
+                .non_send::<PieSession>()
+                .scene_override(&third)
+                .is_none()
+        );
     }
 }
 
@@ -2851,7 +3096,7 @@ mod prebuild_tests {
         world.insert_resource(EditorBuildSettings {
             auto_build: false,
             prebuild,
-            save_before_play: true,
+            save_before_play: SaveBeforePlay::default(),
         });
         world.insert_resource(crate::project::ProjectRoot {
             root: std::env::temp_dir().join("jackdaw-prebuild-test-no-such-project"),

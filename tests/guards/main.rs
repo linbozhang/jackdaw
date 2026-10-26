@@ -14,6 +14,8 @@ mod editor_remote;
 mod feathers_composition;
 mod keyframe_undo;
 mod numeric_transform_undo;
+mod play_current_scene;
+
 mod record_counts;
 mod recovery;
 mod reference_audit;

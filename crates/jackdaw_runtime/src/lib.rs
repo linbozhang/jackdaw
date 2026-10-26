@@ -277,6 +277,7 @@ impl Plugin for JackdawPlugin {
             Update,
             (
                 clear_modified_scene_roots,
+                apply_pie_scene_override,
                 spawn_loaded_scenes,
                 cleanup_orphaned_scene_members,
             )
@@ -572,6 +573,67 @@ fn cleanup_orphaned_scene_members(
             commands.entity(entity).despawn();
         }
     }
+}
+
+/// Environment variable the editor sets when it launches a game so the
+/// game loads the scene the editor has in front instead of the one its own
+/// code named. The value is the override `.bsn` path relative to the asset
+/// root. A game running outside the editor never sees it.
+///
+/// The override works on any game that loads its scene through a
+/// [`JackdawSceneRoot`], which is every scene authored in the editor: the
+/// first root added is treated as the game's main scene and swapped, and
+/// further roots are left alone.
+pub const PIE_SCENE_ENV: &str = "JACKDAW_PIE_SCENE";
+
+/// The scene a launched game has been told to load by the editor, when it
+/// has: the value of [`PIE_SCENE_ENV`], a path relative to the asset root.
+pub fn pie_scene_override() -> Option<String> {
+    std::env::var(PIE_SCENE_ENV).ok().filter(|v| !v.is_empty())
+}
+
+/// The scene a game should load at startup: the editor's override when the
+/// game was launched from one, the caller's default otherwise. A game's own
+/// startup code spelling `assets.load(jackdaw_runtime::pie_scene_or(
+/// "scene.bsn"))` plays the scene in front of the editor when it was
+/// launched by Play, and its default scene when run on its own.
+pub fn pie_scene_or(default: &str) -> String {
+    pie_scene_override().unwrap_or_else(|| default.to_string())
+}
+
+/// Swap the first scene root's handle for the editor's override scene,
+/// before the spawn loop runs, so a game launched from the editor loads
+/// the scene the editor has in front rather than the one its own code
+/// named. Only the first added root is swapped (the game's "main scene" by
+/// convention); further roots keep the scenes the game's own code named.
+///
+/// No-op without [`PIE_SCENE_ENV`]: nothing is queried beyond the added
+/// roots and no command is issued, so a standalone run's behavior is
+/// exactly the pre-override runtime's.
+fn apply_pie_scene_override(
+    added: Query<(Entity, &JackdawSceneRoot), Added<JackdawSceneRoot>>,
+    server: Res<AssetServer>,
+    mut commands: Commands,
+) {
+    let Some(path) = pie_scene_override() else {
+        return;
+    };
+    // Lowest entity index: spawn order, so "first" is deterministic
+    // however the query iterates.
+    let Some((entity, root)) = added.iter().min_by_key(|(entity, _)| entity.index()) else {
+        return;
+    };
+    let original = server.get_path(root.0.id()).map(|path| path.to_string());
+    let replacement: Handle<JackdawScene> = server.load(path.clone());
+    match original.as_deref() {
+        Some(original) => {
+            info!("PIE: playing the editor's scene '{path}' in place of '{original}'");
+        }
+        None => info!("PIE: playing the editor's scene '{path}'"),
+    }
+    commands
+        .entity(entity)
+        .insert(JackdawSceneRoot(replacement));
 }
 
 pub(crate) fn spawn_loaded_scenes(
