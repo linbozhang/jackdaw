@@ -26,6 +26,7 @@ mod keyframe_undo;
 mod numeric_transform_undo;
 mod physics_triggers;
 mod play_current_scene;
+mod player_controller;
 mod record_counts;
 mod recovery;
 mod reference_audit;

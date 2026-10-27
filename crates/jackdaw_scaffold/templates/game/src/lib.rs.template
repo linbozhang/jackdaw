@@ -95,6 +95,41 @@
 //! simulation actually uses. Editing the config file changes the
 //! next launch; changing the `Gravity` resource in the editor's
 //! Resources panel changes it for the running session.
+//!
+//! # Player controller
+//!
+//! The player the template spawns at (-2, 1, 0) is a real, if
+//! minimal, character controller:
+//!
+//! * **Tuning is a component.** `PlayerController { move_speed,
+//!   jump_speed }` lives on the player entity: select it and edit
+//!   the numbers in the Components panel (per-entity numbers are
+//!   components; game-wide numbers are the config above — the same
+//!   split as one cube's `speed` vs the config's `move_speed`).
+//! * **Movement is camera-relative.** W walks away from the camera
+//!   wherever it looks; the body turns smoothly to face the way it
+//!   moves. The one source of truth for "which way is forward" is
+//!   the camera's `CameraLook.yaw`.
+//! * **The camera is a child.** A `CameraRig` parented under the
+//!   player is the whole follow-camera setup: `JackdawCameraRigPlugin`
+//!   (wired in `GamePlugin` below) activates a lone rig by itself and
+//!   drives it around its parent every frame. Author a second rig
+//!   only together with an `ActiveCameraRig` component — with two
+//!   rigs none self-activates; the game must choose.
+//! * **Look has two channels that agree.** The `Look` action writes
+//!   the rig's `CameraLook` every frame (`look_into_camera` below);
+//!   while the right mouse button is held the rig's own mouse-look
+//!   owns the turn instead — the bridge yields those frames so the
+//!   two never double-write.
+//! * **Jump and collision come from the physics module** (on by
+//!   default): gravity — the very same `GameConfig.gravity` number
+//!   the engine got — integrates onto the player's velocity, a short
+//!   downward cast says when the feet are on the ground, and avian's
+//!   `move_and_slide` sweeps the capsule so the player slides along
+//!   walls instead of through them (walk into the stage walls to see
+//!   it: head-on you stop, diagonally you slide). Without the physics
+//!   module the player still walks, camera-relative and
+//!   frame-rate-independent, but does not jump or collide.
 
 use bevy::prelude::*;
 use jackdaw_runtime::prelude::*;
@@ -126,7 +161,10 @@ impl Plugin for GamePlugin {
                 "input-actions.bsn",
             ))
             .add_systems(Startup, spawn_player)
-            .add_systems(Update, move_player_by_actions);
+            .add_systems(Update, (move_player, look_into_camera))
+            // The camera rig driver: activates the rig under the player
+            // and follows it every frame (see "Player controller" above).
+            .add_plugins(JackdawCameraRigPlugin);
 {{module_physics_statements}}
     }
 }
@@ -236,50 +274,133 @@ fn falling_cubes(
     }
 }
 
-/// The shape input actions move: a marker the demo spawns so the
-/// actions have something observable to drive (a real game replaces
-/// this with its player).
+/// Marks the entity the five input actions drive. The template spawns
+/// one; to make your own, add `PlayerMarker` and `PlayerController` to
+/// any entity in the Components panel (its camera then needs an
+/// `ActiveCameraRig`, see the "Player controller" docs above).
 #[derive(Component, Reflect, Default)]
 #[reflect(Component, Default, @EditorCategory::new("Actor"))]
 pub struct PlayerMarker;
 
-fn spawn_player(mut commands: Commands) {
-    commands.spawn((
-        PlayerMarker,
-        Transform::from_xyz(-2.0, 0.5, 0.0),
-{{module_physics_player_body}}
-    ));
+/// The author's half of the player: the tuning the Components panel
+/// edits and the scene saves. Per-entity numbers belong on the entity,
+/// game-wide numbers in `GameConfig` — the same split as `SpinningCube`'s
+/// `speed` against the config's `move_speed`.
+#[derive(Component, Reflect)]
+#[reflect(Component, Default, @EditorCategory::new("Actor"))]
+pub struct PlayerController {
+    /// Ground speed, metres per second.
+    pub move_speed: f32,
+    /// Launch speed of a jump, metres per second (straight up).
+    pub jump_speed: f32,
 }
 
-/// The one system a game writes to consume input: read named actions,
-/// never raw keys. `Move` is an Axis2D (WASD and the left stick compose
-/// into one direction), `Look` a Delta2D (mouse motion this frame);
-/// `Jump` and `Interact` count just-presses; `Pause` flips a flag a
-/// real game would wire to its pause menu.
-fn move_player_by_actions(
-    actions: Res<GameActions>,
-    mut players: Query<&mut Transform, With<PlayerMarker>>,
+impl Default for PlayerController {
+    fn default() -> Self {
+        Self {
+            move_speed: 4.0,
+            jump_speed: 4.5,
+        }
+    }
+}
+
+fn spawn_player(
+    mut commands: Commands,
+    mut meshes: ResMut<Assets<Mesh>>,
+    mut materials: ResMut<Assets<StandardMaterial>>,
 ) {
-    let r#move = actions.value("Move");
-    for mut transform in &mut players {
-        transform.translation.x += r#move.x * 0.1;
-        transform.translation.z -= r#move.y * 0.1;
-    }
-    if actions.just_pressed("Jump") {
-        info!("Jump!");
-    }
-    if actions.just_pressed("Interact") {
-        info!("Interact!");
-    }
-    if actions.just_pressed("Pause") {
-        info!("Pause!");
-    }
-    // Look drives yaw, the camera-style default a top-level controller
-    // would take over in a real game.
-    let look = actions.value("Look");
-    for mut transform in &mut players {
-        transform.rotate_y(-look.x * 0.01);
-    }
+    // The visible body. The capsule matches the collider below, so what
+    // you see is what collides.
+    let player = commands
+        .spawn((
+            PlayerMarker,
+            PlayerController::default(),
+            Mesh3d(meshes.add(Capsule3d::new(0.35, 1.0))),
+            MeshMaterial3d(materials.add(StandardMaterial {
+                base_color: Color::srgb(0.25, 0.55, 0.9),
+                ..default()
+            })),
+            Transform::from_xyz(-2.0, 1.0, 0.0),
+{{module_physics_player_body}}
+        ))
+        .id();
+    // The follow camera: a rig parented to the player. Parenting is the
+    // whole setup — the plugin above activates a lone rig by itself and
+    // drives it around its parent every frame.
+    commands.spawn((CameraRig::default(), ChildOf(player)));
 }
 
+/// The horizontal direction the Move action asks for this frame, in
+/// world space but relative to the camera: rotate the stick/WASD input
+/// by the camera's yaw so W is always "away from the camera", then
+/// clamp to unit length so diagonals are not faster.
+fn move_direction(move_input: Vec2, camera_yaw: f32) -> Vec3 {
+    let forward = Quat::from_rotation_y(camera_yaw) * -Vec3::Z;
+    let right = Quat::from_rotation_y(camera_yaw) * Vec3::X;
+    let mut direction = right * move_input.x + forward * move_input.y;
+    direction.y = 0.0;
+    if direction.length_squared() > 1.0 {
+        direction = direction.normalize();
+    }
+    direction
+}
+
+/// How quickly the body turns to face where it walks: the fraction of
+/// the turn to take scales with this, so the turn takes roughly a
+/// tenth of a second at any frame rate.
+const PLAYER_TURN_RATE: f32 = 12.0;
+
+/// Turn `transform` to face `direction` smoothly — the body runs to
+/// face where it walks instead of snapping. Skipped when there is no
+/// movement this frame.
+fn face_movement_direction(direction: Vec3, dt: f32, transform: &mut Transform) {
+    let horizontal = Vec3::new(direction.x, 0.0, direction.z);
+    if horizontal.length_squared() < 1e-6 {
+        return;
+    }
+    let facing = horizontal.normalize();
+    // `-Z` faces the rotation's "forward"; solve for the yaw that puts
+    // it along `facing`.
+    let target = Quat::from_rotation_y((-facing.x).atan2(-facing.z));
+    let turn = (PLAYER_TURN_RATE * dt).clamp(0.0, 1.0);
+    transform.rotation = transform.rotation.slerp(target, turn);
+}
+
+/// The Look action drives the rig's orientation: mouse (and right
+/// stick) motion becomes `CameraLook` yaw and pitch — the same state
+/// the rig's own right-mouse-drag channel writes. While that button is
+/// held the bridge yields, so the two channels never double-write the
+/// same turn.
+fn look_into_camera(
+    actions: Res<GameActions>,
+    mouse: Option<Res<ButtonInput<MouseButton>>>,
+    mut rigs: Query<(&CameraRig, &mut CameraLook)>,
+) {
+    if mouse
+        .as_deref()
+        .is_some_and(|buttons| buttons.pressed(MouseButton::Right))
+    {
+        return;
+    }
+    let look = actions.value("Look");
+    if look == Vec2::ZERO {
+        return;
+    }
+    for (rig, mut camera) in &mut rigs {
+        camera.yaw -= look.x * rig.sensitivity;
+        camera.pitch = match rig.mode {
+            // Third person: look down increases the pitch, bounded to
+            // stay above the horizon.
+            CameraMode::ThirdPerson => {
+                (camera.pitch + look.y * rig.sensitivity).clamp(0.05, 1.4)
+            }
+            // First person: look up increases the pitch, bounded to
+            // stay short of straight up/down.
+            CameraMode::FirstPerson => {
+                (camera.pitch - look.y * rig.sensitivity).clamp(-1.4, 1.4)
+            }
+        };
+    }
+}
+{{module_physics_player_move}}
 {{module_physics_demo}}

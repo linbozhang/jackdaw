@@ -20,14 +20,25 @@ all a game starts with five built-in actions:
 A system consumes them from the `GameActions` resource, by name:
 
 ```rust
-fn move_player(actions: Res<GameActions>, mut players: Query<&mut Transform, With<PlayerMarker>>) {
+fn move_player(
+    actions: Res<GameActions>,
+    time: Res<Time>,
+    mut players: Query<&mut Transform, With<PlayerMarker>>,
+) {
     let r#move = actions.value("Move");   // Vec2, keys and stick composed
+    let dt = time.delta_secs();
     for mut transform in &mut players {
-        transform.translation.x += r#move.x * 0.1;
+        transform.translation.x += r#move.x * dt;
     }
     if actions.just_pressed("Jump") { /* ... */ }
 }
 ```
+
+Scale every held input by delta time, so the same input covers the same
+ground at any frame rate. The template's own `move_player` is the full
+controller this grows into — camera-relative movement, a jump, and
+(with the physics module) a swept capsule that slides along walls; the
+sample above is the minimal shape.
 
 ## Rebinding is editing one file
 
