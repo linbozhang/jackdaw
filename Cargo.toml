@@ -339,6 +339,11 @@ redundant_closure_for_method_calls = "warn"
 [dev-dependencies]
 bevy.workspace = true
 jackdaw_runtime = { workspace = true, features = ["terrain"] }
+# The physics guards (`tests/guards/physics_triggers.rs`) drive the
+# real engine: avian's types and the trigger bridge live in the
+# integration crates the editor already carries as dependencies.
+avian3d.workspace = true
+jackdaw_avian_integration.workspace = true
 libloading = "0.8"
 serde_json.workspace = true
 tempfile = "3"

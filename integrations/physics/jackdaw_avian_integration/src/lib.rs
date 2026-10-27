@@ -18,9 +18,11 @@ mod model_colliders;
 mod static_bodies;
 #[cfg(feature = "terrain")]
 mod terrain_ground;
+mod triggers;
 
 pub use model_colliders::ModelCollidersPlugin;
 pub use static_bodies::{ImpliedStaticBody, StaticCollidersPlugin};
+pub use triggers::TriggerPlugin;
 
 /// Editor-facing collider shape selector. Wraps avian's [`ColliderConstructor`]
 /// as a newtype so it lives outside avian's auto-processing pipeline (which
@@ -52,7 +54,10 @@ impl Plugin for AvianColliderBridgePlugin {
     fn build(&self, app: &mut App) {
         register_avian_types(app);
         app.add_plugins((ModelCollidersPlugin, StaticCollidersPlugin))
-            .add_systems(PreUpdate, build_brush_colliders)
+            .add_systems(
+                PreUpdate,
+                (build_brush_colliders, build_mesh_primitive_colliders),
+            )
             .add_observer(remove_collider_with_avian_collider);
         #[cfg(feature = "terrain")]
         app.add_plugins(terrain_ground::plugin);
@@ -87,6 +92,26 @@ fn remove_collider_with_avian_collider(trigger: On<Remove<AvianCollider>>, mut c
     let entity = trigger.event_target();
     if let Ok(mut ec) = commands.get_entity(entity) {
         ec.try_remove::<Collider>();
+    }
+}
+
+/// Build a primitive `Collider` (sphere, cuboid, capsule...) for an
+/// entity with its own mesh but no brush: a game-spawned cube with
+/// `AvianCollider(ColliderConstructor::Sphere(0.3))` gets its sphere
+/// straight from the constructor, no geometry to evaluate. A
+/// mesh-based constructor (trimesh, convex hull) is the brush and
+/// model paths' business — those know the geometry.
+fn build_mesh_primitive_colliders(
+    mut commands: Commands,
+    plain: Query<(Entity, &AvianCollider), (With<Mesh3d>, Without<Brush>, Changed<AvianCollider>)>,
+) {
+    for (entity, collider_cfg) in &plain {
+        if collider_cfg.0.requires_mesh() {
+            continue;
+        }
+        if let Some(collider) = Collider::try_from_constructor(collider_cfg.0.clone(), None) {
+            commands.entity(entity).insert(collider);
+        }
     }
 }
 
@@ -144,6 +169,10 @@ pub fn register_avian_types(app: &mut App) {
         // it. Users add AvianCollider instead (clean wrapper).
         .register_type::<Sensor>()
         .register_type::<AvianCollider>()
+        // The prerequisite for collision events; TriggerPlugin adds it
+        // to sensors automatically, registered so a scene that saved
+        // it round-trips and the inspector can show it.
+        .register_type::<CollisionEventsEnabled>()
         // Velocity
         .register_type::<LinearVelocity>()
         .register_type::<AngularVelocity>()
@@ -233,6 +262,35 @@ mod tests {
         assert!(
             app.world().get::<Collider>(entity).is_some(),
             "spawning a brush with an AvianCollider builds a Collider"
+        );
+    }
+
+    #[test]
+    fn bridge_builds_a_primitive_collider_on_a_plain_mesh_entity() {
+        let mut app = App::new();
+        app.add_plugins(MinimalPlugins);
+        app.init_resource::<AppTypeRegistry>();
+        app.init_resource::<Assets<Mesh>>();
+        app.add_plugins(AvianColliderBridgePlugin);
+
+        let mesh = app
+            .world_mut()
+            .resource_mut::<Assets<Mesh>>()
+            .add(Cuboid::new(0.6, 0.6, 0.6));
+        let entity = app
+            .world_mut()
+            .spawn((
+                Mesh3d(mesh),
+                AvianCollider(ColliderConstructor::Sphere { radius: 0.3 }),
+            ))
+            .id();
+
+        app.update();
+
+        assert!(
+            app.world().get::<Collider>(entity).is_some(),
+            "a mesh entity with a primitive AvianCollider gets the primitive, \
+             no brush geometry needed"
         );
     }
 }
