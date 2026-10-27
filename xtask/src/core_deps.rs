@@ -134,7 +134,23 @@ pub fn violations(metadata: &serde_json::Value) -> BTreeMap<String, Violation> {
             violation.path = path.iter().map(|id| name(id)).collect();
         }
     }
+    // The integration crates under `integrations/` exist to bind a foreign
+    // engine to jackdaw's bevy — depending on one through to bevy is their
+    // job, not a leak. A violation counts only when a crate outside the
+    // integration crates depends on the foreign engine too.
+    violations.retain(|_, violation| {
+        violation
+            .users
+            .iter()
+            .any(|user| !user_is_integration(user))
+    });
     violations
+}
+
+/// Whether `package` is one of the crates under `integrations/`, named by
+/// the jackdaw convention every such crate carries.
+fn user_is_integration(package: &str) -> bool {
+    package == "jackdaw_avian_integration" || package == "jackdaw_physics"
 }
 
 /// The shortest-known chain of packages from `id` to a Bevy crate.

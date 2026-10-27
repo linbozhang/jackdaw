@@ -68,6 +68,8 @@ members = [
     "examples/extension/dynamic_extension",
     "examples/extension/viewable_camera_extension",
     "tests/fixtures/test_fixture_extension",
+    "integrations/physics/jackdaw_avian_integration",
+    "integrations/physics/jackdaw_physics",
 ]
 
 [dependencies]
@@ -101,6 +103,7 @@ jackdaw_snap.workspace = true
 jackdaw_select.workspace = true
 jackdaw_uv.workspace = true
 jackdaw_pick.workspace = true
+jackdaw_physics.workspace = true
 jackdaw_hull.workspace = true
 jackdaw_material.workspace = true
 jackdaw_surface.workspace = true
@@ -201,8 +204,23 @@ fontique = { version = "0.11", default-features = false, features = [
 [workspace.package]
 version = "0.21.0-dev"
 rust-version = "1.97.1"
+edition = "2024"
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/jbuehler23/jackdaw"
 
 [workspace.dependencies]
+# The physics integration's engine. avian tracks registry bevy releases,
+# so the patch at the bottom of this file redirects the registry's bevy
+# to the version-pinned fork of the very commit the workspace pins — one
+# bevy, whichever side declares it. Keep the fork in step with the pin:
+# scripts/make-bevy-fork.ps1 remakes it, git_deps checks them apart.
+avian3d = { version = "0.8", features = [
+    "3d",
+    "parry-f32",
+    "collider-from-mesh",
+] }
+jackdaw_avian_integration = { version = "0.21.0-dev", path = "integrations/physics/jackdaw_avian_integration", default-features = false }
+jackdaw_physics = { version = "0.21.0-dev", path = "integrations/physics/jackdaw_physics" }
 bevy = { git = "https://github.com/bevyengine/bevy", branch = "main", features = [
     "bevy_feathers",
     "bevy_scene",
@@ -391,3 +409,28 @@ codegen-units = 1
 name = "jackdaw-rustc-wrapper"
 path = "src/bin/jackdaw-rustc-wrapper.rs"
 doc = false
+
+# One bevy for the whole workspace. The crates jackdaw writes take bevy from
+# the git main branch; avian takes bevy from the registry; and a dependency
+# of the math stack (glam_matrix_extras) takes bevy_reflect from the
+# registry. Three different sources would mean three different bevy
+# packages whose types do not interoperate, so both sources are patched to
+# the same fork: the pinned commit with only its version strings rewritten
+# to `0.20.0` (the registry's `^0.20` requirements cannot match the
+# pre-release `0.20.0-dev` the git tree carries, which is why the fork
+# exists at all). Remake the fork with scripts/make-bevy-fork.ps1 whenever
+# the pin moves; the git_deps guard fails the build when the fork and the
+# pin drift apart. The path is a machine convention, documented in the book.
+[patch.crates-io]
+bevy = { path = "E:/Project/rust/bevy-fork-pinned" }
+bevy_curve = { path = "E:/Project/rust/bevy-fork-pinned/crates/bevy_curve" }
+bevy_math = { path = "E:/Project/rust/bevy-fork-pinned/crates/bevy_math" }
+bevy_reflect = { path = "E:/Project/rust/bevy-fork-pinned/crates/bevy_reflect" }
+bevy_shape = { path = "E:/Project/rust/bevy-fork-pinned/crates/bevy_shape" }
+
+[patch."https://github.com/bevyengine/bevy"]
+bevy = { path = "E:/Project/rust/bevy-fork-pinned" }
+bevy_curve = { path = "E:/Project/rust/bevy-fork-pinned/crates/bevy_curve" }
+bevy_math = { path = "E:/Project/rust/bevy-fork-pinned/crates/bevy_math" }
+bevy_reflect = { path = "E:/Project/rust/bevy-fork-pinned/crates/bevy_reflect" }
+bevy_shape = { path = "E:/Project/rust/bevy-fork-pinned/crates/bevy_shape" }

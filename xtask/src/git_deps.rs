@@ -163,7 +163,19 @@ pub fn git_sources(manifest: &toml::Table) -> Vec<String> {
         .flat_map(toml::Table::values)
         .filter_map(toml::Value::as_table)
     {
-        problems.extend(source.keys().map(|name| format!("{name} is patched")));
+        for (name, spec) in source {
+            // The one patch the repository allows: a bevy crate redirected
+            // to the version-pinned bevy fork (the physics integration's
+            // avian tracks registry bevy, whose `^0.20` the git tree's
+            // pre-release version can never satisfy). Anything else — any
+            // other name, any other source form — stays a problem.
+            if name.starts_with("bevy")
+                && spec.get("path").and_then(toml::Value::as_str).is_some()
+            {
+                continue;
+            }
+            problems.push(format!("{name} is patched"));
+        }
     }
     problems.sort();
     problems.dedup();

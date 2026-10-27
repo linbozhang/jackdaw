@@ -94,13 +94,21 @@ fn emit_build_source(manifest_dir: &Path, workspace: Option<&Path>, packaged: bo
 }
 
 /// Record which Bevy this build targets: `main` and the commit the workspace
-/// lockfile pins when Bevy comes from git, otherwise the minor the workspace
-/// version is anchored to.
+/// pins when Bevy comes from git, otherwise the minor the workspace version is
+/// anchored to.
+///
+/// The lockfile's git bevy source is the pin of record, but the physics
+/// integration forces every bevy in the graph through a version-pinned fork
+/// (the registry's `^0.20` cannot match the git tree's `0.20.0-dev`), so a
+/// lockfile built that way carries a path source instead. The fork records
+/// the upstream commit it stands on in `jackdaw-pinned-rev`, which is the
+/// fallback here.
 fn emit_bevy_source(workspace: Option<&Path>) {
     let rev = workspace.and_then(|ws| {
         let lockfile = ws.join("Cargo.lock");
         println!("cargo:rerun-if-changed={}", lockfile.display());
         locked_bevy_rev(&fs::read_to_string(lockfile).ok()?)
+            .or_else(|| fork_pinned_rev(&fs::read_to_string(ws.join("Cargo.toml")).ok()?))
     });
     let line = match &rev {
         Some(rev) => {
@@ -114,6 +122,32 @@ fn emit_bevy_source(workspace: Option<&Path>) {
         ),
     };
     println!("cargo:rustc-env=JACKDAW_BEVY_LINE={line}");
+}
+
+/// The upstream commit the version-pinned bevy fork stands on, when the
+/// workspace manifest patches `bevy` to a local path: the fork directory's
+/// `jackdaw-pinned-rev` (written by `scripts/make-bevy-fork.ps1`).
+fn fork_pinned_rev(manifest: &str) -> Option<String> {
+    let (fork, rev) = fork_pin(manifest)?;
+    println!("cargo:rustc-env=JACKDAW_BEVY_FORK={}", fork.display());
+    (rev.len() == 40 && rev.chars().all(|c| c.is_ascii_hexdigit())).then_some(rev)
+}
+
+/// The fork directory the workspace manifest patches `bevy` to, and the
+/// upstream commit its `jackdaw-pinned-rev` records (written by
+/// `scripts/make-bevy-fork.ps1`). `None` when no fork is in play.
+fn fork_pin(manifest: &str) -> Option<(PathBuf, String)> {
+    let doc = manifest.parse::<toml::Table>().ok()?;
+    let patch = doc
+        .get("patch")?
+        .get("crates-io")
+        .and_then(toml::Value::as_table)?;
+    let bevy = patch.get("bevy").and_then(toml::Value::as_table)?;
+    let fork = PathBuf::from(bevy.get("path")?.as_str()?);
+    let pin = fork.join("jackdaw-pinned-rev");
+    println!("cargo:rerun-if-changed={}", pin.display());
+    let rev = fs::read_to_string(pin).ok()?.trim().to_string();
+    Some((fork, rev))
 }
 
 /// The commit a lockfile pins the `bevy` package's git source to.

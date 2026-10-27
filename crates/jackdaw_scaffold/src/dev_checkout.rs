@@ -86,11 +86,25 @@ pub(crate) fn rewrite_jackdaw_dep_for_dev_checkout(dest: &Path) {
 }
 
 /// The jackdaw crates a scaffolded project may depend on directly.
-const DEV_PATH_DEPS: [&str; 3] = [
+const DEV_PATH_DEPS: [&str; 4] = [
     "jackdaw_runtime",
     "jackdaw_extension",
     "jackdaw_multiplayer",
+    "jackdaw_avian_integration",
 ];
+
+/// Where crate `name` sits inside the checkout: `crates/` for most, the
+/// recorded elsewhere-path for the module crates that live outside it (the
+/// physics module's, under `integrations/`).
+fn checkout_crate_path(checkout: &Path, name: &str) -> PathBuf {
+    if let Some((_, relative)) = jackdaw_project_build::build_source::CRATES_ELSEWHERE
+        .iter()
+        .find(|(crate_name, _)| *crate_name == name)
+    {
+        return checkout.join(relative);
+    }
+    checkout.join("crates").join(name)
+}
 
 /// Rewrite the known jackdaw dep lines to path deps, preserving
 /// `features` and `optional` keys. Returns `None` when nothing
@@ -108,7 +122,7 @@ fn rewrite_dep_lines(contents: &str, checkout: &Path) -> Option<String> {
         });
         match dep {
             Some(name) if !trimmed.contains("path =") && !trimmed.contains("path=") => {
-                let path = checkout.join("crates").join(name);
+                let path = checkout_crate_path(checkout, name);
                 let mut replacement = format!("{name} = {{ path = '{}'", path.display());
                 if let Some(features) = extract_features_list(trimmed) {
                     replacement.push_str(&format!(", features = {features}"));

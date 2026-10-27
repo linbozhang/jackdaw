@@ -47,7 +47,9 @@ pub fn editor_app() -> App {
     app.add_plugins(bevy::extract::sync_world::SyncWorldPlugin::<
         bevy::render::RenderApp,
     >::default());
-    app.register_extension::<PhysicsExtension>();
+    // The editor bundles the Physics extension now (see `lib.rs`'s builtin
+    // registration), so this harness only enables it; registering again
+    // would add `PhysicsEditorPlugin` twice.
     app.finish();
     app.update();
     enable_extension(app.world_mut(), EXTENSION_ID);

@@ -72,6 +72,13 @@ pub const BEVY_VERSION: &str = env!("JACKDAW_BEVY_LINE");
 /// from the workspace lockfile. `None` for a build on a Bevy release.
 pub const BEVY_REV: Option<&str> = option_env!("JACKDAW_BEVY_REV");
 
+/// The version-pinned bevy fork this build patches every bevy source to (see
+/// [`BEVY_REV`] for the commit it stands on), when one is in play — the
+/// physics integration's avian tracks registry bevy, whose `^0.20` the git
+/// tree's pre-release version can never satisfy. `None` for a build with no
+/// fork. Games the physics module scaffolds carry the same patch.
+pub const BEVY_FORK: Option<&str> = option_env!("JACKDAW_BEVY_FORK");
+
 /// The nightly this build is, e.g. `nightly-2026-10-18`, when the nightly
 /// workflow built it.
 pub const NIGHTLY: Option<&str> = option_env!("JACKDAW_NIGHTLY");
