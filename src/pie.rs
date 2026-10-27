@@ -958,11 +958,11 @@ fn save_before_play(world: &mut World) -> Result<(), String> {
 }
 
 /// Refuse a modified scene that has never been saved, then save every
-/// modified scene and every definition asset card holding unsaved
-/// edits, so what the editor shows is on disk before something else
-/// consumes the project — Play launching the game, an export staging
-/// its `assets/`. The `action` names what asked ("playing",
-/// "exporting"), for the refusal messages.
+/// modified scene, every definition asset card holding unsaved edits,
+/// and the open animation graph in the same state, so what the editor
+/// shows is on disk before something else consumes the project — Play
+/// launching the game, an export staging its `assets/`. The `action`
+/// names what asked ("playing", "exporting"), for the refusal messages.
 pub(crate) fn save_scenes_before_launch(world: &mut World, action: &str) -> Result<(), String> {
     let untitled_in_front = world
         .get_resource::<crate::scenes::Scenes>()
@@ -977,6 +977,16 @@ pub(crate) fn save_scenes_before_launch(world: &mut World, action: &str) -> Resu
     // chain, and one that cannot write blocks the launch rather than
     // silently running the value that is on disk.
     failures.extend(crate::definition_assets::save_dirty_assets(world));
+    // The open animation graph is the same kind of authored state: a
+    // dirty graph the game would read as the stale file blocks the
+    // launch instead of playing yesterday's transitions.
+    if world
+        .get_resource::<crate::animation::AnimationGraphDoc>()
+        .is_some_and(|doc| doc.dirty)
+        && crate::animation::graph_doc::write_graph_file(world).is_none()
+    {
+        failures.push("the open animation graph".to_string());
+    }
     if failures.is_empty() {
         Ok(())
     } else {
@@ -2702,6 +2712,49 @@ mod play_status_tests {
 #[cfg(test)]
 mod save_before_launch_tests {
     use super::*;
+
+    /// The open animation graph is authored state the game reads: a
+    /// dirty graph at launch time saves on the same chain (review item
+    /// 1 of the T08-T3 closeout). Driven with a dirty doc that has no
+    /// path — the write refuses, the launch refuses with it.
+    #[test]
+    fn a_dirty_animation_graph_the_chain_cannot_save_refuses_the_launch() {
+        let mut world = World::new();
+        world.init_resource::<crate::scenes::Scenes>();
+        world.init_resource::<crate::asset_index::AssetIndex>();
+        let mut doc = crate::animation::AnimationGraphDoc::default();
+        doc.path = None;
+        doc.dirty = true;
+        world.insert_resource(doc);
+
+        let outcome = save_scenes_before_launch(&mut world, "playing");
+        let message = outcome.expect_err("a graph with no file to write blocks the launch");
+        assert!(
+            message.contains("animation graph"),
+            "the refusal names the graph: {message}"
+        );
+    }
+
+    /// A clean graph never blocks anything, and no graph resource at
+    /// all (most worlds) stays a pass-through.
+    #[test]
+    fn a_clean_or_absent_animation_graph_never_blocks_the_launch() {
+        let mut world = World::new();
+        world.init_resource::<crate::scenes::Scenes>();
+        world.init_resource::<crate::asset_index::AssetIndex>();
+        assert!(
+            save_scenes_before_launch(&mut world, "playing").is_ok(),
+            "no graph resource: nothing to save"
+        );
+        let mut doc = crate::animation::AnimationGraphDoc::default();
+        doc.path = None;
+        doc.dirty = false;
+        world.insert_resource(doc);
+        assert!(
+            save_scenes_before_launch(&mut world, "playing").is_ok(),
+            "a clean graph is not the launch's business"
+        );
+    }
 
     /// The launch chain saves dirty asset cards along with modified
     /// scenes (the red half of the pair: main had no asset leg at all,
