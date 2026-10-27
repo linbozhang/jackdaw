@@ -2,7 +2,7 @@
 //! without installing it as a bundle.
 //!
 //! ```text
-//! cargo run --manifest-path integrations/physics/Cargo.toml --example editor
+//! cargo run -p jackdaw_physics --example editor
 //! ```
 
 use bevy::app::AppExit;

@@ -2061,7 +2061,9 @@ fn removed_feature_notes(features: &[String]) -> Vec<String> {
 }
 
 /// Add the crates of `modules` that `game` does not declare yet, returning
-/// a note per crate.
+/// a note per crate. Modules whose crates ride a foreign bevy (the physics
+/// module's avian tracks registry bevy) also carry the version-pinned fork
+/// patch, so the game resolves the one bevy this editor was built against.
 fn add_module_crates(
     doc: &mut DocumentMut,
     game: &GameDependencies,
@@ -2092,7 +2094,73 @@ fn add_module_crates(
             ));
         }
     }
+    if modules.contains("physics") {
+        match jackdaw_project_build::BEVY_FORK {
+            Some(fork) => {
+                add_bevy_fork_patch(doc, fork);
+                notes.push(String::from(
+                    "Cargo.toml: patches bevy to the version-pinned fork, the one bevy \
+                     this editor was built against",
+                ));
+            }
+            None => notes.push(String::from(
+                "physics: this build names no bevy fork to patch the game's avian to; \
+                 if the build fails to resolve two bevies, add the [patch] sections this \
+                 editor's own Cargo.toml carries",
+            )),
+        }
+    }
     Some(notes)
+}
+
+/// Point both of the game's bevy sources — the registry one avian names and
+/// the git one the template names — at the version-pinned fork, so every
+/// bevy type in the game is the type this editor was built with.
+fn add_bevy_fork_patch(doc: &mut DocumentMut, fork: &str) {
+    let fork = fork.replace('\\', "/");
+    for name in [
+        "bevy",
+        "bevy_curve",
+        "bevy_math",
+        "bevy_reflect",
+        "bevy_shape",
+    ] {
+        let path = if name == "bevy" {
+            fork.clone()
+        } else {
+            format!("{fork}/crates/{name}")
+        };
+        path_patch_section(doc, "crates-io")
+            .insert(name, toml_edit::Item::Table(path_table(&path)));
+    }
+    let git = jackdaw_project_build::bevy_source::BEVY_GIT;
+    path_patch_section(doc, git).insert("bevy", toml_edit::Item::Table(path_table(&fork)));
+}
+
+/// The `[patch.<section>]` table of `doc`, appended as a standard table
+/// (an implicit index would write an inline table in place, mangling the
+/// manifest's order and form).
+fn path_patch_section<'a>(doc: &'a mut DocumentMut, section: &str) -> &'a mut toml_edit::Table {
+    let patch = doc
+        .entry("patch")
+        .or_insert(toml_edit::Item::Table({
+            let mut table = toml_edit::Table::new();
+            table.set_implicit(true);
+            table
+        }))
+        .as_table_mut()
+        .expect("patch is a table");
+    let entry = patch
+        .entry(section)
+        .or_insert(toml_edit::Item::Table(toml_edit::Table::new()));
+    entry.as_table_mut().expect("the patch section is a table")
+}
+
+/// A `{ path = "..." }` table in standard form.
+fn path_table(path: &str) -> toml_edit::Table {
+    let mut table = toml_edit::Table::new();
+    table["path"] = toml_edit::value(path);
+    table
 }
 
 /// What the game's code still has to do for `added` modules: add each
@@ -2482,6 +2550,7 @@ fn substitute_placeholders(
     modules: &ModuleSet,
 ) -> String {
     let text = replace_line(text, "{{module_crates}}", &module_crate_lines(modules));
+    let text = replace_line(&text, "{{module_patches}}", &module_patch_lines(modules));
     let text = replace_line(&text, "{{bevy_pin_note}}", &bevy_pin_note());
     let text = replace_line(&text, "{{module_plugins}}", &module_plugin_lines(modules));
     text.replace("{{project-name | title_case}}", title)
@@ -2596,6 +2665,44 @@ fn module_crate_lines(modules: &ModuleSet) -> String {
         .flat_map(|module| &module.crates)
         .map(|krate| format!("{} = {}\n", krate.name, module_crate_requirement(krate)))
         .collect()
+}
+
+/// The `[patch]` sections a game with `modules` carries, as manifest text
+/// (empty when none apply). The physics module rides avian, whose registry
+/// bevy must be redirected to the version-pinned fork this editor was
+/// built against — the same patch this editor's own workspace carries.
+fn module_patch_lines(modules: &ModuleSet) -> String {
+    if !modules.contains("physics") {
+        return String::new();
+    }
+    let Some(fork) = jackdaw_project_build::BEVY_FORK else {
+        return String::new();
+    };
+    let fork = fork.replace('\\', "/");
+    let mut out = String::from(
+        "# One bevy for everything: avian tracks the registry's bevy, this\n\
+         # game's own bevy comes from git, and only the fork below satisfies\n\
+         # both. Remade by this jackdaw's scripts/make-bevy-fork.ps1.\n",
+    );
+    out.push_str("[patch.crates-io]\n");
+    for name in [
+        "bevy",
+        "bevy_curve",
+        "bevy_math",
+        "bevy_reflect",
+        "bevy_shape",
+    ] {
+        let path = if name == "bevy" {
+            fork.clone()
+        } else {
+            format!("{fork}/crates/{name}")
+        };
+        out.push_str(&format!("{name} = {{ path = \"{path}\" }}\n"));
+    }
+    let git = jackdaw_project_build::bevy_source::BEVY_GIT;
+    out.push_str(&format!("[patch.\"{git}\"]\n"));
+    out.push_str(&format!("bevy = {{ path = \"{fork}\" }}\n"));
+    out
 }
 
 /// The `.add_plugins(...)` lines a new game's `main` adds for `modules`.
@@ -3333,7 +3440,7 @@ mod tests {
         assert!(
             plan.notes
                 .iter()
-                .any(|note| note.contains("`physics`") && note.contains("not compatible")),
+                .any(|note| note.contains("`physics`") && note.contains("Physics module")),
             "got: {:?}",
             plan.notes
         );
@@ -3945,7 +4052,10 @@ mod tests {
         );
         assert_eq!(modules_arg(&args(&["game"])).unwrap(), None);
         assert!(modules_arg(&args(&["game", "--modules", "rendering"])).is_err());
-        assert!(modules_arg(&args(&["game", "--modules", "physics"])).is_err());
+        assert_eq!(
+            modules_arg(&args(&["game", "--modules", "physics"])).unwrap(),
+            Some(modules(&["physics"]))
+        );
         assert!(modules_arg(&args(&["game", "--modules", "physics", "--no-modules"])).is_err());
     }
 
@@ -4105,7 +4215,7 @@ mod tests {
 
         let chosen = modules(&["multiplayer", "navmesh"]);
         let plan = plan_module_change(&root, &chosen).unwrap();
-        assert_eq!(plan.detected_modules, ModuleSet::new());
+        assert_eq!(plan.detected_modules, modules(&["physics"]));
         apply_import_plan(&plan).unwrap();
         let cargo = std::fs::read_to_string(&cargo_path).unwrap();
         assert!(

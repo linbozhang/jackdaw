@@ -471,10 +471,10 @@ mod tests {
     }
 
     #[test]
-    fn a_new_game_starts_with_no_module_this_line_cannot_build() {
+    fn a_new_game_starts_with_the_default_modules() {
         let catalog = ModuleCatalog::builtin();
-        assert!(catalog.unavailable("physics").is_some());
-        assert_eq!(catalog.defaults(), ModuleSet::new());
+        assert!(catalog.unavailable("physics").is_none());
+        assert_eq!(catalog.defaults(), set(&["physics"]));
     }
 
     #[test]
@@ -492,8 +492,9 @@ mod tests {
         assert_eq!(catalog.parse_list("").unwrap(), ModuleSet::new());
         assert!(catalog.parse_list("rendering").is_err());
         let physics = catalog.parse_list("physics").unwrap();
-        let error = catalog.available(physics).unwrap_err();
-        assert!(error.contains("not compatible"), "{error}");
+        catalog
+            .available(physics)
+            .expect("physics is available on this line");
     }
 
     #[test]
@@ -557,11 +558,8 @@ mod tests {
     #[test]
     fn the_physics_module_adds_the_avian_its_integration_uses() {
         let workspace: toml::Table = toml::from_str(
-            &std::fs::read_to_string(concat!(
-                env!("CARGO_MANIFEST_DIR"),
-                "/../../integrations/physics/Cargo.toml"
-            ))
-            .unwrap(),
+            &std::fs::read_to_string(concat!(env!("CARGO_MANIFEST_DIR"), "/../../Cargo.toml"))
+                .unwrap(),
         )
         .unwrap();
         let avian = &workspace["workspace"]["dependencies"]["avian3d"];

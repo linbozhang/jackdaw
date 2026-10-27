@@ -117,16 +117,14 @@ fn a_game_on_bevy_main_records_the_editors_commit() {
 
 /// The physics module's avian source is a plain literal in the module
 /// catalog (it is not jackdaw's to substitute), so it can silently drift
-/// from what the Physics module builds against. A scaffolded project
-/// resolving a different avian than the module authors scenes with is
-/// exactly the kind of mismatch onboarding is supposed to prevent.
+/// from what the workspace builds against. A scaffolded project resolving
+/// a different avian than the module authors scenes with is exactly the
+/// kind of mismatch onboarding is supposed to prevent.
 #[test]
 fn the_physics_module_tracks_the_integrations_avian() {
-    let workspace = std::fs::read_to_string(concat!(
-        env!("CARGO_MANIFEST_DIR"),
-        "/integrations/physics/Cargo.toml"
-    ))
-    .expect("physics workspace manifest");
+    let workspace =
+        std::fs::read_to_string(concat!(env!("CARGO_MANIFEST_DIR"), "/../../Cargo.toml"))
+            .expect("workspace manifest");
     let entry = workspace
         .split_once("[workspace.dependencies]")
         .expect("[workspace.dependencies]")

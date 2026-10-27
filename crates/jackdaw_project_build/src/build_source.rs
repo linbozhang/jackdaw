@@ -113,8 +113,25 @@ impl BuildSource {
     }
 }
 
+/// Workspace crates that do not sit under `crates/`, as `[name, path from
+/// the root]`. The physics module's two live under `integrations/physics/`,
+/// where its retired workspace kept them.
+pub const CRATES_ELSEWHERE: &[(&str, &str)] = &[
+    (
+        "jackdaw_avian_integration",
+        "integrations/physics/jackdaw_avian_integration",
+    ),
+    ("jackdaw_physics", "integrations/physics/jackdaw_physics"),
+];
+
 /// Where a jackdaw crate's sources sit inside a workspace.
 fn crate_path(root: &Path, crate_name: &str) -> PathBuf {
+    if let Some((_, relative)) = CRATES_ELSEWHERE
+        .iter()
+        .find(|(name, _)| *name == crate_name)
+    {
+        return root.join(relative);
+    }
     root.join("crates").join(crate_name)
 }
 

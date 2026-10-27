@@ -1494,7 +1494,10 @@ target = { bin = "server" }
             problems[0].fix,
             format!("jd upgrade --apply {}", root.display())
         );
-        assert!(problems[0].note.is_some());
+        // The physics module builds on this line, so there is no
+        // availability note to carry; the note exists for a module that
+        // cannot build here.
+        assert!(problems[0].note.is_none());
     }
 
     #[test]

@@ -10,8 +10,8 @@ use bevy::winit::WinitPlugin;
 use jackdaw::prelude::*;
 use jackdaw::test_input::SyntheticInput;
 use jackdaw_api::prelude::OperatorResult;
-use jackdaw_api_internal::lifecycle::{ExtensionAppExt as _, enable_extension};
-use jackdaw_physics::{EXTENSION_ID, PhysicsExtension};
+use jackdaw_api_internal::lifecycle::enable_extension;
+use jackdaw_physics::EXTENSION_ID;
 
 /// Point the editor's per-user config at a scratch directory of this test
 /// process before anything reads it.
@@ -47,7 +47,9 @@ pub fn editor_app() -> App {
     app.add_plugins(bevy::extract::sync_world::SyncWorldPlugin::<
         bevy::render::RenderApp,
     >::default());
-    app.register_extension::<PhysicsExtension>();
+    // The editor bundles the Physics extension now (see `lib.rs`'s builtin
+    // registration), so this harness only enables it; registering again
+    // would add `PhysicsEditorPlugin` twice.
     app.finish();
     app.update();
     enable_extension(app.world_mut(), EXTENSION_ID);

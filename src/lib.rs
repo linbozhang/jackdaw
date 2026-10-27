@@ -705,6 +705,14 @@ impl Plugin for ExtensionPlugin {
                 .register_extension::<jackdaw_multiplayer_editor::MultiplayerExtension>();
         }
 
+        // The Physics module's editor tooling, always present: the physics
+        // tool, collider overlays and the physics toggles in the inspector.
+        // avian runs in the editor's world through the extension, and games
+        // get their own copy through the module's crates.
+        if self.enable_builtin_extensiosn {
+            app.register_extension::<jackdaw_physics::PhysicsExtension>();
+        }
+
         // Bundled behind the default-on `camera_rig` feature: registers the
         // authorable camera-rig component types (ThirdPersonCamera / FirstPersonCamera /
         // CameraTarget) so they appear in the inspector's component picker under "Camera".

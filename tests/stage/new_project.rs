@@ -267,17 +267,8 @@ fn checked(app: &App, toggle: Entity) -> bool {
     app.world().get::<bevy::ui::Checked>(toggle).is_some()
 }
 
-fn shown_texts(app: &mut App) -> Vec<String> {
-    app.world_mut()
-        .query::<(&Text, &Node)>()
-        .iter(app.world())
-        .filter(|(_, node)| node.display != Display::None)
-        .map(|(text, _)| text.0.clone())
-        .collect()
-}
-
 #[test]
-fn an_unavailable_module_is_offered_but_cannot_be_ticked() {
+fn physics_is_on_by_default_and_ships_with_the_game() {
     let projects = tempfile::tempdir().expect("tempdir");
     remember_location(projects.path());
     let mut app = util::editor_test_app();
@@ -286,21 +277,34 @@ fn an_unavailable_module_is_offered_but_cannot_be_ticked() {
     for _ in 0..4 {
         app.update();
     }
-    let physics = module_toggle(&mut app, "physics");
+    let create = create_button(&mut app);
+    click(&mut app, create);
+    let offered = jackdaw::scaffold::validated_project_name("my_game").expect("a usable name");
+    let project = projects.path().join(offered);
+    open_after(&mut app, &project);
+
+    // The module's default is on: the project records it, and the game
+    // carries what it needs — avian itself and the bevy fork patch that
+    // keeps the game's two bevy sources one.
+    let manifest = std::fs::read_to_string(project.join("jackdaw.toml")).expect("jackdaw.toml");
     assert!(
-        !checked(&app, physics),
-        "a new game cannot start with physics yet"
+        manifest.contains("physics = true"),
+        "the project records the module: {manifest}"
+    );
+    let cargo = std::fs::read_to_string(project.join("Cargo.toml")).expect("Cargo.toml");
+    assert!(
+        cargo.contains("avian3d"),
+        "the game depends on avian: {cargo}"
     );
     assert!(
-        shown_texts(&mut app)
-            .iter()
-            .any(|text| text.contains("Not compatible: avian has no release for Bevy main")),
-        "the dialog says why: {:?}",
-        shown_texts(&mut app)
+        cargo.contains("[patch.crates-io]"),
+        "the game carries the bevy patch the module needs: {cargo}"
     );
-    click(&mut app, physics);
-    app.update();
-    assert!(!checked(&app, physics), "a click does not tick it");
+    let lib = std::fs::read_to_string(project.join("src").join("main.rs")).expect("main.rs");
+    assert!(
+        lib.contains("PhysicsPlugins::default()"),
+        "the game's main wires the physics plugin: {lib}"
+    );
 }
 
 #[test]
