@@ -560,6 +560,7 @@ pub enum EntityTemplate {
     Empty,
     Cube,
     Sphere,
+    SphereHighPoly,
     PointLight,
     DirectionalLight,
     SpotLight,
@@ -582,6 +583,7 @@ impl EntityTemplate {
             Self::Empty => "Empty Entity",
             Self::Cube => "Cube",
             Self::Sphere => "Sphere",
+            Self::SphereHighPoly => "Sphere (High Poly)",
             Self::PointLight => "Point Light",
             Self::DirectionalLight => "Directional Light",
             Self::SpotLight => "Spot Light",
@@ -635,6 +637,18 @@ pub fn create_entity(
                 .spawn((
                     Name::new("Sphere"),
                     crate::brush::Brush::sphere(0.5),
+                    Transform::default(),
+                    Visibility::default(),
+                ))
+                .id();
+            commands.queue(apply_last_material(id));
+            id
+        }
+        EntityTemplate::SphereHighPoly => {
+            let id = commands
+                .spawn((
+                    Name::new("Sphere (High Poly)"),
+                    crate::brush::Brush::sphere_high_poly(0.5),
                     Transform::default(),
                     Visibility::default(),
                 ))
@@ -2278,6 +2292,7 @@ pub(crate) fn add_to_extension(ctx: &mut ExtensionContext) {
         .register_operator::<EntityUnhideAllOp>()
         .register_operator::<EntityAddCubeOp>()
         .register_operator::<EntityAddSphereOp>()
+        .register_operator::<EntityAddSphereHighPolyOp>()
         .register_operator::<EntityAddPointLightOp>()
         .register_operator::<EntityAddDirectionalLightOp>()
         .register_operator::<EntityAddSpotLightOp>()
@@ -2645,6 +2660,22 @@ pub(crate) fn entity_add_sphere(
 ) -> OperatorResult {
     commands.queue(|world: &mut World| {
         create_entity_in_world(world, EntityTemplate::Sphere);
+    });
+    OperatorResult::Finished
+}
+
+#[operator(
+    id = "entity.add.sphere_high_poly",
+    label = "Sphere (High Poly)",
+    description = "Add a sphere with a finer, rounder surface.",
+    allows_undo = false
+)]
+pub(crate) fn entity_add_sphere_high_poly(
+    _: In<OperatorParameters>,
+    mut commands: Commands,
+) -> OperatorResult {
+    commands.queue(|world: &mut World| {
+        create_entity_in_world(world, EntityTemplate::SphereHighPoly);
     });
     OperatorResult::Finished
 }

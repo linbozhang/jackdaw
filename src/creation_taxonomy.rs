@@ -11,8 +11,8 @@ use crate::entity_ops::{
     EntityAddAnimationPlayerOp, EntityAddAudioSourceOp, EntityAddCameraOp, EntityAddConeOp,
     EntityAddCubeOp, EntityAddCylinderOp, EntityAddDirectionalLightOp, EntityAddEmptyOp,
     EntityAddFogVolumeOp, EntityAddImageOp, EntityAddPlaneOp, EntityAddPointLightOp,
-    EntityAddPrefabOp, EntityAddPyramidOp, EntityAddReflectionProbeOp, EntityAddSphereOp,
-    EntityAddSpotLightOp, EntityAddTerrainOp, EntityAddWedgeOp,
+    EntityAddPrefabOp, EntityAddPyramidOp, EntityAddReflectionProbeOp, EntityAddSphereHighPolyOp,
+    EntityAddSphereOp, EntityAddSpotLightOp, EntityAddTerrainOp, EntityAddWedgeOp,
 };
 #[cfg(feature = "multiplayer")]
 use crate::entity_ops::{EntityAddNetworkRoomOp, EntityAddSpawnPointOp, EntityAddZoneTransitionOp};
@@ -162,6 +162,11 @@ fn builtin(taxonomy: &mut CreationTaxonomy) {
         ),
         entry("geometry", "Cube", op_action::<EntityAddCubeOp>()),
         entry("geometry", "Sphere", op_action::<EntityAddSphereOp>()),
+        entry(
+            "geometry",
+            EntityAddSphereHighPolyOp::LABEL,
+            op_action::<EntityAddSphereHighPolyOp>(),
+        ),
         entry("geometry", "Plane", op_action::<EntityAddPlaneOp>()),
         entry("geometry", "Cylinder", op_action::<EntityAddCylinderOp>()),
         entry("geometry", "Wedge", op_action::<EntityAddWedgeOp>()),
@@ -552,6 +557,34 @@ mod tests {
             }
         }
         taxonomy
+    }
+
+    #[test]
+    fn both_sphere_resolutions_have_distinct_creation_entries() {
+        let taxonomy = builtin_taxonomy();
+        let spheres = taxonomy
+            .entries_of("geometry")
+            .filter(|entry| entry.label.starts_with("Sphere"))
+            .map(|entry| (entry.label.as_str(), entry.action.as_str()))
+            .collect::<Vec<_>>();
+        assert_eq!(
+            spheres,
+            vec![
+                ("Sphere", "op:entity.add.sphere"),
+                ("Sphere (High Poly)", "op:entity.add.sphere_high_poly"),
+            ],
+        );
+        for (label, action) in spheres {
+            assert!(
+                taxonomy
+                    .menu_rows()
+                    .iter()
+                    .any(|(menu_action, menu_label)| {
+                        menu_action == action && menu_label == label
+                    }),
+                "{label} is available in the Add menu",
+            );
+        }
     }
 
     #[test]

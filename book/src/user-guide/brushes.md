@@ -10,10 +10,16 @@ files.
 
 ### Quick add
 
-Outliner panel, click **Add Entity** and pick `Cube` or `Sphere`.
-You get a unit primitive at the origin, selected and ready
-to move. This is the fastest path when you just need a
-block.
+Outliner panel, click **Add Entity** and pick `Cube`, `Sphere`,
+or `Sphere (High Poly)`. These are also available under
+**Add > 3D Objects**. You get a unit primitive at the origin,
+selected and ready to move.
+
+`Sphere` has 20 triangular faces. `Sphere (High Poly)` has
+1,280 triangular faces for a rounder silhouette, with the same
+radius of 0.5. Both are editable brushes with per-face materials
+and flat shading, and save directly into the scene. Adding a
+high-poly sphere does not change existing spheres.
 
 ### Draw
 

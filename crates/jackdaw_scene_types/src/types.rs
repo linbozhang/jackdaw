@@ -510,6 +510,85 @@ impl Brush {
         Self { faces, topology }
     }
 
+    /// Create an icosphere centered at the origin with three subdivision levels:
+    /// 1280 triangular faces, 642 shared vertices, 1920 edges and 3840 loops.
+    /// `radius` is the distance from the origin to each vertex (positive).
+    pub fn sphere_high_poly(radius: f32) -> Self {
+        const SUBDIVISIONS: usize = 3;
+
+        fn midpoint(
+            vertices: &mut Vec<Vec3>,
+            cache: &mut HashMap<(usize, usize), usize>,
+            a: usize,
+            b: usize,
+        ) -> usize {
+            *cache.entry((a.min(b), a.max(b))).or_insert_with(|| {
+                let position = (vertices[a] + vertices[b]).normalize();
+                let index = vertices.len();
+                vertices.push(position);
+                index
+            })
+        }
+
+        // Reuse the existing 20-face seed without changing the legacy constructor.
+        // Only this small seed uses plane intersection; the subdivided sphere
+        // already has explicit rings and must never take that cubic path.
+        let seed = Self::sphere(1.0);
+        let mut vertices: Vec<Vec3> = seed
+            .topology
+            .vertices
+            .iter()
+            .map(|v| v.position.normalize())
+            .collect();
+        let mut triangles: Vec<[usize; 3]> = (0..seed.topology.polygons.len())
+            .map(|i| {
+                let ring: Vec<usize> = seed.topology.face_ring(i).map(|v| v as usize).collect();
+                [ring[0], ring[1], ring[2]]
+            })
+            .collect();
+
+        for _ in 0..SUBDIVISIONS {
+            let mut cache = HashMap::with_capacity(triangles.len() * 3 / 2);
+            let mut subdivided = Vec::with_capacity(triangles.len() * 4);
+            for [a, b, c] in triangles {
+                // One midpoint per undirected edge, shared by its two faces.
+                // Project each new vertex onto the unit sphere at every level.
+                let ab = midpoint(&mut vertices, &mut cache, a, b);
+                let bc = midpoint(&mut vertices, &mut cache, b, c);
+                let ca = midpoint(&mut vertices, &mut cache, c, a);
+                subdivided.extend([[a, ab, ca], [b, bc, ab], [c, ca, bc], [ab, bc, ca]]);
+            }
+            triangles = subdivided;
+        }
+
+        // Compute outward planes on the unit sphere before applying the radius,
+        // keeping normal calculation independent of the requested scale.
+        let faces = triangles
+            .iter()
+            .map(|&[a, b, c]| {
+                let normal = (vertices[b] - vertices[a])
+                    .cross(vertices[c] - vertices[a])
+                    .normalize();
+                let (u, v) = compute_face_tangent_axes(normal);
+                BrushFaceData {
+                    plane: BrushPlane {
+                        normal,
+                        distance: normal.dot(vertices[a]) * radius,
+                    },
+                    uv_scale: Vec2::ONE,
+                    uv_u_axis: u,
+                    uv_v_axis: v,
+                    ..default()
+                }
+            })
+            .collect();
+        let topology = jackdaw_geometry::build_topology_from_face_polygons(
+            vertices.into_iter().map(|v| v * radius).collect(),
+            triangles.into_iter().map(Vec::from).collect(),
+        );
+        Self { faces, topology }
+    }
+
     /// A thin axis-aligned slab usable as a floor or wall tile. Implemented
     /// as a `cuboid` with a small thickness along Y so it stays a closed
     /// convex brush.

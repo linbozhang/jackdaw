@@ -120,6 +120,95 @@ fn an_add_menu_spawn_is_one_user_entry() {
     assert_eq!(named(&mut app, "Cube"), 0, "the undo takes the cube back");
 }
 
+#[test]
+fn a_high_poly_sphere_add_undoes_and_redoes_as_one_user_entry() {
+    let (mut app, _tmp) = editor();
+    let before = depth(&app);
+    let before_text = scene_text(&mut app);
+    user(&mut app, "entity.add.sphere_high_poly");
+    assert_eq!(depth(&app), before + 1, "one entry for one Add");
+    assert_eq!(named(&mut app, "Sphere (High Poly)"), 1);
+    let brush = app
+        .world_mut()
+        .query::<(&Name, &jackdaw_scene_types::Brush)>()
+        .iter(app.world())
+        .find(|(name, _)| name.as_str() == "Sphere (High Poly)")
+        .map(|(_, brush)| brush.clone())
+        .expect("the high-poly sphere has a Brush");
+    assert_eq!(brush.faces.len(), 1_280);
+    assert_eq!(brush.topology.vertices.len(), 642);
+    let added_text = scene_text(&mut app);
+    assert_ne!(added_text, before_text, "the Brush reached the document");
+
+    undo(&mut app);
+    assert_eq!(named(&mut app, "Sphere (High Poly)"), 0);
+    assert_eq!(scene_text(&mut app), before_text);
+
+    redo(&mut app);
+    assert_eq!(named(&mut app, "Sphere (High Poly)"), 1);
+    assert_eq!(depth(&app), before + 1);
+    assert_eq!(scene_text(&mut app), added_text);
+}
+
+#[test]
+fn a_high_poly_sphere_survives_editor_save_and_load() {
+    let (mut app, tmp) = editor();
+    user(&mut app, "entity.add.sphere_high_poly");
+    let original = app
+        .world_mut()
+        .query::<(&Name, &jackdaw_scene_types::Brush)>()
+        .iter(app.world())
+        .find(|(name, _)| name.as_str() == "Sphere (High Poly)")
+        .map(|(_, brush)| brush.clone())
+        .expect("the high-poly sphere has a Brush");
+    assert!(jackdaw::scene_io::save_scene(app.world_mut()));
+    drop(app);
+
+    let mut app = util::editor_test_app();
+    app.world_mut()
+        .insert_resource(jackdaw::project::ProjectRoot {
+            root: tmp.path().to_path_buf(),
+            config: default(),
+        });
+    app.world_mut()
+        .resource_mut::<NextState<jackdaw::AppState>>()
+        .set(jackdaw::AppState::Editor);
+    app.update();
+    jackdaw::boot_ops::run_op_clause(app.world_mut(), "scene.open path=assets/zone.bsn")
+        .expect("the saved scene opens")
+        .assert_finished();
+    util::settle_scene_load(&mut app);
+
+    let brush = app
+        .world_mut()
+        .query::<(&Name, &jackdaw_scene_types::Brush)>()
+        .iter(app.world())
+        .find(|(name, _)| name.as_str() == "Sphere (High Poly)")
+        .map(|(_, brush)| brush)
+        .expect("the saved high-poly sphere loads as a Brush");
+    assert_eq!(brush.faces.len(), 1_280);
+    assert_eq!(brush.topology.polygons.len(), 1_280);
+    assert_eq!(brush.topology.vertices.len(), 642);
+    assert_eq!(brush.topology.edges.len(), 1_920);
+    assert_eq!(brush.topology.loops.len(), original.topology.loops.len());
+    for (loaded, saved) in brush
+        .topology
+        .vertices
+        .iter()
+        .zip(&original.topology.vertices)
+    {
+        assert_eq!(loaded.position, saved.position);
+    }
+    for (loaded, saved) in brush.faces.iter().zip(&original.faces) {
+        assert_eq!(loaded.plane.normal, saved.plane.normal);
+        assert_eq!(loaded.plane.distance, saved.plane.distance);
+        assert_eq!(loaded.material, saved.material);
+        assert_eq!(loaded.uv_scale, saved.uv_scale);
+        assert_eq!(loaded.uv_u_axis, saved.uv_u_axis);
+        assert_eq!(loaded.uv_v_axis, saved.uv_v_axis);
+    }
+}
+
 /// `spawn_undoable`-backed adds (the reflection probe) are one entry too.
 #[test]
 fn a_spawn_undoable_add_is_one_user_entry() {
@@ -406,6 +495,7 @@ const SELF_PUSHING: &[&str] = &[
     // entity.add.* that spawn through create_entity_in_world / spawn_undoable.
     "entity.add.cube",
     "entity.add.sphere",
+    "entity.add.sphere_high_poly",
     "entity.add.point_light",
     "entity.add.directional_light",
     "entity.add.spot_light",
