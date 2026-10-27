@@ -336,14 +336,17 @@ fn ticking_navmesh_gives_the_created_game_the_navmesh_feature() {
         cargo.contains("features = [\"navmesh\", \"terrain\", \"pie\"]"),
         "the game enables the navmesh runtime feature: {cargo}"
     );
-    assert!(!cargo.contains("avian3d"), "{cargo}");
+    assert!(
+        cargo.contains("avian3d"),
+        "physics is on by default, so the navmesh game carries avian too: {cargo}"
+    );
     assert!(!cargo.contains("jackdaw_multiplayer"), "{cargo}");
     let settings: toml::Table = toml::from_str(
         &std::fs::read_to_string(project.join("jackdaw.toml")).expect("a jackdaw.toml"),
     )
     .expect("jackdaw.toml parses");
     let modules = settings["modules"].as_table().expect("a [modules] table");
-    assert_eq!(modules["physics"].as_bool(), Some(false));
+    assert_eq!(modules["physics"].as_bool(), Some(true));
     assert_eq!(modules["navmesh"].as_bool(), Some(true));
     assert_eq!(modules["multiplayer"].as_bool(), Some(false));
 }

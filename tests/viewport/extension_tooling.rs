@@ -11,7 +11,7 @@ use jackdaw::selection::Selection;
 use jackdaw::test_input::SyntheticInput;
 use jackdaw_api::document::SceneDocument;
 use jackdaw_api::prelude::*;
-use jackdaw_api::tools::{ModalInputs, ToolStatus, ToolbarButton};
+use jackdaw_api::tools::{ModalInputs, ToolStatus};
 use jackdaw_api::viewport::ViewportOverlay;
 use jackdaw_api_internal::lifecycle::disable_extension;
 use jackdaw_feathers::button::ButtonOperatorCall;
@@ -297,21 +297,29 @@ fn disabling_the_extension_takes_its_tooling_away() {
         toolbar_button(&mut app).is_none(),
         "the button leaves the toolbar"
     );
-    assert_eq!(
+    // Counted by operator id, not the whole toolbar: the builtin physics
+    // extension ships a tool button of its own, and disabling this
+    // extension must not take the editor's own tools with it.
+    let ours = |app: &mut App| -> usize {
         app.world_mut()
-            .query::<&ToolbarButton>()
+            .query::<&ButtonOperatorCall>()
             .iter(app.world())
-            .count(),
-        0
-    );
+            .filter(|call| call.id == BallastToolOp::ID)
+            .count()
+    };
     assert_eq!(
+        ours(&mut app),
+        0,
+        "the extension's button leaves the toolbar"
+    );
+    let rows = |app: &mut App| -> usize {
         app.world_mut()
             .query::<&ViewportOverlay>()
             .iter(app.world())
-            .count(),
-        0,
-        "the overlay row goes"
-    );
+            .filter(|row| row.label == "Ballast")
+            .count()
+    };
+    assert_eq!(rows(&mut app), 0, "the overlay row goes");
     let brush = new_brush(&mut app);
     assert!(
         app.world().get::<Ballast>(brush).is_none(),

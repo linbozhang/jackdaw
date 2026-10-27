@@ -60,10 +60,25 @@ fn templates_state_versions_as_placeholders() {
 }
 
 /// The Bevy commit the workspace lockfile pins, when Bevy comes from git.
+///
+/// A workspace that patches `bevy` to the version-pinned fork (the physics
+/// integration's one-bevy rule) carries a path source in its lockfile
+/// instead; the fork's `jackdaw-pinned-rev`, written by
+/// `scripts/make-bevy-fork.ps1`, records the upstream commit it stands on —
+/// the same fallback `jackdaw_project_build`'s build script uses for
+/// `BEVY_REV`.
 fn locked_bevy_rev() -> Option<String> {
     let lockfile =
         std::fs::read_to_string(concat!(env!("CARGO_MANIFEST_DIR"), "/Cargo.lock")).unwrap();
-    jackdaw_project_build::bevy_source::locked_rev(&lockfile)
+    if let Some(rev) = jackdaw_project_build::bevy_source::locked_rev(&lockfile) {
+        return Some(rev);
+    }
+    let manifest =
+        std::fs::read_to_string(concat!(env!("CARGO_MANIFEST_DIR"), "/Cargo.toml")).unwrap();
+    let table: toml::Table = toml::from_str(&manifest).expect("the workspace manifest parses");
+    let fork = table["patch"]["crates-io"]["bevy"]["path"].as_str()?;
+    let pin = std::fs::read_to_string(format!("{fork}/jackdaw-pinned-rev")).ok()?;
+    Some(pin.trim().to_string())
 }
 
 #[test]
@@ -122,9 +137,10 @@ fn a_game_on_bevy_main_records_the_editors_commit() {
 /// kind of mismatch onboarding is supposed to prevent.
 #[test]
 fn the_physics_module_tracks_the_integrations_avian() {
-    let workspace =
-        std::fs::read_to_string(concat!(env!("CARGO_MANIFEST_DIR"), "/../../Cargo.toml"))
-            .expect("workspace manifest");
+    // The `jackdaw` package whose tests these are IS the workspace root, so
+    // its own manifest is the workspace manifest.
+    let workspace = std::fs::read_to_string(concat!(env!("CARGO_MANIFEST_DIR"), "/Cargo.toml"))
+        .expect("workspace manifest");
     let entry = workspace
         .split_once("[workspace.dependencies]")
         .expect("[workspace.dependencies]")

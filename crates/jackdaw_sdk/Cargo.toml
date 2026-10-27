@@ -46,6 +46,19 @@ jackdaw_runtime = { workspace = true, features = [
 bevy_math = { git = "https://github.com/bevyengine/bevy", branch = "main", features = ["approx"] }
 bevy_curve = { git = "https://github.com/bevyengine/bevy", branch = "main", features = ["approx"] }
 bevy_shape = { git = "https://github.com/bevyengine/bevy", branch = "main", features = ["approx"] }
+# The physics module's avian3d dependency resolves these shared crates with
+# features the graph above leaves off: avian turns on `approx`'s and
+# `downcast-rs`'s defaults, parry asks `glam` for `encase`, and the physics
+# integration takes `jackdaw_geometry` with its default `render` feature.
+# The SDK resolves them too, so a project that turns the module on still
+# compiles against SDK rlibs built with everything its graph asks for.
+approx = "0.5"
+crossbeam-utils = "0.8"
+disqualified = "1"
+downcast-rs = { version = "2", features = ["sync"] }
+glam = { version = "0.33", features = ["encase"] }
+hashbrown = { version = "0.16", features = ["serde"] }
+jackdaw_geometry = { version = "0.21.0-dev", path = "../jackdaw_geometry" }
 # The version `bevy_math` uses, with the generator features a project's own
 # `rand` dependency enables, so the SDK build already carries them.
 rand = { version = "0.10", features = ["std_rng", "thread_rng"] }
