@@ -10,8 +10,8 @@ use bevy::winit::WinitPlugin;
 use jackdaw::prelude::*;
 use jackdaw::test_input::SyntheticInput;
 use jackdaw_api::prelude::OperatorResult;
-use jackdaw_api_internal::lifecycle::{ExtensionAppExt as _, enable_extension};
-use jackdaw_physics::{EXTENSION_ID, PhysicsExtension};
+use jackdaw_api_internal::lifecycle::enable_extension;
+use jackdaw_physics::EXTENSION_ID;
 
 /// Point the editor's per-user config at a scratch directory of this test
 /// process before anything reads it.
