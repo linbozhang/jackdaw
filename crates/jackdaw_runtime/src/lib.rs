@@ -103,6 +103,12 @@ pub use config::{
     AssetsWalked, ConfigLoader, ConfigPlugin, DEFAULT_CONFIG_PATH, apply_config_defaults,
 };
 
+mod game_input;
+pub use game_input::{
+    DEFAULT_INPUT_ACTIONS_PATH, GameActionDef, GameActionKind, GameActionState, GameActions,
+    GameInputBinding, GameInputConfig, InputActionsPlugin, merge_actions,
+};
+
 pub mod frame_work;
 #[cfg(feature = "render")]
 mod live_levels;
@@ -155,8 +161,9 @@ pub mod prelude {
     pub use crate::JackdawNavmesh;
     pub use crate::{
         ConfigLoader, ConfigPlugin, DetailPresser, EditorCategory, EditorDescription, EditorHidden,
-        EditorPreview, JackdawAssetSourcePlugin, JackdawCatalog, JackdawCatalogPath, JackdawPlugin,
-        JackdawSceneMember, JackdawSceneRoot, SceneRefused, SkipSerialization,
+        EditorPreview, GameActions, GameInputConfig, InputActionsPlugin, JackdawAssetSourcePlugin,
+        JackdawCatalog, JackdawCatalogPath, JackdawPlugin, JackdawSceneMember, JackdawSceneRoot,
+        SceneRefused, SkipSerialization,
     };
     #[cfg(feature = "terrain")]
     pub use crate::{DetailPressers, DetailSettings, DetailViewer, TerrainViewer};

@@ -40,6 +40,20 @@
 //! missing config is not an error. Per-entity numbers (one cube's
 //! `speed`) stay as components; game-wide numbers (gravity, move
 //! speed, player health) belong in a config like this.
+//!
+//! # Input actions
+//!
+//! The same pattern drives input: `InputActionsPlugin` evaluates the
+//! built-in actions (Move / Look / Jump / Interact / Pause — WASD and
+//! the left stick, mouse and the right stick, Space / South, E / East,
+//! Escape / Start) into the `GameActions` resource every frame; systems
+//! read named actions instead of polling raw keys. To rebind, author
+//! `assets/input-actions.bsn` the same way as the tuning config (the
+//! plugin below wires the file; without it, the built-in table runs).
+//!
+//! In the editor's Play, click the game image to capture input and
+//! Shift+Esc to give it back — a plain Esc is forwarded to the game
+//! (that is why Pause can be Escape).
 
 use bevy::prelude::*;
 use jackdaw_runtime::prelude::*;
@@ -60,7 +74,18 @@ impl Plugin for GamePlugin {
             .register_asset_reflect::<GameConfig>()
             .add_plugins(ConfigPlugin::<GameConfig>::default())
             .add_systems(Startup, spawn_falling_cube)
-            .add_systems(Update, falling_cubes);
+            .add_systems(Update, falling_cubes)
+            // Input: the built-in five actions evaluate every frame; the
+            // `input-actions.bsn` asset (same New Asset flow) overrides
+            // bindings and deadzones when the game registers the type.
+            .init_asset::<GameInputConfig>()
+            .register_asset_reflect::<GameInputConfig>()
+            .add_plugins(InputActionsPlugin)
+            .add_plugins(ConfigPlugin::<GameInputConfig>::new(
+                "input-actions.bsn",
+            ))
+            .add_systems(Startup, spawn_player)
+            .add_systems(Update, move_player_by_actions);
     }
 }
 
@@ -160,5 +185,47 @@ fn falling_cubes(
     for (cube, mut transform) in &mut cubes {
         transform.translation.y += config.gravity * dt;
         transform.rotate_y(cube.speed * config.move_speed * dt);
+    }
+}
+
+/// The shape input actions move: a marker the demo spawns so the
+/// actions have something observable to drive (a real game replaces
+/// this with its player).
+#[derive(Component, Reflect, Default)]
+#[reflect(Component, Default, @EditorCategory::new("Actor"))]
+pub struct PlayerMarker;
+
+fn spawn_player(mut commands: Commands) {
+    commands.spawn((PlayerMarker, Transform::from_xyz(-2.0, 0.5, 0.0)));
+}
+
+/// The one system a game writes to consume input: read named actions,
+/// never raw keys. `Move` is an Axis2D (WASD and the left stick compose
+/// into one direction), `Look` a Delta2D (mouse motion this frame);
+/// `Jump` and `Interact` count just-presses; `Pause` flips a flag a
+/// real game would wire to its pause menu.
+fn move_player_by_actions(
+    actions: Res<GameActions>,
+    mut players: Query<&mut Transform, With<PlayerMarker>>,
+) {
+    let r#move = actions.value("Move");
+    for mut transform in &mut players {
+        transform.translation.x += r#move.x * 0.1;
+        transform.translation.z -= r#move.y * 0.1;
+    }
+    if actions.just_pressed("Jump") {
+        info!("Jump!");
+    }
+    if actions.just_pressed("Interact") {
+        info!("Interact!");
+    }
+    if actions.just_pressed("Pause") {
+        info!("Pause!");
+    }
+    // Look drives yaw, the camera-style default a top-level controller
+    // would take over in a real game.
+    let look = actions.value("Look");
+    for mut transform in &mut players {
+        transform.rotate_y(-look.x * 0.01);
     }
 }

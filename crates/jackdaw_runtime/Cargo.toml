@@ -20,6 +20,11 @@ bevy = { git = "https://github.com/bevyengine/bevy", branch = "main", default-fe
     # The schema dump reads the game's function registry, which only
     # exists with bevy's function reflection on.
     "reflect_functions",
+    # Gamepad bindings and deadzones read the engine's own input
+    # plumbing (`ButtonInput<GamepadButton>`, `Axis<GamepadAxis>`,
+    # `GamepadSettings`); the editor's workspace tree already carries
+    # gilrs so a shipped game has the backend it needs.
+    "bevy_gilrs",
 ] }
 jackdaw_bsn = { version = "0.21.0-dev", path = "../jackdaw_bsn" }
 # `IsA` references in a world scene resolve at load, so a shipped game shows
