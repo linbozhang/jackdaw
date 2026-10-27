@@ -2553,6 +2553,31 @@ fn substitute_placeholders(
     let text = replace_line(&text, "{{module_patches}}", &module_patch_lines(modules));
     let text = replace_line(&text, "{{bevy_pin_note}}", &bevy_pin_note());
     let text = replace_line(&text, "{{module_plugins}}", &module_plugin_lines(modules));
+    let text = replace_line(
+        &text,
+        "{{module_physics_statements}}",
+        &module_physics_statements(modules),
+    );
+    let text = replace_line(
+        &text,
+        "{{module_physics_falling_body}}",
+        &module_physics_falling_body(modules),
+    );
+    let text = replace_line(
+        &text,
+        "{{module_physics_manual_gravity}}",
+        &module_physics_manual_gravity(modules),
+    );
+    let text = replace_line(
+        &text,
+        "{{module_physics_player_body}}",
+        &module_physics_player_body(modules),
+    );
+    let text = replace_line(
+        &text,
+        "{{module_physics_demo}}",
+        &module_physics_demo(modules),
+    );
     text.replace("{{project-name | title_case}}", title)
         .replace(
             "{{jackdaw_modules}}",
@@ -2712,6 +2737,198 @@ fn module_plugin_lines(modules: &ModuleSet) -> String {
         .filter_map(|krate| krate.plugin.as_ref())
         .map(|plugin| format!("        .add_plugins({plugin})\n"))
         .collect()
+}
+
+/// The extra statements the template's `GamePlugin::build` gains with
+/// the physics module: the trigger bridge (sensors report into
+/// `TriggerEvents`), the stage/pickup spawns, and the two systems
+/// that consume them. Empty without the module — the template's
+/// manual-fall fallback stands in instead.
+fn module_physics_statements(modules: &ModuleSet) -> String {
+    if !modules.contains("physics") {
+        return String::new();
+    }
+    [
+        "        // Physics & triggers (the docs at the top walk the pattern):\n",
+        "        // the bridge turns sensor contacts into `TriggerEvents`,\n",
+        "        // `collect_pickups` reads it, `apply_gravity_from_config`\n",
+        "        // hands the config's gravity number to the engine.\n",
+        "        app.add_plugins(jackdaw_avian_integration::TriggerPlugin)\n",
+        "            .add_systems(Startup, (spawn_stage, spawn_pickups))\n",
+        "            .add_systems(Update, (collect_pickups, apply_gravity_from_config));\n",
+    ]
+    .concat()
+}
+
+/// The rigid body and collider the template's falling cube carries
+/// with the physics module: a dynamic body with its own cuboid, so
+/// it falls, lands and stays on the stage.
+fn module_physics_falling_body(modules: &ModuleSet) -> String {
+    if !modules.contains("physics") {
+        return String::new();
+    }
+    [
+        "        avian3d::prelude::RigidBody::Dynamic,\n",
+        "        jackdaw_avian_integration::AvianCollider(\n",
+        "            avian3d::prelude::ColliderConstructor::Cuboid {\n",
+        "                x_length: 0.6,\n",
+        "                y_length: 0.6,\n",
+        "                z_length: 0.6,\n",
+        "            },\n",
+        "        ),\n",
+    ]
+    .concat()
+}
+
+/// The manual fall line the template's `falling_cubes` uses *without*
+/// the physics module: gravity as a translation step, the way the
+/// template worked before physics arrived. With the module the line
+/// is empty — the engine owns the fall, and `GameConfig::gravity`
+/// reaches it through `apply_gravity_from_config` instead.
+fn module_physics_manual_gravity(modules: &ModuleSet) -> String {
+    if modules.contains("physics") {
+        String::new()
+    } else {
+        "        transform.translation.y += config.gravity * dt;\n".to_string()
+    }
+}
+
+/// The physical body the template's player carries with the physics
+/// module: a kinematic capsule. Kinematic means the game keeps
+/// writing the transform (the Move action above stays as it is) and
+/// the collider follows, so the player can walk into pickups — and
+/// into sensors generally — without being pushed around by them.
+fn module_physics_player_body(modules: &ModuleSet) -> String {
+    if !modules.contains("physics") {
+        return String::new();
+    }
+    [
+        "        avian3d::prelude::RigidBody::Kinematic,\n",
+        "        jackdaw_avian_integration::AvianCollider(\n",
+        "            avian3d::prelude::ColliderConstructor::Capsule {\n",
+        "                radius: 0.35,\n",
+        "                height: 1.0,\n",
+        "            },\n",
+        "        ),\n",
+        "        PickupCount(0),\n",
+    ]
+    .concat()
+}
+
+/// The physics demo section the template's library gains: a stage to
+/// land on, three pickups to walk into, the pickup counter, and the
+/// gravity handoff. The whole trigger pattern in one place — a game
+/// copies `collect_pickups` and swaps `Pickup` for its own marker.
+fn module_physics_demo(modules: &ModuleSet) -> String {
+    if !modules.contains("physics") {
+        return String::new();
+    }
+    r#"// ---- Physics & triggers: the pickup demo -------------------------
+// The stage, the pickups and the systems above them. Everything a
+// game needs to copy: spawn a `Sensor` collider, read `TriggerEvents`.
+
+/// A thing to walk over and collect: a small glowing sensor cube.
+#[derive(Component, Reflect, Default)]
+#[reflect(Component, Default, @EditorCategory::new("Actor"))]
+pub struct Pickup;
+
+/// How many pickups the player holds, carried by the player entity
+/// (a component, so the editor's Play view and an exported build can
+/// both see the count move).
+#[derive(Component, Reflect, Default)]
+#[reflect(Component, Default, @EditorCategory::new("Actor"))]
+pub struct PickupCount(pub u32);
+
+/// The floor everything stands on: one big static collider.
+fn spawn_stage(
+    mut commands: Commands,
+    mut meshes: ResMut<Assets<Mesh>>,
+    mut materials: ResMut<Assets<StandardMaterial>>,
+) {
+    commands.spawn((
+        Mesh3d(meshes.add(Cuboid::new(20.0, 1.0, 20.0))),
+        MeshMaterial3d(materials.add(StandardMaterial {
+            base_color: Color::srgb(0.15, 0.15, 0.18),
+            ..default()
+        })),
+        Transform::from_xyz(0.0, -0.5, 0.0),
+        jackdaw_avian_integration::AvianCollider(
+            avian3d::prelude::ColliderConstructor::Cuboid {
+                x_length: 20.0,
+                y_length: 1.0,
+                z_length: 20.0,
+            },
+        ),
+    ));
+}
+
+/// Three pickups in a line between the player and the falling cube.
+fn spawn_pickups(
+    mut commands: Commands,
+    mut meshes: ResMut<Assets<Mesh>>,
+    mut materials: ResMut<Assets<StandardMaterial>>,
+) {
+    for i in 0..3 {
+        commands.spawn((
+            Pickup,
+            Mesh3d(meshes.add(Cuboid::new(0.3, 0.3, 0.3))),
+            MeshMaterial3d(materials.add(StandardMaterial {
+                base_color: Color::srgb(0.1, 0.7, 0.2),
+                emissive: LinearRgba::rgb(0.1, 1.6, 0.3),
+                ..default()
+            })),
+            Transform::from_xyz(-1.0 + i as f32, 0.5, 0.0),
+            jackdaw_avian_integration::AvianCollider(
+                avian3d::prelude::ColliderConstructor::Sphere {
+                    radius: 0.35,
+                },
+            ),
+            // The trigger: detects, does not block. The bridge adds
+            // the event prerequisite avian asks for.
+            avian3d::prelude::Sensor,
+        ));
+    }
+}
+
+/// The pickup pattern itself: every contact that just started
+/// against a `Pickup` takes the pickup away and counts it, and the
+/// third one clears the level. Swap `Pickup` for your own marker and
+/// this is a coin, a key, a landmine — whatever a walk-over should
+/// do.
+fn collect_pickups(
+    triggers: Res<TriggerEvents>,
+    pickups: Query<(), With<Pickup>>,
+    mut players: Query<&mut PickupCount, With<PlayerMarker>>,
+    mut commands: Commands,
+) {
+    let Ok(mut count) = players.single_mut() else {
+        return;
+    };
+    for contact in triggers.enters() {
+        if pickups.contains(contact.trigger) {
+            commands.entity(contact.trigger).despawn();
+            count.0 += 1;
+            if count.0 >= 3 {
+                info!("Level clear! All {} pickups collected.", count.0);
+            }
+        }
+    }
+}
+
+/// Hand the config's gravity number to the engine: `GameConfig` is
+/// the saved author's truth, the engine's `Gravity` resource is what
+/// the simulation reads. Runs whenever the config changes, so a
+/// re-load mid-run (the editor's config panel) carries over too.
+fn apply_gravity_from_config(
+    config: Res<GameConfig>,
+    mut gravity: ResMut<avian3d::prelude::Gravity>,
+) {
+    if config.is_changed() {
+        gravity.0 = Vec3::new(0.0, config.gravity, 0.0);
+    }
+}
+"#
+    .to_string()
 }
 
 /// How a scaffolded project asks for one of the public jackdaw crates: the
@@ -3105,6 +3322,73 @@ mod tests {
                 "the template must teach `{needle}`; the input pattern drifted"
             );
         }
+    }
+
+    /// The physics module (on by default) shapes the template around
+    /// its own teaching: the trigger bridge, the pickup demo, the
+    /// collision-layer table, the gravity handoff, and a physical
+    /// falling cube and player. Without the module all of that
+    /// withdraws and the manual fall the template predates physics
+    /// with stands back in.
+    #[test]
+    fn new_game_project_teaches_the_physics_and_trigger_pattern() {
+        let dest = temp_dir("newgame-triggers").join("my-game");
+        scaffold_new_project(&dest, "my-game", TemplateKind::Game).unwrap();
+        let lib = std::fs::read_to_string(dest.join("src/lib.rs")).unwrap();
+        for needle in [
+            "jackdaw_avian_integration::TriggerPlugin",
+            "triggers.enters()",
+            "struct Pickup",
+            "PickupCount",
+            "Level clear",
+            "CollisionLayers",
+            "memberships 0b100",
+            "apply_gravity_from_config",
+            "RigidBody::Dynamic",
+            "RigidBody::Kinematic",
+            "ColliderConstructor::Capsule",
+            "Two gravities exist",
+        ] {
+            assert!(
+                lib.contains(needle),
+                "the template must teach `{needle}`; the trigger pattern drifted"
+            );
+        }
+        assert!(
+            !lib.contains("{{"),
+            "every placeholder is substituted, got:\n{}",
+            lib.lines().find(|line| line.contains("{{")).unwrap_or("…")
+        );
+
+        // Without the physics module the same template falls back:
+        // no avian code, no bridge, no demo, and the manual gravity
+        // line returns. (The docs at the top still mention physics —
+        // they teach the default shape; only the code withdraws.)
+        let plain = temp_dir("newgame-triggers-plain").join("my-game");
+        scaffold_new_project_with(
+            &plain,
+            "my-game",
+            TemplateKind::Game,
+            &modules(&["navmesh"]),
+        )
+        .unwrap();
+        let plain_lib = std::fs::read_to_string(plain.join("src/lib.rs")).unwrap();
+        for gone in [
+            "jackdaw_avian_integration",
+            "avian3d",
+            "TriggerPlugin",
+            "struct Pickup",
+            "PickupCount",
+        ] {
+            assert!(
+                !plain_lib.contains(gone),
+                "without the physics module `{gone}` must not appear"
+            );
+        }
+        assert!(
+            plain_lib.contains("transform.translation.y += config.gravity * dt;"),
+            "the manual fall stands in without physics"
+        );
     }
 
     #[test]

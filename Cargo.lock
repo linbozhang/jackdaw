@@ -4359,6 +4359,7 @@ version = "0.21.0-dev"
 dependencies = [
  "anyhow",
  "async-channel",
+ "avian3d",
  "base64 0.22.1",
  "bevy",
  "bevy_window_chrome",
@@ -4372,6 +4373,7 @@ dependencies = [
  "jackdaw_animation_runtime",
  "jackdaw_api",
  "jackdaw_api_internal",
+ "jackdaw_avian_integration",
  "jackdaw_bind",
  "jackdaw_bsn",
  "jackdaw_camera",

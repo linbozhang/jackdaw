@@ -109,6 +109,9 @@ pub use game_input::{
     GameInputBinding, GameInputConfig, InputActionsPlugin, merge_actions,
 };
 
+mod triggers;
+pub use triggers::{TriggerContact, TriggerEvents, TriggerPhase};
+
 pub mod frame_work;
 #[cfg(feature = "render")]
 mod live_levels;
@@ -163,7 +166,7 @@ pub mod prelude {
         ConfigLoader, ConfigPlugin, DetailPresser, EditorCategory, EditorDescription, EditorHidden,
         EditorPreview, GameActions, GameInputConfig, InputActionsPlugin, JackdawAssetSourcePlugin,
         JackdawCatalog, JackdawCatalogPath, JackdawPlugin, JackdawSceneMember, JackdawSceneRoot,
-        SceneRefused, SkipSerialization,
+        SceneRefused, SkipSerialization, TriggerContact, TriggerEvents, TriggerPhase,
     };
     #[cfg(feature = "terrain")]
     pub use crate::{DetailPressers, DetailSettings, DetailViewer, TerrainViewer};

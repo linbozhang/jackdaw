@@ -54,6 +54,45 @@
 //! In the editor's Play, click the game image to capture input and
 //! Shift+Esc to give it back — a plain Esc is forwarded to the game
 //! (that is why Pause can be Escape).
+//!
+//! # Physics & triggers
+//!
+//! The physics module (on by default) adds avian: things fall, land
+//! and stay on colliders. Three pieces worth knowing:
+//!
+//! * **Colliders**: add an `AvianCollider` component to any entity
+//!   (the editor's physics category) and pick a shape. A collider
+//!   with no rigid body stands still as a wall or floor; a
+//!   `RigidBody: Dynamic` one falls and lands — never through a
+//!   floor. The falling cube and the pickups below are the examples.
+//! * **Triggers**: an entity that is a collider *and* carries
+//!   `Sensor` detects overlaps without blocking anything (the editor
+//!   draws sensors with a cyan outline). Each frame,
+//!   `TriggerEvents` lists every sensor that started or stopped
+//!   touching something: `enters()` for pickup-style "got it",
+//!   `exits()` for "left the area". The plugin wires the
+//!   `CollisionEventsEnabled` prerequisite avian asks for — author
+//!   the `Sensor`, nothing else. `collect_pickups` below is the
+//!   whole pattern: walk into a pickup, it despawns and the count
+//!   goes up; collect all three and the level clears.
+//! * **Collision layers**: a `CollisionLayers` component (fields
+//!   `memberships` and `filters`, one bit per layer) decides who
+//!   interacts with whom — a contact only exists when each side's
+//!   memberships meet a layer the other side filters in. A common
+//!   table: layer 1 the player and the world, layer 2 pickups,
+//!   layer 3 hazards. Give hazards `memberships 0b100,
+//!   filters 0b001` (hazard hits player only) and the player
+//!   `0b001, 0b111` (hits everything) — pickups and hazards never
+//!   interact with each other, so a drifting hazard cannot collect
+//!   the pickups for the player.
+//!
+//! Two gravities exist and they are different things:
+//! `GameConfig.gravity` (the config asset above) is the author's
+//! number, and at startup `apply_gravity_from_config` copies it
+//! into the physics engine's `Gravity` resource — the one the
+//! simulation actually uses. Editing the config file changes the
+//! next launch; changing the `Gravity` resource in the editor's
+//! Resources panel changes it for the running session.
 
 use bevy::prelude::*;
 use jackdaw_runtime::prelude::*;
@@ -86,6 +125,7 @@ impl Plugin for GamePlugin {
             ))
             .add_systems(Startup, spawn_player)
             .add_systems(Update, move_player_by_actions);
+{{module_physics_statements}}
     }
 }
 
@@ -147,9 +187,14 @@ impl Default for GameConfig {
 }
 
 /// A cube the config drives, spawned so there is something to watch:
-/// it falls under `GameConfig::gravity` and spins at its component's
-/// `speed` scaled by `GameConfig::move_speed` — the per-entity number
-/// and the game-wide number working together.
+/// it falls under gravity and spins at its component's `speed`
+/// scaled by `GameConfig::move_speed` — the per-entity number and
+/// the game-wide number working together.
+///
+/// With the physics module (the default) the fall is the engine's:
+/// the cube is a dynamic body with its own collider, dropped onto
+/// the stage `spawn_stage` lays below it, so it lands and stays.
+/// The spin stays the game's own — a system, not a force.
 #[derive(Component, Reflect, Default)]
 #[reflect(Component, Default, @EditorCategory::new("Actor"))]
 pub struct FallingCube {
@@ -173,6 +218,7 @@ fn spawn_falling_cube(
             ..default()
         })),
         Transform::from_xyz(0.0, 3.0, 0.0),
+{{module_physics_falling_body}}
     ));
 }
 
@@ -183,7 +229,7 @@ fn falling_cubes(
 ) {
     let dt = time.delta_secs();
     for (cube, mut transform) in &mut cubes {
-        transform.translation.y += config.gravity * dt;
+{{module_physics_manual_gravity}}
         transform.rotate_y(cube.speed * config.move_speed * dt);
     }
 }
@@ -196,7 +242,11 @@ fn falling_cubes(
 pub struct PlayerMarker;
 
 fn spawn_player(mut commands: Commands) {
-    commands.spawn((PlayerMarker, Transform::from_xyz(-2.0, 0.5, 0.0)));
+    commands.spawn((
+        PlayerMarker,
+        Transform::from_xyz(-2.0, 0.5, 0.0),
+{{module_physics_player_body}}
+    ));
 }
 
 /// The one system a game writes to consume input: read named actions,
@@ -229,3 +279,5 @@ fn move_player_by_actions(
         transform.rotate_y(-look.x * 0.01);
     }
 }
+
+{{module_physics_demo}}
