@@ -43,16 +43,20 @@ picking, and the Live entity tree all shipped; see
 What's not done: deeper live editing (a broader set of
 component edits riding back into the running game and into the
 authored scene), richer widget metadata for live values, and
-protocol maturity across more component types. Three smaller
+protocol maturity across more component types. Four smaller
 ledgers from the input-actions work (2026-10): the schema watcher
 only fires on `schema.json` changes, so a restart into an
 unchanged schema can serve New Asset before its kinds land (an
 initial read on project open would close it); the game's own log
 lines have no editor-visible surface (its stderr feeds a crash
 tail buffer only — a log pane would make a teaching template's
-`Jump!`/`Pause!` lines observable in PIE); and stop still closes
+`Jump!`/`Pause!` lines observable in PIE); stop still closes
 open asset cards on some paths (the post-stop re-open works, the
-close calls are the residue).
+close calls are the residue); and the physical-gamepad end-to-end
+leg has never run on hardware (the mechanism is pinned — the
+game's own GilrsPlugin reads pads directly, and the synthetic
+event chain is red-green tested — but no pad was ever attached to
+this machine).
 
 Where to dig in: pick one component family that doesn't
 round-trip yet and follow it through the IPC lanes.
