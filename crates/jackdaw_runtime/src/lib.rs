@@ -112,6 +112,15 @@ pub use game_input::{
 mod triggers;
 pub use triggers::{TriggerContact, TriggerEvents, TriggerPhase};
 
+// The camera rig a scene authors: the components and the runtime driver a
+// game wires with one line (`JackdawCameraRigPlugin`). Re-exported so games
+// and the runtime agree on one copy — a rig component the game's schema has
+// not seen loads as `UnresolvedTypes` and never materializes its camera.
+pub use jackdaw_camera_rig::{
+    ActiveCameraRig, CameraLook, CameraMode, CameraRig, JackdawCameraRigPlugin,
+    JackdawCameraRigTypesPlugin,
+};
+
 pub mod frame_work;
 #[cfg(feature = "render")]
 mod live_levels;
@@ -163,8 +172,9 @@ pub mod prelude {
     #[cfg(feature = "navmesh")]
     pub use crate::JackdawNavmesh;
     pub use crate::{
-        ConfigLoader, ConfigPlugin, DetailPresser, EditorCategory, EditorDescription, EditorHidden,
-        EditorPreview, GameActions, GameInputConfig, InputActionsPlugin, JackdawAssetSourcePlugin,
+        ActiveCameraRig, CameraLook, CameraMode, CameraRig, ConfigLoader, ConfigPlugin,
+        DetailPresser, EditorCategory, EditorDescription, EditorHidden, EditorPreview, GameActions,
+        GameInputConfig, InputActionsPlugin, JackdawAssetSourcePlugin, JackdawCameraRigPlugin,
         JackdawCatalog, JackdawCatalogPath, JackdawPlugin, JackdawSceneMember, JackdawSceneRoot,
         SceneRefused, SkipSerialization, TriggerContact, TriggerEvents, TriggerPhase,
     };

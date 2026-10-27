@@ -49,7 +49,13 @@ jackdaw_geometry = { version = "0.21.0-dev", path = "../jackdaw_geometry", defau
 jackdaw_surface = { version = "0.21.0-dev", path = "../jackdaw_surface", optional = true }
 jackdaw_scene_types = { version = "0.21.0-dev", path = "../jackdaw_scene_types", default-features = false }
 jackdaw_pie_protocol = { version = "0.21.0-dev", path = "../jackdaw_pie_protocol", optional = true }
-jackdaw_camera_rig = { version = "0.21.0-dev", path = "../jackdaw_camera_rig", optional = true }
+# The camera rig a scene authors (`CameraRig` + the runtime driver plugin).
+# Ships inside games by design (its bevy features are the minimal authoring
+# set, no render), so the runtime takes it unconditionally: the prelude
+# re-exports the plugin and types a game's one-line wiring needs, and scene
+# components resolve in every feature state instead of falling back to
+# `UnresolvedTypes` when `pie` is off.
+jackdaw_camera_rig = { version = "0.21.0-dev", path = "../jackdaw_camera_rig" }
 # The data model, sidecar decoder, splat material and clipmap mesher shared with
 # the editor. Default features off, so a `navmesh`-only build takes the data
 # half alone and `terrain` asks for the rendering half by name.
@@ -93,7 +99,6 @@ soft_shadows = ["render", "bevy/experimental_pbr_pcss"]
 pie = [
     "dep:jackdaw_pie_protocol",
     "jackdaw_pie_protocol/ipc",
-    "dep:jackdaw_camera_rig",
     "bevy/bevy_render",
     "bevy/bevy_image",
     "bevy/mesh_picking",

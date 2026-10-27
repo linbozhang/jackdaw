@@ -2591,6 +2591,11 @@ fn substitute_placeholders(
     );
     let text = replace_line(
         &text,
+        "{{module_physics_player_move}}",
+        &module_physics_player_move(modules),
+    );
+    let text = replace_line(
+        &text,
         "{{module_physics_demo}}",
         &module_physics_demo(modules),
     );
@@ -2763,7 +2768,7 @@ fn module_physics_statements(modules: &ModuleSet) -> String {
         "        // `collect_pickups` reads it, `apply_gravity_from_config`\n",
         "        // hands the config's gravity number to the engine.\n",
         "        app.add_plugins(jackdaw_avian_integration::TriggerPlugin)\n",
-        "            .add_systems(Startup, (spawn_stage, spawn_pickups))\n",
+        "            .add_systems(Startup, (spawn_stage, spawn_pickups, spawn_walls))\n",
         "            .add_systems(Update, (collect_pickups, apply_gravity_from_config));\n",
     ]
     .concat()
@@ -2803,10 +2808,10 @@ fn module_physics_manual_gravity(modules: &ModuleSet) -> String {
 }
 
 /// The physical body the template's player carries with the physics
-/// module: a kinematic capsule. Kinematic means the game keeps
-/// writing the transform (the Move action above stays as it is) and
-/// the collider follows, so the player can walk into pickups — and
-/// into sensors generally — without being pushed around by them.
+/// module: a kinematic capsule. Kinematic means the game keeps writing
+/// the transform — `move_player` sweeps it with avian's move-and-slide,
+/// so the player slides along walls instead of through them and walks
+/// into sensors without being pushed around by them.
 fn module_physics_player_body(modules: &ModuleSet) -> String {
     if !modules.contains("physics") {
         return String::new();
@@ -2819,9 +2824,147 @@ fn module_physics_player_body(modules: &ModuleSet) -> String {
         "                height: 1.0,\n",
         "            },\n",
         "        ),\n",
+        "        PlayerVelocity(Vec3::ZERO),\n",
         "        PickupCount(0),\n",
     ]
     .concat()
+}
+
+/// The player's movement system. With the physics module it is the
+/// full character controller — gravity, a ground check, a jump, and
+/// avian's move-and-slide so walls stop the player — in the shape of
+/// avian's own controller example: a velocity component the system
+/// integrates and a sweep that resolves the movement against the
+/// world. Without the module the same actions drive a plain transform
+/// step (camera-relative, scaled by delta time — frame-rate
+/// independent, but nothing stops the player and there is no jump:
+/// collision and falling are what the module adds).
+fn module_physics_player_move(modules: &ModuleSet) -> String {
+    if !modules.contains("physics") {
+        return r#"/// The movement system a game without physics gets: the same
+/// camera-relative, frame-rate-correct input handling, applied as a
+/// plain transform step. Nothing stops the player and there is no
+/// jump — collision and falling are what the physics module adds.
+fn move_player(
+    actions: Res<GameActions>,
+    time: Res<Time>,
+    mut players: Query<(&PlayerController, &mut Transform), With<PlayerMarker>>,
+    look: Query<&CameraLook>,
+) {
+    let dt = time.delta_secs();
+    let camera_yaw = look.single().map(|camera| camera.yaw).unwrap_or(0.0);
+    let direction = move_direction(actions.value("Move"), camera_yaw);
+    for (controller, mut transform) in &mut players {
+        transform.translation += direction * controller.move_speed * dt;
+        face_movement_direction(direction, dt, &mut transform);
+    }
+    if actions.just_pressed("Jump") {
+        info!("Jump! (needs the physics module to leave the ground)");
+    }
+    if actions.just_pressed("Interact") {
+        info!("Interact!");
+    }
+    if actions.just_pressed("Pause") {
+        info!("Pause!");
+    }
+}
+"#
+        .to_string();
+    }
+    r#"/// The player's velocity, in metres per second. `move_player` owns it
+/// entirely — gravity adds to it, the ground and walls take from it,
+/// a jump sets it — so it is runtime state, not an author knob (edit
+/// `PlayerController` above to tune how the player moves).
+#[derive(Component, Reflect, Default)]
+#[reflect(Component, Default, @EditorCategory::new("Actor"))]
+pub struct PlayerVelocity(pub Vec3);
+
+/// Everything the five actions do to the player, in one system:
+///
+/// * `Move` becomes a target horizontal velocity relative to the
+///   camera (see `move_direction`);
+/// * gravity — the same `GameConfig.gravity` the engine itself got
+///   from `apply_gravity_from_config` — integrates onto the vertical
+///   axis every frame, grounded or not;
+/// * `Jump`, just-pressed and only when a short downward cast finds
+///   ground that is not too steep, launches at `jump_speed`;
+/// * `move_and_slide` then sweeps the capsule for the frame's
+///   distance: as far as the way is clear, sliding along whatever is
+///   in the way, and back out of anything already penetrated — that
+///   sweep is the "collides with walls" half of a controller, and it
+///   hands back the position and the leftover (slid) velocity.
+fn move_player(
+    actions: Res<GameActions>,
+    config: Res<GameConfig>,
+    time: Res<Time>,
+    move_and_slide: avian3d::prelude::MoveAndSlide,
+    mut players: Query<
+        (
+            Entity,
+            &PlayerController,
+            &avian3d::prelude::Collider,
+            &mut PlayerVelocity,
+            &mut Transform,
+        ),
+        With<PlayerMarker>,
+    >,
+    look: Query<&CameraLook>,
+) {
+    use avian3d::math::{ToF32Precision, ToRealPrecision};
+    let dt = time.delta_secs();
+    let camera_yaw = look.single().map(|camera| camera.yaw).unwrap_or(0.0);
+    let direction = move_direction(actions.value("Move"), camera_yaw);
+    for (entity, controller, collider, mut velocity, mut transform) in &mut players {
+        velocity.0.x = direction.x * controller.move_speed;
+        velocity.0.z = direction.z * controller.move_speed;
+        velocity.0.y += config.gravity * dt;
+        // Exclude the player's own collider from its queries, or the
+        // first sweep hits the player.
+        let filter =
+            avian3d::prelude::SpatialQueryFilter::from_excluded_entities([entity]);
+        // A short cast straight down from the resting capsule finds the
+        // ground (a hit whose surface is not too steep); skin width
+        // keeps the resting capsule a hair above it, so the 0.1 m cast
+        // is enough.
+        let grounded = move_and_slide
+            .spatial_query
+            .cast_shape(
+                collider,
+                transform.translation.real(),
+                transform.rotation,
+                Dir3::NEG_Y,
+                &avian3d::prelude::ShapeCastConfig::from_max_distance(0.1),
+                &filter,
+            )
+            .is_some_and(|hit| hit.normal1.y > 0.7);
+        if grounded && actions.just_pressed("Jump") {
+            velocity.0.y = controller.jump_speed;
+        }
+        let output = move_and_slide.move_and_slide(
+            collider,
+            transform.translation.real(),
+            transform.rotation,
+            velocity.0.real(),
+            time.delta(),
+            &avian3d::prelude::MoveAndSlideConfig::default(),
+            &filter,
+            // Per-hit handling (footsteps, events) would go here; the
+            // default accepts every hit and slides.
+            |_| avian3d::prelude::MoveAndSlideHitResponse::Accept,
+        );
+        transform.translation = output.position.f32();
+        velocity.0 = output.projected_velocity;
+        face_movement_direction(direction, dt, &mut transform);
+    }
+    if actions.just_pressed("Interact") {
+        info!("Interact!");
+    }
+    if actions.just_pressed("Pause") {
+        info!("Pause!");
+    }
+}
+"#
+    .to_string()
 }
 
 /// The physics demo section the template's library gains: a stage to
@@ -2895,6 +3038,36 @@ fn spawn_pickups(
             // The trigger: detects, does not block. The bridge adds
             // the event prerequisite avian asks for.
             avian3d::prelude::Sensor,
+        ));
+    }
+}
+
+/// Two walls at right angles on the stage: something solid to walk
+/// into. `move_player`'s sweep does the rest — walk at the north wall
+/// (ahead of the spawn) head-on and stop; walk at it diagonally and
+/// slide along it. Static, like the stage: a collider with no rigid
+/// body stands still.
+fn spawn_walls(
+    mut commands: Commands,
+    mut meshes: ResMut<Assets<Mesh>>,
+    mut materials: ResMut<Assets<StandardMaterial>>,
+) {
+    let wall = materials.add(StandardMaterial {
+        base_color: Color::srgb(0.45, 0.4, 0.35),
+        ..default()
+    });
+    for (x, z, x_length, z_length) in [(0.0, -3.0, 12.0, 0.4), (-4.0, 0.0, 0.4, 8.0)] {
+        commands.spawn((
+            Mesh3d(meshes.add(Cuboid::new(x_length, 1.5, z_length))),
+            MeshMaterial3d(wall.clone()),
+            Transform::from_xyz(x, 0.75, z),
+            jackdaw_avian_integration::AvianCollider(
+                avian3d::prelude::ColliderConstructor::Cuboid {
+                    x_length,
+                    y_length: 1.5,
+                    z_length,
+                },
+            ),
         ));
     }
 }
@@ -3405,6 +3578,99 @@ mod tests {
         assert!(
             plain_lib.contains("transform.translation.y += config.gravity * dt;"),
             "the manual fall stands in without physics"
+        );
+    }
+
+    /// The player controller pattern the template teaches: tuning on a
+    /// component, camera-relative movement against the rig's look state,
+    /// the rig parented under the player with the runtime plugin wired,
+    /// and (with physics) avian's move-and-slide for walls, gravity and
+    /// a jump. Without the module the same controller degrades to a
+    /// frame-rate-correct transform walk with no jump and no collision,
+    /// while the camera half stays.
+    #[test]
+    fn new_game_project_teaches_the_player_controller_pattern() {
+        let dest = temp_dir("newgame-player").join("my-game");
+        scaffold_new_project(&dest, "my-game", TemplateKind::Game).unwrap();
+        let lib = std::fs::read_to_string(dest.join("src/lib.rs")).unwrap();
+        for needle in [
+            "struct PlayerController",
+            "move_speed: 4.0",
+            "jump_speed: 4.5",
+            "PlayerController::default()",
+            "fn move_direction(",
+            "move_direction(actions.value(\"Move\"), camera_yaw)",
+            "fn look_into_camera",
+            "CameraRig::default()",
+            "JackdawCameraRigPlugin",
+            "face_movement_direction",
+            "struct PlayerVelocity",
+            "PlayerVelocity(Vec3::ZERO)",
+            "MoveAndSlide",
+            "move_and_slide(",
+            "MoveAndSlideHitResponse::Accept",
+            "SpatialQueryFilter::from_excluded_entities",
+            "just_pressed(\"Jump\")",
+            "spawn_walls",
+        ] {
+            assert!(
+                lib.contains(needle),
+                "the template must teach `{needle}`; the player pattern drifted"
+            );
+        }
+        assert!(
+            !lib.contains("{{"),
+            "every placeholder is substituted, got:\n{}",
+            lib.lines().find(|line| line.contains("{{")).unwrap_or("…")
+        );
+
+        // Without the physics module the controller degrades, it does
+        // not vanish: no avian, no velocity, no walls — but the walk
+        // (camera-relative, dt-corrected), the look bridge and the rig
+        // wiring all stay, because none of them needs physics.
+        let plain = temp_dir("newgame-player-plain").join("my-game");
+        scaffold_new_project_with(
+            &plain,
+            "my-game",
+            TemplateKind::Game,
+            &modules(&["navmesh"]),
+        )
+        .unwrap();
+        let plain_lib = std::fs::read_to_string(plain.join("src/lib.rs")).unwrap();
+        for gone in [
+            "avian3d",
+            "PlayerVelocity",
+            // Doc prose may still name the pattern (the header teaches
+            // the default shape, T10 precedent); the call form is code.
+            "move_and_slide(",
+            "spawn_walls",
+            "PickupCount",
+        ] {
+            assert!(
+                !plain_lib.contains(gone),
+                "without the physics module `{gone}` must not appear"
+            );
+        }
+        for stays in [
+            "fn move_player",
+            "controller.move_speed * dt",
+            "fn look_into_camera",
+            "CameraRig::default()",
+            "JackdawCameraRigPlugin",
+            "just_pressed(\"Jump\")",
+        ] {
+            assert!(
+                plain_lib.contains(stays),
+                "without the physics module `{stays}` must stay"
+            );
+        }
+        assert!(
+            !plain_lib.contains("{{"),
+            "the plain template substitutes everything too, got:\n{}",
+            plain_lib
+                .lines()
+                .find(|line| line.contains("{{"))
+                .unwrap_or("…")
         );
     }
 
