@@ -1,6 +1,9 @@
-//! A scene's physics components survive an open and a save in an editor
-//! without the Physics module, kept in the document as types the editor
-//! cannot resolve.
+//! A scene's physics components survive an open and a save. Since the
+//! physics extension ships builtin (T10-T1), the avian types register and
+//! resolve in every editor session; before T10-T3's registration fix they
+//! survived only as unresolved types, which is the fallback the document
+//! keeps for types no loaded extension knows. Either way the components
+//! round-trip through open and re-save unchanged.
 
 use crate::util;
 
@@ -17,7 +20,7 @@ const SCENE: &str = "bevy_ecs::hierarchy::Children [
 ";
 
 #[test]
-fn physics_components_survive_an_open_and_resave_without_the_module() {
+fn physics_components_survive_an_open_and_resave() {
     let mut app = util::editor_test_app();
     let dir = std::env::temp_dir().join(format!("jd_physics_resave_{}", std::process::id()));
     let _ = std::fs::remove_dir_all(&dir);
@@ -28,15 +31,19 @@ fn physics_components_survive_an_open_and_resave_without_the_module() {
     jackdaw::scene_io::load_scene_from_file(app.world_mut(), &path);
     app.update();
 
+    // The builtin physics extension registers avian's types, so they
+    // resolve; anything the editor cannot resolve would ride the
+    // UnresolvedTypes fallback instead, which the re-save below also
+    // preserves.
     let unresolved = app
         .world()
         .resource::<jackdaw_bsn::UnresolvedTypes>()
         .types();
     assert!(
-        unresolved
+        !unresolved
             .iter()
             .any(|type_path| type_path.starts_with("avian3d::")),
-        "without the module avian's types stay unresolved: {unresolved:?}"
+        "the builtin physics extension resolves avian's types: {unresolved:?}"
     );
 
     let emitted = jackdaw::scene_io::emit_bsn_scene_with_inline_assets(app.world_mut(), &dir);

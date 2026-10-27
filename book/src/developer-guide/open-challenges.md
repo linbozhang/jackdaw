@@ -92,6 +92,10 @@ taste in the area could lead. One line each:
 - Audio mixer. Not started.
 - Localization (i18n). Not started.
 - In-editor profiler / frame-time inspector. Not started.
+- Named collision layers (layer names over the `CollisionLayers`
+  bitmask, so authors pick "hazard" instead of counting bits).
+  The bitmask and its editing work; the naming is the gap. Not
+  started.
 - Asset import beyond GLTF (FBX, USD, batch texture
   compression). Not started.
 - Level streaming for large open worlds. Not started.
