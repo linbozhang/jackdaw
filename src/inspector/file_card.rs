@@ -179,6 +179,11 @@ fn drop_a_definition_that_is_gone(
 
 /// The selection moved to something else: an entity in the outliner, or an
 /// asset file with a card of its own. The file card stands for nothing now.
+/// A *cleared* selection is not a move: a PIE stop clears the live
+/// projection's entities (the selection falls back to nothing while the
+/// authored world is restored), and a stop must not close the document
+/// the user had open — coming back from a play session and finding the
+/// asset card gone reads as lost work.
 fn drop_a_file_the_selection_left(
     open: Res<OpenFileCard>,
     selection: Res<crate::selection::Selection>,
@@ -187,7 +192,8 @@ fn drop_a_file_the_selection_left(
     let Some(entity) = open.0 else {
         return;
     };
-    if selection.primary() == Some(entity) {
+    let primary = selection.primary();
+    if primary.is_none() || primary == Some(entity) {
         return;
     }
     commands.queue(|world: &mut World| {
