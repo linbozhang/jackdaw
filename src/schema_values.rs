@@ -593,6 +593,19 @@ fn enum_bsn_for_json(
                 .collect(),
         }));
     }
+    // serde spells a one-field tuple variant as the value itself
+    // (`"Key": "ArrowUp"`), not wrapped in a one-element array — the
+    // form every standard JSON producer writes. Only that shape takes
+    // the shortcut; a struct variant's object is handled below.
+    if variant.fields.len() == 1
+        && !body.is_object()
+        && let Some(value) = bsn_for_json(world, types, &variant.fields[0].type_path, body)
+    {
+        return Some(BsnValue::TupleStruct(jackdaw_bsn::BsnTupleStructData {
+            type_path,
+            values: vec![value],
+        }));
+    }
     let object = body.as_object()?;
     let mut fields = Vec::new();
     for field in &variant.fields {
@@ -726,6 +739,95 @@ mod tests {
             &parse_path("loot[2].item"),
             Value::String("gem".into())
         ));
+    }
+
+    /// The binding enum a rebinding edits: tuple, struct and unit
+    /// variants, the shape `GameInputBinding` has.
+    fn binding_enum_schema() -> TypeSchema {
+        serde_json::from_value(serde_json::json!({
+            "type_path": "my_game::GameInputBinding",
+            "short_name": "GameInputBinding",
+            "module_path": "my_game",
+            "category": "",
+            "description": "",
+            "hidden": false,
+            "default_constructible": true,
+            "kind": "Enum",
+            "default": null,
+            "fields": [],
+            "variants": [
+                { "name": "Key", "fields": [
+                    { "name": "0", "type_path": "my_game::KeyCode" } ] },
+                { "name": "GamepadAxis", "fields": [
+                    { "name": "axis", "type_path": "my_game::GamepadAxis" },
+                    { "name": "deadzone", "type_path": "f32" } ] },
+                { "name": "MouseMotion", "fields": [] }
+            ]
+        }))
+        .expect("the schema reads")
+    }
+
+    fn types_with_binding() -> ProjectTypes {
+        let schema = jackdaw_schema::ProjectSchema {
+            components: vec![],
+            resources: vec![],
+            events: vec![],
+            functions: vec![],
+            assets: vec![],
+            field_types: vec![binding_enum_schema()],
+        };
+        let mut types = ProjectTypes::default();
+        types.update(&schema, &std::collections::HashSet::new());
+        types
+    }
+
+    /// serde spells a one-field tuple variant as the value itself
+    /// (`"Key": "ArrowUp"`), not wrapped in a one-element array — the
+    /// form every standard JSON producer writes, and what a rebinding's
+    /// list is pasted as. Both spellings must build the variant; the
+    /// struct and unit forms are untouched by the tolerance.
+    #[test]
+    fn a_serde_shaped_single_field_variant_takes_its_value_directly() {
+        let mut world = World::new();
+        world.init_resource::<AppTypeRegistry>();
+        let types = types_with_binding();
+        let schema = binding_enum_schema();
+
+        let direct = enum_bsn_for_json(
+            &world,
+            &types,
+            &schema,
+            &serde_json::json!({ "Key": "ArrowUp" }),
+        );
+        assert!(
+            matches!(&direct, Some(BsnValue::TupleStruct(tuple)) if tuple.values.len() == 1),
+            "the bare value builds the tuple variant: {direct:?}"
+        );
+        let wrapped = enum_bsn_for_json(
+            &world,
+            &types,
+            &schema,
+            &serde_json::json!({ "Key": ["ArrowUp"] }),
+        );
+        assert!(
+            matches!(&wrapped, Some(BsnValue::TupleStruct(tuple)) if tuple.values.len() == 1),
+            "the wrapped form still builds it: {wrapped:?}"
+        );
+        let axis = enum_bsn_for_json(
+            &world,
+            &types,
+            &schema,
+            &serde_json::json!({ "GamepadAxis": { "axis": "LeftStickX", "deadzone": 0.5 } }),
+        );
+        assert!(
+            matches!(&axis, Some(BsnValue::Struct(data)) if data.fields.0.len() == 2),
+            "a struct variant keeps its object form: {axis:?}"
+        );
+        let unit = enum_bsn_for_json(&world, &types, &schema, &serde_json::json!("MouseMotion"));
+        assert!(
+            matches!(&unit, Some(BsnValue::Type(path)) if path.ends_with("MouseMotion")),
+            "a unit variant keeps its bare form: {unit:?}"
+        );
     }
 
     fn item_schema() -> TypeSchema {

@@ -36,7 +36,7 @@
 
 use std::collections::HashMap;
 
-use bevy::input::gamepad::{AxisSettings, GamepadSettings};
+use bevy::input::gamepad::{AxisSettings, Gamepad, GamepadSettings};
 use bevy::input::mouse::AccumulatedMouseMotion;
 use bevy::prelude::*;
 use serde::{Deserialize, Serialize};
@@ -311,14 +311,20 @@ fn apply_deadzones(
 }
 
 /// Rebuild [`GameActions`] for this frame.
+///
+/// Gamepad state comes off the engine's `Gamepad` components (per
+/// device, filtered by the settings [`apply_deadzones`] installed) —
+/// this bevy keeps no global `ButtonInput<GamepadButton>` resource, so
+/// every connected gamepad is folded in: a button held on any pad
+/// holds the action, and an axis reads the pad with the largest
+/// deflection.
 fn evaluate_actions(
     config: Option<Res<GameInputConfig>>,
     mut actions: ResMut<GameActions>,
     keys: Option<Res<ButtonInput<KeyCode>>>,
     mouse: Option<Res<ButtonInput<MouseButton>>>,
     mut motion: Option<ResMut<AccumulatedMouseMotion>>,
-    gamepad_buttons: Option<Res<ButtonInput<GamepadButton>>>,
-    gamepad_axes: Option<Res<Axis<GamepadAxis>>>,
+    gamepads: Query<&Gamepad>,
 ) {
     actions.states.clear();
     let Some(config) = config else { return };
@@ -354,18 +360,27 @@ fn evaluate_actions(
                     }
                 }
                 GameInputBinding::GamepadButton(button) => {
-                    if let Some(buttons) = &gamepad_buttons {
-                        state.pressed |= buttons.pressed(*button);
-                        state.just_pressed |= buttons.just_pressed(*button);
-                        state.just_released |= buttons.just_released(*button);
+                    for gamepad in &gamepads {
+                        state.pressed |= gamepad.pressed(*button);
+                        state.just_pressed |= gamepad.just_pressed(*button);
+                        state.just_released |= gamepad.just_released(*button);
                     }
                 }
                 GameInputBinding::GamepadAxis { axis, .. } => {
-                    if let Some(axes) = &gamepad_axes
-                        && let Some(value) = axes.get(*axis)
-                    {
-                        // The engine already applied the deadzone we
-                        // installed; the value is the filtered one.
+                    // The largest deflection across pads — the engine
+                    // already applied the deadzone we installed when it
+                    // filtered the event into the component.
+                    let mut value: f32 = 0.0;
+                    let mut any = false;
+                    for gamepad in &gamepads {
+                        if let Some(deflection) = gamepad.get(*axis)
+                            && (!any || deflection.abs() > value.abs())
+                        {
+                            value = deflection;
+                            any = true;
+                        }
+                    }
+                    if any {
                         match def.kind {
                             GameActionKind::Button => {
                                 state.pressed |= value.abs() > 0.5;
@@ -422,6 +437,10 @@ fn axis_pair(axis: GamepadAxis, value: f32) -> (f32, f32) {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use bevy::input::gamepad::{
+        Gamepad, GamepadButton, GamepadSettings, RawGamepadAxisChangedEvent,
+        RawGamepadButtonChangedEvent, RawGamepadEvent,
+    };
 
     /// A minimal app with the plugin and the input resources the
     /// evaluation reads. `with_config` installs a config; without one
@@ -623,5 +642,72 @@ mod tests {
             .expect("the binding installed settings for its axis");
         assert_eq!(left_x.deadzone_lowerbound(), -0.5);
         assert_eq!(left_x.deadzone_upperbound(), 0.5);
+    }
+
+    /// Feed a gamepad the way gilrs or a PIE-forwarding editor does:
+    /// raw events into the message stream, the engine's own systems
+    /// filtering them into the `Gamepad` component — which is where
+    /// the evaluation reads. This bevy keeps no global
+    /// `ButtonInput<GamepadButton>` resource, so this test is the
+    /// reachability proof for the whole gamepad leg: a pad event that
+    /// lands in the stream drives the action it is bound to.
+    #[test]
+    fn gamepad_events_reach_the_actions_through_the_component() {
+        let mut app = app(None); // defaults: Move sticks at a 0.15 deadzone
+        let pad = app
+            .world_mut()
+            .spawn((Gamepad::default(), GamepadSettings::default()))
+            .id();
+        app.update(); // schedules exist; the deadzones are installed
+
+        // An axis deflected past the deadzone moves.
+        app.world_mut()
+            .write_message(RawGamepadEvent::Axis(RawGamepadAxisChangedEvent::new(
+                pad,
+                GamepadAxis::LeftStickX,
+                0.8,
+            )));
+        app.update();
+        let actions = app.world().resource::<GameActions>();
+        assert!(
+            actions.pressed("Move"),
+            "a left-stick deflection past the deadzone holds Move"
+        );
+        assert_eq!(
+            actions.value("Move").x,
+            0.8,
+            "the raw deflection reads through"
+        );
+
+        // An axis inside the deadzone is filtered by the engine before
+        // the component ever sees it. The Y axis carries no value —
+        // Move's X deflection stands, but Y contributes nothing.
+        app.world_mut()
+            .write_message(RawGamepadEvent::Axis(RawGamepadAxisChangedEvent::new(
+                pad,
+                GamepadAxis::LeftStickY,
+                0.1,
+            )));
+        app.update();
+        let actions = app.world().resource::<GameActions>();
+        assert_eq!(
+            actions.value("Move").y,
+            0.0,
+            "0.1 stays inside the 0.15 deadzone"
+        );
+
+        // A button press jumps.
+        app.world_mut()
+            .write_message(RawGamepadEvent::Button(RawGamepadButtonChangedEvent::new(
+                pad,
+                GamepadButton::South,
+                1.0,
+            )));
+        app.update();
+        let actions = app.world().resource::<GameActions>();
+        assert!(
+            actions.just_pressed("Jump"),
+            "South on the pad jumps the same frame"
+        );
     }
 }

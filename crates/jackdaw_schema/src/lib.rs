@@ -558,15 +558,31 @@ mod extract {
     pub fn extract_asset_types(registry: &TypeRegistry) -> Vec<TypeSchema> {
         let resolved: Vec<&str> = registry
             .iter()
-            .filter(|registration| registration.data::<ReflectAsset>().is_some())
+            .filter(|registration| {
+                registration.data::<ReflectAsset>().is_some()
+                    && asset_belongs_to_the_project(registration)
+            })
             .map(|registration| registration.type_info().type_path())
-            .filter(|path| is_project_crate(crate_segment(path)))
             .collect();
         let crates: HashSet<&str> = resolved.iter().map(|path| crate_segment(path)).collect();
         let root_paths: HashSet<&str> = resolved.iter().copied().collect();
         describe_types_reached_by(registry, resolved.iter().copied(), true, |path| {
             root_paths.contains(path) || crates.contains(crate_segment(path))
         })
+    }
+
+    /// Whether an asset type the game registers belongs in its New Asset
+    /// list. A project crate answers yes; the `jackdaw_runtime` crate the
+    /// game links answers for its config-asset family only — an `Asset`
+    /// that is also a `Resource` (the `ConfigPlugin` family, e.g.
+    /// `GameInputConfig`) is authored as a file by design, while an Asset
+    /// without the resource mark (`JackdawScene`, the scene file format)
+    /// is machinery the editor drives itself.
+    fn asset_belongs_to_the_project(registration: &TypeRegistration) -> bool {
+        let path = registration.type_info().type_path();
+        let segment = crate_segment(path);
+        is_project_crate(segment)
+            || (segment == "jackdaw_runtime" && registration.data::<ReflectResource>().is_some())
     }
 
     /// The part of a reflect type path before its first `::`.
