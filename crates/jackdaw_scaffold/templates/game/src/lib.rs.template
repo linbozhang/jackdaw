@@ -73,8 +73,10 @@
 //!   `exits()` for "left the area". The plugin wires the
 //!   `CollisionEventsEnabled` prerequisite avian asks for — author
 //!   the `Sensor`, nothing else. `collect_pickups` below is the
-//!   whole pattern: walk into a pickup, it despawns and the count
-//!   goes up; collect all three and the level clears.
+//!   whole pattern: the player walks into a pickup, it despawns and
+//!   the count goes up — only the player's touch counts, so a cube
+//!   settling onto a pickup leaves it alone; collect all three and
+//!   the level clears.
 //! * **Collision layers**: a `CollisionLayers` component (fields
 //!   `memberships` and `filters`, one bit per layer) decides who
 //!   interacts with whom — a contact only exists when each side's

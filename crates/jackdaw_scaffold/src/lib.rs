@@ -2118,23 +2118,39 @@ fn add_module_crates(
 /// bevy type in the game is the type this editor was built with.
 fn add_bevy_fork_patch(doc: &mut DocumentMut, fork: &str) {
     let fork = fork.replace('\\', "/");
-    for name in [
-        "bevy",
-        "bevy_curve",
-        "bevy_math",
-        "bevy_reflect",
-        "bevy_shape",
-    ] {
-        let path = if name == "bevy" {
-            fork.clone()
-        } else {
-            format!("{fork}/crates/{name}")
-        };
+    for name in BEVY_FORK_CRATES {
+        let path = fork_crate_path(&fork, name);
         path_patch_section(doc, "crates-io")
             .insert(name, toml_edit::Item::Table(path_table(&path)));
     }
     let git = jackdaw_project_build::bevy_source::BEVY_GIT;
-    path_patch_section(doc, git).insert("bevy", toml_edit::Item::Table(path_table(&fork)));
+    for name in BEVY_FORK_CRATES {
+        let path = fork_crate_path(&fork, name);
+        path_patch_section(doc, git).insert(name, toml_edit::Item::Table(path_table(&path)));
+    }
+}
+
+/// The packages the bevy fork patches, in every `[patch]` section a
+/// game carries: the umbrella `bevy` and the crates that ride the
+/// same fork. Both the registry source (avian's bevy) and the git
+/// source (the template's own bevy declaration) must be covered —
+/// a git-source subcrate left unpatched floats to the remote branch
+/// head on every resolve, past the commit the lockfile holds.
+const BEVY_FORK_CRATES: [&str; 5] = [
+    "bevy",
+    "bevy_curve",
+    "bevy_math",
+    "bevy_reflect",
+    "bevy_shape",
+];
+
+/// Where crate `name` lives inside the bevy fork at `fork`.
+fn fork_crate_path(fork: &str, name: &str) -> String {
+    if name == "bevy" {
+        fork.to_string()
+    } else {
+        format!("{fork}/crates/{name}")
+    }
 }
 
 /// The `[patch.<section>]` table of `doc`, appended as a standard table
@@ -2710,23 +2726,16 @@ fn module_patch_lines(modules: &ModuleSet) -> String {
          # both. Remade by this jackdaw's scripts/make-bevy-fork.ps1.\n",
     );
     out.push_str("[patch.crates-io]\n");
-    for name in [
-        "bevy",
-        "bevy_curve",
-        "bevy_math",
-        "bevy_reflect",
-        "bevy_shape",
-    ] {
-        let path = if name == "bevy" {
-            fork.clone()
-        } else {
-            format!("{fork}/crates/{name}")
-        };
+    for name in BEVY_FORK_CRATES {
+        let path = fork_crate_path(&fork, name);
         out.push_str(&format!("{name} = {{ path = \"{path}\" }}\n"));
     }
     let git = jackdaw_project_build::bevy_source::BEVY_GIT;
     out.push_str(&format!("[patch.\"{git}\"]\n"));
-    out.push_str(&format!("bevy = {{ path = \"{fork}\" }}\n"));
+    for name in BEVY_FORK_CRATES {
+        let path = fork_crate_path(&fork, name);
+        out.push_str(&format!("{name} = {{ path = \"{path}\" }}\n"));
+    }
     out
 }
 
@@ -2890,28 +2899,35 @@ fn spawn_pickups(
     }
 }
 
-/// The pickup pattern itself: every contact that just started
-/// against a `Pickup` takes the pickup away and counts it, and the
-/// third one clears the level. Swap `Pickup` for your own marker and
-/// this is a coin, a key, a landmine — whatever a walk-over should
-/// do.
+/// The pickup pattern itself: when the *player* starts touching a
+/// `Pickup`, the pickup goes away and the count goes up; the third
+/// one clears the level. The other side of the contact is checked
+/// on purpose — a prop merely settling onto a pickup (the falling
+/// cube landing on one) must not collect it. Swap `Pickup` for your
+/// own marker and this is a coin, a key, a landmine — whatever a
+/// walk-over should do.
 fn collect_pickups(
     triggers: Res<TriggerEvents>,
     pickups: Query<(), With<Pickup>>,
     mut players: Query<&mut PickupCount, With<PlayerMarker>>,
     mut commands: Commands,
 ) {
+    let mut collected = 0u32;
+    for contact in triggers.enters() {
+        if pickups.contains(contact.trigger) && players.contains(contact.other) {
+            commands.entity(contact.trigger).despawn();
+            collected += 1;
+        }
+    }
+    if collected == 0 {
+        return;
+    }
     let Ok(mut count) = players.single_mut() else {
         return;
     };
-    for contact in triggers.enters() {
-        if pickups.contains(contact.trigger) {
-            commands.entity(contact.trigger).despawn();
-            count.0 += 1;
-            if count.0 >= 3 {
-                info!("Level clear! All {} pickups collected.", count.0);
-            }
-        }
+    count.0 += collected;
+    if count.0 >= 3 {
+        info!("Level clear! All {} pickups collected.", count.0);
     }
 }
 
@@ -3340,6 +3356,7 @@ mod tests {
             "triggers.enters()",
             "struct Pickup",
             "PickupCount",
+            "players.contains(contact.other)",
             "Level clear",
             "CollisionLayers",
             "memberships 0b100",
@@ -3389,6 +3406,41 @@ mod tests {
             plain_lib.contains("transform.translation.y += config.gravity * dt;"),
             "the manual fall stands in without physics"
         );
+    }
+
+    /// Both `[patch]` sections a physics game carries must cover every
+    /// fork crate: a git-source subcrate left unpatched floats to the
+    /// remote branch head at resolve time — past the commit the lockfile
+    /// holds — and the project's first `--locked` build refuses (T10-T3:
+    /// the scaffolded game's build failed on exactly that).
+    #[test]
+    fn a_physics_game_patches_every_fork_crate_on_both_sources() {
+        let dest = temp_dir("newgame-patches").join("my-game");
+        scaffold_new_project(&dest, "my-game", TemplateKind::Game).unwrap();
+        let manifest = std::fs::read_to_string(dest.join("Cargo.toml")).unwrap();
+        for section in [
+            "[patch.crates-io]",
+            "[patch.\"https://github.com/bevyengine/bevy\"]",
+        ] {
+            let body = manifest
+                .split_once(section)
+                // The section runs to the next `[` header, or to the end of
+                // the file for its last section.
+                .map(|(_, rest)| rest.split_once('[').map_or(rest, |(body, _)| body))
+                .unwrap_or_else(|| panic!("`{section}` is missing from:\n{manifest}"));
+            for name in [
+                "bevy",
+                "bevy_curve",
+                "bevy_math",
+                "bevy_reflect",
+                "bevy_shape",
+            ] {
+                assert!(
+                    body.contains(&format!("{name} = {{ path =")),
+                    "`{section}` must patch `{name}`; got:{body}"
+                );
+            }
+        }
     }
 
     #[test]

@@ -66,6 +66,12 @@ pub struct PhysicsEditorPlugin;
 
 impl Plugin for PhysicsEditorPlugin {
     fn build(&self, app: &mut App) {
+        // The reflected avian types (RigidBody, Sensor, CollisionLayers, ...)
+        // must be registered in the editor's own registry or the inspector's
+        // Add Component and the BRP field paths refuse them: the components
+        // exist on entities (the bridge inserts them), but nothing can be
+        // authored onto one without the registration (T10-T3 matrix, grid 8/7).
+        jackdaw_avian_integration::register_avian_types(app);
         if !app.is_plugin_added::<PhysicsSchedulePlugin>() {
             app.add_plugins(PhysicsPlugins::default());
         }

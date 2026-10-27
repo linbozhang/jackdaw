@@ -6,7 +6,7 @@
 
 use std::path::{Path, PathBuf};
 
-use jackdaw::scaffold::{TemplateKind, scaffold_new_project};
+use jackdaw::scaffold::{TemplateKind, check_new_project, scaffold_new_project};
 use jackdaw_project_build::{BuildEvent, build_project_binary, shim_spec_for_project};
 
 #[test]
@@ -18,6 +18,15 @@ fn scaffold_game_builds_and_exposes_component() {
     std::fs::create_dir_all(&work).expect("a scratch dir for the scaffolded project");
 
     scaffold_new_project(&dest, "mygame", TemplateKind::Game).expect("scaffold a game project");
+    // The product's new-project flow resolves the fresh project before
+    // anything builds it: this is the step that turns the workspace lock
+    // snapshot into the project's own complete lockfile. A `--locked` build
+    // without it fails on the snapshot's missing entries.
+    let warnings = check_new_project(&dest);
+    assert!(
+        warnings.is_empty(),
+        "the new-project flow resolves a fresh project: {warnings:?}"
+    );
     reuse_dependency_build(&dest, &dependency_cache(&key));
 
     let spec = shim_spec_for_project(&dest).expect("scaffolded project is a jackdaw project");
