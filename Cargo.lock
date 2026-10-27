@@ -852,7 +852,7 @@ dependencies = [
  "bevy_reflect",
  "bytemuck",
  "derive_more",
- "encase",
+ "encase 0.13.0",
  "serde",
  "thiserror 2.0.21",
  "wgpu-types",
@@ -1029,7 +1029,7 @@ name = "bevy_encase_derive"
 version = "0.20.0"
 dependencies = [
  "bevy_macro_utils",
- "encase_derive_impl",
+ "encase_derive_impl 0.13.0",
 ]
 
 [[package]]
@@ -1397,7 +1397,7 @@ dependencies = [
  "bevy_reflect",
  "bevy_shader",
  "bevy_utils",
- "encase",
+ "encase 0.13.0",
  "smallvec",
  "thiserror 2.0.21",
  "tracing",
@@ -1446,7 +1446,7 @@ dependencies = [
  "bitflags 2.13.2",
  "bytemuck",
  "derive_more",
- "encase",
+ "encase 0.13.0",
  "glam 0.33.12",
  "half",
  "hexasphere",
@@ -1681,7 +1681,7 @@ dependencies = [
  "bytemuck",
  "derive_more",
  "downcast-rs 2.0.2",
- "encase",
+ "encase 0.13.0",
  "glam 0.33.12",
  "image",
  "indexmap",
@@ -3103,13 +3103,33 @@ dependencies = [
 
 [[package]]
 name = "encase"
+version = "0.12.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "b1acbc46b960480c4959213714511e22f9a2e0d361520693bcf5057b5924f53e"
+dependencies = [
+ "const_panic",
+ "encase_derive 0.12.1",
+ "thiserror 2.0.21",
+]
+
+[[package]]
+name = "encase"
 version = "0.13.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "fdf6312703f02e0625e1750eadf556054b6da5e44960a3a771e9127cb357dbd8"
 dependencies = [
  "const_panic",
- "encase_derive",
+ "encase_derive 0.13.0",
  "thiserror 2.0.21",
+]
+
+[[package]]
+name = "encase_derive"
+version = "0.12.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "1e30d38c47336a0afbdfde297b442944041cf6dccbb1a79eceea16abfb27a92a"
+dependencies = [
+ "encase_derive_impl 0.12.1",
 ]
 
 [[package]]
@@ -3118,7 +3138,18 @@ version = "0.13.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8429e24f02acf09b0fb3c4560c329a1a79fab14bbb9c2d632c073d0a61b0816a"
 dependencies = [
- "encase_derive_impl",
+ "encase_derive_impl 0.13.0",
+]
+
+[[package]]
+name = "encase_derive_impl"
+version = "0.12.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "495d24abe406f090f2ba8fc362ecaa8a001e192522aa75eae7b144163c3235ff"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn 2.0.119",
 ]
 
 [[package]]
@@ -3676,7 +3707,8 @@ checksum = "37bfe73dc8ec21f54d181e5a60554327ec3f1c600c455a75ccbfc65d2106a6c4"
 dependencies = [
  "approx",
  "bytemuck",
- "encase",
+ "encase 0.12.1",
+ "encase 0.13.0",
  "libm",
  "rand 0.10.3",
  "serde_core",
@@ -3852,6 +3884,8 @@ dependencies = [
  "allocator-api2",
  "equivalent",
  "foldhash 0.2.0",
+ "serde",
+ "serde_core",
 ]
 
 [[package]]
@@ -4957,11 +4991,18 @@ dependencies = [
 name = "jackdaw_sdk"
 version = "0.21.0-dev"
 dependencies = [
+ "approx",
  "bevy",
  "bevy_curve",
  "bevy_math",
  "bevy_shape",
+ "crossbeam-utils",
+ "disqualified",
+ "downcast-rs 2.0.2",
+ "glam 0.33.12",
+ "hashbrown 0.16.1",
  "jackdaw_api",
+ "jackdaw_geometry",
  "jackdaw_runtime",
  "rand 0.10.3",
  "rustix 1.1.6",

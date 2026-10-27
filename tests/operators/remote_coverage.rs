@@ -42,6 +42,12 @@ const POINTER_ONLY: &[(&str, Option<&str>, &str)] = &[
         "placing the mirror plane by dragging it; no parametric form yet",
     ),
     (
+        "physics.activate",
+        None,
+        "dragging a selected body to let it settle under gravity; a settle \
+         has no parametric form yet",
+    ),
+    (
         "hierarchy.rename_begin",
         Some("component.set"),
         "an inline text field; set the Name component instead",

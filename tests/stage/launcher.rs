@@ -447,20 +447,24 @@ fn the_new_project_page_creates_the_chosen_template_pinned_to_this_editor() {
         .modules
         .clone();
     assert!(modules.contains("navmesh"), "navmesh is on: {modules:?}");
-    let refused = app
+    let physics = app
         .world_mut()
         .operator("launcher.new_project_module")
         .param("id", "physics")
         .param("enabled", true)
         .call()
         .expect("the operator runs");
-    assert!(matches!(refused, OperatorResult::Cancelled));
+    assert_eq!(
+        physics,
+        OperatorResult::Finished,
+        "physics ships builtin with this editor, so the module turns on"
+    );
     assert!(
-        !app.world()
+        app.world()
             .resource::<jackdaw::launcher::NewProjectForm>()
             .modules
             .contains("physics"),
-        "physics is not compatible with this Bevy, so it stays off"
+        "physics is recorded as a module of the new project"
     );
     run(
         &mut app,
@@ -506,6 +510,10 @@ fn the_new_project_page_creates_the_chosen_template_pinned_to_this_editor() {
         "pinned to this editor: {manifest}"
     );
     assert!(manifest.contains("navmesh = true"), "{manifest}");
+    assert!(
+        manifest.contains("physics = true"),
+        "the physics module the page turned on ships with the game: {manifest}"
+    );
     assert!(
         !project.join(".git").exists(),
         "no repository was asked for"
@@ -593,8 +601,8 @@ fn the_extensions_page_lists_optional_extensions_and_applies_module_changes() {
             .keys()
             .map(jackdaw::launcher::ExtensionItem::id)
             .collect::<Vec<_>>(),
-        ["navmesh"],
-        "a missing extension and an incompatible module cannot be toggled; the module change waits"
+        ["navmesh", "physics"],
+        "a missing extension cannot be toggled; both module changes wait"
     );
     let untouched = std::fs::read_to_string(&manifest_path).unwrap();
     assert!(
@@ -604,13 +612,16 @@ fn the_extensions_page_lists_optional_extensions_and_applies_module_changes() {
 
     run(&mut app, "launcher.extensions_apply", &[]);
     let manifest = jackdaw_project_build::project_manifest::ProjectManifest::read(&project);
-    assert_eq!(
-        manifest
-            .modules
-            .as_ref()
-            .and_then(|table| table.get("navmesh")),
-        Some(&true)
-    );
+    for module in ["navmesh", "physics"] {
+        assert_eq!(
+            manifest
+                .modules
+                .as_ref()
+                .and_then(|table| table.get(module)),
+            Some(&true),
+            "{module} is applied"
+        );
+    }
     assert!(
         app.world()
             .resource::<jackdaw::launcher::ExtensionsView>()
