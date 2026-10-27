@@ -2972,6 +2972,34 @@ mod tests {
         }
     }
 
+    /// The game template teaches the input-action pattern the same way:
+    /// the action table asset, the evaluation plugin, and a consumer
+    /// reading named actions — plus the capture model note, without
+    /// which a game binding Escape reads as eaten by the editor.
+    #[test]
+    fn new_game_project_teaches_the_input_action_pattern() {
+        let dest = temp_dir("newgame-input").join("my-game");
+        scaffold_new_project(&dest, "my-game", TemplateKind::Game).unwrap();
+        let lib = std::fs::read_to_string(dest.join("src/lib.rs")).unwrap();
+        for needle in [
+            "init_asset::<GameInputConfig>()",
+            "register_asset_reflect::<GameInputConfig>()",
+            "InputActionsPlugin",
+            "input-actions.bsn",
+            "GameActions",
+            "struct PlayerMarker",
+            "actions.value(\"Move\")",
+            "just_pressed(\"Jump\")",
+            "Shift+Esc",
+            "Input actions",
+        ] {
+            assert!(
+                lib.contains(needle),
+                "the template must teach `{needle}`; the input pattern drifted"
+            );
+        }
+    }
+
     #[test]
     fn import_adds_the_runtime_alongside_its_own_files() {
         let root = temp_dir("import");

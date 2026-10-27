@@ -85,8 +85,14 @@ pub(crate) fn disable_keyboard_input_when_typing(
     // Suppress action keybinds while the keyboard is spoken for, a numeric
     // transform entry is capturing the keyboard, or Live input capture is
     // forwarding to the game, so typed digits go to the entry and game
-    // input does not fire edit-mode and tool keybinds.
-    sources.keyboard = !focus.keyboard_is_spoken_for() && numeric.axis.is_none() && !capture.active;
+    // input does not fire edit-mode and tool keybinds. The mouse rides
+    // the same gate: while the game owns the pointer, the editor's own
+    // mouse action bindings stand down too — UI picking reads the event
+    // stream, not InputSources, so clicking the Stop button still works.
+    let keyboard_free =
+        !focus.keyboard_is_spoken_for() && numeric.axis.is_none() && !capture.active;
+    sources.keyboard = keyboard_free;
+    sources.mouse = !capture.active;
 }
 
 #[cfg(test)]
@@ -112,6 +118,10 @@ mod tests {
             !app.world().resource::<InputSources>().keyboard,
             "capture active suppresses action keybinds"
         );
+        assert!(
+            !app.world().resource::<InputSources>().mouse,
+            "capture active suppresses the mouse dimension too (I3): the game owns the pointer"
+        );
         app.world_mut()
             .resource_mut::<crate::live_input::LiveInputCapture>()
             .active = false;
@@ -119,5 +129,34 @@ mod tests {
             .run_system_cached(disable_keyboard_input_when_typing)
             .unwrap();
         assert!(app.world().resource::<InputSources>().keyboard);
+        assert!(
+            app.world().resource::<InputSources>().mouse,
+            "released capture frees both dimensions"
+        );
+    }
+
+    /// A chord recording speaking for the keyboard suppresses only the
+    /// keyboard: the mouse stays free, because the capture is not
+    /// holding it (this is the distinction the two-dimension gate
+    /// exists to keep).
+    #[test]
+    fn keyboard_spoken_for_leaves_the_mouse_free() {
+        use bevy::input_focus::InputFocus;
+        use jackdaw_commands::KeymapCapture;
+        use jackdaw_input::InputSources;
+        let mut app = bevy::app::App::new();
+        app.init_resource::<InputFocus>();
+        app.init_resource::<crate::numeric_transform::NumericTransformState>();
+        app.init_resource::<InputSources>();
+        app.init_resource::<crate::live_input::LiveInputCapture>();
+        app.insert_resource(KeymapCapture { recording: true });
+        app.world_mut()
+            .run_system_cached(disable_keyboard_input_when_typing)
+            .unwrap();
+        assert!(!app.world().resource::<InputSources>().keyboard);
+        assert!(
+            app.world().resource::<InputSources>().mouse,
+            "a keyboard-only capture does not own the pointer"
+        );
     }
 }
