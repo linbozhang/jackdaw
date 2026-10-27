@@ -618,6 +618,58 @@ mod tests {
         assert!(actions.get("Pause").is_some(), "and Pause");
     }
 
+    /// Mouse buttons and plain keys drive the button actions they are
+    /// bound to, through the engine's event streams — the legs whose
+    /// live-matrix behavior has no visible surface in the PIE window
+    /// (a game's own log line does not reach any editor pane).
+    #[test]
+    fn mouse_buttons_and_plain_keys_drive_button_actions() {
+        // A rebinding that puts Jump on the left mouse button.
+        let mut rebound = app(Some(GameInputConfig {
+            actions: vec![GameActionDef {
+                name: "Jump".into(),
+                kind: GameActionKind::Button,
+                bindings: vec![GameInputBinding::MouseButton(MouseButton::Left)],
+            }],
+        }));
+        rebound
+            .world_mut()
+            .write_message(bevy::input::mouse::MouseButtonInput {
+                button: MouseButton::Left,
+                state: bevy::input::ButtonState::Pressed,
+                window: Entity::PLACEHOLDER,
+            });
+        rebound.update();
+        assert!(
+            rebound
+                .world()
+                .resource::<GameActions>()
+                .just_pressed("Jump"),
+            "the bound mouse button fires the button action"
+        );
+
+        // Interact on E and Pause on plain Esc, on the built-in table.
+        let mut defaults = app(None);
+        press_key(&mut defaults, KeyCode::KeyE);
+        defaults.update();
+        assert!(
+            defaults
+                .world()
+                .resource::<GameActions>()
+                .just_pressed("Interact"),
+            "E drives Interact on the defaults"
+        );
+        press_key(&mut defaults, KeyCode::Escape);
+        defaults.update();
+        assert!(
+            defaults
+                .world()
+                .resource::<GameActions>()
+                .just_pressed("Pause"),
+            "a plain Esc drives Pause on the defaults"
+        );
+    }
+
     /// Deadzones land in the engine's settings — a component on a
     /// connected gamepad — so the engine's own filter applies them. A
     /// spawned gamepad with settings is the test's device stand-in;
