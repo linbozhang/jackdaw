@@ -130,6 +130,14 @@ enum Mode {
     Running,
 }
 
+/// A unit-struct event: no fields, not even unnamed ones. Its `TypeInfo` is
+/// still a `Struct` (an empty one), so the action path should build and send
+/// it like any named-field event — pinned here because every other event in
+/// this file carries at least one field (U7 probe, T12-T1).
+#[derive(Event, Reflect, Clone, Default)]
+#[reflect(Event, Default)]
+struct StartPressed;
+
 #[derive(Resource, Default)]
 struct Casts(Vec<(Entity, u8)>);
 
@@ -139,6 +147,10 @@ struct Described(Vec<(String, bool)>);
 /// Anything dispatched by an event that should never have been built.
 #[derive(Resource, Default)]
 struct Stray(u32);
+
+/// How many times the unit-struct event arrived.
+#[derive(Resource, Default)]
+struct Started(u32);
 
 fn app() -> App {
     let mut app = App::new();
@@ -155,9 +167,11 @@ fn app() -> App {
     app.register_type::<Aimed>();
     app.register_type::<Fired>();
     app.register_type::<Mode>();
+    app.register_type::<StartPressed>();
     app.init_resource::<Casts>();
     app.init_resource::<Stray>();
     app.init_resource::<Described>();
+    app.init_resource::<Started>();
     app.add_observer(|_: On<Aimed>, mut stray: ResMut<Stray>| stray.0 += 1);
     app.add_observer(|d: On<Describe>, mut seen: ResMut<Described>| {
         seen.0.push((d.event().name.clone(), d.event().ready));
@@ -169,6 +183,7 @@ fn app() -> App {
     app.add_observer(|_: On<Fired>, mut stray: ResMut<Stray>| stray.0 += 1);
     app.add_observer(|_: On<Mode>, mut stray: ResMut<Stray>| stray.0 += 1);
     app.add_observer(|_: On<UnlistedField>, mut stray: ResMut<Stray>| stray.0 += 1);
+    app.add_observer(|_: On<StartPressed>, mut started: ResMut<Started>| started.0 += 1);
     app
 }
 
@@ -600,5 +615,35 @@ fn a_literal_naming_no_field_of_the_event_is_reported_before_the_first_click() {
             .resource::<BindFailures>()
             .0
             .contains(&(button, 0))
+    );
+}
+
+/// A unit-struct event (no fields at all) is still a named struct as far as
+/// reflection is concerned, so an action binding with nothing to map sends it
+/// as-is. Every other shape here carries fields; this pins the empty one.
+#[test]
+fn a_unit_struct_event_is_sent_by_a_fieldless_action() {
+    let mut app = app();
+    let subject = app.world_mut().spawn(AbilitySlot { index: 3 }).id();
+    let button = app
+        .world_mut()
+        .spawn((
+            Node::default(),
+            BindContext(subject),
+            Bindings(vec![Binding::Action {
+                event: "StartPressed".into(),
+                fields: vec![],
+                literals: Vec::new(),
+            }]),
+        ))
+        .id();
+    app.update();
+    app.world_mut().trigger(Activate { entity: button });
+    app.update();
+    assert_eq!(app.world().resource::<Started>().0, 1);
+    let failures = &app.world().resource::<BindFailures>().0;
+    assert!(
+        failures.is_empty(),
+        "a unit-struct event is not a binding failure: {failures:?}"
     );
 }

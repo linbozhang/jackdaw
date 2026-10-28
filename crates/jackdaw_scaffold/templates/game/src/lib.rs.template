@@ -86,7 +86,15 @@
 //!   filters 0b001` (hazard hits player only) and the player
 //!   `0b001, 0b111` (hits everything) — pickups and hazards never
 //!   interact with each other, so a drifting hazard cannot collect
-//!   the pickups for the player.
+//!   the pickups for the player. `spawn_hazards` below authors
+//!   exactly that hazard row; the template player needs nothing
+//!   (an entity without the component is on layer 1 with every
+//!   filter, which is the table's player row already).
+//!
+//! The triggers feed more than pickups: `collect_pickups` counts and
+//! `hazard_damage` burns health — same shape, different marker and
+//! different reaction, and both read the one `TriggerEvents` the
+//! bridge fills.
 //!
 //! Two gravities exist and they are different things:
 //! `GameConfig.gravity` (the config asset above) is the author's
@@ -131,6 +139,48 @@
 //!   module the player still walks, camera-relative and
 //!   frame-rate-independent, but does not jump or collide.
 {{module_physics_player_doc}}
+//!
+//! # Game UI
+//!
+//! `assets/hud.bsn` is a UI scene: the same kind of document as
+//! `scene.bsn`, authored on the editor's 2D canvas (`Add` menu, `UI`
+//! group — panels, labels, buttons, progress bars) with each widget's
+//! `Bindings` component wiring it to the game. The template spawns it
+//! as a second scene root (`spawn_hud` below), and the four screens
+//! inside — start, HUD, pause, game over — show and hide themselves:
+//!
+//! * **Screens follow state.** Each screen's `Visibility` is bound to
+//!   a `GameState` bool (`menu` / `paused` / `game_over`, the
+//!   resource below). Flipping the bool is the whole mechanism; the
+//!   hud's own screen is bound through the registered `not`, so it is
+//!   up whenever the menu is not.
+//! * **Buttons say which one was pressed.** Every button carries an
+//!   `Action` binding that sends `ScreenPressed` with `button` set to
+//!   `"start"`, `"resume"` or `"restart"`; the
+//!   `on_screen_pressed` observer turns those into real behavior —
+//!   leave the menu, unpause, put the run back the way it began.
+//!   The Pause *action* (Escape) lands on the same bool through
+//!   `handle_pause_action`, so the key and the button agree.
+//! * **The bar and the texts read the player.** The health bar's
+//!   `Progress.value` is bound to `PlayerHealth.current` and `.max`
+//!   through the registered `ratio` function, and the texts are
+//!   `Text` bindings on the same components. Bindings can only call
+//!   functions the game registers — that is what the
+//!   `register_function` lines below are for. `wire_hud` is the
+//!   other half: it puts a `BindContext(player)` on the document's
+//!   `HudRoot` once it spawns, which is what `PlayerHealth...`
+//!   resolves against.
+//!
+//! Edit `hud.bsn` in the editor, `Save`, and the running game picks
+//! it up like `scene.bsn`. Layout discipline for your own screens:
+//! percent and flex for anything position-like (the overlays stretch
+//! to 100% of the window, the HUD hugs the top-left corner), pixels
+//! only for sizes and padding — that is what keeps the four screens
+//! correct from 800x600 up to 2560x1440. One editor edge to know:
+//! Play with a UI scene tab focused swaps the 3D scene for that UI
+//! alone (it previews the canvas); play from the 3D scene tab to run
+//! the game.
+
 
 use bevy::prelude::*;
 use jackdaw_runtime::prelude::*;
@@ -142,7 +192,11 @@ pub struct GamePlugin;
 
 impl Plugin for GamePlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(Startup, spawn_scene)
+        // `spawn_hud` after `spawn_scene`: the main scene stays the
+        // first scene root (the one the editor's Play replaces with
+        // the scene it has in front), the hud rides along in every
+        // mode.
+        app.add_systems(Startup, (spawn_scene, spawn_hud))
             .add_systems(Update, spin_cubes)
             // One line per config type: register it as an asset (so the
             // editor offers it in New Asset) and load `game-config.bsn`
@@ -165,7 +219,32 @@ impl Plugin for GamePlugin {
             .add_systems(Update, (move_player, look_into_camera))
             // The camera rig driver: activates the rig under the player
             // and follows it every frame (see "Player controller" above).
-            .add_plugins(JackdawCameraRigPlugin);
+            .add_plugins(JackdawCameraRigPlugin)
+            // Game UI (see "Game UI" above): the state the four screens
+            // bind to, the functions their bindings call, the observer
+            // their buttons feed, and the systems that move the state.
+            // Types (`GameState`, `PlayerHealth`, `ScreenPressed`) need
+            // no registration — the `Reflect` derives announce them the
+            // same way they reach the editor's Add Component list; the
+            // via functions are the one binding piece a game registers
+            // by hand.
+            .init_resource::<GameState>()
+            .register_function(ratio)
+            .register_function(is_zero)
+            .register_function(not)
+            .add_observer(on_screen_pressed)
+            .add_systems(
+                Update,
+                (
+                    wire_hud,
+                    handle_pause_action,
+                    apply_health_from_config,
+                    update_game_over,
+                ),
+            )
+            // The pause flip owns the frame: a Pause press never also
+            // moves the player, whichever way the bool lands.
+            .add_systems(Update, handle_pause_action.before(move_player));
 {{module_physics_statements}}
     }
 }
@@ -202,12 +281,15 @@ fn spin_cubes(time: Res<Time>, mut cubes: Query<(&SpinningCube, &mut Transform)>
 /// `game-config.bsn` files of it) and a `Resource` (systems read it),
 /// so the value can be edited in the editor, saved to disk, and loaded
 /// back as the starting value in every run — see "Tuning parameters"
-/// above. `player_health` has no system yet; a HUD or player module
-/// reads it when you write one.
+/// above. `player_health` is the run's starting health:
+/// `apply_health_from_config` hands it to the player's `PlayerHealth`
+/// component when the file loads — the config is the author's intent,
+/// the component is the live state after that.
 #[derive(Asset, Resource, Reflect, Clone)]
 #[reflect(Resource, Default, @EditorCategory::new("Game Config"))]
 pub struct GameConfig {
-    /// A player system's starting health (yours to consume).
+    /// The health a run starts at, handed to the player's
+    /// `PlayerHealth` (see "Game UI" above).
     pub player_health: f32,
     /// Multiplies how fast things move and spin.
     pub move_speed: f32,
@@ -312,17 +394,20 @@ fn spawn_player(
     mut materials: ResMut<Assets<StandardMaterial>>,
 ) {
     // The visible body. The capsule matches the collider below, so what
-    // you see is what collides.
+    // you see is what collides. `PlayerHealth` is what the hud reads:
+    // it starts at the `Default` and `apply_health_from_config` (below)
+    // hands the config's `player_health` over as soon as it loads.
     let player = commands
         .spawn((
             PlayerMarker,
             PlayerController::default(),
+            PlayerHealth::default(),
             Mesh3d(meshes.add(Capsule3d::new(0.35, 1.0))),
             MeshMaterial3d(materials.add(StandardMaterial {
                 base_color: Color::srgb(0.25, 0.55, 0.9),
                 ..default()
             })),
-            Transform::from_xyz(-2.0, 1.0, 0.0),
+            Transform::from_translation(PLAYER_SPAWN),
 {{module_physics_player_body}}
         ))
         .id();
@@ -402,6 +487,197 @@ fn look_into_camera(
                 (camera.pitch - look.y * rig.sensitivity).clamp(-1.4, 1.4)
             }
         };
+    }
+}
+
+// ---- Game UI: the four screens in assets/hud.bsn --------------------
+// The state the screens bind to, the event their buttons send, and the
+// handful of systems that move both. The screens themselves are data —
+// open `hud.bsn` in the editor to move, restyle or rewire them.
+
+/// Which screen is up. The hud's bindings read this resource: each
+/// screen's `Visibility` is bound to one of the bools, so flipping a
+/// bool here is the whole show/hide mechanism. A run starts on the
+/// menu.
+#[derive(Resource, Reflect)]
+#[reflect(Resource, Default)]
+pub struct GameState {
+    pub menu: bool,
+    pub paused: bool,
+    pub game_over: bool,
+}
+
+impl Default for GameState {
+    fn default() -> Self {
+        Self {
+            menu: true,
+            paused: false,
+            game_over: false,
+        }
+    }
+}
+
+/// What a hud button says. The button's `Action` binding in `hud.bsn`
+/// sends this with `button` filled from its literal (`"start"`,
+/// `"resume"`, `"restart"`) — one event for every screen's buttons:
+/// the payload, not the type, says what was pressed.
+#[derive(Event, Reflect, Clone, Default)]
+#[reflect(Event, Default)]
+pub struct ScreenPressed {
+    pub button: String,
+}
+
+/// The health the hud reads, live on the player. The component is the
+/// run's state; `GameConfig.player_health` is the author's starting
+/// number for it — `apply_health_from_config` below hands one to the
+/// other. Same split as the falling cube's `speed` (component, live)
+/// against the config's `move_speed` (asset, author intent).
+#[derive(Component, Reflect, Default)]
+#[reflect(Component, Default, @EditorCategory::new("Actor"))]
+pub struct PlayerHealth {
+    pub current: f32,
+    pub max: f32,
+}
+
+/// How much one hit takes off, wherever it comes from (the hazard
+/// sensors with the physics module, the Interact key without).
+const PLAYER_DAMAGE: f32 = 15.0;
+
+/// Where a run begins — spawn and restart both use it, so a restart
+/// lands exactly where the game started.
+const PLAYER_SPAWN: Vec3 = Vec3::new(-2.0, 1.0, 0.0);
+
+/// current/max -> 0..1 for the health bar's fill. Registered in
+/// `GamePlugin` above: a binding's `via` can only call functions the
+/// game has registered, and this one turns two component fields into
+/// the one number a bar wants.
+fn ratio(current: f32, max: f32) -> f32 {
+    (current / max).clamp(0.0, 1.0)
+}
+
+/// Boolean not, for bindings that show a thing while a flag is false
+/// (the hud hides itself while the menu is up). Registered like
+/// `ratio`.
+fn not(value: bool) -> bool {
+    !value
+}
+
+/// Zero means the run is over — registered like `ratio` (the
+/// `is_zero`-bound veil in `hud_scenario` is the pattern; this game
+/// drives its game-over screen off `GameState` instead and keeps the
+/// function here as the other half of the pair your own bindings
+/// reach for).
+fn is_zero(value: f32) -> bool {
+    value == 0.0
+}
+
+/// The game UI, spawned after the main scene: the document carries a
+/// `HudRoot` marker (authored on its root entity in `hud.bsn`), and
+/// `wire_hud` finds it by that marker.
+fn spawn_hud(mut commands: Commands, asset_server: Res<AssetServer>) {
+    commands.spawn(JackdawSceneRoot(asset_server.load("hud.bsn")));
+}
+
+/// The marker the hud document itself carries, so the game can tell
+/// the UI root from everything else it spawns. The `Default` here is
+/// load-bearing: the document's bare `HudRoot` line applies through
+/// `ReflectDefault`.
+#[derive(Component, Reflect, Default)]
+#[reflect(Component, Default)]
+pub struct HudRoot;
+
+/// Point the hud at the player: once the document spawns, its root
+/// gets a `BindContext(player)` and every binding inside resolves the
+/// player's components (the health below, the pickup counter the
+/// physics module adds) against that entity. This insert is the whole
+/// wiring — nothing else needs to know the UI exists.
+fn wire_hud(
+    mut commands: Commands,
+    hud_roots: Query<Entity, Added<HudRoot>>,
+    players: Query<Entity, With<PlayerMarker>>,
+) {
+    let (Ok(root), Ok(player)) = (hud_roots.single(), players.single()) else {
+        return;
+    };
+    commands.entity(root).insert(BindContext(player));
+}
+
+/// What the hud's buttons do. The bindings send `ScreenPressed`; this
+/// observer is the whole behavior — Start leaves the menu, Resume
+/// unpauses, Restart puts the run back the way it began (full health,
+/// spawn point, screens cleared; the physics module adds its own
+/// restart half for pickups and velocity).
+fn on_screen_pressed(
+    press: On<ScreenPressed>,
+    mut state: ResMut<GameState>,
+    mut players: Query<(&mut PlayerHealth, &mut Transform), With<PlayerMarker>>,
+) {
+    match press.event().button.as_str() {
+        "start" => state.menu = false,
+        "resume" => state.paused = false,
+        "restart" => {
+            state.menu = false;
+            state.paused = false;
+            state.game_over = false;
+            for (mut health, mut transform) in &mut players {
+                health.current = health.max;
+                *transform = Transform::from_translation(PLAYER_SPAWN);
+            }
+        }
+        _ => {}
+    }
+}
+
+/// The Pause action stops being a log line: Escape (or Start) flips
+/// `paused` and the pause screen's visibility follows. The Resume
+/// button lands on the same bool through `on_screen_pressed` — one
+/// piece of state, two doors in.
+fn handle_pause_action(actions: Res<GameActions>, mut state: ResMut<GameState>) {
+    if actions.just_pressed("Pause") && !state.menu && !state.game_over {
+        state.paused = !state.paused;
+    }
+}
+
+/// The config hands its `player_health` to the component the run
+/// actually reads: the config is the author's starting number, the
+/// component is live state (damage moves it; the config does not
+/// follow back). Runs on config change, so the file's first load and
+/// an editor mid-run edit both carry — the same shape as gravity.
+fn apply_health_from_config(
+    config: Res<GameConfig>,
+    mut players: Query<&mut PlayerHealth, With<PlayerMarker>>,
+) {
+    if !config.is_changed() {
+        return;
+    }
+    for mut health in &mut players {
+        health.max = config.player_health;
+        health.current = config.player_health;
+    }
+}
+
+/// Damage lands here (the hazard sensors below, or the Interact key
+/// when a game has no physics module). Clamped at zero; the game-over
+/// check is what reacts.
+fn take_damage(health: &mut PlayerHealth, amount: f32) {
+    health.current = (health.current - amount).max(0.0);
+}
+
+/// Blood out means game over: the screen's visibility follows
+/// `GameState.game_over`, `move_player` stands down, and Restart —
+/// button or key — brings the run back.
+fn update_game_over(
+    mut state: ResMut<GameState>,
+    mut players: Query<&mut PlayerHealth, With<PlayerMarker>>,
+) {
+    if state.game_over {
+        return;
+    }
+    for health in &mut players {
+        if health.current <= 0.0 {
+            state.game_over = true;
+            state.paused = false;
+        }
     }
 }
 {{module_physics_player_move}}

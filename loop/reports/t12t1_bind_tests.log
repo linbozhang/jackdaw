@@ -1,0 +1,150 @@
+   Compiling jackdaw_bind v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_bind)
+    Finished `test` profile [optimized + debuginfo] target(s) in 15.31s
+     Running unittests src/lib.rs (target/debug/deps/jackdaw_bind-33f7ed258e4346af)
+
+running 24 tests
+test evaluate::tests::renders_bools_and_strings ... ok
+test resolve::tests::a_context_at_the_edge_of_the_walk_still_resolves ... ok
+test resolve::tests::a_context_past_the_edge_of_the_walk_does_not ... ok
+test evaluate::tests::more_placeholders_than_args_is_an_error ... ok
+test actions::tests::an_enum_event_is_refused_when_the_binding_is_resolved ... ok
+test error::tests::display_text_is_pinned ... ok
+test actions::tests::a_tuple_struct_event_is_refused_when_the_binding_is_resolved ... ok
+test evaluate::tests::renders_whole_floats_without_a_fraction ... ok
+test resolve::tests::a_short_type_path_two_types_share_reads_as_ambiguous ... ok
+test resolve::tests::an_unregistered_type_still_reads_as_unknown ... ok
+test resolve::tests::context_walks_up_hierarchy ... ok
+test resolve::tests::despawned_context_entity_is_an_error_not_a_panic ... ok
+test resolve::tests::missing_component_is_an_error_not_a_panic ... ok
+test resolve::tests::missing_context_is_an_error_not_a_panic ... ok
+test resolve::tests::missing_type_registry_is_an_error_not_a_panic ... ok
+test resolve::tests::reads_component_field_by_short_path ... ok
+test resolve::tests::reads_resource_field_without_context ... ok
+test types::tests::a_path_that_does_name_a_field_is_not_a_marker ... ok
+test types::tests::a_path_with_no_field_names_a_whole_component ... ok
+test types::tests::garbage_is_an_error ... ok
+test types::tests::nested_field_paths_survive ... ok
+test types::tests::parses_component_path_with_full_type_path ... ok
+test types::tests::parses_resource_path ... ok
+test types::tests::parses_short_component_path ... ok
+
+test result: ok. 24 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/action_bindings.rs (target/debug/deps/action_bindings-a098d61568d19ab5)
+
+running 21 tests
+test a_nan_is_refused_rather_than_sent_as_zero ... ok
+test a_unit_struct_event_is_sent_by_a_fieldless_action ... ok
+test a_number_too_big_for_the_field_is_refused_not_wrapped ... ok
+test a_tuple_struct_event_is_refused_instead_of_panicking ... ok
+test activate_triggers_mapped_game_event ... ok
+test a_literal_naming_no_field_of_the_event_is_reported_before_the_first_click ... ok
+test a_bound_field_wins_over_a_literal_naming_the_same_field ... ok
+test a_literal_that_cannot_coerce_is_refused_with_one_warning ... ok
+test an_event_with_no_named_fields_is_reported_before_the_first_click ... ok
+test an_action_with_a_resolved_context_still_sends ... ok
+test an_enum_event_is_refused_instead_of_panicking ... ok
+test activate_without_action_bindings_dispatches_nothing ... ok
+test an_action_sends_the_constant_its_binding_carries ... ok
+test an_action_with_no_resolved_context_sends_nothing ... ok
+test field_not_declared_on_the_event_is_an_error ... ok
+test an_entity_target_the_registry_cannot_see_is_refused_not_defaulted ... ok
+test field_of_an_unlisted_type_is_an_error_not_a_silent_default ... ok
+test unknown_event_type_warns_instead_of_panicking ... ok
+test string_mapped_onto_a_numeric_field_warns_instead_of_panicking ... ok
+test unfillable_event_warns_instead_of_panicking ... ok
+test string_and_bool_fields_dispatch_when_the_types_line_up ... ok
+
+test result: ok. 21 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.07s
+
+     Running tests/field_bindings.rs (target/debug/deps/field_bindings-f4d36e3a5fbb785f)
+
+running 15 tests
+test broken_path_warns_once_and_does_not_panic ... ok
+test a_binding_that_reads_what_it_writes_is_refused ... ok
+test a_refused_nan_cannot_churn_change_ticks ... ok
+test borrowed_return_is_an_error_not_a_panic ... ok
+test ambiguous_short_function_name_is_an_error ... ok
+test a_non_finite_number_is_refused_by_every_float_target ... ok
+test a_binding_that_starts_working_leaves_the_failure_ledger ... ok
+test field_binding_writes_percent_width ... ok
+test immutable_component_write_is_an_error_not_a_panic ... ok
+test unspawned_immutable_component_write_is_an_error_not_a_panic ... ok
+test text_binding_formats_values ... ok
+test reading_a_neighbouring_field_of_the_written_component_is_fine ... ok
+test several_reads_without_via_is_an_error_not_a_silent_last_read ... ok
+test visible_binding_toggles_visibility ... ok
+test re_evaluating_an_unchanged_source_leaves_the_target_clean ... ok
+
+test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s
+
+     Running tests/hud_scenario.rs (target/debug/deps/hud_scenario-4acfce4d20ae9c28)
+
+running 2 tests
+test plugin_registers_the_binding_types ... ok
+test hud_binds_fill_text_veil_and_button ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.07s
+
+     Running tests/layout_ordering.rs (target/debug/deps/layout_ordering-ebee641210410597)
+
+running 1 test
+test a_binding_written_in_a_frame_is_laid_out_in_the_same_frame ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s
+
+     Running tests/marker_bindings.rs (target/debug/deps/marker_bindings-a1a7d181e7b63fc5)
+
+running 9 tests
+test a_component_with_fields_is_not_a_marker_however_the_path_is_spelled ... ok
+test a_marker_written_from_something_other_than_a_bool_is_a_typed_error ... ok
+test a_marker_named_by_its_short_path_resolves ... ok
+test a_true_read_puts_the_marker_on_and_a_false_read_takes_it_off ... ok
+test a_marker_reflection_cannot_build_is_a_typed_error ... ok
+test an_immutable_marker_is_still_set_and_cleared ... ok
+test a_non_bool_source_warns_once_and_does_not_panic ... ok
+test a_marker_removed_by_hand_stays_off_until_the_source_moves ... ok
+test re_evaluating_the_same_answer_does_not_put_the_marker_on_again ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s
+
+     Running tests/resolved_bindings.rs (target/debug/deps/resolved_bindings-ec5272b73c17ccaf)
+
+running 11 tests
+test a_frame_where_nothing_moved_reads_nothing ... ok
+test a_context_taken_away_above_a_widget_is_noticed ... ok
+test a_one_way_value_binding_puts_the_widget_back ... ok
+test a_widget_moved_under_another_context_reads_the_new_subject ... ok
+test a_binding_reading_what_another_wrote_follows_it ... ok
+test a_widget_moved_out_of_its_context_stops_reading_the_old_subject ... ok
+test a_despawned_widget_leaves_no_resolution_behind ... ok
+test a_widget_that_left_its_context_while_parked_is_looked_up_again_on_resume ... ok
+test dropping_the_bindings_drops_the_resolution ... ok
+test the_resolution_cannot_reach_a_document ... ok
+test a_widget_whose_target_arrives_late_still_binds ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s
+
+     Running tests/value_bindings.rs (target/debug/deps/value_bindings-38a77291afd1fd45)
+
+running 16 tests
+test a_two_way_binding_writes_an_integer_source_back ... ok
+test a_number_read_into_a_text_widget_is_refused ... ok
+test an_integer_source_refuses_a_number_it_cannot_hold ... ok
+test bool_value_binding_syncs_both_ways ... ok
+test a_typed_string_reaches_the_source_the_widget_is_bound_to ... ok
+test a_string_binding_with_no_named_target_reports_and_then_recovers ... ok
+test a_two_way_string_binding_settles_after_an_edit ... ok
+test a_string_value_binding_fills_the_widgets_text ... ok
+test two_way_value_binding_settles_without_a_feedback_loop ... ok
+test string_value_binding_reports_that_no_widget_target_exists ... ok
+test one_way_value_binding_ignores_widget_changes ... ok
+test resource_change_syncs_widget ... ok
+test numeric_value_binding_without_a_slider_is_reported_not_ignored ... ok
+test string_value_binding_writes_resource ... ok
+test value_binding_writes_a_component_on_the_context_entity ... ok
+test widget_change_writes_resource ... ok
+
+test result: ok. 16 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.05s
+
+BIND_EXIT=0
