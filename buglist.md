@@ -128,6 +128,7 @@
   后果：重命名已打开场景后 Ctrl+S 仍按旧路径写盘——旧文件"复活"，两份内容分叉。
   修复方向：命中任一 tab 路径时拒绝（同 convert），或对匹配 tab 一并 retarget。
   > 已修复 6ba0ce4b（T05-T1）：`reference_rewrite::follow_a_move` retarget `Scenes.tabs[].path`/prefab cache/`DefinitionAssetEdit.path`，干净 tab 重算 `saved_doc_hash` 保持干净、脏 tab 保持脏，journal 路径同步重写（guards: renaming_an_open_clean_scene_retargets_its_tab / a_dirty_tab_journals_under_the_renamed_path / renaming_a_referenced_material_under_a_dirty_tab_keeps_it_dirty_and_in_step）。
+  > 2026-10-28 注记（A3+A4 任务）：T05-T1 修复在 **macOS 从未生效过**——tab 持 canonical 路径（`/private/var`）而 `retarget_tabs` 对已移走的旧路径 canonicalize 失败回落原始拼写，比较永不相等（Y8 症状在 Mac 静默存活，reference_rewrite ×3 确定性红）。f7f57ab7 以 `canonical_of_moved`（最深存在祖先 canonical 化拼尾、双侧同 resolver）补齐，保持 [x]。
 
 - [x] **Y9. `project.json` / `settings.json` 非原子写 + 损坏后被默认值静默覆盖**
   `src/project.rs:311`、`src/project_settings.rs:95`（裸 `std::fs::write`）；触发点 `src/scene_io/save.rs:380`（每次保存场景）与 `native_dialog.rs:255`（每次选目录）。损坏后 `load_project_config` 返回 None，`project_select.rs:524-525` 走 `create_default_project` 直接覆盖。
@@ -435,13 +436,15 @@
 - [ ] **A2. Kinematic 玩家推不动 Dynamic 体（T11 决策 1-A 语义边界，非缺陷；立账备将来）**
   `crates/jackdaw_scaffold/templates/game/src/lib.rs.template`（move_player，T11 引入）：模板玩家=Kinematic+MoveAndSlide 直写 Transform——sweep 停在目标 skin 宽度外、`LinearVelocity` 恒零，avian 接触约束既无重叠也无相对速度可解 → 玩家撞 FallingCube 如撞墙（**双机复现实证**：Windows dx=0.00、Mac dx=1.1e-07，`loop/t11t3-live/t11t3-c-*`/`t11t3-c-mac-*`）。机制链：`wgpu` 无关；`ContactConstraint::generate` 消费双方 `LinearVelocity`（solver/plugin.rs:713），`move_and_slide` 纯 shape-cast 数学不写任何 body 状态（move_and_slide.rs:483）。这是决策 1-A「不被推挤」取舍的另一面（「也不推挤别人」）。若将来要「推箱子」玩法：把 `output.projected_velocity` 写进 avian `LinearVelocity` + `CustomPositionIntegration`（avian 官方 character-controller 注记的 solver-visible 形态），或改 Dynamic+锁轴。T11 范围内不动引擎/模板——book `player-controller.md` 已补边界段（406d116b 之后）。⚪ 设计边界。
 
-- [ ] **A3. standalone 发货测试红：脚手架 [patch] 无条件注入本机 fork path（T10 血统潜伏缺陷，非 T11 引入）**（2026-10-28 T11-T3 QA Mac 迁移冷编首次暴露；主控批准立账）
+- [x] **A3. standalone 发货测试红：脚手架 [patch] 无条件注入本机 fork path（T10 血统潜伏缺陷，非 T11 引入）**（2026-10-28 T11-T3 QA Mac 迁移冷编首次暴露；主控批准立账）
   `crates/jackdaw_scaffold/src/lib.rs` `module_patch_lines`（T10-T3 引入）：工程含 physics 模块即无条件把 `BEVY_FORK`（编译期烘入的本机 fork 绝对路径）写进游戏 Cargo.toml 两段 `[patch]`——standalone 发货（无本机 fork 的机器）解析即红；且 `jackdaw_project_build/build.rs` 不监视 workspace `Cargo.toml`，fork 路径变更后 `BEVY_FORK` 停留旧值。Windows T10a 全绿系增量构建沿用无 fork 烘入的旧产物，**任何清洁重建都会红**（QA 亲证：Mac integration standalone 发货 1 红，隔离复跑与 T11 diff 零交集，`loop/reports/t11t3_qa_mac_integration*.log` + t11-final-qa.md）。
   修复方向：gate 在 `jackdaw_dev_checkout()`（仅开发 checkout 注入 fork patch）或 standalone 剥离 path patch；build.rs 补 `rerun-if-changed=Cargo.toml`。建议小任务立项（T10a「PASS+立项」同款先例）。
+  > 2026-10-28 勾选：f7f57ab7 修复（`module_patch_lines`/`add_module_crates` 两处注入 gate 在 `jackdaw_dev_checkout()`+build.rs 补 workspace Cargo.toml 监视；红证 :132 panic→绿）；QA PASS a3a4-mac-baseline-qa.md（integration 5331/531）。主控裁定：shipped binary+physics 的两 bevy resolve 风险**维持既有降级路径**（产物 note 指引用户自建 fork；可分发 fork 形态超出本账，见 open-challenges fork ledger）。
 
-- [ ] **A4. Mac integration 环境基线红（迁移首基线；处置前该门按「无新增红」口径）**（2026-10-28 T11-T3 QA 建账；主控批准）
+- [x] **A4. Mac integration 环境基线红（迁移首基线；处置前该门按「无新增红」口径）**（2026-10-28 T11-T3 QA 建账；主控批准）
   Mac 首个全量 integration 基线：5331 跑 5323 过+8 红（EXIT=1 如实 FAIL 在档）。逐项诊断：1 项产品侧根源=A3（standalone 发货），其余为 macOS 环境族——/private/var TMPDIR 规范化路径断言 ×5、journal 5ms 预算在 APFS 实测 300-570ms、panels observer 竞态、合成键盘多字符（逐项清单见 `loop/reports/t11-final-qa.md`）——与 T11 三提交 diff 零交集，隔离复跑零 T11 引入。
   修复方向：路径断言 canonicalize 比较、平台预算校准、键位映射平台表。归「Mac 基线清理」账。
+  > 2026-10-28 勾选：f7f57ab7 修复——深挖反转：7 红中 **5 项实为产品缺陷**（Y8 tab retarget 在 Mac 从未生效=canonical 比较形态／indexed_path 断链告警在 Mac 零警告／journal emit 被 autofs `/home` stat 拖到 70ms×N 次（5ms 预算未动，修后 0.62-1.0ms）／project_window observe 生命周期缺护航 11 处换 `observe_if_alive`），仅 #6 双侧 canonicalize（测试侧）+#9 `select_all_gesture` 平台键（helper）为环境侧；QA PASS a3a4-mac-baseline-qa.md，**Mac integration 基线全绿 5331/5331**（T10a 5303/5303 后新基线）。⚪ 遗留：`canonical_prefab_path` FS 行走通用性能面；lod_group flaky 首见观察（TRY2 过，零复发数据，暂不立账）。
 
 - [x] **N10. dirty 场景 + Save 态 play_current 真机冻结编辑器主线程（2026-10-26 T06-T3 矩阵 cell 3 发现）**
   触发：打开已保存场景 → 任意编辑（脏）→ `pie.play_current`（save 策略，默认态）→ play_current 调用正常返回，**下一帧起主线程满 CPU 自旋**（实测 CPU/4s≈5s），BRP 全部无响应，日志停在 `OPERATOR: pie.play_current` 后零输出（保存链最早期）。
