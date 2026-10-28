@@ -291,6 +291,7 @@ fn inspector_field_edit_undoes_back_to_original() {
 const PROJECT_MARKER: &str = "mygame::world::PatrolPoint";
 const PROJECT_STRUCT: &str = "mygame::world::Health";
 const PROJECT_ENUM: &str = "mygame::world::Team";
+const PROJECT_TUNING: &str = "mygame::world::PlayerTuning";
 
 /// A schema shaped like one the project build extracts: a field-less
 /// marker, a struct, and an enum, none of which the editor has a Rust
@@ -318,6 +319,23 @@ fn project_schema() -> jackdaw_schema::ProjectSchema {
             fills_gaps: true,
         }
     };
+    let number = |name: &str| jackdaw_schema::FieldSchema {
+        name: name.to_string(),
+        type_path: "f32".to_string(),
+        item_type_path: String::new(),
+        asset_type_path: String::new(),
+    };
+    // A tuning struct whose extracted schema carries the type's default
+    // (`ReflectSerializer`-wrapped, the shape the extractor writes) —
+    // the PlayerController shape a real game's build reports.
+    let mut tuning = entry(
+        PROJECT_TUNING,
+        jackdaw_schema::TypeKind::Struct,
+        vec![number("move_speed"), number("jump_speed")],
+    );
+    tuning.default = Some(serde_json::json!({
+        PROJECT_TUNING: { "move_speed": 4.0, "jump_speed": 4.5 }
+    }));
     jackdaw_schema::ProjectSchema {
         components: vec![
             entry(PROJECT_MARKER, jackdaw_schema::TypeKind::Struct, Vec::new()),
@@ -340,6 +358,7 @@ fn project_schema() -> jackdaw_schema::ProjectSchema {
                 ],
             ),
             entry(PROJECT_ENUM, jackdaw_schema::TypeKind::Enum, Vec::new()),
+            tuning,
         ],
         resources: Vec::new(),
         events: Vec::new(),
@@ -676,6 +695,62 @@ fn a_path_into_a_variant_sets_one_channel_of_a_project_component_field() {
         tint["LinearRgba"]["blue"],
         serde_json::json!(0.75),
         "the rest of the colour was replaced: {tint}"
+    );
+}
+
+/// The first single-field edit after `component.add` must author the
+/// whole component, not one field: the block `add` leaves spells no
+/// field (every field is the type's default), and a first set into it
+/// used to persist only the edited field — a save then dropped every
+/// sibling to whatever the type's default happened to be (N14, QA
+/// reproduction `add → set move_speed → save → jump_speed gone`).
+#[test]
+fn a_first_field_set_after_add_authors_the_whole_component() {
+    let mut app = app_with_project_schema();
+    let entity = entity_carrying(&mut app, PROJECT_TUNING);
+
+    set_field(&mut app, entity, PROJECT_TUNING, "move_speed", "8.0");
+
+    // The edited field took.
+    assert_eq!(
+        authored_field(&app, entity, PROJECT_TUNING, "f32", "move_speed"),
+        Some(serde_json::json!(8.0)),
+        "the edited field must author its value"
+    );
+    // The untouched sibling is spelled too, merged from the schema's
+    // default — this is the regression: it used to vanish.
+    assert_eq!(
+        authored_field(&app, entity, PROJECT_TUNING, "f32", "jump_speed"),
+        Some(serde_json::json!(4.5)),
+        "the first edit after add must keep the sibling field on disk"
+    );
+
+    // And the save face agrees: the emitted scene spells both fields.
+    let dir = std::env::temp_dir().join(format!("jd_project_n14_{}", std::process::id()));
+    let _ = std::fs::remove_dir_all(&dir);
+    let emitted = jackdaw::scene_io::emit_bsn_scene_with_inline_assets(app.world_mut(), &dir);
+    assert!(
+        emitted.contains("move_speed"),
+        "the edited field must reach the saved file; got:\n{emitted}"
+    );
+    assert!(
+        emitted.contains("jump_speed"),
+        "the sibling field must reach the saved file too (N14); got:\n{emitted}"
+    );
+    let _ = std::fs::remove_dir_all(&dir);
+
+    // A second single-field edit merges onto the now-complete block:
+    // both edits stand, nothing regresses to defaults.
+    set_field(&mut app, entity, PROJECT_TUNING, "jump_speed", "6.0");
+    assert_eq!(
+        authored_field(&app, entity, PROJECT_TUNING, "f32", "move_speed"),
+        Some(serde_json::json!(8.0)),
+        "the earlier edit survives the later one"
+    );
+    assert_eq!(
+        authored_field(&app, entity, PROJECT_TUNING, "f32", "jump_speed"),
+        Some(serde_json::json!(6.0)),
+        "the later edit took"
     );
 }
 

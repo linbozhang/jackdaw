@@ -1,0 +1,155 @@
+   Compiling proc-macro2 v1.0.107
+   Compiling serde_core v1.0.229
+   Compiling crossbeam-utils v0.8.23
+   Compiling num-traits v0.2.19
+   Compiling toml_datetime v1.1.2+spec-1.1.0
+   Compiling getrandom v0.4.3
+   Compiling rand v0.10.3
+   Compiling rustc-hash v1.1.0
+   Compiling disqualified v1.1.0
+   Compiling toml_edit v0.25.17+spec-1.1.0
+   Compiling downcast-rs v2.0.2
+   Compiling objc2 v0.6.5
+   Compiling slotmap v1.1.1
+   Compiling fixedbitset v0.5.7
+   Compiling nonmax v0.5.5
+   Compiling either v1.19.0
+   Compiling rustix v1.1.6
+   Compiling quote v1.0.47
+   Compiling syn v3.0.9
+   Compiling syn v2.0.119
+   Compiling concurrent-queue v2.5.0
+   Compiling async-channel v2.5.0
+   Compiling approx v0.5.1
+   Compiling unsynn v0.3.0
+   Compiling async-executor v1.14.0
+   Compiling crossbeam-queue v0.3.14
+   Compiling tracing v0.1.44
+   Compiling blake3 v1.8.7
+   Compiling block2 v0.6.2
+   Compiling bitflags v2.13.2
+   Compiling hashbrown v0.17.1
+   Compiling bevy_macro_utils v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_macro_utils)
+   Compiling uuid v1.29.0
+   Compiling erased-serde v0.4.11
+   Compiling indexmap v2.14.2
+   Compiling bevy_ecs_macro_logic v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_ecs/macro_logic)
+   Compiling variadics_please v2.0.0
+   Compiling synstructure v0.14.0
+   Compiling dispatch2 v0.3.1
+   Compiling nix v0.31.3
+   Compiling ctrlc v3.5.2
+   Compiling encase_derive_impl v0.13.0
+   Compiling crossbeam-channel v0.5.17
+   Compiling blocking v1.7.0
+   Compiling itertools v0.14.0
+   Compiling constant_time_eq v0.4.2
+   Compiling async-fs v2.2.0
+   Compiling moxcms v0.8.1
+   Compiling polling v3.11.0
+   Compiling async-io v2.6.0
+   Compiling euclid v0.22.14
+   Compiling regex-syntax v0.8.11
+   Compiling guillotiere v0.7.0
+   Compiling rand_distr v0.6.0
+   Compiling regex-automata v0.4.18
+   Compiling matchers v0.2.0
+   Compiling serde_derive v1.0.229
+   Compiling bytemuck_derive v1.12.1
+   Compiling thiserror-impl v2.0.21
+   Compiling bevy_reflect_derive v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_reflect/derive)
+   Compiling derive_more-impl v2.1.1
+   Compiling assert_type_match v0.1.1
+   Compiling bevy_ecs_macros v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_ecs/macros)
+   Compiling bevy_derive v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_derive)
+   Compiling bytemuck v1.25.2
+   Compiling glam v0.33.12
+   Compiling zerofrom-derive v0.1.8
+   Compiling yoke-derive v0.8.4
+   Compiling thiserror v2.0.21
+   Compiling zerovec-derive v0.11.7
+   Compiling displaydoc v0.2.7
+   Compiling serde v1.0.229
+   Compiling smallvec v1.16.4
+   Compiling bevy_platform v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_platform)
+   Compiling naga-types v30.0.1
+   Compiling wgpu-types v30.0.1
+   Compiling bevy_utils v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_utils)
+   Compiling smol_str v0.2.2
+   Compiling encase_derive v0.13.0
+   Compiling zerocopy-derive v0.8.63
+   Compiling encase v0.13.0
+   Compiling futures-macro v0.3.34
+   Compiling ron v0.12.2
+   Compiling font-types v0.12.7
+   Compiling bevy_asset_macros v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_asset/macros)
+   Compiling read-fonts v0.41.0
+   Compiling image v0.25.10
+   Compiling derive_more v2.1.1
+   Compiling zerofrom v0.1.8
+   Compiling bevy_reflect v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_reflect)
+   Compiling bevy_tasks v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_tasks)
+   Compiling hexasphere v19.0.0
+   Compiling tracing-subscriber v0.3.23
+   Compiling yoke v0.8.4
+   Compiling enumn v0.1.14
+   Compiling zerovec v0.11.9
+   Compiling tinystr v0.8.5
+   Compiling potential_utf v0.1.6
+   Compiling zerotrie v0.2.5
+   Compiling futures-util v0.3.34
+   Compiling icu_locale_core v2.4.0
+   Compiling icu_collections v2.4.0
+   Compiling icu_provider v2.4.0
+   Compiling skrifa v0.44.0
+   Compiling icu_locale_fallback v2.4.0
+   Compiling icu_properties v2.4.0
+   Compiling icu_segmenter v2.4.0
+   Compiling parley_data v0.11.1
+   Compiling icu_normalizer v2.4.0
+   Compiling harfrust v0.12.0
+   Compiling fontique v0.11.1
+   Compiling swash v0.2.10
+   Compiling zerocopy v0.8.63
+   Compiling bevy_ecs v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_ecs)
+   Compiling bevy_math v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_math)
+   Compiling half v2.7.1
+   Compiling parley v0.11.1
+   Compiling bevy_curve v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_curve)
+   Compiling bevy_color v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_color)
+   Compiling bevy_shape v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_shape)
+   Compiling accesskit v0.25.2
+   Compiling taffy v0.14.0
+   Compiling bevy_annotations v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_annotations)
+   Compiling bevy_app v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_app)
+   Compiling bevy_time v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_time)
+   Compiling bevy_input v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_input)
+   Compiling bevy_transform v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_transform)
+   Compiling bevy_log v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_log)
+   Compiling bevy_diagnostic v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_diagnostic)
+   Compiling bevy_asset v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_asset)
+   Compiling bevy_clipboard v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_clipboard)
+   Compiling bevy_a11y v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_a11y)
+   Compiling bevy_window v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_window)
+   Compiling bevy_image v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_image)
+   Compiling bevy_mesh v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_mesh)
+   Compiling bevy_text v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_text)
+   Compiling bevy_camera v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_camera)
+   Compiling bevy_picking v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_picking)
+   Compiling bevy_sprite v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_sprite)
+   Compiling bevy_input_focus v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_input_focus)
+   Compiling bevy_ui v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_ui)
+   Compiling bevy_ui_widgets v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_ui_widgets)
+   Compiling bevy_internal v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_internal)
+   Compiling bevy v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned)
+   Compiling jackdaw_bind v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_bind)
+    Finished `test` profile [optimized + debuginfo] target(s) in 2m 37s
+   Doc-tests jackdaw_bind
+
+running 1 test
+test crates/jackdaw_bind/src/error.rs - error::BindError (line 9) ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+all doctests ran in 2.65s; merged doctests compilation took 1.24s
+EXIT=0

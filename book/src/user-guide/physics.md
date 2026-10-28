@@ -217,9 +217,11 @@ the template falls back to a physics-free shape):
   goes up, and the third one logs "Level clear!". A cube merely
   landing on a pickup does not collect it — only the player's
   touch counts.
-- A **player with a body** — a kinematic capsule collider that
-  follows the input-driven Transform, detects sensors, and is not
-  pushed around by falling props.
+- A **player with a body** — a kinematic capsule collider whose
+  movement the [player controller](player-controller.md) sweeps
+  through the world (`move_and_slide`: walls stop it, diagonals slide
+  along), that detects sensors, and is not pushed around by falling
+  props.
 
 The template's doc comment at the top of `src/lib.rs` walks the
 same pattern in code: colliders, triggers, layers, and the two

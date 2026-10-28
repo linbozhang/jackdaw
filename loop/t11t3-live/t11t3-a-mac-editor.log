@@ -1,0 +1,188 @@
+[2m2026-10-28T04:42:26.043397Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-28T04:42:26.117971Z[0m [32m INFO[0m [2mbevy_render::renderer[0m[2m:[0m AdapterInfo { name: "Apple M1 Pro", vendor: 0, device: 0, device_type: IntegratedGpu, device_pci_bus_id: "", driver: "", driver_info: "", backend: Metal, subgroup_min_size: 4, subgroup_max_size: 64, transient_saves_memory: Some(true), limit_bucket: None }
+[2m2026-10-28T04:42:26.795905Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw::test_input::plugin` of extension `jackdaw.test_input`
+[2m2026-10-28T04:42:26.796217Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw_physics::PhysicsEditorPlugin` of extension `jackdaw.physics`
+[2m2026-10-28T04:42:26.811003Z[0m [32m INFO[0m [2mbevy_pbr::cluster[0m[2m:[0m GPU clustering is supported on this device.
+[2m2026-10-28T04:42:26.811067Z[0m [32m INFO[0m [2mbevy_render::batching::gpu_preprocessing[0m[2m:[0m GPU preprocessing is fully supported on this device.
+[2m2026-10-28T04:42:26.887475Z[0m [32m INFO[0m [2mbevy_winit::system[0m[2m:[0m Creating new window jackdaw (71v0)
+[2m2026-10-28T04:42:27.073432Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core
+[2m2026-10-28T04:42:27.081782Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.ui_palette
+[2m2026-10-28T04:42:27.081914Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.game_panel
+[2m2026-10-28T04:42:27.081961Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.project_window
+[2m2026-10-28T04:42:27.081976Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.timeline
+[2m2026-10-28T04:42:27.081987Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.animation_graph
+[2m2026-10-28T04:42:27.082001Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.build_panel
+[2m2026-10-28T04:42:27.082014Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core_windows
+[2m2026-10-28T04:42:27.082044Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.viewport_panel
+[2m2026-10-28T04:42:27.082138Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.inspector
+[2m2026-10-28T04:42:27.082160Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.test_input
+[2m2026-10-28T04:42:27.082181Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.physics
+[2m2026-10-28T04:42:27.082301Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.multiplayer
+[2m2026-10-28T04:42:27.086905Z[0m [33m WARN[0m [2mjackdaw_api_internal::keymap::apply[0m[2m:[0m preset 'classic' has 10 chords claimed by more than one action: ["Delete (Press, Operators): clip.delete_keyframes, entity.delete, brush.delete_element", "Backspace (Press, Operators): clip.delete_keyframes, viewport.draw_brush.remove_last_vertex, brush.delete_element", "Home (Press, Operators): clip.timeline.jump_start, view.frame_all, viewport2d.frame", "Super+KeyC (Press, Operators): clip.copy_keyframes, entity.copy", "Super+KeyV (Press, Operators): clip.paste_keyframes, entity.paste", "Tab (Press, Operators): viewport.draw_brush.toggle_mode, brush.clip.cycle_mode", "Enter (Press, Operators): viewport.draw_brush.commit_polygon, brush.clip.apply", "KeyE (Press, Operators): tool.rotate, brush.mesh.extrude", "Escape (Press, Operators): brush.exit_edit_mode, selection.clear, brush.clip.clear, terrain.tool.exit_to_select", "Super+KeyB (Press, Operators): brush.mesh.edge_bevel, brush.mesh.vertex_bevel"]
+[2m2026-10-28T04:42:27.086992Z[0m [32m INFO[0m [2mjackdaw::extension_lifecycle[0m[2m:[0m applied keymap preset 'classic': 112 entries, 112 bindings, 0 user rows
+[2m2026-10-28T04:42:27.301896Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking /Users/zhanglinbo/workspace/loop-mac/t11t1-game/assets recursively
+[2m2026-10-28T04:42:27.302252Z[0m [32m INFO[0m [2mjackdaw::asset_catalog[0m[2m:[0m No asset catalog found, starting with empty catalog
+[2m2026-10-28T04:42:27.377271Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: pre-building the game in the background for a fast first Play
+[2m2026-10-28T04:42:27.382778Z[0m [32m INFO[0m [2mjackdaw::material_browser[0m[2m:[0m update_material_browser_ui: rebuilding with 1 entries
+[2m2026-10-28T04:42:28.650978Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 1, typed 0, referencing 0)
+[2m2026-10-28T04:42:28.651116Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 0)
+[2m2026-10-28T04:46:41.187440Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: refreshed project types from schema (9 project components)
+[2m2026-10-28T04:46:41.189354Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking /Users/zhanglinbo/workspace/loop-mac/t11t1-game/assets recursively
+[2m2026-10-28T04:46:41.197543Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 1, typed 0, referencing 0)
+[2m2026-10-28T04:46:41.197639Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 0)
+[2m2026-10-28T04:46:46.191697Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: refreshed project types from schema (9 project components)
+[2m2026-10-28T04:46:46.192497Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking /Users/zhanglinbo/workspace/loop-mac/t11t1-game/assets recursively
+[2m2026-10-28T04:46:46.201017Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 1, typed 0, referencing 0)
+[2m2026-10-28T04:46:46.201076Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 0)
+[2m2026-10-28T04:46:52.167896Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: scene.open
+[2m2026-10-28T04:46:54.207309Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: pie.play_current
+[2m2026-10-28T04:46:54.216035Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 launched, awaiting connection
+[2m2026-10-28T04:46:54.216073Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 launched with scene override 'scene.bsn' (the editor's scene)
+[2m2026-10-28T04:46:54.489725Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 connected
+
+thread 'main' (13087774) panicked at /rustc/b940084d7eb6a299eb4bfeb8e34901bc051e7ac4/library/alloc/src/vec/mod.rs:2258:13:
+swap_remove index (is 0) should be < len (is 0)
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+[2m2026-10-28T04:47:03.166801Z[0m [31mERROR[0m [2mbevy_ecs::error::handler[0m[2m:[0m Encountered an error in system `jackdaw::pie::drain_game_events`: Exclusive system panicked
+
+[2m2026-10-28T04:47:14.299696Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: pie.stop
+[2m2026-10-28T04:47:14.299808Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 asked to stop; exiting on its own for 2s
+[2m2026-10-28T04:47:14.388378Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 exited
+[2m2026-10-28T04:47:18.363329Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: pie.play_current
+[2m2026-10-28T04:47:18.411093Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: building the game for Play #1
+[2m2026-10-28T04:47:38.812198Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 launched, awaiting connection
+[2m2026-10-28T04:47:38.812248Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 launched with scene override 'scene.bsn' (the editor's scene)
+[2m2026-10-28T04:47:39.092422Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 connected
+[2m2026-10-28T04:47:39.188951Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: refreshed project types from schema (9 project components)
+[2m2026-10-28T04:47:39.189750Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking /Users/zhanglinbo/workspace/loop-mac/t11t1-game/assets recursively
+[2m2026-10-28T04:47:39.197466Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 1, typed 0, referencing 0)
+[2m2026-10-28T04:47:39.197525Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 0)
+[2m2026-10-28T04:47:40.539549Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: pie.stop
+[2m2026-10-28T04:47:40.539605Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 asked to stop; exiting on its own for 2s
+[2m2026-10-28T04:47:41.034842Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 exited
+
+thread 'main' (13087774) panicked at /rustc/b940084d7eb6a299eb4bfeb8e34901bc051e7ac4/library/alloc/src/vec/mod.rs:2258:13:
+swap_remove index (is 0) should be < len (is 0)
+[2m2026-10-28T04:47:41.099257Z[0m [31mERROR[0m [2mbevy_ecs::error::handler[0m[2m:[0m Encountered an error in system `jackdaw::pie::cleanup_session_on_stop`: Exclusive system panicked
+
+
+thread 'main' (13087774) panicked at /rustc/b940084d7eb6a299eb4bfeb8e34901bc051e7ac4/library/alloc/src/vec/mod.rs:2258:13:
+swap_remove index (is 0) should be < len (is 0)
+[2m2026-10-28T04:47:41.164567Z[0m [31mERROR[0m [2mbevy_ecs::error::handler[0m[2m:[0m Encountered an error in command `<<bevy_ecs::system::commands::entity_command::despawn::{{closure}} as bevy_ecs::system::commands::entity_command::EntityCommand>::with_entity::{{closure}} as bevy_ecs::system::commands::command::Command>::ignore_error::{{closure}}`: Command panicked
+
+[2m2026-10-28T04:47:44.605503Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: pie.play_current
+[2m2026-10-28T04:47:44.643491Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: building the game for Play #1
+[2m2026-10-28T04:48:04.377852Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 launched, awaiting connection
+[2m2026-10-28T04:48:04.377899Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 launched with scene override 'scene.bsn' (the editor's scene)
+[2m2026-10-28T04:48:04.661677Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 connected
+[2m2026-10-28T04:48:04.696495Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: refreshed project types from schema (9 project components)
+[2m2026-10-28T04:48:04.697312Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking /Users/zhanglinbo/workspace/loop-mac/t11t1-game/assets recursively
+[2m2026-10-28T04:48:04.706883Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 1, typed 0, referencing 0)
+[2m2026-10-28T04:48:04.706950Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 0)
+[2m2026-10-28T04:48:04.724143Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: pie.stop
+[2m2026-10-28T04:48:04.724203Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 asked to stop; exiting on its own for 2s
+[2m2026-10-28T04:48:05.406452Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 exited
+
+thread 'main' (13087774) panicked at /rustc/b940084d7eb6a299eb4bfeb8e34901bc051e7ac4/library/alloc/src/vec/mod.rs:2258:13:
+swap_remove index (is 1) should be < len (is 1)
+[2m2026-10-28T04:48:05.470546Z[0m [31mERROR[0m [2mbevy_ecs::error::handler[0m[2m:[0m Encountered an error in system `jackdaw::pie::cleanup_session_on_stop`: Exclusive system panicked
+
+
+thread 'main' (13087774) panicked at /rustc/b940084d7eb6a299eb4bfeb8e34901bc051e7ac4/library/alloc/src/vec/mod.rs:2258:13:
+swap_remove index (is 1) should be < len (is 1)
+[2m2026-10-28T04:48:05.534740Z[0m [31mERROR[0m [2mbevy_ecs::error::handler[0m[2m:[0m Encountered an error in command `<<bevy_ecs::system::commands::entity_command::despawn::{{closure}} as bevy_ecs::system::commands::entity_command::EntityCommand>::with_entity::{{closure}} as bevy_ecs::system::commands::command::Command>::ignore_error::{{closure}}`: Command panicked
+
+[2m2026-10-28T04:48:08.796347Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: scene.new
+
+thread 'main' (13087774) panicked at /rustc/b940084d7eb6a299eb4bfeb8e34901bc051e7ac4/library/alloc/src/vec/mod.rs:2258:13:
+swap_remove index (is 1) should be < len (is 0)
+[2m2026-10-28T04:48:08.828975Z[0m [31mERROR[0m [2mbevy_ecs::error::handler[0m[2m:[0m Encountered an error in command `<jackdaw::scenes::operators::scene_new::{{closure}} as bevy_ecs::system::commands::command::Command>::handle_error::{{closure}}`: Command panicked
+
+[2m2026-10-28T04:48:10.861826Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: entity.add.cube
+[2m2026-10-28T04:48:10.999751Z[0m [32m INFO[0m [2mjackdaw::boot_ops[0m[2m:[0m JACKDAW_RUN_OP: component.set: `entity` = 4574v1 (Cube), by id
+[2m2026-10-28T04:48:10.999806Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: component.set
+[2m2026-10-28T04:48:11.117678Z[0m [32m INFO[0m [2mjackdaw::boot_ops[0m[2m:[0m JACKDAW_RUN_OP: component.add: `entity` = 4574v1 (Cube), by id
+[2m2026-10-28T04:48:11.117746Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: component.add
+[2m2026-10-28T04:48:11.892523Z[0m [32m INFO[0m [2mjackdaw::boot_ops[0m[2m:[0m JACKDAW_RUN_OP: component.add: `entity` = 4574v1 (Cube), by id
+[2m2026-10-28T04:48:11.892594Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: component.add
+[2m2026-10-28T04:48:12.182658Z[0m [32m INFO[0m [2mjackdaw::boot_ops[0m[2m:[0m JACKDAW_RUN_OP: component.add: `entity` = 4574v1 (Cube), by id
+[2m2026-10-28T04:48:12.182730Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: component.add
+[2m2026-10-28T04:48:12.482128Z[0m [32m INFO[0m [2mjackdaw::boot_ops[0m[2m:[0m JACKDAW_RUN_OP: component.add: `entity` = 4574v1 (Cube), by id
+[2m2026-10-28T04:48:12.482204Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: component.add
+[2m2026-10-28T04:48:12.482226Z[0m [32m INFO[0m [2mjackdaw::commands[0m[2m:[0m AddComponent::execute entered: type_path=avian3d::dynamics::rigid_body::RigidBody, type_id=TypeId(0xc329120eeef1ce133796a18134fdd650), component_id=ComponentId(1381), entity=4574v1
+[2m2026-10-28T04:48:12.482245Z[0m [32m INFO[0m [2mjackdaw::commands[0m[2m:[0m AddComponent: inserting `avian3d::dynamics::rigid_body::RigidBody` (type_id TypeId(0xc329120eeef1ce133796a18134fdd650), component_id ComponentId(1381)) on entity 4574v1
+[2m2026-10-28T04:48:12.482358Z[0m [32m INFO[0m [2mjackdaw::commands[0m[2m:[0m AddComponent: post-insert, entity 4574v1 has component_id ComponentId(1381): true
+[2m2026-10-28T04:48:12.852401Z[0m [32m INFO[0m [2mjackdaw::boot_ops[0m[2m:[0m JACKDAW_RUN_OP: component.set: `entity` = 4574v1 (Cube), by id
+[2m2026-10-28T04:48:12.852454Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: component.set
+[2m2026-10-28T04:48:13.091663Z[0m [32m INFO[0m [2mjackdaw::boot_ops[0m[2m:[0m JACKDAW_RUN_OP: component.add: `entity` = 4574v1 (Cube), by id
+[2m2026-10-28T04:48:13.091733Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: component.add
+[2m2026-10-28T04:48:13.091751Z[0m [32m INFO[0m [2mjackdaw::commands[0m[2m:[0m AddComponent::execute entered: type_path=jackdaw_avian_integration::AvianCollider, type_id=TypeId(0xb73ffde325b95013d9bb02c27c75052c), component_id=ComponentId(1479), entity=4574v1
+[2m2026-10-28T04:48:13.091788Z[0m [32m INFO[0m [2mjackdaw::commands[0m[2m:[0m AddComponent: inserting `jackdaw_avian_integration::AvianCollider` (type_id TypeId(0xb73ffde325b95013d9bb02c27c75052c), component_id ComponentId(1479)) on entity 4574v1
+[2m2026-10-28T04:48:13.091800Z[0m [32m INFO[0m [2mjackdaw::commands[0m[2m:[0m AddComponent: post-insert, entity 4574v1 has component_id ComponentId(1479): true
+[2m2026-10-28T04:48:13.332557Z[0m [32m INFO[0m [2mjackdaw::boot_ops[0m[2m:[0m JACKDAW_RUN_OP: component.set: `entity` = 4574v1 (Cube), by id
+[2m2026-10-28T04:48:13.332616Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: component.set
+[2m2026-10-28T04:48:13.478958Z[0m [32m INFO[0m [2mjackdaw::boot_ops[0m[2m:[0m JACKDAW_RUN_OP: component.set: `entity` = 4574v1 (Cube), by id
+[2m2026-10-28T04:48:13.479014Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: component.set
+[2m2026-10-28T04:48:13.613158Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: entity.add.camera_rig
+[2m2026-10-28T04:48:13.753468Z[0m [32m INFO[0m [2mjackdaw::boot_ops[0m[2m:[0m JACKDAW_RUN_OP: component.set: `entity` = 9144v5 (Camera Rig), by id
+[2m2026-10-28T04:48:13.753528Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: component.set
+[2m2026-10-28T04:48:13.786655Z[0m [32m INFO[0m [2mjackdaw::boot_ops[0m[2m:[0m JACKDAW_RUN_OP: entity.reparent: `child` = 9144v5 (Camera Rig), by id
+[2m2026-10-28T04:48:13.786700Z[0m [32m INFO[0m [2mjackdaw::boot_ops[0m[2m:[0m JACKDAW_RUN_OP: entity.reparent: `parent` = 4574v1 (Cube), by id
+[2m2026-10-28T04:48:13.786721Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: entity.reparent
+[2m2026-10-28T04:48:13.819788Z[0m [32m INFO[0m [2mjackdaw::boot_ops[0m[2m:[0m JACKDAW_RUN_OP: component.add: `entity` = 9144v5 (Camera Rig), by id
+[2m2026-10-28T04:48:13.819851Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: component.add
+[2m2026-10-28T04:48:13.819866Z[0m [32m INFO[0m [2mjackdaw::commands[0m[2m:[0m AddComponent::execute entered: type_path=jackdaw_camera_rig::ActiveCameraRig, type_id=TypeId(0xc8b98d9b9e0afb937e2ffbe823624c48), component_id=ComponentId(2382), entity=9144v5
+[2m2026-10-28T04:48:13.819882Z[0m [32m INFO[0m [2mjackdaw::commands[0m[2m:[0m AddComponent: inserting `jackdaw_camera_rig::ActiveCameraRig` (type_id TypeId(0xc8b98d9b9e0afb937e2ffbe823624c48), component_id ComponentId(2382)) on entity 9144v5
+[2m2026-10-28T04:48:13.819928Z[0m [32m INFO[0m [2mjackdaw::commands[0m[2m:[0m AddComponent: post-insert, entity 9144v5 has component_id ComponentId(2382): true
+[2m2026-10-28T04:48:13.879572Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: entity.add.cube
+[2m2026-10-28T04:48:14.016304Z[0m [32m INFO[0m [2mjackdaw::boot_ops[0m[2m:[0m JACKDAW_RUN_OP: component.set: `entity` = 6216v23 (Cube), by id
+[2m2026-10-28T04:48:14.016366Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: component.set
+[2m2026-10-28T04:48:14.131544Z[0m [32m INFO[0m [2mjackdaw::boot_ops[0m[2m:[0m JACKDAW_RUN_OP: component.set: `entity` = 6216v23 (Cube), by id
+[2m2026-10-28T04:48:14.131613Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: component.set
+[2m2026-10-28T04:48:14.247163Z[0m [32m INFO[0m [2mjackdaw::boot_ops[0m[2m:[0m JACKDAW_RUN_OP: physics.enable: `entity` = 6216v23 (Cube), by id
+[2m2026-10-28T04:48:14.247226Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: physics.enable
+[2m2026-10-28T04:48:14.361514Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: entity.add.cube
+[2m2026-10-28T04:48:14.559653Z[0m [32m INFO[0m [2mjackdaw::boot_ops[0m[2m:[0m JACKDAW_RUN_OP: component.set: `entity` = 5520v24 (Cube), by id
+[2m2026-10-28T04:48:14.559725Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: component.set
+[2m2026-10-28T04:48:14.672809Z[0m [32m INFO[0m [2mjackdaw::boot_ops[0m[2m:[0m JACKDAW_RUN_OP: component.set: `entity` = 5520v24 (Cube), by id
+[2m2026-10-28T04:48:14.672869Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: component.set
+[2m2026-10-28T04:48:14.794006Z[0m [32m INFO[0m [2mjackdaw::boot_ops[0m[2m:[0m JACKDAW_RUN_OP: physics.enable: `entity` = 5520v24 (Cube), by id
+[2m2026-10-28T04:48:14.794067Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: physics.enable
+[2m2026-10-28T04:48:14.910169Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: scene.save
+[2m2026-10-28T04:48:14.916582Z[0m [32m INFO[0m [2mjackdaw::scene_io::save[0m[2m:[0m Scene saved to /Users/zhanglinbo/workspace/loop-mac/t11t1-game/assets/t11t3-place.bsn
+[2m2026-10-28T04:48:14.916679Z[0m [32m INFO[0m [2mjackdaw::scene_io::session_journal[0m[2m:[0m session journal: /Users/zhanglinbo/workspace/loop-mac/t11t1-game/assets/t11t3-place.bsn reached disk; dropping its entry
+[2m2026-10-28T04:48:14.976697Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking /Users/zhanglinbo/workspace/loop-mac/t11t1-game/assets recursively
+[2m2026-10-28T04:48:15.059082Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 2, typed 0, referencing 0)
+[2m2026-10-28T04:48:15.059136Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 0)
+[2m2026-10-28T04:48:15.079693Z[0m [32m INFO[0m [2mjackdaw::boot_ops[0m[2m:[0m JACKDAW_RUN_OP: component.set: `entity` = 4574v1 (Cube), by id
+[2m2026-10-28T04:48:15.079748Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: component.set
+[2m2026-10-28T04:48:15.306606Z[0m [32m INFO[0m [2mjackdaw::boot_ops[0m[2m:[0m JACKDAW_RUN_OP: component.set: `entity` = 9144v5 (Camera Rig), by id
+[2m2026-10-28T04:48:15.306664Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: component.set
+[2m2026-10-28T04:48:15.385486Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: scene.save
+[2m2026-10-28T04:48:15.393530Z[0m [32m INFO[0m [2mjackdaw::scene_io::save[0m[2m:[0m Scene saved to /Users/zhanglinbo/workspace/loop-mac/t11t1-game/assets/t11t3-place.bsn
+[2m2026-10-28T04:48:15.393595Z[0m [32m INFO[0m [2mjackdaw::scene_io::session_journal[0m[2m:[0m session journal: /Users/zhanglinbo/workspace/loop-mac/t11t1-game/assets/t11t3-place.bsn reached disk; dropping its entry
+[2m2026-10-28T04:48:15.411218Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking /Users/zhanglinbo/workspace/loop-mac/t11t1-game/assets recursively
+[2m2026-10-28T04:48:15.425614Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 2, typed 0, referencing 0)
+[2m2026-10-28T04:48:15.425671Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 0)
+[2m2026-10-28T04:48:15.426976Z[0m [33m WARN[0m [2mbevy_ecs::relationship[0m[2m:[0m The bevy_ecs::hierarchy::ChildOf(5282v19) relationship on entity 7144v34 relates to an entity that does not exist. The invalid bevy_ecs::hierarchy::ChildOf relationship has been removed.
+[2m2026-10-28T04:48:15.441707Z[0m [33m WARN[0m [2mbevy_ecs::relationship[0m[2m:[0m The bevy_ecs::hierarchy::ChildOf(6537v31) relationship on entity 5305v29 relates to an entity that does not exist. The invalid bevy_ecs::hierarchy::ChildOf relationship has been removed.
+[2m2026-10-28T04:48:15.448540Z[0m [32m INFO[0m [2mjackdaw::boot_ops[0m[2m:[0m JACKDAW_RUN_OP: component.set: `entity` = 9144v5 (Camera Rig), by id
+[2m2026-10-28T04:48:15.448596Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: component.set
+[2m2026-10-28T04:48:15.518032Z[0m [32m INFO[0m [2mjackdaw::boot_ops[0m[2m:[0m JACKDAW_RUN_OP: component.set: `entity` = 9144v5 (Camera Rig), by id
+[2m2026-10-28T04:48:15.518088Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: component.set
+[2m2026-10-28T04:48:15.549028Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: scene.save
+[2m2026-10-28T04:48:15.555508Z[0m [32m INFO[0m [2mjackdaw::scene_io::save[0m[2m:[0m Scene saved to /Users/zhanglinbo/workspace/loop-mac/t11t1-game/assets/t11t3-fp.bsn
+[2m2026-10-28T04:48:15.555576Z[0m [32m INFO[0m [2mjackdaw::scene_io::session_journal[0m[2m:[0m session journal: /Users/zhanglinbo/workspace/loop-mac/t11t1-game/assets/t11t3-fp.bsn reached disk; dropping its entry
+[2m2026-10-28T04:48:15.571158Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking /Users/zhanglinbo/workspace/loop-mac/t11t1-game/assets recursively
+[2m2026-10-28T04:48:15.586694Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 3, typed 0, referencing 0)
+[2m2026-10-28T04:48:15.586742Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 0)
+[2m2026-10-28T04:48:15.600790Z[0m [33m WARN[0m [2mbevy_ecs::relationship[0m[2m:[0m The bevy_ecs::hierarchy::ChildOf(5455v27) relationship on entity 8653v17 relates to an entity that does not exist. The invalid bevy_ecs::hierarchy::ChildOf relationship has been removed.
+[2m2026-10-28T04:48:15.607187Z[0m [32m INFO[0m [2mjackdaw::boot_ops[0m[2m:[0m JACKDAW_RUN_OP: component.set: `entity` = 4574v1 (Cube), by id
+[2m2026-10-28T04:48:15.607240Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: component.set
+[2m2026-10-28T04:48:15.790134Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: scene.save
+[2m2026-10-28T04:48:15.796553Z[0m [32m INFO[0m [2mjackdaw::scene_io::save[0m[2m:[0m Scene saved to /Users/zhanglinbo/workspace/loop-mac/t11t1-game/assets/t11t3-fast.bsn
+[2m2026-10-28T04:48:15.796618Z[0m [32m INFO[0m [2mjackdaw::scene_io::session_journal[0m[2m:[0m session journal: /Users/zhanglinbo/workspace/loop-mac/t11t1-game/assets/t11t3-fast.bsn reached disk; dropping its entry
+[2m2026-10-28T04:48:15.812972Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking /Users/zhanglinbo/workspace/loop-mac/t11t1-game/assets recursively
+[2m2026-10-28T04:48:15.848213Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 4, typed 0, referencing 0)
+[2m2026-10-28T04:48:15.848262Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 0)
+[2m2026-10-28T04:48:15.849813Z[0m [33m WARN[0m [2mbevy_ecs::relationship[0m[2m:[0m The bevy_ecs::hierarchy::ChildOf(5912v23) relationship on entity 4965v22 relates to an entity that does not exist. The invalid bevy_ecs::hierarchy::ChildOf relationship has been removed.
