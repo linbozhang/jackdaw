@@ -78,6 +78,16 @@ into the stage walls to see it — head-on you stop, diagonally you
 slide. (The character-controller tools are documented in avian's own
 character-controller chapter.)
 
+One boundary of that design, on purpose: a kinematic player **does
+not push `RigidBody: Dynamic` bodies**. The sweep stops the capsule a
+skin width short of the falling cube, the solver never sees an overlap
+or a velocity to resolve, and the cube stays put — walking into it
+stops you like a wall. Making the player shove dynamic props around
+needs a solver-visible velocity on the body (avian's own
+character-controller notes describe that form); it is out of scope for
+this first controller, whose chosen trade is "never shoved, never
+shoving".
+
 Gravity comes from `GameConfig.gravity` — the same number
 [Game Parameters](game-parameters.md) authors and the same one the
 engine's own simulation got at startup. One value, both consumers.

@@ -1,0 +1,8 @@
+EDITOR_READY
+C7 open-channel: rigXZangle 0.0 -> -57.29578101508276 deg, |delta|=57.29578101508276 (expect ~57.3 deg = 1.0 rad = dx*0.005)
+C7_LOOK_OPEN_CHANNEL_PASS
+C7 mouse resource probe: []
+C7 rmb-held: rigXZangle -57.29578101508276 -> -114.5915156255728 deg (single write ~57.3 = crate channel only; double would be ~114.6)
+C7_LOOK_RMB_YIELD_PASS
+VERDICT_A3_MAC: C7_LOOK_OPEN_CHANNEL=PASS C7_LOOK_RMB_YIELD=PASS 
+T11T3_A3_MAC_DONE

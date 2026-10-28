@@ -1,0 +1,25 @@
+EDITOR_READY
+PIE_PROBE2 (warm-aware, up to 420s): alive=true note=
+PIE2_PROBE_ALIVE_PASS
+C7 open-channel: yaw0= yaw1= delta=999 (expect -1.0 = -dx*0.005)
+C7_LOOK_OPEN_CHANNEL_FAIL
+C7 mouse resource probe: Unknown resource type: `bevy_input::button_input::ButtonInpu
+C7 rmb-held: yaw read failed (yaw2= yaw3=)
+C7_LOOK_RMB_YIELD_FAIL
+CELL11 player z while driven: -2.440000057220459
+CELL11_STOP sha_same=true temp_left=0
+CELL11_STOP_IRON_PASS
+N13 #1: connected=yes editorAlive=yes swap_remove_hits_in_log=13
+N13 #2: connected=yes editorAlive=yes swap_remove_hits_in_log=19
+N13 #3: connected=yes editorAlive=yes swap_remove_hits_in_log=24
+N13 #4: connected=yes editorAlive=yes swap_remove_hits_in_log=29
+N13 #5: connected=yes editorAlive=yes swap_remove_hits_in_log=35
+N13 #6: connected= editorAlive=yes swap_remove_hits_in_log=36
+N13 #7: connected=yes editorAlive=yes swap_remove_hits_in_log=40
+N13 #8: connected=yes editorAlive=yes swap_remove_hits_in_log=46
+N13 #9: connected=yes editorAlive=yes swap_remove_hits_in_log=52
+N13 #10: connected=yes editorAlive=yes swap_remove_hits_in_log=57
+N13_X10: rounds=10 recurrences=57 (T10b: 1 hit / 1 clean on the old machine; panic-message signature only, no RUST_BACKTRACE on this machine)
+N13_X10_NO_RECURRENCE_FAIL
+VERDICT_A2_MAC: C7_LOOK_OPEN_CHANNEL=FAIL C7_LOOK_RMB_YIELD=FAIL CELL11_STOP_IRON=PASS N13_X10_NO_RECURRENCE=FAIL PIE2_PROBE_ALIVE=PASS 
+T11T3_A2_MAC_DONE

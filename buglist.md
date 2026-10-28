@@ -432,6 +432,9 @@
   `src/draw_brush/mesh.rs:147`（`recenter_brush_origins`，早于 T03 全部工作、Bevy 0.20 升级提交 18aab519 已在）：join 保留笔刷后下一帧异步把笔刷 Transform 移到 hull 质心，该位移不在任何撤销命令组内——单次 undo 能复原双笔刷与几何，但保留笔刷的 translation 停在质心不回原位。BRP history:false 路径同样存在。
   修复方向：把 recenter 位移并入 join 的自推命令组，或撤销时以快照基线恢复 Transform。
 
+- [ ] **A2. Kinematic 玩家推不动 Dynamic 体（T11 决策 1-A 语义边界，非缺陷；立账备将来）**
+  `crates/jackdaw_scaffold/templates/game/src/lib.rs.template`（move_player，T11 引入）：模板玩家=Kinematic+MoveAndSlide 直写 Transform——sweep 停在目标 skin 宽度外、`LinearVelocity` 恒零，avian 接触约束既无重叠也无相对速度可解 → 玩家撞 FallingCube 如撞墙（**双机复现实证**：Windows dx=0.00、Mac dx=1.1e-07，`loop/t11t3-live/t11t3-c-*`/`t11t3-c-mac-*`）。机制链：`wgpu` 无关；`ContactConstraint::generate` 消费双方 `LinearVelocity`（solver/plugin.rs:713），`move_and_slide` 纯 shape-cast 数学不写任何 body 状态（move_and_slide.rs:483）。这是决策 1-A「不被推挤」取舍的另一面（「也不推挤别人」）。若将来要「推箱子」玩法：把 `output.projected_velocity` 写进 avian `LinearVelocity` + `CustomPositionIntegration`（avian 官方 character-controller 注记的 solver-visible 形态），或改 Dynamic+锁轴。T11 范围内不动引擎/模板——book `player-controller.md` 已补边界段（406d116b 之后）。⚪ 设计边界。
+
 - [x] **N10. dirty 场景 + Save 态 play_current 真机冻结编辑器主线程（2026-10-26 T06-T3 矩阵 cell 3 发现）**
   触发：打开已保存场景 → 任意编辑（脏）→ `pie.play_current`（save 策略，默认态）→ play_current 调用正常返回，**下一帧起主线程满 CPU 自旋**（实测 CPU/4s≈5s），BRP 全部无响应，日志停在 `OPERATOR: pie.play_current` 后零输出（保存链最早期）。
   实证（`loop/t06t3_probe_freeze*.log`）：① main 基线（66ef15e8，无 T3 改动）同样冻结=**既有 bug**（T1 的 Save 态 dirty play 真机路径从未跑过，headless guards 全绿）；② clean 场景 play、untitled/dirty + Copy 态 play、Ask→Copy 均不冻；③ connected 后 stop 不冻，但 connecting 窗口内 stop 也触发同款冻结（T3 曾放宽 avail 门后实测 100% 复现，已回退该放宽，connecting-stop 恢复 avail 拒绝+重试语义封路）；④ 保存链单独走（scene.save op）不冻——冻结需要「保存链 + PIE 启动」同帧组合。
@@ -453,9 +456,11 @@
   现象：`swap_remove index (is 1) should be < len (is 1)`，位于 `jackdaw::pie::drain_game_events` exclusive system（bevy 捕获不退出进程），PIE connected 后 1.9s（原件 `H:\workspace_AI\t10b-qa\`+T10b 报告 §九）。
   刻画（T10b 返工轮）：本体无 swap_remove、仓内 tree_view 两处带 position() 护航——断言收敛到 bevy_ecs 内三处无护航点（archetype.rs:630 / table/mod.rs:255/765），「index 1 len 1」匹配**陈旧 EntityLocation**（重入/交错操作特征）；调用链唯一 ECS 结构写路径=pie_projection::project_event 全量镜像投影窗口。与 N10 三项症状类型均不同=**第三种独立问题**。非必现（1 hit/1 clean）。
   修复方向：先 PIE connected ×10 连跑定复发率+RUST_BACKTRACE=1 拿真栈（折入 T11-T2 真机腿）；嫌疑链排序①投影重入→②bevy_ecs 陈旧 location→③树索引上游竞态；🔴 严重度候选（数据结构级 panic）。
+  > 2026-10-28 更新：N13 复发率测定因驱动态（PIE 全形态崩）不可执行，挂账维持（t11-t2-qa.md §四-3）。
+  > 2026-10-28 更新（T11-T3 Mac 真机 ×10 完成）：**复发率=100%**——10/10 轮 connected 全复发，累计 **57 次 panic**（每 connect/stop 周期 ~5-6 次）；同签名第二个受害系统 **`jackdaw::pie::cleanup_session_on_stop`**（原刻画未含）；Mac 上全部被 bevy 系统错误处理器捕获（编辑器存活，`Encountered an error in system ...: Exclusive system panicked`），旧机形态直接杀死编辑器——严重度依机器形态不同；Mac 签名 `swap_remove index (is 0) should be < len (is 0)`（空 vec 退化形态，与旧机 is 1/len 1 同根）。RUST_BACKTRACE=1 在 Mac debug 构建不可用（wgpu LockTrace→libunwind SIGSEGV，见 t11-t3-report 环境节），真栈仍缺。证据 `loop/t11t3-live/t11t3-a2-mac-*`。
 
 - [ ] **N14（=T11 方案 C11）. 单字段 set 后存档丢同组件未编辑字段**（2026-10-28 T11-T2 程序发现+QA 定向复现实锤；主控批准立账）
   现象：entity add 组件后首次单字段 set（如 set move_speed）→save，同组件其他字段（jump_speed）从文档消失（QA 复现链 t11-t2-qa.md §四-2；程序发现 t11-t2-report.md）。
   危害边界（QA 收窄）：触发窗口唯一=add 后首次 set；「非默认改值被丢」场景实测安全（P2 反证——先改过值的字段不会被丢）；当前行为无损系默认值巧合。
   修复方向：add 后首 set 应以「完整组件值」落文档而非仅 set 字段（T3 顺手修，QA 建议）。
-  > 2026-10-28 更新：N13 复发率测定因驱动态（PIE 全形态崩）不可执行，挂账维持（t11-t2-qa.md §四-3）。
+  > 2026-10-28 更新（T11-T3）：**已修**（406d116b，T3 分支）——add 后首 set 以 schema 默认合并整组件落库；Windows 活证（t11t3-a-summary `N14_LIVE_SIBLING_ON_DISK=True`）+ Mac 复证（t11t3-a-mac-summary `N14_LIVE_SIBLING_ON_DISK=PASS`：move_speed 2.0 与 sibling jump_speed 4.5 同在盘上）。勾选留待 QA 复核。

@@ -1,0 +1,19 @@
+EDITOR_READY
+PIE_PROBE scene.open: {"jsonrpc":"2.0","id":2002,"result":{"entities":[],"id":"scene.open","result":"finished","warnings":[]}}
+PIE_PROBE #1: procAlive= exitedMark=0
+PIE_PROBE #2: procAlive= exitedMark=0
+PIE_PROBE #3: procAlive= exitedMark=0
+PIE_PROBE: DEAD (0/3 attempts exited before connecting) -- PIE cells degrade per T10 precedent
+PIE_PROBE_ALIVE_FAIL
+M2_ADD five components via operators: true
+N14_LIVE first-set-after-add: move_speed 2.0 on disk=true; sibling jump_speed 4.5 on disk=true
+N14_LIVE_SIBLING_ON_DISK_PASS
+M2_BUILD_PASS
+M8_SECOND_SET_PASS
+M7PRE_FP(+M9 eye_height=1.3) saved: false
+M7PRE_FP_EYEHEIGHT_FAIL
+M6PRE_FAST move_speed=8 saved: true
+M6PRE_FAST_PASS
+CELL11_STOP_IRON_DEGRADED
+VERDICT_A_MAC: CELL11_STOP_IRON=DEGRADED M2_BUILD=PASS M6PRE_FAST=PASS M7PRE_FP_EYEHEIGHT=FAIL M8_SECOND_SET=PASS N14_LIVE_SIBLING_ON_DISK=PASS PIE_PROBE_ALIVE=FAIL 
+T11T3_A_MAC_DONE
