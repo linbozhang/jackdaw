@@ -1,0 +1,6 @@
+EXPORT boot state={"game_over":false,"menu":true,"paused":false}
+EXPORT menu=false: Hud=Inherited (shown=Inherited) StartScreen=Hidden
+EXPORT health 60: Progress.value=0.6000000238418579 HealthText=60 / 100 (expect 0.6 / 60 / 100)
+EXPORT paused: PauseScreen=Inherited (shown=Inherited)
+EXPORT game_over: GameOverScreen=Inherited (shown=Inherited)
+VERDICT_PARITY_EXPORT: PASS

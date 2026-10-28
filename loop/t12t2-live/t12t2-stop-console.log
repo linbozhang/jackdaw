@@ -1,0 +1,8 @@
+scene.bsn before: 6af809207803b071b8504ca233eea112acda4c4e4495f122d085ed96604b2453
+hud.bsn before:   1007b0d3fddc43db28fad2e15d2d91388c94bfcda6799170724cd1929fd8baaf
+EDITOR_READY
+game up: yes
+scene.bsn after:  6af809207803b071b8504ca233eea112acda4c4e4495f122d085ed96604b2453
+hud.bsn after:    1007b0d3fddc43db28fad2e15d2d91388c94bfcda6799170724cd1929fd8baaf
+VERDICT_STOP_PROOF: PASS (both documents untouched)
+T12T2_STOP_DONE

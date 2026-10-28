@@ -3860,6 +3860,7 @@ mod tests {
             "register_function(is_zero)",
             "register_function(not)",
             "fn spawn_hud",
+            "(spawn_scene, spawn_hud).chain()",
             "JackdawSceneRoot(asset_server.load(\"hud.bsn\"))",
             "fn wire_hud",
             "BindContext(player)",
@@ -3871,6 +3872,8 @@ mod tests {
             "\"restart\" =>",
             "fn handle_pause_action",
             "just_pressed(\"Pause\")",
+            "add_systems(Update, handle_pause_action.before(move_player))",
+            "(apply_health_from_config, update_game_over).chain()",
         ] {
             assert!(
                 lib.contains(needle),
@@ -3924,6 +3927,7 @@ mod tests {
         for stays in [
             "struct GameState",
             "fn spawn_hud",
+            "(spawn_scene, spawn_hud).chain()",
             "register_function(ratio)",
             "fn wire_hud",
             "BindContext(player)",

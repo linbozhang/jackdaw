@@ -1,0 +1,74 @@
+EDITOR_READY
+C4_RED strip texts: Main scene ||  || Embedded || Ready || Jackdaw v0.21.0-dev | /Users/zhanglinbo/workspace/loop-mac/t12t1-game/t12t1-game/assets/scene.bsn ||  || Select (World) || Disconnected || Outliner ||  || Import ||  ||  ||  ||  || Scene || Live ||  || LIVE  Play #1 || Play #1 ||  || Add Entity || 34 entities  0 meshes  2 lights  0 cameras || Viewport ||  ||  ||  ||  ||  ||  ||  ||  ||  ||  ||  ||  ||  ||  ||  ||  || 0.25 ||  ||  || 3D || 2D ||  ||  ||  ||  ||  || Play || Select || jackdaw_bind::evaluate: binding 0 on 722v0: path 'currrent' on 't12t1_game::PlayerHealth': Error accessing element with `.currrent` access(offset 8): The struct accessed doesn't have a `currrent` field || jackdaw_bind::evaluate: binding 0 on 720v0: path 'currrent' on 't12t1_game::PlayerHealth': Error accessing element with `.currr
+C4_RED_TYPBING_VISIBLE_PASS
+fixture restored: 1007b0d3fddc43db28fad2e15d2d91388c94bfcda6799170724cd1929fd8baaf
+window entity: 697v0
+boot state (menu,paused,game_over) = true,false,false (expect true,false,false)
+C4_GREEN_TYPING_GONE_PASS
+sweep_click (787,772): state=true,false,false
+sweep_click (700,772): state=true,false,false
+sweep_click (875,772): state=true,false,false
+sweep_click (550,772): state=true,false,false
+sweep_click (1025,772): state=true,false,false
+sweep_click (787,757): state=true,false,false
+sweep_click (700,757): state=true,false,false
+sweep_click (875,757): state=true,false,false
+sweep_click (550,757): state=true,false,false
+sweep_click (1025,757): state=true,false,false
+sweep_click (787,787): state=true,false,false
+sweep_click (700,787): state=false,false,false
+sweep_click: hit at (700,787)
+after Start: Hud=Inherited StartScreen=Hidden (expect shown=Inherited / Hidden)
+C1_START_BUTTON_PASS
+player=(-2.0,0.8600000739097595,0.0) hazard=(2.0,·,0.0) rig=(,·,)
+player at -2.0 0.0 when the steer starts
+steered to 1.7582387924194336 0.39923834800720215; crossing the sensor
+crossing walk: health 100.0 -> 70.0, player now 13.894866943359375 0.3992323577404022
+damage via hazard walk (KeyD): health 100.0 -> 70.0, Progress.value=0.699999988079071, HealthText=70 / 100
+C2_BAR_DAMAGE_PASS
+C2_BAR_RATIO_PASS
+C2_BAR_TEXT_PASS
+cycle 1: state=false,false,false health=70.0 player=34.0516357421875 0.3992323577404022
+cycle 2: state=false,false,false health=70.0 player=34.15944290161133 0.3992323577404022
+cycle 3: state=false,false,false health=70.0 player=34.177825927734375 0.3992323577404022
+cycle 4: state=false,false,false health=70.0 player=34.2503547668457 0.3992323577404022
+cycle 5: state=false,false,false health=70.0 player=34.50017166137695 0.3992323577404022
+cycle 6: state=false,false,false health=70.0 player=34.62850570678711 0.3992323577404022
+blood-out state=false,false,true GameOverScreen=Inherited
+C2_BLOODOUT_GAMEOVER_PASS
+before Restart: state=false,false,true GameOverScreen=Inherited (shown=Inherited)
+sweep_click (787,772): state=false,false,true
+sweep_click (700,772): state=false,false,true
+sweep_click (875,772): state=false,false,true
+sweep_click (550,772): state=false,false,true
+sweep_click (1025,772): state=false,false,true
+sweep_click (787,757): state=false,false,true
+sweep_click (700,757): state=false,false,true
+sweep_click (875,757): state=false,false,true
+sweep_click (550,757): state=false,false,true
+sweep_click (1025,757): state=false,false,true
+sweep_click (787,787): state=false,false,true
+sweep_click (700,787): state=false,false,false
+sweep_click: hit at (700,787)
+after Restart: state=false,false,false health=100.0 GameOverScreen=Hidden (expect cleared / 100 / Hidden)
+C3_RESTART_RESET_PASS
+after Escape: state=false,true,false PauseScreen=Inherited (shown=Inherited)
+sweep_click (787,772): state=false,true,false
+sweep_click (700,772): state=false,true,false
+sweep_click (875,772): state=false,true,false
+sweep_click (550,772): state=false,true,false
+sweep_click (1025,772): state=false,true,false
+sweep_click (787,757): state=false,true,false
+sweep_click (700,757): state=false,true,false
+sweep_click (875,757): state=false,true,false
+sweep_click (550,757): state=false,true,false
+sweep_click (1025,757): state=false,true,false
+sweep_click (787,787): state=false,true,false
+sweep_click (700,787): state=false,false,false
+sweep_click: hit at (700,787)
+after Resume sweep: state=false,false,false
+C3_PAUSE_RESUME_PASS
+U5: Brush entities=0 HudRoot entities=2 (expect 0 and >=1)
+C5_U5_UI_ONLY_PASS
+VERDICT_PIE_CHAINS: C1_START_BUTTON=PASS C2_BAR_DAMAGE=PASS C2_BAR_RATIO=PASS C2_BAR_TEXT=PASS C2_BLOODOUT_GAMEOVER=PASS C3_PAUSE_RESUME=PASS C3_RESTART_RESET=PASS C4_GREEN_TYPING_GONE=PASS C4_RED_TYPBING_VISIBLE=PASS C5_U5_UI_ONLY=PASS 
+T12T2_PIE_CHAINS_DONE

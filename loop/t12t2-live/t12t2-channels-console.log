@@ -1,0 +1,34 @@
+A: window=1920 x151 StartScreen=x HealthBar=x StartButton=x
+RES_A_1600x900_FAIL
+B: window=1920 x170 StartScreen=x HealthBar=x StartButton=x
+RES_B_1920x1080_FAIL
+DIRECT boot state=true,false,true
+DIRECT menu=false: Hud=Inherited StartScreen=Hidden
+DIRECT health 60 -> Progress.value=0.6000000238418579 (expect 0.6)
+DIRECT paused: PauseScreen=Inherited
+DIRECT game_over: GameOverScreen=Inherited
+PARITY_DIRECT_FAIL
+export build starting (release; several minutes)
+total 411720
+drwxr-xr-x@ 6 zhanglinbo  staff        192 Oct 28 23:03 .
+drwxr-xr-x@ 4 zhanglinbo  staff        128 Oct 28 23:03 ..
+-rw-r--r--@ 1 zhanglinbo  staff         64 Oct 28 23:03 .jackdaw-export
+drwxr-xr-x@ 4 zhanglinbo  staff        128 Oct 28 23:03 assets
+-rw-r--r--@ 1 zhanglinbo  staff        606 Oct 28 23:03 export-manifest.json
+-rwxr-xr-x@ 1 zhanglinbo  staff  210790912 Oct 28 23:03 t12t1-game
+EXPORT_BOOT_FAIL
+PARITY_EXPORT_FAIL
+VERDICT_CHANNELS: PARITY_DIRECT=FAIL PARITY_EXPORT=FAIL RES_A_1600x900=FAIL RES_B_1920x1080=FAIL 
+T12T2_CHANNELS_DONE
+EXPORT boot state={"game_over":false,"menu":true,"paused":false}
+EXPORT menu=false: Hud=Inherited (shown=Inherited) StartScreen=Hidden
+EXPORT health 60: Progress.value=0.6000000238418579 HealthText=60 / 100 (expect 0.6 / 60 / 100)
+EXPORT paused: PauseScreen=Inherited (shown=Inherited)
+EXPORT game_over: GameOverScreen=Inherited (shown=Inherited)
+VERDICT_PARITY_EXPORT: PASS
+DIRECT boot state={"game_over":false,"menu":true,"paused":false}
+DIRECT menu=false: Hud=Inherited (shown=Inherited) StartScreen=Hidden
+DIRECT health 60: Progress.value=0.6000000238418579 HealthText=60 / 100 (expect 0.6 / 60 / 100)
+DIRECT paused: PauseScreen=Inherited (shown=Inherited)
+DIRECT game_over: GameOverScreen=Inherited (shown=Inherited)
+VERDICT_PARITY_DIRECT: PASS

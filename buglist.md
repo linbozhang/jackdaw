@@ -446,6 +446,10 @@
   修复方向：路径断言 canonicalize 比较、平台预算校准、键位映射平台表。归「Mac 基线清理」账。
   > 2026-10-28 勾选：f7f57ab7 修复——深挖反转：7 红中 **5 项实为产品缺陷**（Y8 tab retarget 在 Mac 从未生效=canonical 比较形态／indexed_path 断链告警在 Mac 零警告／journal emit 被 autofs `/home` stat 拖到 70ms×N 次（5ms 预算未动，修后 0.62-1.0ms）／project_window observe 生命周期缺护航 11 处换 `observe_if_alive`），仅 #6 双侧 canonicalize（测试侧）+#9 `select_all_gesture` 平台键（helper）为环境侧；QA PASS a3a4-mac-baseline-qa.md，**Mac integration 基线全绿 5331/5331**（T10a 5303/5303 后新基线）。⚪ 遗留：`canonical_prefab_path` FS 行走通用性能面；lod_group flaky 首见观察（TRY2 过，零复发数据，暂不立账）。
 
+- [ ] **A5. pie_log 窗口上限溢出静默丢弃（与帧排空溢出的明报不对称）**（2026-10-28 T12-T2 QA 回流③建议开票；主控批准立账）
+  `crates/jackdaw_runtime/src/pie_log.rs`（T12-T2 引入）：节流层每秒窗口上限（32 条/秒）溢出时静默丢弃，而每帧 512 条排空溢出有明报——同一转发层两种溢出语义不对称；唯一性错误恰逢窗口满时可能被丢（低概率、低危，但日志即 T12 的验收面）。
+  修复方向：窗口溢出补一条自身计数 warn（或尾条替换+计数标注，形态与帧排空对齐）。小票，下轮触碰 pie_log 时顺手。
+
 - [x] **N10. dirty 场景 + Save 态 play_current 真机冻结编辑器主线程（2026-10-26 T06-T3 矩阵 cell 3 发现）**
   触发：打开已保存场景 → 任意编辑（脏）→ `pie.play_current`（save 策略，默认态）→ play_current 调用正常返回，**下一帧起主线程满 CPU 自旋**（实测 CPU/4s≈5s），BRP 全部无响应，日志停在 `OPERATOR: pie.play_current` 后零输出（保存链最早期）。
   实证（`loop/t06t3_probe_freeze*.log`）：① main 基线（66ef15e8，无 T3 改动）同样冻结=**既有 bug**（T1 的 Save 态 dirty play 真机路径从未跑过，headless guards 全绿）；② clean 场景 play、untitled/dirty + Copy 态 play、Ask→Copy 均不冻；③ connected 后 stop 不冻，但 connecting 窗口内 stop 也触发同款冻结（T3 曾放宽 avail 门后实测 100% 复现，已回退该放宽，connecting-stop 恢复 avail 拒绝+重试语义封路）；④ 保存链单独走（scene.save op）不冻——冻结需要「保存链 + PIE 启动」同帧组合。
