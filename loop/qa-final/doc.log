@@ -1,0 +1,60 @@
+warning: linker stderr: rust-lld: ignoring unknown argument '-fuse-ld=lld'
+  |
+  = note: `#[warn(linker_messages)]` on by default
+
+warning: `jackdaw_env` (build script) generated 1 warning
+warning: `jackdaw_api_macros` (lib) generated 1 warning (1 duplicate)
+warning: `jackdaw_project_build` (build script) generated 1 warning (1 duplicate)
+warning: `jackdaw_package` (build script) generated 1 warning (1 duplicate)
+   Compiling jackdaw_project_build v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_project_build)
+   Compiling ring v0.17.14
+warning: public documentation for `system_access_entries` links to private item `ambiguities_for`
+   --> crates\jackdaw_remote\src\ecs_methods.rs:147:42
+    |
+147 | /// unregistered (the same fallback as [`ambiguities_for`]).
+    |                                          ^^^^^^^^^^^^^^^ this item is private
+    |
+    = note: this link resolves only because you passed `--document-private-items`, but will break without
+    = note: `#[warn(rustdoc::private_intra_doc_links)]` on by default
+
+warning: `jackdaw_remote` (lib doc) generated 1 warning
+ Documenting jackdaw_project_build v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_project_build)
+   Compiling rustls v0.23.43
+    Checking jackdaw_scaffold v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_scaffold)
+    Checking jackdaw_cli_internal v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_cli)
+ Documenting jackdaw_cli_internal v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_cli)
+ Documenting jackdaw_scaffold v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_scaffold)
+    Checking jackdaw v0.21.0-dev (E:\Project\rust\jackdaw)
+ Documenting jackdaw v0.21.0-dev (E:\Project\rust\jackdaw)
+    Checking rustls-webpki v0.103.14
+    Checking ureq v2.12.1
+ Documenting jd v0.21.0-dev (E:\Project\rust\jackdaw\crates\jd)
+ Documenting jackdaw_editor v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_editor)
+warning: public documentation for `GameExportPlugin` links to private item `add_to_extension`
+   --> src\game_export.rs:230:7
+    |
+230 | /// [`add_to_extension`], like every operator.
+    |       ^^^^^^^^^^^^^^^^ this item is private
+    |
+    = note: this link resolves only because you passed `--document-private-items`, but will break without
+    = note: `#[warn(rustdoc::private_intra_doc_links)]` on by default
+
+warning: public documentation for `pie` links to private item `BuildKey`
+  --> src\pie.rs:10:45
+   |
+10 | //! instance number). Builds are keyed by [`BuildKey`]: the project root
+   |                                             ^^^^^^^^ this item is private
+   |
+   = note: this link resolves only because you passed `--document-private-items`, but will break without
+
+warning: unclosed HTML tag `outcome`
+   --> src\game_export.rs:202:53
+    |
+202 | /// the outcome, the panel shows "Build succeeded - <outcome>", and the
+    |                                                     ^^^^^^^^^
+    |
+    = note: `#[warn(rustdoc::invalid_html_tags)]` on by default
+
+warning: `jackdaw` (lib doc) generated 3 warnings
+    Finished `dev` profile [optimized + debuginfo] target(s) in 1m 22s
+   Generated E:\Project\rust\jackdaw\target\doc\bevy_window_chrome\index.html and 56 other files

@@ -1,0 +1,13 @@
+True
+setup,window,INFO,"hwnd=1395458312 logical center=(461,274)"
+T34,setup,INFO,"after viewport click: mode="Object" focus="71v0""
+T34,fixture,INFO,"Digit1 -> "Object""
+T3,1,PASS,"d4={"BrushEdit":"Clip"} esc="Object" preFocus=null"
+T3,cancel-op,INFO,"reenter="Object" jackdaw/cancel->"Object""
+T4,1,PASS,"k={"BrushEdit":"Knife"} escPath={"BrushEdit":"Knife"} escExit="Object""
+T9,modal-G,PASS,"modal:  ->  (G starts no modal; systems disabled by design)"
+T9,face-commit,FAIL,"modal=brush.face.drag geometryChanged=False (control drag commits)"
+T9,face-esc,BLOCKED,"control drag changed nothing; face drag never started"
+V8,fixture,BLOCKED,"no EditableText rows queryable (reflect path missing)"
+T10,calib,BLOCKED,"snap.toggle changed 0 button variants (expected 1): "
+SUPPLEMENT DONE -> E:\Project\rust\jackdaw\loop\reports\t01-t2-supplement\s1\metrics.csv

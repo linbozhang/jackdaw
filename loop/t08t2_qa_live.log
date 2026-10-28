@@ -1,0 +1,26 @@
+True
+editor ready
+P0 card dirty; disk has 0.75: False
+P5 baseline: clean tab
+P5 after asset edit: dirty=True undo_len 1->2
+P5 FAIL: asset edit dirtied the scene tab
+True
+LEG A: play running (N10 zone)
+LEG C scene_snapshot: count=54 moved=False (my-game has no animated entity; moved expected False)
+True
+LEG A PASS: N10-zone play survived; the launch chain saved the 0.8 card
+LEG A post-stop tab dirty=False
+LEG B sync save: disk has 0.85 right after game.export: False
+LEG B state=ready distHas085=False
+LEG B FAIL: card value did not reach disk
+QUIT1 dialog: no dialog node
+QUIT1 names asset: not found
+QUIT1 Cancel: alive=False diskHas09=False
+QUIT1 FAIL
+Get-Process : 找不到进程标识符为 2436 的进程。
+所在位置 E:\Project\rust\jackdaw\loop\qa\t08-t2-qa-live.ps1:193 字符: 10
++ $hwnd = (Get-Process -Id $proc.Id).MainWindowHandle
++          ~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (2436:Int32) [Get-Process], ProcessCommandException
+    + FullyQualifiedErrorId : NoProcessFoundForGivenId,Microsoft.PowerShell.Commands.GetProcessCommand
+ 

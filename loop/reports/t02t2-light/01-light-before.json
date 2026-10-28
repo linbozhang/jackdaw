@@ -1,0 +1,23 @@
+﻿{
+    "components":  {
+                       "bevy_ecs::name::Name":  "Directional Light",
+                       "bevy_light::directional_light::DirectionalLight":  {
+                                                                               "affects_lightmapped_mesh_diffuse":  true,
+                                                                               "color":  {
+                                                                                             "LinearRgba":  {
+                                                                                                                "alpha":  1.0,
+                                                                                                                "blue":  1.0,
+                                                                                                                "green":  1.0,
+                                                                                                                "red":  1.0
+                                                                                                            }
+                                                                                         },
+                                                                               "contact_shadows_enabled":  false,
+                                                                               "illuminance":  10000.0,
+                                                                               "shadow_depth_bias":  0.019999999552965164,
+                                                                               "shadow_maps_enabled":  true,
+                                                                               "shadow_normal_bias":  1.7999999523162842,
+                                                                               "soft_shadow_size":  null
+                                                                           }
+                   },
+    "entity":  "3576v0"
+}

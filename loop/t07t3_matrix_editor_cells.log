@@ -1,0 +1,14 @@
+True
+editor ready pid=40624
+CELL 8 PASS: Build panel showed compiling lines during the export build
+CELL 1 PASS: jackdaw/export=ready dist=C:\Users\linbo.zhang\Projects\my-game\.jackdaw\dist\release files=2 started_at=1793015999
+CELL 2 PASS: failed state=failed, old dist SHA unchanged (4 files)
+CELL 3 PASS: second export byte-identical (2 files) + manifest equal (time excluded)
+CELL 4 PASS: moved game ran  screenshot bytes (see cell4-moved-game.png)
+CELL 9 PASS: PIE-session export shipped no .jackdaw-pie and no .bak
+CELL 10 PASS: dev Play built (--locked) and ran; Stop returned to authoring
+CELL 5 FAIL: refused=False kept=True force-staged=False out=
+CELL 6 FAIL: refused=False sourcesAlive=True out=
+CELL 7 FAIL: [2m2026-10-26T12:00:52.018783Z[0m [32m INFO[0m [2mbevy_diagnostic::system_information_diagnostics_plugin::internal[0m[2m:[0m SystemInfo { os: "Windows 11 Pro", kernel: "26100", cpu: "AMD Ryzen 7 9700X 8-Core Processor", core_count: "8", memory: "93.4 GiB" }
+MATRIX: 7 passed, 3 failed (8,1,2,3,4,9,10,5,6,7)
+MATRIX-EXIT=1 

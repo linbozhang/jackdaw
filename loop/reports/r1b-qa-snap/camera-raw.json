@@ -1,0 +1,502 @@
+﻿{
+    "jsonrpc":  "2.0",
+    "id":  1,
+    "result":  [
+                   {
+                       "components":  {
+                                          "bevy_camera::camera::Camera":  {
+                                                                              "clear_color":  {
+                                                                                                  "Custom":  {
+                                                                                                                 "Srgba":  {
+                                                                                                                               "alpha":  1.0,
+                                                                                                                               "blue":  0.15000000596046448,
+                                                                                                                               "green":  0.15000000596046448,
+                                                                                                                               "red":  0.15000000596046448
+                                                                                                                           }
+                                                                                                             }
+                                                                                              },
+                                                                              "computed":  {
+                                                                                               "clip_from_view":  [
+                                                                                                                      2.4142134189605713,
+                                                                                                                      0.0,
+                                                                                                                      0.0,
+                                                                                                                      0.0,
+                                                                                                                      0.0,
+                                                                                                                      2.4142134189605713,
+                                                                                                                      0.0,
+                                                                                                                      0.0,
+                                                                                                                      0.0,
+                                                                                                                      0.0,
+                                                                                                                      0.0,
+                                                                                                                      -1.0,
+                                                                                                                      0.0,
+                                                                                                                      0.0,
+                                                                                                                      0.10000000149011612,
+                                                                                                                      0.0
+                                                                                                                  ],
+                                                                                               "old_sub_camera_view":  null,
+                                                                                               "old_viewport_size":  null,
+                                                                                               "target_info":  {
+                                                                                                                   "physical_size":  [
+                                                                                                                                         256,
+                                                                                                                                         256
+                                                                                                                                     ],
+                                                                                                                   "scale_factor":  1.0
+                                                                                                               }
+                                                                                           },
+                                                                              "invert_culling":  false,
+                                                                              "is_active":  false,
+                                                                              "msaa_writeback":  "Auto",
+                                                                              "order":  -1,
+                                                                              "output_mode":  {
+                                                                                                  "Write":  {
+                                                                                                                "blend_state":  null,
+                                                                                                                "clear_color":  "Default"
+                                                                                                            }
+                                                                                              },
+                                                                              "sub_camera_view":  null,
+                                                                              "viewport":  null
+                                                                          },
+                                          "bevy_transform::components::transform::Transform":  {
+                                                                                                   "rotation":  [
+                                                                                                                    0.0,
+                                                                                                                    0.0,
+                                                                                                                    0.0,
+                                                                                                                    1.0
+                                                                                                                ],
+                                                                                                   "scale":  [
+                                                                                                                 1.0,
+                                                                                                                 1.0,
+                                                                                                                 1.0
+                                                                                                             ],
+                                                                                                   "translation":  [
+                                                                                                                       0.0,
+                                                                                                                       0.0,
+                                                                                                                       3.0
+                                                                                                                   ]
+                                                                                               }
+                                      },
+                       "entity":  "3549v0"
+                   },
+                   {
+                       "components":  {
+                                          "bevy_camera::camera::Camera":  {
+                                                                              "clear_color":  "Default",
+                                                                              "computed":  {
+                                                                                               "clip_from_view":  [
+                                                                                                                      1.3579950332641602,
+                                                                                                                      0.0,
+                                                                                                                      0.0,
+                                                                                                                      0.0,
+                                                                                                                      0.0,
+                                                                                                                      2.4142134189605713,
+                                                                                                                      0.0,
+                                                                                                                      0.0,
+                                                                                                                      0.0,
+                                                                                                                      0.0,
+                                                                                                                      0.0,
+                                                                                                                      -1.0,
+                                                                                                                      0.0,
+                                                                                                                      0.0,
+                                                                                                                      0.10000000149011612,
+                                                                                                                      0.0
+                                                                                                                  ],
+                                                                                               "old_sub_camera_view":  null,
+                                                                                               "old_viewport_size":  null,
+                                                                                               "target_info":  {
+                                                                                                                   "physical_size":  [
+                                                                                                                                         1920,
+                                                                                                                                         1080
+                                                                                                                                     ],
+                                                                                                                   "scale_factor":  1.5
+                                                                                                               }
+                                                                                           },
+                                                                              "invert_culling":  false,
+                                                                              "is_active":  false,
+                                                                              "msaa_writeback":  "Auto",
+                                                                              "order":  0,
+                                                                              "output_mode":  {
+                                                                                                  "Write":  {
+                                                                                                                "blend_state":  null,
+                                                                                                                "clear_color":  "Default"
+                                                                                                            }
+                                                                                              },
+                                                                              "sub_camera_view":  null,
+                                                                              "viewport":  null
+                                                                          },
+                                          "bevy_transform::components::transform::Transform":  {
+                                                                                                   "rotation":  [
+                                                                                                                    0.0,
+                                                                                                                    0.0,
+                                                                                                                    0.0,
+                                                                                                                    1.0
+                                                                                                                ],
+                                                                                                   "scale":  [
+                                                                                                                 1.0,
+                                                                                                                 1.0,
+                                                                                                                 1.0
+                                                                                                             ],
+                                                                                                   "translation":  [
+                                                                                                                       0.0,
+                                                                                                                       0.0,
+                                                                                                                       0.0
+                                                                                                                   ]
+                                                                                               }
+                                      },
+                       "entity":  "4139v0"
+                   },
+                   {
+                       "components":  {
+                                          "bevy_camera::camera::Camera":  {
+                                                                              "clear_color":  "Default",
+                                                                              "computed":  {
+                                                                                               "clip_from_view":  [
+                                                                                                                      0.7091591954231262,
+                                                                                                                      0.0,
+                                                                                                                      0.0,
+                                                                                                                      0.0,
+                                                                                                                      0.0,
+                                                                                                                      2.4142134189605713,
+                                                                                                                      0.0,
+                                                                                                                      0.0,
+                                                                                                                      0.0,
+                                                                                                                      0.0,
+                                                                                                                      0.0,
+                                                                                                                      -1.0,
+                                                                                                                      0.0,
+                                                                                                                      0.0,
+                                                                                                                      0.10000000149011612,
+                                                                                                                      0.0
+                                                                                                                  ],
+                                                                                               "old_sub_camera_view":  null,
+                                                                                               "old_viewport_size":  null,
+                                                                                               "target_info":  {
+                                                                                                                   "physical_size":  [
+                                                                                                                                         943,
+                                                                                                                                         277
+                                                                                                                                     ],
+                                                                                                                   "scale_factor":  1.0
+                                                                                                               }
+                                                                                           },
+                                                                              "invert_culling":  false,
+                                                                              "is_active":  true,
+                                                                              "msaa_writeback":  "Auto",
+                                                                              "order":  -1,
+                                                                              "output_mode":  {
+                                                                                                  "Write":  {
+                                                                                                                "blend_state":  null,
+                                                                                                                "clear_color":  "Default"
+                                                                                                            }
+                                                                                              },
+                                                                              "sub_camera_view":  null,
+                                                                              "viewport":  null
+                                                                          },
+                                          "bevy_transform::components::transform::Transform":  {
+                                                                                                   "rotation":  [
+                                                                                                                    -0.22975292801856995,
+                                                                                                                    0.0,
+                                                                                                                    0.0,
+                                                                                                                    0.9732490181922913
+                                                                                                                ],
+                                                                                                   "scale":  [
+                                                                                                                 1.0,
+                                                                                                                 1.0,
+                                                                                                                 1.0
+                                                                                                             ],
+                                                                                                   "translation":  [
+                                                                                                                       0.0,
+                                                                                                                       4.0,
+                                                                                                                       8.0
+                                                                                                                   ]
+                                                                                               }
+                                      },
+                       "entity":  "3696v0"
+                   },
+                   {
+                       "components":  {
+                                          "bevy_camera::camera::Camera":  {
+                                                                              "clear_color":  "Default",
+                                                                              "computed":  {
+                                                                                               "clip_from_view":  [
+                                                                                                                      1.3579950332641602,
+                                                                                                                      0.0,
+                                                                                                                      0.0,
+                                                                                                                      0.0,
+                                                                                                                      0.0,
+                                                                                                                      2.4142134189605713,
+                                                                                                                      0.0,
+                                                                                                                      0.0,
+                                                                                                                      0.0,
+                                                                                                                      0.0,
+                                                                                                                      0.0,
+                                                                                                                      -1.0,
+                                                                                                                      0.0,
+                                                                                                                      0.0,
+                                                                                                                      0.10000000149011612,
+                                                                                                                      0.0
+                                                                                                                  ],
+                                                                                               "old_sub_camera_view":  null,
+                                                                                               "old_viewport_size":  null,
+                                                                                               "target_info":  {
+                                                                                                                   "physical_size":  [
+                                                                                                                                         320,
+                                                                                                                                         180
+                                                                                                                                     ],
+                                                                                                                   "scale_factor":  1.0
+                                                                                                               }
+                                                                                           },
+                                                                              "invert_culling":  false,
+                                                                              "is_active":  false,
+                                                                              "msaa_writeback":  "Auto",
+                                                                              "order":  -3,
+                                                                              "output_mode":  {
+                                                                                                  "Write":  {
+                                                                                                                "blend_state":  null,
+                                                                                                                "clear_color":  "Default"
+                                                                                                            }
+                                                                                              },
+                                                                              "sub_camera_view":  null,
+                                                                              "viewport":  null
+                                                                          },
+                                          "bevy_transform::components::transform::Transform":  {
+                                                                                                   "rotation":  [
+                                                                                                                    0.0,
+                                                                                                                    0.0,
+                                                                                                                    0.0,
+                                                                                                                    1.0
+                                                                                                                ],
+                                                                                                   "scale":  [
+                                                                                                                 1.0,
+                                                                                                                 1.0,
+                                                                                                                 1.0
+                                                                                                             ],
+                                                                                                   "translation":  [
+                                                                                                                       0.0,
+                                                                                                                       0.0,
+                                                                                                                       0.0
+                                                                                                                   ]
+                                                                                               }
+                                      },
+                       "entity":  "3556v0"
+                   },
+                   {
+                       "components":  {
+                                          "bevy_camera::camera::Camera":  {
+                                                                              "clear_color":  "Default",
+                                                                              "computed":  {
+                                                                                               "clip_from_view":  [
+                                                                                                                      0.0015625000232830644,
+                                                                                                                      0.0,
+                                                                                                                      0.0,
+                                                                                                                      0.0,
+                                                                                                                      0.0,
+                                                                                                                      0.0027777778450399637,
+                                                                                                                      0.0,
+                                                                                                                      0.0,
+                                                                                                                      0.0,
+                                                                                                                      0.0,
+                                                                                                                      0.0005000000237487257,
+                                                                                                                      0.0,
+                                                                                                                      0.0,
+                                                                                                                      0.0,
+                                                                                                                      0.5,
+                                                                                                                      1.0
+                                                                                                                  ],
+                                                                                               "old_sub_camera_view":  null,
+                                                                                               "old_viewport_size":  null,
+                                                                                               "target_info":  {
+                                                                                                                   "physical_size":  [
+                                                                                                                                         1280,
+                                                                                                                                         720
+                                                                                                                                     ],
+                                                                                                                   "scale_factor":  1.0
+                                                                                                               }
+                                                                                           },
+                                                                              "invert_culling":  false,
+                                                                              "is_active":  false,
+                                                                              "msaa_writeback":  "Auto",
+                                                                              "order":  -1,
+                                                                              "output_mode":  {
+                                                                                                  "Write":  {
+                                                                                                                "blend_state":  null,
+                                                                                                                "clear_color":  "Default"
+                                                                                                            }
+                                                                                              },
+                                                                              "sub_camera_view":  null,
+                                                                              "viewport":  null
+                                                                          },
+                                          "bevy_transform::components::transform::Transform":  {
+                                                                                                   "rotation":  [
+                                                                                                                    0.0,
+                                                                                                                    0.0,
+                                                                                                                    0.0,
+                                                                                                                    1.0
+                                                                                                                ],
+                                                                                                   "scale":  [
+                                                                                                                 1.0,
+                                                                                                                 1.0,
+                                                                                                                 1.0
+                                                                                                             ],
+                                                                                                   "translation":  [
+                                                                                                                       0.0,
+                                                                                                                       0.0,
+                                                                                                                       999.0
+                                                                                                                   ]
+                                                                                               }
+                                      },
+                       "entity":  "3767v0"
+                   },
+                   {
+                       "components":  {
+                                          "bevy_camera::camera::Camera":  {
+                                                                              "clear_color":  {
+                                                                                                  "Custom":  {
+                                                                                                                 "LinearRgba":  {
+                                                                                                                                    "alpha":  0.0,
+                                                                                                                                    "blue":  0.0,
+                                                                                                                                    "green":  0.0,
+                                                                                                                                    "red":  0.0
+                                                                                                                                }
+                                                                                                             }
+                                                                                              },
+                                                                              "computed":  {
+                                                                                               "clip_from_view":  [
+                                                                                                                      0.0015625000232830644,
+                                                                                                                      0.0,
+                                                                                                                      0.0,
+                                                                                                                      0.0,
+                                                                                                                      0.0,
+                                                                                                                      0.0027777778450399637,
+                                                                                                                      0.0,
+                                                                                                                      0.0,
+                                                                                                                      0.0,
+                                                                                                                      0.0,
+                                                                                                                      0.0005000000237487257,
+                                                                                                                      0.0,
+                                                                                                                      0.0,
+                                                                                                                      0.0,
+                                                                                                                      0.5,
+                                                                                                                      1.0
+                                                                                                                  ],
+                                                                                               "old_sub_camera_view":  null,
+                                                                                               "old_viewport_size":  null,
+                                                                                               "target_info":  {
+                                                                                                                   "physical_size":  [
+                                                                                                                                         1920,
+                                                                                                                                         1080
+                                                                                                                                     ],
+                                                                                                                   "scale_factor":  1.5
+                                                                                                               }
+                                                                                           },
+                                                                              "invert_culling":  false,
+                                                                              "is_active":  true,
+                                                                              "msaa_writeback":  "Auto",
+                                                                              "order":  0,
+                                                                              "output_mode":  {
+                                                                                                  "Write":  {
+                                                                                                                "blend_state":  null,
+                                                                                                                "clear_color":  "Default"
+                                                                                                            }
+                                                                                              },
+                                                                              "sub_camera_view":  null,
+                                                                              "viewport":  null
+                                                                          },
+                                          "bevy_transform::components::transform::Transform":  {
+                                                                                                   "rotation":  [
+                                                                                                                    0.0,
+                                                                                                                    0.0,
+                                                                                                                    0.0,
+                                                                                                                    1.0
+                                                                                                                ],
+                                                                                                   "scale":  [
+                                                                                                                 1.0,
+                                                                                                                 1.0,
+                                                                                                                 1.0
+                                                                                                             ],
+                                                                                                   "translation":  [
+                                                                                                                       0.0,
+                                                                                                                       0.0,
+                                                                                                                       0.0
+                                                                                                                   ]
+                                                                                               }
+                                      },
+                       "entity":  "3536v0"
+                   },
+                   {
+                       "components":  {
+                                          "bevy_camera::camera::Camera":  {
+                                                                              "clear_color":  {
+                                                                                                  "Custom":  {
+                                                                                                                 "Srgba":  {
+                                                                                                                               "alpha":  1.0,
+                                                                                                                               "blue":  0.18000000715255737,
+                                                                                                                               "green":  0.16500000655651093,
+                                                                                                                               "red":  0.16500000655651093
+                                                                                                                           }
+                                                                                                             }
+                                                                                              },
+                                                                              "computed":  {
+                                                                                               "clip_from_view":  [
+                                                                                                                      2.4142134189605713,
+                                                                                                                      0.0,
+                                                                                                                      0.0,
+                                                                                                                      0.0,
+                                                                                                                      0.0,
+                                                                                                                      2.4142134189605713,
+                                                                                                                      0.0,
+                                                                                                                      0.0,
+                                                                                                                      0.0,
+                                                                                                                      0.0,
+                                                                                                                      0.0,
+                                                                                                                      -1.0,
+                                                                                                                      0.0,
+                                                                                                                      0.0,
+                                                                                                                      0.10000000149011612,
+                                                                                                                      0.0
+                                                                                                                  ],
+                                                                                               "old_sub_camera_view":  null,
+                                                                                               "old_viewport_size":  null,
+                                                                                               "target_info":  {
+                                                                                                                   "physical_size":  [
+                                                                                                                                         128,
+                                                                                                                                         128
+                                                                                                                                     ],
+                                                                                                                   "scale_factor":  1.0
+                                                                                                               }
+                                                                                           },
+                                                                              "invert_culling":  false,
+                                                                              "is_active":  false,
+                                                                              "msaa_writeback":  "Auto",
+                                                                              "order":  -1,
+                                                                              "output_mode":  {
+                                                                                                  "Write":  {
+                                                                                                                "blend_state":  null,
+                                                                                                                "clear_color":  "Default"
+                                                                                                            }
+                                                                                              },
+                                                                              "sub_camera_view":  null,
+                                                                              "viewport":  null
+                                                                          },
+                                          "bevy_transform::components::transform::Transform":  {
+                                                                                                   "rotation":  [
+                                                                                                                    -0.2798481583595276,
+                                                                                                                    0.3647052049636841,
+                                                                                                                    0.1159169003367424,
+                                                                                                                    0.8804762959480286
+                                                                                                                ],
+                                                                                                   "scale":  [
+                                                                                                                 1.0,
+                                                                                                                 1.0,
+                                                                                                                 1.0
+                                                                                                             ],
+                                                                                                   "translation":  [
+                                                                                                                       3.0,
+                                                                                                                       3.0,
+                                                                                                                       3.0
+                                                                                                                   ]
+                                                                                               }
+                                      },
+                       "entity":  "3557v0"
+                   }
+               ]
+}

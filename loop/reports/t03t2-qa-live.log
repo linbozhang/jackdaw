@@ -1,0 +1,68 @@
+READY pid=41912
+PASS  stage: zone.bsn loaded, Zone reachable
+[stage] window scale factor = 1
+[tree] walk collected 689 nodes
+[row] AllNodes=689 pre-rect=2 post-rect=1
+[row]   pre e=12884897430 rect=[464.0,9.0,28.0,16.0]
+[row]   pre e=12884896854 rect=[8.0,127.0,278.0,28.0]
+PASS  stage: Zone selected through the outliner
+[stage] history probe: {"dirty":false,"has_save_baseline":true,"redo":[],"redo_len":0,"saved_len":0,"top":null,"undo":[],"undo_len":0}
+PASS  stage: jackdaw/history reads empty stacks on a clean scene
+PASS  stage: freshly loaded scene reads clean
+[tree] walk collected 788 nodes
+[chain1] Transform card clicked: True
+[tree] walk collected 790 nodes
+[chain1] translation trio: e=12884897183 y=212 x=1736 | e=12884897396 y=212 x=1803 | e=12884897394 y=212 x=1870
+[chain1] x: 0 -> 0.25; undo_len: 0 -> 1 (top: Set component field)
+PASS  chain1: the scrub moved Zone.x (0 -> 0.25)
+PASS  chain1: the scrub gesture is ONE entry (undo_len 0 -> 1)
+PASS  chain1: the scrub dirties the tab
+PASS  chain1: ONE undo returns x to 0 (got 0)
+PASS  chain1: stack back at 0; redo_len 1
+PASS  chain1: undo back to the saved content reads clean
+[row] AllNodes=788 pre-rect=2 post-rect=1
+[row]   pre e=12884897430 rect=[464.0,9.0,28.0,16.0]
+[row]   pre e=12884896854 rect=[8.0,127.0,278.0,28.0]
+[chain2] undo_len: 0 -> 1 (top: Duplicate); #Zone in document: 2
+PASS  chain2: the menu Duplicate is ONE entry (undo_len 0 -> 1)
+PASS  chain2: the copy reached the document (#Zone x2)
+PASS  chain2: ONE undo removes the copy (#Zone x2 -> x1)
+[chain3] spawn_instance result: {"result":{"entities":[30064766367],"id":"prefab.spawn_instance","result":"finished","warnings":[]}}
+[chain3] spawned entity bsn: 
+[chain3] scene_tree: {"tree":[{"children":[{"children":[{"children":[],"components":["bevy_ecs::hierarchy::ChildOf","bevy_ecs::name::Name","bevy_transform::components::global_transform::GlobalTransform","bevy_transform::components::transform::Transform","bevy_transform::components::transform::TransformTreeChanged","jackdaw_bsn::document::AstNodeRef","jackdaw_prefab::components::PrefabEntityId","jackdaw_widgets_runtime::AuthoredWidget"],"entity":30064766585,"missing_source":null,"name":"Pebble"}],"components":["bevy_ecs::hierarchy::ChildOf","bevy_ecs::hierarchy::Children","bevy_ecs::name::Name","bevy_transform::components::global_transform::GlobalTransform","bevy_transform::components::transform::Transform","bevy_transform::components::transform::TransformTreeChanged","jackdaw_bsn::document::AstNodeRef","jackdaw_prefab::components::IsA","jackdaw_prefab::components::PrefabEntityId","jackdaw_scene_types::node_id::SceneNodeId","jackdaw_widgets_runtime::AuthoredWidget"],"entity":25769799077,"missing_source":null,"name":"Rock"}],"components":["bevy_ecs::hierarchy::Children","bevy_ecs::name::Name","bevy_transform::components::global_transform::GlobalTransform","bevy_transform::components::transform::Transform","bevy_transform::components::transform::TransformTreeChanged","jackdaw_bsn::document::AstNodeRef","jackdaw_widgets::tree_view::TreeNodeSource","jackdaw_widgets_runtime::AuthoredWidget"],"entity":25769798450,"missing_source":null,"name":"Zone"}]}
+[chain3] scene_bsn head: #Zone
+bevy_transform::components::transform::Transform
+bevy_ecs::hierarchy::Children [
+    jackdaw::prefab::components::IsA {
+        source: "C:\\Users\\linbo.zhang\\AppData\\Local\\Temp\\t03t2-qa-912848459\\assets\\prefabs/rock.bsn",
+        deleted: [],
+    }
+    jackdaw::prefab::components::PrefabEntityId(0)
+    jackdaw_scene_types::node_id::SceneNodeId(5964813801033945741)
+    bevy_transform::components::transform::Transform {
+        translation: glam::Vec3 {
+            x: 0.0,
+            y: 0.0,
+            z: 0.0,
+        },
+    }
+    bevy_ecs::hierarchy::Children [
+        jackdaw::prefab::components::PrefabEntityId(7)
+    ]
+]
+
+[row] AllNodes=824 pre-rect=1 post-rect=1
+[row]   pre e=12884896767 rect=[50.0,183.0,236.0,28.0]
+[row] AllNodes=824 pre-rect=2 post-rect=1
+[row]   pre e=12884897430 rect=[464.0,9.0,28.0,16.0]
+[row]   pre e=30064766349 rect=[8.0,127.0,278.0,28.0]
+[chain3] pebble row rect=[50.0,183.0,236.0,28.0] zone row rect=[8.0,127.0,278.0,28.0]
+[chain3] undo_len: 1 -> 2 (top: Unpack Prefab Child); #Pebble: 0 -> 1
+PASS  chain3: the gesture changed the document
+PASS  chain3: the unpack gesture is ONE entry (undo_len 1 -> 2)
+PASS  chain3: the unpacked child appears exactly once (#Pebble 0 -> 1)
+PASS  chain3: ONE undo returns the document byte-for-byte
+PASS  chain3: redo restores the unpacked document
+PASS  chain3: saved reads clean
+PASS  chain3: save then undo leaves the tab DIRTY (close must prompt)
+RESULT failures=0

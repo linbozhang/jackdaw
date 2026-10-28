@@ -1,0 +1,23 @@
+
+running 18 tests
+test tests::a_build_outcome_carries_what_an_export_checks ... ok
+test tests::a_config_label_is_not_read_as_a_project_path ... ok
+test tests::a_missing_sdk_is_information_for_a_game_and_a_failure_for_an_extension ... ok
+test tests::a_usable_sdk_passes_for_every_project ... ok
+test tests::a_configured_run_points_its_asset_root_at_the_run_cwd ... ok
+test tests::an_out_directory_must_be_absolute ... ok
+test tests::a_run_that_sets_its_own_asset_root_wins ... ok
+test tests::export_flag_values_are_not_read_as_project_paths ... ok
+test tests::the_bare_run_path_runs_plain_cargo_run_in_the_project_root ... ok
+test tests::the_config_flag_reads_its_label ... ok
+test tests::the_export_profile_flag_beats_the_target_then_defaults_to_release ... ok
+test tests::a_missing_manifest_names_the_file ... ok
+test tests::a_removed_runtime_feature_in_a_project_not_set_up_is_fixed_by_import ... ok
+test tests::a_removed_runtime_feature_fails_with_the_upgrade_that_drops_it ... ok
+test tests::current_runtime_features_are_no_problem ... ok
+test tests::an_invalid_target_reports_its_shape_before_resolving_anything ... ok
+test tests::an_unknown_label_lists_the_runs_the_manifest_has ... ok
+test tests::an_unknown_export_profile_lists_what_is_available ... ok
+
+test result: ok. 18 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+

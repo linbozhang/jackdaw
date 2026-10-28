@@ -1,0 +1,5 @@
+error: unexpected argument 'reference_rewrite::moving_a_file' found
+
+Usage: cargo.exe test [OPTIONS] [TESTNAME] [-- [ARGS]...]
+
+For more information, try '--help'.

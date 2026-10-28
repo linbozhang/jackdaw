@@ -1,0 +1,9 @@
+PASS: grid 1: on-disk reference renamed
+PASS: grid 1: old path gone, new file there
+timeout waiting for jackdaw/screenshot System.Collections.Hashtable
+ËùÔÚÎ»ÖÃ E:\Project\rust\jackdaw\loop\qa\t05-final-live.ps1:28 ×Ö·û: 5
++     throw "timeout waiting for $Method $Params"
++     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : OperationStopped: (timeout waiting...tions.Hashtable:String) [], RuntimeException
+    + FullyQualifiedErrorId : timeout waiting for jackdaw/screenshot System.Collections.Hashtable
+ 

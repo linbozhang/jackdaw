@@ -1,0 +1,54 @@
+
+running 17 tests
+test export::tests::a_drive_root_is_a_hazard_across_drives ... ok
+test export::tests::a_dynamic_linking_build_is_refused_with_guidance ... ok
+test export::tests::a_filesystem_root_is_always_a_staging_hazard ... ok
+test export::tests::the_default_staging_directory_is_jackdaw_dist_under_the_profile ... ok
+test export::tests::verbatim_prefixes_are_stripped_and_hidden_dots_are_still_detected ... ok
+test export::tests::a_missing_executable_is_refused ... ok
+test export::tests::a_project_without_assets_is_refused_not_exported_broken ... ok
+test export::tests::a_case_variant_of_the_output_directory_cannot_bypass_the_guard ... FAILED
+test export::tests::a_staging_directory_inside_the_assets_tree_is_refused ... ok
+test export::tests::a_verbatim_prefix_cannot_smuggle_a_directory_past_the_guard ... ok
+test export::tests::a_staging_directory_that_contains_the_sources_is_refused ... ok
+test export::tests::a_relative_staging_directory_is_refused_before_anything_is_touched ... ok
+test export::tests::a_locked_previous_export_refuses_the_swap_and_stays_intact ... FAILED
+test export::tests::staging_copies_the_executable_and_the_whole_assets_tree ... ok
+test export::tests::a_locked_executable_source_keeps_the_previous_export_intact ... FAILED
+test export::tests::a_failure_while_staging_keeps_the_previous_export_intact ... FAILED
+test export::tests::a_re_export_clears_the_staging_directory_first ... ok
+
+failures:
+
+---- export::tests::a_case_variant_of_the_output_directory_cannot_bypass_the_guard stdout ----
+
+thread 'export::tests::a_case_variant_of_the_output_directory_cannot_bypass_the_guard' (101656) panicked at crates\jackdaw_project_build\src\export.rs:798:9:
+C:\Users\linbo.zhang\AppData\Local\Temp\JACKDAW_EXPORT_CASE-GUARD_40556 was accepted: could not read C:\Users\linbo.zhang\AppData\Local\Temp\jackdaw_export_case-guard_40556\assets: 系统找不到指定的路径。 (os error 3)
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- export::tests::a_locked_previous_export_refuses_the_swap_and_stays_intact stdout ----
+
+thread 'export::tests::a_locked_previous_export_refuses_the_swap_and_stays_intact' (17808) panicked at crates\jackdaw_project_build\src\export.rs:764:9:
+the failure names the swap it could not do: could not clear the existing staging directory C:\Users\linbo.zhang\AppData\Local\Temp\jackdaw_export_locked-swap_40556\.jackdaw\dist\release: 另一个程序正在使用此文件，进程无法访问。 (os error 32)
+
+---- export::tests::a_locked_executable_source_keeps_the_previous_export_intact stdout ----
+
+thread 'export::tests::a_locked_executable_source_keeps_the_previous_export_intact' (75036) panicked at crates\jackdaw_project_build\src\export.rs:733:9:
+assertion `left == right` failed: the previous export is untouched when the executable copy fails
+  left: [("assets\\scene.bsn", [115, 99, 101, 110, 101]), ("assets\\textures\\tile\\diffuse.png", [112, 110, 103])]
+ right: [("assets\\scene.bsn", [115, 99, 101, 110, 101]), ("assets\\textures\\tile\\diffuse.png", [112, 110, 103]), ("my-game.exe", [101, 120, 101, 32, 98, 121, 116, 101, 115])]
+
+---- export::tests::a_failure_while_staging_keeps_the_previous_export_intact stdout ----
+
+thread 'export::tests::a_failure_while_staging_keeps_the_previous_export_intact' (22428) panicked at crates\jackdaw_project_build\src\export.rs:694:41:
+called `Result::unwrap_err()` on an `Ok` value: ExportReport { dist_dir: "C:\\Users\\linbo.zhang\\AppData\\Local\\Temp\\jackdaw_export_keep-old_40556\\.jackdaw\\dist\\release", executable: "C:\\Users\\linbo.zhang\\AppData\\Local\\Temp\\jackdaw_export_keep-old_40556\\.jackdaw\\dist\\release\\my-game.exe", assets_dir: "C:\\Users\\linbo.zhang\\AppData\\Local\\Temp\\jackdaw_export_keep-old_40556\\.jackdaw\\dist\\release\\assets", files: 4 }
+
+
+failures:
+    export::tests::a_case_variant_of_the_output_directory_cannot_bypass_the_guard
+    export::tests::a_failure_while_staging_keeps_the_previous_export_intact
+    export::tests::a_locked_executable_source_keeps_the_previous_export_intact
+    export::tests::a_locked_previous_export_refuses_the_swap_and_stays_intact
+
+test result: FAILED. 13 passed; 4 failed; 0 ignored; 0 measured; 194 filtered out; finished in 0.07s
+

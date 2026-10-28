@@ -1,0 +1,45 @@
+warning: linker stderr: rust-lld: ignoring unknown argument '-fuse-ld=lld'
+  |
+  = note: `#[warn(linker_messages)]` on by default
+
+warning: `jackdaw_env` (build script) generated 1 warning
+warning: `jackdaw_api_macros` (lib) generated 1 warning (1 duplicate)
+warning: `jackdaw_project_build` (build script) generated 1 warning (1 duplicate)
+warning: `jackdaw_package` (build script) generated 1 warning (1 duplicate)
+warning: `test_fixture_extension` (lib) generated 1 warning (1 duplicate)
+   Compiling jackdaw v0.21.0-dev (E:\Project\rust\jackdaw)
+warning: variable does not need to be mutable
+   --> src\reference_audit.rs:925:21
+    |
+925 |                 let mut value = value;
+    |                     ----^^^^^
+    |                     |
+    |                     help: remove this `mut`
+    |
+    = note: `#[warn(unused_mut)]` (part of `#[warn(unused)]`) on by default
+
+warning: `jackdaw` (lib test) generated 2 warnings (1 duplicate) (run `cargo fix --lib -p jackdaw --tests` to apply 1 suggestion)
+    Finished `test` profile [optimized + debuginfo] target(s) in 54.80s
+     Running unittests src\lib.rs (target\debug\deps\jackdaw-b8bb05f875dbf70a.exe)
+
+running 4 tests
+test reference_rewrite::tests::a_folder_prefix_ends_on_a_component_boundary ... ok
+test reference_rewrite::tests::a_twin_spelling_is_the_binary_form_of_the_same_path ... ok
+test reference_rewrite::tests::a_twin_spelling_is_rewritten_as_the_new_paths_own_twin ... ok
+test reference_rewrite::tests::a_reference_worn_through_a_newtype_component_is_rewritten_on_rename ... FAILED
+
+failures:
+
+---- reference_rewrite::tests::a_reference_worn_through_a_newtype_component_is_rewritten_on_rename stdout ----
+
+thread 'reference_rewrite::tests::a_reference_worn_through_a_newtype_component_is_rewritten_on_rename' (37412) panicked at src\reference_rewrite.rs:810:10:
+the scene is written: Os { code: 3, kind: NotFound, message: "系统找不到指定的路径。" }
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    reference_rewrite::tests::a_reference_worn_through_a_newtype_component_is_rewritten_on_rename
+
+test result: FAILED. 3 passed; 1 failed; 0 ignored; 0 measured; 1140 filtered out; finished in 0.03s
+
+error: test failed, to rerun pass `--lib`

@@ -1,0 +1,153 @@
+[2m2026-10-27T07:06:08.608495Z[0m [32m INFO[0m [2mbevy_diagnostic::system_information_diagnostics_plugin::internal[0m[2m:[0m SystemInfo { os: "Windows 11 Pro", kernel: "26100", cpu: "AMD Ryzen 7 9700X 8-Core Processor", core_count: "8", memory: "93.4 GiB" }
+[2m2026-10-27T07:06:08.952199Z[0m [32m INFO[0m [2mbevy_render::renderer[0m[2m:[0m AdapterInfo { name: "NVIDIA GeForce RTX 5070", vendor: 4318, device: 12036, device_type: DiscreteGpu, device_pci_bus_id: "0000:01:00.0", driver: "32.0.15.9186", driver_info: "", backend: Dx12, subgroup_min_size: 32, subgroup_max_size: 32, transient_saves_memory: Some(false), limit_bucket: None }
+[2m2026-10-27T07:06:09.220088Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw::test_input::plugin` of extension `jackdaw.test_input`
+[2m2026-10-27T07:06:09.232584Z[0m [32m INFO[0m [2mbevy_pbr::cluster[0m[2m:[0m GPU clustering is supported on this device.
+[2m2026-10-27T07:06:09.232866Z[0m [32m INFO[0m [2mbevy_render::batching::gpu_preprocessing[0m[2m:[0m GPU preprocessing is fully supported on this device.
+[2m2026-10-27T07:06:09.234044Z[0m [32m INFO[0m [2mbevy_winit::system[0m[2m:[0m Creating new window jackdaw (71v0)
+[2m2026-10-27T07:06:09.427974Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core_windows
+[2m2026-10-27T07:06:09.428473Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.ui_palette
+[2m2026-10-27T07:06:09.428712Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.animation_graph
+[2m2026-10-27T07:06:09.428854Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core
+[2m2026-10-27T07:06:09.431294Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.project_window
+[2m2026-10-27T07:06:09.431451Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.test_input
+[2m2026-10-27T07:06:09.431608Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.inspector
+[2m2026-10-27T07:06:09.431692Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.multiplayer
+[2m2026-10-27T07:06:09.431787Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.build_panel
+[2m2026-10-27T07:06:09.431858Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.viewport_panel
+[2m2026-10-27T07:06:09.432007Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.timeline
+[2m2026-10-27T07:06:09.432135Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.game_panel
+[2m2026-10-27T07:06:09.434408Z[0m [33m WARN[0m [2mjackdaw_api_internal::keymap::apply[0m[2m:[0m preset 'classic' has 10 chords claimed by more than one action: ["Delete (Press, Operators): clip.delete_keyframes, entity.delete, brush.delete_element", "Backspace (Press, Operators): clip.delete_keyframes, viewport.draw_brush.remove_last_vertex, brush.delete_element", "Home (Press, Operators): clip.timeline.jump_start, view.frame_all, viewport2d.frame", "Ctrl+KeyC (Press, Operators): clip.copy_keyframes, entity.copy", "Ctrl+KeyV (Press, Operators): clip.paste_keyframes, entity.paste", "Tab (Press, Operators): viewport.draw_brush.toggle_mode, brush.clip.cycle_mode", "Enter (Press, Operators): viewport.draw_brush.commit_polygon, brush.clip.apply", "KeyE (Press, Operators): tool.rotate, brush.mesh.extrude", "Escape (Press, Operators): brush.exit_edit_mode, selection.clear, brush.clip.clear, terrain.tool.exit_to_select", "Ctrl+KeyB (Press, Operators): brush.mesh.edge_bevel, brush.mesh.vertex_bevel"]
+[2m2026-10-27T07:06:09.434570Z[0m [32m INFO[0m [2mjackdaw::extension_lifecycle[0m[2m:[0m applied keymap preset 'classic': 110 entries, 110 bindings, 0 user rows
+[2m2026-10-27T07:06:09.479706Z[0m [32m INFO[0m [2mjackdaw::pie_current[0m[2m:[0m PIE: removed 1 leftover temporary run copy under H:\workspace_AI\t09t2-live\t09t2-game\assets\.jackdaw-pie
+[2m2026-10-27T07:06:09.568516Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking H:\workspace_AI\t09t2-live\t09t2-game\assets recursively
+[2m2026-10-27T07:06:09.569037Z[0m [32m INFO[0m [2mjackdaw::asset_catalog[0m[2m:[0m No asset catalog found, starting with empty catalog
+[2m2026-10-27T07:06:09.732459Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: pre-building the game in the background for a fast first Play
+[2m2026-10-27T07:06:09.734125Z[0m [32m INFO[0m [2mjackdaw::material_browser[0m[2m:[0m update_material_browser_ui: rebuilding with 1 entries
+[2m2026-10-27T07:06:09.923252Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 2, typed 1, referencing 0)
+[2m2026-10-27T07:06:09.923823Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m Indexed 1 asset files
+[2m2026-10-27T07:06:10.217554Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking H:\workspace_AI\t09t2-live\t09t2-game\assets recursively
+[2m2026-10-27T07:06:10.246601Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 2, typed 1, referencing 0)
+[2m2026-10-27T07:06:10.246999Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 0)
+[2m2026-10-27T07:06:12.319708Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: refreshed project types from schema (4 project components)
+[2m2026-10-27T07:06:12.320603Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking H:\workspace_AI\t09t2-live\t09t2-game\assets recursively
+[2m2026-10-27T07:06:12.334782Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 2, typed 1, referencing 0)
+[2m2026-10-27T07:06:12.335111Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 0)
+[2m2026-10-27T07:06:36.892001Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: asset.open
+[2m2026-10-27T07:06:36.981445Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: asset.get
+[2m2026-10-27T07:06:36.981938Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m input-actions.bsn
+[2m2026-10-27T07:06:36.982138Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m actions: [{"bindings":[{"Key":["ArrowUp"]},{"Key":["ArrowDown"]},{"Key":["ArrowLeft"]},{"Key":["ArrowRight"]},{"GamepadAxis":{"axis":"LeftStickX","deadzone":0.5}}],"kind":"Axis2D","name":"Move"},{"bindings":[{"MouseButton":["Left"]}],"kind":"Button","name":"Jump"}]
+[2m2026-10-27T07:06:37.010057Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: pie.play_current
+[2m2026-10-27T07:06:37.019711Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 launched, awaiting connection
+[2m2026-10-27T07:06:37.019987Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 launched with scene override 'scene.bsn' (the editor's scene)
+[2m2026-10-27T07:06:38.087893Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 connected
+[2m2026-10-27T07:06:40.051093Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: pie.play_input_toggle
+[2m2026-10-27T07:06:41.069263Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: input.key
+[2m2026-10-27T07:06:44.136279Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: input.key
+[2m2026-10-27T07:06:44.175284Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: input.motion
+[2m2026-10-27T07:06:47.255374Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: input.key
+[2m2026-10-27T07:06:48.339916Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: input.key
+[2m2026-10-27T07:06:51.476973Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: input.key
+[2m2026-10-27T07:06:51.500628Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: input.key
+[2m2026-10-27T07:06:52.511040Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: input.key
+[2m2026-10-27T07:06:52.523771Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: selection.clear
+[2m2026-10-27T07:06:53.576543Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: input.key
+[2m2026-10-27T07:06:53.588476Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_z_neg
+[2m2026-10-27T07:06:53.601964Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_z_neg
+[2m2026-10-27T07:06:53.617980Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_z_neg
+[2m2026-10-27T07:06:53.633870Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_z_neg
+[2m2026-10-27T07:06:53.650686Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_z_neg
+[2m2026-10-27T07:06:53.667099Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_z_neg
+[2m2026-10-27T07:06:53.684453Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_z_neg
+[2m2026-10-27T07:06:53.701133Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_z_neg
+[2m2026-10-27T07:06:53.717565Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_z_neg
+[2m2026-10-27T07:06:53.735296Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_z_neg
+[2m2026-10-27T07:06:53.751358Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_z_neg
+[2m2026-10-27T07:06:53.767955Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_z_neg
+[2m2026-10-27T07:06:53.783757Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_z_neg
+[2m2026-10-27T07:06:53.804315Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_z_neg
+[2m2026-10-27T07:06:53.818539Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_z_neg
+[2m2026-10-27T07:06:53.835325Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_z_neg
+[2m2026-10-27T07:06:53.850575Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_z_neg
+[2m2026-10-27T07:06:53.868574Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_z_neg
+[2m2026-10-27T07:06:53.884972Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_z_neg
+[2m2026-10-27T07:06:53.902770Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_z_neg
+[2m2026-10-27T07:06:53.917806Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_z_neg
+[2m2026-10-27T07:06:53.934871Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_z_neg
+[2m2026-10-27T07:06:53.950524Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_z_neg
+[2m2026-10-27T07:06:53.969642Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_z_neg
+[2m2026-10-27T07:06:53.986261Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_z_neg
+[2m2026-10-27T07:06:54.001413Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_z_neg
+[2m2026-10-27T07:06:54.020547Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_z_neg
+[2m2026-10-27T07:06:54.038930Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_z_neg
+[2m2026-10-27T07:06:54.053014Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_z_neg
+[2m2026-10-27T07:06:54.069111Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_z_neg
+[2m2026-10-27T07:06:54.085207Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_z_neg
+[2m2026-10-27T07:06:54.104384Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_z_neg
+[2m2026-10-27T07:06:54.125682Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_z_neg
+[2m2026-10-27T07:06:54.140299Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_z_neg
+[2m2026-10-27T07:06:54.153901Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_z_neg
+[2m2026-10-27T07:06:54.178673Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_z_neg
+[2m2026-10-27T07:06:54.194347Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_z_neg
+[2m2026-10-27T07:06:54.205759Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_z_neg
+[2m2026-10-27T07:06:54.221381Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_z_neg
+[2m2026-10-27T07:06:54.235899Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_z_neg
+[2m2026-10-27T07:06:54.252142Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_z_neg
+[2m2026-10-27T07:06:54.267691Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_z_neg
+[2m2026-10-27T07:06:54.284842Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_z_neg
+[2m2026-10-27T07:06:54.303553Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_z_neg
+[2m2026-10-27T07:06:54.318953Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_z_neg
+[2m2026-10-27T07:06:54.334820Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_z_neg
+[2m2026-10-27T07:06:54.350537Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_z_neg
+[2m2026-10-27T07:06:54.368028Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_z_neg
+[2m2026-10-27T07:06:54.387359Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_z_neg
+[2m2026-10-27T07:06:54.402088Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_z_neg
+[2m2026-10-27T07:06:54.419533Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_z_neg
+[2m2026-10-27T07:06:54.434320Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_z_neg
+[2m2026-10-27T07:06:54.450534Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_z_neg
+[2m2026-10-27T07:06:54.467831Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_z_neg
+[2m2026-10-27T07:06:54.486440Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_z_neg
+[2m2026-10-27T07:06:54.502702Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_z_neg
+[2m2026-10-27T07:06:54.518209Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_z_neg
+[2m2026-10-27T07:06:54.534779Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_z_neg
+[2m2026-10-27T07:06:54.552958Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_z_neg
+[2m2026-10-27T07:06:54.570697Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_z_neg
+[2m2026-10-27T07:06:54.585345Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_z_neg
+[2m2026-10-27T07:06:54.601450Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_z_neg
+[2m2026-10-27T07:06:54.618397Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_z_neg
+[2m2026-10-27T07:06:54.626428Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: input.key
+[2m2026-10-27T07:06:54.642571Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: pie.stop
+[2m2026-10-27T07:06:54.642928Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 asked to stop; exiting on its own for 2s
+[2m2026-10-27T07:06:54.851266Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 exited
+[2m2026-10-27T07:06:56.689825Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: asset.open
+[2m2026-10-27T07:06:57.711705Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: asset.set
+[2m2026-10-27T07:06:57.721095Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m Set actions
+[2m2026-10-27T07:06:58.729625Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: asset.get
+[2m2026-10-27T07:06:58.738881Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m input-actions.bsn
+[2m2026-10-27T07:06:58.739073Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m actions: [{"bindings":[{"Key":["ArrowUp"]},{"Key":["ArrowDown"]},{"Key":["ArrowLeft"]},{"Key":["ArrowRight"]},{"GamepadAxis":{"axis":"LeftStickX","deadzone":0.6000000238418579}}],"kind":"Axis2D","name":"Move"},{"bindings":[{"MouseButton":["Left"]}],"kind":"Button","name":"Jump"}]
+[2m2026-10-27T07:06:58.750934Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: game.export
+[2m2026-10-27T07:06:58.840872Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking H:\workspace_AI\t09t2-live\t09t2-game\assets recursively
+[2m2026-10-27T07:06:58.853826Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 2, typed 1, referencing 0)
+[2m2026-10-27T07:06:58.854177Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 0)
+[2m2026-10-27T07:15:06.868679Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: refreshed project types from schema (4 project components)
+[2m2026-10-27T07:15:06.878624Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking H:\workspace_AI\t09t2-live\t09t2-game\assets recursively
+[2m2026-10-27T07:15:06.934372Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 2, typed 1, referencing 0)
+[2m2026-10-27T07:15:06.934813Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 0)
+[2m2026-10-27T07:15:07.699133Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking H:\workspace_AI\t09t2-live\t09t2-game\assets recursively
+[2m2026-10-27T07:15:07.721251Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: pie.play_current
+[2m2026-10-27T07:15:08.361642Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: building the game for Play #1
+[2m2026-10-27T07:15:08.382090Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 1, typed 0, referencing 0)
+[2m2026-10-27T07:15:08.382523Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 1, reloaded 0)
+[2m2026-10-27T07:15:11.115719Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 launched, awaiting connection
+[2m2026-10-27T07:15:11.124877Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 launched with scene override 'scene.bsn' (the editor's scene)
+[2m2026-10-27T07:15:11.275584Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: refreshed project types from schema (4 project components)
+[2m2026-10-27T07:15:11.276406Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking H:\workspace_AI\t09t2-live\t09t2-game\assets recursively
+[2m2026-10-27T07:15:11.289676Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 1, typed 0, referencing 0)
+[2m2026-10-27T07:15:11.289884Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 0)
+[2m2026-10-27T07:15:12.175432Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 connected
+[2m2026-10-27T07:15:14.150531Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: pie.play_input_toggle
+[2m2026-10-27T07:15:15.182759Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: input.key
+[2m2026-10-27T07:15:18.269932Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: input.key
+[2m2026-10-27T07:15:18.291361Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: input.key
+[2m2026-10-27T07:15:21.361963Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: input.key
+[2m2026-10-27T07:15:21.382409Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: pie.stop
+[2m2026-10-27T07:15:21.382693Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 asked to stop; exiting on its own for 2s

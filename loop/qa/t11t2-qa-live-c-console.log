@@ -1,0 +1,19 @@
+C0_PREP PlayerVelocity injected into document: True (backtick contamination: False)
+C1_BASE: placedPlayer y=0.860 tplPlayer=True placedRig materialized=True active=True tplRig materialized=True (template rig may win a startup race into lone-rig activation before the scene's entities spawn -- recorded, not asserted)
+C1_BASE_PASS
+C2_WALK z: 1.697 1.340 0.968 0.615 0.292 -0.052 -0.384 -0.731 -1.048 -1.368 -1.704 -2.046 -2.372 -2.440 -2.440 -> end -2.440
+C2_WALK_PASS
+C5_FOLLOW local off=(0.00,3.15,4.61) |.|=5.578 -> (4.61,3.15,0.03) |.|=5.578 lenDrift=0.000 (initial pose matches distance-5 expectation (0,3.15,4.61), |.|~5.578)
+C5_FOLLOW_PASS
+C3_JUMP y: 1.500 1.797 1.944 1.993 1.935 1.775 1.459 1.003 0.860 0.860 0.860 0.860 0.860 0.860 0.860 0.860 0.860 0.860 0.860 0.860 0.860 0.860 0.860 0.860 0.860 0.860 0.860 0.860 0.860 0.860 apex=1.993 expected~1.892
+C3_JUMP_PASS
+C4_SLIDE x 2.40 -> 4.24 (travel 1.84 m), zEnd=-2.440 (wall face -2.8 + capsule -> ~-2.44 clamp)
+C4_SLIDE_PASS
+C6_SPEED placed=1.65 m/s (authored 2.0) template=3.31 m/s (4.0) over 1.72s
+C6_HALFSPEED_PASS
+C7_PREP stripped ActiveCameraRig: changed=True
+C7_DEAD: placedRig active=False materialized=False; templateRig active=False materialized=False (race form recorded)
+C7_DEAD player: z 2.00 -> -0.43
+C7_DEAD_PASS
+VERDICT_C: C1_BASE=True C2_WALK=True C3_JUMP=True C4_SLIDE=True C5_FOLLOW=True C6_HALFSPEED=True C7_DEAD=True
+T11T2_C_DONE

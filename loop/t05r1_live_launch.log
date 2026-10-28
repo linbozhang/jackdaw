@@ -1,0 +1,7 @@
+所在位置 E:\Project\rust\jackdaw\loop\reports\t05r1-closeout.ps1:7 字符: 18
++     [int]$Port = 15841,
++                  ~~~~~
+赋值表达式无效。赋值运算符输入必须是能够接受赋值的对象，例如变量或属性。
+    + CategoryInfo          : ParserError: (:) [], ParentContainsErrorRecordException
+    + FullyQualifiedErrorId : InvalidLeftHandSide
+ 

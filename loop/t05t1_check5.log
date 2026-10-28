@@ -1,0 +1,377 @@
+warning: linker stderr: rust-lld: ignoring unknown argument '-fuse-ld=lld'
+  |
+  = note: `#[warn(linker_messages)]` on by default
+
+warning: `jackdaw_env` (build script) generated 1 warning
+   Compiling jackdaw_env v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_env)
+warning: `jackdaw_api_macros` (lib) generated 1 warning (1 duplicate)
+warning: `jackdaw_package` (build script) generated 1 warning (1 duplicate)
+warning: `jackdaw_project_build` (build script) generated 1 warning (1 duplicate)
+    Checking jackdaw_runtime v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_runtime)
+    Checking jackdaw_api_internal v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_api_internal)
+    Checking jackdaw_package v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_package)
+    Checking jackdaw_project_build v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_project_build)
+    Checking jackdaw_releases v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_releases)
+    Checking jackdaw_scaffold v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_scaffold)
+    Checking jackdaw_api v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_api)
+    Checking jackdaw_loader v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_loader)
+    Checking jackdaw_multiplayer_editor v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_multiplayer_editor)
+    Checking jackdaw_extension v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_extension)
+    Checking test_fixture_extension v0.0.0 (E:\Project\rust\jackdaw\tests\fixtures\test_fixture_extension)
+    Checking jackdaw v0.21.0-dev (E:\Project\rust\jackdaw)
+error[E0603]: function `file_has_moved_on` is private
+   --> tests\guards\reference_rewrite.rs:579:43
+    |
+579 |         !jackdaw::scenes::external_watch::file_has_moved_on(app.world(), &tab_file),
+    |                                           ^^^^^^^^^^^^^^^^^ private function
+    |
+note: the function `file_has_moved_on` is defined here
+   --> src\scenes\external_watch.rs:228:1
+    |
+228 | pub(crate) fn file_has_moved_on(world: &World, path: &Path) -> bool {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `bevy::reflect::TypePath`
+  --> tests\guards\reference_rewrite.rs:12:5
+   |
+12 | use bevy::reflect::TypePath;
+   |     ^^^^^^^^^^^^^^^^^^^^^^^
+   |
+   = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+error[E0308]: mismatched types
+  --> tests\guards\reference_rewrite.rs:65:11
+   |
+65 |     write(&tmp, "materials/rust.material.bsn", &material(0.25));
+   |     ----- ^^^^ expected `&Path`, found `&TempDir`
+   |     |
+   |     arguments to this function are incorrect
+   |
+   = note: expected reference `&std::path::Path`
+              found reference `&TempDir`
+note: function defined here
+  --> tests\guards\reference_rewrite.rs:47:4
+   |
+47 | fn write(root: &Path, relative: &str, text: &str) {
+   |    ^^^^^ -----------
+
+error[E0308]: mismatched types
+  --> tests\guards\reference_rewrite.rs:67:9
+   |
+66 |     write(
+   |     ----- arguments to this function are incorrect
+67 |         &tmp,
+   |         ^^^^ expected `&Path`, found `&TempDir`
+   |
+   = note: expected reference `&std::path::Path`
+              found reference `&TempDir`
+note: function defined here
+  --> tests\guards\reference_rewrite.rs:47:4
+   |
+47 | fn write(root: &Path, relative: &str, text: &str) {
+   |    ^^^^^ -----------
+
+error[E0308]: mismatched types
+   --> tests\guards\reference_rewrite.rs:152:26
+    |
+152 |     let rewritten = read(&tmp, "zones/hedgerow.bsn");
+    |                     ---- ^^^^ expected `&Path`, found `&TempDir`
+    |                     |
+    |                     arguments to this function are incorrect
+    |
+    = note: expected reference `&std::path::Path`
+               found reference `&TempDir`
+note: function defined here
+   --> tests\guards\reference_rewrite.rs:54:4
+    |
+ 54 | fn read(root: &Path, relative: &str) -> String {
+    |    ^^^^ -----------
+
+error[E0308]: mismatched types
+   --> tests\guards\reference_rewrite.rs:215:11
+    |
+215 |     write(&tmp, "props/a/crate.bsn", &material(0.25).replace("#rust", "#crate"));
+    |     ----- ^^^^ expected `&Path`, found `&TempDir`
+    |     |
+    |     arguments to this function are incorrect
+    |
+    = note: expected reference `&std::path::Path`
+               found reference `&TempDir`
+note: function defined here
+   --> tests\guards\reference_rewrite.rs:47:4
+    |
+ 47 | fn write(root: &Path, relative: &str, text: &str) {
+    |    ^^^^^ -----------
+
+error[E0308]: mismatched types
+   --> tests\guards\reference_rewrite.rs:216:11
+    |
+216 |     write(&tmp, "props/b/box.bsn", &material(0.5).replace("#rust", "#box"));
+    |     ----- ^^^^ expected `&Path`, found `&TempDir`
+    |     |
+    |     arguments to this function are incorrect
+    |
+    = note: expected reference `&std::path::Path`
+               found reference `&TempDir`
+note: function defined here
+   --> tests\guards\reference_rewrite.rs:47:4
+    |
+ 47 | fn write(root: &Path, relative: &str, text: &str) {
+    |    ^^^^^ -----------
+
+error[E0308]: mismatched types
+   --> tests\guards\reference_rewrite.rs:218:9
+    |
+217 |     write(
+    |     ----- arguments to this function are incorrect
+218 |         &tmp,
+    |         ^^^^ expected `&Path`, found `&TempDir`
+    |
+    = note: expected reference `&std::path::Path`
+               found reference `&TempDir`
+note: function defined here
+   --> tests\guards\reference_rewrite.rs:47:4
+    |
+ 47 | fn write(root: &Path, relative: &str, text: &str) {
+    |    ^^^^^ -----------
+
+error[E0308]: mismatched types
+   --> tests\guards\reference_rewrite.rs:222:11
+    |
+222 |     write(&tmp, "zones/one.bsn", &scene_with("props/a/crate.bsn"));
+    |     ----- ^^^^ expected `&Path`, found `&TempDir`
+    |     |
+    |     arguments to this function are incorrect
+    |
+    = note: expected reference `&std::path::Path`
+               found reference `&TempDir`
+note: function defined here
+   --> tests\guards\reference_rewrite.rs:47:4
+    |
+ 47 | fn write(root: &Path, relative: &str, text: &str) {
+    |    ^^^^^ -----------
+
+error[E0308]: mismatched types
+   --> tests\guards\reference_rewrite.rs:223:11
+    |
+223 |     write(&tmp, "zones/two.bsn", &scene_with("props/b/box.bsn"));
+    |     ----- ^^^^ expected `&Path`, found `&TempDir`
+    |     |
+    |     arguments to this function are incorrect
+    |
+    = note: expected reference `&std::path::Path`
+               found reference `&TempDir`
+note: function defined here
+   --> tests\guards\reference_rewrite.rs:47:4
+    |
+ 47 | fn write(root: &Path, relative: &str, text: &str) {
+    |    ^^^^^ -----------
+
+error[E0308]: mismatched types
+   --> tests\guards\reference_rewrite.rs:224:11
+    |
+224 |     write(&tmp, "zones/three.bsn", &scene_with("props2/keep.bsn"));
+    |     ----- ^^^^ expected `&Path`, found `&TempDir`
+    |     |
+    |     arguments to this function are incorrect
+    |
+    = note: expected reference `&std::path::Path`
+               found reference `&TempDir`
+note: function defined here
+   --> tests\guards\reference_rewrite.rs:47:4
+    |
+ 47 | fn write(root: &Path, relative: &str, text: &str) {
+    |    ^^^^^ -----------
+
+error[E0308]: mismatched types
+   --> tests\guards\reference_rewrite.rs:244:20
+    |
+244 |     let one = read(&tmp, "zones/one.bsn");
+    |               ---- ^^^^ expected `&Path`, found `&TempDir`
+    |               |
+    |               arguments to this function are incorrect
+    |
+    = note: expected reference `&std::path::Path`
+               found reference `&TempDir`
+note: function defined here
+   --> tests\guards\reference_rewrite.rs:54:4
+    |
+ 54 | fn read(root: &Path, relative: &str) -> String {
+    |    ^^^^ -----------
+
+error[E0308]: mismatched types
+   --> tests\guards\reference_rewrite.rs:251:20
+    |
+251 |     let two = read(&tmp, "zones/two.bsn");
+    |               ---- ^^^^ expected `&Path`, found `&TempDir`
+    |               |
+    |               arguments to this function are incorrect
+    |
+    = note: expected reference `&std::path::Path`
+               found reference `&TempDir`
+note: function defined here
+   --> tests\guards\reference_rewrite.rs:54:4
+    |
+ 54 | fn read(root: &Path, relative: &str) -> String {
+    |    ^^^^ -----------
+
+error[E0308]: mismatched types
+   --> tests\guards\reference_rewrite.rs:257:22
+    |
+257 |     let three = read(&tmp, "zones/three.bsn");
+    |                 ---- ^^^^ expected `&Path`, found `&TempDir`
+    |                 |
+    |                 arguments to this function are incorrect
+    |
+    = note: expected reference `&std::path::Path`
+               found reference `&TempDir`
+note: function defined here
+   --> tests\guards\reference_rewrite.rs:54:4
+    |
+ 54 | fn read(root: &Path, relative: &str) -> String {
+    |    ^^^^ -----------
+
+error[E0308]: mismatched types
+   --> tests\guards\reference_rewrite.rs:297:22
+    |
+297 |     let saved = read(&tmp, "zones/thicket.bsn");
+    |                 ---- ^^^^ expected `&Path`, found `&TempDir`
+    |                 |
+    |                 arguments to this function are incorrect
+    |
+    = note: expected reference `&std::path::Path`
+               found reference `&TempDir`
+note: function defined here
+   --> tests\guards\reference_rewrite.rs:54:4
+    |
+ 54 | fn read(root: &Path, relative: &str) -> String {
+    |    ^^^^ -----------
+
+error[E0308]: mismatched types
+   --> tests\guards\reference_rewrite.rs:334:22
+    |
+334 |     let saved = read(&tmp, "zones/hedgerow.bsn");
+    |                 ---- ^^^^ expected `&Path`, found `&TempDir`
+    |                 |
+    |                 arguments to this function are incorrect
+    |
+    = note: expected reference `&std::path::Path`
+               found reference `&TempDir`
+note: function defined here
+   --> tests\guards\reference_rewrite.rs:54:4
+    |
+ 54 | fn read(root: &Path, relative: &str) -> String {
+    |    ^^^^ -----------
+
+error[E0308]: mismatched types
+   --> tests\guards\reference_rewrite.rs:356:11
+    |
+356 |     write(&tmp, "zones/one.bsn", "#One\nbevy_transform::components::transform::Transform\n");
+    |     ----- ^^^^ expected `&Path`, found `&TempDir`
+    |     |
+    |     arguments to this function are incorrect
+    |
+    = note: expected reference `&std::path::Path`
+               found reference `&TempDir`
+note: function defined here
+   --> tests\guards\reference_rewrite.rs:47:4
+    |
+ 47 | fn write(root: &Path, relative: &str, text: &str) {
+    |    ^^^^^ -----------
+
+error[E0308]: mismatched types
+   --> tests\guards\reference_rewrite.rs:357:11
+    |
+357 |     write(&tmp, "zones/two.bsn", "#Two\nbevy_transform::components::transform::Transform\n");
+    |     ----- ^^^^ expected `&Path`, found `&TempDir`
+    |     |
+    |     arguments to this function are incorrect
+    |
+    = note: expected reference `&std::path::Path`
+               found reference `&TempDir`
+note: function defined here
+   --> tests\guards\reference_rewrite.rs:47:4
+    |
+ 47 | fn write(root: &Path, relative: &str, text: &str) {
+    |    ^^^^^ -----------
+
+error[E0308]: mismatched types
+   --> tests\guards\reference_rewrite.rs:432:11
+    |
+432 |     write(&tmp, "zones/hedgerow.bsn", "#Zone\nbevy_transform::components::transform::Transform\n");
+    |     ----- ^^^^ expected `&Path`, found `&TempDir`
+    |     |
+    |     arguments to this function are incorrect
+    |
+    = note: expected reference `&std::path::Path`
+               found reference `&TempDir`
+note: function defined here
+   --> tests\guards\reference_rewrite.rs:47:4
+    |
+ 47 | fn write(root: &Path, relative: &str, text: &str) {
+    |    ^^^^^ -----------
+
+error[E0308]: mismatched types
+   --> tests\guards\reference_rewrite.rs:502:26
+    |
+502 |     let rewritten = read(&tmp, "zones/hedgerow.bsn");
+    |                     ---- ^^^^ expected `&Path`, found `&TempDir`
+    |                     |
+    |                     arguments to this function are incorrect
+    |
+    = note: expected reference `&std::path::Path`
+               found reference `&TempDir`
+note: function defined here
+   --> tests\guards\reference_rewrite.rs:54:4
+    |
+ 54 | fn read(root: &Path, relative: &str) -> String {
+    |    ^^^^ -----------
+
+error[E0308]: mismatched types
+   --> tests\guards\reference_rewrite.rs:545:11
+    |
+545 |     write(&tmp, "materials/rust.material.bsn", &material(0.9));
+    |     ----- ^^^^ expected `&Path`, found `&TempDir`
+    |     |
+    |     arguments to this function are incorrect
+    |
+    = note: expected reference `&std::path::Path`
+               found reference `&TempDir`
+note: function defined here
+   --> tests\guards\reference_rewrite.rs:47:4
+    |
+ 47 | fn write(root: &Path, relative: &str, text: &str) {
+    |    ^^^^^ -----------
+
+error[E0308]: mismatched types
+   --> tests\guards\reference_rewrite.rs:556:11
+    |
+556 |     write(&tmp, "materials/rust.material.bsn", &material(0.25));
+    |     ----- ^^^^ expected `&Path`, found `&TempDir`
+    |     |
+    |     arguments to this function are incorrect
+    |
+    = note: expected reference `&std::path::Path`
+               found reference `&TempDir`
+note: function defined here
+   --> tests\guards\reference_rewrite.rs:47:4
+    |
+ 47 | fn write(root: &Path, relative: &str, text: &str) {
+    |    ^^^^^ -----------
+
+error[E0596]: cannot borrow data in a `&` reference as mutable
+   --> tests\guards\reference_rewrite.rs:112:5
+    |
+112 |     app.world()
+    |     ^^^^^^^^^^^ cannot borrow as mutable
+
+error[E0596]: cannot borrow data in a `&` reference as mutable
+   --> tests\guards\reference_rewrite.rs:126:21
+    |
+126 |     let mut query = app.world().query::<&Signpost>();
+    |                     ^^^^^^^^^^^ cannot borrow as mutable
+
+Some errors have detailed explanations: E0308, E0596, E0603.
+For more information about an error, try `rustc --explain E0308`.
+warning: `jackdaw` (test "guards") generated 1 warning
+error: could not compile `jackdaw` (test "guards") due to 23 previous errors; 1 warning emitted

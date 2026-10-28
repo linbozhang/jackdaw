@@ -1,0 +1,6 @@
+PASS: grid 1: on-disk reference renamed
+PASS: grid 1: old path gone, new file there
+PASS: grid 2: move rewrote the reference
+PASS: grid 3: folder rename rewrote the prefix
+PASS: grid 3: folder moved on disk
+GRID123 DONE

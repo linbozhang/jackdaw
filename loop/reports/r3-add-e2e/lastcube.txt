@@ -1,0 +1,29 @@
+﻿#Cube
+    jackdaw_scene_types::node_id::SceneNodeId(7531863582022356672)
+    bevy_transform::components::transform::Transform {
+        translation: glam::Vec3 {
+            x: 0.0020000000949949026,
+        },
+    }
+    bevy_camera::visibility::Visibility::Inherited
+    jackdaw_scene_types::types::Brush {
+        faces: [
+            jackdaw_geometry::BrushFaceData {
+                plane: jackdaw_geometry::BrushPlane {
+                    normal: glam::Vec3 {
+                        x: 1.0,
+                        y: 0.0,
+                        z: 0.0,
+                    },
+                    distance: 0.5,
+                },
+                material: "",
+                uv_offset: glam::Vec2 {
+                    x: 0.0,
+                    y: 0.0,
+                },
+                uv_scale: glam::Vec2 {
+                    x: 1.0,
+                    y: 1.0,
+                },
+  

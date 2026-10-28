@@ -1,0 +1,10 @@
+binary: E:\Project\rust\jackdaw\target\debug\jd.exe
+output bytes: 0
+使用“2”个参数调用“Matches”时发生异常:“值不能为 null。
+参数名: input”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t06t3-mcp-smoke.ps1:55 字符: 16
++ ... each ($m in [regex]::Matches($content, '"name"\s*:\s*"([a-z_]+)"')) { ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], ParentContainsErrorRecordException
+    + FullyQualifiedErrorId : ArgumentNullException
+ 

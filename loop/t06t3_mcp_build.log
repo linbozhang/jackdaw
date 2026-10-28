@@ -1,0 +1,43 @@
+   Compiling futures-util v0.3.34
+   Compiling tokio v1.53.1
+   Compiling serde v1.0.229
+   Compiling tracing v0.1.44
+   Compiling zerofrom v0.1.8
+   Compiling serde_json v1.0.151
+   Compiling ref-cast v1.0.27
+warning: linker stderr: rust-lld: ignoring unknown argument '-fuse-ld=lld'
+  |
+  = note: `#[warn(linker_messages)]` on by default
+
+   Compiling thiserror v2.0.20
+warning: `jackdaw_env` (build script) generated 1 warning
+   Compiling yoke v0.8.3
+   Compiling zerovec v0.11.8
+   Compiling zerotrie v0.2.5
+   Compiling chrono v0.4.45
+   Compiling serde_urlencoded v0.7.1
+   Compiling jackdaw_env v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_env)
+   Compiling tinystr v0.8.4
+   Compiling potential_utf v0.1.6
+   Compiling icu_collections v2.3.0
+   Compiling icu_locale_core v2.3.0
+   Compiling rmcp-macros v3.2.0
+   Compiling schemars v1.2.2
+   Compiling icu_provider v2.3.0
+   Compiling icu_normalizer v2.3.0
+   Compiling icu_properties v2.3.0
+   Compiling futures-executor v0.3.34
+   Compiling futures v0.3.34
+   Compiling idna_adapter v1.2.2
+   Compiling tower v0.5.3
+   Compiling hyper v1.11.0
+   Compiling tokio-util v0.7.19
+   Compiling idna v1.1.0
+   Compiling url v2.5.8
+   Compiling rmcp v3.2.0
+   Compiling hyper-util v0.1.20
+   Compiling tower-http v0.6.11
+   Compiling reqwest v0.12.28
+   Compiling jackdaw_mcp v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_mcp)
+warning: `jackdaw_mcp` (bin "jd-mcp") generated 1 warning (1 duplicate)
+    Finished `dev` profile [optimized + debuginfo] target(s) in 23.96s

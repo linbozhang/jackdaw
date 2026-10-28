@@ -1,0 +1,2 @@
+﻿C:\Users\linbo.zhang\Projects\my-game\assets\scene.bsn|639285063413276368
+C:\Users\linbo.zhang\Projects\my-game\.jackdaw\dist\release\assets\scene.bsn|639283742719178142

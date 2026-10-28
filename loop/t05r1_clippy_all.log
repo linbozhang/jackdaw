@@ -1,0 +1,82 @@
+warning: linker stderr: rust-lld: ignoring unknown argument '-fuse-ld=lld'
+  |
+  = note: `#[warn(linker_messages)]` on by default
+  = note: the `linker_messages` lint ignores `-D warnings`
+
+warning: `jackdaw_env` (build script) generated 1 warning
+warning: `jackdaw_api_macros` (lib) generated 1 warning (1 duplicate)
+warning: `jackdaw_package` (build script) generated 1 warning (1 duplicate)
+warning: `jackdaw_project_build` (build script) generated 1 warning (1 duplicate)
+    Checking jackdaw v0.21.0-dev (E:\Project\rust\jackdaw)
+    Checking jackdaw_editor v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_editor)
+error: this lint expectation is unfulfilled
+ --> tests\stress_reload.rs:1:11
+  |
+1 | #![expect(clippy::print_stdout, reason = "test prints progress diagnostics")]
+  |           ^^^^^^^^^^^^^^^^^^^^
+  |
+  = note: test prints progress diagnostics
+  = note: `-D unfulfilled-lint-expectations` implied by `-D warnings`
+  = help: to override `-D warnings` add `#[allow(unfulfilled_lint_expectations)]`
+
+error: could not compile `jackdaw` (test "stress_reload") due to 1 previous error
+warning: build failed, waiting for other jobs to finish...
+error: this lint expectation is unfulfilled
+ --> tests\extern_redirect_ecosystem.rs:1:11
+  |
+1 | #![expect(clippy::print_stdout, reason = "test prints progress diagnostics")]
+  |           ^^^^^^^^^^^^^^^^^^^^
+  |
+  = note: test prints progress diagnostics
+  = note: `-D unfulfilled-lint-expectations` implied by `-D warnings`
+  = help: to override `-D warnings` add `#[allow(unfulfilled_lint_expectations)]`
+
+error: could not compile `jackdaw` (test "extern_redirect_ecosystem") due to 1 previous error
+error: this lint expectation is unfulfilled
+ --> tests\dylib_linkage_identity.rs:1:11
+  |
+1 | #![expect(clippy::print_stdout, reason = "test prints progress diagnostics")]
+  |           ^^^^^^^^^^^^^^^^^^^^
+  |
+  = note: test prints progress diagnostics
+  = note: `-D unfulfilled-lint-expectations` implied by `-D warnings`
+  = help: to override `-D warnings` add `#[allow(unfulfilled_lint_expectations)]`
+
+error: could not compile `jackdaw` (test "dylib_linkage_identity") due to 1 previous error
+error: variable does not need to be mutable
+   --> src\reference_audit.rs:925:21
+    |
+925 |                 let mut value = value;
+    |                     ----^^^^^
+    |                     |
+    |                     help: remove this `mut`
+    |
+    = note: `-D unused-mut` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(unused_mut)]`
+
+error: this creates an owned instance just for comparison
+   --> src\reference_audit.rs:680:51
+    |
+680 |             .filter(|finding| finding.document == PathBuf::from(document))
+    |                                                   ^^^^^^^^^^^^^^^^^^^^^^^ help: try: `*document`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#cmp_owned
+    = note: `-D clippy::cmp-owned` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::cmp_owned)]`
+
+error: item in documentation is missing backticks
+   --> src\reference_rewrite.rs:770:31
+    |
+770 |     /// a named field is (the MeshMaterial3d probe).
+    |                               ^^^^^^^^^^^^^^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#doc_markdown
+    = note: `-D clippy::doc-markdown` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::doc_markdown)]`
+help: try
+    |
+770 -     /// a named field is (the MeshMaterial3d probe).
+770 +     /// a named field is (the `MeshMaterial3d` probe).
+    |
+
+error: could not compile `jackdaw` (lib test) due to 3 previous errors

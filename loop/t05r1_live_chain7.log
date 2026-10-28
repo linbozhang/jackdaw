@@ -1,0 +1,6 @@
+PASS: startup walk logged "Indexed 1 asset files"
+PASS: audit names the gone prefab Missing (relative spelling)
+PASS: the Missing list shows the row and its Rebind
+FAIL: authored bsn: {
+    "bsn":  "#Probe\njackdaw::prefab::components::Prefab\njackdaw::prefab::components::IsA {\n    source: \"C:/Users/linbo.zhang/AppData/Local/Temp/t05r1-proj/assets/props/victim.bsn\",\n    deleted: [],\n}\n"
+}

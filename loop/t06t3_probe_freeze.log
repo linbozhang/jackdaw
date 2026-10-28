@@ -1,0 +1,18 @@
+True
+
+entities id         result   warnings
+-------- --         ------   --------
+{}       scene.open finished {}      
+{}       scene.save finished {}      
+step 1: play clean
+{}       pie.pla... finished {}      
+step 2: stop
+{}       pie.stop   finished {}      
+Invoke-RestMethod : 请求被中止: 操作超时。
+所在位置 E:\Project\rust\jackdaw\loop\qa\brp.ps1:25 字符: 9
++         Invoke-RestMethod -Uri "http://127.0.0.1:$script:BrpPort/" -M ...
++         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (System.Net.HttpWebRequest:HttpWebRequest) [Invoke-RestMethod]，WebExce
+    ption
+    + FullyQualifiedErrorId : WebCmdletWebResponseException,Microsoft.PowerShell.Commands.InvokeRestMethodCommand
+ 

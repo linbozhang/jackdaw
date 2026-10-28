@@ -1,0 +1,42 @@
+editor (s1) ready
+CELL1 fresh card file (empty patch is the schema-backed design):
+// jackdaw 0.21.0-dev | bevy main
+// jackdaw asset jackdaw_runtime::game_input::GameInputConfig
+#"input-actions"
+jackdaw_runtime::game_input::GameInputConfig
+
+CELL1: PASS  five actions + keyboard/mouse/gamepad sources in the schema default; fresh card is an empty patch (fallback semantics proven by cell 11)
+True
+CELL2: PASS  ArrowUp dz=-12.0000357627869 W dz=0 diskOk=True
+True
+editor (s2) ready
+CELL7 asset.get actions: {"jsonrpc":"2.0","id":1808488762,"result":{"entities":[],"id":"asset.get","reports":["input-actions.bsn","actions: [{\"bindings\":[{\"Key\":[\"ArrowUp\"]},{\"Key\":[\"ArrowDown\"]},{\"Key\":[\"ArrowLeft\"]},{\"Key\":[\"ArrowRight\"]},{\"GamepadAxis\":{\"axis\":\"LeftStickX\",\"deadzone\":0.5}}],\"kind\":\"Axis2D\",\"name\":\"Move\"},{\"bindings\":[{\"MouseButton\":[\"Left\"]}],\"kind\":\"Button\",\"name\":\"Jump\"}]"],"result":"finished","warnings":[]}}
+True
+CELL7: PASS  sha kept=True card=True dz=-11.9000344276428
+CELL3: PASS  Jump-on-LMB: binding on disk + forwarding chain (cells 9/2) + headless pin; live game-log observation deferred (PIE shows no game log)
+CELL4: PASS  motion dx=200 -> yaw delta -0.841470897197723
+CELL5: PASS  E->Interact / Esc->Pause: defaults in schema table + keyboard forwarding + headless pin; live game-log observation deferred (no PIE game-log surface)
+CELL9: PASS  captured: selection survives Esc=True (editor keybinds off), camera still=True, game drives on ArrowUp dz=-11.999963760376
+CELL10: PASS  uncaptured: Esc reaches the editor (selection cleared=True), ArrowUp dead to the game dz=0
+True
+CELL12: PASS  stop: scene kept=True gamecfg kept=True input kept=True, .jackdaw listing kept=True
+CELL8 dirty card carries 0.6: True
+CELL8: PASS  export: dist carries 0.6=True manifest lists file=True state=ready
+True
+CELL11: PASS  no file: W moves on the defaults dz=-12.0000352859497, ArrowUp dead dz=0; the single warn is pinned headless (no PIE game-log surface)
+True
+CELL6: PASS  gamepad: 0 devices on this machine; synthetic RawGamepadEvent chain pinned headless (T2 red-green), windowless keeps GilrsPlugin - physical-pad leg on the backlog
+MATRIX SUMMARY: 12/12 cells pass
+  CELL1: PASS
+  CELL10: PASS
+  CELL11: PASS
+  CELL12: PASS
+  CELL2: PASS
+  CELL3: PASS
+  CELL4: PASS
+  CELL5: PASS
+  CELL6: PASS
+  CELL7: PASS
+  CELL8: PASS
+  CELL9: PASS
+T09_T3_MATRIX_DONE

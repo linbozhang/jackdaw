@@ -1,0 +1,30 @@
+True
+True
+snapshot A count=19
+  A entity=4294963530 names=bevy_gizmos::retained::Gizmo | bevy_transform::components::global_transform::GlobalTransform | bevy_transform::components::transform::Transform
+  A entity=4294963669 names=bevy_light::cascade::CascadeShadowConfig | bevy_light::directional_light::DirectionalLight | bevy_transform::components::global_transform::GlobalTransform | bevy_transform::components::transform::Transform
+  A entity=4294963691 names=bevy_camera::projection::Projection | bevy_transform::components::global_transform::GlobalTransform | bevy_transform::components::transform::Transform | bevy_ui::ui_node::IsDefaultUiCamera
+  A entity=4294963532 names=bevy_dev_tools::infinite_grid::InfiniteGrid | bevy_dev_tools::infinite_grid::InfiniteGridSettings | bevy_transform::components::global_transform::GlobalTransform | bevy_transform::components::transform::Transform
+  A entity=4294963460 names=bevy_camera::projection::Projection | bevy_transform::components::global_transform::GlobalTransform | bevy_transform::components::transform::Transform
+  A entity=4294963531 names=bevy_anti_alias::fxaa::Fxaa | bevy_camera::projection::Projection | bevy_light::probe::EnvironmentMapLight | bevy_pbr::transmission::ScreenSpaceTransmission | bevy_transform::components::global_transform::GlobalTransform | bevy_transform::components::transform::Transform | jackdaw_camera::JackdawCameraSettings
+  A entity=4294963678 names=bevy_camera::projection::Projection | bevy_light::probe::EnvironmentMapLight | bevy_pbr::transmission::ScreenSpaceTransmission | bevy_transform::components::global_transform::GlobalTransform | bevy_transform::components::transform::Transform
+  A entity=4294963677 names=bevy_camera::projection::Projection | bevy_transform::components::global_transform::GlobalTransform | bevy_transform::components::transform::Transform
+  A entity=4294963670 names=bevy_camera::projection::Projection | bevy_light::probe::EnvironmentMapLight | bevy_transform::components::global_transform::GlobalTransform | bevy_transform::components::transform::Transform
+  A entity=4294963679 names=bevy_mesh::components::Mesh3d | bevy_pbr::mesh_material::MeshMaterial3d<bevy_pbr::pbr_material::StandardMaterial> | bevy_transform::components::global_transform::GlobalTransform | bevy_transform::components::transform::Transform
+  A entity=4294963675 names=bevy_mesh::components::Mesh3d | bevy_pbr::mesh_material::MeshMaterial3d<bevy_pbr::extended_material::ExtendedMaterial<bevy_pbr::pbr_material::StandardMaterial, jackdaw::brush::gizmo_overlay::OccludedExtension>> | bevy_transform::components::global_transform::GlobalTransform | bevy_transform::components::transform::Transform
+  A entity=4294963673 names=bevy_mesh::components::Mesh3d | bevy_pbr::mesh_material::MeshMaterial3d<bevy_pbr::extended_material::ExtendedMaterial<bevy_pbr::pbr_material::StandardMaterial, jackdaw::brush::gizmo_overlay::OccludedExtension>> | bevy_transform::components::global_transform::GlobalTransform | bevy_transform::components::transform::Transform
+  A entity=4294963671 names=bevy_mesh::components::Mesh3d | bevy_pbr::mesh_material::MeshMaterial3d<bevy_pbr::extended_material::ExtendedMaterial<bevy_pbr::pbr_material::StandardMaterial, jackdaw::brush::gizmo_overlay::OccludedExtension>> | bevy_transform::components::global_transform::GlobalTransform | bevy_transform::components::transform::Transform
+  A entity=4294963676 names=bevy_mesh::components::Mesh3d | bevy_pbr::mesh_material::MeshMaterial3d<bevy_pbr::extended_material::ExtendedMaterial<bevy_pbr::pbr_material::StandardMaterial, jackdaw::brush::gizmo_overlay::EdgeOffsetExtension>> | bevy_transform::components::global_transform::GlobalTransform | bevy_transform::components::transform::Transform
+  A entity=4294963674 names=bevy_mesh::components::Mesh3d | bevy_pbr::mesh_material::MeshMaterial3d<bevy_pbr::extended_material::ExtendedMaterial<bevy_pbr::pbr_material::StandardMaterial, jackdaw::brush::gizmo_overlay::EdgeOffsetExtension>> | bevy_transform::components::global_transform::GlobalTransform | bevy_transform::components::transform::Transform
+  A entity=4294963672 names=bevy_mesh::components::Mesh3d | bevy_pbr::mesh_material::MeshMaterial3d<bevy_pbr::extended_material::ExtendedMaterial<bevy_pbr::pbr_material::StandardMaterial, jackdaw::brush::gizmo_overlay::EdgeOffsetExtension>> | bevy_transform::components::global_transform::GlobalTransform | bevy_transform::components::transform::Transform
+  A entity=4294962839 names=bevy_ecs::hierarchy::ChildOf | bevy_ecs::name::Name | bevy_light::cascade::CascadeShadowConfig | bevy_light::directional_light::DirectionalLight | bevy_transform::components::global_transform::GlobalTransform | bevy_transform::components::transform::Transform | jackdaw::entity_ops::SceneLight | jackdaw_scene_types::node_id::SceneNodeId
+  A entity=4294962016 names=bevy_ecs::name::Name | bevy_transform::components::global_transform::GlobalTransform | bevy_transform::components::transform::Transform | jackdaw_scene_types::types::SceneRootTag
+  A entity=4294962017 names=bevy_transform::components::global_transform::GlobalTransform | bevy_transform::components::transform::Transform
+Get-TD : 无法将“Get-TD”项识别为 cmdlet、函数、脚本文件或可运行程序的名称。请检查名称的拼写，如果包括路径，请确保路径
+正确，然后再试一次。
+所在位置 E:\Project\rust\jackdaw\loop\qa\t08-t2-qa-diag.ps1:69 字符: 11
++     $tb = Get-TD $eb
++           ~~~~~~
+    + CategoryInfo          : ObjectNotFound: (Get-TD:String) [], ParentContainsErrorRecordException
+    + FullyQualifiedErrorId : CommandNotFoundException
+ 

@@ -1,0 +1,24 @@
+=== variant A: dirty save-play with no prior round ===
+
+entities     id              result   warnings
+--------     --              ------   --------
+{}           scene.open      finished {}      
+{4294962816} entity.add.cube finished {}      
+{}           pie.play_cur... finished {}      
+variant A: dirty save-play with no prior round: 请求被中止: 操作超时。
+=== variant B: play, settled stop, then dirty save-play ===
+{}           scene.open      finished {}      
+{}           pie.play_cur... finished {}      
+  running
+{}           pie.stop        finished {}      
+variant B: play, settled stop, then dirty save-play: 请求被中止: 操作超时。
+=== variant C: cell-2 tail (untitled round + scene.close force), then dirty save-play ===
+{}           scene.new       finished {}      
+{8589930105} entity.add.cube finished {}      
+{}           pie.play_cur... finished {}      
+  running
+{}           pie.stop        finished {}      
+variant C: cell-2 tail (untitled round + scene.close force), then dirty save-play: 请求被中止: 操作超时。
+probe done
+
+

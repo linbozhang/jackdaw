@@ -1,0 +1,5 @@
+E:\Project\rust\jackdaw\loop\reports\t05r1-closeout.ps1 : 无法处理对参数“Port”的参数转换。无法将值“;”转换为类型“Sy
+stem.Int32”。错误:“输入字符串的格式不正确。”
+    + CategoryInfo          : InvalidData: (:) [t05r1-closeout.ps1]，ParentContainsErrorRecordException
+    + FullyQualifiedErrorId : ParameterArgumentTransformationError,t05r1-closeout.ps1
+ 

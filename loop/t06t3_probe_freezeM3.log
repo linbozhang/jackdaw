@@ -1,0 +1,9 @@
+True
+
+BRP error: {"code":-32602,"message":"unknown operator: entity.move"}
+ËùÔÚÎ»ÖÃ E:\Project\rust\jackdaw\loop\qa\brp.ps1:34 ×Ö·û: 9
++         throw "BRP error: $($Response.error | ConvertTo-Json -Depth 6 ...
++         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : OperationStopped: (BRP error: {"co...: entity.move"}:String) [], RuntimeException
+    + FullyQualifiedErrorId : BRP error: {"code":-32602,"message":"unknown operator: entity.move"}
+ 

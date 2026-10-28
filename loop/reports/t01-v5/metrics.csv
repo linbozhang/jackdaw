@@ -1,0 +1,29 @@
+﻿case,iter,result,detail
+V1,1,PASS,"act=True dyaw=0.0000 dpitch=0.0000 pos_hold=0.0000 pos_rel=0.0000"
+V1,2,PASS,"act=True dyaw=0.0000 dpitch=0.0000 pos_hold=0.0000 pos_rel=0.0000"
+V1,3,PASS,"act=True dyaw=0.0000 dpitch=0.0000 pos_hold=0.0000 pos_rel=0.0000"
+V1,4,PASS,"act=True dyaw=0.0000 dpitch=0.0000 pos_hold=0.0000 pos_rel=0.0000"
+V1,5,PASS,"act=True dyaw=0.0000 dpitch=0.0000 pos_hold=0.0000 pos_rel=0.0000"
+probe-P2,recheck5,False,cursor=
+V1,6,PASS,"act=True dyaw=0.0000 dpitch=0.0000 pos_hold=0.0000 pos_rel=0.0000"
+V1,7,PASS,"act=True dyaw=0.0000 dpitch=0.0000 pos_hold=0.0000 pos_rel=0.0000"
+V1,8,PASS,"act=True dyaw=0.0000 dpitch=0.0000 pos_hold=0.0000 pos_rel=0.0000"
+V1,9,PASS,"act=True dyaw=0.0000 dpitch=0.0000 pos_hold=0.0000 pos_rel=0.0000"
+V1,10,PASS,"act=True dyaw=0.0000 dpitch=0.0000 pos_hold=0.0000 pos_rel=0.0000"
+probe-P2,recheck10,False,cursor=
+V1n,1,PASS,"fly=False moved=0.0000"
+V2,1,PASS,"dyaw=-0.900 (exp -0.900) dpitch=0.0000"
+V2g,1,PASS,"giant_dyaw=0.0000 (exp 0) small_dyaw=-0.225 (exp -0.225)"
+V2s,1,PASS,"total={0:N2} (exp ~-5.4) perFrame=[-1.8,-1.8,-1.8]"
+V3,1,PASS,"panX dot=-6.00/6.00 panY dot=6.00/6.00 rotSame=True"
+probe-P2,recheck15,False,cursor=
+V4,1,FAIL,"dolly=0.04 along fwd dot=-0.04"
+V5,1,FAIL,"W len=3.99 fwdOk=False Ey=4.17 Qy=-4.01 exz=0.000"
+V6,1,PASS,"focus d=3.75 (exp>0.01) no-selection d=0.0000 (exp~0)"
+V7,a,PASS,"session reuse covered by V1 x10 then V2 in same run"
+V7,b-alttab,FAIL,"before=False away=False backIdle=False reengage=False"
+V7,c-minrestore,FAIL,"before=False minimized=False afterRestore=False"
+V8,1,INVALID,"text focus not achieved: before=null after=null"
+V9,1,FAIL,"moved=0.0000 during: fly=True enabled=True afterClose: fly=True"
+V10,1,PASS,"modal: tools.measure_distance→ fly=True look=0.45"
+probe-P2,recheck5,False,cursor=

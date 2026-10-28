@@ -1,0 +1,23 @@
+warning: linker stderr: rust-lld: ignoring unknown argument '-fuse-ld=lld'
+  |
+  = note: `#[warn(linker_messages)]` on by default
+
+warning: `jackdaw_env` (build script) generated 1 warning
+warning: `jackdaw_api_macros` (lib) generated 1 warning (1 duplicate)
+warning: `jackdaw_project_build` (build script) generated 1 warning (1 duplicate)
+warning: `jackdaw_package` (build script) generated 1 warning (1 duplicate)
+warning: `test_fixture_extension` (lib) generated 1 warning (1 duplicate)
+   Compiling jackdaw v0.21.0-dev (E:\Project\rust\jackdaw)
+warning: `jackdaw` (lib test) generated 1 warning (1 duplicate)
+    Finished `test` profile [optimized + debuginfo] target(s) in 19.92s
+     Running unittests src\lib.rs (target\debug\deps\jackdaw-b8bb05f875dbf70a.exe)
+
+running 5 tests
+test pie::stop_cleanup_tests::stop_cleanup_clears_session_state ... ok
+test pie::stop_cleanup_tests::pick_result_selects_the_projected_entity ... ok
+test pie::stop_cleanup_tests::stop_cleanup_tolerates_an_already_missing_temp_copy ... ok
+test pie::stop_cleanup_tests::recording_an_override_dedupes_shared_temp_copies ... ok
+test pie::stop_cleanup_tests::stop_cleanup_deletes_temp_copies_and_scene_overrides ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 1150 filtered out; finished in 0.00s
+

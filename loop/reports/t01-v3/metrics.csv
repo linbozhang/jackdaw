@@ -1,0 +1,19 @@
+﻿case,iter,result,detail
+V1,1,INVALID,"activation probe failed fly=False"
+V1,2,INVALID,"activation probe failed fly=False"
+V1,3,INVALID,"activation probe failed fly=False"
+V1,4,INVALID,"activation probe failed fly=False"
+V1,5,INVALID,"activation probe failed fly=False"
+probe-P2,recheck5,False,cursor=
+V1,6,INVALID,"activation probe failed fly=False"
+V1,7,INVALID,"activation probe failed fly=False"
+V1,8,INVALID,"activation probe failed fly=False"
+V1,9,INVALID,"activation probe failed fly=False"
+V1,10,INVALID,"activation probe failed fly=False"
+probe-P2,recheck10,False,cursor=
+V1n,1,PASS,"fly=False moved=0.0000"
+V2,1,PASS,"dyaw=-0.900 (exp -0.900) dpitch=0.0000"
+V2g,1,INVALID,"activation probe failed fly=False"
+V2s,1,INVALID,"activation probe failed fly=False"
+V3,1,INVALID,"pan activation failed pan=False"
+probe-P2,recheck15,False,cursor=

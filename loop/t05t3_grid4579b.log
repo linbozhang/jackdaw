@@ -1,0 +1,8 @@
+PASS: grid 4 (spot): tab retargeted to the new path
+PASS: grid 4 (spot): save landed at the new path only
+PASS: grid 5 (spot): case-only rename, exactly one file
+PASS: grid 7 (spot): open scene refused without force
+PASS: grid 7 (spot): force deleted the open scene
+PASS: grid 7 (spot): no tab left standing on the deleted file
+PASS: grid 9 (spot): no -1 copies appeared this session
+GRID4579 DONE

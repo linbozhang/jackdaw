@@ -1,0 +1,13 @@
+﻿case,iter,result,detail
+setup,window,INFO,"hwnd=1785986 fg=True rect=(-8,-8,2568,1400) center=(853,464)"
+setup,probe,PASS,"synthetic RMB engages fly=True"
+T3,1,PASS,"d4={"BrushEdit":"Clip"} esc="Object" (Esc also deselects: next entry needs a click; s2-A evidence)"
+T4,1,PASS,"k={"BrushEdit":"Knife"} escPath={"BrushEdit":"Knife"} escExit="Object""
+T9,modal-G,PASS,"modal: '' -> '' (modal transform disabled by design)"
+T9,face-commit,FAIL,"modal=brush.face.drag geometryChanged=False"
+T9,face-esc,BLOCKED,"control drag changed nothing"
+V8,rows,INFO,"text rows: 173 x-range 28..2,897"
+V8,focus,BLOCKED,"no clicked field held the keyboard (camera never gated)"
+T10,snapshot,INFO,"toolbar-band BackgroundColor entities: 492"
+T10,calib,INFO,"KeyM changed 0: "
+T10,1,BLOCKED,"calibration found 0 changed entities (expected the magnet only)"

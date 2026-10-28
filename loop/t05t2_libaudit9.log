@@ -1,0 +1,74 @@
+warning: linker stderr: rust-lld: ignoring unknown argument '-fuse-ld=lld'
+  |
+  = note: `#[warn(linker_messages)]` on by default
+
+warning: `jackdaw_env` (build script) generated 1 warning
+warning: `jackdaw_api_macros` (lib) generated 1 warning (1 duplicate)
+warning: `jackdaw_project_build` (build script) generated 1 warning (1 duplicate)
+warning: `jackdaw_package` (build script) generated 1 warning (1 duplicate)
+warning: `test_fixture_extension` (lib) generated 1 warning (1 duplicate)
+   Compiling jackdaw v0.21.0-dev (E:\Project\rust\jackdaw)
+error[E0599]: the method `map` exists for reference `&Archetype`, but its trait bounds were not satisfied
+   --> src\reference_audit.rs:482:49
+    |
+482 |             .and_then(|entry| entry.archetype().map(|archetype| archetype.components().collect()))
+    |                                                 ^^^
+    |
+   ::: C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_ecs\src\archetype.rs:388:1
+    |
+388 | pub struct Archetype {
+    | -------------------- doesn't satisfy `Archetype: Iterator`, `Archetype: bevy::bevy_curve::Curve<_>` or `Archetype: bevy::bevy_curve::CurveExt<_>`
+    |
+    = note: the following trait bounds were not satisfied:
+            `&Archetype: bevy::bevy_curve::Curve<_>`
+            which is required by `&Archetype: bevy::bevy_curve::CurveExt<_>`
+            `&&Archetype: bevy::bevy_curve::Curve<_>`
+            which is required by `&&Archetype: bevy::bevy_curve::CurveExt<_>`
+            `&mut &Archetype: bevy::bevy_curve::Curve<_>`
+            which is required by `&mut &Archetype: bevy::bevy_curve::CurveExt<_>`
+            `&Archetype: Iterator`
+            which is required by `&mut &Archetype: Iterator`
+            `Archetype: bevy::bevy_curve::Curve<_>`
+            which is required by `Archetype: bevy::bevy_curve::CurveExt<_>`
+            `&mut Archetype: bevy::bevy_curve::Curve<_>`
+            which is required by `&mut Archetype: bevy::bevy_curve::CurveExt<_>`
+            `Archetype: Iterator`
+            which is required by `&mut Archetype: Iterator`
+
+error[E0599]: no method named `iter_fields` found for reference `&StructInfo` in the current scope
+   --> src\reference_audit.rs:509:38
+    |
+509 |             for field in struct_info.iter_fields() {
+    |                                      ^^^^^^^^^^^ method not found in `&StructInfo`
+
+error[E0599]: no method named `field` found for reference `&dyn bevy::bevy_reflect::Reflect` in the current scope
+   --> src\reference_audit.rs:517:22
+    |
+516 |                   let Some(held) = value
+    |  __________________________________-
+517 | |                     .field(name)
+    | |                     -^^^^^ method not found in `&dyn bevy::bevy_reflect::Reflect`
+    | |_____________________|
+    |
+
+warning: unused import: `jackdaw_api::prelude`
+  --> src\inspector\missing_list.rs:18:5
+   |
+18 | use jackdaw_api::prelude::*;
+   |     ^^^^^^^^^^^^^^^^^^^^
+   |
+   = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: variable does not need to be mutable
+   --> src\reference_audit.rs:886:21
+    |
+886 |                 let mut value = value;
+    |                     ----^^^^^
+    |                     |
+    |                     help: remove this `mut`
+    |
+    = note: `#[warn(unused_mut)]` (part of `#[warn(unused)]`) on by default
+
+For more information about this error, try `rustc --explain E0599`.
+warning: `jackdaw` (lib test) generated 2 warnings
+error: could not compile `jackdaw` (lib test) due to 3 previous errors; 2 warnings emitted

@@ -1,0 +1,11 @@
+error: failed to load manifest for workspace member `E:\Project\rust\jackdaw\integrations\physics\jackdaw_avian_integration`
+referenced by workspace at `E:\Project\rust\jackdaw\Cargo.toml`
+
+Caused by:
+  failed to parse manifest at `E:\Project\rust\jackdaw\integrations\physics\jackdaw_avian_integration\Cargo.toml`
+
+Caused by:
+  error inheriting `edition` from workspace root manifest's `workspace.package.edition`
+
+Caused by:
+  `workspace.package.edition` was not defined

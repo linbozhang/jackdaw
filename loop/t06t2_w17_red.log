@@ -1,0 +1,45 @@
+warning: linker stderr: rust-lld: ignoring unknown argument '-fuse-ld=lld'
+  |
+  = note: `#[warn(linker_messages)]` on by default
+
+warning: `jackdaw_env` (build script) generated 1 warning
+warning: `jackdaw_api_macros` (lib) generated 1 warning (1 duplicate)
+warning: `jackdaw_project_build` (build script) generated 1 warning (1 duplicate)
+warning: `jackdaw_package` (build script) generated 1 warning (1 duplicate)
+warning: `test_fixture_extension` (lib) generated 1 warning (1 duplicate)
+   Compiling jackdaw v0.21.0-dev (E:\Project\rust\jackdaw)
+warning: `jackdaw` (lib test) generated 1 warning (1 duplicate)
+    Finished `test` profile [optimized + debuginfo] target(s) in 25.61s
+     Running unittests src\lib.rs (target\debug\deps\jackdaw-b8bb05f875dbf70a.exe)
+
+running 2 tests
+test inspector::val_field::val_resource_guard_tests::a_resource_val_commit_is_one_resource_undo_entry ... FAILED
+test inspector::val_field::val_resource_guard_tests::a_resource_val_tick_previews_onto_the_resource ... FAILED
+
+failures:
+
+---- inspector::val_field::val_resource_guard_tests::a_resource_val_commit_is_one_resource_undo_entry stdout ----
+
+thread 'inspector::val_field::val_resource_guard_tests::a_resource_val_commit_is_one_resource_undo_entry' (43120) panicked at src\commands.rs:87:30:
+Requested resource jackdaw::commands::FieldEditSessions does not exist in the `World`.
+                Did you forget to add it using `app.insert_resource` / `app.init_resource`?
+                Resources are also implicitly added via `app.add_message`,
+                and can be added by plugins.
+
+---- inspector::val_field::val_resource_guard_tests::a_resource_val_tick_previews_onto_the_resource stdout ----
+
+thread 'inspector::val_field::val_resource_guard_tests::a_resource_val_tick_previews_onto_the_resource' (37576) panicked at src\commands.rs:87:30:
+Requested resource jackdaw::commands::FieldEditSessions does not exist in the `World`.
+                Did you forget to add it using `app.insert_resource` / `app.init_resource`?
+                Resources are also implicitly added via `app.add_message`,
+                and can be added by plugins.
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    inspector::val_field::val_resource_guard_tests::a_resource_val_commit_is_one_resource_undo_entry
+    inspector::val_field::val_resource_guard_tests::a_resource_val_tick_previews_onto_the_resource
+
+test result: FAILED. 0 passed; 2 failed; 0 ignored; 0 measured; 1155 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `-p jackdaw --lib`

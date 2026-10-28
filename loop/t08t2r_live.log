@@ -1,0 +1,7 @@
+editor ready (my-game)
+LEG B saved-scene dirty: before=False after-asset-set=False (expect False/False)
+LEG A running: True
+LEG A untitled+Save policy: alive=True card-value-on-disk=False
+editor ready (QA fixture)
+LEG C spin rates: ms=2.5 -> 0.419367489058497 rad/s; ms=0.5 -> 1.504112062551 rad/s
+T08_T2_REWORK_LIVE_DONE

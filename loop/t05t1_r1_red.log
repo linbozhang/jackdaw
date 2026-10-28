@@ -1,0 +1,5 @@
+error: unexpected argument 'a_forced_delete_that_would_close' found
+
+Usage: cargo.exe test [OPTIONS] [TESTNAME] [-- [ARGS]...]
+
+For more information, try '--help'.

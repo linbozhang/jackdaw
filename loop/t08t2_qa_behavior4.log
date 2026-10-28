@@ -1,0 +1,22 @@
+True
+editor ready (schema settled)
+asset.new ok: True
+game-config.bsn on disk:
+// jackdaw 0.21.0-dev | bevy main
+// jackdaw asset t08t2qa_fixture::GameConfig
+#"game-config"
+t08t2qa_fixture::GameConfig {
+    move_speed: 2.5,
+    gravity: -9.8100004196167,
+}
+
+True
+True
+run@2.5: snapshotCount=19 sample=
+no projected entity moved while playing (move_speed=2.5)
+ËùÔÚÎ»ÖÃ E:\Project\rust\jackdaw\loop\qa\t08-t2-qa-behavior3.ps1:116 ×Ö·û: 23
++ ... sample25) { throw 'no projected entity moved while playing (move_spee ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : OperationStopped: (no projected en...move_speed=2.5):String) [], RuntimeException
+    + FullyQualifiedErrorId : no projected entity moved while playing (move_speed=2.5)
+ 

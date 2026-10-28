@@ -1,0 +1,49 @@
+editor ready
+idle
+== cell 1: named scene runs by path with projection parity ==
+
+entities id         result   warnings
+-------- --         ------   --------
+{}       scene.open finished {}      
+{}       scene.save finished {}      
+  ok: the scene is open
+{}       pie.pla... finished {}      
+pie running (11:47:42)
+  ok: jackdaw/pie names the override: t06-final.bsn
+  ok: the source is named
+switched to Live view
+  ok: projection parity: live entities == authored entities (Spinner,Still)
+switched to Scene view
+{}       pie.stop   finished {}      
+pie stopped (wait satisfied)
+idle
+== cell 1 done ==
+== cell 2: untitled runs from a temp copy ==
+{}       scene.new  finished {}      
+  ok: the untitled tab is dirty
+{}       pie.pla... finished {}      
+pie running (11:47:51)
+  ok: the source is unsaved-copy
+  ok: the temp copy exists
+  ok: the copy carries the cube document
+switched to Live view
+  ok: the game loaded the copy (Cube in the live tree)
+switched to Scene view
+{}       pie.stop   finished {}      
+pie stopped (wait satisfied)
+idle
+  ok: stop removed the copy
+  ok: the tab is still dirty after the run
+{}       scene.open finished {}      
+== cell 2 done ==
+== cell 3: save policy saves; copy policy leaves disk alone ==
+{}       pie.pla... finished {}      
+editor killed
+Invoke-RestMethod : 请求被中止: 操作超时。
+所在位置 E:\Project\rust\jackdaw\loop\qa\brp.ps1:25 字符: 9
++         Invoke-RestMethod -Uri "http://127.0.0.1:$script:BrpPort/" -M ...
++         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (System.Net.HttpWebRequest:HttpWebRequest) [Invoke-RestMethod]，WebExce
+    ption
+    + FullyQualifiedErrorId : WebCmdletWebResponseException,Microsoft.PowerShell.Commands.InvokeRestMethodCommand
+ 

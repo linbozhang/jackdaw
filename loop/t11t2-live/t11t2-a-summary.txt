@@ -1,0 +1,2 @@
+A1_CHAIN=True A2_DEAD=False A3_ACTIVATE=False A4a_WALK=False A4b_JUMP=False A4c_SLIDE=False A4d_FOLLOW=False A5_BRIDGE=False A5_NO_DOUBLE=True A6_DISTANCE=False A6_HALFSPEED=False
+actInDoc=True dyawRmb=9.9

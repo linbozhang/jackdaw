@@ -1,0 +1,50 @@
+   Compiling jackdaw_runtime v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_runtime)
+warning: linker stderr: rust-lld: ignoring unknown argument '-fuse-ld=lld'
+  |
+  = note: `#[warn(linker_messages)]` on by default
+
+warning: `jackdaw_runtime` (lib test) generated 1 warning
+    Finished `test` profile [optimized + debuginfo] target(s) in 11.32s
+     Running unittests src\lib.rs (target\debug\deps\jackdaw_runtime-a2540723c8664f3c.exe)
+
+running 37 tests
+test frame_work::tests::a_batch_that_ran_long_is_smaller_the_next_time_round ... ok
+test frame_work::tests::a_batch_that_left_room_to_spare_grows_up_to_the_ceiling ... ok
+test frame_work::tests::a_pace_still_takes_an_item_when_every_batch_runs_long ... ok
+test frame_work::tests::a_paced_job_settles_on_frames_that_fit_the_budget ... ok
+test game_input::tests::a_file_merges_over_the_defaults_as_a_union ... ok
+test game_input::tests::a_partial_config_still_evaluates_the_full_action_set ... ok
+test game_input::tests::a_pressed_key_drives_the_action_it_is_bound_to ... ok
+test config::tests::a_missing_config_falls_back_to_default_once ... ok
+test config::tests::the_plugin_has_the_resource_ready_before_the_first_update ... ok
+test asset_file_tests::a_missing_assets_directory_is_not_an_error ... ok
+test config::tests::a_later_edit_of_the_asset_does_not_re_inject ... ok
+test config::tests::a_pie_temp_directory_does_not_shadow_the_config ... ok
+test game_input::tests::axis_deadzones_apply_through_the_engine_settings ... ok
+test game_input::tests::mouse_motion_and_buttons_feed_actions ... ok
+test config::tests::a_config_asset_becomes_the_resource_initial_value ... ok
+test game_input::tests::rebinding_moves_the_action_with_the_binding ... ok
+test asset_file_tests::an_asset_file_outranks_an_inline_catalog_entry_of_the_same_name ... ok
+test asset_file_tests::an_asset_file_answers_to_the_name_its_stem_gives_it ... ok
+test hidden_in_game::tests::hidden_in_game_hides_visibility_when_added_later ... ok
+test asset_file_tests::a_scene_file_is_not_taken_for_an_asset ... ok
+test material_overrides::tests::an_instances_overrides_lay_over_its_models_and_leave_the_rest_to_it ... ok
+test asset_file_tests::a_file_naming_a_type_the_game_did_not_register_is_skipped ... ok
+test asset_file_tests::an_asset_type_registered_without_its_reflection_is_skipped ... ok
+test material_overrides::tests::a_reference_that_resolves_later_dresses_the_part_when_it_does ... ok
+test asset_file_tests::an_asset_type_the_game_registered_is_loaded_into_its_store ... ok
+test asset_file_tests::two_files_of_one_stem_answer_by_path_and_neither_by_name ... ok
+test material_texture_format_tests::a_material_added_after_its_image_still_gets_it_promoted ... ok
+test material_overrides::tests::removing_the_overrides_gives_each_part_its_own_material_back ... ok
+test asset_file_tests::an_asset_file_in_any_folder_answers_to_its_path ... ok
+test material_overrides::tests::parts_that_arrive_after_the_overrides_are_dressed_too ... ok
+test material_texture_format_tests::promotion_leaves_the_texels_alone ... ok
+test material_texture_format_tests::a_sixteen_bit_uint_image_a_material_binds_is_retagged_as_its_unorm_twin ... ok
+test material_texture_format_tests::an_image_no_material_binds_keeps_its_uint_format ... ok
+test material_overrides::tests::an_override_dresses_only_the_parts_its_material_name_matches ... ok
+test schema_cli::tests::a_built_app_reports_its_registered_functions ... ok
+test schema_cli::tests::a_built_app_reports_its_events ... ok
+test schema_cli::tests::the_panic_fallback_prints_a_populated_schema_line ... ok
+
+test result: ok. 37 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.05s
+

@@ -1,0 +1,314 @@
+﻿{
+    "tree":  [
+                 {
+                     "children":  [
+
+                                  ],
+                     "components":  [
+                                        "bevy_camera::visibility::InheritedVisibility",
+                                        "bevy_camera::visibility::ViewVisibility",
+                                        "bevy_camera::visibility::Visibility",
+                                        "bevy_ecs::name::Name",
+                                        "bevy_transform::components::global_transform::GlobalTransform",
+                                        "bevy_transform::components::transform::Transform",
+                                        "bevy_transform::components::transform::TransformTreeChanged",
+                                        "jackdaw_bsn::document::AstNodeRef",
+                                        "jackdaw_widgets::tree_view::TreeNodeSource",
+                                        "jackdaw_widgets_runtime::AuthoredWidget"
+                                    ],
+                     "entity":  4294962999,
+                     "missing_source":  null,
+                     "name":  "Root"
+                 },
+                 {
+                     "children":  [
+
+                                  ],
+                     "components":  [
+                                        "bevy_camera::visibility::InheritedVisibility",
+                                        "bevy_camera::visibility::ViewVisibility",
+                                        "bevy_camera::visibility::Visibility",
+                                        "bevy_ecs::hierarchy::Children",
+                                        "bevy_ecs::name::Name",
+                                        "bevy_transform::components::global_transform::GlobalTransform",
+                                        "bevy_transform::components::transform::Transform",
+                                        "bevy_transform::components::transform::TransformTreeChanged",
+                                        "jackdaw::brush::BrushMeshCache",
+                                        "jackdaw_bsn::document::AstNodeRef",
+                                        "jackdaw_scene_types::node_id::SceneNodeId",
+                                        "jackdaw_scene_types::types::Brush",
+                                        "jackdaw_widgets::tree_view::TreeNodeSource",
+                                        "jackdaw_widgets_runtime::AuthoredWidget"
+                                    ],
+                     "entity":  4294962998,
+                     "missing_source":  null,
+                     "name":  "Cube"
+                 },
+                 {
+                     "children":  [
+
+                                  ],
+                     "components":  [
+                                        "bevy_camera::visibility::InheritedVisibility",
+                                        "bevy_camera::visibility::ViewVisibility",
+                                        "bevy_camera::visibility::Visibility",
+                                        "bevy_ecs::hierarchy::Children",
+                                        "bevy_ecs::name::Name",
+                                        "bevy_transform::components::global_transform::GlobalTransform",
+                                        "bevy_transform::components::transform::Transform",
+                                        "bevy_transform::components::transform::TransformTreeChanged",
+                                        "jackdaw::brush::BrushMeshCache",
+                                        "jackdaw_bsn::document::AstNodeRef",
+                                        "jackdaw_scene_types::node_id::SceneNodeId",
+                                        "jackdaw_scene_types::types::Brush",
+                                        "jackdaw_widgets::tree_view::TreeNodeSource",
+                                        "jackdaw_widgets_runtime::AuthoredWidget"
+                                    ],
+                     "entity":  4294962995,
+                     "missing_source":  null,
+                     "name":  "Cube2"
+                 },
+                 {
+                     "children":  [
+
+                                  ],
+                     "components":  [
+                                        "bevy_camera::visibility::InheritedVisibility",
+                                        "bevy_camera::visibility::ViewVisibility",
+                                        "bevy_camera::visibility::Visibility",
+                                        "bevy_ecs::hierarchy::Children",
+                                        "bevy_ecs::name::Name",
+                                        "bevy_transform::components::global_transform::GlobalTransform",
+                                        "bevy_transform::components::transform::Transform",
+                                        "bevy_transform::components::transform::TransformTreeChanged",
+                                        "jackdaw::brush::BrushMeshCache",
+                                        "jackdaw_bsn::document::AstNodeRef",
+                                        "jackdaw_scene_types::node_id::SceneNodeId",
+                                        "jackdaw_scene_types::types::Brush",
+                                        "jackdaw_widgets::tree_view::TreeNodeSource",
+                                        "jackdaw_widgets_runtime::AuthoredWidget"
+                                    ],
+                     "entity":  4294962994,
+                     "missing_source":  null,
+                     "name":  "Cube3"
+                 },
+                 {
+                     "children":  [
+
+                                  ],
+                     "components":  [
+                                        "bevy_camera::visibility::InheritedVisibility",
+                                        "bevy_camera::visibility::ViewVisibility",
+                                        "bevy_camera::visibility::Visibility",
+                                        "bevy_ecs::hierarchy::Children",
+                                        "bevy_ecs::name::Name",
+                                        "bevy_transform::components::global_transform::GlobalTransform",
+                                        "bevy_transform::components::transform::Transform",
+                                        "bevy_transform::components::transform::TransformTreeChanged",
+                                        "jackdaw::brush::BrushMeshCache",
+                                        "jackdaw_bsn::document::AstNodeRef",
+                                        "jackdaw_scene_types::node_id::SceneNodeId",
+                                        "jackdaw_scene_types::types::Brush",
+                                        "jackdaw_widgets::tree_view::TreeNodeSource",
+                                        "jackdaw_widgets_runtime::AuthoredWidget"
+                                    ],
+                     "entity":  4294962993,
+                     "missing_source":  null,
+                     "name":  "Cube4"
+                 },
+                 {
+                     "children":  [
+
+                                  ],
+                     "components":  [
+                                        "bevy_camera::visibility::InheritedVisibility",
+                                        "bevy_camera::visibility::ViewVisibility",
+                                        "bevy_camera::visibility::Visibility",
+                                        "bevy_ecs::hierarchy::Children",
+                                        "bevy_ecs::name::Name",
+                                        "bevy_transform::components::global_transform::GlobalTransform",
+                                        "bevy_transform::components::transform::Transform",
+                                        "bevy_transform::components::transform::TransformTreeChanged",
+                                        "jackdaw::brush::BrushMeshCache",
+                                        "jackdaw_bsn::document::AstNodeRef",
+                                        "jackdaw_scene_types::node_id::SceneNodeId",
+                                        "jackdaw_scene_types::types::Brush",
+                                        "jackdaw_widgets::tree_view::TreeNodeSource",
+                                        "jackdaw_widgets_runtime::AuthoredWidget"
+                                    ],
+                     "entity":  4294962990,
+                     "missing_source":  null,
+                     "name":  "Cube5"
+                 },
+                 {
+                     "children":  [
+
+                                  ],
+                     "components":  [
+                                        "bevy_camera::visibility::InheritedVisibility",
+                                        "bevy_camera::visibility::ViewVisibility",
+                                        "bevy_camera::visibility::Visibility",
+                                        "bevy_ecs::hierarchy::Children",
+                                        "bevy_ecs::name::Name",
+                                        "bevy_transform::components::global_transform::GlobalTransform",
+                                        "bevy_transform::components::transform::Transform",
+                                        "bevy_transform::components::transform::TransformTreeChanged",
+                                        "jackdaw::brush::BrushMeshCache",
+                                        "jackdaw_bsn::document::AstNodeRef",
+                                        "jackdaw_scene_types::node_id::SceneNodeId",
+                                        "jackdaw_scene_types::types::Brush",
+                                        "jackdaw_widgets::tree_view::TreeNodeSource",
+                                        "jackdaw_widgets_runtime::AuthoredWidget"
+                                    ],
+                     "entity":  4294962989,
+                     "missing_source":  null,
+                     "name":  "Sphere"
+                 },
+                 {
+                     "children":  [
+
+                                  ],
+                     "components":  [
+                                        "bevy_camera::visibility::InheritedVisibility",
+                                        "bevy_camera::visibility::ViewVisibility",
+                                        "bevy_camera::visibility::Visibility",
+                                        "bevy_ecs::hierarchy::Children",
+                                        "bevy_ecs::name::Name",
+                                        "bevy_transform::components::global_transform::GlobalTransform",
+                                        "bevy_transform::components::transform::Transform",
+                                        "bevy_transform::components::transform::TransformTreeChanged",
+                                        "jackdaw::brush::BrushMeshCache",
+                                        "jackdaw_bsn::document::AstNodeRef",
+                                        "jackdaw_scene_types::node_id::SceneNodeId",
+                                        "jackdaw_scene_types::types::Brush",
+                                        "jackdaw_widgets::tree_view::TreeNodeSource",
+                                        "jackdaw_widgets_runtime::AuthoredWidget"
+                                    ],
+                     "entity":  4294962988,
+                     "missing_source":  null,
+                     "name":  "Cube"
+                 },
+                 {
+                     "children":  [
+
+                                  ],
+                     "components":  [
+                                        "bevy_camera::primitives::Frustum",
+                                        "bevy_camera::primitives::Sphere",
+                                        "bevy_camera::visibility::InheritedVisibility",
+                                        "bevy_camera::visibility::ViewVisibility",
+                                        "bevy_camera::visibility::Visibility",
+                                        "bevy_camera::visibility::VisibilityClass",
+                                        "bevy_camera::visibility::VisibleMeshEntities",
+                                        "bevy_ecs::name::Name",
+                                        "bevy_extract::sync_world::SubEntity\u003cbevy_render::RenderApp\u003e",
+                                        "bevy_extract::sync_world::SyncToSubWorld\u003cbevy_render::RenderApp\u003e",
+                                        "bevy_light::spot_light::SpotLight",
+                                        "bevy_transform::components::global_transform::GlobalTransform",
+                                        "bevy_transform::components::transform::Transform",
+                                        "bevy_transform::components::transform::TransformTreeChanged",
+                                        "jackdaw_bsn::document::AstNodeRef",
+                                        "jackdaw_scene_types::node_id::SceneNodeId",
+                                        "jackdaw_widgets::tree_view::TreeNodeSource",
+                                        "jackdaw_widgets_runtime::AuthoredWidget"
+                                    ],
+                     "entity":  4294962997,
+                     "missing_source":  null,
+                     "name":  "Spot Light"
+                 },
+                 {
+                     "children":  [
+
+                                  ],
+                     "components":  [
+                                        "bevy_camera::primitives::CascadesFrusta",
+                                        "bevy_camera::visibility::CascadesVisibleEntities",
+                                        "bevy_camera::visibility::InheritedVisibility",
+                                        "bevy_camera::visibility::ViewVisibility",
+                                        "bevy_camera::visibility::Visibility",
+                                        "bevy_camera::visibility::VisibilityClass",
+                                        "bevy_ecs::name::Name",
+                                        "bevy_extract::sync_world::SubEntity\u003cbevy_render::RenderApp\u003e",
+                                        "bevy_extract::sync_world::SyncToSubWorld\u003cbevy_render::RenderApp\u003e",
+                                        "bevy_light::cascade::CascadeShadowConfig",
+                                        "bevy_light::cascade::Cascades",
+                                        "bevy_light::directional_light::DirectionalLight",
+                                        "bevy_transform::components::global_transform::GlobalTransform",
+                                        "bevy_transform::components::transform::Transform",
+                                        "bevy_transform::components::transform::TransformTreeChanged",
+                                        "jackdaw_bsn::document::AstNodeRef",
+                                        "jackdaw_widgets::tree_view::TreeNodeSource",
+                                        "jackdaw_widgets_runtime::AuthoredWidget"
+                                    ],
+                     "entity":  4294962996,
+                     "missing_source":  null,
+                     "name":  "Sun"
+                 },
+                 {
+                     "children":  [
+
+                                  ],
+                     "components":  [
+                                        "bevy_camera::primitives::CubemapFrusta",
+                                        "bevy_camera::primitives::Sphere",
+                                        "bevy_camera::visibility::CubemapVisibleEntities",
+                                        "bevy_camera::visibility::InheritedVisibility",
+                                        "bevy_camera::visibility::ViewVisibility",
+                                        "bevy_camera::visibility::Visibility",
+                                        "bevy_camera::visibility::VisibilityClass",
+                                        "bevy_ecs::name::Name",
+                                        "bevy_extract::sync_world::SubEntity\u003cbevy_render::RenderApp\u003e",
+                                        "bevy_extract::sync_world::SyncToSubWorld\u003cbevy_render::RenderApp\u003e",
+                                        "bevy_light::point_light::PointLight",
+                                        "bevy_transform::components::global_transform::GlobalTransform",
+                                        "bevy_transform::components::transform::Transform",
+                                        "bevy_transform::components::transform::TransformTreeChanged",
+                                        "jackdaw_bsn::document::AstNodeRef",
+                                        "jackdaw_scene_types::node_id::SceneNodeId",
+                                        "jackdaw_widgets::tree_view::TreeNodeSource",
+                                        "jackdaw_widgets_runtime::AuthoredWidget"
+                                    ],
+                     "entity":  4294962992,
+                     "missing_source":  null,
+                     "name":  "Point Light"
+                 },
+                 {
+                     "children":  [
+
+                                  ],
+                     "components":  [
+                                        "bevy_camera::camera::Camera",
+                                        "bevy_camera::camera::CameraMainTextureUsages",
+                                        "bevy_camera::camera::Exposure",
+                                        "bevy_camera::camera::RenderTarget",
+                                        "bevy_camera::components::Camera3d",
+                                        "bevy_camera::primitives::Frustum",
+                                        "bevy_camera::projection::Projection",
+                                        "bevy_camera::visibility::InheritedVisibility",
+                                        "bevy_camera::visibility::ViewVisibility",
+                                        "bevy_camera::visibility::Visibility",
+                                        "bevy_camera::visibility::VisibleEntities",
+                                        "bevy_core_pipeline::prepass::PreviousViewData",
+                                        "bevy_ecs::name::Name",
+                                        "bevy_extract::sync_world::SubEntity\u003cbevy_render::RenderApp\u003e",
+                                        "bevy_extract::sync_world::SyncToSubWorld\u003cbevy_render::RenderApp\u003e",
+                                        "bevy_light::cluster::Clusters",
+                                        "bevy_render::camera::CameraRenderGraph",
+                                        "bevy_render::view::ColorGrading",
+                                        "bevy_render::view::DebandDither",
+                                        "bevy_render::view::Msaa",
+                                        "bevy_render::view::Tonemapping",
+                                        "bevy_transform::components::global_transform::GlobalTransform",
+                                        "bevy_transform::components::transform::Transform",
+                                        "bevy_transform::components::transform::TransformTreeChanged",
+                                        "jackdaw_bsn::document::AstNodeRef",
+                                        "jackdaw_scene_types::node_id::SceneNodeId",
+                                        "jackdaw_widgets::tree_view::TreeNodeSource",
+                                        "jackdaw_widgets_runtime::AuthoredWidget"
+                                    ],
+                     "entity":  4294962991,
+                     "missing_source":  null,
+                     "name":  "Camera3D"
+                 }
+             ]
+}

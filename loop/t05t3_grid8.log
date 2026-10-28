@@ -1,0 +1,24 @@
+PASS: grid 8: audit names the gone prefab
+PASS: grid 8: rebind saved the held source
+FAIL: grid 8 audit after: {
+    "count":  2,
+    "findings":  [
+                     {
+                         "component":  "IsA",
+                         "document":  "zones/two.bsn",
+                         "entity":  "Board",
+                         "field":  "source",
+                         "kind":  "Missing",
+                         "reference":  "materials/rust.material.bsn"
+                     },
+                     {
+                         "component":  "IsA",
+                         "document":  "zones/one.bsn",
+                         "entity":  "Sign",
+                         "field":  "source",
+                         "kind":  "Missing",
+                         "reference":  "props/a/crate.prefab.bsn"
+                     }
+                 ],
+    "summary":  "2 broken references in 2 documents (2 Missing)"
+}

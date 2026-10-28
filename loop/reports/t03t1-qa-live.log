@@ -1,0 +1,20 @@
+READY pid=19824
+PASS  stage: zone.bsn loaded, Zone entity reachable
+[stage] zone row e=12884896871 rect=[8.0,126.0,182.0,28.0]
+[stage] outliner click: {"result":{"at":[99.0,140.0],"clicked":true,"target":{"entity":12884896871,"kind":"node","operator":null,"text":"??o"}}}
+[stage] selection: {"entity":12884897430,"name":"Zone"}
+PASS  stage: Zone selected through the outliner
+PASS  stage: Zone starts at x=0 (got 0)
+PASS  stage: freshly loaded scene reads clean
+PASS  chain1: X+1+Enter moved Zone to x=1 (got 1)
+PASS  chain1: the move dirties the tab
+PASS  chain1: ONE undo returns x to 0 (got 0): the move was exactly one entry
+PASS  chain1: undo back to saved depth+content reads clean (fingerprint semantics)
+PASS  chain1: second undo is a no-op (stack held only the move)
+PASS  chain1: redo returns x to 1 (got 1)
+PASS  chain1: redo re-dirties the tab (content differs from the file)
+PASS  chain2: saved at x=1, tab reads clean
+PASS  chain2: the saved file holds the move (R2 save-loss symptom gone)
+PASS  chain2: undo returned x to 0 (got 0)
+PASS  chain2 (N4 CORE): save then undo leaves the tab DIRTY -- closing must prompt
+RESULT failures=0

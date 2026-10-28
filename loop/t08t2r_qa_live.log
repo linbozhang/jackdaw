@@ -1,0 +1,12 @@
+True
+editor ready
+P0 card dirty, disk has 0.6: False (expect False)
+LEGB saved-scene dirty: before=False after-asset-set=False undo 1->2 (expect False/False)
+LEGB PASS: the saved tab stays clean across an asset edit (QA-1 closed)
+True
+LEGA untitled+Save policy: play running
+True
+LEGA alive=True card-on-disk-0.7=True
+LEGA PASS: the untitled+Save-policy launch chain saved the dirty card
+scene.bsn SHA unchanged: True
+T08_T2_REWORK_QA_DONE

@@ -1,0 +1,143 @@
+    Blocking waiting for file lock on build directory
+   Compiling derive_more-impl v2.1.1
+   Compiling bevy_platform v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+   Compiling wgpu-types v30.0.1
+   Compiling glam v0.33.12
+   Compiling aho-corasick v1.1.5
+   Compiling half v2.7.1
+   Compiling rand_distr v0.6.0
+   Compiling image v0.25.10
+   Compiling windows-core v0.62.2
+   Compiling anstyle-wincon v3.0.11
+   Compiling anstyle-query v1.1.5
+   Compiling ordered-float v5.3.0
+   Compiling wgpu-core v30.0.1
+   Compiling wgpu v30.0.1
+   Compiling serde_json v1.0.151
+   Compiling earcutr v0.5.0
+   Compiling bevy_utils v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+   Compiling anstream v1.0.0
+   Compiling float-cmp v0.10.0
+   Compiling nom v8.0.0
+   Compiling windows-collections v0.3.2
+   Compiling windows-numerics v0.3.1
+   Compiling windows-future v0.3.2
+   Compiling naga v30.0.1
+   Compiling wgsl-types v0.6.0
+   Compiling meshopt v0.6.2
+   Compiling noise v0.9.0
+   Compiling tempfile v3.27.0
+   Compiling regex-automata v0.4.18
+   Compiling windows v0.62.2
+   Compiling gltf-json v1.4.1
+   Compiling matchers v0.2.0
+   Compiling tracing-subscriber v0.3.23
+   Compiling lalrpop-util v0.23.1
+   Compiling logos-codegen v0.16.1
+   Compiling gltf v1.4.1
+   Compiling hexasphere v19.0.0
+   Compiling wgpu-naga-bridge v30.0.1
+   Compiling gpu-allocator v0.28.0
+   Compiling wgpu-hal v30.0.1
+   Compiling derive_more v2.1.1
+   Compiling bevy_reflect v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+   Compiling bevy_tasks v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+   Compiling logos-derive v0.16.1
+   Compiling logos v0.16.1
+   Compiling wgsl-parse v0.6.0
+   Compiling wgpu-core-deps-windows-linux-android v30.0.1
+   Compiling wesl v0.6.0
+   Compiling bevy_ecs v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+   Compiling bevy_math v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+   Compiling bevy_annotations v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+   Compiling bevy_curve v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+   Compiling bevy_shape v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+   Compiling bevy_color v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+   Compiling bevy_app v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+   Compiling bevy_time v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+   Compiling bevy_transform v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+   Compiling bevy_input v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+   Compiling bevy_diagnostic v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+   Compiling bevy_log v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+   Compiling bevy_a11y v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+   Compiling bevy_asset v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+   Compiling bevy_clipboard v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+   Compiling bevy_mesh v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+   Compiling bevy_image v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+   Compiling bevy_shader v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+   Compiling bevy_scene v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+   Compiling bevy_window v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+   Compiling bevy_text v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+   Compiling bevy_material v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+   Compiling bevy_animation v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+   Compiling bevy_camera v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+   Compiling bevy_extract v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+   Compiling bevy_light v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+   Compiling bevy_render v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+   Compiling bevy_picking v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+   Compiling bevy_sprite v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+   Compiling bevy_world_serialization v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+   Compiling bevy_gltf v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+   Compiling bevy_input_focus v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+   Compiling bevy_ui v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+   Compiling bevy_core_pipeline v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+   Compiling bevy_sprite_render v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+   Compiling bevy_pbr v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+   Compiling bevy_ui_widgets v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+   Compiling bevy_anti_alias v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+   Compiling bevy_post_process v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+   Compiling bevy_ui_render v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+   Compiling bevy_feathers v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+   Compiling bevy_internal v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+   Compiling bevy v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+   Compiling jackdaw_geometry v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_geometry)
+   Compiling jackdaw_bsn v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_bsn)
+   Compiling jackdaw_bind v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_bind)
+   Compiling jackdaw_widgets_runtime v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_widgets_runtime)
+   Compiling jackdaw_scene_types v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_scene_types)
+   Compiling jackdaw_prefab v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_prefab)
+   Compiling jackdaw_schema v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_schema)
+   Compiling jackdaw_surface v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_surface)
+   Compiling jackdaw_terrain v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_terrain)
+   Compiling jackdaw_animation_runtime v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_animation_runtime)
+   Compiling jackdaw_runtime v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_runtime)
+warning: linker stderr: rust-lld: ignoring unknown argument '-fuse-ld=lld'
+  |
+  = note: `#[warn(linker_messages)]` on by default
+
+warning: `jackdaw_runtime` (test "pie_scene_override") generated 1 warning
+    Finished `test` profile [optimized + debuginfo] target(s) in 3m 19s
+     Running tests\pie_scene_override.rs (target\debug\deps\pie_scene_override-1d82ffb8da4a3118.exe)
+
+running 3 tests
+test only_the_first_scene_root_is_overridden ... FAILED
+test the_override_scene_loads_in_place_of_the_named_one ... FAILED
+test without_the_env_the_named_scene_loads ... FAILED
+
+failures:
+
+---- only_the_first_scene_root_is_overridden stdout ----
+
+thread 'only_the_first_scene_root_is_overridden' (4432) panicked at crates\jackdaw_runtime\tests\pie_scene_override.rs:186:5:
+the first root plays the override: ["Anchor", "Second", "scene", "second"]
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- the_override_scene_loads_in_place_of_the_named_one stdout ----
+
+thread 'the_override_scene_loads_in_place_of_the_named_one' (42884) panicked at crates\jackdaw_runtime\tests\pie_scene_override.rs:126:34:
+called `Result::unwrap()` on an `Err` value: PoisonError { .. }
+
+---- without_the_env_the_named_scene_loads stdout ----
+
+thread 'without_the_env_the_named_scene_loads' (17808) panicked at crates\jackdaw_runtime\tests\pie_scene_override.rs:100:34:
+called `Result::unwrap()` on an `Err` value: PoisonError { .. }
+
+
+failures:
+    only_the_first_scene_root_is_overridden
+    the_override_scene_loads_in_place_of_the_named_one
+    without_the_env_the_named_scene_loads
+
+test result: FAILED. 0 passed; 3 failed; 0 ignored; 0 measured; 0 filtered out; finished in 3.15s
+
+error: test failed, to rerun pass `-p jackdaw_runtime --test pie_scene_override`

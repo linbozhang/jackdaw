@@ -1,0 +1,27 @@
+所在位置 E:\Project\rust\jackdaw\loop\qa\t06-stop-restore.ps1:223 字符: 53
++     Write-Host "  spinner doc sample1: $(($t1 -split \"`n\") -match ' ...
++                                                     ~
+必须在“-split”运算符后面提供一个值表达式。
+所在位置 E:\Project\rust\jackdaw\loop\qa\t06-stop-restore.ps1:223 字符: 54
++     Write-Host "  spinner doc sample1: $(($t1 -split \"`n\") -match ' ...
++                                                      ~~~~~~
+表达式或语句中包含意外的标记“\"`n\"”。
+所在位置 E:\Project\rust\jackdaw\loop\qa\t06-stop-restore.ps1:223 字符: 53
++     Write-Host "  spinner doc sample1: $(($t1 -split \"`n\") -match ' ...
++                                                     ~
+表达式中缺少右“)”。
+所在位置 E:\Project\rust\jackdaw\loop\qa\t06-stop-restore.ps1:224 字符: 53
++     Write-Host "  spinner doc sample2: $(($t2 -split \"`n\") -match ' ...
++                                                     ~
+必须在“-split”运算符后面提供一个值表达式。
+所在位置 E:\Project\rust\jackdaw\loop\qa\t06-stop-restore.ps1:224 字符: 54
++     Write-Host "  spinner doc sample2: $(($t2 -split \"`n\") -match ' ...
++                                                      ~~~~~~
+表达式或语句中包含意外的标记“\"`n\"”。
+所在位置 E:\Project\rust\jackdaw\loop\qa\t06-stop-restore.ps1:224 字符: 53
++     Write-Host "  spinner doc sample2: $(($t2 -split \"`n\") -match ' ...
++                                                     ~
+表达式中缺少右“)”。
+    + CategoryInfo          : ParserError: (:) [], ParentContainsErrorRecordException
+    + FullyQualifiedErrorId : ExpectedValueExpression
+ 

@@ -1,0 +1,1 @@
+cargo fmt --all -- --check: exit 0 (after one cargo fmt --all pass) 

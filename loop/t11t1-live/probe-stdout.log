@@ -1,0 +1,12 @@
+[2m2026-10-27T22:20:24.514902Z[0m [32m INFO[0m [2mbevy_diagnostic::system_information_diagnostics_plugin::internal[0m[2m:[0m SystemInfo { os: "Windows 11 Pro", kernel: "26100", cpu: "AMD Ryzen 7 9700X 8-Core Processor", core_count: "8", memory: "93.4 GiB" }
+[2m2026-10-27T22:20:24.518492Z[0m [33m WARN[0m [2mbevy_asset::io::source[0m[2m:[0m Skip creating file watcher because path "H:\\workspace_AI\\t11-live\\t11t1-game\\target\\debug\\assets" does not exist.
+[2m2026-10-27T22:20:24.519253Z[0m [33m WARN[0m [2mbevy_asset::io::source[0m[2m:[0m AssetSourceId::Default does not have an AssetWatcher configured. Consider adding an "assets" directory.
+[2m2026-10-27T22:20:25.515613Z[0m [32m INFO[0m [2mbevy_render::renderer[0m[2m:[0m AdapterInfo { name: "NVIDIA GeForce RTX 5070", vendor: 4318, device: 12036, device_type: DiscreteGpu, device_pci_bus_id: "0000:01:00.0", driver: "NVIDIA", driver_info: "591.86", backend: Vulkan, subgroup_min_size: 32, subgroup_max_size: 32, transient_saves_memory: Some(false), limit_bucket: None }
+[2m2026-10-27T22:20:25.961826Z[0m [32m INFO[0m [2mbevy_pbr::cluster[0m[2m:[0m GPU clustering is supported on this device.
+[2m2026-10-27T22:20:25.962295Z[0m [32m INFO[0m [2mbevy_render::batching::gpu_preprocessing[0m[2m:[0m GPU preprocessing is fully supported on this device.
+[2m2026-10-27T22:20:25.967227Z[0m [32m INFO[0m [2mbevy_winit::system[0m[2m:[0m Creating new window t11t1-game (69v0)
+[2m2026-10-27T22:20:26.179388Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Path not found: H:\workspace_AI\t11-live\t11t1-game\target\debug\assets\scene.bsn
+[2m2026-10-27T22:20:26.185573Z[0m [32m INFO[0m [2mjackdaw_runtime[0m[2m:[0m No catalog at H:\workspace_AI\t11-live\t11t1-game\target\debug\assets\catalog.bsn, skipping catalog load
+[2m2026-10-27T22:20:26.222208Z[0m [33m WARN[0m [2mjackdaw_runtime::config[0m[2m:[0m no config asset at 'game-config.bsn'; t11t1_game::GameConfig starts at its default
+[2m2026-10-27T22:20:26.222228Z[0m [33m WARN[0m [2mjackdaw_runtime::config[0m[2m:[0m no config asset at 'input-actions.bsn'; jackdaw_runtime::game_input::GameInputConfig starts at its default
+[2m2026-10-27T22:20:26.223492Z[0m [33m WARN[0m [2mjackdaw_runtime[0m[2m:[0m Cannot spawn scene: Path not found: H:\workspace_AI\t11-live\t11t1-game\target\debug\assets\scene.bsn

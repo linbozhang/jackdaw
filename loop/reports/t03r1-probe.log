@@ -1,0 +1,12 @@
+PASS  registry: clip.delete_keyframes answers allows_undo=false
+PASS  registry: clip.paste_keyframes answers allows_undo=false
+PASS  registry: brush.join answers allows_undo=false
+PASS  registry: pie.live_edits_apply_all answers allows_undo=false
+PASS  registry: terrain.generate answers allows_undo=false
+PASS  registry: terrain.erode answers allows_undo=false
+PASS  registry: resource.insert answers allows_undo=false
+PASS  registry: resource.remove answers allows_undo=false
+PASS  registry: resource.set_field answers allows_undo=false
+[probe] terrain.generate: undo_len 1 -> 2 (top: Generate Terrain)
+PASS  behaviour: terrain.generate through call_operator (history=true) is ONE entry
+RESULT failures=0

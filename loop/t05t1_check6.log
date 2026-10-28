@@ -1,0 +1,77 @@
+warning: linker stderr: rust-lld: ignoring unknown argument '-fuse-ld=lld'
+  |
+  = note: `#[warn(linker_messages)]` on by default
+
+warning: `jackdaw_env` (build script) generated 1 warning
+warning: `jackdaw_api_macros` (lib) generated 1 warning (1 duplicate)
+warning: `jackdaw_project_build` (build script) generated 1 warning (1 duplicate)
+warning: `jackdaw_package` (build script) generated 1 warning (1 duplicate)
+    Checking jackdaw v0.21.0-dev (E:\Project\rust\jackdaw)
+error[E0603]: function `file_has_moved_on` is private
+   --> tests\guards\reference_rewrite.rs:579:43
+    |
+579 |         !jackdaw::scenes::external_watch::file_has_moved_on(app.world(), &tab_file),
+    |                                           ^^^^^^^^^^^^^^^^^ private function
+    |
+note: the function `file_has_moved_on` is defined here
+   --> src\scenes\external_watch.rs:228:1
+    |
+228 | pub(crate) fn file_has_moved_on(world: &World, path: &Path) -> bool {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `bevy::reflect::TypePath`
+  --> tests\guards\reference_rewrite.rs:12:5
+   |
+12 | use bevy::reflect::TypePath;
+   |     ^^^^^^^^^^^^^^^^^^^^^^^
+   |
+   = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+error[E0308]: mismatched types
+  --> tests\guards\reference_rewrite.rs:67:9
+   |
+66 |     write(
+   |     ----- arguments to this function are incorrect
+67 |         &tmp,
+   |         ^^^^ expected `&Path`, found `&TempDir`
+   |
+   = note: expected reference `&std::path::Path`
+              found reference `&TempDir`
+note: function defined here
+  --> tests\guards\reference_rewrite.rs:47:4
+   |
+47 | fn write(root: &Path, relative: &str, text: &str) {
+   |    ^^^^^ -----------
+
+error[E0308]: mismatched types
+   --> tests\guards\reference_rewrite.rs:218:9
+    |
+217 |     write(
+    |     ----- arguments to this function are incorrect
+218 |         &tmp,
+    |         ^^^^ expected `&Path`, found `&TempDir`
+    |
+    = note: expected reference `&std::path::Path`
+               found reference `&TempDir`
+note: function defined here
+   --> tests\guards\reference_rewrite.rs:47:4
+    |
+ 47 | fn write(root: &Path, relative: &str, text: &str) {
+    |    ^^^^^ -----------
+
+error[E0596]: cannot borrow data in a `&` reference as mutable
+   --> tests\guards\reference_rewrite.rs:112:5
+    |
+112 |     app.world()
+    |     ^^^^^^^^^^^ cannot borrow as mutable
+
+error[E0596]: cannot borrow data in a `&` reference as mutable
+   --> tests\guards\reference_rewrite.rs:126:21
+    |
+126 |     let mut query = app.world().query::<&Signpost>();
+    |                     ^^^^^^^^^^^ cannot borrow as mutable
+
+Some errors have detailed explanations: E0308, E0596, E0603.
+For more information about an error, try `rustc --explain E0308`.
+warning: `jackdaw` (test "guards") generated 1 warning
+error: could not compile `jackdaw` (test "guards") due to 5 previous errors; 1 warning emitted

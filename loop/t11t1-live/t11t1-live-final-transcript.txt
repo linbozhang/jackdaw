@@ -1,0 +1,22 @@
+T11-T1 live final run (per-leg fresh boots, loop/qa/t11t1-live.ps1, 2026-10-28)
+
+GAME_READY at 9096/2230 ms per boot (cmd start /B only, no WGPU_BACKEND)
+
+L1_BASE: player=(-2.000,0.860,0.000) count=0 pickups=3 rigActive=True rigCamera=True
+L1_PASS
+L2_Z_SERIES: -0.591 -1.262 -1.912 -2.440 -2.440 -2.440 -2.440 -2.440
+L2_WALL_STOP: z=-2.440 (wall face -2.80 + radius 0.35 + skin -> ~-2.44)
+L5_SLIDE: xAlongWall=6.84-7.41 m, zEnd=-2.440 (z clamped at the wall while x runs)
+L2_PASS / L5_PASS
+L4_APPROACH (fresh boot lane walk): player at spawn (-2, 0.86, 0)
+L4_SEQ: -1.69/0.86/c0 -1.33/0.86/c1 -0.95/0.86/c1 -0.67/0.86/c2 ... 1.49/0.86/c2 1.11/0.86/c3
+L4_FINAL: count=3 pickupsLeft=0 player=(1.07,0.86,0.47)
+CLEAR_LOG: True ("Level clear! All 3 pickups collected.")
+L4_PASS
+L3_Y_SERIES: 1.411 1.693 1.854 1.948 1.953 1.893 1.771 1.565 1.305 0.953 0.860 0.860 ...
+L3_APEX: 1.952-1.970 expected 1.892 (rest 0.86 + v2/2g 1.03); final 0.860
+L3_PASS
+L6_FOLLOW: at(-2.00,0.86,0.00) offset=(0.00,5.09,9.21); at(2.12,0.86,-0.73) offset=(0.00,5.09,9.21); drift=0.000
+   (theory: focus lift 1.2 + 10*sin(0.4)=3.89 -> y 5.09; 10*cos(0.4)=9.21 -> z)
+L6_PASS
+VERDICT: L1=True L2=True L3=True L4=True L5=True L6=True

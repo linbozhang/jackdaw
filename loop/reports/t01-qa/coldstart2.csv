@@ -1,0 +1,11 @@
+﻿probe,item,value,expected,ok
+COLD2,inputfocus_no_click,71v0,non-null(window),True
+COLD2,cursor_before_brp_move,False,False(null),True
+COLD2,enabled_before_hover,False,all False,True
+COLD2,cursor_after_brp_move,,non-null,False
+COLD2,enabled_hover_windowfocus,,all True (D5#1 fix),True
+COLD2,fly_before_rmb,False,False,True
+COLD2,fly_on_rmb_noclick,False,True,False
+COLD2,zero_jump_press,dyaw=0.0000 dpitch=0.0000 posPress=0.0000 posHold=0.0000,<0.005/<0.01,True
+COLD2,wasd_forward_noclick,len=0.00,>0.5,False
+COLD2,fly_after_release,False,False,True

@@ -1,0 +1,4 @@
+jackdaw export: building C:\Users\linbo.zhang\Projects\my-game with profile release
+jackdaw build: building C:\Users\linbo.zhang\Projects\my-game
+jackdaw build: ok (492 components); binary at C:\Users\linbo.zhang\Projects\my-game\.jackdaw\target/game\release\my-game.exe, schema at C:\Users\linbo.zhang\Projects\my-game\.jackdaw\schema.json
+jackdaw export: staged C:\Users\linbo.zhang\Projects\my-game\.jackdaw\dist\release\my-game.exe (2 files) in C:\Users\linbo.zhang\Projects\my-game\.jackdaw\dist\release

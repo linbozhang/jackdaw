@@ -1,0 +1,7 @@
+﻿probe,item,value,expected,ok
+COLD4,inputfocus_no_click,{"current_focus":"71v0","original_focus":"71v0","recorded_changes":[]},current_focus non-null,True
+COLD4,cam_pos_start,0.000,4.000,8.000,baseline,True
+COLD4,A_fly_engaged_poll,True,True (<=18f),True
+COLD4,B_enabled_windowfocus,True,True (D5#1 core),True
+COLD4,C2_wasd_forward_poll,maxLen=1.17,>0.5,True
+COLD4,D_fly_released_poll,True,True (<=18f),True

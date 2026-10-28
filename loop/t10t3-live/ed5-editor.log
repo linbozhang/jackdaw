@@ -1,0 +1,139 @@
+[2m2026-10-27T17:00:21.566343Z[0m [32m INFO[0m [2mbevy_diagnostic::system_information_diagnostics_plugin::internal[0m[2m:[0m SystemInfo { os: "Windows 11 Pro", kernel: "26100", cpu: "AMD Ryzen 7 9700X 8-Core Processor", core_count: "8", memory: "93.4 GiB" }
+[2m2026-10-27T17:00:22.060400Z[0m [32m INFO[0m [2mbevy_render::renderer[0m[2m:[0m AdapterInfo { name: "NVIDIA GeForce RTX 5070", vendor: 4318, device: 12036, device_type: DiscreteGpu, device_pci_bus_id: "0000:01:00.0", driver: "32.0.15.9186", driver_info: "", backend: Dx12, subgroup_min_size: 32, subgroup_max_size: 32, transient_saves_memory: Some(false), limit_bucket: None }
+[2m2026-10-27T17:00:23.160912Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw::test_input::plugin` of extension `jackdaw.test_input`
+[2m2026-10-27T17:00:23.161482Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw_physics::PhysicsEditorPlugin` of extension `jackdaw.physics`
+[2m2026-10-27T17:00:23.169577Z[0m [32m INFO[0m [2mbevy_pbr::cluster[0m[2m:[0m GPU clustering is supported on this device.
+[2m2026-10-27T17:00:23.169786Z[0m [32m INFO[0m [2mbevy_render::batching::gpu_preprocessing[0m[2m:[0m GPU preprocessing is fully supported on this device.
+[2m2026-10-27T17:00:23.171370Z[0m [32m INFO[0m [2mbevy_winit::system[0m[2m:[0m Creating new window jackdaw (71v0)
+[2m2026-10-27T17:00:23.415572Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core_windows
+[2m2026-10-27T17:00:23.416015Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.project_window
+[2m2026-10-27T17:00:23.416100Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.build_panel
+[2m2026-10-27T17:00:23.416157Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.multiplayer
+[2m2026-10-27T17:00:23.416255Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.physics
+[2m2026-10-27T17:00:23.416677Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.inspector
+[2m2026-10-27T17:00:23.416758Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core
+[2m2026-10-27T17:00:23.419117Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.viewport_panel
+[2m2026-10-27T17:00:23.419257Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.game_panel
+[2m2026-10-27T17:00:23.419327Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.timeline
+[2m2026-10-27T17:00:23.419383Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.ui_palette
+[2m2026-10-27T17:00:23.419479Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.animation_graph
+[2m2026-10-27T17:00:23.419538Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.test_input
+[2m2026-10-27T17:00:23.422073Z[0m [33m WARN[0m [2mjackdaw_api_internal::keymap::apply[0m[2m:[0m preset 'classic' has 10 chords claimed by more than one action: ["Delete (Press, Operators): clip.delete_keyframes, entity.delete, brush.delete_element", "Backspace (Press, Operators): clip.delete_keyframes, viewport.draw_brush.remove_last_vertex, brush.delete_element", "Home (Press, Operators): clip.timeline.jump_start, view.frame_all, viewport2d.frame", "Ctrl+KeyC (Press, Operators): clip.copy_keyframes, entity.copy", "Ctrl+KeyV (Press, Operators): clip.paste_keyframes, entity.paste", "Tab (Press, Operators): viewport.draw_brush.toggle_mode, brush.clip.cycle_mode", "Enter (Press, Operators): viewport.draw_brush.commit_polygon, brush.clip.apply", "KeyE (Press, Operators): tool.rotate, brush.mesh.extrude", "Escape (Press, Operators): brush.exit_edit_mode, selection.clear, brush.clip.clear, terrain.tool.exit_to_select", "Ctrl+KeyB (Press, Operators): brush.mesh.edge_bevel, brush.mesh.vertex_bevel"]
+[2m2026-10-27T17:00:23.422367Z[0m [32m INFO[0m [2mjackdaw::extension_lifecycle[0m[2m:[0m applied keymap preset 'classic': 112 entries, 112 bindings, 0 user rows
+[2m2026-10-27T17:00:23.474788Z[0m [32m INFO[0m [2mjackdaw::project_select[0m[2m:[0m recovery: 1 leftover session(s) from a crash; the recovery dialog will offer them
+[2m2026-10-27T17:00:23.584088Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking H:\workspace_AI\t10-phys\phys-game\assets recursively
+[2m2026-10-27T17:00:23.584698Z[0m [32m INFO[0m [2mjackdaw::asset_catalog[0m[2m:[0m No asset catalog found, starting with empty catalog
+[2m2026-10-27T17:00:25.348358Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: pre-building the game in the background for a fast first Play
+[2m2026-10-27T17:00:25.349566Z[0m [32m INFO[0m [2mjackdaw::material_browser[0m[2m:[0m update_material_browser_ui: rebuilding with 1 entries
+[2m2026-10-27T17:00:25.618049Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 2, typed 1, referencing 0)
+[2m2026-10-27T17:00:25.619644Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 0)
+[2m2026-10-27T17:00:35.391490Z[0m [33m WARN[0m [2mjackdaw_project_build::binary[0m[2m:[0m project schema extraction skipped: extractor failed: \x1b[2m2026-10-27T17:00:27.600909Z\x1b[0m \x1b[32m INFO\x1b[0m \x1b[2mbevy_diagnostic::system_information_diagnostics_plugin::internal\x1b[0m\x1b[2m:\x1b[0m SystemInfo { os: "Windows 11 Pro", kernel: "26100", cpu: "AMD Ryzen 7 9700X 8-Core Processor", core_count: "8", memory: "93.4 GiB" }
+\x1b[2m2026-10-27T17:00:27.604260Z\x1b[0m \x1b[33m WARN\x1b[0m \x1b[2mbevy_asset::io::source\x1b[0m\x1b[2m:\x1b[0m Skip creating file watcher because path "H:\\workspace_AI\\t10-phys\\phys-game\\.jackdaw\\target\\game\\debug\\assets" does not exist.
+\x1b[2m2026-10-27T17:00:27.604309Z\x1b[0m \x1b[33m WARN\x1b[0m \x1b[2mbevy_asset::io::source\x1b[0m\x1b[2m:\x1b[0m AssetSourceId::Default does not have an AssetWatcher configured. Consider adding an "assets" directory.
+\x1b[2m2026-10-27T17:00:28.306290Z\x1b[0m \x1b[32m INFO\x1b[0m \x1b[2mbevy_render::renderer\x1b[0m\x1b[2m:\x1b[0m AdapterInfo { name: "NVIDIA GeForce RTX 5070", vendor: 4318, device: 12036, device_type: DiscreteGpu, device_pci_bus_id: "0000:01:00.0", driver: "NVIDIA", driver_info: "591.86", backend: Vulkan, subgroup_min_size: 32, subgroup_max_size: 32, transient_saves_memory: Some(false), limit_bucket: None }
+
+[2m2026-10-27T17:00:40.428907Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: scene.open
+[2m2026-10-27T17:00:40.432694Z[0m [33m WARN[0m [2mjackdaw_bsn::apply[0m[2m:[0m cannot apply 'avian3d::dynamics::rigid_body::Sensor': type not in the registry
+[2m2026-10-27T17:00:40.432852Z[0m [33m WARN[0m [2mjackdaw_bsn::apply[0m[2m:[0m cannot apply 'avian3d::collision::layers::CollisionLayers': type not in the registry
+[2m2026-10-27T17:00:40.433023Z[0m [33m WARN[0m [2mjackdaw_bsn::catalog[0m[2m:[0m 2 types in this scene are in neither the editor's registry nor the project's extracted schema (avian3d::collision::layers::CollisionLayers, avian3d::dynamics::rigid_body::Sensor); rebuild the project so the editor picks up its types.
+[2m2026-10-27T17:00:42.649860Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: entity.add.cube
+[2m2026-10-27T17:00:42.785039Z[0m [32m INFO[0m [2mjackdaw::boot_ops[0m[2m:[0m JACKDAW_RUN_OP: component.set: `entity` = 4613v0 (Cube), by id
+[2m2026-10-27T17:00:42.785273Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: component.set
+[2m2026-10-27T17:00:42.885503Z[0m [32m INFO[0m [2mjackdaw::boot_ops[0m[2m:[0m JACKDAW_RUN_OP: component.set: `entity` = 4613v0 (Cube), by id
+[2m2026-10-27T17:00:42.885788Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: component.set
+[2m2026-10-27T17:00:42.986245Z[0m [32m INFO[0m [2mjackdaw::boot_ops[0m[2m:[0m JACKDAW_RUN_OP: physics.enable: `entity` = 4613v0 (Cube), by id
+[2m2026-10-27T17:00:42.986578Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: physics.enable
+[2m2026-10-27T17:00:44.179519Z[0m [32m INFO[0m [2mjackdaw::screenshot[0m[2m:[0m screenshot: wrote H:\workspace_AI\t10-phys\phys-game\t10t3-grid8-base.png
+[2m2026-10-27T17:00:44.284516Z[0m [32m INFO[0m [2mjackdaw::screenshot[0m[2m:[0m screenshot: wrote H:\workspace_AI\t10-phys\phys-game\t10t3-grid8-base.png
+[2m2026-10-27T17:00:46.458330Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: view.toggle_collider_gizmos
+[2m2026-10-27T17:00:48.579722Z[0m [32m INFO[0m [2mjackdaw::screenshot[0m[2m:[0m screenshot: wrote H:\workspace_AI\t10-phys\phys-game\t10t3-grid8-on.png
+[2m2026-10-27T17:00:48.675615Z[0m [32m INFO[0m [2mjackdaw::screenshot[0m[2m:[0m screenshot: wrote H:\workspace_AI\t10-phys\phys-game\t10t3-grid8-on.png
+[2m2026-10-27T17:00:50.805683Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: view.toggle_collider_gizmos
+[2m2026-10-27T17:00:52.920270Z[0m [32m INFO[0m [2mjackdaw::screenshot[0m[2m:[0m screenshot: wrote H:\workspace_AI\t10-phys\phys-game\t10t3-grid8-off.png
+[2m2026-10-27T17:00:53.020041Z[0m [32m INFO[0m [2mjackdaw::screenshot[0m[2m:[0m screenshot: wrote H:\workspace_AI\t10-phys\phys-game\t10t3-grid8-off.png
+[2m2026-10-27T17:00:55.162644Z[0m [32m INFO[0m [2mjackdaw::boot_ops[0m[2m:[0m JACKDAW_RUN_OP: component.set: `entity` = 4579v0 (DroppingCube), by id
+[2m2026-10-27T17:00:55.162920Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: component.set
+[2m2026-10-27T17:00:56.350558Z[0m [32m INFO[0m [2mjackdaw::boot_ops[0m[2m:[0m JACKDAW_RUN_OP: selection.select: `entity` = 4579v0 (DroppingCube), by id
+[2m2026-10-27T17:00:56.350844Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: selection.select
+[2m2026-10-27T17:00:56.453807Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: view.frame_selected
+[2m2026-10-27T17:00:58.510512Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: physics.activate
+[2m2026-10-27T17:00:59.556416Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: input.pointer
+[2m2026-10-27T17:00:59.874898Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: input.pointer
+[2m2026-10-27T17:01:00.335028Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: input.pointer
+[2m2026-10-27T17:01:00.798195Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: input.pointer
+[2m2026-10-27T17:01:02.961254Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: input.pointer
+[2m2026-10-27T17:01:03.294453Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: input.pointer
+[2m2026-10-27T17:01:03.769216Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: input.pointer
+[2m2026-10-27T17:01:04.242581Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: input.pointer
+[2m2026-10-27T17:01:06.374941Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: input.pointer
+[2m2026-10-27T17:01:06.698585Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: input.pointer
+[2m2026-10-27T17:01:07.160183Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: input.pointer
+[2m2026-10-27T17:01:07.634949Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: input.pointer
+[2m2026-10-27T17:01:09.785918Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: input.pointer
+[2m2026-10-27T17:01:10.115471Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: input.pointer
+[2m2026-10-27T17:01:10.590096Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: input.pointer
+[2m2026-10-27T17:01:11.058813Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: input.pointer
+[2m2026-10-27T17:01:13.193559Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: input.pointer
+[2m2026-10-27T17:01:13.520671Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: input.pointer
+[2m2026-10-27T17:01:14.004817Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: input.pointer
+[2m2026-10-27T17:01:14.489101Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: input.pointer
+[2m2026-10-27T17:01:16.640375Z[0m [32m INFO[0m [2mjackdaw::boot_ops[0m[2m:[0m JACKDAW_RUN_OP: component.set: `entity` = 4579v0 (DroppingCube), by id
+[2m2026-10-27T17:01:16.640680Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: component.set
+[2m2026-10-27T17:01:16.640834Z[0m [32m INFO[0m [2mjackdaw::commands[0m[2m:[0m Authored override for previously derived component 'avian3d::dynamics::rigid_body::LinearVelocity'
+[2m2026-10-27T17:01:16.749643Z[0m [32m INFO[0m [2mjackdaw::boot_ops[0m[2m:[0m JACKDAW_RUN_OP: selection.select: `entity` = 4579v0 (DroppingCube), by id
+[2m2026-10-27T17:01:16.749919Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: selection.select
+[2m2026-10-27T17:01:17.905447Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: input.pointer
+[2m2026-10-27T17:01:18.229686Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: input.pointer
+[2m2026-10-27T17:01:18.695332Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: input.pointer
+[2m2026-10-27T17:01:19.165284Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: input.pointer
+[2m2026-10-27T17:01:23.337290Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: input.key
+[2m2026-10-27T17:01:23.340318Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: modal.cancel
+[2m2026-10-27T17:01:24.499123Z[0m [32m INFO[0m [2mjackdaw::boot_ops[0m[2m:[0m JACKDAW_RUN_OP: selection.select: `entity` = 4581v0 (LayerCube), by id
+[2m2026-10-27T17:01:24.499401Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: selection.select
+[2m2026-10-27T17:01:24.680747Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: physics.activate
+[2m2026-10-27T17:01:25.733169Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: input.pointer
+[2m2026-10-27T17:01:26.081900Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: input.pointer
+[2m2026-10-27T17:01:26.566422Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: input.pointer
+[2m2026-10-27T17:01:27.032371Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: input.pointer
+[2m2026-10-27T17:01:30.182162Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: input.pointer
+[2m2026-10-27T17:01:30.508104Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: input.pointer
+[2m2026-10-27T17:01:30.972913Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: input.pointer
+[2m2026-10-27T17:01:31.444091Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: input.pointer
+[2m2026-10-27T17:01:34.568430Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: input.pointer
+[2m2026-10-27T17:01:34.891283Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: input.pointer
+[2m2026-10-27T17:01:35.380517Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: input.pointer
+[2m2026-10-27T17:01:35.852929Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: input.pointer
+[2m2026-10-27T17:01:39.006973Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: input.key
+[2m2026-10-27T17:01:39.010979Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: modal.cancel
+[2m2026-10-27T17:01:40.145283Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: scene.save
+[2m2026-10-27T17:01:40.150065Z[0m [32m INFO[0m [2mjackdaw::scene_io::save[0m[2m:[0m Scene saved to H:\workspace_AI\t10-phys\phys-game\assets\scene.bsn
+[2m2026-10-27T17:01:40.150256Z[0m [32m INFO[0m [2mjackdaw::scene_io::session_journal[0m[2m:[0m session journal: H:\workspace_AI\t10-phys\phys-game\assets\scene.bsn reached disk; dropping its entry
+[2m2026-10-27T17:01:40.159388Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking H:\workspace_AI\t10-phys\phys-game\assets recursively
+[2m2026-10-27T17:01:40.183659Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 2, typed 1, referencing 0)
+[2m2026-10-27T17:01:40.183864Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 0)
+[2m2026-10-27T17:01:40.293235Z[0m [33m WARN[0m [2mbevy_ecs::relationship[0m[2m:[0m The bevy_ecs::hierarchy::ChildOf(8731v5) relationship on entity 8716v5 relates to an entity that does not exist. The invalid bevy_ecs::hierarchy::ChildOf relationship has been removed.
+[2m2026-10-27T17:02:50.952826Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking H:\workspace_AI\t10-phys\phys-game\assets recursively
+[2m2026-10-27T17:02:50.976668Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 2, typed 1, referencing 0)
+[2m2026-10-27T17:02:50.976959Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 0)
+[2m2026-10-27T17:02:51.005880Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking H:\workspace_AI\t10-phys\phys-game\assets recursively
+[2m2026-10-27T17:02:51.033539Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 2, typed 1, referencing 0)
+[2m2026-10-27T17:02:51.033844Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 0)
+[2m2026-10-27T17:02:51.115250Z[0m [32m INFO[0m [2mjackdaw::scenes::external_watch[0m[2m:[0m H:\workspace_AI\t10-phys\phys-game\assets\scene.bsn changed on disk; offering a reload
+[2m2026-10-27T17:02:51.194654Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: scene.open
+[2m2026-10-27T17:02:51.201909Z[0m [33m WARN[0m [2mjackdaw_bsn::apply[0m[2m:[0m cannot apply 'avian3d::dynamics::rigid_body::Sensor': type not in the registry
+[2m2026-10-27T17:02:51.202171Z[0m [33m WARN[0m [2mjackdaw_bsn::apply[0m[2m:[0m cannot apply 'avian3d::collision::layers::CollisionLayers': type not in the registry
+[2m2026-10-27T17:02:51.202252Z[0m [32m INFO[0m [2mjackdaw::scene_io::load[0m[2m:[0m Scene loaded from H:\workspace_AI\t10-phys\phys-game\assets\scene.bsn (7 entities, 0 embedded assets)
+[2m2026-10-27T17:02:54.528464Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: pie.play_current
+[2m2026-10-27T17:02:54.542320Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 launched, awaiting connection
+[2m2026-10-27T17:02:54.542612Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 launched with scene override 'scene.bsn' (the editor's scene)
+[2m2026-10-27T17:03:01.361349Z[0m [31mERROR[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 exited before connecting with exit code: 0xc0000005
+[2m2026-10-27T17:03:01.361602Z[0m [31mERROR[0m [2mjackdaw::pie[0m[2m:[0m PIE: game stderr tail:
+\x1b[2m2026-10-27T17:02:54.617494Z\x1b[0m \x1b[32m INFO\x1b[0m \x1b[2mbevy_diagnostic::system_information_diagnostics_plugin::internal\x1b[0m\x1b[2m:\x1b[0m SystemInfo { os: "Windows 11 Pro", kernel: "26100", cpu: "AMD Ryzen 7 9700X 8-Core Processor", core_count: "8", memory: "93.4 GiB" }
+\x1b[2m2026-10-27T17:02:55.274492Z\x1b[0m \x1b[32m INFO\x1b[0m \x1b[2mbevy_render::renderer\x1b[0m\x1b[2m:\x1b[0m AdapterInfo { name: "NVIDIA GeForce RTX 5070", vendor: 4318, device: 12036, device_type: DiscreteGpu, device_pci_bus_id: "0000:01:00.0", driver: "NVIDIA", driver_info: "591.86", backend: Vulkan, subgroup_min_size: 32, subgroup_max_size: 32, transient_saves_memory: Some(false), limit_bucket: None }
+[2m2026-10-27T17:09:34.161589Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: scene.save
+[2m2026-10-27T17:09:34.167411Z[0m [32m INFO[0m [2mjackdaw::scene_io::save[0m[2m:[0m Scene saved to H:\workspace_AI\t10-phys\phys-game\assets\scene.bsn
+[2m2026-10-27T17:09:34.167679Z[0m [32m INFO[0m [2mjackdaw::scene_io::session_journal[0m[2m:[0m session journal: H:\workspace_AI\t10-phys\phys-game\assets\scene.bsn reached disk; dropping its entry
+[2m2026-10-27T17:09:34.176419Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking H:\workspace_AI\t10-phys\phys-game\assets recursively
+[2m2026-10-27T17:09:34.201892Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 2, typed 1, referencing 0)
+[2m2026-10-27T17:09:34.202057Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 0)
+[2m2026-10-27T17:09:34.309353Z[0m [33m WARN[0m [2mbevy_ecs::relationship[0m[2m:[0m The bevy_ecs::hierarchy::ChildOf(5404v10) relationship on entity 6921v9 relates to an entity that does not exist. The invalid bevy_ecs::hierarchy::ChildOf relationship has been removed.

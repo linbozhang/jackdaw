@@ -1,0 +1,7 @@
+﻿probe,item,value,expected,ok
+COLD,fresh-process-foreground,False,True,False
+COLD,inputfocus_no_click,{"value":{"current_focus":"71v0","original_focus":"71v0","recorded_changes":[]}},Some(window)=steady-state,True
+COLD,fly_before_rmb,False,False,True
+COLD,fly_on_rmb_noclick,False,True (D5#1 fix),False
+COLD,zero_jump_press,dyaw=0.0000 dpitch=0.0000 posPress=0.0000 posHold=0.0000,dyaw/dpitch<0.005 pos<0.01,True
+COLD,fly_after_release,False,False,True

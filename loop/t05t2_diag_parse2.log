@@ -1,0 +1,72 @@
+warning: linker stderr: rust-lld: ignoring unknown argument '-fuse-ld=lld'
+  |
+  = note: `#[warn(linker_messages)]` on by default
+
+warning: `jackdaw_env` (build script) generated 1 warning
+warning: `jackdaw_api_macros` (lib) generated 1 warning (1 duplicate)
+warning: `jackdaw_project_build` (build script) generated 1 warning (1 duplicate)
+warning: `jackdaw_package` (build script) generated 1 warning (1 duplicate)
+warning: unused import: `jackdaw_bsn::BsnPatch as JackdawPatch`
+    --> src\reference_audit.rs:1023:5
+     |
+1023 | use jackdaw_bsn::BsnPatch as JackdawPatch;
+     |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+     = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused import: `jackdaw_api::prelude`
+  --> src\inspector\missing_list.rs:18:5
+   |
+18 | use jackdaw_api::prelude::*;
+   |     ^^^^^^^^^^^^^^^^^^^^
+
+warning: type `CloseListButton` is more private than the item `on_close_list_click`
+   --> src\inspector\missing_list.rs:268:1
+    |
+268 | / pub fn on_close_list_click(
+269 | |     trigger: On<PointerClick>,
+270 | |     closers: Query<&CloseListButton>,
+271 | |     mut commands: Commands,
+272 | | ) {
+    | |_^ function `on_close_list_click` is reachable at visibility `pub(crate)`
+    |
+note: but type `CloseListButton` is only usable at visibility `pub(self)`
+   --> src\inspector\missing_list.rs:55:1
+    |
+ 55 | struct CloseListButton;
+    | ^^^^^^^^^^^^^^^^^^^^^^
+    = note: `#[warn(private_interfaces)]` on by default
+
+warning: `jackdaw` (lib) generated 3 warnings (run `cargo fix --lib -p jackdaw` to apply 1 suggestion)
+warning: `test_fixture_extension` (lib) generated 1 warning (1 duplicate)
+   Compiling jackdaw v0.21.0-dev (E:\Project\rust\jackdaw)
+warning: `jackdaw` (bin "jackdaw-rustc-wrapper") generated 1 warning (1 duplicate)
+warning: `jackdaw` (bin "jackdaw") generated 1 warning (1 duplicate)
+error[E0425]: cannot find value `tmp` in this scope
+   --> tests\guards\reference_audit.rs:112:44
+    |
+ 81 |     let (mut app, _tmp) = editor();
+    |                   ---- `_tmp` defined here
+...
+112 |         let text = std::fs::read_to_string(tmp.path().join("assets/zones/hedgerow.bsn"))
+    |                                            ^^^
+    |
+help: the leading underscore in `_tmp` marks it as unused, consider renaming it to `tmp`
+    |
+ 81 -     let (mut app, _tmp) = editor();
+ 81 +     let (mut app, tmp) = editor();
+    |
+
+warning: variable does not need to be mutable
+   --> tests\guards\reference_audit.rs:173:10
+    |
+173 |     let (mut app, _tmp) = editor();
+    |          ----^^^
+    |          |
+    |          help: remove this `mut`
+    |
+    = note: `#[warn(unused_mut)]` (part of `#[warn(unused)]`) on by default
+
+For more information about this error, try `rustc --explain E0425`.
+warning: `jackdaw` (test "guards") generated 1 warning
+error: could not compile `jackdaw` (test "guards") due to 1 previous error; 1 warning emitted

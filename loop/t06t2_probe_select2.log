@@ -1,0 +1,24 @@
+True
+
+entities id               result   warnings
+-------- --               ------   --------
+{}       scene.open       finished {}      
+{}       pie.play_current finished {}      
+{}       input.pointer    finished {}      
+click (600,300) -> 
+{}       selection.clear  cance... {}      
+{}       input.pointer    finished {}      
+click (600,420) -> 
+{}       selection.clear  cance... {}      
+{}       input.pointer    finished {}      
+click (560,420) -> 
+{}       selection.clear  cance... {}      
+{}       input.pointer    finished {}      
+click (640,420) -> 
+{}       selection.clear  cance... {}      
+{}       input.pointer    finished {}      
+click (600,520) -> 
+{}       selection.clear  cance... {}      
+probe2 done
+
+

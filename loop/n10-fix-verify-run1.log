@@ -1,0 +1,33 @@
+True
+Invoke-RestMethod : 请求被中止: 操作超时。
+所在位置 E:\Project\rust\jackdaw\loop\qa\brp.ps1:25 字符: 9
++         Invoke-RestMethod -Uri "http://127.0.0.1:$script:BrpPort/" -M ...
++         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (System.Net.HttpWebRequest:HttpWebRequest) [Invoke-RestMethod]，WebExce
+    ption
+    + FullyQualifiedErrorId : WebCmdletWebResponseException,Microsoft.PowerShell.Commands.InvokeRestMethodCommand
+ 
+editor ready pid=96456 (idle, warm build)
+== dirty+Save one-step run 1/3 ==
+  play_current dispatched (dirty, save policy, one step)
+  running=True
+  stopped=True
+  brp_alive_after=True
+  disk_saved=True (file 14566 chars)
+  RUN PASS
+== dirty+Save one-step run 2/3 ==
+  play_current dispatched (dirty, save policy, one step)
+  running=True
+  stopped=True
+  brp_alive_after=True
+  disk_saved=True (file 28769 chars)
+  RUN PASS
+== dirty+Save one-step run 3/3 ==
+  play_current dispatched (dirty, save policy, one step)
+  running=True
+  stopped=True
+  brp_alive_after=True
+  disk_saved=True (file 42972 chars)
+  RUN PASS
+N10_VERIFY_DIRTY_SAVE pass=3 fail=0 of 3
+N10_VERIFY_PASS

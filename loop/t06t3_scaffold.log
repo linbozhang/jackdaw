@@ -1,0 +1,14 @@
+warning: linker stderr: rust-lld: ignoring unknown argument '-fuse-ld=lld'
+  |
+  = note: `#[warn(linker_messages)]` on by default
+
+jd new: created C:/Users/linbo.zhang/AppData/Local/Temp\t06-template-check
+  modules: none
+  scaffolded 8 files
+  checking dependencies resolve...
+
+note: this jackdaw runs from the checkout at E:\Project\rust\jackdaw, so the new project depends on its crates by path. That Cargo.toml is local to this machine; switch those back to versions before sharing it.
+
+Next:
+  jd open C:/Users/linbo.zhang/AppData/Local/Temp\t06-template-check
+or `cargo run` in that directory to play standalone.

@@ -1,0 +1,57 @@
+    Blocking waiting for file lock on build directory
+warning: linker stderr: rust-lld: ignoring unknown argument '-fuse-ld=lld'
+  |
+  = note: `#[warn(linker_messages)]` on by default
+
+warning: `jackdaw_env` (build script) generated 1 warning
+   Compiling jackdaw_env v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_env)
+warning: `jackdaw_api_macros` (lib) generated 1 warning (1 duplicate)
+warning: `jackdaw_project_build` (build script) generated 1 warning (1 duplicate)
+   Compiling jackdaw_project_build v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_project_build)
+warning: `jackdaw_package` (build script) generated 1 warning (1 duplicate)
+   Compiling jackdaw_runtime v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_runtime)
+   Compiling jackdaw_api_internal v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_api_internal)
+   Compiling jackdaw_package v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_package)
+   Compiling jackdaw_releases v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_releases)
+   Compiling jackdaw_api v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_api)
+   Compiling jackdaw_loader v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_loader)
+   Compiling jackdaw_multiplayer_editor v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_multiplayer_editor)
+   Compiling jackdaw_extension v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_extension)
+   Compiling jackdaw_scaffold v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_scaffold)
+   Compiling jackdaw v0.21.0-dev (E:\Project\rust\jackdaw)
+   Compiling test_fixture_extension v0.0.0 (E:\Project\rust\jackdaw\tests\fixtures\test_fixture_extension)
+warning: `test_fixture_extension` (lib) generated 1 warning (1 duplicate)
+warning: `jackdaw` (bin "jackdaw-rustc-wrapper") generated 1 warning (1 duplicate)
+error[E0308]: mismatched types
+   --> tests\guards\stop_restore.rs:120:12
+    |
+120 |     if let Some(mut authored) = app.world_mut().get_entity_mut(zone) {
+    |            ^^^^^^^^^^^^^^^^^^   ------------------------------------ this expression has type `std::result::Result<EntityWorldMut<'_>, EntityMutableFetchError>`
+    |            |
+    |            expected `Result<EntityWorldMut<'_>, _>`, found `Option<_>`
+    |
+    = note: expected enum `std::result::Result<EntityWorldMut<'_>, EntityMutableFetchError>`
+               found enum `std::option::Option<_>`
+
+error[E0600]: cannot apply unary operator `!` to type `()`
+   --> tests\guards\stop_restore.rs:291:5
+    |
+291 |     assert!(journaled, "the premise: the dirty tab is journaled");
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ cannot apply unary operator `!`
+
+error[E0596]: cannot borrow `still_selected` as mutable, as it is not declared as mutable
+   --> tests\guards\stop_restore.rs:219:42
+    |
+219 |     let selected_ids: Vec<SceneNodeId> = still_selected
+    |                                          ^^^^^^^^^^^^^^ cannot borrow as mutable
+    |
+help: consider changing this to be mutable
+    |
+216 |     let mut still_selected = app
+    |         +++
+
+Some errors have detailed explanations: E0308, E0596, E0600.
+For more information about an error, try `rustc --explain E0308`.
+error: could not compile `jackdaw` (test "guards") due to 3 previous errors
+warning: build failed, waiting for other jobs to finish...
+warning: `jackdaw` (bin "jackdaw") generated 1 warning (1 duplicate)

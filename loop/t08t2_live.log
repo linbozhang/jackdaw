@@ -1,0 +1,11 @@
+True
+editor ready
+card dirty; disk has 0.75: False
+True
+play running (N10 zone: no freeze)
+LEG C scene_snapshot: count=54 moved=False
+True
+LEG A PASS: N10-zone play survived; the launch chain saved the dirty card
+True
+LEG B FAIL: state=building stagedHas=False dist=
+T08_T2_LIFECYCLE_DONE

@@ -1,0 +1,42 @@
+warning: linker stderr: rust-lld: ignoring unknown argument '-fuse-ld=lld'
+  |
+  = note: `#[warn(linker_messages)]` on by default
+
+warning: `jackdaw_env` (build script) generated 1 warning
+warning: `jackdaw_api_macros` (lib) generated 1 warning (1 duplicate)
+warning: `jackdaw_project_build` (build script) generated 1 warning (1 duplicate)
+warning: `jackdaw_package` (build script) generated 1 warning (1 duplicate)
+warning: `test_fixture_extension` (lib) generated 1 warning (1 duplicate)
+   Compiling jackdaw v0.21.0-dev (E:\Project\rust\jackdaw)
+warning: `jackdaw` (lib test) generated 1 warning (1 duplicate)
+    Finished `test` profile [optimized + debuginfo] target(s) in 38.08s
+     Running unittests src\lib.rs (target\debug\deps\jackdaw-b8bb05f875dbf70a.exe)
+
+running 5 tests
+test pie::graceful_stop_tests::force_stop_all_kills_now ... FAILED
+test pie::graceful_stop_tests::handle_stop_arms_the_window_and_waits_for_the_reap ... FAILED
+test pie::graceful_stop_tests::inside_the_window_the_stage_is_kept ... ok
+test pie::graceful_stop_tests::past_the_deadline_the_child_is_killed_once ... ok
+test pie::graceful_stop_tests::a_self_exit_inside_the_window_is_graceful ... ok
+
+failures:
+
+---- pie::graceful_stop_tests::force_stop_all_kills_now stdout ----
+
+thread 'pie::graceful_stop_tests::force_stop_all_kills_now' (44912) panicked at C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_state\src\app.rs:102:67:
+The `StateTransition` schedule is missing. Did you forget to add StatesPlugin or DefaultPlugins before calling init_state?
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- pie::graceful_stop_tests::handle_stop_arms_the_window_and_waits_for_the_reap stdout ----
+
+thread 'pie::graceful_stop_tests::handle_stop_arms_the_window_and_waits_for_the_reap' (23264) panicked at C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_state\src\app.rs:102:67:
+The `StateTransition` schedule is missing. Did you forget to add StatesPlugin or DefaultPlugins before calling init_state?
+
+
+failures:
+    pie::graceful_stop_tests::force_stop_all_kills_now
+    pie::graceful_stop_tests::handle_stop_arms_the_window_and_waits_for_the_reap
+
+test result: FAILED. 3 passed; 2 failed; 0 ignored; 0 measured; 1157 filtered out; finished in 0.07s
+
+error: test failed, to rerun pass `-p jackdaw --lib`

@@ -1,0 +1,100 @@
+editor ready
+idle
+== cell 1: named scene runs by path with projection parity ==
+
+entities id         result   warnings
+-------- --         ------   --------
+{}       scene.open finished {}      
+{}       scene.save finished {}      
+  ok: the scene is open
+{}       pie.pla... finished {}      
+pie running (12:39:26)
+  ok: jackdaw/pie names the override: t06-final.bsn
+  ok: the source is named
+switched to Live view
+  ok: projection parity: live entities == authored entities (Spinner,Still)
+switched to Scene view
+{}       pie.stop   finished {}      
+pie stopped (status face)
+idle
+== cell 1 done ==
+== cell 2: untitled runs from a temp copy ==
+{}       scene.new  finished {}      
+  ok: the untitled tab is dirty
+{}       pie.pla... finished {}      
+pie running (12:39:35)
+  ok: the source is unsaved-copy
+  ok: the temp copy exists
+  ok: the copy carries the cube document
+switched to Live view
+  ok: the game loaded the copy (Cube in the live tree)
+switched to Scene view
+{}       pie.stop   finished {}      
+pie stopped (status face)
+idle
+  ok: stop removed the copy
+  ok: the tab is still dirty after the run
+{}       scene.open finished {}      
+== cell 2 done ==
+== cell 3: save policy saves; copy policy leaves disk alone ==
+{}       scene.save finished {}      
+  ok: the save wrote the edit to disk
+  ok: the tab is clean after the save
+{}       pie.pla... finished {}      
+pie running (12:39:46)
+  ok: the save-policy play runs the saved file
+{}       pie.stop   cance... {}      
+{}       pie.stop   finished {}      
+pie stopped (status face)
+idle
+{}       project... finished {}      
+{}       pie.pla... finished {}      
+pie running (12:40:09)
+  ok: copy policy runs a copy of the dirty scene
+{}       pie.stop   cance... {}      
+{}       pie.stop   finished {}      
+pie stopped (status face)
+idle
+  ok: copy policy left disk alone
+{}       project... finished {}      
+{}       scene.save finished {}      
+== cell 3 done ==
+== cell 4: prefab in front falls back; all-prefab refuses ==
+{}       scene.open finished {}      
+{}       pie.pla... finished {}      
+pie running (12:40:32)
+  ok: fell back to the nearest scene tab: t06-final.bsn
+{}       pie.stop   cance... {}      
+{}       pie.stop   finished {}      
+pie stopped (status face)
+idle
+== cell 4 done ==
+== cell 5: startup play carries no override ==
+{}       pie.play   finished {}      
+pie running (12:40:52)
+  ok: startup play has no override
+{}       pie.stop   cance... {}      
+{}       pie.stop   finished {}      
+pie stopped (status face)
+idle
+== cell 5 done ==
+== cell 6: stop restores the edit state ==
+{}       pie.pla... finished {}      
+pie running (12:41:12)
+switched to Live view
+  ok: the live tree holds the Spinner
+switched to Scene view
+{}       pie.stop   finished {}      
+pie stopped (status face)
+idle
+  ok: the document is byte-identical
+  ok: the disk file is byte-identical
+  ok: the undo depth is unchanged
+editor killed
+ASSERT FAILED: the entity names are restored
+ËùÔÚÎ»ÖÃ E:\Project\rust\jackdaw\loop\qa\t06-final-live.ps1:25 ×Ö·û: 23
++     if (-not $Cond) { throw "ASSERT FAILED: $What" }
++                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : OperationStopped: (ASSERT FAILED: ...es are restored:String) [], RuntimeException
+    + FullyQualifiedErrorId : ASSERT FAILED: the entity names are restored
+ 

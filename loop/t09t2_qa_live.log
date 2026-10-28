@@ -1,0 +1,8 @@
+ITEM3 gamepad devices present: 0
+editor died while booting
+ËùÔÚÎ»ÖÃ E:\Project\rust\jackdaw\loop\qa\t09-t2-live.ps1:92 ×Ö·û: 74
++ ... -ErrorAction SilentlyContinue)) { throw 'editor died while booting' }
++                                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : OperationStopped: (editor died while booting:String) [], RuntimeException
+    + FullyQualifiedErrorId : editor died while booting
+ 

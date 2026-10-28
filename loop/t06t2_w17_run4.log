@@ -1,0 +1,20 @@
+warning: linker stderr: rust-lld: ignoring unknown argument '-fuse-ld=lld'
+  |
+  = note: `#[warn(linker_messages)]` on by default
+
+warning: `jackdaw_env` (build script) generated 1 warning
+warning: `jackdaw_api_macros` (lib) generated 1 warning (1 duplicate)
+warning: `jackdaw_project_build` (build script) generated 1 warning (1 duplicate)
+warning: `jackdaw_package` (build script) generated 1 warning (1 duplicate)
+warning: `test_fixture_extension` (lib) generated 1 warning (1 duplicate)
+   Compiling jackdaw v0.21.0-dev (E:\Project\rust\jackdaw)
+warning: `jackdaw` (lib test) generated 1 warning (1 duplicate)
+    Finished `test` profile [optimized + debuginfo] target(s) in 1m 02s
+     Running unittests src\lib.rs (target\debug\deps\jackdaw-b8bb05f875dbf70a.exe)
+
+running 2 tests
+test inspector::val_field::val_resource_guard_tests::a_resource_val_tick_previews_onto_the_resource ... ok
+test inspector::val_field::val_resource_guard_tests::a_resource_val_commit_is_one_resource_undo_entry ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 1155 filtered out; finished in 0.00s
+

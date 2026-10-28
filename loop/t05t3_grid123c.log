@@ -1,0 +1,7 @@
+PASS: grid 1: on-disk reference renamed
+PASS: grid 1: old path gone, new file there
+PASS: grid 2: move rewrote the reference
+FAIL: grid 3 reference: #Sign
+jackdaw::prefab::components::Prefab
+jackdaw::prefab::components::IsA { source: "props/a/crate.prefab.bsn" }
+

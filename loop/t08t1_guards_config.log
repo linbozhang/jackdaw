@@ -1,0 +1,7 @@
+
+running 2 tests
+test config_injection::the_editors_config_file_is_the_games_initial_resource ... ok
+test config_injection::a_resource_panel_edit_never_reaches_the_game ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 197 filtered out; finished in 0.62s
+

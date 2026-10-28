@@ -1,0 +1,5 @@
+warning: linker stderr: rust-lld: ignoring unknown argument '-fuse-ld=lld'
+  |
+  = note: `#[warn(linker_messages)]` on by default
+
+usage: cargo xtask <fast|archive [FILE]|integration [N/M] [--archive FILE]|heavy|release-gate|package-sdk|bundle|bundle-smoke|core-deps|git-deps|package DIR [--check]|publish [--dry-run]> (got "docs")

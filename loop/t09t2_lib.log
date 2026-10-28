@@ -1,0 +1,1416 @@
+warning: linker stderr: rust-lld: ignoring unknown argument '-fuse-ld=lld'
+  |
+  = note: `#[warn(linker_messages)]` on by default
+
+warning: `jackdaw_env` (build script) generated 1 warning
+warning: `jackdaw_api_macros` (lib) generated 1 warning (1 duplicate)
+warning: `jackdaw_project_build` (build script) generated 1 warning (1 duplicate)
+warning: `jackdaw_package` (build script) generated 1 warning (1 duplicate)
+   Compiling jackdaw_schema v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_schema)
+   Compiling jackdaw_project_build v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_project_build)
+warning: `test_fixture_extension` (lib) generated 1 warning (1 duplicate)
+   Compiling jackdaw_runtime v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_runtime)
+   Compiling jackdaw_scaffold v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_scaffold)
+   Compiling jackdaw v0.21.0-dev (E:\Project\rust\jackdaw)
+warning: `jackdaw` (lib test) generated 1 warning (1 duplicate)
+    Finished `test` profile [optimized + debuginfo] target(s) in 26.61s
+     Running unittests src\lib.rs (target\debug\deps\jackdaw-670f08d969701e8b.exe)
+
+running 1176 tests
+test active_tool::tests::default_is_select ... ok
+test animation::graph_doc::tests::a_file_with_no_layout_opens_as_a_grid_rather_than_a_stack ... ok
+test animation::graph_doc::tests::a_graph_edit_does_not_count_as_a_scene_document_push ... ok
+test animation::graph_doc::tests::a_graph_name_becomes_a_file_stem_that_can_be_written ... ok
+test animation::graph_doc::tests::a_placed_file_keeps_the_layout_it_was_saved_with ... ok
+test animation::graph_ops::tests::a_clause_with_no_operator_is_refused ... ok
+test animation::graph_ops::tests::a_condition_reads_its_parameter_operator_and_value ... ok
+test animation::graph_ops::tests::a_trigger_condition_is_named_on_its_own ... ok
+test animation::graph_window::tests::a_crossfade_still_running_lights_the_state_it_leaves ... ok
+test animation::graph_window::tests::the_highlight_names_the_state_the_rig_is_in ... ok
+test animation::graph_window::tests::a_crossfade_that_has_run_out_lights_nothing_behind_it ... ok
+test animation::library::tests::a_binary_gltf_lists_the_clips_its_json_chunk_names ... ok
+test animation::library::tests::a_file_that_is_not_gltf_lists_no_clips ... ok
+test animation::library::tests::a_file_with_no_clips_is_not_listed ... ok
+test animation::library::tests::a_name_ending_in_loop_is_hinted_as_looping ... ok
+test alignment_guides::measurable_geometry_tests::ordinary_geometry_is_unaffected ... ok
+test alignment_guides::measurable_geometry_tests::a_ring_offers_no_snap_targets_wherever_the_camera_put_it ... ok
+test alignment_guides::measurable_geometry_tests::a_terrains_authored_edges_are_offered_as_snap_targets ... ok
+test alignment_guides::measurable_geometry_tests::dragging_with_alignment_guides_on_beside_a_render_world_only_mesh_does_not_panic ... ok
+test animation::library::tests::a_gltf_lists_its_named_clips_in_order_with_their_last_keyframe ... ok
+test animation::markers::tests::a_bone_named_like_the_clip_is_not_the_event_row ... ok
+test animation::markers::tests::a_parked_clip_that_reads_back_was_scrubbed_back ... ok
+test animation::markers::tests::a_playhead_that_did_not_move_reads_as_a_forward_step ... ok
+test animation::markers::tests::a_playing_clip_that_reads_back_has_wrapped ... ok
+test animation::markers::tests::a_row_name_tells_two_files_holding_the_same_clip_apart ... ok
+test animation::panel::tests::a_second_state_for_the_same_clip_takes_another_name ... ok
+test asset_files::tests::a_comment_below_the_document_is_not_read_as_a_header ... ok
+test asset_files::tests::a_header_that_disagrees_with_the_root_defers_to_the_root ... ok
+test asset_files::tests::a_header_naming_a_prefab_defers_to_the_root_that_holds_an_asset ... ok
+test asset_files::tests::a_header_naming_a_type_the_editor_does_not_open_is_taken_at_its_word ... ok
+test asset_files::tests::a_saved_asset_carries_its_type_in_its_header ... ok
+test asset_files::tests::a_file_without_a_header_is_known_by_its_first_root ... ok
+test asset_files::tests::a_kind_registered_later_makes_a_trusted_header_worth_reading_past ... ok
+test asset_files::tests::a_prefab_marker_on_the_root_outranks_a_header_naming_an_asset ... ok
+test asset_files::tests::a_scene_is_never_taken_for_an_asset ... ok
+test asset_files::tests::a_legacy_prefab_document_is_still_known_by_its_first_entity ... ok
+test asset_files::tests::the_kind_cache_forgets_a_file_that_has_gone ... ok
+test asset_files::tests::a_prefab_is_known_by_the_marker_on_one_of_its_roots ... ok
+test asset_index::tests::a_file_outside_the_projects_assets_is_not_indexed ... ok
+test asset_files::tests::a_scene_whose_root_holds_an_asset_type_is_still_a_scene ... ok
+test asset_index::tests::a_lone_stem_still_resolves ... ok
+test asset_index::tests::a_stem_two_files_share_resolves_to_neither_and_names_both ... ok
+test asset_files::tests::a_walk_finds_documents_in_every_folder_but_the_hidden_ones ... ok
+test asset_files::tests::the_kind_cache_rereads_a_file_whose_mtime_changed ... ok
+test animation::panel::tests::a_library_list_on_screen_asks_for_the_project_walk ... ok
+test animation::panel::tests::a_library_list_in_a_tab_behind_another_leaves_the_project_unread ... ok
+test animation::library::tests::sources_placed_or_repointed_after_the_first_pass_are_asked_about ... ok
+test animation::library::tests::another_project_asks_about_the_open_scenes_sources_again ... ok
+test asset_migration::tests::a_project_with_no_assets_directory_is_said_so_rather_than_walked ... ok
+test asset_catalog::tests::opening_a_project_whose_catalog_holds_entries_reports_them_once ... ok
+test asset_catalog::tests::nothing_the_editor_does_writes_the_catalog_file ... ok
+test asset_index::tests::a_document_held_only_in_binary_is_keyed_by_the_path_its_text_twin_would_sit_at ... ok
+test animation::graph_doc::tests::a_graph_filed_outside_the_animation_folder_is_listed_and_reads_back ... ok
+test boot_ops::tests::a_bare_operator_id_parses_with_no_parameters ... ok
+test boot_ops::tests::a_name_carried_by_one_entity_resolves_to_it ... ok
+test asset_index::tests::a_document_held_in_both_forms_is_keyed_once_and_read_from_its_text ... ok
+test asset_index::tests::a_name_a_scene_and_an_asset_share_stands_for_neither ... ok
+test asset_migration::tests::a_project_with_unsaved_edits_open_is_refused ... ok
+test boot_ops::tests::a_name_two_entities_share_resolves_to_neither ... ok
+test boot_ops::tests::a_resolved_parameter_names_its_entity_and_its_source ... ok
+test boot_ops::tests::a_token_without_an_equals_is_dropped_and_the_rest_survives ... ok
+test boot_ops::tests::an_empty_or_blank_spec_parses_to_nothing_runnable ... ok
+test boot_ops::tests::an_unnamed_entity_still_reads_as_something ... ok
+test boot_ops::tests::negative_numbers_stay_numeric ... ok
+test asset_migration::tests::a_name_no_file_carries_is_left_alone_and_reported ... ok
+test boot_ops::tests::only_the_first_equals_splits_a_parameter ... ok
+test boot_ops::tests::parameter_values_are_typed_by_their_spelling ... ok
+test boot_ops::tests::only_the_parameters_the_resolver_touched_produce_a_line ... ok
+test boot_ops::tests::semicolons_separate_a_sequence_of_runs ... ok
+test boot_ops::tests::the_environment_may_shorten_the_gap_between_clauses ... ok
+test brush::shown_edit_brushes_tests::brush_and_group_expand_correctly ... ok
+test brush::shown_edit_brushes_tests::empty_selection_yields_empty ... ok
+test brush::shown_edit_brushes_tests::no_duplicates_when_group_child_also_selected ... ok
+test brush::shown_edit_brushes_tests::unselected_brush_excluded ... ok
+test brush::topology_ops::modal_edit::tests::apply_reconciles_and_returns_the_edit_result ... ok
+test brush::topology_ops::modal_edit::tests::restore_returns_the_brush_to_its_snapshot ... ok
+test asset_migration::tests::a_file_with_no_header_is_given_one ... ok
+test brush_drag_ops::apply_vertex_deltas_tests::clip_disabled_or_no_mirror_axes_leaves_positions_alone ... ok
+test brush_drag_ops::apply_vertex_deltas_tests::clip_pins_plane_verts_and_blocks_crossing ... ok
+test brush_drag_ops::apply_vertex_deltas_tests::moving_a_vertex_lands_it_and_preserves_faces ... ok
+test asset_migration::tests::a_catalog_entry_that_would_land_on_a_file_is_left_alone ... ok
+test brush::topology_migration::tests::brush_with_existing_topology_is_not_overwritten ... ok
+test brush::topology_migration::tests::empty_brush_no_faces_no_topology_is_skipped ... ok
+test builtin_extensions::tests::world_entity_icon_paths_match_real_type_paths ... ok
+test camera_capture::tests::gizmos_are_off_while_a_recording_camera_exists_and_back_after ... ok
+test brush::topology_migration::tests::legacy_brush_with_empty_topology_gets_populated_by_system ... ok
+test cli::tests::export_terrain_forwards_its_arguments ... ok
+test camera_preview::tests::editor_cameras_do_not_feed_the_mirror ... ok
+test camera_preview::tests::mirror_follows_a_selected_scene_camera_and_sleeps_otherwise ... ok
+test cli::tests::help_flags_print_usage ... ok
+test cli::tests::no_arguments_and_bundle_launch_start_the_editor ... ok
+test cli::tests::unknown_flags_are_rejected ... ok
+test cli::tests::version_flags_print_version ... ok
+test camera_capture::tests::a_capture_path_stays_inside_the_project ... ok
+test asset_migration::tests::a_catalog_entry_is_written_out_as_a_file_of_its_own ... ok
+test commands::set_bsn_field_tests::a_key_the_map_does_not_hold_writes_nothing ... ok
+test commands::set_bsn_field_tests::a_path_running_on_inside_a_map_entry_writes_that_part_of_it ... ok
+test commands::set_bsn_field_tests::editing_derived_component_authors_override_and_undo_drops_it ... ok
+test commands::set_bsn_field_tests::an_edit_to_one_map_entry_authors_the_map_and_undoes ... ok
+test asset_catalog::tests::comment_only_and_blank_catalogs_load_as_empty_not_as_failures ... ok
+test commands::set_bsn_field_tests::gesture_session_baseline_survives_live_preview_mutation ... ok
+test commands::set_bsn_field_tests::naming_an_unnamed_entity_inserts_the_name_patch_and_undo_removes_it ... ok
+test asset_migration::tests::a_name_a_prefab_spells_becomes_a_path_too ... ok
+test commands::set_bsn_field_tests::renaming_replaces_the_existing_name_patch_and_undo_restores_it ... ok
+test commands::set_bsn_field_tests::renaming_to_an_empty_string_removes_the_name_and_undo_restores_it ... ok
+test commands::spawned_entities_tests::a_spawn_after_the_call_took_its_list_is_not_recorded ... ok
+test commands::spawned_entities_tests::a_spawn_taken_back_is_not_reported ... ok
+test commands::set_bsn_field_tests::scrub_gesture_is_one_entry_and_lights_the_tab_dirty ... ok
+test commands::spawned_entities_tests::nothing_is_recorded_while_no_call_is_watching ... ok
+test commands::set_bsn_field_tests::undo_removes_component_authored_by_execute ... ok
+test commands::set_bsn_field_tests::set_bsn_field_round_trips_document_and_ecs_with_undo ... ok
+test commands::set_bsn_field_tests::sparse_missing_field_commit_undo_removes_field ... ok
+test component_json::tests::get_field_bracket_index_reads_list_element ... ok
+test component_json::tests::get_field_empty_path_returns_whole_component ... ok
+test component_json::tests::get_field_missing_path_returns_none ... ok
+test asset_migration::tests::a_sidecar_slot_naming_no_file_keeps_its_name_and_is_reported ... ok
+test component_json::tests::get_field_reads_named_struct_field ... ok
+test asset_migration::tests::a_name_a_scene_spells_becomes_the_path_of_the_file_it_names ... ok
+test commands::set_bsn_field_tests::undo_removes_field_authored_by_execute ... ok
+test component_json::tests::get_field_round_trips_with_set_field ... ok
+test commands::set_bsn_field_tests::whole_component_author_of_derived_undo_keeps_ecs ... ok
+test component_json::tests::get_field_unregistered_type_returns_none ... ok
+test component_json::tests::get_field_unwraps_enum_variant_and_reads_field ... ok
+test component_json::tests::newtype_variant_field_round_trips_through_index_zero ... ok
+test commands::bsn_doc_coherence_tests::a_despawn_undoes_again_after_a_redo ... ok
+test component_json::tests::set_field_in_component_json_empty_path_replaces_value ... ok
+test component_json::tests::set_field_in_component_json_sets_nested_array_field ... ok
+test component_json::tests::set_field_in_component_json_unregistered_type_is_noop ... ok
+test commands::bsn_doc_coherence_tests::undo_respawn_rebuilds_the_bsn_document ... ok
+test creation_taxonomy::tests::a_group_of_one_says_what_it_is_instead_of_expanding ... ok
+test asset_migration::tests::a_name_two_files_carry_is_left_alone_and_both_are_named ... ok
+test creation_taxonomy::tests::a_nested_group_reads_with_its_parents_name ... ok
+test creation_taxonomy::tests::an_extensions_single_entry_keeps_its_byline ... ok
+test creation_taxonomy::tests::every_entry_names_a_group_that_exists ... ok
+test creation_taxonomy::tests::groups_come_in_their_declared_order ... ok
+test creation_taxonomy::tests::the_general_group_stays_in_the_menu_and_the_rest_expand ... ok
+test creation_taxonomy::tests::the_ui_group_expands_into_its_categories ... ok
+test definition_assets::tests::a_file_names_what_it_holds_by_the_stem_before_its_first_dot ... ok
+test definition_assets::tests::names_sanitize_to_one_file_each ... ok
+test definition_assets::tests::the_root_name_a_file_spells_is_read_back_however_it_is_written ... ok
+test dock_open_tests::a_present_but_unfocused_tab_is_brought_to_front ... ok
+test dock_open_tests::calling_it_again_when_already_active_stays_stable ... ok
+test document_units::tests::a_node_without_an_id_leaves_the_document_whole ... ok
+test asset_migration::tests::a_reference_that_already_spells_its_file_is_left_as_it_is ... ok
+test draw_brush::plane_math::tests::bowtie_ring_is_self_intersecting ... ok
+test document_units::tests::an_edit_keeps_only_the_units_it_changed ... ok
+test draw_brush::plane_math::tests::chevron_ring_is_not_self_intersecting ... ok
+test document_units::tests::units_rebuild_the_document_they_were_cut_from ... ok
+test document_units::tests::changes_put_either_side_of_an_edit_back_exactly ... ok
+test entity_ops::clipboard_tests::a_copied_subtree_is_an_entity_document ... ok
+test entity_ops::clipboard_tests::a_pasted_subtree_uniquifies_its_descendants_too ... ok
+test entity_ops::asset_path_tests::an_open_project_resolves_asset_paths_without_touching_the_disk ... ok
+test entity_ops::clipboard_tests::a_root_naming_no_registered_component_is_not_an_entity_document ... ok
+test entity_ops::clipboard_tests::a_subtree_from_another_window_is_accepted_over_the_mirror ... ok
+test entity_ops::clipboard_tests::an_older_spaced_suffix_renumbers_from_its_base ... ok
+test entity_ops::clipboard_tests::a_payload_past_the_size_cap_is_refused ... ok
+test entity_ops::clipboard_tests::free_names_are_addressable_from_a_clause ... ok
+test editor_grid_depth_patch::tests::overwrites_the_registered_asset_with_the_patched_shader ... ok
+test editor_grid_depth_patch::tests::missing_prior_entry_trips_the_guard - should panic ... ok
+test entity_ops::clipboard_tests::json_is_not_an_entity_document ... ok
+test entity_ops::clipboard_tests::minting_ids_over_a_cyclic_document_ends ... ok
+test entity_ops::clipboard_tests::naming_a_cyclic_document_ends ... ok
+test entity_ops::clipboard_tests::os_text_this_editor_emitted_pastes_the_mirror ... ok
+test asset_migration::tests::a_second_run_has_nothing_to_do ... ok
+test entity_ops::clipboard_tests::os_text_that_is_not_entities_refuses_rather_than_pasting_the_mirror ... ok
+test entity_ops::clipboard_tests::prose_is_not_an_entity_document ... ok
+test entity_ops::clipboard_tests::with_no_os_clipboard_the_mirror_answers ... ok
+test asset_migration::tests::a_sidecar_written_before_paths_is_re_encoded_with_its_slots_as_paths ... ok
+test entity_ops::tests::assign_unique_entity_names_keeps_free_names_and_numbers_collisions ... ok
+test entity_ops::tests::mint_scene_node_ids_replaces_existing_ids ... ok
+test entity_ops::tests::a_saved_terrain_declares_no_extent ... ok
+test entity_ops::tests::terrain_focus_guard::first_terrain_add_focuses_the_seeded_unfocused_tab ... ok
+test entity_ops::tests::terrain_focus_guard::second_terrain_add_leaves_components_active ... ok
+test ext_build::tests::progress_fraction_tracks_the_unit_count ... ok
+test ext_build::tests::the_log_tail_is_bounded_but_the_full_log_is_not ... ok
+test extension_build::tests::a_build_for_another_project_is_replaced_not_kept ... ok
+test extension_build::tests::a_build_still_running_is_left_alone_by_the_loader ... ok
+test extension_build::tests::a_failed_sdk_build_fails_the_waiting_extension_build ... ok
+test editor_log::tests::the_log_goes_to_the_file_and_the_last_run_is_kept ... ok
+test extension_build::tests::an_extension_without_an_sdk_waits_for_its_build ... ok
+test extension_build::tests::a_build_of_a_project_no_longer_open_is_not_loaded ... ok
+test extension_build::tests::leaving_the_editor_forgets_the_build ... ok
+test extension_build::tests::only_the_projects_own_build_cache_is_cleaned ... ok
+test entity_ops::clone_brush_tests::cloned_brush_keeps_extra_components ... ok
+test extension_lifecycle::tests::nothing_installed_loads_nothing ... ok
+test extension_lifecycle::tests::only_bundles_the_session_has_not_seen_are_loaded ... ok
+test extension_menu_tests::a_menu_with_no_built_in_rows_starts_with_the_heading ... ok
+test extension_build::tests::an_unchanged_library_is_not_loaded_again ... ok
+test extension_menu_tests::an_entry_for_an_operator_the_menu_already_lists_is_dropped ... ok
+test entity_ops::clipboard_tests::an_opening_scene_hands_over_larger_batches_than_editing ... ok
+test extension_build::tests::a_game_project_is_not_an_extension ... ok
+test extension_menu_tests::a_parametrised_built_in_row_carries_its_operator ... ok
+test extension_menu_tests::two_extensions_registering_one_operator_get_one_row ... ok
+test extension_menu_tests::what_an_extension_adds_opens_its_own_labelled_section ... ok
+test extension_resolution::tests::a_builtin_the_config_predates_arrives_enabled ... ok
+test extension_resolution::tests::a_builtin_the_user_turned_off_stays_off ... ok
+test extension_resolution::tests::an_unlisted_third_party_extension_stays_off ... ok
+test extension_resolution::tests::a_config_naming_no_builtin_enables_everything ... ok
+test file_menu_tests::a_path_with_the_encodings_own_characters_survives_it ... ok
+test file_menu_tests::an_empty_recent_list_is_no_group_at_all ... ok
+test file_menu_tests::text_that_was_never_escaped_comes_back_unchanged ... ok
+test file_menu_tests::the_file_menu_names_no_sections ... ok
+test file_menu_tests::the_new_group_offers_the_three_scene_kinds ... ok
+test file_menu_tests::the_recent_projects_are_a_group_of_the_menus_two ... ok
+test fps_overlay::tests::the_scene_readout_names_what_the_frame_draws ... ok
+test game_export::tests::a_failed_export_keeps_the_build_log_for_the_panel ... [2m2026-10-27T04:55:45.417426Z[0m [32m INFO[0m [2mbevy_diagnostic::system_information_diagnostics_plugin::internal[0m[2m:[0m SystemInfo { os: "Windows 11 Pro", kernel: "26100", cpu: "AMD Ryzen 7 9700X 8-Core Processor", core_count: "8", memory: "93.4 GiB" }
+ok
+test game_export::tests::a_finished_export_names_where_it_landed ... [2m2026-10-27T04:55:45.417773Z[0m [32m INFO[0m [2mbevy_diagnostic::system_information_diagnostics_plugin::internal[0m[2m:[0m SystemInfo { os: "Windows 11 Pro", kernel: "26100", cpu: "AMD Ryzen 7 9700X 8-Core Processor", core_count: "8", memory: "93.4 GiB" }
+ok
+test game_export::tests::the_entry_needs_a_project_and_a_free_export_slot ... ok
+test extension_build::tests::a_library_the_editor_already_tried_is_not_loaded_again ... ok
+test extension_build::tests::a_library_rebuilt_outside_the_editor_is_loaded ... ok
+test game_export::tests::the_footer_shows_the_export_build_as_a_build ... ok
+test extension_build::tests::a_recorded_build_older_than_its_source_is_not_loaded ... ok
+test game_export::tests::the_poll_reports_a_finished_failure_and_frees_the_slot ... ok
+test game_panel::tests::contain_fit_letterboxes_and_centers ... ok
+test extension_build::tests::reopening_an_extension_loads_its_up_to_date_build_without_building ... ok
+test game_panel::tests::panel_to_stream_inverts_the_fit ... ok
+test gizmos::central_gizmo_tests::centroid_is_mean_of_positions ... ok
+test game_panel::tests::surface_click_without_fresh_stream_is_a_noop ... ok
+test extension_build::tests::each_load_gets_its_own_copy_and_replaces_the_last ... ok
+test gizmos::central_gizmo_tests::selected_sub_vertices_expands_and_dedups ... ok
+test gizmos::central_gizmo_tests::topmost_excludes_selected_descendants ... ok
+test hierarchy::tests::authored_children_of_a_model_keep_their_own_category ... ok
+test hierarchy::tests::dead_child_refs_are_not_outliner_children ... ok
+test hierarchy::tests::brush_icon_refreshes_when_brush_added_after_row ... ok
+test hierarchy::tests::gltf_descendants_classify_as_asset_parts ... ok
+test hierarchy::tests::live_set_roots_are_live_entities_without_live_parents ... ok
+test hierarchy::tests::resolve_rename_target_falls_back_to_selection_primary ... ok
+test hierarchy::tests::resolve_rename_target_prefers_entity_param ... ok
+test hierarchy::tests::resolve_rename_target_returns_none_without_selection_or_param ... ok
+test hierarchy::tests::reveal_driver_clears_when_countdown_expires ... ok
+test hierarchy::tests::reveal_driver_clears_when_target_has_a_row ... ok
+test hierarchy::tests::reveal_driver_expands_nearest_rowed_ancestor_and_counts_down ... ok
+test hierarchy::tests::reveal_path_walks_to_the_nearest_rowed_ancestor ... ok
+test hierarchy::tests::a_filter_keystroke_that_changes_nothing_writes_no_display ... ok
+test hierarchy::tests::scene_mode_hides_live_preview_children ... ok
+[2m2026-10-27T04:55:45.423802Z[0m [31mERROR[0m [2mbevy_extract::extract_resource[0m[2m:[0m Sub app did not exist when trying to add `extract_resource` for <bevy_camera::clear_color::ClearColor>.
+test hierarchy::tests::scene_root_tag_classifies_as_scene ... ok
+test input_contexts::tests::all_sources_inactive_context_stays_inactive ... ok
+test input_contexts::tests::edge_drag_activates_context ... ok
+test input_contexts::tests::brush_drag_activates_context ... ok
+test input_contexts::tests::fly_release_resets_suppression_window ... ok
+test input_contexts::tests::giant_delta_dropped_past_the_suppression_window ... ok
+test input_contexts::tests::giant_pan_delta_dropped ... ok
+test inspector::add_header::tests::empty_registry_is_index_zero ... ok
+test input_contexts::tests::look_passes_through_when_not_flying ... ok
+test input_contexts::tests::look_discarded_on_fly_rising_edge_then_passes ... ok
+test input_contexts::tests::middle_drag_pans_instead_of_looking ... ok
+test input_contexts::tests::plausible_delta_at_the_limit_passes ... ok
+test input_contexts::tests::move_axes_and_zoom_survive_the_suppression_window ... ok
+test input_contexts::tests::modal_transform_activates_context ... ok
+test input_contexts::tests::vertex_drag_activates_context ... ok
+test inspector::bindings_card::tests::a_binding_that_cannot_evaluate_says_so_without_a_schema ... ok
+test inspector::bindings_card::tests::a_kind_change_carries_the_first_path ... ok
+test inspector::bindings_card::tests::a_marker_is_judged_only_as_a_write ... ok
+test inspector::bindings_card::tests::a_marker_path_survives_being_taken_apart_and_put_back ... ok
+test inspector::bindings_card::tests::a_marker_write_reads_as_setting_the_component ... ok
+test inspector::bindings_card::tests::a_path_survives_being_taken_apart_and_put_back ... ok
+test inspector::asset_row::tests::a_type_with_no_files_of_its_own_offers_nothing ... ok
+test inspector::bindings_card::tests::a_summary_names_both_ends ... ok
+test inspector::bindings_card::tests::an_event_mapping_is_set_and_cleared_by_name ... ok
+test inspector::bindings_card::tests::display_shortens_the_type_and_keeps_the_field ... ok
+test inspector::asset_row::tests::a_browse_starts_in_the_folder_holding_the_asset ... ok
+test inspector::bindings_card::tests::every_kind_builds_a_binding_of_that_kind ... ok
+test inspector::category_strip::tests::applicable_categories_from_present_paths_in_order ... ok
+test inspector::category_strip::tests::rebuild_resolution_empty_applicable_keeps_current ... ok
+test inspector::category_strip::tests::rebuild_resolution_leaves_card_less_category ... ok
+test inspector::category_strip::tests::rebuild_resolution_stays_sticky_when_cards_exist ... ok
+test inspector::component_display::tests::binding_types_survive_the_namespace_cull ... ok
+test inspector::component_display::tests::editor_bookkeeping_stays_out_of_the_generic_list ... ok
+test inspector::component_display::tests::scene_data_naming_an_editor_category_gets_a_card_and_bookkeeping_does_not ... ok
+test inspector::asset_row::tests::an_image_field_offers_the_image_files_the_project_holds ... ok
+test inspector::component_display::tests::the_authored_widget_components_survive_the_namespace_cull ... ok
+test inspector::add_header::tests::assigned_material_selects_its_registry_row ... ok
+test inspector::add_header::tests::unassigned_selects_the_none_row ... ok
+test inspector::component_display::tests::the_runtime_widget_marker_stays_out_of_the_generic_list ... ok
+test inspector::component_display::tests::the_scene_data_components_with_their_own_cards_survive_the_namespace_cull ... ok
+test inspector::component_display::tests::a_source_that_is_on_disk_but_did_not_read_says_so_rather_than_reading_as_missing ... ok
+test inspector::add_header::tests::material_absent_from_registry_falls_back_to_zero ... ok
+test inspector::material_card_routing::refresh_card_matches_tests::exact_match_is_true ... ok
+test inspector::material_card_routing::refresh_card_matches_tests::exact_match_settings_card ... ok
+test inspector::material_card_routing::refresh_card_matches_tests::prefix_trigger_does_not_match_unrelated_card ... ok
+test inspector::material_card_routing::refresh_card_matches_tests::prefix_trigger_matches_card_under_it ... ok
+test inspector::material_display::card_kind_tests::kinds_are_in_display_order_with_prefixed_paths ... ok
+test inspector::node_card::tests::a_settled_value_is_one_the_field_can_hold ... ok
+test inspector::node_card::tests::every_node_field_has_a_control_on_the_card ... ok
+[2m2026-10-27T04:55:45.437389Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Could not find an asset loader matching: Asset Type: Some(TypeId(0x8823d019834ac64e788869992eb5514a)); Path: "embedded://bevy_feathers/assets/icons/chevron-right.png";
+test inspector::node_card::tests::the_enum_tables_index_the_variants_they_name ... ok
+[2m2026-10-27T04:55:45.437857Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Could not find an asset loader matching: Asset Type: Some(TypeId(0x7274def2e2b8b74464262d2f604e6a54)); Path: "embedded://jackdaw_feathers/../fonts/lucide.ttf";
+test inspector::prefab_menu::tests::equal_values_emit_nothing ... ok
+test inspector::prefab_menu::tests::flat_leaf_difference_emits_dotted_path ... ok
+test inspector::prefab_menu::tests::leaf_json_form_covers_scalars_and_containers ... ok
+test inspector::prefab_menu::tests::missing_prefab_treats_every_leaf_as_override ... ok
+test inspector::reflect_fields::tests::an_option_switches_to_a_value_its_deserializer_reads ... ok
+[2m2026-10-27T04:55:45.439243Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Could not find an asset loader matching: Asset Type: Some(TypeId(0x8823d019834ac64e788869992eb5514a)); Path: "embedded://bevy_feathers/assets/icons/chevron-right.png";
+test inspector::reflect_fields::tests::decimal_input_parses_to_json_float ... ok
+[2m2026-10-27T04:55:45.439410Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Could not find an asset loader matching: Asset Type: Some(TypeId(0x7274def2e2b8b74464262d2f604e6a54)); Path: "embedded://jackdaw_feathers/../fonts/lucide.ttf";
+test inspector::component_display::tests::a_project_component_card_has_the_remove_control ... ok
+test inspector::reflect_fields::tests::entity_components_changed_tracks_mutations ... ok
+[2m2026-10-27T04:55:45.440669Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Could not find an asset loader matching: Asset Type: Some(TypeId(0x7274def2e2b8b74464262d2f604e6a54)); Path: "embedded://jackdaw_feathers/../fonts/lucide.ttf";
+test inspector::reflect_fields::tests::integer_input_parses_to_json_integer ... ok
+test inspector::reflect_fields::tests::non_numeric_input_parses_to_bool_or_string ... [2m2026-10-27T04:55:45.441212Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Could not find an asset loader matching: Asset Type: Some(TypeId(0x8823d019834ac64e788869992eb5514a)); Path: "embedded://bevy_feathers/assets/icons/chevron-down.png";
+ok
+test inspector::component_display::tests::the_remove_control_is_a_feathers_tool_button ... ok
+test inspector::schema_fields::tests::a_string_a_type_marks_as_a_reference_names_the_kind_it_declares ... ok
+test inspector::schema_fields::tests::a_field_holding_no_string_names_no_kind_however_it_is_marked ... ok
+test inspector::component_display::tests::the_card_layout_is_added_to_the_panes_own_node_not_swapped_for_it ... ok
+test inspector::unavailable::tests::a_crate_a_module_provides_names_the_module ... ok
+test inspector::unavailable::tests::a_crate_no_module_provides_is_named_as_it_is ... ok
+test inspector::unavailable::tests::a_registered_type_and_its_variants_are_available ... ok
+[2m2026-10-27T04:55:45.443328Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Could not find an asset loader matching: Asset Type: Some(TypeId(0x8823d019834ac64e788869992eb5514a)); Path: "embedded://bevy_feathers/assets/icons/chevron-down.png";
+test inspector::unavailable::tests::a_variant_card_names_its_enum ... ok
+[2m2026-10-27T04:55:45.443606Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Could not find an asset loader matching: Asset Type: Some(TypeId(0x8823d019834ac64e788869992eb5514a)); Path: "embedded://bevy_feathers/assets/icons/chevron-right.png";
+test inspector::unavailable::tests::modules_and_other_crates_together_name_both_remedies ... ok
+[2m2026-10-27T04:55:45.443831Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Could not find an asset loader matching: Asset Type: Some(TypeId(0x7274def2e2b8b74464262d2f604e6a54)); Path: "embedded://bevy_feathers/assets/fonts/FiraMono-Medium.ttf";
+test inspector::unavailable::tests::nothing_unavailable_has_no_notice ... ok
+test inspector::custom_props_display::tests::a_property_row_removes_through_a_feathers_tool_button ... ok
+test inspector::val_field::val_resource_guard_tests::a_resource_val_commit_is_one_resource_undo_entry ... [2m2026-10-27T04:55:45.444489Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Could not find an asset loader matching: Asset Type: Some(TypeId(0x7274def2e2b8b74464262d2f604e6a54)); Path: "embedded://bevy_feathers/assets/fonts/FiraMono-Medium.ttf";
+ok
+test inspector::val_field::val_resource_guard_tests::a_resource_val_tick_previews_onto_the_resource ... ok
+test io_pool::tests::asks_for_half_the_cores_within_the_four_to_eight_band ... ok
+test io_pool::tests::holds_the_nesting_that_aborted_a_real_scene ... ok
+[2m2026-10-27T04:55:45.445437Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Could not find an asset loader matching: Asset Type: Some(TypeId(0x7274def2e2b8b74464262d2f604e6a54)); Path: "embedded://bevy_feathers/assets/fonts/FiraMono-Medium.ttf";
+test inspector::material_display::preview_card_tests::fill_preview_card_spawns_view_and_shape_buttons ... ok
+test keybind_settings::tests::a_category_is_the_head_of_the_operator_id ... ok
+test keybind_settings::tests::a_chord_another_command_holds_is_reported_by_label ... ok
+test inspector::material_display::preview_card_tests::refresh_preview_shape_buttons_initializes_without_query_conflict ... ok
+[2m2026-10-27T04:55:45.446788Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Could not find an asset loader matching: Asset Type: Some(TypeId(0x8823d019834ac64e788869992eb5514a)); Path: "embedded://bevy_feathers/assets/icons/chevron-down.png";
+test inspector::material_display::settings_card_tests::settings_card_spawns_rows ... ok
+test keybind_settings::tests::a_rebind_replaces_every_chord_the_operator_had ... ok
+[2m2026-10-27T04:55:45.447304Z[0m [33m WARN[0m [2mjackdaw::keybind_settings[0m[2m:[0m ignoring a key with no name in the keymap format: Unidentified(Unidentified)
+test inspector::material_display::textures_card_tests::textures_card_spawns_every_slot_and_the_normal_flip ... ok
+test keybind_settings::tests::an_unchanged_keymap_has_nothing_to_advise ... ok
+test keybind_settings::tests::binding_a_shared_chord_leaves_the_other_command_holding_it ... ok
+test inspector::material_display::surface_card_tests::surface_card_spawns_rows ... ok
+test keybind_settings::tests::capture_ignores_a_press_that_is_only_modifiers ... ok
+test keybind_settings::tests::capture_reads_a_mouse_button_by_its_preset_name ... ok
+test keybind_focus::tests::capture_active_suppresses_action_keybinds ... ok
+test keybind_focus::tests::keyboard_spoken_for_leaves_the_mouse_free ... ok
+test keybind_settings::tests::capture_reads_the_modifiers_that_are_held ... ok
+test keybind_settings::tests::resetting_all_restores_the_shipped_keymap ... ok
+test keybind_settings::tests::capture_refuses_a_key_the_keymap_format_cannot_name ... ok
+test keybind_settings::tests::resetting_one_operator_restores_only_that_one ... ok
+test keybind_settings::tests::saving_carries_an_unresolvable_row_through_untouched ... ok
+test keybind_settings::tests::saving_writes_only_the_operators_that_changed ... ok
+test keybind_settings::tests::the_advisory_names_the_conflicts_and_the_skips ... ok
+test keybinds::tests::cmd_and_ctrl_both_hold_back_a_bare_chord ... ok
+test keybinds::tests::cmd_and_ctrl_both_satisfy_a_primary_chord ... ok
+test inspector::material_display::inject_material_cards_tests::four_cards_with_expected_type_paths ... ok
+[2m2026-10-27T04:55:45.451494Z[0m [32m INFO[0m [2mjackdaw::launcher::jd[0m[2m:[0m jd editor install 0.20
+test keybinds::tests::shift_holds_back_a_chord_that_does_not_name_it ... ok
+test launcher::jd::tests::json_lines_become_events_and_anything_else_a_message ... ok
+test launcher::model::tests::a_nightly_pin_needs_its_exact_build ... ok
+test launcher::model::tests::a_pin_another_install_satisfies_relaunches_into_it ... ok
+test launcher::model::tests::a_stable_pin_of_this_editors_line_opens_here_without_an_install ... ok
+test launcher::model::tests::chips_name_the_version_and_bevy_line_or_the_nightly_date ... ok
+test launcher::model::tests::editor_lines_group_installs_offer_missing_lines_and_report_updates ... ok
+test launcher::model::tests::filters_keep_a_channel_or_the_projects_missing_an_editor_and_match_text ... ok
+test launcher::jd::tests::a_job_that_cannot_start_is_listed_as_failed ... ok
+test layout::grid_readout_tests::an_explicit_metric_increment_reads_as_itself ... ok[2m2026-10-27T04:55:45.454116Z[0m [33m WARN[0m [2mjackdaw::live_edits[0m[2m:[0m apply live edits: 1 stale entries kept in the log
+
+test launcher::project_actions::tests::repinning_rewrites_the_jackdaw_table_and_keeps_the_rest ... ok
+test layout::grid_readout_tests::power_of_two_fractions_read_exactly ... ok
+test layout::grid_readout_tests::whole_sizes_lose_their_trailing_zero ... ok
+test layout::live_badge_tests::header_accent_tracks_view_mode ... ok
+test keybind_settings::tests::cancelling_capture_puts_the_resting_caption_back ... ok
+test layout::live_badge_tests::label_with_focus_names_the_instance ... ok
+test layout::live_badge_tests::label_without_focus_is_bare_live ... ok
+test keybind_settings::tests::a_captured_key_reaches_the_buttons_caption ... ok
+[2m2026-10-27T04:55:45.457240Z[0m [33m WARN[0m [2mjackdaw::live_edits[0m[2m:[0m live edit revert: player / Transform.translation no longer has bevy_transform::components::transform::Transform, keeping the entry
+test live_edits::tests::discard_all_clears_without_touching_ast ... ok
+test live_edits::tests::apply_all_groups_into_one_history_entry_and_clears ... ok
+[2m2026-10-27T04:55:45.457917Z[0m [33m WARN[0m [2mjackdaw::live_edits[0m[2m:[0m revert live edit: 'player / Health.current' has no authored baseline
+[2m2026-10-27T04:55:45.457942Z[0m [33m WARN[0m [2mjackdaw::live_edits[0m[2m:[0m revert live edit: 'player / Transform.translation' has no live counterpart right now, keeping the entry
+test live_edits::tests::apply_all_keeps_stale_entries_and_handles_the_rest ... [2m2026-10-27T04:55:45.458066Z[0m [32m INFO[0m [2mjackdaw::commands[0m[2m:[0m Authored override for previously derived component 'jackdaw::live_edits::tests::Health'
+ok
+test live_edits::tests::empty_field_path_label_omits_field_segment ... ok
+test live_edits::tests::first_edit_captures_baseline_and_second_updates_live_value ... ok
+test live_edits::tests::live_bits_reverse_resolves_projected_entities ... ok
+test live_edits::tests::re_edit_after_node_id_loss_keeps_one_entry_and_baseline ... ok
+test live_edits::tests::resolve_prefers_node_id_over_bits ... ok
+test live_edits::tests::re_edit_after_respawn_rekeys_instead_of_duplicating ... ok
+test live_edits::tests::post_stop_apply_writes_via_node_id ... ok
+test live_edits::tests::revert_keeps_the_entry_when_the_component_is_gone ... ok
+test live_edits::tests::revert_without_a_live_counterpart_keeps_the_entry ... ok
+test live_edits::tests::revert_requires_a_baseline ... ok
+test live_edits::tests::save_entry_writes_the_ast_field_and_drops_the_entry ... ok
+test live_edits::tests::save_authors_an_unauthored_component_on_a_mapped_entity ... ok
+[2m2026-10-27T04:55:45.462178Z[0m [33m WARN[0m [2mjackdaw::live_edits[0m[2m:[0m save live edit: entity for 'entity 2a / Transform.translation' no longer resolves
+[2m2026-10-27T04:55:45.462335Z[0m [32m INFO[0m [2mjackdaw::commands[0m[2m:[0m Authored override for previously derived component 'jackdaw::live_edits::tests::Health'
+[2m2026-10-27T04:55:45.462243Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m save to scene: promoted ephemeral 7v0 (bits 2a) to new authored node 4154743435023652627
+test launcher::project_actions::tests::copies_and_backups_land_beside_the_project_under_a_free_name ... ok
+test live_edits::tests::truncate_json_for_display_truncates_and_marks_unauthored ... ok
+test live_edits::tests::truncate_json_to_respects_a_custom_cap ... ok
+test live_edits_ui::tests::badge_label_pluralizes ... ok
+test live_edits::tests::unmapped_entity_keys_by_bits_only ... ok
+test live_edits::tests::save_keeps_a_stale_entry_when_nothing_resolves ... ok
+test live_edits_ui::tests::stale_rows_disable_both_actions ... ok
+test live_edits_ui::tests::replay_while_prompt_open_hands_off_to_tray ... ok
+test live_edits::tests::unnamed_entity_label_uses_bits ... ok
+test live_edits::tests::undo_demotes_authored_live_component ... ok
+test live_edits::tests::save_promotes_an_unmapped_entity_and_drops_its_entries ... ok
+test live_edits::tests::unauthored_component_records_a_none_baseline ... ok
+test live_edits_ui::tests::resolving_rows_enable_both_actions ... ok
+test live_edits_ui::tests::review_handoff_closes_prompt_and_opens_tray ... ok
+test live_edits_ui::tests::stop_prompt_title_pluralizes ... ok
+test live_edits_ui::tests::stop_with_clean_log_stays_quiet ... ok
+test live_edits_ui::tests::stop_with_edits_opens_the_prompt_and_keeps_the_log ... ok
+test live_frame::tests::clear_releases_the_asset ... ok
+test live_frame::tests::duplicate_seq_is_dropped_and_regression_restarts ... ok
+test live_frame::tests::first_frame_creates_image_and_later_frames_update_in_place ... ok
+test live_frame::tests::zero_size_frame_is_ignored ... ok
+test live_frame_view::tests::each_retry_rearms_the_backoff ... ok
+test live_frame_view::tests::first_start_waits_out_the_debounce_window ... ok
+test live_frame_view::tests::fresh_stream_never_retries ... ok
+test live_frame_view::tests::no_request_yet_and_no_want_stays_quiet ... ok
+test live_frame_view::tests::real_resize_restarts_after_the_debounce ... ok
+test live_frame_view::tests::size_still_moving_keeps_resetting_the_window ... ok
+test live_frame_view::tests::stop_is_sent_once_when_want_goes_away ... ok
+test live_frame_view::tests::refocus_rerequests_for_the_new_instance ... ok
+test live_frame_view::tests::stale_stream_retries_after_the_backoff_window ... ok
+test live_frame_view::tests::wiggle_inside_the_dead_zone_never_restarts ... ok
+test live_highlight::tests::highlight_syncs_on_selection_change_while_focused ... ok
+test live_highlight::tests::highlight_waits_for_focus_before_recording ... ok
+test live_input::tests::engage_from_panel_binds_the_surface_and_queues_focus ... ok
+test live_input::tests::note_game_cursor_state_mirrors_onto_the_editor_when_active ... ok
+[2m2026-10-27T04:55:45.473875Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+test lod_group::tests::the_default_heights_halve_down_the_levels_and_cull_at_one_percent ... ok
+test live_input::tests::plain_keys_forward_and_track_held_state ... ok
+test live_input::tests::shift_esc_requests_release_and_swallows_the_esc ... ok
+test live_input::tests::release_synthesizes_ups_for_everything_held ... ok
+test lod_group::tests::the_level_files_beside_a_model_are_found_in_order_until_one_is_missing ... ok
+[2m2026-10-27T04:55:45.480146Z[0m [33m WARN[0m [2mbevy_render::texture[0m[2m:[0m CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+[2m2026-10-27T04:55:45.480510Z[0m [33m WARN[0m [2mbevy_gltf[0m[2m:[0m CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+test material_assets::tests::a_confirmation_from_another_dialog_leaves_the_armed_delete_alone ... ok
+test material_assets::tests::a_material_with_no_textures_survives_a_round_trip ... ok
+test material_assets::tests::created_names_skip_taken_ones ... ok
+[2m2026-10-27T04:55:45.483704Z[0m [33m WARN[0m [2mjackdaw::material_assets[0m[2m:[0m Material 'my material' has no valid file name; it is not written out
+[2m2026-10-27T04:55:45.483832Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Could not find an asset loader matching: Asset Type: Some(TypeId(0x8823d019834ac64e788869992eb5514a)); Path: "t/does_not_exist.png";
+test material_assets::tests::a_missing_texture_file_loads_without_panicking_and_keeps_its_path ... ok
+test material_assets::tests::a_name_that_is_not_a_legal_file_stem_is_not_written_out ... ok
+[2m2026-10-27T04:55:45.488261Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Could not find an asset loader matching: Asset Type: Some(TypeId(0x8823d019834ac64e788869992eb5514a)); Path: "t/rock_normal.png";
+test material_assets::tests::a_material_loads_its_textures_for_drawing_only_in_their_own_colour_space ... ok
+[2m2026-10-27T04:55:45.491352Z[0m [32m INFO[0m [2mjackdaw::material_assets[0m[2m:[0m Saved material 'bramble'
+[2m2026-10-27T04:55:45.491922Z[0m [32m INFO[0m [2mjackdaw::material_assets[0m[2m:[0m Saved material 'grass'
+[2m2026-10-27T04:55:45.492018Z[0m [33m WARN[0m [2mjackdaw::material_assets[0m[2m:[0m material.save: 'grass' already belongs to material 'grass'
+[2m2026-10-27T04:55:45.492677Z[0m [32m INFO[0m [2mjackdaw::material_assets[0m[2m:[0m Saved material 'bramble'
+test material_assets::tests::a_deleted_file_demotes_its_material_instead_of_dropping_it ... ok
+[2m2026-10-27T04:55:45.493517Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Could not find an asset loader matching: Asset Type: Some(TypeId(0x8823d019834ac64e788869992eb5514a)); Path: "t/base.png";
+[2m2026-10-27T04:55:45.493620Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Could not find an asset loader matching: Asset Type: Some(TypeId(0x8823d019834ac64e788869992eb5514a)); Path: "t/rough.png";
+[2m2026-10-27T04:55:45.493538Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Could not find an asset loader matching: Asset Type: Some(TypeId(0x8823d019834ac64e788869992eb5514a)); Path: "t/normal.png";
+[2m2026-10-27T04:55:45.493679Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Could not find an asset loader matching: Asset Type: Some(TypeId(0x8823d019834ac64e788869992eb5514a)); Path: "t/emit.png";
+[2m2026-10-27T04:55:45.493701Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Could not find an asset loader matching: Asset Type: Some(TypeId(0x8823d019834ac64e788869992eb5514a)); Path: "t/height.png";
+[2m2026-10-27T04:55:45.493855Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Could not find an asset loader matching: Asset Type: Some(TypeId(0x8823d019834ac64e788869992eb5514a)); Path: "t/ao.png";
+test material_assets::tests::all_six_texture_slots_and_scalars_survive_a_round_trip ... ok
+[2m2026-10-27T04:55:45.493897Z[0m [33m WARN[0m [2mjackdaw::material_assets[0m[2m:[0m material.delete: 'detected' has no file to delete
+[2m2026-10-27T04:55:45.494633Z[0m [32m INFO[0m [2mjackdaw::material_assets[0m[2m:[0m Saved material 'bramble'
+test material_assets::tests::names_sanitize_to_one_file_each ... ok
+test material_assets::tests::a_file_that_appeared_after_load_registers_on_rescan ... ok
+test material_assets::tests::dismissing_the_dialog_without_confirming_disarms_the_delete ... ok
+test material_assets::tests::saved_entries_skip_the_none_placeholder_and_unsaved_materials ... ok
+test material_assets::tests::a_save_into_a_folder_that_is_not_there_yet_writes_inside_it ... ok
+test material_assets::tests::saved_flag_separates_durable_entries_from_ephemeral_ones ... ok
+test material_assets::tests::a_queued_save_re_checks_the_name_it_was_cleared_for ... ok
+test material_assets::tests::deleting_an_unsaved_material_is_refused ... ok
+[2m2026-10-27T04:55:45.498245Z[0m [32m INFO[0m [2mjackdaw::material_assets[0m[2m:[0m Saved material 'slate'
+[2m2026-10-27T04:55:45.499860Z[0m [32m INFO[0m [2mjackdaw::material_assets[0m[2m:[0m Saved material 'grass'
+test material_assets::tests::a_material_filed_in_another_folder_is_indexed_by_its_path ... ok
+[2m2026-10-27T04:55:45.501665Z[0m [33m WARN[0m [2mjackdaw::material_assets[0m[2m:[0m Failed to parse material: BSN parse error: lex error: unexpected character '$'
+test material_assets::tests::a_save_with_a_file_chosen_writes_that_file ... ok
+test material_assets::tests::a_save_with_a_folder_chosen_writes_there ... ok
+test material_assets::tests::ephemeral_ids_name_exactly_the_unsaved_materials ... ok
+test material_assets::tests::a_deleted_file_is_not_written_back_by_the_next_persist ... ok
+[2m2026-10-27T04:55:45.503995Z[0m [32m INFO[0m [2mjackdaw::material_assets[0m[2m:[0m Removed C:\Users\linbo.zhang\AppData\Local\Temp\.tmpEjdfVX\assets\materials\grass.bsn
+test material_assets::tests::a_saved_material_file_reloads_through_the_index ... ok[2m2026-10-27T04:55:45.504219Z[0m [32m INFO[0m [2mjackdaw::material_assets[0m[2m:[0m Saved material 'meadow'
+
+test material_assets::tests::malformed_material_text_returns_none ... ok
+[2m2026-10-27T04:55:45.504847Z[0m [32m INFO[0m [2mjackdaw::material_assets[0m[2m:[0m Removed C:\Users\linbo.zhang\AppData\Local\Temp\.tmpEjdfVX\assets\materials\meadow.bsn
+[2m2026-10-27T04:55:45.505103Z[0m [32m INFO[0m [2mjackdaw::material_assets[0m[2m:[0m Deleted material 'meadow'
+[2m2026-10-27T04:55:45.506711Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Could not find an asset loader matching: Asset Type: Some(TypeId(0x8823d019834ac64e788869992eb5514a)); Path: "t/grass_basecolor.png";
+test material_assets::tests::deleting_a_material_removes_its_file_and_every_name_that_resolved_to_it ... ok
+[2m2026-10-27T04:55:45.509486Z[0m [33m WARN[0m [2mjackdaw::material_assets[0m[2m:[0m material.save: 'GRASS' already belongs to material 'grass'
+test material_assets::tests::unsaved_materials_are_not_written ... [2m2026-10-27T04:55:45.511052Z[0m [32m INFO[0m [2mjackdaw::material_assets[0m[2m:[0m Saved material 'grass'
+ok
+test material_assets::tests::saving_over_another_materials_name_is_refused ... ok
+test material_assets::tests::the_editor_plugin_registers_the_runtime_texture_format_retag ... ok
+test material_assets::tests::the_catalog_file_is_not_indexed_as_a_material ... ok
+[2m2026-10-27T04:55:45.513095Z[0m [32m INFO[0m [2mjackdaw::material_assets[0m[2m:[0m Saved material 'grass'
+[2m2026-10-27T04:55:45.514567Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Could not find an asset loader matching: Asset Type: Some(TypeId(0x8823d019834ac64e788869992eb5514a)); Path: "pack/rock_albedo.png";
+test material_assets::tests::saving_a_material_writes_a_file_and_promotes_it ... ok
+[2m2026-10-27T04:55:45.514776Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Could not find an asset loader matching: Asset Type: Some(TypeId(0x8823d019834ac64e788869992eb5514a)); Path: "pack/rock_albedo.png";
+test material_browser::tests::a_detected_set_with_no_height_map_leaves_parallax_off ... ok[2m2026-10-27T04:55:45.515447Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Could not find an asset loader matching: Asset Type: Some(TypeId(0x8823d019834ac64e788869992eb5514a)); Path: "pack/rock_height.png";
+
+test material_browser::tests::a_detected_height_map_binds_beside_the_parallax_scalars_it_implies ... ok
+[2m2026-10-27T04:55:45.516792Z[0m [32m INFO[0m [2mjackdaw::material_assets[0m[2m:[0m Removed C:\Users\linbo.zhang\AppData\Local\Temp\.tmpBDWHWr\assets\materials\grass.bsn
+test material_browser::tests::a_scalar_edit_does_not_ask_for_a_rebuild ... [2m2026-10-27T04:55:45.517196Z[0m [32m INFO[0m [2mjackdaw::material_assets[0m[2m:[0m Saved material 'meadow'
+ok
+test material_preview::preview_shape_tests::shapes_cycle_in_order ... ok
+test material_assets::tests::renaming_a_material_moves_its_file_and_keeps_the_old_name_resolving ... ok[2m2026-10-27T04:55:45.521378Z[0m [33m WARN[0m [2mjackdaw_scene_types::asset_path[0m[2m:[0m Cannot load 'C:/Users/linbo.zhang/AppData/Local/Temp/.tmpPfh5QU/assets/textures/moss_albedo.png': file is outside the assets directory. Move it into your project's assets/ folder.
+[2m2026-10-27T04:55:45.521490Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Asset path "C:/Users/linbo.zhang/AppData/Local/Temp/.tmpPfh5QU/assets/textures/moss_albedo.png" is unapproved. See UnapprovedPathMode for details.
+
+test material_ui::focus_gate_tests::a_collapsed_picker_leaves_the_tab_order_and_rejoins_when_opened ... ok
+[2m2026-10-27T04:55:45.522537Z[0m [33m WARN[0m [2mjackdaw_scene_types::asset_path[0m[2m:[0m Cannot load 'C:/Users/linbo.zhang/AppData/Local/Temp/.tmpPfh5QU/assets/textures/moss_normal.png': file is outside the assets directory. Move it into your project's assets/ folder.
+[2m2026-10-27T04:55:45.522686Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Asset path "C:/Users/linbo.zhang/AppData/Local/Temp/.tmpPfh5QU/assets/textures/moss_normal.png" is unapproved. See UnapprovedPathMode for details.
+test material_browser::tests::a_material_whose_file_vanished_is_listed_as_unsaved ... ok
+[2m2026-10-27T04:55:45.526883Z[0m [33m WARN[0m [2mjackdaw_scene_types::asset_path[0m[2m:[0m Cannot load 'C:/Users/linbo.zhang/AppData/Local/Temp/.tmpIfGv0c/assets/textures/moss_albedo.png': file is outside the assets directory. Move it into your project's assets/ folder.
+[2m2026-10-27T04:55:45.526974Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Asset path "C:/Users/linbo.zhang/AppData/Local/Temp/.tmpIfGv0c/assets/textures/moss_albedo.png" is unapproved. See UnapprovedPathMode for details.
+test material_browser::tests::a_material_filed_outside_the_materials_folder_is_listed ... ok
+test material_browser::tests::a_previewed_texture_set_binds_its_textures ... ok[2m2026-10-27T04:55:45.527928Z[0m [33m WARN[0m [2mjackdaw_scene_types::asset_path[0m[2m:[0m Cannot load 'C:/Users/linbo.zhang/AppData/Local/Temp/.tmpIfGv0c/assets/textures/moss_normal.png': file is outside the assets directory. Move it into your project's assets/ folder.
+
+[2m2026-10-27T04:55:45.528147Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Asset path "C:/Users/linbo.zhang/AppData/Local/Temp/.tmpIfGv0c/assets/textures/moss_normal.png" is unapproved. See UnapprovedPathMode for details.
+test material_browser::tests::saving_a_material_asks_for_a_rebuild ... ok
+test material_browser::tests::binding_a_texture_does_ask_for_a_rebuild ... ok
+test material_ui::refresh_tests::a_refresh_writes_nothing_back_and_settles ... ok
+test material_ui::refresh_tests::an_edit_made_elsewhere_reaches_an_unfocused_row ... ok
+test material_browser::tests::an_offered_texture_set_reads_no_texture_until_it_is_used ... ok
+test material_browser::tests::a_texture_that_is_not_a_ktx2_is_never_read_as_a_cubemap ... ok
+test fps_overlay::tests::the_stats_setting_toggles_what_the_overlay_displays ... ok
+test material_browser::tests::a_texture_set_worn_by_a_mesh_binds_its_textures ... ok
+test material_ui::tests::an_unsaved_name_says_so_and_a_saved_one_is_left_alone ... ok
+test material_ui::tests::binding_a_height_map_turns_parallax_on_and_clearing_it_turns_it_off ... ok
+test material_ui::tests::emissive_is_stored_linear_under_the_srgb_the_row_shows ... ok
+test material_ui::tests::emissive_reads_back_the_srgb_it_was_given ... ok
+test material_ui::tests::hex_names_the_colour_the_swatch_draws ... ok
+test material_ui::refresh_tests::the_row_being_dragged_is_left_alone ... ok
+test material_ui::tests::only_the_color_carrying_slots_decode_as_srgb ... ok
+test material_ui::refresh_tests::an_edit_made_elsewhere_repaints_a_colour_row_face ... ok
+test material_ui::refresh_tests::the_row_holding_focus_is_left_alone ... ok
+test material_ui::scalar_commit_tests::a_slider_value_reaches_the_material ... ok
+test model_lod::tests::a_level_suffix_reads_in_any_case ... ok
+test material_browser::tests::a_walk_that_found_the_same_textures_does_not_ask_the_panel_to_list_again ... ok
+test model_lod::tests::a_reimport_keeps_heights_and_fade_while_the_level_count_holds ... ok
+test model_lod::tests::node_levels_with_repeated_names_are_refused ... ok
+test material_ui::scalar_commit_tests::a_commit_moves_the_thumb_it_came_from ... ok
+[2m2026-10-27T04:55:45.543067Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Could not find an asset loader matching: Asset Type: Some(TypeId(0x7274def2e2b8b74464262d2f604e6a54)); Path: "embedded://bevy_feathers/assets/fonts/FiraMono-Medium.ttf";
+test material_ui::scalar_commit_tests::a_value_mid_drag_reaches_the_material_too ... ok
+test material_ui::scalar_commit_tests::a_value_mid_drag_queues_no_write ... ok
+test model_lod::tests::suffixed_nodes_make_levels_and_unsuffixed_meshes_go_on_every_level ... ok
+test material_ui::scalar_commit_tests::the_end_of_a_drag_queues_the_write ... ok
+test module_picker::tests::a_project_using_a_module_this_editor_lacks_is_told_so ... ok
+test material_ui::scalar_commit_tests::a_drag_that_ends_without_a_final_event_still_queues_the_write ... ok
+test new_asset::tests::a_kind_reads_as_its_name_and_the_type_it_holds ... ok
+test numeric_transform::tests::axis_direction_maps_to_unit_vectors ... ok
+test numeric_transform::tests::clear_ends_entry ... ok
+test modal_transform::tests::a_middle_drag_beyond_the_click_travel_does_not_toggle ... ok
+test modal_transform::tests::a_plain_middle_click_toggles_and_toggles_back ... ok
+test modal_transform::tests::stale_motion_backlog_does_not_swallow_a_middle_click ... ok
+test numeric_transform::tests::digit_char_maps_top_row_and_numpad ... ok
+test numeric_transform::tests::pressed_axis_arms_on_bare_key_and_ignores_modified_presses ... ok
+test numeric_transform::tests::sub_selection_vertices_unions_and_dedups ... ok
+test numeric_transform::tests::toggle_sign_adds_and_removes_leading_minus ... ok
+test material_browser::tests::a_texture_set_in_any_folder_is_offered_unsaved_until_it_has_a_file ... ok
+[2m2026-10-27T04:55:45.547359Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Could not find an asset loader matching: Asset Type: Some(TypeId(0x8823d019834ac64e788869992eb5514a)); Path: "textures/rock.png";
+test numeric_transform::tests::value_parses_signed_decimals_and_rejects_bare_signs ... ok
+test operator_tooltip::tests::a_ctrl_chord_reads_ctrl_on_macos ... ok
+test material_ui::scalar_seed_tests::every_surface_row_opens_on_the_value_the_asset_holds ... ok
+test operator_tooltip::tests::a_pending_chord_reads_like_the_applied_one ... ok
+test operator_tooltip::tests::a_scroll_chord_has_pending_text_even_though_a_binding_has_none ... ok
+test operator_tooltip::tests::an_unparseable_key_name_still_renders_as_itself ... ok
+test operator_tooltip::tests::keyboard_binding_no_modifier ... ok
+test operator_tooltip::tests::keyboard_binding_with_modifier ... ok
+test operator_tooltip::tests::macos_names_super_cmd_in_both_forms ... ok
+test operator_tooltip::tests::mouse_button_no_modifier ... ok
+test operator_tooltip::tests::mouse_button_with_modifier ... ok
+test operator_tooltip::tests::unsupported_variants_return_none ... ok
+test perf_probe::tests::an_unset_environment_is_off ... ok
+test material_ui::texture_slot_tests::a_slot_shows_the_file_bound_to_it_and_none_again_after_undo ... ok
+test perf_probe::tests::anything_else_is_on ... ok
+test perf_probe::tests::spawn_scene_keeps_its_own_slice ... ok
+test perf_probe::tests::zero_false_and_empty_are_off ... ok
+test pie::build_key_tests::a_run_with_a_target_gets_its_own_key ... ok
+test material_ui::texture_slot_tests::every_texture_slot_is_an_asset_field_naming_an_image ... ok
+test pie::build_key_tests::runs_without_a_target_share_the_default_build ... ok
+test pie::build_key_tests::same_root_different_targets_do_not_collide ... ok
+test pie::enter_live_tests::a_runs_own_asset_root_beats_the_launch_default ... ok
+[2m2026-10-27T04:55:45.552255Z[0m [31mERROR[0m [2mjackdaw::pie[0m[2m:[0m PIE: game build of my-game failed: error[E0560]: no field (src/lib.rs:40:13)
+test pie::enter_live_tests::enter_live_view_flips_mode_to_live ... ok
+test pie::enter_live_tests::window_mode_toggle_flips_and_embedded_sets_the_env ... ok
+test pie::play_status_tests::a_background_build_that_failed_leaves_the_editor_stopped ... ok
+test pie::play_status_tests::a_launch_whose_build_failed_reads_as_failed ... ok
+[2m2026-10-27T04:55:45.553453Z[0m [33m WARN[0m [2mjackdaw::pie[0m[2m:[0m PIE: not pre-building 'Broken': target cannot set both bin (Some("a")) and example (Some("b")); keep one
+test pie::prebuild_tests::a_compile_failure_reports_its_first_diagnostic ... ok
+test pie::prebuild_tests::a_compile_failure_says_where_its_first_diagnostic_points ... ok
+[2m2026-10-27T04:55:45.554103Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: pre-build disabled; the first Play will compile the game
+test pie::prebuild_tests::a_failure_with_no_diagnostic_falls_back_to_the_error ... ok
+test pie::prebuild_tests::a_failed_build_stays_on_screen_naming_its_error_until_the_next_build ... ok
+test pie::prebuild_tests::an_invalid_first_run_target_blocks_instead_of_building ... ok
+test pie::prebuild_tests::only_an_explicit_off_disables_the_prebuild ... ok
+test pie::prebuild_tests::the_setting_off_starts_no_build ... ok
+[2m2026-10-27T04:55:45.555219Z[0m [33m WARN[0m [2mjackdaw::pie[0m[2m:[0m save to scene: selected entity 5v0 has no live projection entry
+test pie::save_before_launch_tests::a_clean_or_absent_animation_graph_never_blocks_the_launch ... ok
+[2m2026-10-27T04:55:45.555361Z[0m [33m WARN[0m [2mjackdaw::pie[0m[2m:[0m save to scene: no entity selected
+test pie::save_before_launch_tests::a_dirty_animation_graph_the_chain_cannot_save_refuses_the_launch ... ok
+test pie::save_before_launch_tests::a_dirty_asset_the_chain_cannot_save_refuses_the_launch ... ok
+[2m2026-10-27T04:55:45.555818Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m save to scene: promoted runtime values into node 0
+test pie::save_to_scene_tests::no_projection_entry_is_noop ... ok
+[2m2026-10-27T04:55:45.556101Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m save to scene: promoted runtime values into node 0
+test pie::save_to_scene_tests::no_selection_is_noop ... ok
+[2m2026-10-27T04:55:45.556523Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m save to scene: promoted ephemeral 6v0 (bits ef01) to new authored node 4154743435023652632
+test pie::save_to_scene_tests::path_a_promote_is_undoable_back_to_authored_value ... ok
+test pie::save_to_scene_tests::path_b_ephemeral_entity_is_saveable ... ok
+test pie::save_to_scene_tests::path_a_promote_writes_live_values_to_ast_and_preview_ecs ... ok
+test pie::save_to_scene_tests::path_b_promote_creates_new_ast_node_with_components ... ok
+test pie::stop_cleanup_tests::pick_result_selects_the_projected_entity ... ok
+[2m2026-10-27T04:55:45.557778Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 launched with scene override '.jackdaw-pie/current-zone-0-4242.bsn' (an unsaved copy)
+[2m2026-10-27T04:55:45.557861Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #2 launched with scene override '.jackdaw-pie/current-zone-0-4242.bsn' (an unsaved copy)
+test pie::stop_cleanup_tests::stop_cleanup_clears_session_state ... ok
+test pie::stop_cleanup_tests::stop_cleanup_tolerates_an_already_missing_temp_copy ... ok
+test pie_current::tests::an_unknown_mode_is_rejected ... ok
+test pie::stop_cleanup_tests::recording_an_override_dedupes_shared_temp_copies ... ok
+test pie_current::tests::enum_settings_round_trip_snake_case ... ok
+[2m2026-10-27T04:55:45.559079Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: removed the temporary run copy C:\Users\linbo.zhang\AppData\Local\Temp\.tmpfHHnIY\current-untitled-0-4242.bsn
+test pie_current::tests::legacy_bool_settings_read_as_enum_modes ... ok
+test pie_current::tests::scene_paths_spell_assets_relative_or_refuse ... ok
+test pie::source_change_tests::source_older_than_the_finished_build_is_current ... ok
+test pie_current::tests::tab_display_names_sanitize_to_single_components ... ok
+test pie_current::tests::the_nearest_scene_tab_wins_over_prefab_tabs ... ok
+test pie::stop_cleanup_tests::stop_cleanup_deletes_temp_copies_and_scene_overrides ... ok
+test pie_current::tests::the_settings_section_migrates_a_legacy_bool ... ok
+[2m2026-10-27T04:55:45.564193Z[0m [32m INFO[0m [2mjackdaw::pie_current[0m[2m:[0m PIE: removed 2 leftover temporary run copies under C:\Users\linbo.zhang\AppData\Local\Temp\.tmpxXHNje\assets\.jackdaw-pie
+test pie_current::tests::the_sweep_removes_only_stale_run_copies ... ok
+test pie_menu::tests::the_badge_names_the_cargo_target_kind ... ok
+test pie_mirror::instance_buffer_tests::component_changed_unknown_entity_is_ignored ... ok
+test pie_mirror::instance_buffer_tests::instance_buffer_apply_accumulation ... ok
+test pie_mirror::instance_buffer_tests::pie_instances_starts_empty ... ok
+test pie_mirror::instance_buffer_tests::status_and_log_are_ignored ... ok
+test pie_mirror::instance_buffer_tests::two_instances_same_bits_do_not_collide ... ok
+test pie_menu::tests::a_stopped_instance_leaves_the_box_clear ... ok
+test pie_menu::tests::a_row_without_a_target_renders_no_badge ... ok
+test pie_projection::tests::absent_component_is_inserted_not_panicked ... ok
+test pie_menu::tests::a_running_instance_is_marked_with_a_checked_feathers_checkbox ... ok
+test pie_menu::tests::a_targeted_row_carries_a_dim_badge_after_its_label ... ok
+test pie_projection::tests::camera_components_are_never_projected ... ok
+test pie_projection::tests::entity_despawned_removes_ephemeral_and_leaves_authored ... ok
+test pie_projection::tests::entity_spawned_authored_maps_to_existing_preview_entity ... ok
+test pie_projection::tests::entity_spawned_no_scene_node_id_creates_ephemeral ... ok
+test pie_projection::tests::ephemeral_despawn_rescues_authored_descendants ... ok
+test pie_projection::tests::child_of_pends_until_parent_spawns ... ok
+test pie_projection::tests::component_changed_child_of_reparents ... ok
+test pie_projection::tests::child_of_remaps_to_projected_parent ... ok
+test pie_projection::tests::ephemeral_previews_carry_a_transform_and_visibility_backbone ... ok
+test pie_projection::tests::immutable_value_edit_reinserts ... ok
+test pie_projection::tests::focus_change_skips_log_clear_while_prompt_open ... ok
+test pie_projection::tests::mutable_value_edit_does_not_reinsert ... ok
+test pie_projection::tests::projection_skips_filtered_components ... ok
+test pie_projection::tests::reparent_preview_refuses_a_cycle ... ok
+test pie_projection::tests::respawn_with_new_bits_purges_the_old_alias ... ok
+test pie_projection::tests::revert_preview_despawns_ephemerals_and_clears_by_bits ... ok
+test pie_projection::tests::set_focused_instance_noop_when_already_focused ... ok
+test pie_projection::tests::set_focused_instance_projects_new_instance_and_clears_old ... ok
+test pie_projection::tests::stale_entity_is_a_noop_not_a_panic ... ok
+test play_settings::tests::a_line_of_named_values_reads_back_as_the_line_it_came_from ... ok
+test play_settings::tests::a_quoted_value_keeps_its_spaces ... ok
+test play_settings::tests::a_word_naming_no_value_is_left_out ... ok
+test pie_projection::tests::brush_geometry_survives_pie_round_trip ... ok
+test prefab::overrides_bsn::tests::field_is_overridden_false_for_inherited_field ... ok
+test prefab::overrides_bsn::tests::field_is_overridden_true_for_diverged_field ... ok
+test pie_projection::tests::replay_reproduces_stream_parenting ... ok
+test prefab::overrides_bsn::tests::inside_prefab_instance_detects_descendant ... ok
+test prefab::overrides_bsn::tests::resolve_inheritance_reports_source_and_id ... ok
+test preflight::tests::missing_editor_toolchain_warns_until_installed ... ok
+test preflight::tests::rustc_without_rustup_fails ... ok
+test play_settings::tests::an_action_from_another_dialog_leaves_the_settings_alone ... ok
+test preset_tree_tests::the_animation_preset_docks_one_viewport_panel_in_the_center ... ok
+test preset_tree_tests::the_default_tree_docks_one_viewport_panel_in_the_center ... [2m2026-10-27T04:55:45.579883Z[0m [32m INFO[0m [2mjackdaw::play_settings[0m[2m:[0m PIE: the launch environment names REALM
+ok
+test preset_tree_tests::the_level_design_preset_docks_one_viewport_panel_in_the_center ... ok
+test play_settings::tests::what_was_set_is_read_back_and_no_committed_file_holds_it ... ok
+test prefab::watcher::tests::a_prefab_placed_into_a_scene_with_none_is_watched ... ok
+test prefab::watcher::tests::a_prefab_placed_after_the_first_is_added_to_the_watch ... ok
+test preview_model::tests::embedded_gltf_copies_without_a_bin ... ok
+test preview_model::tests::glb_name_collision_gets_a_suffix ... ok
+test preview_model::tests::gltf_parent_dir_uri_is_rejected ... ok
+test pie::graceful_stop_tests::inside_the_window_the_stage_is_kept ... ok
+test probe_bake::tests::a_mirrored_face_is_read_back_right_to_left ... ok
+test probe_bake::tests::a_new_bake_lands_beside_the_scene_under_a_name_no_other_probe_holds ... ok
+test probe_bake::tests::each_face_camera_looks_down_its_axis_with_a_right_angled_up ... ok
+test preview_model::tests::gltf_without_bin_is_rejected ... ok
+test preview_model::tests::gltf_copies_bin_into_unique_folder ... ok
+test preview_model::tests::in_assets_keeps_relative_path ... ok
+test project_select::tests::a_project_outside_the_asset_root_is_handed_to_another_process ... ok
+test project_select::tests::a_location_that_does_not_exist_yet_browses_its_nearest_parent ... ok
+test probe_bake::tests::the_written_faces_load_back_as_a_cubemap_in_order ... ok
+test preview_model::tests::outside_glb_copies_into_preview_folder ... ok
+test preview_model::tests::gltf_copies_nested_image_uris ... ok
+test project_select::tests::a_preview_with_no_changes_or_notes_still_renders ... ok
+test project_select::tests::new_project_warnings_are_shown_before_the_project_opens ... ok
+test project_select::tests::the_launcher_footer_names_a_checkout_only_when_running_from_one ... ok
+test project_select::tests::the_modal_and_the_cli_reject_the_same_names ... ok
+test project_select::tests::refusing_a_missing_folder_offers_to_forget_it ... ok
+test project_select::tests::the_name_hint_previews_the_directory_or_the_problem ... ok
+test project_select::tests::the_destination_is_described_before_create_is_pressed ... ok
+test project_select::tests::refusing_a_non_project_folder_says_what_was_expected ... ok
+test project_select::tests::the_new_project_browse_starts_where_the_location_field_points ... ok
+test project_types::tests::native_filtering_skips_events_and_functions ... ok
+[2m2026-10-27T04:55:45.612148Z[0m [33m WARN[0m [2mjackdaw::pie[0m[2m:[0m PIE: graceful #1 did not exit within the graceful window; killing it
+test project_select::tests::the_lib_stub_card_numbers_its_steps ... ok
+[2m2026-10-27T04:55:45.613635Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Could not find an asset loader matching: Asset Type: Some(TypeId(0x7274def2e2b8b74464262d2f604e6a54)); Path: "embedded://jackdaw_feathers/../fonts/lucide.ttf";
+test pie::graceful_stop_tests::past_the_deadline_the_child_is_killed_once ... ok
+test project_window::tests::a_folder_survives_every_filter ... ok
+test project_select::tests::the_preview_marks_modifications_differently_from_creations ... ok
+[2m2026-10-27T04:55:45.614641Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Could not find an asset loader matching: Asset Type: Some(TypeId(0x8823d019834ac64e788869992eb5514a)); Path: "embedded://bevy_feathers/assets/icons/chevron-right.png";
+test project_select::tests::the_package_picker_lists_each_candidate ... ok
+test project_window::tests::a_prefab_tile_is_pictured_and_a_folder_is_not ... ok
+test project_select::tests::the_setup_card_lists_its_guarantees_separately ... ok
+test project_window::tests::a_folder_row_label_does_not_opt_in_to_the_ellipsis ... ok
+test project_window::tests::every_filter_is_named_by_a_word_a_caller_can_spell ... ok
+test project_window::tests::project_select_expands_the_tree ... ok
+test project_window::tests::a_name_already_taken_gets_a_number ... ok
+test project_window::tests::the_action_ids_the_retired_panels_used_still_resolve ... ok
+test project_window::tests::the_image_filter_reads_the_extension ... ok
+test project_window::tests::the_prefab_filter_keeps_prefabs_and_drops_scenes ... ok
+test project_window::tests::an_unnarrowed_folder_lists_only_its_own_files ... ok
+[2m2026-10-27T04:55:45.620527Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Could not find an asset loader matching: Asset Type: Some(TypeId(0x8823d019834ac64e788869992eb5514a)); Path: "embedded://bevy_feathers/assets/icons/chevron-right.png";
+[2m2026-10-27T04:55:45.621036Z[0m [33m WARN[0m [2mjackdaw_api_internal::operator[0m[2m:[0m 1 Entity fields point outside the document; they are saved as raw ids, which a reload points by spawn order — rebind them after reopening
+test reference_audit::tests::a_dangling_entity_field_warns_once_at_the_save_boundary ... ok
+test project_window::tests::a_folder_row_opens_on_a_feathers_disclosure_toggle ... ok
+test project_window::tests::a_search_at_the_root_finds_a_file_two_folders_down ... ok
+test project_window::tests::a_search_that_gives_up_early_says_so ... ok
+[2m2026-10-27T04:55:45.625487Z[0m [33m WARN[0m [2mjackdaw_bsn::document::from_reflect[0m[2m:[0m value of type 'bevy_ecs::entity::Entity' has no BSN representation; storing its Debug form as a string
+test reference_audit::tests::an_entity_field_is_emitted_as_its_id_and_points_where_the_reader_spawned ... ok
+[2m2026-10-27T04:55:45.626284Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Could not find an asset loader matching: Asset Type: Some(TypeId(0x8823d019834ac64e788869992eb5514a)); Path: "embedded://bevy_feathers/assets/icons/chevron-right.png";
+test reference_rewrite::tests::a_folder_prefix_ends_on_a_component_boundary ... ok
+test project_window::tests::the_tree_marks_the_shown_folder ... ok
+test reference_rewrite::tests::a_twin_spelling_is_rewritten_as_the_new_paths_own_twin ... ok
+test reference_rewrite::tests::a_twin_spelling_is_the_binary_form_of_the_same_path ... ok
+[2m2026-10-27T04:55:45.630747Z[0m [33m WARN[0m [2mjackdaw_api_internal::operator[0m[2m:[0m scene 'zones/hedgerow.bsn': 2 references name files the project does not hold (2 missing) — run asset.audit for the list
+test reference_audit::tests::an_embedded_reference_survives_the_two_phase_load ... ok
+test remote::brp::tests::reads_a_chunked_body ... ok
+test reference_audit::tests::a_loaded_scene_warns_once_about_its_missing_references ... ok
+test remote::brp::tests::reads_a_content_length_body ... ok
+test remote::brp::tests::rejects_an_error_status ... ok
+test pie::graceful_stop_tests::force_stop_all_kills_now ... ok
+test remote::debug::archetypes::tests::reply_deserializes_from_brp_shape ... ok
+test remote::debug::archetypes::tests::sort_by_components_orders_by_set_length ... ok
+test remote::debug::archetypes::tests::sort_by_entities_ascending_reverses ... ok
+test remote::debug::archetypes::tests::sort_by_entities_descending_puts_largest_first ... ok
+test remote::debug::archetypes::tests::sort_by_size_orders_by_bytes_per_entity ... ok
+test remote::debug::archetypes::tests::sort_preserves_each_rows_original_index ... ok
+test remote::debug::depgraph::tests::access_badge_counts_reads_and_writes ... ok
+test remote::debug::depgraph::tests::access_badge_marks_all_and_exclusive_and_none ... ok
+test remote::debug::depgraph::tests::access_options_exclude_empty_components_and_dedup ... ok
+test remote::debug::depgraph::tests::degraded_hint_distinguishes_disconnected_from_old_game ... ok
+test remote::debug::depgraph::tests::manual_filter_requires_every_component ... ok
+test remote::debug::depgraph::tests::node_color_defaults_without_filter ... ok
+test remote::debug::depgraph::tests::selection_components_empty_without_selection_or_entity ... ok
+test remote::brp::tests::posts_to_a_local_server ... ok
+test remote::debug::depgraph::tests::selection_components_sorted_from_cached_entity ... ok
+test remote::debug::depgraph::tests::node_color_highlights_hits_and_dims_misses ... ok
+test remote::debug::depgraph::tests::selection_filter_matches_any_component ... ok
+test reference_audit::tests::an_embedded_name_the_document_defines_is_no_finding ... ok
+test remote::debug::depgraph::tests::short_name_fallback_matches_across_namespaces ... ok
+test remote::debug::depgraph::tests::unbounded_and_exclusive_match_any_component ... ok
+test remote::debug::diagnostics::tests::thousands_grouping ... ok
+test remote::debug::graph::tests::cycle_terminates_instead_of_looping_forever ... ok
+test remote::debug::graph::tests::diamond_layers_by_longest_path ... ok
+test remote::debug::graph::tests::force_layout_is_deterministic ... ok
+test remote::debug::graph::tests::force_layout_never_produces_nan_or_inf ... ok
+test remote::debug::graph::tests::force_layout_pulls_connected_nodes_closer ... ok
+test remote::debug::graph::tests::force_layout_returns_nothing_for_zero_nodes ... ok
+test remote::debug::graph::tests::isolated_node_is_layer_zero ... ok
+test remote::debug::graph::tests::linear_chain_layers_sequentially ... ok
+test remote::debug::graph::tests::out_of_range_edges_are_ignored ... ok
+test remote::debug::graph::tests::rows_are_unique_within_a_layer ... ok
+test remote::debug::queries::tests::brp_params_lists_components_by_full_path ... ok
+test remote::debug::queries::tests::matches_requires_all_with_and_no_without ... ok
+test remote::debug::queries::tests::parse_rows_extracts_id_name_and_sorted_components ... ok
+test remote::debug::queries::tests::parse_rows_handles_non_array ... ok
+test remote::debug::queries::tests::parse_rows_reads_struct_form_name ... ok
+test remote::debug::queries::tests::schema_is_component_reads_reflect_types ... ok
+test remote::debug::relationships::tests::hierarchy_from_empty_reply_is_empty ... ok
+test remote::debug::relationships::tests::hierarchy_parses_roots_children_and_drops_isolated_entities ... ok
+test remote::debug::relationships::tests::reply_deserializes_from_bare_json_array ... ok
+test remote::debug::schedules::tests::parsed_accesses_drive_the_box_badge ... ok
+test reference_audit::tests::the_audit_names_every_break_with_its_four_locations ... ok
+test remote::debug::schedules::tests::reply_defaults_access_fields_when_absent ... ok
+test remote::debug::schedules::tests::reply_defaults_edges_and_ambiguities_when_absent ... ok
+test remote::debug::schedules::tests::reply_deserializes_accesses_and_capability_flag ... ok
+test remote::debug::schedules::tests::reply_deserializes_edges_and_ambiguities ... ok
+test remote::debug::schedules::tests::short_system_name_passes_bare_name_through ... ok
+test remote::debug::schedules::tests::short_system_name_takes_final_segment ... ok
+test reference_rewrite::tests::a_reference_worn_through_a_newtype_component_is_rewritten_on_rename ... ok
+test remote::debug::sparkline::tests::empty_buffer_is_safe ... ok
+test remote::debug::sparkline::tests::min_max_over_current_window ... ok
+test remote::debug::sparkline::tests::push_evicts_oldest_at_capacity ... ok
+test remote::debug::sparkline::tests::set_samples_keeps_most_recent_window ... ok
+test remote::debug::sparkline::tests::set_samples_packs_window_and_bounds ... ok
+test remote::debug::style::tests::short_type_name_passes_bare_name_through ... ok
+test remote::debug::style::tests::short_type_name_strips_generics_then_takes_final_segment ... ok
+test remote::debug::style::tests::short_type_name_takes_final_segment_with_no_generics ... ok
+test remote::server::tests::a_declared_type_beats_the_json_spelling ... ok
+test remote::server::tests::a_failed_or_unknown_load_is_not_waited_on ... ok
+test remote::server::tests::a_glob_matches_in_order_and_anchors_where_it_has_no_star ... ok
+test remote::server::tests::a_listing_names_a_document_once_and_says_a_binary_twin_is_there ... ok
+test remote::server::tests::a_loading_model_is_work_the_editor_is_still_doing ... ok
+test remote::server::tests::a_pattern_with_no_star_matches_anywhere_in_the_path ... ok
+test remote::server::tests::a_pie_stopped_wait_holds_when_nothing_ever_ran ... ok
+test remote::server::tests::a_pie_stopped_wait_satisfies_when_the_session_already_ended ... ok
+test remote::server::tests::a_vector_reads_as_an_array_or_as_a_comma_list ... ok
+test remote::server::tests::an_undeclared_parameter_is_typed_by_its_spelling ... ok
+test remote::server::tests::pie_face_reports_a_stopped_session ... ok
+test remote::server::tests::selection_set_takes_bits_names_and_clears ... ok
+[2m2026-10-27T04:55:45.650325Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: graceful #1 asked to stop; exiting on its own for 2s
+[2m2026-10-27T04:55:45.650446Z[0m [31mERROR[0m [2mbevy_scene::scene_component[0m[2m:[0m Entity 3v0 was spawned with the "scene component" bevy_feathers::controls::slider::FeathersSlider, but without its scene. Scene components should not be spawned directly as components. Instead, they should be spawned as "scenes" using world.spawn_scene or commands.spawn_scene. Scene components should be included using `@bevy_feathers::controls::slider::FeathersSlider` syntax in BSN.
+test remote::server::tests::the_editor_port_is_not_the_game_port ... ok
+test remote::server::tests::the_export_face_reports_idle_ready_failed_and_building ... ok
+test remote::ui_probe::tests::a_disabled_ancestor_disables_the_control ... ok
+test remote::ui_probe::tests::a_fraction_maps_onto_the_controls_box ... ok
+test remote::ui_probe::tests::a_hidden_node_is_reported_invisible ... ok
+test remote::ui_probe::tests::yaw_and_pitch_read_back_compass_degrees ... ok
+test remote::ui_probe::tests::a_node_reports_its_narrowest_kind ... ok
+test render_backend::tests::a_valid_variable_is_honored_not_overridden ... ok
+test render_backend::tests::a_value_of_only_unknown_names_falls_back_like_an_unset_one ... ok
+test render_backend::tests::an_unset_variable_takes_the_platform_default ... ok
+test render_backend::tests::wgpu_env_parsing_matches_the_shapes_we_dispatch_on ... ok
+test render_diagnostics::tests::an_unset_environment_is_off ... ok
+test render_diagnostics::tests::anything_else_is_on ... ok
+test render_diagnostics::tests::zero_false_and_empty_are_off ... ok
+test pie::graceful_stop_tests::handle_stop_arms_the_window_and_waits_for_the_reap ... ok
+test restart::tests::a_project_with_nowhere_to_open_is_neither_opened_nor_reopened ... ok
+test restart::tests::absent_directories_still_compare ... ok
+[2m2026-10-27T04:55:45.654423Z[0m [33m WARN[0m [2mjackdaw::run_config[0m[2m:[0m jackdaw.toml parse error: TOML parse error at line 1, column 6
+  |
+1 | this is not = valid = toml [[
+  |      ^
+key with no value, expected `=`
+
+test restart::tests::the_reopened_editor_is_named_the_project_and_no_spent_switches ... ok
+test retired_window_tests::a_layout_naming_a_withdrawn_window_loads_without_its_tab ... ok
+test retired_window_tests::a_layout_naming_the_retired_windows_loads_with_one_project_window ... ok
+test run_config::tests::a_run_without_a_target_builds_the_default ... ok
+test run_config::tests::a_target_converts_field_for_field_to_a_cargo_target ... ok
+test run_config::tests::bad_toml_yields_empty_manifest ... ok
+test run_config::tests::finds_the_lib_name ... ok
+test run_config::tests::parses_a_manifest_string ... ok
+test run_config::tests::scaffold_has_a_default_run ... ok
+test scene_io::asset_fields::tests::a_drive_relative_spelling_is_a_machine_path_without_a_separator ... ok
+test scene_io::asset_fields::tests::a_field_a_project_type_marks_is_reported_though_the_editor_cannot_load_the_type ... ok
+test scene_io::asset_fields::tests::a_field_naming_no_asset_may_hold_whatever_it_likes ... ok
+test restart::tests::only_the_project_the_asset_root_was_built_from_opens_in_place ... ok
+test scene_io::asset_fields::tests::a_marked_field_is_reported_for_every_absolute_path_in_its_list ... ok
+test scene_io::asset_fields::tests::a_path_spelled_for_another_platform_is_a_machine_path_too ... ok
+test scene_io::asset_fields::tests::a_prefab_source_named_by_an_absolute_path_is_reported_with_its_field ... ok
+test scene_io::asset_fields::tests::a_source_named_under_the_assets_folder_passes ... ok
+test scene_io::camera_tests::document_cameras_are_deactivated_and_editor_cameras_kept ... ok
+test scene_io::camera_tests::editor_camera_settings_stay_out_of_the_save ... ok
+test scene_io::legacy::tests::fill_missing_with_defaults_completes_partial_struct ... ok
+test scene_io::legacy::tests::fill_missing_with_defaults_is_noop_for_complete_object ... ok
+test scene_io::load::declared_scene_kind_tests::a_2d_root_nested_in_a_subtree_is_found ... ok
+test scene_io::load::declared_scene_kind_tests::a_document_with_a_ui_root_is_a_ui_scene ... ok
+test scene_io::load::declared_scene_kind_tests::a_document_with_neither_marker_is_a_3d_scene ... ok
+test scene_io::load::declared_scene_kind_tests::a_qualified_2d_root_is_a_2d_scene ... ok
+test scene_io::load::declared_scene_kind_tests::a_type_merely_ending_in_the_2d_root_name_is_not_a_2d_scene ... ok
+[2m2026-10-27T04:55:45.660446Z[0m [33m WARN[0m [2mjackdaw::scene_io::load[0m[2m:[0m Terrain data C:\Users\linbo.zhang\AppData\Local\Temp\jd_terrin_118372_missing\gone.jdterrain is missing (系统找不到指定的文件。 (os error 2)); loading a flat terrain
+test scene_io::load::terrain_sidecar_import_tests::a_missing_sidecar_loads_flat_rather_than_erroring ... ok
+[2m2026-10-27T04:55:45.662155Z[0m [33m WARN[0m [2mjackdaw::scene_io::load[0m[2m:[0m scene.terrain-1.jdterrain: this terrain was drawn 1.9550343 metres per cell across and 0.48875856 along, which one square cell cannot describe. Its grid is respaced to 1.9550343 on both axes, so its ground has moved along Z.
+test scene_io::load::terrain_sidecar_import_tests::a_terrain_with_no_stored_data_is_hydrated_from_its_sidecar ... ok
+test scene_io::load::grid_settling_tests::a_sidecar_that_states_its_geometry_outranks_stale_scene_text ... ok
+test scene_io::load::grid_settling_tests::a_non_square_rect_settles_on_its_x_spacing_and_says_so ... ok
+test scene_io::load::ui_scene_detection_tests::a_fully_qualified_ui_scene_root_is_detected ... ok
+test scene_io::load::grid_settling_tests::settling_a_terrain_fills_its_cell_size_and_empties_the_inlets ... ok
+test scene_io::load::ui_scene_detection_tests::a_root_nested_in_a_subtree_is_detected ... ok
+test scene_io::load::ui_scene_detection_tests::a_scene_with_no_ui_root_is_not_a_ui_scene ... ok
+test scene_io::load::ui_scene_detection_tests::a_type_merely_ending_in_the_name_is_not_a_ui_root ... ok
+test scene_io::load::terrain_sidecar_import_tests::fill_missing_leaves_unsaved_edits_alone ... ok
+test scene_io::load::ui_scene_detection_tests::the_short_form_a_hand_authored_document_may_use_is_detected ... ok
+test scene_io::load::terrain_sidecar_import_tests::reload_overwrites_what_the_store_was_holding ... ok
+[2m2026-10-27T04:55:45.667521Z[0m [33m WARN[0m [2mjackdaw::scene_io::load[0m[2m:[0m Terrain data C:\Users\linbo.zhang\AppData\Local\Temp\jd_terr_118372_never-loaded\zone.terrain-0.jdterrain is missing (系统找不到指定的文件。 (os error 2)); loading a flat terrain
+test scene_io::legacy::tests::spawned_entities_carry_node_id_and_round_trip ... ok
+test scene_io::save::terrain_sidecar_tests::a_never_loaded_missing_sidecar_stays_saveable ... ok
+test scene_io::load::grid_settling_tests::a_declared_rects_ground_stays_where_it_was_through_the_migration ... ok
+[2m2026-10-27T04:55:45.670797Z[0m [32m INFO[0m [2mjackdaw::scene_io::save[0m[2m:[0m Terrain data written to C:\Users\linbo.zhang\AppData\Local\Temp\jd_terr_118372_flat-authored\zone.terrain-0.jdterrain
+[2m2026-10-27T04:55:45.672417Z[0m [33m WARN[0m [2mjackdaw::scene_io::load[0m[2m:[0m Terrain data C:\Users\linbo.zhang\AppData\Local\Temp\jd_terr_118372_unreadable\zone.terrain-0.jdterrain is unreadable (terrain sidecar version 12 is newer than this build); edits to this terrain are refused and save will not overwrite the file until it is fixed and reloaded
+test scene_io::save::terrain_sidecar_tests::a_flat_but_authored_terrain_round_trips_as_a_present_region ... ok[2m2026-10-27T04:55:45.672673Z[0m [33m WARN[0m [2mjackdaw_terrain::store[0m[2m:[0m Refusing to edit terrain data "zone.terrain-0.jdterrain": it failed to load; fix or replace the sidecar file and reload the scene
+
+[2m2026-10-27T04:55:45.672810Z[0m [33m WARN[0m [2mjackdaw::scene_io::save[0m[2m:[0m Not saving terrain data "zone.terrain-0.jdterrain": it failed to load, so writing would overwrite the original file with empty data. Fix or replace the sidecar and reload the scene.
+test pie::prebuild_tests::a_first_run_without_a_target_reuses_the_default_build ... ok
+test scene_io::save::terrain_sidecar_tests::a_sidecar_write_failure_is_returned_to_the_save_caller ... ok
+test scene_io::load::grid_settling_tests::an_import_that_finds_everything_already_loaded_reads_nothing ... ok
+test scene_io::save::terrain_sidecar_tests::a_512_terrain_contributes_almost_nothing_to_the_scene_text ... ok
+test pie::graceful_stop_tests::a_connecting_child_keeps_the_editor_stopped ... ok
+test scene_io::save::terrain_sidecar_tests::an_unreadable_sidecar_is_never_overwritten_by_a_save ... ok
+test scene_io::save::terrain_sidecar_tests::no_sidecar_when_the_scene_has_no_terrain ... ok
+test scene_io::save::tests::a_named_save_renames_the_tab_it_saves ... ok
+[2m2026-10-27T04:55:45.678484Z[0m [32m INFO[0m [2mjackdaw::scene_io::save[0m[2m:[0m Terrain data written to C:\Users\linbo.zhang\AppData\Local\Temp\jd_terr_118372_migrate\zone.terrain-0.jdterrain
+[2m2026-10-27T04:55:45.678547Z[0m [32m INFO[0m [2mjackdaw::scene_io::save[0m[2m:[0m Terrain data written to C:\Users\linbo.zhang\AppData\Local\Temp\jd_terr_118372_paint-roundtrip\zone.terrain-0.jdterrain
+test scene_io::save::tests::live_mode_save_uses_authored_values_not_live_overlays ... ok
+[2m2026-10-27T04:55:45.678935Z[0m [32m INFO[0m [2mjackdaw::scene_io::save[0m[2m:[0m Terrain data written to C:\Users\linbo.zhang\AppData\Local\Temp\jd_terr_118372_non-pow2\zone.terrain-0.jdterrain
+[2m2026-10-27T04:55:45.680126Z[0m [32m INFO[0m [2mjackdaw::scene_io::save[0m[2m:[0m Terrain data written to C:\Users\linbo.zhang\AppData\Local\Temp\jd_terr_118372_stable\zone.terrain-0.jdterrain
+[2m2026-10-27T04:55:45.680178Z[0m [32m INFO[0m [2mjackdaw::scene_io::save[0m[2m:[0m Terrain data written to C:\Users\linbo.zhang\AppData\Local\Temp\jd_terr_118372_scoped\zone.terrain-0.jdterrain
+test scene_io::save::terrain_sidecar_tests::authored_paint_and_materials_survive_a_save_and_reload ... ok
+test scene_io::save::terrain_sidecar_tests::a_pre_region_sidecar_migrates_on_load_and_saves_in_the_current_format ... ok
+[2m2026-10-27T04:55:45.681728Z[0m [32m INFO[0m [2mjackdaw::scene_io::save[0m[2m:[0m Terrain data written to C:\Users\linbo.zhang\AppData\Local\Temp\jd_terr_118372_roundtrip\zone.terrain-0.jdterrain
+[2m2026-10-27T04:55:45.681893Z[0m [31mERROR[0m [2mjackdaw::scene_io::save[0m[2m:[0m scene save failed: failed to write scene file C:\Users\linbo.zhang\AppData\Local\Temp\.tmpD9kAGQ\not-a-directory\zone.bsn: 系统找不到指定的路径。 (os error 3)
+
+test scene_io::save::tests::failed_authoritative_write_keeps_the_scene_dirty ... ok
+test scene_io::save::terrain_sidecar_tests::only_terrains_present_in_the_scene_are_written ... ok
+[2m2026-10-27T04:55:45.683169Z[0m [32m INFO[0m [2mjackdaw::scene_io::save[0m[2m:[0m Scene saved to C:\Users\linbo.zhang\AppData\Local\Temp\.tmpVucIlS\zone.bsn
+test scene_io::save::terrain_sidecar_tests::a_non_power_of_two_sidecar_opens_and_embeds_every_height ... ok
+test scene_io::stamp::tests::stamp_round_trips ... ok
+test scene_io::save::terrain_sidecar_tests::writes_a_sidecar_that_decodes_back_to_the_sculpted_heights ... ok
+test scene_io::save::tests::save_scene_with_outcome_reports_failed_on_a_blocked_write ... [2m2026-10-27T04:55:45.685503Z[0m [32m INFO[0m [2mjackdaw::scene_io::save[0m[2m:[0m Terrain data written to C:\Users\linbo.zhang\AppData\Local\Temp\.tmp6rN0K7\zone.terrain-0.jdterrain
+ok
+[2m2026-10-27T04:55:45.685568Z[0m [32m INFO[0m [2mjackdaw::scene_io::save[0m[2m:[0m Scene saved to C:\Users\linbo.zhang\AppData\Local\Temp\.tmpTJ5VJv\zone.bsn
+test scene_nodes::tests::a_dead_entity_whose_node_is_gone_comes_back_unchanged ... ok
+test scene_nodes::tests::a_despawned_entity_resolves_to_the_entity_holding_its_node_now ... ok
+test scene_io::save::tests::save_scene_with_outcome_reports_saved_on_success ... [2m2026-10-27T04:55:45.686734Z[0m [32m INFO[0m [2mjackdaw::scene_io::save[0m[2m:[0m Terrain data written to C:\Users\linbo.zhang\AppData\Local\Temp\jd_terr_118372_stable\zone.terrain-0.jdterrain
+ok
+[2m2026-10-27T04:55:45.687021Z[0m [33m WARN[0m [2mjackdaw::scenes::operators[0m[2m:[0m scene.save_all: cannot save dirty untitled tab 0 without a path
+test scene_nodes::tests::a_node_held_by_two_entities_resolves_to_neither_until_one_goes ... [2m2026-10-27T04:55:45.687177Z[0m [33m WARN[0m [2mjackdaw::scenes::confirm_dialog[0m[2m:[0m leaving cancelled because one or more scenes could not be saved
+ok
+test scene_io::save::tests::write_atomic_leaves_the_destination_untouched_on_failure ... ok
+test scenes::confirm_dialog::apply_confirm_dialog_action_tests::a_failed_save_disarms_the_project_pick_and_the_wording ... ok
+test scenes::confirm_dialog::apply_confirm_dialog_action_tests::a_saved_project_closes_without_a_prompt ... ok
+test scene_io::save::tests::saving_a_sidecar_leaves_the_store_current_with_the_file ... ok
+test scenes::confirm_dialog::apply_confirm_dialog_action_tests::unsaved_work_holds_the_project_open_until_it_is_answered ... ok
+test scene_io::save::tests::successful_scene_write_finishes_before_the_tab_becomes_clean ... ok
+test scene_io::save::terrain_sidecar_tests::saving_twice_produces_identical_bytes ... ok
+test schema_values::tests::a_field_arriving_takes_the_place_its_type_declares_it_in ... [2m2026-10-27T04:55:45.689967Z[0m [31mERROR[0m [2mjackdaw::scene_io::save[0m[2m:[0m scene save failed: failed to write scene file C:\Users\linbo.zhang\AppData\Local\Temp\.tmp14IxCR\not-a-directory\zone.bsn: 系统找不到指定的路径。 (os error 3)
+
+ok[2m2026-10-27T04:55:45.690130Z[0m [33m WARN[0m [2mjackdaw::scenes::confirm_dialog[0m[2m:[0m confirm_dialog: save failed; keeping tab 0 open
+
+test schema_values::tests::a_field_holding_what_its_type_defaults_to_stops_being_authored ... ok
+test schema_values::tests::a_field_the_patch_already_spells_keeps_the_place_it_has ... ok
+test scene_io::save::tests::write_atomic_replaces_existing_content_and_cleans_up_its_temp_file ... ok
+test scenes::confirm_dialog::apply_confirm_dialog_action_tests::a_failed_save_still_clears_pending_tab_close ... ok
+test schema_values::tests::a_field_the_type_does_not_declare_arrives_at_the_end ... ok
+test schema_values::tests::a_path_splits_into_fields_and_indices ... ok
+test schema_values::tests::a_serde_shaped_single_field_variant_takes_its_value_directly ... ok
+test scene_io::load::grid_settling_tests::reopening_a_warm_store_reads_no_sidecar_again ... ok
+test schema_values::tests::a_vec_field_reports_the_type_it_holds ... ok
+test schema_values::tests::a_write_reaches_through_a_list_row ... ok
+test schema_values::tests::a_write_to_a_row_that_is_not_there_is_refused ... ok
+[2m2026-10-27T04:55:45.694475Z[0m [31mERROR[0m [2mjackdaw::screenshot[0m[2m:[0m JACKDAW_SHOT: no viewport panel is open to capture
+test schema_values::tests::an_index_spelled_as_a_field_reaches_the_element_and_a_field_of_that_name_wins ... ok
+test schema_values::tests::writing_through_an_index_spelled_as_a_field_writes_the_element ... ok
+test screenshot::tests::a_capture_that_never_starts_emits_app_exit_only_once ... ok
+test screenshot::tests::capturing_a_window_target_reports_not_an_image_target ... ok
+test screenshot::tests::capturing_without_a_viewport_reports_no_viewport ... ok
+test screenshot::tests::default_path_is_a_png_under_the_project ... ok
+test sdk_setup::tests::a_failed_build_names_its_log_and_offers_a_retry ... ok
+test scrolling_log::tests::changed_content_reaches_the_inner_text_and_pins_to_the_bottom ... ok
+test sdk_setup::tests::a_ready_sdk_offers_nothing ... ok
+test sdk_setup::tests::a_running_build_names_the_project_waiting_on_it ... ok
+test sdk_setup::tests::an_unbuilt_sdk_offers_a_build_and_says_only_extensions_need_it ... ok
+test sdk_setup::tests::build_progress_reads_as_phase_crate_and_count ... ok
+test sdk_setup::tests::opening_anything_with_a_ready_sdk_proceeds ... ok
+test status_bar::tests::notices_carry_their_level ... ok
+test scene_nodes::tests::the_oldest_despawned_entities_are_forgotten_first ... ok
+test terrain::autoterrain_ops::tests::a_no_op_change_leaves_no_history_entry ... ok
+test terrain::autoterrain_ops::tests::a_quarantined_terrain_refuses_the_change_by_name ... ok
+test terrain::autoterrain_ops::tests::a_range_call_naming_neither_end_does_nothing ... ok
+test terrain::autoterrain_ops::tests::a_terrain_starts_with_autoterrain_off ... ok
+test terrain::autoterrain_ops::tests::an_angle_spelled_as_a_whole_number_is_still_an_angle ... ok
+test terrain::autoterrain_ops::tests::an_end_dragged_past_its_partner_stops_a_band_short_of_it ... ok[2m2026-10-27T04:55:45.701208Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Could not find an asset loader matching: Asset Type: Some(TypeId(0x324e772be850971740a8d275d3d3bb5e)); Path: "models/flag.glb#Scene0";
+
+[2m2026-10-27T04:55:45.701208Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Could not find an asset loader matching: Asset Type: Some(TypeId(0x324e772be850971740a8d275d3d3bb5e)); Path: "models/flag.glb#Scene0";
+test terrain::autoterrain_ops::tests::enable_takes_an_explicit_value_and_flips_without_one ... [2m2026-10-27T04:55:45.701397Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Could not find an asset loader matching: Asset Type: Some(TypeId(0x324e772be850971740a8d275d3d3bb5e)); Path: "models/flag.glb#Scene0";
+ok[2m2026-10-27T04:55:45.701872Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Could not find an asset loader matching: Asset Type: Some(TypeId(0x324e772be850971740a8d275d3d3bb5e)); Path: "models/flag.glb#Scene0";
+
+[2m2026-10-27T04:55:45.701472Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Could not find an asset loader matching: Asset Type: Some(TypeId(0x324e772be850971740a8d275d3d3bb5e)); Path: "models/banner.glb#Scene0";
+[2m2026-10-27T04:55:45.701748Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Could not find an asset loader matching: Asset Type: Some(TypeId(0x324e772be850971740a8d275d3d3bb5e)); Path: "models/flag.glb#Scene0";
+test terrain::autoterrain_ops::tests::every_setting_undoes_back_to_what_it_was ... [2m2026-10-27T04:55:45.701406Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Could not find an asset loader matching: Asset Type: Some(TypeId(0x324e772be850971740a8d275d3d3bb5e)); Path: "models/flag.glb#Scene0";
+ok[2m2026-10-27T04:55:45.702056Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Could not find an asset loader matching: Asset Type: Some(TypeId(0x324e772be850971740a8d275d3d3bb5e)); Path: "models/flag.glb#Scene0";
+
+test terrain::autoterrain_ops::tests::moving_one_end_of_the_range_leaves_the_other_alone ... ok
+test terrain::autoterrain_ops::tests::the_range_clamps_to_the_slopes_that_exist ... ok
+test schema_preview::tests::a_host_spawned_after_the_first_pass_gets_its_preview ... ok
+test schema_preview::tests::a_new_preview_path_in_the_metadata_replaces_the_preview ... ok
+test terrain::autoterrain_ops::tests::the_two_slots_are_chosen_independently_and_clamp_to_the_id_space ... ok
+test schema_preview::tests::a_component_added_to_a_hosts_node_brings_its_preview ... ok
+test terrain::brush_ring_tests::the_ring_closes_on_itself ... ok
+test schema_preview::tests::a_preview_taken_down_elsewhere_comes_back ... ok
+test terrain::brush_ring_tests::the_ring_rides_the_grid_where_it_actually_sits ... ok
+test terrain::channel_ops::mint_channel_name_tests::does_not_repeat_after_a_remove_from_the_middle ... ok
+test schema_preview::tests::an_authored_visual_stands_in_for_the_preview_while_it_is_there ... ok
+test terrain::channel_ops::mint_channel_name_tests::starts_at_zero_for_an_empty_terrain ... ok
+test terrain::channel_ops::picked_tests::a_mask_named_like_a_number_is_that_mask_and_not_that_position ... ok
+test sdk_setup::tests::opening_a_game_with_no_sdk_proceeds ... ok
+test terrain::channel_ops::picked_tests::a_palette_label_that_looks_like_a_number_wins_over_the_number ... ok
+test terrain::channel_ops::remove_tests::a_captured_channel_counts_against_the_history_budget ... ok
+test terrain::channel_ops::remove_tests::undoing_a_channel_remove_restores_its_painted_values ... ok
+test terrain::detail::tests::a_painted_cell_alone_reseeds_nothing ... ok
+test terrain::detail::tests::adding_a_layer_reseeds_the_field ... ok
+test terrain::detail::tests::an_unchanged_projection_reseeds_nothing ... ok
+test terrain::detail::tests::changing_only_the_look_reseeds_nothing ... ok
+test terrain::detail::tests::changing_where_instances_stand_reseeds_the_field ... ok
+test terrain::detail::tests::only_the_placement_fields_reseed_the_field ... ok
+test terrain::detail::tests::removing_a_middle_layer_reseeds_the_field ... ok
+test terrain::detail_ops::tests::a_colour_takes_three_channels_and_clamps_them ... ok
+test terrain::detail_ops::tests::a_range_is_stored_low_end_first ... ok
+test terrain::detail_ops::tests::a_scalar_field_takes_a_number_and_refuses_anything_else ... ok
+test terrain::detail_ops::tests::a_varietys_weight_tint_and_height_scale_are_written_and_bounded ... ok
+test terrain::detail_ops::tests::aligning_to_the_normal_takes_only_a_bool ... ok
+test terrain::detail_ops::tests::an_unknown_field_is_refused ... ok
+test terrain::detail_ops::tests::the_fields_a_frame_pays_for_are_capped ... ok
+test terrain::detail_ops::tests::the_mesh_takes_the_card_and_refuses_a_file_that_is_not_there ... ok
+test terrain::detail_ops::tests::the_name_and_the_density_channel_take_a_name_but_not_an_empty_one ... ok
+test terrain::export::tests::a_missing_global_transform_falls_back_to_local_space ... ok
+test terrain::export::tests::agreeing_terrain_and_flags_are_accepted_as_terrain_sourced ... ok
+test terrain::export::tests::disagreeing_terrain_and_flags_are_refused_naming_both ... ok
+test terrain::export::tests::flags_are_used_when_terrain_quantization_is_off ... ok
+test terrain::export::tests::neither_terrain_nor_flags_is_unquantized ... ok
+test terrain::export::tests::one_flag_without_the_other_is_rejected ... ok
+test terrain::export::tests::terrain_origin_uses_world_translation_and_rejects_unrepresentable_transforms ... ok
+test terrain::export::tests::terrain_quantization_disabled_falls_through_to_flags_even_with_stale_values ... ok
+test terrain::export::tests::terrain_quantization_wins_when_enabled ... ok
+test terrain::import::tests::a_detail_image_naming_a_layer_this_terrain_has_not_got_is_refused ... ok
+test terrain::import::tests::a_height_range_is_two_numbers_and_anything_else_is_refused ... ok
+test terrain::import::tests::a_pair_missing_one_of_its_sides_is_refused ... ok
+test terrain::import::tests::a_path_that_walks_out_of_the_project_is_refused ... ok
+test terrain::import::tests::a_weight_naming_a_slot_with_no_material_is_refused ... ok
+test terrain::export::tests::placements_export_the_propagated_world_transform ... ok
+[2m2026-10-27T04:55:45.716265Z[0m [31mERROR[0m [2mjackdaw::pie[0m[2m:[0m PIE: graceful #1 exited with exit code: 1
+[2m2026-10-27T04:55:45.717140Z[0m [33m WARN[0m [2mjackdaw::terrain::import[0m[2m:[0m this terrain has no detail layer 2
+test pie::graceful_stop_tests::a_self_exit_inside_the_window_is_graceful ... ok
+test terrain::import::tests::importing::a_channel_image_paints_its_value_where_it_is_not_black ... ok
+[2m2026-10-27T04:55:45.719136Z[0m [33m WARN[0m [2mjackdaw::terrain::import[0m[2m:[0m choose the image the channel row for mask reads
+test terrain::import::tests::importing::a_channel_the_terrain_does_not_declare_is_added_by_the_import ... ok
+test terrain::import::tests::importing::a_heightmap_of_another_resolution_resamples_to_the_terrains ... ok
+test terrain::import::tests::importing::a_detail_image_naming_no_layer_is_refused_and_the_terrain_is_unchanged ... ok
+[2m2026-10-27T04:55:45.721351Z[0m [33m WARN[0m [2mjackdaw::terrain::import[0m[2m:[0m this terrain has no material in slot 3
+[2m2026-10-27T04:55:45.721461Z[0m [33m WARN[0m [2mjackdaw::terrain::import[0m[2m:[0m "../ramp8.png" is outside this project's assets
+test terrain::import::tests::importing::a_panel_row_with_no_image_is_refused_and_the_terrain_is_unchanged ... ok
+test terrain::import::tests::importing::a_detail_image_lays_the_layers_mask_down ... ok
+test terrain::import::tests::importing::a_heightmap_outside_the_project_is_refused_and_the_terrain_is_unchanged ... ok
+test terrain::import::tests::importing::a_weight_naming_an_empty_slot_is_refused_and_the_terrain_is_unchanged ... ok
+test terrain::import::tests::importing::an_8_bit_and_a_16_bit_heightmap_import_to_the_same_heights ... ok
+test terrain::import::tests::importing::heights_weights_channels_and_details_are_one_undo_step ... ok
+test terrain::import::tests::importing::undo_restores_the_masks_and_drops_the_one_the_import_minted ... ok
+test terrain::import::tests::importing::undo_restores_the_heights_and_the_paint ... ok
+test terrain::import::tests::importing::weights_paint_the_named_slots_and_normalise ... ok
+[2m2026-10-27T04:55:45.733075Z[0m [33m WARN[0m [2mjackdaw::pie[0m[2m:[0m PIE: cannot build C:\Users\linbo.zhang\AppData\Local\Temp\jackdaw-prebuild-test-no-such-project: cargo could not read C:\Users\linbo.zhang\AppData\Local\Temp\jackdaw-prebuild-test-no-such-project: could not run cargo: 目录名称无效。 (os error 267)
+test pie::prebuild_tests::a_first_run_with_a_target_prebuilds_under_its_own_key ... ok
+[2m2026-10-27T04:55:45.733554Z[0m [33m WARN[0m [2mjackdaw::pie[0m[2m:[0m PIE: cannot build C:\Users\linbo.zhang\AppData\Local\Temp\jackdaw-prebuild-test-no-such-project: cargo could not read C:\Users\linbo.zhang\AppData\Local\Temp\jackdaw-prebuild-test-no-such-project: could not run cargo: 目录名称无效。 (os error 267)
+test terrain::import::tests::importing::the_panels_rows_import_as_the_same_undo_entry_as_the_arguments ... ok
+test pie::prebuild_tests::the_setting_on_reaches_the_build_attempt ... ok
+test terrain::mesh::tests::a_hole_only_rebuild_still_follows_the_terrain_onto_its_material ... ok
+test terrain::mesh::tests::a_stroke_on_one_terrain_leaves_another_terrains_surface_alone ... ok
+[2m2026-10-27T04:55:45.736915Z[0m [32m INFO[0m [2mjackdaw_runtime[0m[2m:[0m Loaded project catalog with 0 entries from E:\Project\rust\jackdaw\assets\catalog.bsn
+test terrain::mesh::tests::a_129_resolution_terrain_meshes ... ok
+test terrain::mesh::tests::a_level_whose_terrain_is_gone_is_retired ... ok
+test terrain::mesh::tests::a_terrain_with_no_regions_draws_nothing ... ok
+[2m2026-10-27T04:55:45.740645Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Could not find an asset loader matching: Asset Type: Some(TypeId(0x8823d019834ac64e788869992eb5514a)); Path: "embedded://bevy_feathers/assets/icons/chevron-right.png";
+[2m2026-10-27T04:55:45.741048Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Could not find an asset loader matching: Asset Type: Some(TypeId(0x8823d019834ac64e788869992eb5514a)); Path: "embedded://bevy_feathers/assets/icons/chevron-right.png";
+[2m2026-10-27T04:55:45.741151Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Could not find an asset loader matching: Asset Type: Some(TypeId(0x8823d019834ac64e788869992eb5514a)); Path: "embedded://bevy_feathers/assets/icons/chevron-right.png";
+[2m2026-10-27T04:55:45.741690Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Could not find an asset loader matching: Asset Type: Some(TypeId(0x8823d019834ac64e788869992eb5514a)); Path: "embedded://bevy_feathers/assets/icons/chevron-right.png";
+test terrain::mesh::tests::hidden_with_no_active_region_still_draws_the_whole_terrain ... [2m2026-10-27T04:55:45.741954Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Could not find an asset loader matching: Asset Type: Some(TypeId(0x8823d019834ac64e788869992eb5514a)); Path: "embedded://bevy_feathers/assets/icons/chevron-right.png";
+ok[2m2026-10-27T04:55:45.742149Z[0m [33m WARN[0m [2mjackdaw_runtime::terrain[0m[2m:[0m no active Camera3d, so terrain has no viewer to lay its levels around and will not draw
+
+test terrain::inspector::update_terrain_inspector_tests::a_quarantined_terrains_read_only_reason_surfaces_in_the_inspector ... ok
+test terrain::new_terrain_tests::a_new_terrain_declares_spacing_not_extent ... ok
+test terrain::inspector::update_terrain_inspector_tests::a_container_that_appears_a_frame_late_still_gets_rendered ... ok
+test terrain::inspector::update_terrain_inspector_tests::tool_and_parameter_sections_stay_out_of_the_components_inspector ... ok
+test terrain::new_terrain_tests::the_components_default_stays_the_shape_older_scenes_elided ... ok
+test terrain::inspector::update_terrain_inspector_tests::terrain_properties_render_for_a_never_generated_terrain ... ok
+test terrain::ops::tests::exit_to_select_is_unavailable_mid_stroke ... ok
+test terrain::ops::tests::palette_keybinds_use_alt_not_plain_digits ... ok
+test terrain::inspector::update_terrain_inspector_tests::every_docked_container_gets_rendered ... ok
+test terrain::options_bar::tests::bar_state_changes_on_mode_switch ... ok
+test terrain::options_bar::tests::bar_state_changes_on_paint_target_switch ... ok
+test terrain::mesh::tests::hiding_the_other_regions_drops_their_quads_and_no_stored_word ... ok
+test terrain::options_bar::tests::bar_state_changes_on_region_view_switch ... ok
+test terrain::options_bar::tests::bar_state_changes_when_the_base_slots_material_changes ... ok
+test terrain::options_bar::tests::bar_state_changes_when_a_thumbnail_finishes_loading ... ok
+test terrain::paint::tests::a_mismatched_snapshot_length_does_not_panic ... ok
+test terrain::paint::tests::a_restoring_stroke_releases_cells_without_touching_their_paint ... ok
+test terrain::ops::tests::generating_on_a_fresh_terrain_lays_down_ground ... ok
+test terrain::paint::tests::a_stale_palette_selection_falls_back_to_zero ... ok
+test terrain::paint::tests::a_restoring_stroke_works_on_a_terrain_with_no_materials_at_all ... [2m2026-10-27T04:55:45.749868Z[0m [33m WARN[0m [2mjackdaw_terrain::store[0m[2m:[0m Refusing to edit terrain data "zone.terrain-0.jdterrain": it failed to load; fix or replace the sidecar file and reload the scene
+ok
+test terrain::paint::tests::a_stroke_keeps_doing_what_it_started_as ... ok
+test terrain::paint::tests::a_terrain_with_no_channels_has_nothing_to_paint ... ok
+test terrain::paint::tests::ctrl_erases_regardless_of_the_selected_entry ... ok
+test terrain::paint::tests::execute_and_undo_round_trip_the_whole_control_layer ... ok
+test terrain::paint::tests::painting_with_an_in_range_active_texture_id_paints_normally ... ok
+test terrain::paint::tests::painting_a_quarantined_terrain_is_a_no_op ... ok
+test terrain::paint::tests::painting_with_an_out_of_range_active_texture_id_leaves_the_control_map_untouched ... ok
+test terrain::paint::tests::the_brush_writes_the_selected_palette_entrys_value ... ok
+test terrain::palette::tests::each_sculpt_tool_highlights_only_its_own_entry ... ok
+test terrain::palette::tests::paint_and_quantize_highlight_only_their_own_mode ... ok
+test terrain::mesh::tests::a_small_camera_move_re_snaps_only_the_fine_levels ... ok
+test terrain::export::tests::loaded_scene_propagates_parent_rotation_before_export_reads_transforms ... ok
+test terrain::palette::tests::the_regions_entry_highlights_only_its_own_mode ... ok
+test terrain::palette::tests::unrelated_operator_ids_are_left_alone ... ok
+test terrain::panel::tests::a_later_shape_drag_tick_moves_the_chip_again ... ok
+test terrain::panel::tests::a_later_drag_tick_resyncs_again ... ok
+[2m2026-10-27T04:55:45.757139Z[0m [33m WARN[0m [2mjackdaw::terrain::panel[0m[2m:[0m terrain.panel.tab: unrecognized tab "nonsense", falling back to "scatter"
+test terrain::panel::tests::a_drag_past_the_limit_shows_the_clamped_cell_size ... ok
+test terrain::panel::tests::an_unrecognized_value_falls_back_to_scatter ... ok
+test terrain::mesh::tests::an_unmoved_level_is_not_rebuilt ... ok
+test terrain::panel::tests::recognized_values_switch_the_active_tab ... ok
+test terrain::panel::tests::an_intermediate_drag_tick_moves_the_chip_without_committing ... ok
+test terrain::panel::tests::erosion_field_also_resyncs_live ... ok
+[2m2026-10-27T04:55:45.761968Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Could not find an asset loader matching: Asset Type: Some(TypeId(0x8823d019834ac64e788869992eb5514a)); Path: "embedded://bevy_feathers/assets/icons/chevron-right.png";
+[2m2026-10-27T04:55:45.762247Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Could not find an asset loader matching: Asset Type: Some(TypeId(0x8823d019834ac64e788869992eb5514a)); Path: "embedded://bevy_feathers/assets/icons/chevron-right.png";
+test terrain::panel::tests::intermediate_drag_tick_updates_state_and_resyncs_the_widget_live ... [2m2026-10-27T04:55:45.762736Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Could not find an asset loader matching: Asset Type: Some(TypeId(0x8823d019834ac64e788869992eb5514a)); Path: "embedded://bevy_feathers/assets/icons/chevron-right.png";
+ok[2m2026-10-27T04:55:45.762905Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Could not find an asset loader matching: Asset Type: Some(TypeId(0x7274def2e2b8b74464262d2f604e6a54)); Path: "embedded://bevy_feathers/assets/fonts/FiraMono-Medium.ttf";
+
+[2m2026-10-27T04:55:45.763119Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Could not find an asset loader matching: Asset Type: Some(TypeId(0x7274def2e2b8b74464262d2f604e6a54)); Path: "embedded://bevy_feathers/assets/fonts/FiraMono-Medium.ttf";
+test terrain::panel::tests::a_quarantined_terrain_shows_only_its_reason ... ok
+[2m2026-10-27T04:55:45.763405Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Could not find an asset loader matching: Asset Type: Some(TypeId(0x7274def2e2b8b74464262d2f604e6a54)); Path: "embedded://bevy_feathers/assets/fonts/FiraMono-Medium.ttf";
+test terrain::panel::tests::a_missing_material_is_named_and_keeps_its_tile ... ok
+test terrain::panel::tests::a_vacated_id_shows_as_an_empty_tile_with_no_controls_behind_it ... ok
+test terrain::panel::tests::a_refused_add_renders_its_reason ... ok
+test terrain::quantize_ops::tests::undoing_an_apply_restores_the_cell_size_it_replaced ... ok[2m2026-10-27T04:55:45.766271Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Could not find an asset loader matching: Asset Type: Some(TypeId(0x8823d019834ac64e788869992eb5514a)); Path: "embedded://bevy_feathers/assets/icons/chevron-right.png";
+
+test terrain::panel::tests::the_final_drag_tick_commits_the_cell_size ... ok
+[2m2026-10-27T04:55:45.766992Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Could not find an asset loader matching: Asset Type: Some(TypeId(0x7274def2e2b8b74464262d2f604e6a54)); Path: "embedded://bevy_feathers/assets/fonts/FiraMono-Medium.ttf";
+test terrain::quantize_ops::tests::apply_pins_the_cell_size_and_writes_no_rectangle ... ok
+test terrain::panel::tests::an_array_build_failure_renders_beside_the_list ... ok
+test terrain::regions::tests::a_vertex_lands_in_the_region_that_holds_it ... ok
+test terrain::regions::tests::base_only_substitutes_the_default_word_outside_the_active_region ... ok
+test terrain::regions::tests::base_only_with_no_active_region_changes_nothing ... ok
+[2m2026-10-27T04:55:45.769948Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Could not find an asset loader matching: Asset Type: Some(TypeId(0x8823d019834ac64e788869992eb5514a)); Path: "embedded://bevy_feathers/assets/icons/chevron-right.png";
+test terrain::regions::pointer_tests::a_press_on_open_ground_names_a_region ... ok
+[2m2026-10-27T04:55:45.770539Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Could not find an asset loader matching: Asset Type: Some(TypeId(0x8823d019834ac64e788869992eb5514a)); Path: "embedded://bevy_feathers/assets/icons/chevron-right.png";
+test terrain::regions::tests::every_visibility_mode_round_trips_through_its_parameter ... [2m2026-10-27T04:55:45.770802Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Could not find an asset loader matching: Asset Type: Some(TypeId(0x8823d019834ac64e788869992eb5514a)); Path: "embedded://bevy_feathers/assets/icons/chevron-right.png";
+[2m2026-10-27T04:55:45.770816Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Could not find an asset loader matching: Asset Type: Some(TypeId(0x7274def2e2b8b74464262d2f604e6a54)); Path: "embedded://bevy_feathers/assets/fonts/FiraMono-Medium.ttf";
+ok
+[2m2026-10-27T04:55:45.771150Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Could not find an asset loader matching: Asset Type: Some(TypeId(0x7274def2e2b8b74464262d2f604e6a54)); Path: "embedded://bevy_feathers/assets/fonts/FiraMono-Medium.ttf";
+test terrain::regions::tests::every_mode_but_base_only_passes_the_stored_words_through ... ok
+[2m2026-10-27T04:55:45.771667Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Could not find an asset loader matching: Asset Type: Some(TypeId(0x7274def2e2b8b74464262d2f604e6a54)); Path: "embedded://bevy_feathers/assets/fonts/FiraMono-Medium.ttf";
+test terrain::regions::pointer_tests::a_press_on_the_tool_palette_names_no_region ... ok
+test terrain::regions::tests::full_draws_every_region ... ok
+test terrain::regions::tests::hidden_keeps_only_the_active_region ... ok
+test terrain::regions::tests::hidden_with_no_active_region_draws_everything ... [2m2026-10-27T04:55:45.772741Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Could not find an asset loader matching: Asset Type: Some(TypeId(0x8823d019834ac64e788869992eb5514a)); Path: "embedded://bevy_feathers/assets/icons/chevron-right.png";
+ok
+test terrain::regions::tests::hiding_one_terrains_regions_leaves_another_terrain_whole ... ok
+[2m2026-10-27T04:55:45.773574Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m terrain.scatter: refused: density 1000 over 1000000 square units would place roughly 1000000000 instances, over the 100000 limit; lower density or spacing and try again
+test terrain::regions::tests::only_hidden_makes_the_geometry_depend_on_the_active_region ... ok
+test terrain::panel::tests::the_autoterrain_section_offers_both_slot_pickers_and_both_angles ... ok
+[2m2026-10-27T04:55:45.774129Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m terrain.scatter: refused: no ground to scatter on; generate the terrain first
+test terrain::panel::tests::the_autoterrain_pickers_say_what_is_missing_before_any_material_is_added ... ok[2m2026-10-27T04:55:45.774186Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Could not find an asset loader matching: Asset Type: Some(TypeId(0x7274def2e2b8b74464262d2f604e6a54)); Path: "embedded://bevy_feathers/assets/fonts/FiraMono-Medium.ttf";
+
+test terrain::scatter::tests::a_negative_weight_channel_turns_the_weight_off ... ok
+[2m2026-10-27T04:55:45.774815Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Could not find an asset loader matching: Asset Type: Some(TypeId(0x8823d019834ac64e788869992eb5514a)); Path: "embedded://bevy_feathers/assets/icons/chevron-right.png";
+test terrain::scatter::tests::a_palette_entry_captions_with_its_file_stem ... ok
+test terrain::panel::tests::the_base_slot_is_badged_and_no_other_slot_is ... ok[2m2026-10-27T04:55:45.775294Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Could not find an asset loader matching: Asset Type: Some(TypeId(0x7274def2e2b8b74464262d2f604e6a54)); Path: "embedded://bevy_feathers/assets/fonts/FiraMono-Medium.ttf";
+
+test terrain::scatter::tests::a_pathological_density_is_refused_before_running_the_kernel ... ok
+test terrain::scatter::tests::a_tilted_normal_tilts_the_instance ... ok
+test terrain::scatter::tests::a_terrain_with_no_ground_is_refused_before_running_the_kernel ... ok
+test terrain::scatter::tests::an_instance_is_stored_in_terrain_local_space ... ok
+test terrain::panel::tests::the_picker_shows_unsaved_materials_and_marks_them ... ok
+test terrain::panel::tests::the_picker_says_so_when_there_is_nothing_to_offer ... ok
+test terrain::scatter::tests::numeric_fields_clamp_rather_than_going_negative ... ok
+test terrain::scatter::tests::asset_draft_field_is_not_given_a_slider_value ... ok
+test terrain::scatter::tests::only_active_palette_entries_take_part_in_a_run ... ok
+test terrain::scatter::tests::untouched_means_the_transform_still_equals_the_generated_one ... ok
+test terrain::scatter_data::tests::a_group_re_run_keeps_the_row_it_already_had ... ok
+test terrain::scatter_data::tests::a_promoted_placement_reports_where_it_stood_and_leaves_the_document ... ok
+test terrain::scatter_data::tests::a_stamp_stores_its_placements_and_undo_takes_them_away_again ... ok
+[2m2026-10-27T04:55:45.784408Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m terrain.scatter: placed 53 in 'Hill Scatter'
+test terrain::scatter_data::tests::a_terrain_with_no_document_says_so_rather_than_storing_nothing_quietly ... ok
+[2m2026-10-27T04:55:45.785364Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m terrain.scatter: adopted 'Scatter_Trees': 1 placements now stored on the terrain
+[2m2026-10-27T04:55:45.785512Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m terrain.scatter: cleared 'woods': 1 placements removed
+test terrain::scatter_data::tests::a_snapshot_round_trips_a_document_it_was_taken_from ... ok
+test terrain::scatter::tests::intermediate_drag_tick_updates_state_and_resyncs_the_widget_live ... ok
+test terrain::scatter::tests::a_run_stores_its_placements_on_the_terrain_in_terrain_space ... ok
+test terrain::scatter_data::tests::an_undo_entry_costs_the_placements_rather_than_the_document ... ok
+test terrain::scatter_data::tests::clearing_a_group_leaves_the_others_alone ... ok
+test terrain::scatter::tests::clearing_a_stored_group_leaves_the_others_standing ... ok
+test terrain::scatter_data::tests::re_running_a_group_replaces_its_placements_rather_than_adding_to_them ... ok
+test terrain::scatter_data::tests::undoing_a_stamp_gives_back_the_ground_it_allocated ... ok
+test terrain::scatter::tests::adopting_a_hand_authored_group_stores_its_models_as_placements ... ok
+test terrain::sculpt::tests::brushing_in_place_lands_the_same_terrain_as_copying_out_and_back ... ok
+[2m2026-10-27T04:55:45.790265Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m terrain.scatter: adopted 'Scatter_Trees': 1 placements now stored on the terrain
+[2m2026-10-27T04:55:45.790620Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Could not find an asset loader matching: Asset Type: Some(TypeId(0x324e772be850971740a8d275d3d3bb5e)); Path: "kit/Tree.gltf#Scene0";
+test terrain::sculpt::pointer_tests::a_press_on_open_ground_targets_the_terrain ... ok
+test terrain::sculpt::pointer_tests::a_press_on_the_tool_palette_leaves_the_brush_no_target ... ok
+test terrain::sculpt::pointer_tests::a_press_in_another_viewport_targets_the_terrain ... ok
+test terrain::sculpt::tests::a_stroke_entry_holds_its_rect_and_a_global_edit_holds_the_terrain ... [2m2026-10-27T04:55:45.791445Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m terrain.scatter: promoted placement 1 of 'woods' to an entity
+ok
+test terrain::sculpt::tests::undo_retires_the_shared_heightmap ... ok
+test terrain::sculpt::pointer_tests::a_press_on_the_tool_palette_targets_no_terrain ... ok
+test terrain::sculpt::tests::undoing_a_rect_scoped_stroke_restores_the_whole_terrain_bit_for_bit ... ok
+test terrain::scatter::tests::find_group_matches_within_one_terrain ... ok
+test terrain::scatter::tests::undoing_an_adoption_restores_the_group_and_empties_the_document ... ok
+test terrain::shape_ops::tests::a_cell_size_outside_the_range_is_clamped_rather_than_refused ... ok
+test terrain::shape_ops::tests::changing_the_cell_size_rescales_without_touching_a_height ... ok
+test terrain::splat::tests::a_terrain_with_no_entry_has_no_material_to_render_with ... ok
+test terrain::stroke_should_end_tests::a_button_that_was_never_pressed_ends_the_stroke ... ok
+test terrain::shape_ops::tests::a_cell_size_change_reaches_the_component_the_document_and_undo ... ok
+test terrain::stroke_should_end_tests::a_held_button_does_not_end_the_stroke ... ok
+test terrain::sculpt::pointer_tests::a_press_over_the_2d_canvas_targets_no_terrain ... ok
+test terrain::scatter::tests::promoting_a_placement_spawns_an_entity_and_takes_it_out_of_the_document ... ok
+test terrain::stroke_should_end_tests::a_press_and_release_within_one_frame_still_ends_the_stroke ... ok
+test terrain::texture_ops::tests::a_no_op_retile_leaves_no_history_entry ... ok
+test terrain::texture_ops::tests::a_list_change_undoes_back_to_the_previous_list ... ok
+test terrain::texture_ops::tests::a_successful_add_closes_the_picker_and_a_refusal_leaves_it_open ... ok
+[2m2026-10-27T04:55:45.801055Z[0m [33m WARN[0m [2mjackdaw::terrain::texture_ops[0m[2m:[0m terrain.paint.target: unrecognized target "nonsense", falling back to "channels"
+test terrain::texture_ops::tests::adding_a_material_that_does_not_exist_is_refused_by_name ... ok
+test terrain::shape_ops::tests::redo_puts_a_cell_size_change_back ... ok
+test terrain::texture_ops::tests::adding_a_saved_material_appends_a_texture_id ... ok
+test terrain::texture_ops::tests::adding_an_unsaved_material_is_refused_with_a_hint_to_save_it ... ok
+test terrain::texture_ops::tests::adding_the_same_material_twice_is_refused ... ok
+test terrain::texture_ops::tests::an_unrecognized_paint_target_falls_back_to_channels ... ok
+test terrain::texture_ops::tests::detiling_a_vacated_id_is_refused_by_name ... ok
+test terrain::texture_ops::tests::detiling_lands_on_the_slot_and_is_clamped_to_its_range ... ok
+test terrain::texture_ops::tests::moving_a_slot_renumbers_the_ids_and_the_brush_follows ... ok
+test terrain::texture_ops::tests::moving_past_either_end_clamps_rather_than_refusing ... ok
+test terrain::splat::tests::losing_every_material_asks_the_chunks_to_rebuild_once ... ok
+[2m2026-10-27T04:55:45.811090Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Could not find an asset loader matching: Asset Type: Some(TypeId(0x8823d019834ac64e788869992eb5514a)); Path: "t/grass.png";
+test terrain::splat::tests::a_tint_stroke_reaches_the_uploaded_tint_map ... [2m2026-10-27T04:55:45.811121Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Could not find an asset loader matching: Asset Type: Some(TypeId(0x8823d019834ac64e788869992eb5514a)); Path: "t/rock.png";
+ok[2m2026-10-27T04:55:45.811169Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Could not find an asset loader matching: Asset Type: Some(TypeId(0x8823d019834ac64e788869992eb5514a)); Path: "t/sand.png";
+
+[2m2026-10-27T04:55:45.811940Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Could not find an asset loader matching: Asset Type: Some(TypeId(0x8823d019834ac64e788869992eb5514a)); Path: "t/rock.png";
+test terrain::splat::tests::a_sculpt_reaches_the_slope_map_and_quiet_ground_does_not ... [2m2026-10-27T04:55:45.811999Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Could not find an asset loader matching: Asset Type: Some(TypeId(0x8823d019834ac64e788869992eb5514a)); Path: "t/sand.png";
+ok[2m2026-10-27T04:55:45.812006Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Could not find an asset loader matching: Asset Type: Some(TypeId(0x8823d019834ac64e788869992eb5514a)); Path: "t/grass.png";
+
+test terrain::texture_ops::tests::painted_meaning::a_vacated_id_at_the_end_of_the_list_is_dropped ... [2m2026-10-27T04:55:45.813343Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Could not find an asset loader matching: Asset Type: Some(TypeId(0x8823d019834ac64e788869992eb5514a)); Path: "t/grass.png";
+ok[2m2026-10-27T04:55:45.813396Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Could not find an asset loader matching: Asset Type: Some(TypeId(0x8823d019834ac64e788869992eb5514a)); Path: "t/sand.png";
+[2m2026-10-27T04:55:45.813430Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Could not find an asset loader matching: Asset Type: Some(TypeId(0x8823d019834ac64e788869992eb5514a)); Path: "t/rock.png";
+
+[2m2026-10-27T04:55:45.813868Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Could not find an asset loader matching: Asset Type: Some(TypeId(0x8823d019834ac64e788869992eb5514a)); Path: "t/rock.png";
+test terrain::texture_ops::tests::painted_meaning::an_autoterrain_slot_moves_off_a_vacated_id_and_undoes_back_onto_it ... [2m2026-10-27T04:55:45.813885Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Could not find an asset loader matching: Asset Type: Some(TypeId(0x8823d019834ac64e788869992eb5514a)); Path: "t/grass.png";
+ok[2m2026-10-27T04:55:45.813906Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Could not find an asset loader matching: Asset Type: Some(TypeId(0x8823d019834ac64e788869992eb5514a)); Path: "t/sand.png";
+
+test terrain::texture_ops::tests::painted_meaning::adding_with_no_vacated_id_appends ... ok
+test terrain::texture_ops::tests::painted_meaning::re_adding_a_material_lands_in_the_vacated_id_and_restores_its_cells ... ok
+[2m2026-10-27T04:55:45.816780Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Could not find an asset loader matching: Asset Type: Some(TypeId(0x8823d019834ac64e788869992eb5514a)); Path: "t/grass.png";
+[2m2026-10-27T04:55:45.817188Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Could not find an asset loader matching: Asset Type: Some(TypeId(0x8823d019834ac64e788869992eb5514a)); Path: "t/sand.png";
+[2m2026-10-27T04:55:45.817287Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Could not find an asset loader matching: Asset Type: Some(TypeId(0x8823d019834ac64e788869992eb5514a)); Path: "t/grass.png";
+[2m2026-10-27T04:55:45.816826Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Could not find an asset loader matching: Asset Type: Some(TypeId(0x8823d019834ac64e788869992eb5514a)); Path: "t/rock.png";
+[2m2026-10-27T04:55:45.816832Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Could not find an asset loader matching: Asset Type: Some(TypeId(0x8823d019834ac64e788869992eb5514a)); Path: "t/sand.png";
+test terrain::texture_ops::tests::recognized_values_switch_the_paint_domain ... ok[2m2026-10-27T04:55:45.816835Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Could not find an asset loader matching: Asset Type: Some(TypeId(0x8823d019834ac64e788869992eb5514a)); Path: "t/rock.png";
+
+test terrain::texture_ops::tests::painted_meaning::removing_a_middle_material_leaves_every_other_cell_drawing_what_it_drew ... ok
+test terrain::texture_ops::tests::painted_meaning::removing_an_already_vacated_id_is_a_no_op ... ok
+[2m2026-10-27T04:55:45.819593Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Could not find an asset loader matching: Asset Type: Some(TypeId(0x8823d019834ac64e788869992eb5514a)); Path: "t/rock.png";
+[2m2026-10-27T04:55:45.819688Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Could not find an asset loader matching: Asset Type: Some(TypeId(0x8823d019834ac64e788869992eb5514a)); Path: "t/sand.png";
+[2m2026-10-27T04:55:45.819677Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Could not find an asset loader matching: Asset Type: Some(TypeId(0x8823d019834ac64e788869992eb5514a)); Path: "t/grass.png";
+test terrain::texture_ops::tests::removing_a_slot_that_is_not_there_is_refused_rather_than_silent ... ok
+test terrain::texture_ops::tests::removing_a_slot_vacates_its_id_without_moving_the_others ... ok
+test terrain::texture_ops::tests::slot_roughness_and_reflectance_set_clamp_and_clear ... ok
+test terrain::texture_ops::tests::texture_select_clamps_to_the_id_ceiling ... ok
+test terrain::texture_ops::tests::the_picker_toggles_and_clears_its_error_when_it_closes ... ok
+test terrain::texture_ops::tests::painted_meaning::retiling_a_vacated_id_is_refused_by_name ... ok
+test terrain::texture_ops::tests::uv_scale_lands_on_the_slot_and_is_clamped_to_a_usable_range ... ok
+[2m2026-10-27T04:55:45.823158Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Could not find an asset loader matching: Asset Type: Some(TypeId(0x8823d019834ac64e788869992eb5514a)); Path: "t/grass.png";
+[2m2026-10-27T04:55:45.823169Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Could not find an asset loader matching: Asset Type: Some(TypeId(0x8823d019834ac64e788869992eb5514a)); Path: "t/sand.png";
+[2m2026-10-27T04:55:45.823187Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Could not find an asset loader matching: Asset Type: Some(TypeId(0x8823d019834ac64e788869992eb5514a)); Path: "t/sand.png";
+[2m2026-10-27T04:55:45.823194Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Could not find an asset loader matching: Asset Type: Some(TypeId(0x8823d019834ac64e788869992eb5514a)); Path: "t/grass.png";
+[2m2026-10-27T04:55:45.823575Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Could not find an asset loader matching: Asset Type: Some(TypeId(0x8823d019834ac64e788869992eb5514a)); Path: "t/rock.png";
+[2m2026-10-27T04:55:45.823803Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Could not find an asset loader matching: Asset Type: Some(TypeId(0x8823d019834ac64e788869992eb5514a)); Path: "t/rock.png";
+[2m2026-10-27T04:55:45.825179Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Could not find an asset loader matching: Asset Type: Some(TypeId(0x8823d019834ac64e788869992eb5514a)); Path: "t/grass.png";
+[2m2026-10-27T04:55:45.825186Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Could not find an asset loader matching: Asset Type: Some(TypeId(0x8823d019834ac64e788869992eb5514a)); Path: "t/rock.png";
+[2m2026-10-27T04:55:45.825198Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Could not find an asset loader matching: Asset Type: Some(TypeId(0x8823d019834ac64e788869992eb5514a)); Path: "t/sand.png";
+[2m2026-10-27T04:55:45.825714Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Could not find an asset loader matching: Asset Type: Some(TypeId(0x8823d019834ac64e788869992eb5514a)); Path: "t/grass.png";
+[2m2026-10-27T04:55:45.825740Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Could not find an asset loader matching: Asset Type: Some(TypeId(0x8823d019834ac64e788869992eb5514a)); Path: "t/sand.png";
+[2m2026-10-27T04:55:45.825755Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Could not find an asset loader matching: Asset Type: Some(TypeId(0x8823d019834ac64e788869992eb5514a)); Path: "t/rock.png";
+test terrain::ui_fields::tests::a_chip_takes_its_digits_from_the_same_field_kind_a_slider_row_does ... ok
+test terrain::ui_fields::tests::tile_labels_are_elided_only_when_they_do_not_fit ... ok
+test test_input::tests::a_count_parameter_is_clamped_to_something_a_session_can_finish ... ok
+test test_input::tests::a_letter_carries_the_character_a_text_field_inserts ... ok
+test terrain::texture_ops::tests::painted_meaning::reordering_renumbers_what_painted_cells_draw ... ok
+test test_input::tests::a_motion_gesture_splits_its_travel_across_its_beats ... ok
+[2m2026-10-27T04:55:45.828952Z[0m [33m WARN[0m [2mjackdaw::test_input[0m[2m:[0m input: ignoring unknown modifier "banana"
+test terrain::texture_ops::tests::painted_meaning::the_cells_painted_with_the_removed_id_fall_back_and_nothing_else_does ... ok
+test fps_overlay::tests::the_readout_carries_a_frame_time_beside_the_rate ... ok
+test terrain::texture_ops::tests::painted_meaning::the_brush_moves_off_a_vacated_id_and_stays_put_otherwise ... ok
+test terrain::texture_ops::tests::painted_meaning::undoing_a_removal_restores_the_visual_state ... ok
+test test_input::tests::a_percent_escape_reaches_the_underscore_itself ... ok
+test test_input::tests::a_wheel_turn_reaches_the_window_as_lines ... ok
+test test_input::tests::an_incomplete_escape_stays_a_percent ... ok
+test test_input::tests::an_underscore_and_a_percent_escape_both_spell_a_space ... ok
+test test_input::tests::every_typing_key_round_trips_through_its_character ... ok
+test test_input::tests::modifier_names_map_to_keys_and_unknown_ones_are_dropped ... ok
+test test_input::tests::modifiers_bracket_the_gesture_in_beats_of_their_own ... [2m2026-10-27T04:55:45.834498Z[0m [33m WARN[0m [2mjackdaw::thumbnail[0m[2m:[0m thumbnail: /kit/broken.gltf could not be photographed
+ok
+test test_input::tests::raw_motion_reaches_the_accumulator_stream_not_the_window ... ok
+test test_input::tests::the_shared_gesture_builders_shape_clicks_drags_and_typing ... ok
+test texture_import::tests::a_file_name_suffix_says_whether_the_texture_is_colour ... ok
+test thumbnail::tests::a_changed_mtime_invalidates_and_requeues ... ok
+test thumbnail::tests::a_degenerate_model_still_gets_a_usable_camera ... ok
+test thumbnail::tests::a_material_saved_again_is_photographed_again ... ok
+test thumbnail::tests::a_failed_model_is_never_retried_at_the_same_mtime ... ok
+test thumbnail::tests::a_failure_is_reported_once_per_file ... ok
+test thumbnail::tests::a_scene_outside_the_assets_folder_still_gets_a_file_name ... ok
+test thumbnail::tests::a_ready_thumbnail_is_not_requeued ... ok
+test thumbnail::tests::a_scene_picture_is_named_after_the_scene_under_the_project ... ok
+test texture_import::tests::importing_writes_a_meta_that_reads_back_and_clearing_removes_it ... ok
+test thumbnail::tests::framing_centres_an_off_origin_model ... ok
+[2m2026-10-27T04:55:45.848486Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Could not find an asset loader matching: Asset Type: Some(TypeId(0x324e772be850971740a8d275d3d3bb5e)); Path: "nowhere/missing.glb#Scene0";
+test thumbnail::tests::is_failed_reads_true_only_for_a_failure_at_the_current_mtime ... ok
+test terrain::import::tests::importing::an_import_onto_a_terrain_with_no_ground_lays_it_down_and_writes_it ... ok
+test thumbnail::tests::fit_distance_scales_with_radius_and_shrinks_with_field_of_view ... ok
+test thumbnail::tests::cache_key_changes_with_path_and_with_mtime ... ok
+test thumbnail::tests::a_saved_scene_shows_its_picture_and_an_unsaved_one_keeps_its_icon ... ok
+test thumbnail::tests::a_material_tile_carries_a_rendered_image_once_the_stage_has_run ... ok
+test thumbnail::tests::a_subject_whose_models_have_all_failed_is_written_off ... ok
+test thumbnail::tests::model_paths_are_gltf_and_glb_only ... ok
+test thumbnail::tests::requesting_the_same_path_twice_queues_it_once ... ok
+test thumbnail::tests::saving_every_tab_pictures_only_the_scene_on_screen ... ok
+test thumbnail::tests::a_prefab_takes_the_models_the_prefab_it_names_brings ... ok
+test thumbnail::tests::a_thumbnail_is_not_requested_for_an_undrawn_tile ... ok
+test pie::prebuild_tests::a_preflight_without_metadata_lets_the_build_speak ... ok
+test timestamps::tests::formatted_instants_parse_back ... ok
+test timestamps::tests::an_unusable_timestamp_yields_nothing_to_render ... ok
+test timestamps::tests::instants_format_as_utc_with_trimmed_fractions ... ok
+[2m2026-10-27T04:55:45.866264Z[0m [33m WARN[0m [2mjackdaw::thumbnail[0m[2m:[0m thumbnail: C:\Users\linbo.zhang\AppData\Local\Temp\.tmpYEThZh\marker.bsn could not be photographed
+test timestamps::tests::coarse_buckets_read_naturally ... ok
+test timestamps::tests::offsets_are_folded_into_utc ... ok
+test thumbnail::tests::a_prefab_with_meshes_gets_a_thumbnail_and_one_without_keeps_its_icon ... ok
+test type_metadata::tests::game_editor_categories_rank_above_game_and_engine ... ok
+[2m2026-10-27T04:55:45.869315Z[0m [33m WARN[0m [2mjackdaw::type_metadata[0m[2m:[0m failed to parse C:\Users\linbo.zhang\AppData\Local\Temp\.tmptQCVVP\jackdaw_metadata.toml: TOML parse error at line 1, column 5
+  |
+1 | not valid toml {{{
+  |     ^
+key with no value, expected `=`
+
+test type_metadata::tests::file_overrides_schema_per_field_and_leaves_the_rest ... ok
+test type_metadata::tests::group_falls_back_from_type_path ... ok
+test type_metadata::tests::registry_chrome_is_used_then_overlaid_per_field ... ok
+test type_metadata::tests::round_trips_category_preview_hidden_and_description ... ok
+test type_metadata::tests::schema_chrome_is_used_when_file_and_registry_miss ... ok
+test type_metadata::tests::schema_rustdoc_is_used_when_editor_description_is_empty ... ok
+test tool_ops::tests::tool_select_sets_select_and_resets_edit_mode ... ok
+test tool_ops::tests::tool_translate_only_sets_tool ... ok
+test thumbnail::tests::the_thumbnail_camera_renders_only_while_a_thumbnail_is_in_flight ... ok
+test type_metadata::tests::set_category_rejects_unparseable_file ... ok
+test typed_values::tests::channels_and_a_hex_code_of_the_same_colour_agree ... ok
+test type_metadata::tests::set_description_round_trips_newlines ... ok
+test typed_values::tests::channels_hex_and_names_all_read_as_colours ... ok
+test type_metadata::tests::set_category_persists_and_drops_empty_entries ... ok
+test type_metadata::tests::set_description_keeps_other_overlay_fields ... ok
+test view_modes::tests::every_mode_reads_back_from_the_settings_it_sets ... ok
+test view_modes::tests::unlit_keeps_the_colour_and_lighting_only_takes_it_away ... ok
+test view_ops::resolve_frame_camera_tests::a_dolly_moves_along_the_sightline_and_keeps_the_aim ... ok
+test view_ops::resolve_frame_camera_tests::a_hovered_camera_wins_even_with_others_present ... ok
+test view_ops::resolve_frame_camera_tests::a_spread_dolly_arrives_over_the_frames_it_was_given ... ok
+test view_ops::resolve_frame_camera_tests::nothing_hovered_and_no_camera_resolves_to_nothing ... ok
+test view_ops::resolve_frame_camera_tests::nothing_hovered_falls_back_to_the_sole_camera ... ok
+test view_ops::resolve_frame_camera_tests::nothing_hovered_with_two_cameras_resolves_to_nothing ... ok
+test view_ops::world_bounds_tests::a_large_surface_at_the_origin_reports_its_extent_not_its_point ... ok
+test view_ops::world_bounds_tests::a_rotated_box_is_measured_by_its_corners ... ok
+test view_ops::world_bounds_tests::an_entity_with_no_bounds_anywhere_under_it_reports_none ... ok
+test view_ops::world_bounds_tests::an_entitys_own_aabb_is_its_bounds ... ok
+test view_ops::world_bounds_tests::bounds_come_from_descendants_when_the_entity_has_none ... ok
+test undo_snapshot::tests::capturing_an_unchanged_scene_without_node_ids_shares_the_packed_text ... ok
+test undo_snapshot::tests::bsn_snapshot_round_trips_document_and_editor_state ... ok
+test view_ops::world_bounds_tests::view_dependent_geometry_is_not_measured ... ok
+test viewport::tests::node_contains_agrees_across_dpi_scales ... ok
+test viewport_2d::ruler_label_step_tests::the_label_step_keeps_labels_apart_and_no_further_apart_than_it_must ... ok
+test viewport::tests::a_focused_text_edit_still_disables_the_camera ... ok
+test viewport::tests::node_contains_includes_the_rect_edges ... ok
+test viewport_2d::ruler_label_step_tests::zooming_in_refines_the_labels ... ok
+test viewport_host::viewport_mode_tests::a_2d_world_scene_is_authored_on_the_canvas ... ok
+test undo_snapshot::tests::an_unsaved_catalog_material_embeds_inline_instead_of_emitting_a_name ... ok
+test viewport_host::viewport_mode_tests::a_3d_scene_is_authored_in_the_world_viewport ... ok
+test viewport_host::viewport_mode_tests::a_ui_scene_is_authored_on_the_canvas ... ok
+test viewport::tests::the_startup_window_focus_does_not_disable_the_camera ... ok
+test viewport_overlays::selection_bounds_tests::a_marked_entity_contributes_nothing_from_any_camera_position ... ok
+test viewport_overlays::selection_bounds_tests::a_prop_reaching_past_the_authored_extent_still_widens_the_box ... ok
+test viewport_host::viewport_mode_tests::a_mode_parameter_names_either_mode ... ok
+test viewport_overlays::selection_bounds_tests::a_prop_parented_onto_view_dependent_ground_does_not_shrink_the_box_to_itself ... ok
+test viewport_overlays::selection_bounds_tests::a_marked_entity_queried_directly_contributes_nothing ... ok
+test undo_snapshot::tests::bsn_snapshot_embeds_runtime_face_material ... ok
+test viewport_overlays::selection_bounds_tests::a_view_dependent_child_contributes_no_vertices_however_far_it_reaches ... ok
+test viewport_overlays::selection_bounds_tests::an_authored_aabb_measures_the_extent_it_states ... ok
+test viewport_overlays::axis_label_tests::axis_labels_are_not_pickable ... ok
+test viewport_overlays::selection_bounds_tests::nothing_pruned_means_the_authored_aabb_is_not_consulted ... ok
+test viewport_overlays::selection_bounds_tests::an_unmarked_root_with_marked_descendants_unions_its_authored_extent ... ok
+test viewport_overlays::selection_bounds_tests::ordinary_descendant_geometry_is_still_measured ... ok
+test viewport_overlays::selection_bounds_tests::pruning_a_view_dependent_node_prunes_what_hangs_below_it ... ok
+test viewport_quality::tests::a_light_without_shadows_stays_without_them_when_shown ... ok
+test viewport_quality::tests::a_withheld_light_stays_withheld_while_hidden ... ok
+[2m2026-10-27T04:55:45.910337Z[0m [33m WARN[0m [2mjackdaw::viewport_settings[0m[2m:[0m could not read the viewport settings at C:\Users\linbo.zhang\AppData\Local\Temp\.tmpZGYU0A\viewport.json: expected ident at line 1 column 2
+test viewport_quality::tests::hiding_a_casting_light_turns_its_shadows_off_and_showing_it_restores_them ... ok
+test viewport_quality::tests::the_render_scale_sizes_the_target_from_the_node ... ok
+test viewport_select::tests::activate_falls_back_to_cursor_without_pending ... ok
+test viewport_select::tests::activate_uses_pending_as_start_when_set ... ok
+test viewport_select::tests::drag_at_or_above_threshold_promotes ... ok
+test viewport_select::tests::drag_below_threshold_does_not_promote ... ok
+test viewport_settings::tests::changing_one_choice_leaves_every_preset ... ok
+test viewport_settings::tests::a_missing_file_gives_the_defaults ... ok
+test viewport_settings::tests::each_preset_is_recognised_from_its_own_choices ... ok
+test viewport_settings::tests::a_file_from_before_ssao_quality_and_sharpening_takes_their_defaults ... ok
+test viewport_settings::tests::the_defaults_are_the_high_preset_drawn_every_frame ... ok
+test viewport_settings::tests::the_presets_keep_the_choices_they_already_made ... ok
+test viewport_settings::tests::an_unreadable_file_gives_the_defaults ... ok
+test windowing::window_size_tests::a_well_formed_size_parses ... ok
+test windowing::window_size_tests::a_zero_half_parses_to_nothing ... ok
+test windowing::window_size_tests::missing_separator_parses_to_nothing ... ok
+test viewport::tests::editor_views_render_into_the_same_format ... ok
+test windowing::window_size_tests::non_numeric_halves_parse_to_nothing ... ok
+test windowing::window_size_tests::whitespace_around_either_half_is_tolerated ... ok
+test viewport_settings::tests::fields_a_file_leaves_out_take_their_defaults ... ok
+test viewport_settings::tests::stored_settings_load_back_unchanged ... ok
+test project_select::tests::each_project_shape_reaches_the_right_card ... ok
+test terrain::mesh::tests::a_forced_rebuild_never_takes_a_level_off_the_screen ... ok
+test terrain::mesh::tests::absent_regions_are_not_drawn ... ok
+
+test result: ok. 1176 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.95s
+

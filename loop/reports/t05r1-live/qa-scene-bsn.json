@@ -1,0 +1,3 @@
+﻿{
+    "bsn":  "#Probe\njackdaw::prefab::components::Prefab\njackdaw::prefab::components::IsA {\n    source: \"props/keeper.bsn\",\n    deleted: [],\n}\n"
+}

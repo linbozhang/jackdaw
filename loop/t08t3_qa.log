@@ -1,0 +1,7 @@
+BRP never answered
+ËùÔÚÎ»ÖÃ E:\Project\rust\jackdaw\loop\qa\t08-t3-qa.ps1:58 ×Ö·û: 20
++ if (-not $ready) { throw 'BRP never answered' }
++                    ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : OperationStopped: (BRP never answered:String) [], RuntimeException
+    + FullyQualifiedErrorId : BRP never answered
+ 

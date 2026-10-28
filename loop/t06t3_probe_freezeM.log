@@ -1,0 +1,9 @@
+True
+
+BRP error: {"code":-32602,"message":"unknown operator: selection.set-entity"}
+ËùÔÚÎ»ÖÃ E:\Project\rust\jackdaw\loop\qa\brp.ps1:34 ×Ö·û: 9
++         throw "BRP error: $($Response.error | ConvertTo-Json -Depth 6 ...
++         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : OperationStopped: (BRP error: {"co...on.set-entity"}:String) [], RuntimeException
+    + FullyQualifiedErrorId : BRP error: {"code":-32602,"message":"unknown operator: selection.set-entity"}
+ 

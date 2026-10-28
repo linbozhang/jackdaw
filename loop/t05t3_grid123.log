@@ -1,0 +1,4 @@
+FAIL: grid 1 reference: #Board
+jackdaw::prefab::components::Prefab
+jackdaw::prefab::components::IsA { source: "materials/rust.material.bsn" }
+

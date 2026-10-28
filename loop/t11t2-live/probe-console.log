@@ -1,0 +1,47 @@
+True
+PROBE: editor ready
+True
+PROBE player cube: 4294961940
+True
+PROBE add PlayerMarker: {"jsonrpc":"2.0","id":1454028178,"result":{"entities":[],"id":"component.add","result":"finished","warnings":[]}}
+PROBE add PlayerController: {"jsonrpc":"2.0","id":676840420,"result":{"entities":[],"id":"component.add","result":"finished","warnings":[]}}
+PROBE add RigidBody: {"jsonrpc":"2.0","id":2086933089,"result":{"entities":[],"id":"component.add","result":"finished","warnings":[]}}
+PROBE set RigidBody=Kinematic: {"jsonrpc":"2.0","id":1911630495,"result":{"entities":[],"id":"component.set","result":"finished","warnings":[]}}
+PROBE add AvianCollider: {"jsonrpc":"2.0","id":1601154063,"result":{"entities":[],"id":"component.add","result":"finished","warnings":[]}}
+PROBE set AvianCollider capsule: {"jsonrpc":"2.0","id":1458681621,"result":{"entities":[],"id":"component.set","result":"finished","warnings":["component.set: \"Capsule { radius: 0.35, height: 1.0 }\" is not a value for jackdaw_avian_integration::AvianCollider."]}}
+True
+PROBE camera rig: 42949665932
+PROBE reparent: {"jsonrpc":"2.0","id":463294862,"result":{"entities":[],"id":"entity.reparent","result":"finished","warnings":[]}}
+PROBE physics.enable floor: {"jsonrpc":"2.0","id":1517167337,"result":{"entities":[],"id":"physics.enable","result":"finished","warnings":[]}}
+True
+PROBE document entities:
+  doc [4294963374]: Gizmo, GlobalTransform, Transform
+  doc [4294963513]: CascadeShadowConfig, DirectionalLight, GlobalTransform, Transform
+  doc [4294963535]: Projection, GlobalTransform, Transform, IsDefaultUiCamera
+  doc [4294963376]: InfiniteGrid, InfiniteGridSettings, GlobalTransform, Transform
+  doc [4294963304]: Projection, GlobalTransform, Transform
+  doc [4294963514]: Projection, EnvironmentMapLight, GlobalTransform, Transform
+  doc [4294963375]: Projection, EnvironmentMapLight, ScreenSpaceTransmission, GlobalTransform, Transform, JackdawCameraSettings
+  doc [4294963521]: Projection, GlobalTransform, Transform
+  doc [4294963522]: Projection, EnvironmentMapLight, ScreenSpaceTransmission, GlobalTransform, Transform
+  doc [4294963519]: Mesh3d, OccludedExtension>>, GlobalTransform, Transform
+  doc [4294963517]: Mesh3d, OccludedExtension>>, GlobalTransform, Transform
+  doc [4294963515]: Mesh3d, OccludedExtension>>, GlobalTransform, Transform
+  doc [4294963523]: Mesh3d, StandardMaterial>, GlobalTransform, Transform
+  doc [4294963520]: Mesh3d, EdgeOffsetExtension>>, GlobalTransform, Transform
+  doc [4294963518]: Mesh3d, EdgeOffsetExtension>>, GlobalTransform, Transform
+  doc [4294963516]: Mesh3d, EdgeOffsetExtension>>, GlobalTransform, Transform
+  doc [4294962708]: Name, CascadeShadowConfig, DirectionalLight, GlobalTransform, Transform, SceneLight, SceneNodeId
+  doc [8589925489]: ColliderAabb, ColliderAabbMargin, EnlargedAabb, ColliderMarker, ColliderTransform, CollisionLayers, AngularVelocity, LinearVelocity, RigidBody, AccumulatedLocalAcceleration, ColliderDensity, ColliderMassProperties, ComputedAngularInertia, ComputedCenterOfMass, ComputedMass, Position, PreSolveDeltaPosition, PreSolveDeltaRotation, Rotation, Name, GlobalTransform, Transform, AvianCollider, SceneNodeId, Brush
+  doc [4294959932]: ChildOf, NotShadowCaster, NotShadowReceiver, Mesh3d, StandardMaterial>, GlobalTransform, Transform, EditorHidden
+  doc [34359730792]: ChildOf, NotShadowCaster, NotShadowReceiver, Mesh3d, StandardMaterial>, GlobalTransform, Transform, EditorHidden
+  doc [4294961940]: ColliderAabb, ColliderAabbMargin, EnlargedAabb, ColliderMarker, ColliderTransform, CollisionLayers, VelocityIntegrationData, AngularVelocity, LinearVelocity, RigidBody, AccumulatedLocalAcceleration, ColliderDensity, ColliderMassProperties, ComputedAngularInertia, ComputedCenterOfMass, ComputedMass, SleepThreshold, SleepTimer, SolverBodyIndex, Position, PreSolveDeltaPosition, PreSolveDeltaRotation, Rotation, Name, GlobalTransform, Transform, AvianCollider, SceneNodeId, Brush
+  doc [42949665932]: ChildOf, Name, GlobalTransform, Transform, CameraRig, SceneNodeId
+PROBE scene.save_as: {"jsonrpc":"2.0","id":912941827,"result":{"entities":[],"id":"scene.save_as","result":"finished","warnings":[]}}
+True
+PROBE t11t2-place.bsn NOT on disk
+PROBE pie running: True
+PROBE game BRP 15702: 
+PROBE capture toggle: {"jsonrpc":"2.0","id":827244050,"result":{"entities":[],"id":"pie.play_input_toggle","result":"cancelled","warnings":[]}}
+PROBE pie after stop: stopped
+PROBE_DONE

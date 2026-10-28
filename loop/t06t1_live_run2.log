@@ -1,0 +1,22 @@
+editor ready pid=40204
+editor idle
+== case A: untitled scene -> temp copy ==
+
+  ok: authored preview holds the new cube (count=2)
+entities id               result   warnings
+-------- --               ------   --------
+{}       scene.new        finished {}      
+{}       pie.play_current finished {}      
+pie running (08:19:28)
+  ok: editor alive while playing an untitled scene
+  ok: one temp run copy exists: current-untitled-1-40204.bsn
+  ok: the temp copy carries the cube document
+editor killed
+BRP error: {"code":-32602,"message":"expected one of \"entity\", \"operator\" or \"text\" (+ \"index\")"}
+ËùÔÚÎ»ÖÃ E:\Project\rust\jackdaw\loop\qa\brp.ps1:34 ×Ö·û: 9
++         throw "BRP error: $($Response.error | ConvertTo-Json -Depth 6 ...
++         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : OperationStopped: (BRP error: {"co...(+ \"index\")"}:String) [], RuntimeException
+    + FullyQualifiedErrorId : BRP error: {"code":-32602,"message":"expected one of \"entity\", \"operator\" or \"text\ 
+   " (+ \"index\")"}
+ 

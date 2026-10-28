@@ -1,0 +1,84 @@
+[2m2026-10-28T01:22:59.883736Z[0m [32m INFO[0m [2mbevy_diagnostic::system_information_diagnostics_plugin::internal[0m[2m:[0m SystemInfo { os: "Windows 11 Pro", kernel: "26100", cpu: "AMD Ryzen 7 9700X 8-Core Processor", core_count: "8", memory: "93.4 GiB" }
+[2m2026-10-28T01:23:00.360073Z[0m [32m INFO[0m [2mbevy_render::renderer[0m[2m:[0m AdapterInfo { name: "NVIDIA GeForce RTX 5070", vendor: 4318, device: 12036, device_type: DiscreteGpu, device_pci_bus_id: "0000:01:00.0", driver: "32.0.15.9186", driver_info: "", backend: Dx12, subgroup_min_size: 32, subgroup_max_size: 32, transient_saves_memory: Some(false), limit_bucket: None }
+[2m2026-10-28T01:23:00.760789Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw::test_input::plugin` of extension `jackdaw.test_input`
+[2m2026-10-28T01:23:00.761377Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw_physics::PhysicsEditorPlugin` of extension `jackdaw.physics`
+[2m2026-10-28T01:23:00.769306Z[0m [32m INFO[0m [2mbevy_pbr::cluster[0m[2m:[0m GPU clustering is supported on this device.
+[2m2026-10-28T01:23:00.769484Z[0m [32m INFO[0m [2mbevy_render::batching::gpu_preprocessing[0m[2m:[0m GPU preprocessing is fully supported on this device.
+[2m2026-10-28T01:23:00.770830Z[0m [32m INFO[0m [2mbevy_winit::system[0m[2m:[0m Creating new window jackdaw (71v0)
+[2m2026-10-28T01:23:00.996706Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.project_window
+[2m2026-10-28T01:23:00.997029Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.ui_palette
+[2m2026-10-28T01:23:00.997162Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.game_panel
+[2m2026-10-28T01:23:00.997223Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.animation_graph
+[2m2026-10-28T01:23:00.997281Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.multiplayer
+[2m2026-10-28T01:23:00.997379Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.timeline
+[2m2026-10-28T01:23:00.997439Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core
+[2m2026-10-28T01:23:00.999956Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.inspector
+[2m2026-10-28T01:23:01.000065Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core_windows
+[2m2026-10-28T01:23:01.000167Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.test_input
+[2m2026-10-28T01:23:01.000240Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.build_panel
+[2m2026-10-28T01:23:01.000299Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.physics
+[2m2026-10-28T01:23:01.000569Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.viewport_panel
+[2m2026-10-28T01:23:01.003044Z[0m [33m WARN[0m [2mjackdaw_api_internal::keymap::apply[0m[2m:[0m preset 'classic' has 10 chords claimed by more than one action: ["Delete (Press, Operators): clip.delete_keyframes, entity.delete, brush.delete_element", "Backspace (Press, Operators): clip.delete_keyframes, viewport.draw_brush.remove_last_vertex, brush.delete_element", "Home (Press, Operators): clip.timeline.jump_start, view.frame_all, viewport2d.frame", "Ctrl+KeyC (Press, Operators): clip.copy_keyframes, entity.copy", "Ctrl+KeyV (Press, Operators): clip.paste_keyframes, entity.paste", "Tab (Press, Operators): viewport.draw_brush.toggle_mode, brush.clip.cycle_mode", "Enter (Press, Operators): viewport.draw_brush.commit_polygon, brush.clip.apply", "KeyE (Press, Operators): tool.rotate, brush.mesh.extrude", "Escape (Press, Operators): brush.exit_edit_mode, selection.clear, brush.clip.clear, terrain.tool.exit_to_select", "Ctrl+KeyB (Press, Operators): brush.mesh.edge_bevel, brush.mesh.vertex_bevel"]
+[2m2026-10-28T01:23:01.003236Z[0m [32m INFO[0m [2mjackdaw::extension_lifecycle[0m[2m:[0m applied keymap preset 'classic': 112 entries, 112 bindings, 0 user rows
+[2m2026-10-28T01:23:01.173049Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking H:\workspace_AI\t11-live\t11t1-game\assets recursively
+[2m2026-10-28T01:23:01.173641Z[0m [32m INFO[0m [2mjackdaw::asset_catalog[0m[2m:[0m No asset catalog found, starting with empty catalog
+[2m2026-10-28T01:23:01.381325Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: pre-building the game in the background for a fast first Play
+[2m2026-10-28T01:23:01.382727Z[0m [32m INFO[0m [2mjackdaw::material_browser[0m[2m:[0m update_material_browser_ui: rebuilding with 1 entries
+[2m2026-10-28T01:23:01.622065Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 2, typed 1, referencing 0)
+[2m2026-10-28T01:23:01.622417Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 0)
+[2m2026-10-28T01:23:01.923626Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking H:\workspace_AI\t11-live\t11t1-game\assets recursively
+[2m2026-10-28T01:23:01.952577Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 2, typed 1, referencing 0)
+[2m2026-10-28T01:23:01.952823Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 0)
+EDITOR_READY pid=82436 scene=H:\workspace_AI\t11-live\qa\qa-param.bsn
+[2m2026-10-28T01:23:12.189362Z[0m [33m WARN[0m [2mjackdaw_project_build::binary[0m[2m:[0m project schema extraction skipped: extractor failed: \x1b[2m2026-10-28T01:23:03.782936Z\x1b[0m \x1b[32m INFO\x1b[0m \x1b[2mbevy_diagnostic::system_information_diagnostics_plugin::internal\x1b[0m\x1b[2m:\x1b[0m SystemInfo { os: "Windows 11 Pro", kernel: "26100", cpu: "AMD Ryzen 7 9700X 8-Core Processor", core_count: "8", memory: "93.4 GiB" }
+\x1b[2m2026-10-28T01:23:03.786971Z\x1b[0m \x1b[33m WARN\x1b[0m \x1b[2mbevy_asset::io::source\x1b[0m\x1b[2m:\x1b[0m Skip creating file watcher because path "H:\\workspace_AI\\t11-live\\t11t1-game\\.jackdaw\\target\\game\\debug\\assets" does not exist.
+\x1b[2m2026-10-28T01:23:03.787027Z\x1b[0m \x1b[33m WARN\x1b[0m \x1b[2mbevy_asset::io::source\x1b[0m\x1b[2m:\x1b[0m AssetSourceId::Default does not have an AssetWatcher configured. Consider adding an "assets" directory.
+\x1b[2m2026-10-28T01:23:04.572691Z\x1b[0m \x1b[32m INFO\x1b[0m \x1b[2mbevy_render::renderer\x1b[0m\x1b[2m:\x1b[0m AdapterInfo { name: "NVIDIA GeForce RTX 5070", vendor: 4318, device: 12036, device_type: DiscreteGpu, device_pci_bus_id: "0000:01:00.0", driver: "NVIDIA", driver_info: "591.86", backend: Vulkan, subgroup_min_size: 32, subgroup_max_size: 32, transient_saves_memory: Some(false), limit_bucket: None }
+
+[2m2026-10-28T01:23:23.528575Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: scene.open
+[2m2026-10-28T01:23:23.529114Z[0m [33m WARN[0m [2mjackdaw::scenes::operators[0m[2m:[0m scene.open: H:\workspace_AI\t11-live\qa\qa-param.bsn is outside the open project at H:\workspace_AI\t11-live\t11t1-game
+[2m2026-10-28T01:23:26.566980Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: scene.save
+[2m2026-10-28T01:23:26.571678Z[0m [32m INFO[0m [2mjackdaw::scene_io::save[0m[2m:[0m Scene saved to H:\workspace_AI\t11-live\qa\qa-param-reopen.bsn
+[2m2026-10-28T01:23:26.571974Z[0m [32m INFO[0m [2mjackdaw::scene_io::session_journal[0m[2m:[0m session journal: H:\workspace_AI\t11-live\qa\qa-param-reopen.bsn reached disk; dropping its entry
+[2m2026-10-28T01:23:58.323703Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: scene.open
+[2m2026-10-28T01:24:01.391700Z[0m [33m WARN[0m [2mjackdaw::boot_ops[0m[2m:[0m JACKDAW_RUN_OP: component.add: `entity` was not set: no entity in this scene has id 4294962805
+[2m2026-10-28T01:24:02.425954Z[0m [33m WARN[0m [2mjackdaw::boot_ops[0m[2m:[0m JACKDAW_RUN_OP: component.set: `entity` was not set: no entity in this scene has id 4294962805
+[2m2026-10-28T01:24:02.426258Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: component.set
+[2m2026-10-28T01:24:03.458266Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: scene.save
+[2m2026-10-28T01:24:03.463283Z[0m [32m INFO[0m [2mjackdaw::scene_io::save[0m[2m:[0m Scene saved to H:\workspace_AI\t11-live\qa\qa-c11-probe.bsn
+[2m2026-10-28T01:24:03.463523Z[0m [32m INFO[0m [2mjackdaw::scene_io::session_journal[0m[2m:[0m session journal: H:\workspace_AI\t11-live\qa\qa-c11-probe.bsn reached disk; dropping its entry
+[2m2026-10-28T01:24:20.457135Z[0m [32m INFO[0m [2mjackdaw::boot_ops[0m[2m:[0m JACKDAW_RUN_OP: component.add: `entity` = 4673v0 (Cube), by id
+[2m2026-10-28T01:24:20.457412Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: component.add
+[2m2026-10-28T01:24:21.512633Z[0m [32m INFO[0m [2mjackdaw::boot_ops[0m[2m:[0m JACKDAW_RUN_OP: component.set: `entity` = 4673v0 (Cube), by id
+[2m2026-10-28T01:24:21.512968Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: component.set
+[2m2026-10-28T01:24:22.544517Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: scene.save
+[2m2026-10-28T01:24:22.550154Z[0m [32m INFO[0m [2mjackdaw::scene_io::save[0m[2m:[0m Scene saved to H:\workspace_AI\t11-live\qa\qa-c11-probe.bsn
+[2m2026-10-28T01:24:22.550385Z[0m [32m INFO[0m [2mjackdaw::scene_io::session_journal[0m[2m:[0m session journal: H:\workspace_AI\t11-live\qa\qa-c11-probe.bsn reached disk; dropping its entry
+[2m2026-10-28T01:25:07.195116Z[0m [32m INFO[0m [2mjackdaw::boot_ops[0m[2m:[0m JACKDAW_RUN_OP: component.set: `entity` = 4673v0 (Cube), by id
+[2m2026-10-28T01:25:07.195381Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: component.set
+[2m2026-10-28T01:25:08.243394Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: scene.save
+[2m2026-10-28T01:25:08.249378Z[0m [32m INFO[0m [2mjackdaw::scene_io::save[0m[2m:[0m Scene saved to H:\workspace_AI\t11-live\qa\qa-c11-probe.bsn
+[2m2026-10-28T01:25:08.249663Z[0m [32m INFO[0m [2mjackdaw::scene_io::session_journal[0m[2m:[0m session journal: H:\workspace_AI\t11-live\qa\qa-c11-probe.bsn reached disk; dropping its entry
+[2m2026-10-28T01:25:48.578076Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: scene.open
+[2m2026-10-28T01:26:06.521511Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: pie.play_current
+[2m2026-10-28T01:26:06.541927Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 launched, awaiting connection
+[2m2026-10-28T01:26:06.542180Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 launched with scene override 't11t2-place.bsn' (the editor's scene)
+[2m2026-10-28T01:26:14.076919Z[0m [31mERROR[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 exited before connecting with exit code: 0xc0000005
+[2m2026-10-28T01:26:14.077169Z[0m [31mERROR[0m [2mjackdaw::pie[0m[2m:[0m PIE: game stderr tail:
+\x1b[2m2026-10-28T01:26:06.657366Z\x1b[0m \x1b[32m INFO\x1b[0m \x1b[2mbevy_diagnostic::system_information_diagnostics_plugin::internal\x1b[0m\x1b[2m:\x1b[0m SystemInfo { os: "Windows 11 Pro", kernel: "26100", cpu: "AMD Ryzen 7 9700X 8-Core Processor", core_count: "8", memory: "93.4 GiB" }
+\x1b[2m2026-10-28T01:26:07.380180Z\x1b[0m \x1b[32m INFO\x1b[0m \x1b[2mbevy_render::renderer\x1b[0m\x1b[2m:\x1b[0m AdapterInfo { name: "NVIDIA GeForce RTX 5070", vendor: 4318, device: 12036, device_type: DiscreteGpu, device_pci_bus_id: "0000:01:00.0", driver: "NVIDIA", driver_info: "591.86", backend: Vulkan, subgroup_min_size: 32, subgroup_max_size: 32, transient_saves_memory: Some(false), limit_bucket: None }
+[2m2026-10-28T01:28:42.770263Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: pie.play_current
+[2m2026-10-28T01:28:42.783768Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 launched, awaiting connection
+[2m2026-10-28T01:28:42.784022Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 launched with scene override 't11t2-place.bsn' (the editor's scene)
+[2m2026-10-28T01:28:50.721614Z[0m [31mERROR[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 exited before connecting with exit code: 0xc0000005
+[2m2026-10-28T01:28:50.722031Z[0m [31mERROR[0m [2mjackdaw::pie[0m[2m:[0m PIE: game stderr tail:
+\x1b[2m2026-10-28T01:28:42.866255Z\x1b[0m \x1b[32m INFO\x1b[0m \x1b[2mbevy_diagnostic::system_information_diagnostics_plugin::internal\x1b[0m\x1b[2m:\x1b[0m SystemInfo { os: "Windows 11 Pro", kernel: "26100", cpu: "AMD Ryzen 7 9700X 8-Core Processor", core_count: "8", memory: "93.4 GiB" }
+\x1b[2m2026-10-28T01:28:43.607814Z\x1b[0m \x1b[32m INFO\x1b[0m \x1b[2mbevy_render::renderer\x1b[0m\x1b[2m:\x1b[0m AdapterInfo { name: "NVIDIA GeForce RTX 5070", vendor: 4318, device: 12036, device_type: DiscreteGpu, device_pci_bus_id: "0000:01:00.0", driver: "NVIDIA", driver_info: "591.86", backend: Vulkan, subgroup_min_size: 32, subgroup_max_size: 32, transient_saves_memory: Some(false), limit_bucket: None }
+[2m2026-10-28T01:29:05.324016Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: pie.window_mode_toggle
+[2m2026-10-28T01:29:06.390761Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: pie.play_current
+[2m2026-10-28T01:29:06.404720Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 launched, awaiting connection
+[2m2026-10-28T01:29:06.404967Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 launched with scene override 't11t2-place.bsn' (the editor's scene)
+[2m2026-10-28T01:29:14.041117Z[0m [31mERROR[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 exited before connecting with exit code: 0xc0000005
+[2m2026-10-28T01:29:14.041460Z[0m [31mERROR[0m [2mjackdaw::pie[0m[2m:[0m PIE: game stderr tail:
+\x1b[2m2026-10-28T01:29:06.478415Z\x1b[0m \x1b[32m INFO\x1b[0m \x1b[2mbevy_diagnostic::system_information_diagnostics_plugin::internal\x1b[0m\x1b[2m:\x1b[0m SystemInfo { os: "Windows 11 Pro", kernel: "26100", cpu: "AMD Ryzen 7 9700X 8-Core Processor", core_count: "8", memory: "93.4 GiB" }
+\x1b[2m2026-10-28T01:29:07.210804Z\x1b[0m \x1b[32m INFO\x1b[0m \x1b[2mbevy_render::renderer\x1b[0m\x1b[2m:\x1b[0m AdapterInfo { name: "NVIDIA GeForce RTX 5070", vendor: 4318, device: 12036, device_type: DiscreteGpu, device_pci_bus_id: "0000:01:00.0", driver: "NVIDIA", driver_info: "591.86", backend: Vulkan, subgroup_min_size: 32, subgroup_max_size: 32, transient_saves_memory: Some(false), limit_bucket: None }

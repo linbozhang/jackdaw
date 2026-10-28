@@ -1,0 +1,32 @@
+warning: linker stderr: rust-lld: ignoring unknown argument '-fuse-ld=lld'
+  |
+  = note: `#[warn(linker_messages)]` on by default
+
+warning: `jackdaw_env` (build script) generated 1 warning
+warning: `jackdaw_api_macros` (lib) generated 1 warning (1 duplicate)
+warning: `jackdaw_project_build` (build script) generated 1 warning (1 duplicate)
+warning: `jackdaw_package` (build script) generated 1 warning (1 duplicate)
+   Compiling test_fixture_extension v0.0.0 (E:\Project\rust\jackdaw\tests\fixtures\test_fixture_extension)
+warning: `test_fixture_extension` (lib) generated 1 warning (1 duplicate)
+   Compiling jackdaw v0.21.0-dev (E:\Project\rust\jackdaw)
+warning: `jackdaw` (lib test) generated 1 warning (1 duplicate)
+    Finished `test` profile [optimized + debuginfo] target(s) in 37.78s
+     Running unittests src\lib.rs (target\debug\deps\jackdaw-b8bb05f875dbf70a.exe)
+
+running 13 tests
+test remote::server::tests::a_glob_matches_in_order_and_anchors_where_it_has_no_star ... ok
+test remote::server::tests::a_failed_or_unknown_load_is_not_waited_on ... ok
+test remote::server::tests::a_declared_type_beats_the_json_spelling ... ok
+test remote::server::tests::a_loading_model_is_work_the_editor_is_still_doing ... ok
+test remote::server::tests::a_listing_names_a_document_once_and_says_a_binary_twin_is_there ... ok
+test remote::server::tests::the_editor_port_is_not_the_game_port ... ok
+test remote::server::tests::an_undeclared_parameter_is_typed_by_its_spelling ... ok
+test remote::server::tests::a_vector_reads_as_an_array_or_as_a_comma_list ... ok
+test remote::server::tests::pie_face_reports_a_stopped_session ... ok
+test remote::server::tests::selection_set_takes_bits_names_and_clears ... ok
+test remote::server::tests::a_pie_stopped_wait_holds_when_nothing_ever_ran ... ok
+test remote::server::tests::a_pie_stopped_wait_satisfies_when_the_session_already_ended ... ok
+test remote::server::tests::a_pattern_with_no_star_matches_anywhere_in_the_path ... ok
+
+test result: ok. 13 passed; 0 failed; 0 ignored; 0 measured; 1154 filtered out; finished in 0.01s
+

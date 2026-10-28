@@ -1,0 +1,17 @@
+   Compiling jackdaw_runtime v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_runtime)
+warning: linker stderr: rust-lld: ignoring unknown argument '-fuse-ld=lld'
+  |
+  = note: `#[warn(linker_messages)]` on by default
+
+warning: `jackdaw_runtime` (test "pie_scene_override") generated 1 warning
+    Finished `test` profile [optimized + debuginfo] target(s) in 8.38s
+     Running tests\pie_scene_override.rs (target\debug\deps\pie_scene_override-1d82ffb8da4a3118.exe)
+
+running 4 tests
+test only_the_first_scene_root_is_overridden ... ok
+test pie_scene_or_picks_the_override_or_the_default ... ok
+test the_override_scene_loads_in_place_of_the_named_one ... ok
+test without_the_env_the_named_scene_loads ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.06s
+

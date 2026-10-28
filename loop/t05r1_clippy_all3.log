@@ -1,0 +1,45 @@
+warning: linker stderr: rust-lld: ignoring unknown argument '-fuse-ld=lld'
+  |
+  = note: `#[warn(linker_messages)]` on by default
+  = note: the `linker_messages` lint ignores `-D warnings`
+
+warning: `jackdaw_env` (build script) generated 1 warning
+warning: `jackdaw_api_macros` (lib) generated 1 warning (1 duplicate)
+warning: `jackdaw_package` (build script) generated 1 warning (1 duplicate)
+warning: `jackdaw_project_build` (build script) generated 1 warning (1 duplicate)
+    Checking jackdaw v0.21.0-dev (E:\Project\rust\jackdaw)
+    Checking jackdaw_editor v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_editor)
+error: this lint expectation is unfulfilled
+ --> tests\reflect_auto_register.rs:1:11
+  |
+1 | #![expect(clippy::print_stdout, reason = "test prints progress diagnostics")]
+  |           ^^^^^^^^^^^^^^^^^^^^
+  |
+  = note: test prints progress diagnostics
+  = note: `-D unfulfilled-lint-expectations` implied by `-D warnings`
+  = help: to override `-D warnings` add `#[allow(unfulfilled_lint_expectations)]`
+
+error: could not compile `jackdaw` (test "reflect_auto_register") due to 1 previous error
+warning: build failed, waiting for other jobs to finish...
+error: this lint expectation is unfulfilled
+ --> tests\component_shape_refresh.rs:1:11
+  |
+1 | #![expect(clippy::print_stdout, reason = "test prints progress diagnostics")]
+  |           ^^^^^^^^^^^^^^^^^^^^
+  |
+  = note: test prints progress diagnostics
+  = note: `-D unfulfilled-lint-expectations` implied by `-D warnings`
+  = help: to override `-D warnings` add `#[allow(unfulfilled_lint_expectations)]`
+
+error: could not compile `jackdaw` (test "component_shape_refresh") due to 1 previous error
+error: this lint expectation is unfulfilled
+ --> tests\dylib_linkage_identity.rs:1:11
+  |
+1 | #![expect(clippy::print_stdout, reason = "test prints progress diagnostics")]
+  |           ^^^^^^^^^^^^^^^^^^^^
+  |
+  = note: test prints progress diagnostics
+  = note: `-D unfulfilled-lint-expectations` implied by `-D warnings`
+  = help: to override `-D warnings` add `#[allow(unfulfilled_lint_expectations)]`
+
+error: could not compile `jackdaw` (test "dylib_linkage_identity") due to 1 previous error

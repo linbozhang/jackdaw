@@ -1,0 +1,14 @@
+True
+editor ready
+P0 card dirty; disk has 0.75: False
+LEGB sync save: disk has 0.75 right after game.export: True
+LEGB state=ready distHas075=True
+LEGB PASS: export saved the dirty card and the staged package carries it
+QUIT1 dialog: no dialog node
+QUIT1 names asset: {"checked":false,"children":[],"disabled":false,"entity":12884897503,"index":0,"kind":"text","operator":null,"rect":[475.0,336.0,330.0,27.0],"scene":false,"text":"You have unsaved changes. Save all before quitting?\nUnsaved assets: t08qa3","visible":true}
+QUIT1 Cancel: dialogWasUp=True alive=True diskHas09=False
+QUIT1 PASS: dialog named the asset; Cancel stayed with 0.9 unsaved
+QUIT2 SaveAll: exited=True diskHas09=False
+QUIT2 FAIL
+scene.bsn SHA unchanged: True
+T08_T2_QA_LIVE2_DONE

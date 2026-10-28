@@ -1,0 +1,14 @@
+True
+editor ready pid=110888 (idle)
+== cycle 1 ==
+  play dispatched; hammering stop every 100ms
+  stop outcome=finished after 19 attempts
+== cycle 2 ==
+  play dispatched; hammering stop every 100ms
+  stop outcome=finished after 39 attempts
+== cycle 3 ==
+  play dispatched; hammering stop every 100ms
+  stop outcome=finished after 39 attempts
+final observation 6s...
+BRP alive=True CPU delta=9.5s/6s
+N10_PROBE_DONE case=D froze=False

@@ -1,0 +1,23 @@
+True
+
+entities id               result   warnings
+-------- --               ------   --------
+{}       scene.open       finished {}      
+{}       pie.play_current finished {}      
+text_input count: 21
+row[0]: y=35.0 value='' entity=4294963135
+row[1]: y=35.0 value='' entity=4294963147
+row[2]: y=76.0 value='' entity=4294963141
+row[3]: y=122.0 value='' entity=4294963138
+row[4]: y=173.0 value='' entity=8589929984
+row[5]: y=173.0 value='' entity=8589929974
+row[6]: y=173.0 value='' entity=8589930050
+row[7]: y=177.0 value='' entity=8589929770
+row[8]: y=177.0 value='' entity=8589929889
+row[9]: y=177.0 value='' entity=8589929909
+row[10]: y=177.0 value='' entity=8589929865
+row[11]: y=177.0 value='' entity=8589929829
+after drag sorted[1]: live_edits=0
+after drag sorted[2]: live_edits=0
+
+

@@ -1,0 +1,24 @@
+warning: linker stderr: rust-lld: ignoring unknown argument '-fuse-ld=lld'
+  |
+  = note: `#[warn(linker_messages)]` on by default
+
+warning: `jackdaw_env` (build script) generated 1 warning
+warning: `jackdaw_api_macros` (lib) generated 1 warning (1 duplicate)
+warning: `jackdaw_project_build` (build script) generated 1 warning (1 duplicate)
+warning: `jackdaw_package` (build script) generated 1 warning (1 duplicate)
+warning: `test_fixture_extension` (lib) generated 1 warning (1 duplicate)
+   Compiling jackdaw v0.21.0-dev (E:\Project\rust\jackdaw)
+warning: `jackdaw` (lib test) generated 1 warning (1 duplicate)
+    Finished `test` profile [optimized + debuginfo] target(s) in 29.77s
+     Running unittests src\lib.rs (target\debug\deps\jackdaw-b8bb05f875dbf70a.exe)
+
+running 6 tests
+test pie::graceful_stop_tests::past_the_deadline_the_child_is_killed_once ... ok
+test pie::graceful_stop_tests::inside_the_window_the_stage_is_kept ... ok
+test pie::graceful_stop_tests::handle_stop_arms_the_window_and_waits_for_the_reap ... ok
+test pie::graceful_stop_tests::force_stop_all_kills_now ... ok
+test pie::graceful_stop_tests::a_connecting_child_already_counts_as_playing ... ok
+test pie::graceful_stop_tests::a_self_exit_inside_the_window_is_graceful ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 1161 filtered out; finished in 0.14s
+

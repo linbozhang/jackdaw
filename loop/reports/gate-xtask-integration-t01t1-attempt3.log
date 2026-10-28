@@ -1,0 +1,543 @@
+warning: linker stderr: rust-lld: ignoring unknown argument '-fuse-ld=lld'
+  |
+  = note: `#[warn(linker_messages)]` on by default
+
++ cargo nextest run --profile ci --workspace --features dylib --tests -E not (binary(bsn_game_run) | binary(editor_journey) | binary(stress_reload) | binary(scaffold_e2e) | binary(reflect_auto_register) | binary(component_shape_refresh) | binary(dylib_linkage_identity) | binary(extern_redirect_ecosystem) | binary(mcp_smoke))
+warning: linker stderr: rust-lld: ignoring unknown argument '-fuse-ld=lld'
+  |
+  = note: `#[warn(linker_messages)]` on by default
+
+warning: `jackdaw_env` (build script) generated 1 warning
+   Compiling jackdaw_env v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_env)
+warning: `jackdaw_api_macros` (lib) generated 1 warning (1 duplicate)
+warning: `jackdaw_package` (build script) generated 1 warning (1 duplicate)
+warning: `jackdaw_project_build` (build script) generated 1 warning (1 duplicate)
+   Compiling jackdaw_rustc_wrapper v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_rustc_wrapper)
+   Compiling ring v0.17.14
+warning: `jackdaw_animation` (lib test) generated 1 warning (1 duplicate)
+warning: `jackdaw_panels` (lib test) generated 1 warning (1 duplicate)
+warning: `jackdaw_node_graph` (lib test) generated 1 warning (1 duplicate)
+warning: `jackdaw_csg` (test "boolean_no_bevy") generated 1 warning (1 duplicate)
+warning: `jackdaw_csg` (test "beveled_cube_subtract") generated 1 warning (1 duplicate)
+warning: `jackdaw_csg` (test "box_cutter_against_concave") generated 1 warning (1 duplicate)
+warning: `jackdaw_feathers` (lib test) generated 1 warning (1 duplicate)
+warning: `jackdaw_csg` (test "corner_bite_subtract") generated 1 warning (1 duplicate)
+warning: `jackdaw_csg` (test "brush_booleans") generated 1 warning (1 duplicate)
+warning: `jackdaw_runtime` (test "ui_scene_ownership") generated 1 warning (1 duplicate)
+warning: `jackdaw_runtime` (test "binary_assets") generated 1 warning (1 duplicate)
+warning: `jackdaw_runtime` (test "replaced_children_transforms") generated 1 warning (1 duplicate)
+warning: `jackdaw_runtime` (test "insert_observer_global_transform") generated 1 warning (1 duplicate)
+warning: `jackdaw_runtime` (test "lod_group") generated 1 warning (1 duplicate)
+warning: `jackdaw_runtime` (test "retired_ui_components") generated 1 warning (1 duplicate)
+warning: `jackdaw_runtime` (test "catalog_loading") generated 1 warning (1 duplicate)
+warning: `jackdaw_csg` (lib test) generated 1 warning (1 duplicate)
+warning: `jackdaw_runtime` (test "texture_import") generated 1 warning (1 duplicate)
+warning: `jackdaw_runtime` (test "runtime_bindings") generated 1 warning (1 duplicate)
+warning: `jackdaw_runtime` (test "model_parts") generated 1 warning (1 duplicate)
+warning: `jackdaw_runtime` (test "terrain_scene_load") generated 1 warning (1 duplicate)
+warning: `jackdaw_runtime` (test "authored_widgets") generated 1 warning (1 duplicate)
+warning: `jackdaw_runtime` (test "text_value_bindings") generated 1 warning (1 duplicate)
+warning: `jackdaw_hull` (lib test) generated 1 warning (1 duplicate)
+warning: `jackdaw_runtime` (test "headless_brush_load") generated 1 warning (1 duplicate)
+warning: `jackdaw_runtime` (test "animation_scene_load") generated 1 warning (1 duplicate)
+warning: `jackdaw_runtime` (test "progress_bindings") generated 1 warning (1 duplicate)
+warning: `jackdaw_runtime` (test "scene_root_name") generated 1 warning (1 duplicate)
+warning: `jackdaw_runtime` (test "headless_render_brush_load") generated 1 warning (1 duplicate)
+warning: `jackdaw_localization` (lib test) generated 1 warning (1 duplicate)
+warning: `jackdaw_runtime` (test "model_lod") generated 1 warning (1 duplicate)
+warning: `jackdaw_runtime` (test "prefab_resolution") generated 1 warning (1 duplicate)
+warning: `jackdaw_runtime` (test "navmesh_scene_load") generated 1 warning (1 duplicate)
+warning: `jackdaw_runtime` (test "document_twins") generated 1 warning (1 duplicate)
+warning: `jackdaw_runtime` (test "headless_bsn_load") generated 1 warning (1 duplicate)
+warning: `jackdaw_runtime` (test "gltf_source_paths") generated 1 warning (1 duplicate)
+warning: `jackdaw_runtime` (lib test) generated 1 warning (1 duplicate)
+warning: `jackdaw_jsn` (test "brush_bevel_pipeline") generated 1 warning (1 duplicate)
+warning: `jackdaw_multiplayer` (test "jsn_roundtrip") generated 1 warning (1 duplicate)
+warning: `jackdaw_jsn` (test "brush_constructors") generated 1 warning (1 duplicate)
+warning: `jackdaw_remote` (test "methods") generated 1 warning (1 duplicate)
+warning: `jackdaw_geometry` (test "halfedge_face_poke") generated 1 warning (1 duplicate)
+warning: `jackdaw_geometry` (test "halfedge_edge_slide") generated 1 warning (1 duplicate)
+warning: `jackdaw_surface` (lib test) generated 1 warning (1 duplicate)
+warning: `jackdaw_geometry` (lib test) generated 1 warning (1 duplicate)
+warning: `jackdaw_geometry` (test "halfedge_lift") generated 1 warning (1 duplicate)
+warning: `jackdaw_geometry` (test "halfedge_types") generated 1 warning (1 duplicate)
+warning: `jackdaw_geometry` (test "halfedge_contextual_create") generated 1 warning (1 duplicate)
+warning: `jackdaw_geometry` (test "halfedge_connect_verts") generated 1 warning (1 duplicate)
+warning: `jackdaw_jsn` (lib test) generated 1 warning (1 duplicate)
+warning: `jackdaw_multiplayer` (lib test) generated 1 warning (1 duplicate)
+warning: `jackdaw_geometry` (test "halfedge_loop_walk") generated 1 warning (1 duplicate)
+warning: `jackdaw_camera_rig` (lib test) generated 1 warning (1 duplicate)
+warning: `jackdaw_geometry` (test "halfedge_edge_split") generated 1 warning (1 duplicate)
+warning: `jackdaw_geometry` (test "halfedge_face_retriangulate") generated 1 warning (1 duplicate)
+warning: `jackdaw_terrain` (lib test) generated 1 warning (1 duplicate)
+warning: `jackdaw_geometry` (test "halfedge_validate") generated 1 warning (1 duplicate)
+warning: `jackdaw_geometry` (test "halfedge_cycles") generated 1 warning (1 duplicate)
+warning: `jackdaw_geometry` (test "halfedge_remove_doubles") generated 1 warning (1 duplicate)
+warning: `jackdaw_geometry` (test "halfedge_face_split") generated 1 warning (1 duplicate)
+warning: `jackdaw_geometry` (test "cuboid") generated 1 warning (1 duplicate)
+warning: `jackdaw_prefab` (test "nested_instance_ids") generated 1 warning (1 duplicate)
+warning: `jackdaw_geometry` (test "halfedge_edge_bevel") generated 1 warning (1 duplicate)
+warning: `jackdaw_geometry` (test "halfedge_vertex_bevel") generated 1 warning (1 duplicate)
+warning: `jackdaw_geometry` (test "halfedge_delete_elements") generated 1 warning (1 duplicate)
+warning: `jackdaw_animation_runtime` (test "animation_graphs") generated 1 warning (1 duplicate)
+warning: `jackdaw_geometry` (test "halfedge_vertex_slide") generated 1 warning (1 duplicate)
+warning: `jackdaw_geometry` (test "halfedge_ring_walk") generated 1 warning (1 duplicate)
+warning: `jackdaw_schema` (lib test) generated 1 warning (1 duplicate)
+warning: `jackdaw_geometry` (test "halfedge_inset") generated 1 warning (1 duplicate)
+warning: `jackdaw_geometry` (test "halfedge_flatten") generated 1 warning (1 duplicate)
+warning: `jackdaw_geometry` (test "triangulate") generated 1 warning (1 duplicate)
+warning: `jackdaw_geometry` (test "halfedge_bridge") generated 1 warning (1 duplicate)
+warning: `jackdaw_geometry` (test "halfedge_extrude") generated 1 warning (1 duplicate)
+warning: `jackdaw_geometry` (test "halfedge_dissolve_edges") generated 1 warning (1 duplicate)
+warning: `jackdaw_material` (lib test) generated 1 warning (1 duplicate)
+warning: `jackdaw_animation_runtime` (test "animation_sets") generated 1 warning (1 duplicate)
+warning: `jackdaw_geometry` (test "halfedge_select") generated 1 warning (1 duplicate)
+warning: `jackdaw_geometry` (test "diagnose_dissolve_render") generated 1 warning (1 duplicate)
+warning: `jackdaw_geometry` (test "halfedge_knife") generated 1 warning (1 duplicate)
+warning: `jackdaw_geometry` (test "halfedge_linked_walk") generated 1 warning (1 duplicate)
+warning: `jackdaw_geometry` (test "newell") generated 1 warning (1 duplicate)
+warning: `jackdaw_geometry` (test "halfedge_dissolve_verts") generated 1 warning (1 duplicate)
+warning: `jackdaw_geometry` (test "halfedge_dissolve_faces") generated 1 warning (1 duplicate)
+warning: `jackdaw_geometry` (test "halfedge_bisect_plane") generated 1 warning (1 duplicate)
+warning: `jackdaw_geometry` (test "halfedge_subdivide") generated 1 warning (1 duplicate)
+warning: `jackdaw_geometry` (test "topology_edit") generated 1 warning (1 duplicate)
+warning: `jackdaw_geometry` (test "halfedge_loop_cut") generated 1 warning (1 duplicate)
+warning: `jackdaw_geometry` (test "topology_basics") generated 1 warning (1 duplicate)
+warning: `jackdaw_remote` (lib test) generated 1 warning (1 duplicate)
+warning: `jackdaw_bsn` (test "emitter") generated 1 warning (1 duplicate)
+warning: `jackdaw_bsn` (test "from_reflect_handles") generated 1 warning (1 duplicate)
+warning: `jackdaw_bsn` (test "loader") generated 1 warning (1 duplicate)
+warning: `jackdaw_animation_runtime` (lib test) generated 1 warning (1 duplicate)
+warning: `jackdaw_bsn` (test "list_element_drops") generated 1 warning (1 duplicate)
+warning: `jackdaw_bsn` (test "set_field") generated 1 warning (1 duplicate)
+warning: `jackdaw_bind` (test "marker_bindings") generated 1 warning (1 duplicate)
+warning: `jackdaw_uv` (lib test) generated 1 warning (1 duplicate)
+warning: `jackdaw_bind` (test "action_bindings") generated 1 warning (1 duplicate)
+warning: `jackdaw_bind` (test "resolved_bindings") generated 1 warning (1 duplicate)
+warning: `jackdaw_bsn` (test "bindings_round_trip") generated 1 warning (1 duplicate)
+warning: `jackdaw_pick` (lib test) generated 1 warning (1 duplicate)
+warning: `jackdaw_bind` (test "hud_scenario") generated 1 warning (1 duplicate)
+warning: `jackdaw_scene_types` (lib test) generated 1 warning (1 duplicate)
+warning: `jackdaw_bsn` (test "apply_refusals") generated 1 warning (1 duplicate)
+warning: `jackdaw_bsn` (test "parse") generated 1 warning (1 duplicate)
+warning: `jackdaw_widgets` (lib test) generated 1 warning (1 duplicate)
+warning: `jackdaw_bind` (test "field_bindings") generated 1 warning (1 duplicate)
+warning: `jackdaw_bsn` (test "binary_form") generated 1 warning (1 duplicate)
+warning: `jackdaw_bsn` (test "bevy_020_syntax") generated 1 warning (1 duplicate)
+warning: `jackdaw_select` (lib test) generated 1 warning (1 duplicate)
+warning: `jackdaw_bsn` (test "opaque_values") generated 1 warning (1 duplicate)
+warning: `jackdaw_prefab` (lib test) generated 1 warning (1 duplicate)
+warning: `jackdaw_bsn` (lib test) generated 1 warning (1 duplicate)
+warning: `jackdaw_bsn` (test "document_mutation") generated 1 warning (1 duplicate)
+warning: `jackdaw_bind` (test "layout_ordering") generated 1 warning (1 duplicate)
+warning: `jackdaw_bsn` (test "apply") generated 1 warning (1 duplicate)
+warning: `jackdaw_bind` (test "value_bindings") generated 1 warning (1 duplicate)
+warning: `bevy_window_chrome` (lib test) generated 1 warning (1 duplicate)
+warning: `jackdaw_bind` (lib test) generated 1 warning (1 duplicate)
+warning: `jackdaw_camera` (lib test) generated 1 warning (1 duplicate)
+warning: `jackdaw_input` (lib test) generated 1 warning (1 duplicate)
+warning: `jackdaw_widgets_runtime` (lib test) generated 1 warning (1 duplicate)
+warning: `jackdaw_pie_protocol` (lib test) generated 1 warning (1 duplicate)
+warning: `jackdaw_commands` (lib test) generated 1 warning (1 duplicate)
+warning: `jackdaw_fuzzy` (lib test) generated 1 warning (1 duplicate)
+warning: `jackdaw_snap` (lib test) generated 1 warning (1 duplicate)
+warning: `jackdaw_api_macros` (lib test) generated 1 warning (1 duplicate)
+   Compiling jackdaw_api_internal v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_api_internal)
+   Compiling jackdaw_project_build v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_project_build)
+   Compiling jackdaw_package v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_package)
+   Compiling jackdaw_releases v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_releases)
+   Compiling jackdaw_mcp v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_mcp)
+warning: `jackdaw_env` (lib test) generated 1 warning (1 duplicate)
+warning: `jackdaw_rustc_wrapper` (lib test) generated 1 warning (1 duplicate)
+   Compiling jackdaw_scaffold v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_scaffold)
+warning: `jackdaw_rustc_wrapper` (bin "jackdaw-rustc-wrapper" test) generated 1 warning (1 duplicate)
+   Compiling jackdaw_cli_internal v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_cli)
+warning: `jackdaw_package` (lib test) generated 1 warning (1 duplicate)
+warning: `jackdaw_releases` (lib test) generated 1 warning (1 duplicate)
+   Compiling jackdaw_loader v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_loader)
+   Compiling rustls-webpki v0.103.14
+   Compiling rustls v0.23.43
+warning: `jackdaw_api_internal` (lib test) generated 1 warning (1 duplicate)
+warning: `jackdaw_mcp` (bin "jd-mcp" test) generated 1 warning (1 duplicate)
+warning: `jackdaw_cli_internal` (lib test) generated 1 warning (1 duplicate)
+   Compiling ureq v2.12.1
+   Compiling jackdaw_dylib v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_dylib)
+   Compiling jd v0.21.0-dev (E:\Project\rust\jackdaw\crates\jd)
+warning: `jackdaw_scaffold` (lib test) generated 1 warning (1 duplicate)
+warning: `jackdaw_mcp` (lib test) generated 1 warning (1 duplicate)
+warning: `jackdaw_project_build` (lib test) generated 1 warning (1 duplicate)
+warning: `jackdaw_dylib` (lib test) generated 1 warning (1 duplicate)
+warning: `jackdaw_loader` (lib test) generated 1 warning (1 duplicate)
+warning: `jd` (test "editor_installs") generated 1 warning (1 duplicate)
+warning: `jackdaw_dylib` (lib) generated 1 warning (1 duplicate)
+   Compiling jackdaw_api v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_api)
+   Compiling jackdaw_multiplayer_editor v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_multiplayer_editor)
+   Compiling jackdaw_extension v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_extension)
+   Compiling jackdaw_sdk v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_sdk)
+   Compiling test_fixture_extension v0.0.0 (E:\Project\rust\jackdaw\tests\fixtures\test_fixture_extension)
+   Compiling dynamic_extension v0.1.0 (E:\Project\rust\jackdaw\examples\extension\dynamic_extension)
+   Compiling viewable_camera_extension v0.1.0 (E:\Project\rust\jackdaw\examples\extension\viewable_camera_extension)
+warning: `jd` (bin "jd" test) generated 1 warning (1 duplicate)
+warning: `jd` (test "standalone_scaffold") generated 1 warning (1 duplicate)
+warning: `jackdaw_api` (lib test) generated 1 warning (1 duplicate)
+warning: `jd` (bin "jd") generated 1 warning (1 duplicate)
+warning: `jd` (lib test) generated 1 warning (1 duplicate)
+warning: `jackdaw_sdk` (lib) generated 1 warning (1 duplicate)
+   Compiling jackdaw v0.21.0-dev (E:\Project\rust\jackdaw)
+warning: `jackdaw_sdk` (lib test) generated 1 warning (1 duplicate)
+warning: `jackdaw_extension` (lib test) generated 1 warning (1 duplicate)
+warning: `jackdaw_multiplayer_editor` (lib test) generated 1 warning (1 duplicate)
+warning: `test_fixture_extension` (lib) generated 1 warning (1 duplicate)
+warning: `test_fixture_extension` (lib test) generated 1 warning (1 duplicate)
+warning: `dynamic_extension` (lib test) generated 1 warning (1 duplicate)
+warning: `viewable_camera_extension` (lib test) generated 1 warning (1 duplicate)
+warning: `jackdaw` (lib test) generated 1 warning (1 duplicate)
+   Compiling jackdaw_editor v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_editor)
+error: linking with `rust-lld` failed: exit code: 1
+  |
+  = note: "rust-lld" "-flavor" "link" "/NOLOGO" "E:\\Project\\rust\\jackdaw\\target\\debug\\deps\\rustcFqfHDn\\symbols.o" "<42 object files omitted>" "E:\\Project\\rust\\jackdaw\\target\\debug\\deps/{libjackdaw_env-86b5eb86e1b56645,libdirs-1eaf56e21d3b5c0d,libdirs_sys-86430a5156f51d75,liboption_ext-f5dfd6d3eb39258a,libserde-1c4fd26c41887864,libtempfile-9af24062b7f0ea69,libgetrandom-f3b226e40385b595,librand_core-8a87d1ab1cd17632,libcfg_if-13b67e259b315b57,libfastrand-867f3ff1c1400893,libonce_cell-1c31de0e522c7a0d,libwindows_sys-95273cccd4350195,libwindows_link-14ad683cc9ebe8a6}.rlib" "<sysroot>\\lib\\rustlib\\x86_64-pc-windows-msvc\\lib/{libtest-*,libgetopts-*,librustc_std_workspace_std-*}.rlib" "E:\\Project\\rust\\jackdaw\\target\\debug\\deps/{libserde_json-f286ad9cb219a4a8,libmemchr-222320c1efaf4466,libitoa-1bd8ea2ade00e12c,libzmij-6d913c2a3e8738e4,libserde_core-52b55ea2da964465}.rlib" "<sysroot>\\lib\\rustlib\\x86_64-pc-windows-msvc\\lib/{libstd-*,libpanic_unwind-*,libcfg_if-*,libwindows_link-*,librustc_demangle-*,libstd_detect-*,libhashbrown-*,librustc_std_workspace_alloc-*,libunwind-*,librustc_std_workspace_core-*,liballoc-*,libcore-*,libcompiler_builtins-*}.rlib" "kernel32.lib" "kernel32.lib" "kernel32.lib" "kernel32.lib" "ntdll.lib" "userenv.lib" "ws2_32.lib" "dbghelp.lib" "/defaultlib:msvcrt" "/NXCOMPAT" "/LIBPATH:E:\\Project\\rust\\jackdaw\\target\\debug\\build\\blake3-473817b0af235f5b\\out" "/LIBPATH:E:\\Project\\rust\\jackdaw\\target\\debug\\build\\basis-universal-sys-6d45e3c315748e4e\\out" "/LIBPATH:E:\\Project\\rust\\jackdaw\\target\\debug\\build\\meshopt-8dcda4d966823908\\out" "/LIBPATH:C:\\Program Files\\Microsoft Visual Studio\\2022\\Professional\\VC\\Tools\\MSVC\\14.44.35207\\atlmfc\\lib\\x64" "/LIBPATH:C:\\Users\\linbo.zhang\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\windows_x86_64_msvc-0.53.1\\lib" "/LIBPATH:C:\\Users\\linbo.zhang\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\windows_x86_64_msvc-0.52.6\\lib" "/OUT:E:\\Project\\rust\\jackdaw\\target\\debug\\deps\\mcp_smoke-06bc4d5918be7405.exe" "/OPT:REF,ICF" "/DEBUG" "/PDBALTPATH:%_PDB%" "/NATVIS:<sysroot>\\lib\\rustlib\\etc\\intrinsic.natvis" "/NATVIS:<sysroot>\\lib\\rustlib\\etc\\liballoc.natvis" "/NATVIS:<sysroot>\\lib\\rustlib\\etc\\libcore.natvis" "/NATVIS:<sysroot>\\lib\\rustlib\\etc\\libstd.natvis" "-fuse-ld=lld"
+  = note: some arguments are omitted. use `--verbose` to show all linker arguments
+  = note: rust-lld: warning: ignoring unknown argument '-fuse-ld=lld'
+          rust-lld: error: <root>: undefined symbol: mainCRTStartup
+          rust-lld: error: undefined symbol: __CxxFrameHandler3
+          >>> referenced by E:\Project\rust\jackdaw\target\debug\deps\mcp_smoke-06bc4d5918be7405.0c67tuycmf1y3qfx5oncosokm.15sgwk3.rcgu.o:(.xdata)
+          >>> referenced by E:\Project\rust\jackdaw\target\debug\deps\mcp_smoke-06bc4d5918be7405.0edb8mp89428gxaqlcr2tb5z5.15sgwk3.rcgu.o:(.xdata)
+          >>> referenced by E:\Project\rust\jackdaw\target\debug\deps\mcp_smoke-06bc4d5918be7405.11mjzziwnngb0u2o6krvq5pz1.15sgwk3.rcgu.o:(.xdata)
+          >>> referenced 870 more times
+          
+          rust-lld: error: undefined symbol: memcpy
+          >>> referenced by C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde_json-1.0.151\src\value\de.rs:1346
+          >>>               E:\Project\rust\jackdaw\target\debug\deps\mcp_smoke-06bc4d5918be7405.0c67tuycmf1y3qfx5oncosokm.15sgwk3.rcgu.o:(<serde_json::value::de::KeyClassifier as serde_core::de::DeserializeSeed>::deserialize::<serde_json::de::MapKey<serde_json::read::StrRead>>)
+          >>> referenced by C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde_json-1.0.151\src\value\mod.rs:999
+          >>>               E:\Project\rust\jackdaw\target\debug\deps\mcp_smoke-06bc4d5918be7405.4isyrjmz7h2lzdafqw23syj00.15sgwk3.rcgu.o:(serde_json::value::to_value::<&&str>)
+          >>> referenced by C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde_core-1.0.229\src\ser\impls.rs:472
+          >>>               E:\Project\rust\jackdaw\target\debug\deps\mcp_smoke-06bc4d5918be7405.4isyrjmz7h2lzdafqw23syj00.15sgwk3.rcgu.o:(<&serde_json::value::Value as serde_core::ser::Serialize>::serialize::<serde_json::value::ser::Serializer>)
+          >>> referenced 458 more times
+          
+          rust-lld: error: undefined symbol: memcmp
+          >>> referenced by C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde_json-1.0.151\src\value\mod.rs:151
+          >>>               E:\Project\rust\jackdaw\target\debug\deps\mcp_smoke-06bc4d5918be7405.4isyrjmz7h2lzdafqw23syj00.15sgwk3.rcgu.o:(<serde_json::value::Value as core::cmp::PartialEq>::eq)
+          >>> referenced by E:\Project\rust\jackdaw\tests\mcp_smoke.rs:230
+          >>>               E:\Project\rust\jackdaw\target\debug\deps\mcp_smoke-06bc4d5918be7405.5hott7xi2t76665k1qeyz3vot.15sgwk3.rcgu.o:(mcp_smoke::jd_mcp_initializes_and_reaches_a_running_editor)
+          >>> referenced by E:\Project\rust\jackdaw\tests\mcp_smoke.rs:251
+          >>>               E:\Project\rust\jackdaw\target\debug\deps\mcp_smoke-06bc4d5918be7405.5hott7xi2t76665k1qeyz3vot.15sgwk3.rcgu.o:(mcp_smoke::jd_mcp_initializes_and_reaches_a_running_editor)
+          >>> referenced 77 more times
+          
+          rust-lld: error: undefined symbol: _fltused
+          >>> referenced by E:\Project\rust\jackdaw\target\debug\deps\mcp_smoke-06bc4d5918be7405.4isyrjmz7h2lzdafqw23syj00.15sgwk3.rcgu.o
+          >>> referenced by E:\Project\rust\jackdaw\target\debug\deps\mcp_smoke-06bc4d5918be7405.4rptxbiflk9izbwhe7dsdlxwk.15sgwk3.rcgu.o
+          >>> referenced by E:\Project\rust\jackdaw\target\debug\deps\mcp_smoke-06bc4d5918be7405.5hott7xi2t76665k1qeyz3vot.15sgwk3.rcgu.o
+          
+          rust-lld: error: undefined symbol: memmove
+          >>> referenced by C:\Users\linbo.zhang\.rustup\toolchains\1.99.0-x86_64-pc-windows-msvc\lib\rustlib\src\rust\library\alloc\src\collections\btree\node.rs:1065
+          >>>               E:\Project\rust\jackdaw\target\debug\deps\mcp_smoke-06bc4d5918be7405.cekkwkr1svn5olsckvmoxb2ad.15sgwk3.rcgu.o:(<alloc::collections::btree::node::Handle<alloc::collections::btree::node::NodeRef<alloc::collections::btree::node::marker::Mut, alloc::string::String, serde_json::value::Value, alloc::collections::btree::node::marker::Leaf>, alloc::collections::btree::node::marker::Edge>>::insert_recursing::<alloc::alloc::Global, <alloc::collections::btree::map::entry::VacantEntry<alloc::string::String, serde_json::value::Value>>::insert_entry::{closure#0}>)
+          >>> referenced by C:\Users\linbo.zhang\.rustup\toolchains\1.99.0-x86_64-pc-windows-msvc\lib\rustlib\src\rust\library\alloc\src\collections\btree\node.rs:1065
+          >>>               E:\Project\rust\jackdaw\target\debug\deps\mcp_smoke-06bc4d5918be7405.cekkwkr1svn5olsckvmoxb2ad.15sgwk3.rcgu.o:(<alloc::collections::btree::node::Handle<alloc::collections::btree::node::NodeRef<alloc::collections::btree::node::marker::Mut, alloc::string::String, serde_json::value::Value, alloc::collections::btree::node::marker::Leaf>, alloc::collections::btree::node::marker::Edge>>::insert_recursing::<alloc::alloc::Global, <alloc::collections::btree::map::entry::VacantEntry<alloc::string::String, serde_json::value::Value>>::insert_entry::{closure#0}>)
+          >>> referenced by C:\Users\linbo.zhang\.rustup\toolchains\1.99.0-x86_64-pc-windows-msvc\lib\rustlib\src\rust\library\alloc\src\collections\btree\node.rs:1009
+          >>>               E:\Project\rust\jackdaw\target\debug\deps\mcp_smoke-06bc4d5918be7405.cekkwkr1svn5olsckvmoxb2ad.15sgwk3.rcgu.o:(<alloc::collections::btree::node::Handle<alloc::collections::btree::node::NodeRef<alloc::collections::btree::node::marker::Mut, alloc::string::String, serde_json::value::Value, alloc::collections::btree::node::marker::Internal>, alloc::collections::btree::node::marker::Edge>>::insert_fit)
+          >>> referenced 96 more times
+          
+          rust-lld: error: undefined symbol: memset
+          >>> referenced by /rustc/b940084d7eb6a299eb4bfeb8e34901bc051e7ac4/library\alloc\src\io\cursor.rs:161
+          >>>               libtempfile-9af24062b7f0ea69.rlib(tempfile-9af24062b7f0ea69.tempfile.8291e22118f92c0d-cgu.3.rcgu.o):(alloc::io::cursor::reserve_and_pad::<alloc::alloc::Global>)
+          >>> referenced by /rust/deps\hashbrown-0.17.1/src\raw.rs:1638
+          >>>               libtest-d303f45be7ac867f.rlib(test-d303f45be7ac867f.test.e112c08b187fe2b6-cgu.0.rcgu.o):(<hashbrown::raw::RawTableInner>::fallible_with_capacity::<alloc::alloc::Global>)
+          >>> referenced by /rustc/b940084d7eb6a299eb4bfeb8e34901bc051e7ac4/library\alloc\src\io\read.rs:947
+          >>>               libtest-d303f45be7ac867f.rlib(test-d303f45be7ac867f.test.e112c08b187fe2b6-cgu.0.rcgu.o):(alloc::io::read::default_read_to_end::<core::io::util::Take<&mut dyn alloc::io::read::Read>>)
+          >>> referenced 48 more times
+          
+          rust-lld: error: undefined symbol: _tls_index
+          >>> referenced by /rustc/b940084d7eb6a299eb4bfeb8e34901bc051e7ac4/library\std\src\sys\thread_local\native\mod.rs:103
+          >>>               libfastrand-867f3ff1c1400893.rlib(fastrand-867f3ff1c1400893.fastrand.5b369218cc02e8aa-cgu.0.rcgu.o):(fastrand::global_rng::RNG::{K#0}::{closure#1}::__RUST_STD_INTERNAL_VAL::{shim:tls#0})
+          >>> referenced by C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\fastrand-2.5.0\src\global_rng.rs:181
+          >>>               libfastrand-867f3ff1c1400893.rlib(fastrand-867f3ff1c1400893.fastrand.5b369218cc02e8aa-cgu.0.rcgu.o):(fastrand::global_rng::f32_inclusive)
+          >>> referenced by C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\fastrand-2.5.0\src\global_rng.rs:191
+          >>>               libfastrand-867f3ff1c1400893.rlib(fastrand-867f3ff1c1400893.fastrand.5b369218cc02e8aa-cgu.0.rcgu.o):(fastrand::global_rng::f64_inclusive)
+          >>> referenced 60 more times
+          
+          rust-lld: error: undefined symbol: __chkstk
+          >>> referenced by /rustc/b940084d7eb6a299eb4bfeb8e34901bc051e7ac4/library\core\src\slice\sort\stable\mod.rs:94
+          >>>               libtest-d303f45be7ac867f.rlib(test-d303f45be7ac867f.test.e112c08b187fe2b6-cgu.0.rcgu.o):(core::slice::sort::stable::driftsort_main::<alloc::string::String, <alloc::string::String as core::cmp::PartialOrd>::lt, alloc::vec::Vec<alloc::string::String>>)
+          >>> referenced by /rustc/b940084d7eb6a299eb4bfeb8e34901bc051e7ac4/library\core\src\slice\sort\stable\mod.rs:94
+          >>>               libtest-d303f45be7ac867f.rlib(test-d303f45be7ac867f.test.e112c08b187fe2b6-cgu.0.rcgu.o):(core::slice::sort::stable::driftsort_main::<f64, <[f64]>::sort_by<test::stats::local_sort::{closure#0}>::{closure#0}, alloc::vec::Vec<f64>>)
+          >>> referenced by /rustc/b940084d7eb6a299eb4bfeb8e34901bc051e7ac4/library\std\src\sys\backtrace.rs:162
+          >>>               libstd-512d688ad63bc3c4.rlib(std-512d688ad63bc3c4.std.f8439e2c5135d149-cgu.0.rcgu.o):(std::sys::backtrace::__rust_begin_short_backtrace::<std::sys::process::windows::child_pipe::spawn_pipe_relay::{closure#0}, ()>)
+          >>> referenced 6 more times
+          
+          rust-lld: error: undefined symbol: fmod
+          >>> referenced by /rustc/b940084d7eb6a299eb4bfeb8e34901bc051e7ac4/library\test\src\bench.rs:106
+          >>>               libtest-d303f45be7ac867f.rlib(test-d303f45be7ac867f.test.e112c08b187fe2b6-cgu.0.rcgu.o):(test::bench::fmt_thousands_sep)
+          
+          rust-lld: error: undefined symbol: floor
+          >>> referenced by /rustc/b940084d7eb6a299eb4bfeb8e34901bc051e7ac4/library\test\src\stats.rs:274
+          >>>               libtest-d303f45be7ac867f.rlib(test-d303f45be7ac867f.test.e112c08b187fe2b6-cgu.0.rcgu.o):(test::stats::percentile_of_sorted)
+          >>> referenced by /rustc/b940084d7eb6a299eb4bfeb8e34901bc051e7ac4/library\test\src\stats.rs:244
+          >>>               libtest-d303f45be7ac867f.rlib(test-d303f45be7ac867f.test.e112c08b187fe2b6-cgu.0.rcgu.o):(<[f64] as test::stats::Stats>::quartiles)
+          >>> referenced by /rustc/b940084d7eb6a299eb4bfeb8e34901bc051e7ac4/library\test\src\stats.rs:246
+          >>>               libtest-d303f45be7ac867f.rlib(test-d303f45be7ac867f.test.e112c08b187fe2b6-cgu.0.rcgu.o):(<[f64] as test::stats::Stats>::quartiles)
+          >>> referenced 1 more times
+          
+          rust-lld: error: undefined symbol: const type_info::`vftable'
+          >>> referenced by libtest-d303f45be7ac867f.rlib(test-d303f45be7ac867f.test.e112c08b187fe2b6-cgu.0.rcgu.o):(__rustc::__rust_panic_type_info)
+          >>> referenced by libstd-512d688ad63bc3c4.rlib(std-512d688ad63bc3c4.std.f8439e2c5135d149-cgu.0.rcgu.o)
+          >>> referenced by libpanic_unwind-9a6982b5613ae144.rlib(panic_unwind-9a6982b5613ae144.panic_unwind.7cf39c7304ab4c15-cgu.0.rcgu.o):(panic_unwind::imp::TYPE_DESCRIPTOR)
+          
+          rust-lld: error: undefined symbol: wcslen
+          >>> referenced by /rustc/b940084d7eb6a299eb4bfeb8e34901bc051e7ac4/library\std\src\..\..\backtrace\src\symbolize\dbghelp.rs:202
+          >>>               libstd-512d688ad63bc3c4.rlib(std-512d688ad63bc3c4.std.f8439e2c5135d149-cgu.0.rcgu.o):(std::backtrace_rs::symbolize::dbghelp::resolve_with_inline)
+          >>> referenced by /rustc/b940084d7eb6a299eb4bfeb8e34901bc051e7ac4/library\std\src\sys\env\windows.rs:42
+          >>>               libstd-512d688ad63bc3c4.rlib(std-512d688ad63bc3c4.std.f8439e2c5135d149-cgu.0.rcgu.o):(<std::sys::env::windows::EnvIterator as core::iter::traits::iterator::Iterator>::next)
+          
+          rust-lld: error: undefined symbol: atexit
+          >>> referenced by /rustc/b940084d7eb6a299eb4bfeb8e34901bc051e7ac4/library\std\src\sys\thread_local\guard\windows.rs:163
+          >>>               libstd-512d688ad63bc3c4.rlib(std-512d688ad63bc3c4.std.f8439e2c5135d149-cgu.0.rcgu.o):(std::sys::thread_local::guard::windows::enable)
+          
+          rust-lld: error: undefined symbol: _CxxThrowException
+          >>> referenced by /rustc/b940084d7eb6a299eb4bfeb8e34901bc051e7ac4/library\panic_unwind\src\seh.rs:368
+          >>>               libpanic_unwind-9a6982b5613ae144.rlib(panic_unwind-9a6982b5613ae144.panic_unwind.7cf39c7304ab4c15-cgu.0.rcgu.o):(panic_unwind::imp::throw_exception)
+          
+          rust-lld: error: undefined symbol: strlen
+          >>> referenced by /rustc/b940084d7eb6a299eb4bfeb8e34901bc051e7ac4/library\alloc\src\ffi\c_str.rs:413
+          >>>               liballoc-a363f509dabb8931.rlib(alloc-a363f509dabb8931.alloc.5ef4293888d15ed5-cgu.0.rcgu.o):(<alloc::ffi::c_str::CString>::from_raw)
+          
+
+error: could not compile `jackdaw` (test "mcp_smoke") due to 1 previous error
+warning: build failed, waiting for other jobs to finish...
+error[E0463]: can't find crate for `jackdaw`
+ --> crates\jackdaw_editor\src\lib.rs:6:9
+  |
+6 | pub use jackdaw::prelude::{editor_window_plugin, primary_window_attributes};
+  |         ^^^^^^^ can't find crate
+
+error[E0463]: can't find crate for `jackdaw`
+  --> tests\dylib_linkage_identity.rs:22:5
+   |
+22 | use jackdaw::project_build::linkage::{LinkageError, verify_linkage};
+   |     ^^^^^^^ can't find crate
+
+error[E0463]: can't find crate for `jackdaw_api_internal`
+  --> tests\util\mod.rs:12:5
+   |
+12 | use jackdaw_api_internal::lifecycle::{ExtensionAppExt as _, OperatorEntity, enable_extension};
+   |     ^^^^^^^^^^^^^^^^^^^^ can't find crate
+
+error[E0460]: found possibly newer version of crate `rand` which `jackdaw` depends on
+ --> src\main.rs:4:5
+  |
+4 |     jackdaw::launch::run(|_| {})
+  |     ^^^^^^^
+  |
+  = note: perhaps that crate needs to be recompiled?
+  = note: the following crate versions were found:
+          crate `rand`: E:\Project\rust\jackdaw\target\debug\deps\librand-cf48c0d59ebce39b.rlib
+          crate `rand`: E:\Project\rust\jackdaw\target\debug\deps\librand-d5776c787f0db220.rmeta
+          crate `rand`: E:\Project\rust\jackdaw\target\debug\deps\librand-d5776c787f0db220.rlib
+          crate `rand`: E:\Project\rust\jackdaw\target\debug\deps\librand-3b5e0ef89f38d7e6.rmeta
+          crate `rand`: E:\Project\rust\jackdaw\target\debug\deps\librand-429aa418bfe9a963.rmeta
+          crate `rand`: E:\Project\rust\jackdaw\target\debug\deps\librand-5c913ef3d05d9429.rmeta
+          crate `jackdaw`: \\?\E:\Project\rust\jackdaw\target\debug\deps\libjackdaw-a6ca96663d430eff.rlib
+
+For more information about this error, try `rustc --explain E0463`.
+For more information about this error, try `rustc --explain E0460`.
+error[E0463]: can't find crate for `jackdaw`
+  --> tests\extern_redirect_ecosystem.rs:25:5
+   |
+25 | use jackdaw::project_build::plan::{SdkManifest, write_plan};
+   |     ^^^^^^^ can't find crate
+
+error[E0463]: can't find crate for `jackdaw`
+  --> tests\sdk_feature_superset.rs:28:5
+   |
+28 | use jackdaw::project_build::shim;
+   |     ^^^^^^^ can't find crate
+
+error[E0463]: can't find crate for `jackdaw_api_internal`
+  --> tests\panels\..\util\mod.rs:11:5
+   |
+11 | use jackdaw::prelude::*;
+   |     ^^^^^^^ can't find crate
+
+error[E0463]: can't find crate for `jackdaw_api_internal`
+ --> tests\panels\keybind.rs:7:5
+  |
+7 | use jackdaw_api_internal::keymap::{DefaultKeymap, PresetInput, find_conflicts};
+  |     ^^^^^^^^^^^^^^^^^^^^ can't find crate
+
+error[E0463]: can't find crate for `jackdaw`
+  --> tests\sdk_layout\..\util\mod.rs:11:5
+   |
+11 | use jackdaw::prelude::*;
+   |     ^^^^^^^ can't find crate
+
+error: could not compile `jackdaw_editor` (lib test) due to 1 previous error
+error: could not compile `jackdaw` (test "dylib_linkage_identity") due to 2 previous errors
+error[E0463]: can't find crate for `jackdaw_api_internal`
+  --> tests\sdk_layout\dylib_loading.rs:19:5
+   |
+19 | use jackdaw_api_internal::lifecycle::ExtensionCatalog;
+   |     ^^^^^^^^^^^^^^^^^^^^ can't find crate
+
+error[E0463]: can't find crate for `jackdaw_loader`
+  --> tests\sdk_layout\dylib_loading.rs:20:5
+   |
+20 | use jackdaw_loader::{LoadError, LoadedDylibs, load_from_path};
+   |     ^^^^^^^^^^^^^^ can't find crate
+
+error: could not compile `jackdaw` (test "extern_redirect_ecosystem") due to 2 previous errors
+error: could not compile `jackdaw` (bin "jackdaw" test) due to 1 previous error
+error: could not compile `jackdaw` (test "sdk_feature_superset") due to 1 previous error
+error: could not compile `jackdaw` (test "sdk_layout") due to 3 previous errors
+error: could not compile `jackdaw` (test "panels") due to 2 previous errors
+error[E0463]: can't find crate for `jackdaw_api`
+  --> tests\prefabs\..\util\mod.rs:11:5
+   |
+11 | use jackdaw::prelude::*;
+   |     ^^^^^^^ can't find crate
+
+error[E0463]: can't find crate for `jackdaw_api`
+    --> tests\prefabs\prefab_lifecycle.rs:1649:9
+     |
+1649 |     use jackdaw_api::prelude::*;
+     |         ^^^^^^^^^^^ can't find crate
+
+error[E0463]: can't find crate for `jackdaw_api_internal`
+    --> tests\prefabs\prefab_lifecycle.rs:3255:9
+     |
+3255 |     use jackdaw_api_internal::snapshot::ActiveSnapshotter;
+     |         ^^^^^^^^^^^^^^^^^^^^ can't find crate
+
+error[E0463]: can't find crate for `jackdaw`
+  --> tests\operators\..\util\mod.rs:11:5
+   |
+11 | use jackdaw::prelude::*;
+   |     ^^^^^^^ can't find crate
+
+error[E0463]: can't find crate for `jackdaw_api`
+  --> tests\operators\authoring_ops.rs:14:5
+   |
+14 | use jackdaw_api::prelude::*;
+   |     ^^^^^^^^^^^ can't find crate
+
+error[E0463]: can't find crate for `jackdaw_api_internal`
+ --> tests\operators\operator_tooltip.rs:9:5
+  |
+9 | use jackdaw_api_internal::keymap::ShortcutPlatform;
+  |     ^^^^^^^^^^^^^^^^^^^^ can't find crate
+
+error[E0463]: can't find crate for `jackdaw_api`
+  --> tests\scenes\..\util\mod.rs:11:5
+   |
+11 | use jackdaw::prelude::*;
+   |     ^^^^^^^ can't find crate
+
+error[E0463]: can't find crate for `jackdaw_api`
+  --> tests\scenes\load_progress.rs:14:5
+   |
+14 | use jackdaw_api::prelude::*;
+   |     ^^^^^^^^^^^ can't find crate
+
+error[E0463]: can't find crate for `jackdaw_api_internal`
+  --> tests\scenes\..\util\mod.rs:12:5
+   |
+12 | use jackdaw_api_internal::lifecycle::{ExtensionAppExt as _, OperatorEntity, enable_extension};
+   |     ^^^^^^^^^^^^^^^^^^^^ can't find crate
+
+error[E0432]: unresolved imports `jackdaw_api_internal::lifecycle::ExtensionAppExt`, `jackdaw_api_internal::lifecycle::OperatorEntity`, `jackdaw_api_internal::lifecycle::enable_extension`, `jackdaw_api_internal::snapshot::ActiveSnapshotter`, `jackdaw_api_internal::snapshot::SceneSnapshot`, `jackdaw::project_build::plan::SdkManifest`
+   --> tests\outliner\..\util\mod.rs:12:39
+    |
+ 12 | use jackdaw_api_internal::lifecycle::{ExtensionAppExt as _, OperatorEntity, enable_extension};
+    |                                       ^^^^^^^^^^^^^^^^^^^^  ^^^^^^^^^^^^^^  ^^^^^^^^^^^^^^^^
+ 13 | use jackdaw_api_internal::snapshot::{ActiveSnapshotter, SceneSnapshot};
+    |                                      ^^^^^^^^^^^^^^^^^  ^^^^^^^^^^^^^
+...
+466 |     use jackdaw::project_build::plan::SdkManifest;
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: could not compile `jackdaw` (test "prefabs") due to 3 previous errors
+error[E0463]: can't find crate for `jackdaw_api`
+  --> tests\viewport\..\util\mod.rs:11:5
+   |
+11 | use jackdaw::prelude::*;
+   |     ^^^^^^^ can't find crate
+
+error[E0463]: can't find crate for `jackdaw_api`
+  --> tests\viewport\multi_viewport.rs:13:5
+   |
+13 | use jackdaw_api::prelude::*;
+   |     ^^^^^^^^^^^ can't find crate
+
+error[E0463]: can't find crate for `jackdaw_api_internal`
+  --> tests\viewport\..\util\mod.rs:12:5
+   |
+12 | use jackdaw_api_internal::lifecycle::{ExtensionAppExt as _, OperatorEntity, enable_extension};
+   |     ^^^^^^^^^^^^^^^^^^^^ can't find crate
+
+error: could not compile `jackdaw` (test "operators") due to 3 previous errors
+error: could not compile `jackdaw` (test "scenes") due to 3 previous errors
+error: could not compile `jackdaw` (test "viewport") due to 3 previous errors
+error[E0405]: cannot find trait `JackdawExtension` in this scope
+   --> tests\outliner\..\util\mod.rs:222:41
+    |
+222 | pub fn register_and_enable_extension<T: JackdawExtension + Default>(app: &mut App) {
+    |                                         ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `OperatorResult` in this scope
+   --> tests\outliner\..\util\mod.rs:435:28
+    |
+420 | pub trait OperatorResultExt: Copy {
+    | --------------------------------- similarly named trait `OperatorResultExt` defined here
+...
+435 | impl OperatorResultExt for OperatorResult {
+    |                            ^^^^^^^^^^^^^^
+    |
+help: a trait with a similar name exists
+    |
+435 | impl OperatorResultExt for OperatorResultExt {
+    |                                          +++
+
+error[E0433]: cannot find type `JackdawEditorPlugins` in this scope
+   --> tests\outliner\..\util\mod.rs:104:21
+    |
+104 |     app.add_plugins(JackdawEditorPlugins::default());
+    |                     ^^^^^^^^^^^^^^^^^^^^ use of undeclared type `JackdawEditorPlugins`
+
+error[E0433]: cannot find type `OperatorResult` in this scope
+   --> tests\outliner\..\util\mod.rs:437:26
+    |
+437 |         assert_eq!(self, OperatorResult::Finished, "Operator failed to finish");
+    |                          ^^^^^^^^^^^^^^ use of undeclared type `OperatorResult`
+    |
+help: a trait with a similar name exists
+    |
+437 |         assert_eq!(self, OperatorResultExt::Finished, "Operator failed to finish");
+    |                                        +++
+
+error[E0433]: cannot find type `OperatorResult` in this scope
+   --> tests\outliner\..\util\mod.rs:442:13
+    |
+442 |             OperatorResult::Cancelled,
+    |             ^^^^^^^^^^^^^^ use of undeclared type `OperatorResult`
+    |
+help: a trait with a similar name exists
+    |
+442 |             OperatorResultExt::Cancelled,
+    |                           +++
+
+error[E0433]: cannot find type `OperatorResult` in this scope
+   --> tests\outliner\..\util\mod.rs:449:13
+    |
+449 |             OperatorResult::Running,
+    |             ^^^^^^^^^^^^^^ use of undeclared type `OperatorResult`
+    |
+help: a trait with a similar name exists
+    |
+449 |             OperatorResultExt::Running,
+    |                           +++
+
+Some errors have detailed explanations: E0405, E0425, E0432, E0433.
+For more information about an error, try `rustc --explain E0405`.
+error: could not compile `jackdaw` (test "outliner") due to 7 previous errors
+warning: `jackdaw` (test "sdk_recipe") generated 1 warning (1 duplicate)
+warning: `jackdaw` (test "sdk_installed_layout") generated 1 warning (1 duplicate)
+warning: `jackdaw` (test "editor_journey") generated 1 warning (1 duplicate)
+error: command `'C:\Users\linbo.zhang\.rustup\toolchains\1.99.0-x86_64-pc-windows-msvc\bin\cargo.exe' '--color=auto' test --no-run --message-format json-render-diagnostics --workspace --tests --features dylib` exited with code 101

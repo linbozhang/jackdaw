@@ -1,0 +1,24 @@
+True
+True
+snapshot A count=19
+  entity=4294963530 comps=3 :: bevy_gizmos::retained::Gizmo;bevy_transform::components::global_transform::GlobalTransform;bevy_transform::components::t
+  entity=4294963669 comps=4 :: bevy_light::cascade::CascadeShadowConfig;bevy_light::directional_light::DirectionalLight;bevy_transform::components::glo
+  entity=4294963691 comps=4 :: bevy_camera::projection::Projection;bevy_transform::components::global_transform::GlobalTransform;bevy_transform::compon
+  entity=4294963532 comps=4 :: bevy_dev_tools::infinite_grid::InfiniteGrid;bevy_dev_tools::infinite_grid::InfiniteGridSettings;bevy_transform::componen
+  entity=4294963460 comps=3 :: bevy_camera::projection::Projection;bevy_transform::components::global_transform::GlobalTransform;bevy_transform::compon
+  entity=4294963531 comps=7 :: bevy_anti_alias::fxaa::Fxaa;bevy_camera::projection::Projection;bevy_light::probe::EnvironmentMapLight;bevy_pbr::transmi
+  entity=4294963678 comps=5 :: bevy_camera::projection::Projection;bevy_light::probe::EnvironmentMapLight;bevy_pbr::transmission::ScreenSpaceTransmissi
+  entity=4294963677 comps=3 :: bevy_camera::projection::Projection;bevy_transform::components::global_transform::GlobalTransform;bevy_transform::compon
+  entity=4294963670 comps=4 :: bevy_camera::projection::Projection;bevy_light::probe::EnvironmentMapLight;bevy_transform::components::global_transform:
+  entity=4294963679 comps=4 :: bevy_mesh::components::Mesh3d;bevy_pbr::mesh_material::MeshMaterial3d<bevy_pbr::pbr_material::StandardMaterial>;bevy_tra
+  entity=4294963675 comps=4 :: bevy_mesh::components::Mesh3d;bevy_pbr::mesh_material::MeshMaterial3d<bevy_pbr::extended_material::ExtendedMaterial<bevy
+  entity=4294963673 comps=4 :: bevy_mesh::components::Mesh3d;bevy_pbr::mesh_material::MeshMaterial3d<bevy_pbr::extended_material::ExtendedMaterial<bevy
+  entity=4294963671 comps=4 :: bevy_mesh::components::Mesh3d;bevy_pbr::mesh_material::MeshMaterial3d<bevy_pbr::extended_material::ExtendedMaterial<bevy
+  entity=4294963676 comps=4 :: bevy_mesh::components::Mesh3d;bevy_pbr::mesh_material::MeshMaterial3d<bevy_pbr::extended_material::ExtendedMaterial<bevy
+  entity=4294963674 comps=4 :: bevy_mesh::components::Mesh3d;bevy_pbr::mesh_material::MeshMaterial3d<bevy_pbr::extended_material::ExtendedMaterial<bevy
+  entity=4294963672 comps=4 :: bevy_mesh::components::Mesh3d;bevy_pbr::mesh_material::MeshMaterial3d<bevy_pbr::extended_material::ExtendedMaterial<bevy
+  entity=4294962839 comps=8 :: bevy_ecs::hierarchy::ChildOf;bevy_ecs::name::Name;bevy_light::cascade::CascadeShadowConfig;bevy_light::directional_light
+  entity=4294962016 comps=4 :: bevy_ecs::name::Name;bevy_transform::components::global_transform::GlobalTransform;bevy_transform::components::transform
+  entity=4294962017 comps=2 :: bevy_transform::components::global_transform::GlobalTransform;bevy_transform::components::transform::Transform
+True
+DIAG_DONE

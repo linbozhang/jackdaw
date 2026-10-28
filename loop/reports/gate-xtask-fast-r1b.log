@@ -1,0 +1,81 @@
+warning: linker stderr: rust-lld: ignoring unknown argument '-fuse-ld=lld'
+  |
+  = note: `#[warn(linker_messages)]` on by default
+
++ cargo fmt --all --check
+the core crates depend on no third-party Bevy crate
+67 manifests and the module catalog take nothing from git but bevy main at c9c397ba1a73e6cfffe957318e0359330b701865
++ cargo clippy --workspace --all-targets --features dylib -- --deny warnings
+warning: linker stderr: rust-lld: ignoring unknown argument '-fuse-ld=lld'
+  |
+  = note: `#[warn(linker_messages)]` on by default
+  = note: the `linker_messages` lint ignores `-D warnings`
+
+warning: `jackdaw_env` (build script) generated 1 warning
+warning: `jackdaw_api_macros` (lib) generated 1 warning (1 duplicate)
+warning: `jackdaw_package` (build script) generated 1 warning (1 duplicate)
+warning: `jackdaw_project_build` (build script) generated 1 warning (1 duplicate)
+   Compiling jackdaw_project_build v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_project_build)
+    Checking jackdaw_camera v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_camera)
+   Compiling ring v0.17.14
+    Checking jackdaw_api_internal v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_api_internal)
+    Checking jackdaw_dylib v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_dylib)
+    Checking jackdaw_loader v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_loader)
+    Checking jackdaw_api v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_api)
+    Checking jackdaw_extension v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_extension)
+    Checking jackdaw_sdk v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_sdk)
+    Checking jackdaw_multiplayer_editor v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_multiplayer_editor)
+    Checking jackdaw_scaffold v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_scaffold)
+    Checking jackdaw_cli_internal v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_cli)
+    Checking test_fixture_extension v0.0.0 (E:\Project\rust\jackdaw\tests\fixtures\test_fixture_extension)
+    Checking dynamic_extension v0.1.0 (E:\Project\rust\jackdaw\examples\extension\dynamic_extension)
+    Checking viewable_camera_extension v0.1.0 (E:\Project\rust\jackdaw\examples\extension\viewable_camera_extension)
+    Checking jackdaw v0.21.0-dev (E:\Project\rust\jackdaw)
+   Compiling rustls v0.23.43
+    Checking rustls-webpki v0.103.14
+    Checking ureq v2.12.1
+    Checking jd v0.21.0-dev (E:\Project\rust\jackdaw\crates\jd)
+error: doc list item without indentation
+  --> src\modal_inputs.rs:55:5
+   |
+55 | /// drag delta itself comes from the shared mouse-motion feed (the `NavLook`
+   |     ^
+   |
+   = help: if this is supposed to be its own paragraph, add a blank line
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#doc_lazy_continuation
+   = note: `-D clippy::doc-lazy-continuation` implied by `-D warnings`
+   = help: to override `-D warnings` add `#[allow(clippy::doc_lazy_continuation)]`
+help: indent this line
+   |
+55 | ///   drag delta itself comes from the shared mouse-motion feed (the `NavLook`
+   |     ++
+
+error: doc list item without indentation
+  --> src\modal_inputs.rs:56:5
+   |
+56 | /// binding); this action only decides whether that motion pans instead of
+   |     ^
+   |
+   = help: if this is supposed to be its own paragraph, add a blank line
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#doc_lazy_continuation
+help: indent this line
+   |
+56 | ///   binding); this action only decides whether that motion pans instead of
+   |     ++
+
+error: doc list item without indentation
+  --> src\modal_inputs.rs:57:5
+   |
+57 | /// looking, in `populate_camera_nav_input`. Not preset-bindable.
+   |     ^
+   |
+   = help: if this is supposed to be its own paragraph, add a blank line
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#doc_lazy_continuation
+help: indent this line
+   |
+57 | ///   looking, in `populate_camera_nav_input`. Not preset-bindable.
+   |     ++
+
+error: could not compile `jackdaw` (lib) due to 3 previous errors
+warning: build failed, waiting for other jobs to finish...
+error: could not compile `jackdaw` (lib test) due to 3 previous errors

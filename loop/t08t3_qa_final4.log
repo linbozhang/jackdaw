@@ -1,0 +1,12 @@
+True
+C2 asset.new ok: True
+C2 saved on disk has 3.25: True
+True
+C2 restart: disk-survived=True card-reads=False
+C2 PASS: the value survived an editor restart
+C7 card dirty, disk pre-export has 7.5: False (expect False)
+C7 sync save leg wrote 7.5 right after export: True
+C7 state=ready dist=E:\Project\rust\jackdaw\loop\qa-fixture\t08lf-qa\.jackdaw\dist\release
+C7 dist carries 7.5: True; manifest lists config: True
+C7 PASS: export carries the card value and the receipt names it
+T08_T3_QA_DONE

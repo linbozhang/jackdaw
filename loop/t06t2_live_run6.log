@@ -1,0 +1,22 @@
+editor ready
+editor idle
+== case 1: iron chain (acceptance 2) ==
+
+entities id         result   warnings
+-------- --         ------   --------
+{}       scene.open finished {}      
+{}       scene.save finished {}      
+  ok: the scene is open (Spinner present)
+{}       pie.pla... finished {}      
+pie running (10:01:35)
+switched to Live view
+  ok: the projection holds the Spinner
+  [debug] spinner bits '8589929912' -> bevy form '4294962616v1'
+editor killed
+BRP error: {"code":-23401,"message":"Entity 4294962616v1 not found"}
+ËùÔÚÎ»ÖÃ E:\Project\rust\jackdaw\loop\qa\brp.ps1:34 ×Ö·û: 9
++         throw "BRP error: $($Response.error | ConvertTo-Json -Depth 6 ...
++         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : OperationStopped: (BRP error: {"co...6v1 not found"}:String) [], RuntimeException
+    + FullyQualifiedErrorId : BRP error: {"code":-23401,"message":"Entity 4294962616v1 not found"}
+ 

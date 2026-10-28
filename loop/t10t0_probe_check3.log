@@ -1,0 +1,2679 @@
+    Updating git repository `https://github.com/bevyengine/bevy`
+    Updating crates.io index
+warning: patch `bevy v0.20.0-dev (https://github.com/bevyengine/bevy?rev=c9c397ba1a73e6cfffe957318e0359330b701865#c9c397ba)` was not used in the crate graph
+help: Check that the patched package version and available features are compatible
+      with the dependency requirements. If the patch has a different version from
+      what is locked in the Cargo.lock file, run `cargo update` to use the new
+      version. This may also occur with an optional dependency that is not enabled.
+     Locking 90 packages to highest Rust 1.97.1 compatible versions
+      Adding accesskit v0.24.1
+      Adding anes v0.1.6
+      Adding arbitrary-chunks v0.4.1
+      Adding avian3d v0.8.0
+      Adding avian_derive v0.2.3
+      Adding bevy v0.20.0
+      Adding bevy_a11y v0.20.0
+      Adding bevy_android v0.20.0
+      Adding bevy_app v0.20.0
+      Adding bevy_asset v0.20.0
+      Adding bevy_asset_macros v0.20.0
+      Adding bevy_camera v0.20.0
+      Adding bevy_color v0.20.0
+      Adding bevy_curve v0.20.0
+      Adding bevy_derive v0.20.0
+      Adding bevy_diagnostic v0.20.0
+      Adding bevy_ecs v0.20.0
+      Adding bevy_ecs_macro_logic v0.20.0
+      Adding bevy_ecs_macros v0.20.0
+      Adding bevy_encase_derive v0.20.0
+      Adding bevy_extract v0.20.0
+      Adding bevy_extract_macros v0.20.0
+      Adding bevy_gizmos v0.20.0
+      Adding bevy_gizmos_macros v0.20.0
+      Adding bevy_heavy v0.6.0
+      Adding bevy_image v0.20.0
+      Adding bevy_input v0.20.0
+      Adding bevy_input_focus v0.20.0
+      Adding bevy_internal v0.20.0
+      Adding bevy_light v0.20.0
+      Adding bevy_log v0.20.0
+      Adding bevy_macro_utils v0.20.0
+      Adding bevy_material v0.20.0
+      Adding bevy_material_macros v0.20.0
+      Adding bevy_math v0.20.0
+      Adding bevy_mesh v0.20.0
+      Adding bevy_picking v0.20.0
+      Adding bevy_platform v0.20.0
+      Adding bevy_ptr v0.20.0
+      Adding bevy_reflect v0.20.0
+      Adding bevy_reflect_derive v0.20.0
+      Adding bevy_render v0.20.0
+      Adding bevy_render_macros v0.20.0
+      Adding bevy_shader v0.20.0
+      Adding bevy_shape v0.20.0
+      Adding bevy_state v0.20.0
+      Adding bevy_state_macros v0.20.0
+      Adding bevy_tasks v0.20.0
+      Adding bevy_time v0.20.0
+      Adding bevy_transform v0.20.0
+      Adding bevy_transform_interpolation v0.6.0
+      Adding bevy_utils v0.20.0
+      Adding bevy_window v0.20.0
+      Adding bevy_world_serialization v0.20.0
+      Adding block-pseudorand v0.1.2
+      Adding cast v0.3.0
+      Adding chiapos-chacha8 v0.1.0
+      Adding ciborium v0.2.2
+      Adding ciborium-io v0.2.2
+      Adding ciborium-ll v0.2.2
+      Adding clap v4.6.7
+      Adding clap_builder v4.6.7
+      Adding clap_lex v1.1.1
+      Adding criterion v0.5.1
+      Adding criterion-plot v0.5.0
+      Adding crossbeam-deque v0.8.8
+      Adding crossbeam-epoch v0.9.21
+      Adding encase v0.12.1
+      Adding encase_derive v0.12.1
+      Adding encase_derive_impl v0.12.1
+      Adding glam_matrix_extras v0.4.0
+      Adding is-terminal v0.4.17
+      Adding itertools v0.10.5
+      Adding nanorand v0.6.1
+      Adding obvhs v0.4.0
+      Adding oorandom v11.1.5
+      Adding parry3d-f64 v0.31.1
+      Adding partition v0.1.2
+      Adding plotters v0.3.7
+      Adding plotters-backend v0.3.7
+      Adding plotters-svg v0.3.7
+      Adding proc-macro-error-attr3 v3.1.1
+      Adding proc-macro-error3 v3.1.1
+      Adding rayon v1.12.0
+      Adding rayon-core v1.13.0
+      Adding rdst v0.20.14
+      Adding tikv-jemalloc-sys v0.5.4+5.3.0-patched
+      Adding tikv-jemallocator v0.5.4
+      Adding tinytemplate v1.2.1
+      Adding voracious_radix_sort v1.2.0
+ Downloading crates ...
+  Downloaded avian_derive v0.2.3
+  Downloaded arbitrary-chunks v0.4.1
+  Downloaded crossbeam-deque v0.8.8
+  Downloaded bevy_heavy v0.6.0
+  Downloaded bevy_transform_interpolation v0.6.0
+  Downloaded partition v0.1.2
+  Downloaded glam_matrix_extras v0.4.0
+  Downloaded crossbeam-epoch v0.9.21
+  Downloaded proc-macro-error-attr3 v3.1.1
+  Downloaded proc-macro-error3 v3.1.1
+  Downloaded rdst v0.20.14
+  Downloaded rayon-core v1.13.0
+  Downloaded rayon v1.12.0
+  Downloaded avian3d v0.8.0
+  Downloaded parry3d-f64 v0.31.1
+  Downloaded obvhs v0.4.0
+   Compiling crossbeam-utils v0.8.22
+   Compiling encase_derive_impl v0.12.1
+    Checking disqualified v1.0.0
+    Checking hashbrown v0.16.1
+   Compiling bevy_macro_utils v0.20.0
+    Checking bevy_ptr v0.20.0
+warning: linker stderr: rust-lld: ignoring unknown argument '-fuse-ld=lld'
+  |
+  = note: `#[warn(linker_messages)]` on by default
+
+warning: `jackdaw_env` (build script) generated 1 warning
+warning: `jackdaw_api_macros` (lib) generated 1 warning (1 duplicate)
+   Compiling crossbeam-epoch v0.9.21
+   Compiling crossbeam-deque v0.8.8
+   Compiling rayon-core v1.13.0
+warning: `jackdaw_project_build` (build script) generated 1 warning (1 duplicate)
+   Compiling jackdaw_project_build v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_project_build)
+warning: `jackdaw_package` (build script) generated 1 warning (1 duplicate)
+   Compiling jackdaw_package v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_package)
+    Checking accesskit v0.24.1
+    Checking ring v0.17.14
+   Compiling proc-macro-error-attr3 v3.1.1
+    Checking partition v0.1.2
+    Checking arbitrary-chunks v0.4.1
+    Checking jackdaw_mcp v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_mcp)
+   Compiling bevy_ecs_macro_logic v0.20.0
+    Checking rdst v0.20.14
+    Checking gpu-allocator v0.28.0
+    Checking weak-table v0.4.0
+    Checking bevy_platform v0.20.0
+    Checking spade v2.15.1
+   Compiling proc-macro-error3 v3.1.1
+    Checking rustls-webpki v0.103.14
+   Compiling encase_derive v0.12.1
+    Checking concurrent-queue v2.5.0
+    Checking crossbeam-queue v0.3.13
+    Checking crossbeam-channel v0.5.16
+    Checking wgpu-hal v30.0.1
+    Checking rustls v0.23.43
+    Checking async-channel v2.5.0
+    Checking async-executor v1.14.0
+    Checking polling v3.11.0
+    Checking ipc-channel v0.22.0
+    Checking blocking v1.6.2
+    Checking bevy_utils v0.20.0
+   Compiling bevy_reflect_derive v0.20.0
+    Checking bevy_tasks v0.20.0
+    Checking async-io v2.6.0
+    Checking async-fs v2.2.0
+   Compiling bevy_derive v0.20.0
+   Compiling bevy_asset_macros v0.20.0
+   Compiling bevy_encase_derive v0.20.0
+   Compiling bevy_extract_macros v0.20.0
+   Compiling bevy_material_macros v0.20.0
+   Compiling bevy_gizmos_macros v0.20.0
+   Compiling avian_derive v0.2.3
+    Checking bevy_platform v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+    Checking smol-hyper v0.1.1
+   Compiling bevy_ecs_macros v0.20.0
+    Checking bevy_utils v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+    Checking bevy_tasks v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+    Checking rayon v1.12.0
+    Checking encase v0.12.1
+    Checking ureq v2.12.1
+    Checking wgpu-core-deps-windows-linux-android v30.0.1
+    Checking glam v0.33.12
+    Checking wgpu-core v30.0.1
+   Compiling bevy_render_macros v0.20.0
+    Checking wgpu v30.0.1
+    Checking bevy_reflect v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+    Checking hexasphere v19.0.0
+    Checking glamx v0.3.1
+    Checking jackdaw_snap v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_snap)
+    Checking obvhs v0.4.0
+    Checking bevy_reflect v0.20.0
+    Checking parry3d v0.31.1
+    Checking bevy_ecs v0.20.0
+    Checking bevy_math v0.20.0
+    Checking glam_matrix_extras v0.4.0
+    Checking bevy_shape v0.20.0
+    Checking bevy_curve v0.20.0
+    Checking bevy_ecs v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+    Checking bevy_math v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+    Checking bevy_annotations v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+    Checking bevy_color v0.20.0
+    Checking bevy_curve v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+    Checking bevy_shape v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+    Checking bevy_heavy v0.6.0
+    Checking bevy_color v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+    Checking bevy_app v0.20.0
+    Checking bevy_app v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+    Checking bevy_time v0.20.0
+    Checking bevy_transform v0.20.0
+    Checking bevy_input v0.20.0
+    Checking bevy_log v0.20.0
+    Checking bevy_a11y v0.20.0
+    Checking bevy_diagnostic v0.20.0
+    Checking bevy_time v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+    Checking bevy_transform v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+    Checking bevy_input v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+    Checking bevy_log v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+    Checking bevy_a11y v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+    Checking bevy_state v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+    Checking bevy_asset v0.20.0
+    Checking bevy_window v0.20.0
+    Checking bevy_diagnostic v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+    Checking bevy_asset v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+    Checking bevy_gilrs v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+    Checking bevy_mesh v0.20.0
+    Checking bevy_image v0.20.0
+    Checking bevy_shader v0.20.0
+    Checking bevy_image v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+    Checking bevy_mesh v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+    Checking bevy_shader v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+    Checking bevy_audio v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+    Checking bevy_scene v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+    Checking bevy_camera v0.20.0
+    Checking bevy_material v0.20.0
+    Checking bevy_window v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+    Checking bevy_clipboard v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+    Checking bevy_text v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+    Checking bevy_material v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+    Checking bevy_animation v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+    Checking bevy_extract v0.20.0
+    Checking bevy_picking v0.20.0
+    Checking bevy_world_serialization v0.20.0
+    Checking bevy_gizmos v0.20.0
+    Checking bevy_render v0.20.0
+    Checking bevy_camera v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+    Checking bevy_gizmos v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+    Checking bevy_picking v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+    Checking bevy_extract v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+    Checking bevy_world_serialization v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+    Checking bevy_render v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+    Checking bevy_light v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+    Checking bevy_sprite v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+    Checking bevy_input_focus v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+    Checking bevy_gltf v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+    Checking bevy_winit v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+    Checking bevy_ui v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+    Checking bevy_internal v0.20.0
+    Checking bevy v0.20.0
+    Checking bevy_transform_interpolation v0.6.0
+    Checking avian3d v0.8.0
+    Checking bevy_core_pipeline v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+    Checking bevy_ui_widgets v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+    Checking bevy_sprite_render v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+    Checking bevy_pbr v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+    Checking bevy_post_process v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+    Checking bevy_anti_alias v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+    Checking bevy_ui_render v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+    Checking bevy_feathers v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+    Checking bevy_dev_tools v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+    Checking bevy_gizmos_render v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+    Checking bevy_remote v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+    Checking bevy_internal v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+    Checking bevy_dylib v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+    Checking bevy v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+    Checking jackdaw_geometry v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_geometry)
+    Checking jackdaw_input v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_input)
+    Checking jackdaw_commands v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_commands)
+    Checking jackdaw_localization v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_localization)
+    Checking jackdaw_bsn v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_bsn)
+    Checking jackdaw_pie_protocol v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_pie_protocol)
+    Checking jackdaw_widgets_runtime v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_widgets_runtime)
+    Checking jackdaw_bind v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_bind)
+    Checking jackdaw_camera v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_camera)
+    Checking bevy_window_chrome v0.21.0-dev (E:\Project\rust\jackdaw\crates\bevy_window_chrome)
+    Checking jackdaw_widgets v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_widgets)
+    Checking jackdaw_animation_runtime v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_animation_runtime)
+    Checking jackdaw_prefab v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_prefab)
+    Checking jackdaw_remote v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_remote)
+    Checking jackdaw_scene_types v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_scene_types)
+    Checking jackdaw_select v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_select)
+    Checking jackdaw_uv v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_uv)
+    Checking jackdaw_hull v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_hull)
+    Checking jackdaw_pick v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_pick)
+    Checking jackdaw_csg v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_csg)
+    Checking jackdaw_feathers v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_feathers)
+    Checking jackdaw_terrain v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_terrain)
+    Checking jackdaw_schema v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_schema)
+    Checking jackdaw_camera_rig v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_camera_rig)
+    Checking jackdaw_surface v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_surface)
+    Checking jackdaw_multiplayer v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_multiplayer)
+    Checking jackdaw_jsn v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_jsn)
+    Checking jackdaw_scaffold v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_scaffold)
+    Checking jackdaw_cli_internal v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_cli)
+    Checking jackdaw_runtime v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_runtime)
+    Checking jd v0.21.0-dev (E:\Project\rust\jackdaw\crates\jd)
+    Checking jackdaw_panels v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_panels)
+    Checking jackdaw_node_graph v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_node_graph)
+    Checking jackdaw_avian_integration v0.21.0-dev (E:\Project\rust\jackdaw\integrations\physics\jackdaw_avian_integration)
+    Checking jackdaw_api_internal v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_api_internal)
+    Checking jackdaw_animation v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_animation)
+error[E0277]: `avian3d::prelude::Collider` is not a `Component`
+   --> integrations\physics\jackdaw_avian_integration\src\model_colliders.rs:53:12
+    |
+ 53 |     built: BuiltColliders,
+    |            ^^^^^^^^^^^^^^ invalid `Component`
+    |
+    = help: the trait `bevy::bevy_ecs::component::Component` is not implemented for `avian3d::prelude::Collider`
+    = note: consider annotating `avian3d::prelude::Collider` with `#[derive(Component)]`
+note: there are multiple different versions of crate `bevy_ecs` in the dependency graph
+   --> C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_ecs\src\component\mod.rs:530:1
+    |
+530 | pub trait Component: Send + Sync + 'static {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ this is the expected trait
+    |
+   ::: C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\bevy_ecs-0.20.0\src\component\mod.rs:530:1
+    |
+530 | pub trait Component: Send + Sync + 'static {
+    | ------------------------------------------ this is the found trait
+    = help: you can use `cargo tree` to explore your dependency tree
+    = help: the following other types implement trait `bevy::bevy_ecs::component::Component`:
+              AccessibilityNode
+              AccessibilityRequested
+              AccessibleLabel
+              AccumulatedMouseMotion
+              AccumulatedMouseScroll
+              ActivateOnPress
+              ActiveDescendant
+              AmbientLight
+            and 1035 others
+    = note: required for `bevy::bevy_ecs::query::With<avian3d::prelude::Collider>` to implement `QueryFilter`
+    = note: 1 redundant requirement hidden
+    = note: required for `(With<Collider>, Without<AvianCollider>)` to implement `QueryFilter`
+note: required by a bound in `bevy::bevy_ecs::system::Query`
+   --> C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_ecs\src\system\query.rs:488:51
+    |
+488 | pub struct Query<'world, 'state, D: QueryData, F: QueryFilter = ()> {
+    |                                                   ^^^^^^^^^^^ required by this bound in `Query`
+    = note: the full name for the type has been written to 'E:\Project\rust\jackdaw\target\debug\deps\jackdaw_avian_integration-f192302c80eca1c6.long-type-4211086330585230648.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0277]: `avian3d::prelude::Collider` is not a `Component`
+   --> integrations\physics\jackdaw_avian_integration\src\model_colliders.rs:77:12
+    |
+ 77 |     built: BuiltColliders,
+    |            ^^^^^^^^^^^^^^ invalid `Component`
+    |
+    = help: the trait `bevy::bevy_ecs::component::Component` is not implemented for `avian3d::prelude::Collider`
+    = note: consider annotating `avian3d::prelude::Collider` with `#[derive(Component)]`
+note: there are multiple different versions of crate `bevy_ecs` in the dependency graph
+   --> C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_ecs\src\component\mod.rs:530:1
+    |
+530 | pub trait Component: Send + Sync + 'static {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ this is the expected trait
+    |
+   ::: C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\bevy_ecs-0.20.0\src\component\mod.rs:530:1
+    |
+530 | pub trait Component: Send + Sync + 'static {
+    | ------------------------------------------ this is the found trait
+    = help: you can use `cargo tree` to explore your dependency tree
+    = help: the following other types implement trait `bevy::bevy_ecs::component::Component`:
+              AccessibilityNode
+              AccessibilityRequested
+              AccessibleLabel
+              AccumulatedMouseMotion
+              AccumulatedMouseScroll
+              ActivateOnPress
+              ActiveDescendant
+              AmbientLight
+            and 1035 others
+    = note: required for `bevy::bevy_ecs::query::With<avian3d::prelude::Collider>` to implement `QueryFilter`
+    = note: 1 redundant requirement hidden
+    = note: required for `(With<Collider>, Without<AvianCollider>)` to implement `QueryFilter`
+note: required by a bound in `bevy::bevy_ecs::system::Query`
+   --> C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_ecs\src\system\query.rs:488:51
+    |
+488 | pub struct Query<'world, 'state, D: QueryData, F: QueryFilter = ()> {
+    |                                                   ^^^^^^^^^^^ required by this bound in `Query`
+    = note: the full name for the type has been written to 'E:\Project\rust\jackdaw\target\debug\deps\jackdaw_avian_integration-f192302c80eca1c6.long-type-4211086330585230648.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0277]: `avian3d::prelude::Collider` is not a `Component`
+   --> integrations\physics\jackdaw_avian_integration\src\model_colliders.rs:93:13
+    |
+ 93 |     built: &BuiltColliders,
+    |             ^^^^^^^^^^^^^^ invalid `Component`
+    |
+    = help: the trait `bevy::bevy_ecs::component::Component` is not implemented for `avian3d::prelude::Collider`
+    = note: consider annotating `avian3d::prelude::Collider` with `#[derive(Component)]`
+note: there are multiple different versions of crate `bevy_ecs` in the dependency graph
+   --> C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_ecs\src\component\mod.rs:530:1
+    |
+530 | pub trait Component: Send + Sync + 'static {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ this is the expected trait
+    |
+   ::: C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\bevy_ecs-0.20.0\src\component\mod.rs:530:1
+    |
+530 | pub trait Component: Send + Sync + 'static {
+    | ------------------------------------------ this is the found trait
+    = help: you can use `cargo tree` to explore your dependency tree
+    = help: the following other types implement trait `bevy::bevy_ecs::component::Component`:
+              AccessibilityNode
+              AccessibilityRequested
+              AccessibleLabel
+              AccumulatedMouseMotion
+              AccumulatedMouseScroll
+              ActivateOnPress
+              ActiveDescendant
+              AmbientLight
+            and 1035 others
+    = note: required for `bevy::bevy_ecs::query::With<avian3d::prelude::Collider>` to implement `QueryFilter`
+    = note: 1 redundant requirement hidden
+    = note: required for `(With<Collider>, Without<AvianCollider>)` to implement `QueryFilter`
+note: required by a bound in `bevy::bevy_ecs::system::Query`
+   --> C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_ecs\src\system\query.rs:488:51
+    |
+488 | pub struct Query<'world, 'state, D: QueryData, F: QueryFilter = ()> {
+    |                                                   ^^^^^^^^^^^ required by this bound in `Query`
+    = note: the full name for the type has been written to 'E:\Project\rust\jackdaw\target\debug\deps\jackdaw_avian_integration-f192302c80eca1c6.long-type-4211086330585230648.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0277]: `avian3d::prelude::Collider` is not a `Component`
+   --> integrations\physics\jackdaw_avian_integration\src\model_colliders.rs:147:12
+    |
+147 |     built: BuiltColliders,
+    |            ^^^^^^^^^^^^^^ invalid `Component`
+    |
+    = help: the trait `bevy::bevy_ecs::component::Component` is not implemented for `avian3d::prelude::Collider`
+    = note: consider annotating `avian3d::prelude::Collider` with `#[derive(Component)]`
+note: there are multiple different versions of crate `bevy_ecs` in the dependency graph
+   --> C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_ecs\src\component\mod.rs:530:1
+    |
+530 | pub trait Component: Send + Sync + 'static {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ this is the expected trait
+    |
+   ::: C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\bevy_ecs-0.20.0\src\component\mod.rs:530:1
+    |
+530 | pub trait Component: Send + Sync + 'static {
+    | ------------------------------------------ this is the found trait
+    = help: you can use `cargo tree` to explore your dependency tree
+    = help: the following other types implement trait `bevy::bevy_ecs::component::Component`:
+              AccessibilityNode
+              AccessibilityRequested
+              AccessibleLabel
+              AccumulatedMouseMotion
+              AccumulatedMouseScroll
+              ActivateOnPress
+              ActiveDescendant
+              AmbientLight
+            and 1035 others
+    = note: required for `bevy::bevy_ecs::query::With<avian3d::prelude::Collider>` to implement `QueryFilter`
+    = note: 1 redundant requirement hidden
+    = note: required for `(With<Collider>, Without<AvianCollider>)` to implement `QueryFilter`
+note: required by a bound in `bevy::bevy_ecs::system::Query`
+   --> C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_ecs\src\system\query.rs:488:51
+    |
+488 | pub struct Query<'world, 'state, D: QueryData, F: QueryFilter = ()> {
+    |                                                   ^^^^^^^^^^^ required by this bound in `Query`
+    = note: the full name for the type has been written to 'E:\Project\rust\jackdaw\target\debug\deps\jackdaw_avian_integration-f192302c80eca1c6.long-type-4211086330585230648.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0277]: `avian3d::prelude::RigidBody` is not a `Component`
+   --> integrations\physics\jackdaw_avian_integration\src\static_bodies.rs:38:13
+    |
+ 38 |     bodies: Query<(Entity, Ref<RigidBody>), With<ImpliedStaticBody>>,
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ invalid `Component`
+    |
+    = help: the trait `bevy::bevy_ecs::component::Component` is not implemented for `avian3d::prelude::RigidBody`
+    = note: consider annotating `avian3d::prelude::RigidBody` with `#[derive(Component)]`
+note: there are multiple different versions of crate `bevy_ecs` in the dependency graph
+   --> C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_ecs\src\component\mod.rs:530:1
+    |
+530 | pub trait Component: Send + Sync + 'static {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ this is the expected trait
+    |
+   ::: C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\bevy_ecs-0.20.0\src\component\mod.rs:530:1
+    |
+530 | pub trait Component: Send + Sync + 'static {
+    | ------------------------------------------ this is the found trait
+    = help: you can use `cargo tree` to explore your dependency tree
+    = help: the following other types implement trait `bevy::bevy_ecs::component::Component`:
+              AccessibilityNode
+              AccessibilityRequested
+              AccessibleLabel
+              AccumulatedMouseMotion
+              AccumulatedMouseScroll
+              ActivateOnPress
+              ActiveDescendant
+              AmbientLight
+            and 1035 others
+    = note: required for `bevy::bevy_ecs::change_detection::Ref<'_, avian3d::prelude::RigidBody>` to implement `QueryData`
+    = note: 1 redundant requirement hidden
+    = note: required for `(Entity, Ref<'_, RigidBody>)` to implement `QueryData`
+note: required by a bound in `bevy::bevy_ecs::system::Query`
+   --> C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_ecs\src\system\query.rs:488:37
+    |
+488 | pub struct Query<'world, 'state, D: QueryData, F: QueryFilter = ()> {
+    |                                     ^^^^^^^^^ required by this bound in `Query`
+    = note: the full name for the type has been written to 'E:\Project\rust\jackdaw\target\debug\deps\jackdaw_avian_integration-f192302c80eca1c6.long-type-85287673213846504.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0277]: `avian3d::prelude::RigidBody` is not a `Component`
+   --> integrations\physics\jackdaw_avian_integration\src\static_bodies.rs:62:16
+    |
+ 62 |     colliders: Query<Entity, (With<AvianCollider>, Without<RigidBody>)>,
+    |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ invalid `Component`
+    |
+    = help: the trait `bevy::bevy_ecs::component::Component` is not implemented for `avian3d::prelude::RigidBody`
+    = note: consider annotating `avian3d::prelude::RigidBody` with `#[derive(Component)]`
+note: there are multiple different versions of crate `bevy_ecs` in the dependency graph
+   --> C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_ecs\src\component\mod.rs:530:1
+    |
+530 | pub trait Component: Send + Sync + 'static {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ this is the expected trait
+    |
+   ::: C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\bevy_ecs-0.20.0\src\component\mod.rs:530:1
+    |
+530 | pub trait Component: Send + Sync + 'static {
+    | ------------------------------------------ this is the found trait
+    = help: you can use `cargo tree` to explore your dependency tree
+    = help: the following other types implement trait `bevy::bevy_ecs::component::Component`:
+              AccessibilityNode
+              AccessibilityRequested
+              AccessibleLabel
+              AccumulatedMouseMotion
+              AccumulatedMouseScroll
+              ActivateOnPress
+              ActiveDescendant
+              AmbientLight
+            and 1035 others
+    = note: required for `bevy::bevy_ecs::query::Without<avian3d::prelude::RigidBody>` to implement `QueryFilter`
+    = note: 1 redundant requirement hidden
+    = note: required for `(With<AvianCollider>, Without<RigidBody>)` to implement `QueryFilter`
+note: required by a bound in `bevy::bevy_ecs::system::Query`
+   --> C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_ecs\src\system\query.rs:488:51
+    |
+488 | pub struct Query<'world, 'state, D: QueryData, F: QueryFilter = ()> {
+    |                                                   ^^^^^^^^^^^ required by this bound in `Query`
+    = note: the full name for the type has been written to 'E:\Project\rust\jackdaw\target\debug\deps\jackdaw_avian_integration-f192302c80eca1c6.long-type-14604831643608113412.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0277]: `(fn(Commands<'a, 'b>, _, _, _) {build_model_colliders}, _)` does not describe a valid system configuration
+   --> integrations\physics\jackdaw_avian_integration\src\model_colliders.rs:27:13
+    |
+ 25 |         app.add_systems(
+    |             ----------- required by a bound introduced by this call
+ 26 |             PreUpdate,
+ 27 |             (build_model_colliders, build_lod_group_colliders),
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ invalid system configuration
+    |
+    = help: the trait `bevy::bevy_ecs::schedule::IntoScheduleConfigs<std::boxed::Box<(dyn bevy::bevy_ecs::system::System<In = (), Out = ()> + 'static)>, _>` is not implemented for `(fn(Commands<'a, 'b>, _, _, _) {build_model_colliders}, _)`
+note: there are multiple different versions of crate `bevy_ecs` in the dependency graph
+   --> C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_ecs\src\schedule\config.rs:356:1
+    |
+356 | / pub trait IntoScheduleConfigs<T: Schedulable<Metadata = GraphInfo, GroupMetadata = Chain>, Marker>:
+357 | |     Sized
+    | |_________^ this is the expected trait
+    |
+   ::: C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\bevy_ecs-0.20.0\src\schedule\config.rs:357:1
+    |
+357 | / pub trait IntoScheduleConfigs<T: Schedulable<Metadata = GraphInfo, GroupMetadata = Chain>, Marker>:
+358 | |     Sized
+    | |         -
+    | |         |
+    | |         this is the found trait
+    | |_________this is the found trait
+    |           this is the found trait
+    = help: you can use `cargo tree` to explore your dependency tree
+    = help: the following other types implement trait `bevy::bevy_ecs::schedule::IntoScheduleConfigs<T, Marker>`:
+              `(S,)` implements `IntoScheduleConfigs<T, (ScheduleConfigTupleMarker, P)>`
+              `(S0, S1)` implements `IntoScheduleConfigs<T, (ScheduleConfigTupleMarker, P0, P1)>`
+              `(S0, S1, S2)` implements `IntoScheduleConfigs<T, (ScheduleConfigTupleMarker, P0, P1, P2)>`
+              `(S0, S1, S2, S3)` implements `IntoScheduleConfigs<T, (ScheduleConfigTupleMarker, P0, P1, P2, P3)>`
+              `(S0, S1, S2, S3, S4)` implements `IntoScheduleConfigs<T, (_, P0, P1, P2, P3, P4)>`
+              `(S0, S1, S2, S3, S4, S5)` implements `IntoScheduleConfigs<T, (_, P0, P1, P2, P3, P4, P5)>`
+              `(S0, S1, S2, S3, S4, S5, S6)` implements `IntoScheduleConfigs<T, (_, P0, P1, P2, P3, P4, P5, P6)>`
+              `(S0, S1, S2, S3, S4, S5, S6, S7)` implements `IntoScheduleConfigs<T, (_, P0, P1, P2, P3, P4, P5, P6, P7)>`
+            and 12 others
+note: required by a bound in `bevy::bevy_app::App::add_systems`
+   --> C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_app\src\app.rs:324:23
+    |
+321 |     pub fn add_systems<M>(
+    |            ----------- required by a bound in this associated function
+...
+324 |         systems: impl IntoScheduleConfigs<ScheduleSystem, M>,
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ required by this bound in `App::add_systems`
+    = note: the full name for the type has been written to 'E:\Project\rust\jackdaw\target\debug\deps\jackdaw_avian_integration-f192302c80eca1c6.long-type-17690073079276350052.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0277]: the trait bound `fn(_, _, _, _, _) {remove_model_colliders}: IntoObserver<_>` is not satisfied
+    --> integrations\physics\jackdaw_avian_integration\src\model_colliders.rs:29:23
+     |
+  29 |         .add_observer(remove_model_colliders);
+     |          ------------ ^^^^^^^^^^^^^^^^^^^^^^ unsatisfied trait bound
+     |          |
+     |          required by a bound introduced by this call
+     |
+     = help: the trait `bevy::bevy_ecs::system::IntoSystem<bevy::bevy_ecs::observer::On<'static, _>, (), _>` is not implemented for fn item `fn(On<'a, Remove<AvianCollider>>, _, _, _, _) {remove_model_colliders}`
+note: there are multiple different versions of crate `bevy_ecs` in the dependency graph
+    --> C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_ecs\src\system\mod.rs:181:1
+     |
+ 181 | pub trait IntoSystem<In: SystemInput, Out, Marker>: Sized {
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ this is the expected trait
+     |
+    ::: C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\bevy_ecs-0.20.0\src\system\mod.rs:183:1
+     |
+ 183 | pub trait IntoSystem<In: SystemInput, Out, Marker>: Sized {
+     | ---------------------------------------------------------
+     | |
+     | this is the found trait
+     | this is the found trait
+     = help: you can use `cargo tree` to explore your dependency tree
+help: the following other types implement trait `bevy::bevy_ecs::system::IntoSystem<In, Out, Marker>`
+    --> C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_ecs\src\system\builder.rs:277:1
+     |
+ 277 | / impl<Marker, In, Out, Func, Builder> IntoSystem<In, Out, (IsBuilderSystem, Marker)>
+ 278 | |     for IntoBuilderSystem<Marker, In, Out, Func, Builder>
+ 279 | | where
+ 280 | |     Marker: 'static,
+...    |
+ 283 | |     Func: SystemParamFunction<Marker, In: FromInput<In>, Out: IntoResult<Out>>,
+ 284 | |     Builder: SystemParamBuilder<Func::Param> + Send + Sync + 'static,
+     | |_____________________________________________________________________^ `IntoBuilderSystem<Marker, In, Out, Func, Builder>` implements `IntoSystem<In, Out, (IsBuilderSystem, Marker)>`
+     |
+    ::: C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_ecs\src\system\adapter_system.rs:84:1
+     |
+  84 | / impl<Func, S, I, O, M> IntoSystem<Func::In, Func::Out, (IsAdapterSystemMarker, I, O, M)>
+  85 | |     for IntoAdapterSystem<Func, S>
+  86 | | where
+  87 | |     Func: Adapt<S::System>,
+  88 | |     I: SystemInput,
+  89 | |     S: IntoSystem<I, O, M>,
+     | |___________________________^ `IntoAdapterSystem<Func, S>` implements `IntoSystem<<Func as Adapt<_>>::In, _, _>`
+     |
+    ::: C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_ecs\src\system\combinator.rs:410:1
+     |
+ 410 | / impl<A, B, N, IA, OA, IB, OB, MA, MB> IntoSystem<IA, OB, (IsPipeSystemMarker, OA, IB, MA, MB)>
+ 411 | |     for IntoPipeSystem<A, B, N>
+ 412 | | where
+ 413 | |     IA: SystemInput,
+...    |
+ 416 | |     N: PipeSystemName,
+ 417 | |     for<'a> IB: SystemInput<Inner<'a> = OA>,
+     | |____________________________________________^ `IntoPipeSystem<A, B, N>` implements `IntoSystem<IA, OB, (IsPipeSystemMarker, OA, IB, MA, MB)>`
+     = note: required for `fn(On<'a, Remove<AvianCollider>>, _, _, _, _) {remove_model_colliders}` to implement `IntoObserverSystem<_, _>`
+     = note: required for `fn(On<'a, Remove<AvianCollider>>, _, _, _, _) {remove_model_colliders}` to implement `IntoObserver<(_, _)>`
+note: required by a bound in `bevy::bevy_app::App::add_observer`
+    --> C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_app\src\app.rs:1459:54
+     |
+1459 |     pub fn add_observer<M>(&mut self, observer: impl IntoObserver<M>) -> &mut Self {
+     |                                                      ^^^^^^^^^^^^^^^ required by this bound in `App::add_observer`
+     = note: the full name for the type has been written to 'E:\Project\rust\jackdaw\target\debug\deps\jackdaw_avian_integration-f192302c80eca1c6.long-type-5230277254940666637.txt'
+     = note: consider using `--verbose` to print the full type name to the console
+
+error[E0277]: `avian3d::prelude::Collider` is not a `Component`
+   --> integrations\physics\jackdaw_avian_integration\src\model_colliders.rs:56:66
+    |
+ 56 |         clear_part_colliders(&mut commands, model, &descendants, &built);
+    |                                                                  ^^^^^^ invalid `Component`
+    |
+    = help: the trait `bevy::bevy_ecs::component::Component` is not implemented for `avian3d::prelude::Collider`
+    = note: consider annotating `avian3d::prelude::Collider` with `#[derive(Component)]`
+note: there are multiple different versions of crate `bevy_ecs` in the dependency graph
+   --> C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_ecs\src\component\mod.rs:530:1
+    |
+530 | pub trait Component: Send + Sync + 'static {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ this is the expected trait
+    |
+   ::: C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\bevy_ecs-0.20.0\src\component\mod.rs:530:1
+    |
+530 | pub trait Component: Send + Sync + 'static {
+    | ------------------------------------------ this is the found trait
+    = help: you can use `cargo tree` to explore your dependency tree
+    = help: the following other types implement trait `bevy::bevy_ecs::component::Component`:
+              AccessibilityNode
+              AccessibilityRequested
+              AccessibleLabel
+              AccumulatedMouseMotion
+              AccumulatedMouseScroll
+              ActivateOnPress
+              ActiveDescendant
+              AmbientLight
+            and 1035 others
+    = note: required for `bevy::bevy_ecs::query::With<avian3d::prelude::Collider>` to implement `QueryFilter`
+    = note: 1 redundant requirement hidden
+    = note: required for `(With<Collider>, Without<AvianCollider>)` to implement `QueryFilter`
+note: required by a bound in `bevy::bevy_ecs::system::Query`
+   --> C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_ecs\src\system\query.rs:488:51
+    |
+488 | pub struct Query<'world, 'state, D: QueryData, F: QueryFilter = ()> {
+    |                                                   ^^^^^^^^^^^ required by this bound in `Query`
+    = note: the full name for the type has been written to 'E:\Project\rust\jackdaw\target\debug\deps\jackdaw_avian_integration-f192302c80eca1c6.long-type-4211086330585230648.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0277]: `avian3d::prelude::Collider` is not a `Bundle`
+    --> integrations\physics\jackdaw_avian_integration\src\model_colliders.rs:60:31
+     |
+  60 |                 .try_remove::<Collider>()
+     |                  ----------   ^^^^^^^^ invalid `Bundle`
+     |                  |
+     |                  required by a bound introduced by this call
+     |
+     = help: the trait `bevy::bevy_ecs::component::Component` is not implemented for `avian3d::prelude::Collider`
+     = note: consider annotating `avian3d::prelude::Collider` with `#[derive(Component)]` or `#[derive(Bundle)]`
+note: there are multiple different versions of crate `bevy_ecs` in the dependency graph
+    --> C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_ecs\src\component\mod.rs:530:1
+     |
+ 530 | pub trait Component: Send + Sync + 'static {
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ this is the expected trait
+     |
+    ::: C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\bevy_ecs-0.20.0\src\component\mod.rs:530:1
+     |
+ 530 | pub trait Component: Send + Sync + 'static {
+     | ------------------------------------------ this is the found trait
+     = help: you can use `cargo tree` to explore your dependency tree
+     = help: the following other types implement trait `bevy::bevy_ecs::component::Component`:
+               AccessibilityNode
+               AccessibilityRequested
+               AccessibleLabel
+               AccumulatedMouseMotion
+               AccumulatedMouseScroll
+               ActivateOnPress
+               ActiveDescendant
+               AmbientLight
+             and 1035 others
+     = note: required for `avian3d::prelude::Collider` to implement `bevy::bevy_ecs::bundle::Bundle`
+note: required by a bound in `EntityCommands::<'a>::try_remove`
+    --> C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_ecs\src\system\commands\mod.rs:1820:26
+     |
+1820 |     pub fn try_remove<B: Bundle>(&mut self) -> &mut Self {
+     |                          ^^^^^^ required by this bound in `EntityCommands::<'a>::try_remove`
+
+error[E0277]: `avian3d::prelude::ColliderConstructorHierarchy` is not a `Bundle`
+    --> integrations\physics\jackdaw_avian_integration\src\model_colliders.rs:61:25
+     |
+  61 |                 .insert(ColliderConstructorHierarchy::new(collider.0.clone()));
+     |                  ------ ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ invalid `Bundle`
+     |                  |
+     |                  required by a bound introduced by this call
+     |
+     = help: the trait `bevy::bevy_ecs::component::Component` is not implemented for `avian3d::prelude::ColliderConstructorHierarchy`
+     = note: consider annotating `avian3d::prelude::ColliderConstructorHierarchy` with `#[derive(Component)]` or `#[derive(Bundle)]`
+note: there are multiple different versions of crate `bevy_ecs` in the dependency graph
+    --> C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_ecs\src\component\mod.rs:530:1
+     |
+ 530 | pub trait Component: Send + Sync + 'static {
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ this is the expected trait
+     |
+    ::: C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\bevy_ecs-0.20.0\src\component\mod.rs:530:1
+     |
+ 530 | pub trait Component: Send + Sync + 'static {
+     | ------------------------------------------ this is the found trait
+     = help: you can use `cargo tree` to explore your dependency tree
+     = help: the following other types implement trait `bevy::bevy_ecs::component::Component`:
+               AccessibilityNode
+               AccessibilityRequested
+               AccessibleLabel
+               AccumulatedMouseMotion
+               AccumulatedMouseScroll
+               ActivateOnPress
+               ActiveDescendant
+               AmbientLight
+             and 1035 others
+     = note: required for `avian3d::prelude::ColliderConstructorHierarchy` to implement `bevy::bevy_ecs::bundle::Bundle`
+note: required by a bound in `EntityCommands::<'a>::insert`
+    --> C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_ecs\src\system\commands\mod.rs:1428:43
+     |
+1428 |     pub fn insert(&mut self, bundle: impl Bundle) -> &mut Self {
+     |                                           ^^^^^^ required by this bound in `EntityCommands::<'a>::insert`
+
+error[E0277]: `avian3d::prelude::ColliderConstructorHierarchy` is not a `Bundle`
+    --> integrations\physics\jackdaw_avian_integration\src\model_colliders.rs:64:31
+     |
+  64 |                 .try_remove::<ColliderConstructorHierarchy>()
+     |                  ----------   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ invalid `Bundle`
+     |                  |
+     |                  required by a bound introduced by this call
+     |
+     = help: the trait `bevy::bevy_ecs::component::Component` is not implemented for `avian3d::prelude::ColliderConstructorHierarchy`
+     = note: consider annotating `avian3d::prelude::ColliderConstructorHierarchy` with `#[derive(Component)]` or `#[derive(Bundle)]`
+note: there are multiple different versions of crate `bevy_ecs` in the dependency graph
+    --> C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_ecs\src\component\mod.rs:530:1
+     |
+ 530 | pub trait Component: Send + Sync + 'static {
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ this is the expected trait
+     |
+    ::: C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\bevy_ecs-0.20.0\src\component\mod.rs:530:1
+     |
+ 530 | pub trait Component: Send + Sync + 'static {
+     | ------------------------------------------ this is the found trait
+     = help: you can use `cargo tree` to explore your dependency tree
+     = help: the following other types implement trait `bevy::bevy_ecs::component::Component`:
+               AccessibilityNode
+               AccessibilityRequested
+               AccessibleLabel
+               AccumulatedMouseMotion
+               AccumulatedMouseScroll
+               ActivateOnPress
+               ActiveDescendant
+               AmbientLight
+             and 1035 others
+     = note: required for `avian3d::prelude::ColliderConstructorHierarchy` to implement `bevy::bevy_ecs::bundle::Bundle`
+note: required by a bound in `EntityCommands::<'a>::try_remove`
+    --> C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_ecs\src\system\commands\mod.rs:1820:26
+     |
+1820 |     pub fn try_remove<B: Bundle>(&mut self) -> &mut Self {
+     |                          ^^^^^^ required by this bound in `EntityCommands::<'a>::try_remove`
+
+error[E0277]: `avian3d::prelude::Collider` is not a `Bundle`
+    --> integrations\physics\jackdaw_avian_integration\src\model_colliders.rs:65:25
+     |
+  65 |                 .insert(shape);
+     |                  ------ ^^^^^ invalid `Bundle`
+     |                  |
+     |                  required by a bound introduced by this call
+     |
+     = help: the trait `bevy::bevy_ecs::component::Component` is not implemented for `avian3d::prelude::Collider`
+     = note: consider annotating `avian3d::prelude::Collider` with `#[derive(Component)]` or `#[derive(Bundle)]`
+note: there are multiple different versions of crate `bevy_ecs` in the dependency graph
+    --> C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_ecs\src\component\mod.rs:530:1
+     |
+ 530 | pub trait Component: Send + Sync + 'static {
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ this is the expected trait
+     |
+    ::: C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\bevy_ecs-0.20.0\src\component\mod.rs:530:1
+     |
+ 530 | pub trait Component: Send + Sync + 'static {
+     | ------------------------------------------ this is the found trait
+     = help: you can use `cargo tree` to explore your dependency tree
+     = help: the following other types implement trait `bevy::bevy_ecs::component::Component`:
+               AccessibilityNode
+               AccessibilityRequested
+               AccessibleLabel
+               AccumulatedMouseMotion
+               AccumulatedMouseScroll
+               ActivateOnPress
+               ActiveDescendant
+               AmbientLight
+             and 1035 others
+     = note: required for `avian3d::prelude::Collider` to implement `bevy::bevy_ecs::bundle::Bundle`
+note: required by a bound in `EntityCommands::<'a>::insert`
+    --> C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_ecs\src\system\commands\mod.rs:1428:43
+     |
+1428 |     pub fn insert(&mut self, bundle: impl Bundle) -> &mut Self {
+     |                                           ^^^^^^ required by this bound in `EntityCommands::<'a>::insert`
+
+error[E0277]: `avian3d::prelude::Collider` is not a `Component`
+   --> integrations\physics\jackdaw_avian_integration\src\model_colliders.rs:83:62
+    |
+ 83 |     clear_part_colliders(&mut commands, model, &descendants, &built);
+    |                                                              ^^^^^^ invalid `Component`
+    |
+    = help: the trait `bevy::bevy_ecs::component::Component` is not implemented for `avian3d::prelude::Collider`
+    = note: consider annotating `avian3d::prelude::Collider` with `#[derive(Component)]`
+note: there are multiple different versions of crate `bevy_ecs` in the dependency graph
+   --> C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_ecs\src\component\mod.rs:530:1
+    |
+530 | pub trait Component: Send + Sync + 'static {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ this is the expected trait
+    |
+   ::: C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\bevy_ecs-0.20.0\src\component\mod.rs:530:1
+    |
+530 | pub trait Component: Send + Sync + 'static {
+    | ------------------------------------------ this is the found trait
+    = help: you can use `cargo tree` to explore your dependency tree
+    = help: the following other types implement trait `bevy::bevy_ecs::component::Component`:
+              AccessibilityNode
+              AccessibilityRequested
+              AccessibleLabel
+              AccumulatedMouseMotion
+              AccumulatedMouseScroll
+              ActivateOnPress
+              ActiveDescendant
+              AmbientLight
+            and 1035 others
+    = note: required for `bevy::bevy_ecs::query::With<avian3d::prelude::Collider>` to implement `QueryFilter`
+    = note: 1 redundant requirement hidden
+    = note: required for `(With<Collider>, Without<AvianCollider>)` to implement `QueryFilter`
+note: required by a bound in `bevy::bevy_ecs::system::Query`
+   --> C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_ecs\src\system\query.rs:488:51
+    |
+488 | pub struct Query<'world, 'state, D: QueryData, F: QueryFilter = ()> {
+    |                                                   ^^^^^^^^^^^ required by this bound in `Query`
+    = note: the full name for the type has been written to 'E:\Project\rust\jackdaw\target\debug\deps\jackdaw_avian_integration-f192302c80eca1c6.long-type-4211086330585230648.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0277]: `avian3d::prelude::ColliderConstructorHierarchy` is not a `Bundle`
+    --> integrations\physics\jackdaw_avian_integration\src\model_colliders.rs:85:28
+     |
+  85 |         model.try_remove::<ColliderConstructorHierarchy>();
+     |               ----------   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ invalid `Bundle`
+     |               |
+     |               required by a bound introduced by this call
+     |
+     = help: the trait `bevy::bevy_ecs::component::Component` is not implemented for `avian3d::prelude::ColliderConstructorHierarchy`
+     = note: consider annotating `avian3d::prelude::ColliderConstructorHierarchy` with `#[derive(Component)]` or `#[derive(Bundle)]`
+note: there are multiple different versions of crate `bevy_ecs` in the dependency graph
+    --> C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_ecs\src\component\mod.rs:530:1
+     |
+ 530 | pub trait Component: Send + Sync + 'static {
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ this is the expected trait
+     |
+    ::: C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\bevy_ecs-0.20.0\src\component\mod.rs:530:1
+     |
+ 530 | pub trait Component: Send + Sync + 'static {
+     | ------------------------------------------ this is the found trait
+     = help: you can use `cargo tree` to explore your dependency tree
+     = help: the following other types implement trait `bevy::bevy_ecs::component::Component`:
+               AccessibilityNode
+               AccessibilityRequested
+               AccessibleLabel
+               AccumulatedMouseMotion
+               AccumulatedMouseScroll
+               ActivateOnPress
+               ActiveDescendant
+               AmbientLight
+             and 1035 others
+     = note: required for `avian3d::prelude::ColliderConstructorHierarchy` to implement `bevy::bevy_ecs::bundle::Bundle`
+note: required by a bound in `EntityCommands::<'a>::try_remove`
+    --> C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_ecs\src\system\commands\mod.rs:1820:26
+     |
+1820 |     pub fn try_remove<B: Bundle>(&mut self) -> &mut Self {
+     |                          ^^^^^^ required by this bound in `EntityCommands::<'a>::try_remove`
+
+error[E0599]: the method `contains` exists for reference `&Query<'_, '_, (), (With<Collider>, Without<AvianCollider>)>`, but its trait bounds were not satisfied
+   --> integrations\physics\jackdaw_avian_integration\src\model_colliders.rs:96:18
+    |
+ 96 |         if built.contains(part) {
+    |                  ^^^^^^^^ method cannot be called due to unsatisfied trait bounds
+    |
+   ::: C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\avian3d-0.8.0\src\collision\collider\parry\mod.rs:382:1
+    |
+382 | pub struct Collider {
+    | ------------------- doesn't satisfy `_: Component`
+    |
+    = note: the following trait bounds were not satisfied:
+            `avian3d::prelude::Collider: bevy::bevy_ecs::component::Component`
+            which is required by `(bevy::bevy_ecs::query::With<avian3d::prelude::Collider>, bevy::bevy_ecs::query::Without<AvianCollider>): QueryFilter`
+    = note: the full name for the type has been written to 'E:\Project\rust\jackdaw\target\debug\deps\jackdaw_avian_integration-f192302c80eca1c6.long-type-1803763363514852612.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0277]: `avian3d::prelude::Collider` is not a `Bundle`
+    --> integrations\physics\jackdaw_avian_integration\src\model_colliders.rs:97:48
+     |
+  97 |             commands.entity(part).try_remove::<Collider>();
+     |                                   ----------   ^^^^^^^^ invalid `Bundle`
+     |                                   |
+     |                                   required by a bound introduced by this call
+     |
+     = help: the trait `bevy::bevy_ecs::component::Component` is not implemented for `avian3d::prelude::Collider`
+     = note: consider annotating `avian3d::prelude::Collider` with `#[derive(Component)]` or `#[derive(Bundle)]`
+note: there are multiple different versions of crate `bevy_ecs` in the dependency graph
+    --> C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_ecs\src\component\mod.rs:530:1
+     |
+ 530 | pub trait Component: Send + Sync + 'static {
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ this is the expected trait
+     |
+    ::: C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\bevy_ecs-0.20.0\src\component\mod.rs:530:1
+     |
+ 530 | pub trait Component: Send + Sync + 'static {
+     | ------------------------------------------ this is the found trait
+     = help: you can use `cargo tree` to explore your dependency tree
+     = help: the following other types implement trait `bevy::bevy_ecs::component::Component`:
+               AccessibilityNode
+               AccessibilityRequested
+               AccessibleLabel
+               AccumulatedMouseMotion
+               AccumulatedMouseScroll
+               ActivateOnPress
+               ActiveDescendant
+               AmbientLight
+             and 1035 others
+     = note: required for `avian3d::prelude::Collider` to implement `bevy::bevy_ecs::bundle::Bundle`
+note: required by a bound in `EntityCommands::<'a>::try_remove`
+    --> C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_ecs\src\system\commands\mod.rs:1820:26
+     |
+1820 |     pub fn try_remove<B: Bundle>(&mut self) -> &mut Self {
+     |                          ^^^^^^ required by this bound in `EntityCommands::<'a>::try_remove`
+
+error[E0277]: `avian3d::prelude::Collider` is not a `Component`
+   --> integrations\physics\jackdaw_avian_integration\src\model_colliders.rs:170:66
+    |
+170 |         clear_part_colliders(&mut commands, group, &descendants, &built);
+    |                                                                  ^^^^^^ invalid `Component`
+    |
+    = help: the trait `bevy::bevy_ecs::component::Component` is not implemented for `avian3d::prelude::Collider`
+    = note: consider annotating `avian3d::prelude::Collider` with `#[derive(Component)]`
+note: there are multiple different versions of crate `bevy_ecs` in the dependency graph
+   --> C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_ecs\src\component\mod.rs:530:1
+    |
+530 | pub trait Component: Send + Sync + 'static {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ this is the expected trait
+    |
+   ::: C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\bevy_ecs-0.20.0\src\component\mod.rs:530:1
+    |
+530 | pub trait Component: Send + Sync + 'static {
+    | ------------------------------------------ this is the found trait
+    = help: you can use `cargo tree` to explore your dependency tree
+    = help: the following other types implement trait `bevy::bevy_ecs::component::Component`:
+              AccessibilityNode
+              AccessibilityRequested
+              AccessibleLabel
+              AccumulatedMouseMotion
+              AccumulatedMouseScroll
+              ActivateOnPress
+              ActiveDescendant
+              AmbientLight
+            and 1035 others
+    = note: required for `bevy::bevy_ecs::query::With<avian3d::prelude::Collider>` to implement `QueryFilter`
+    = note: 1 redundant requirement hidden
+    = note: required for `(With<Collider>, Without<AvianCollider>)` to implement `QueryFilter`
+note: required by a bound in `bevy::bevy_ecs::system::Query`
+   --> C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_ecs\src\system\query.rs:488:51
+    |
+488 | pub struct Query<'world, 'state, D: QueryData, F: QueryFilter = ()> {
+    |                                                   ^^^^^^^^^^^ required by this bound in `Query`
+    = note: the full name for the type has been written to 'E:\Project\rust\jackdaw\target\debug\deps\jackdaw_avian_integration-f192302c80eca1c6.long-type-4211086330585230648.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0277]: `avian3d::prelude::ColliderConstructorHierarchy` is not a `Bundle`
+    --> integrations\physics\jackdaw_avian_integration\src\model_colliders.rs:172:29
+     |
+ 172 |         entity.try_remove::<ColliderConstructorHierarchy>();
+     |                ----------   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ invalid `Bundle`
+     |                |
+     |                required by a bound introduced by this call
+     |
+     = help: the trait `bevy::bevy_ecs::component::Component` is not implemented for `avian3d::prelude::ColliderConstructorHierarchy`
+     = note: consider annotating `avian3d::prelude::ColliderConstructorHierarchy` with `#[derive(Component)]` or `#[derive(Bundle)]`
+note: there are multiple different versions of crate `bevy_ecs` in the dependency graph
+    --> C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_ecs\src\component\mod.rs:530:1
+     |
+ 530 | pub trait Component: Send + Sync + 'static {
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ this is the expected trait
+     |
+    ::: C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\bevy_ecs-0.20.0\src\component\mod.rs:530:1
+     |
+ 530 | pub trait Component: Send + Sync + 'static {
+     | ------------------------------------------ this is the found trait
+     = help: you can use `cargo tree` to explore your dependency tree
+     = help: the following other types implement trait `bevy::bevy_ecs::component::Component`:
+               AccessibilityNode
+               AccessibilityRequested
+               AccessibleLabel
+               AccumulatedMouseMotion
+               AccumulatedMouseScroll
+               ActivateOnPress
+               ActiveDescendant
+               AmbientLight
+             and 1035 others
+     = note: required for `avian3d::prelude::ColliderConstructorHierarchy` to implement `bevy::bevy_ecs::bundle::Bundle`
+note: required by a bound in `EntityCommands::<'a>::try_remove`
+    --> C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_ecs\src\system\commands\mod.rs:1820:26
+     |
+1820 |     pub fn try_remove<B: Bundle>(&mut self) -> &mut Self {
+     |                          ^^^^^^ required by this bound in `EntityCommands::<'a>::try_remove`
+
+error[E0277]: `avian3d::prelude::Collider` is not a `Bundle`
+    --> integrations\physics\jackdaw_avian_integration\src\model_colliders.rs:175:31
+     |
+ 175 |                 entity.insert(shape);
+     |                        ------ ^^^^^ invalid `Bundle`
+     |                        |
+     |                        required by a bound introduced by this call
+     |
+     = help: the trait `bevy::bevy_ecs::component::Component` is not implemented for `avian3d::prelude::Collider`
+     = note: consider annotating `avian3d::prelude::Collider` with `#[derive(Component)]` or `#[derive(Bundle)]`
+note: there are multiple different versions of crate `bevy_ecs` in the dependency graph
+    --> C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_ecs\src\component\mod.rs:530:1
+     |
+ 530 | pub trait Component: Send + Sync + 'static {
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ this is the expected trait
+     |
+    ::: C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\bevy_ecs-0.20.0\src\component\mod.rs:530:1
+     |
+ 530 | pub trait Component: Send + Sync + 'static {
+     | ------------------------------------------ this is the found trait
+     = help: you can use `cargo tree` to explore your dependency tree
+     = help: the following other types implement trait `bevy::bevy_ecs::component::Component`:
+               AccessibilityNode
+               AccessibilityRequested
+               AccessibleLabel
+               AccumulatedMouseMotion
+               AccumulatedMouseScroll
+               ActivateOnPress
+               ActiveDescendant
+               AmbientLight
+             and 1035 others
+     = note: required for `avian3d::prelude::Collider` to implement `bevy::bevy_ecs::bundle::Bundle`
+note: required by a bound in `EntityCommands::<'a>::insert`
+    --> C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_ecs\src\system\commands\mod.rs:1428:43
+     |
+1428 |     pub fn insert(&mut self, bundle: impl Bundle) -> &mut Self {
+     |                                           ^^^^^^ required by this bound in `EntityCommands::<'a>::insert`
+
+error[E0308]: mismatched types
+   --> integrations\physics\jackdaw_avian_integration\src\model_colliders.rs:213:73
+    |
+213 |                 Collider::try_from_constructor(collider.0.clone(), Some(&mesh))
+    |                                                                    ---- ^^^^^ expected `bevy_mesh::mesh::Mesh`, found `bevy::bevy_mesh::Mesh`
+    |                                                                    |
+    |                                                                    arguments to this enum variant are incorrect
+    |
+note: there are multiple different versions of crate `bevy_mesh` in the dependency graph
+   --> C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\bevy_mesh-0.20.0\src\mesh.rs:230:1
+    |
+230 | pub struct Mesh {
+    | ^^^^^^^^^^^^^^^ this is the expected type
+    |
+   ::: C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_mesh\src\mesh.rs:230:1
+    |
+230 | pub struct Mesh {
+    | --------------- this is the found type
+    = help: you can use `cargo tree` to explore your dependency tree
+help: the type constructed contains `&bevy::bevy_mesh::Mesh` due to the type of the argument passed
+   --> integrations\physics\jackdaw_avian_integration\src\model_colliders.rs:213:68
+    |
+213 |                 Collider::try_from_constructor(collider.0.clone(), Some(&mesh))
+    |                                                                    ^^^^^-----^
+    |                                                                         |
+    |                                                                         this argument influences the type of `Some`
+note: tuple variant defined here
+   --> C:\Users\linbo.zhang\.rustup\toolchains\1.99.0-x86_64-pc-windows-msvc\lib/rustlib/src/rust\library\core\src\option.rs:606:5
+    |
+606 |     Some(#[stable(feature = "rust1", since = "1.0.0")] T),
+    |     ^^^^
+
+error[E0277]: `avian3d::prelude::Collider` is not a `Bundle`
+    --> integrations\physics\jackdaw_avian_integration\src\model_colliders.rs:226:27
+     |
+ 226 |             entity.insert(shape);
+     |                    ------ ^^^^^ invalid `Bundle`
+     |                    |
+     |                    required by a bound introduced by this call
+     |
+     = help: the trait `bevy::bevy_ecs::component::Component` is not implemented for `avian3d::prelude::Collider`
+     = note: consider annotating `avian3d::prelude::Collider` with `#[derive(Component)]` or `#[derive(Bundle)]`
+note: there are multiple different versions of crate `bevy_ecs` in the dependency graph
+    --> C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_ecs\src\component\mod.rs:530:1
+     |
+ 530 | pub trait Component: Send + Sync + 'static {
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ this is the expected trait
+     |
+    ::: C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\bevy_ecs-0.20.0\src\component\mod.rs:530:1
+     |
+ 530 | pub trait Component: Send + Sync + 'static {
+     | ------------------------------------------ this is the found trait
+     = help: you can use `cargo tree` to explore your dependency tree
+     = help: the following other types implement trait `bevy::bevy_ecs::component::Component`:
+               AccessibilityNode
+               AccessibilityRequested
+               AccessibleLabel
+               AccumulatedMouseMotion
+               AccumulatedMouseScroll
+               ActivateOnPress
+               ActiveDescendant
+               AmbientLight
+             and 1035 others
+     = note: required for `avian3d::prelude::Collider` to implement `bevy::bevy_ecs::bundle::Bundle`
+note: required by a bound in `EntityCommands::<'a>::insert`
+    --> C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_ecs\src\system\commands\mod.rs:1428:43
+     |
+1428 |     pub fn insert(&mut self, bundle: impl Bundle) -> &mut Self {
+     |                                           ^^^^^^ required by this bound in `EntityCommands::<'a>::insert`
+
+error[E0599]: the method `chain` exists for tuple `(fn(Commands<'a, 'b>, _) {keep_changed_bodies}, _, _)`, but its trait bounds were not satisfied
+  --> integrations\physics\jackdaw_avian_integration\src\static_bodies.rs:24:18
+   |
+19 | /             (
+20 | |                 keep_changed_bodies,
+21 | |                 remove_implied_bodies,
+22 | |                 add_implied_bodies,
+23 | |             )
+24 | |                 .chain(),
+   | |                 -^^^^^ method cannot be called due to unsatisfied trait bounds
+   | |_________________|
+   |
+   |
+   = note: the following trait bounds were not satisfied:
+           `(for<'a, 'b, 'c, 'd, 'e> fn(bevy::bevy_ecs::system::Commands<'a, 'b>, bevy::bevy_ecs::system::Query<'c, 'd, (bevy::bevy_ecs::entity::Entity, bevy::bevy_ecs::change_detection::Ref<'e, avian3d::prelude::RigidBody>), bevy::bevy_ecs::query::With<ImpliedStaticBody>>) {keep_changed_bodies}, for<'a, 'b, 'c, 'd> fn(bevy::bevy_ecs::system::Commands<'a, 'b>, bevy::bevy_ecs::system::Query<'c, 'd, bevy::bevy_ecs::entity::Entity, (bevy::bevy_ecs::query::With<ImpliedStaticBody>, bevy::bevy_ecs::query::Without<AvianCollider>)>) {remove_implied_bodies}, for<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i> fn(bevy::bevy_ecs::system::Commands<'a, 'b>, bevy::bevy_ecs::system::Query<'c, 'd, bevy::bevy_ecs::entity::Entity, (bevy::bevy_ecs::query::With<AvianCollider>, bevy::bevy_ecs::query::Without<avian3d::prelude::RigidBody>)>, bevy::bevy_ecs::system::Query<'e, 'f, &'g bevy::bevy_ecs::hierarchy::ChildOf>, bevy::bevy_ecs::system::Query<'h, 'i, (), bevy::bevy_ecs::query::Or<(bevy::bevy_ecs::query::With<avian3d::prelude::RigidBody>, bevy::bevy_ecs::query::With<AvianCollider>)>>) {add_implied_bodies}): bevy::bevy_curve::Curve<_>`
+           which is required by `(for<'a, 'b, 'c, 'd, 'e> fn(bevy::bevy_ecs::system::Commands<'a, 'b>, bevy::bevy_ecs::system::Query<'c, 'd, (bevy::bevy_ecs::entity::Entity, bevy::bevy_ecs::change_detection::Ref<'e, avian3d::prelude::RigidBody>), bevy::bevy_ecs::query::With<ImpliedStaticBody>>) {keep_changed_bodies}, for<'a, 'b, 'c, 'd> fn(bevy::bevy_ecs::system::Commands<'a, 'b>, bevy::bevy_ecs::system::Query<'c, 'd, bevy::bevy_ecs::entity::Entity, (bevy::bevy_ecs::query::With<ImpliedStaticBody>, bevy::bevy_ecs::query::Without<AvianCollider>)>) {remove_implied_bodies}, for<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i> fn(bevy::bevy_ecs::system::Commands<'a, 'b>, bevy::bevy_ecs::system::Query<'c, 'd, bevy::bevy_ecs::entity::Entity, (bevy::bevy_ecs::query::With<AvianCollider>, bevy::bevy_ecs::query::Without<avian3d::prelude::RigidBody>)>, bevy::bevy_ecs::system::Query<'e, 'f, &'g bevy::bevy_ecs::hierarchy::ChildOf>, bevy::bevy_ecs::system::Query<'h, 'i, (), bevy::bevy_ecs::query::Or<(bevy::bevy_ecs::query::With<avian3d::prelude::RigidBody>, bevy::bevy_ecs::query::With<AvianCollider>)>>) {add_implied_bodies}): bevy::bevy_curve::CurveExt<_>`
+           `&(for<'a, 'b, 'c, 'd, 'e> fn(bevy::bevy_ecs::system::Commands<'a, 'b>, bevy::bevy_ecs::system::Query<'c, 'd, (bevy::bevy_ecs::entity::Entity, bevy::bevy_ecs::change_detection::Ref<'e, avian3d::prelude::RigidBody>), bevy::bevy_ecs::query::With<ImpliedStaticBody>>) {keep_changed_bodies}, for<'a, 'b, 'c, 'd> fn(bevy::bevy_ecs::system::Commands<'a, 'b>, bevy::bevy_ecs::system::Query<'c, 'd, bevy::bevy_ecs::entity::Entity, (bevy::bevy_ecs::query::With<ImpliedStaticBody>, bevy::bevy_ecs::query::Without<AvianCollider>)>) {remove_implied_bodies}, for<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i> fn(bevy::bevy_ecs::system::Commands<'a, 'b>, bevy::bevy_ecs::system::Query<'c, 'd, bevy::bevy_ecs::entity::Entity, (bevy::bevy_ecs::query::With<AvianCollider>, bevy::bevy_ecs::query::Without<avian3d::prelude::RigidBody>)>, bevy::bevy_ecs::system::Query<'e, 'f, &'g bevy::bevy_ecs::hierarchy::ChildOf>, bevy::bevy_ecs::system::Query<'h, 'i, (), bevy::bevy_ecs::query::Or<(bevy::bevy_ecs::query::With<avian3d::prelude::RigidBody>, bevy::bevy_ecs::query::With<AvianCollider>)>>) {add_implied_bodies}): bevy::bevy_curve::Curve<_>`
+           which is required by `&(for<'a, 'b, 'c, 'd, 'e> fn(bevy::bevy_ecs::system::Commands<'a, 'b>, bevy::bevy_ecs::system::Query<'c, 'd, (bevy::bevy_ecs::entity::Entity, bevy::bevy_ecs::change_detection::Ref<'e, avian3d::prelude::RigidBody>), bevy::bevy_ecs::query::With<ImpliedStaticBody>>) {keep_changed_bodies}, for<'a, 'b, 'c, 'd> fn(bevy::bevy_ecs::system::Commands<'a, 'b>, bevy::bevy_ecs::system::Query<'c, 'd, bevy::bevy_ecs::entity::Entity, (bevy::bevy_ecs::query::With<ImpliedStaticBody>, bevy::bevy_ecs::query::Without<AvianCollider>)>) {remove_implied_bodies}, for<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i> fn(bevy::bevy_ecs::system::Commands<'a, 'b>, bevy::bevy_ecs::system::Query<'c, 'd, bevy::bevy_ecs::entity::Entity, (bevy::bevy_ecs::query::With<AvianCollider>, bevy::bevy_ecs::query::Without<avian3d::prelude::RigidBody>)>, bevy::bevy_ecs::system::Query<'e, 'f, &'g bevy::bevy_ecs::hierarchy::ChildOf>, bevy::bevy_ecs::system::Query<'h, 'i, (), bevy::bevy_ecs::query::Or<(bevy::bevy_ecs::query::With<avian3d::prelude::RigidBody>, bevy::bevy_ecs::query::With<AvianCollider>)>>) {add_implied_bodies}): bevy::bevy_curve::CurveExt<_>`
+           `&mut (for<'a, 'b, 'c, 'd, 'e> fn(bevy::bevy_ecs::system::Commands<'a, 'b>, bevy::bevy_ecs::system::Query<'c, 'd, (bevy::bevy_ecs::entity::Entity, bevy::bevy_ecs::change_detection::Ref<'e, avian3d::prelude::RigidBody>), bevy::bevy_ecs::query::With<ImpliedStaticBody>>) {keep_changed_bodies}, for<'a, 'b, 'c, 'd> fn(bevy::bevy_ecs::system::Commands<'a, 'b>, bevy::bevy_ecs::system::Query<'c, 'd, bevy::bevy_ecs::entity::Entity, (bevy::bevy_ecs::query::With<ImpliedStaticBody>, bevy::bevy_ecs::query::Without<AvianCollider>)>) {remove_implied_bodies}, for<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i> fn(bevy::bevy_ecs::system::Commands<'a, 'b>, bevy::bevy_ecs::system::Query<'c, 'd, bevy::bevy_ecs::entity::Entity, (bevy::bevy_ecs::query::With<AvianCollider>, bevy::bevy_ecs::query::Without<avian3d::prelude::RigidBody>)>, bevy::bevy_ecs::system::Query<'e, 'f, &'g bevy::bevy_ecs::hierarchy::ChildOf>, bevy::bevy_ecs::system::Query<'h, 'i, (), bevy::bevy_ecs::query::Or<(bevy::bevy_ecs::query::With<avian3d::prelude::RigidBody>, bevy::bevy_ecs::query::With<AvianCollider>)>>) {add_implied_bodies}): bevy::bevy_curve::Curve<_>`
+           which is required by `&mut (for<'a, 'b, 'c, 'd, 'e> fn(bevy::bevy_ecs::system::Commands<'a, 'b>, bevy::bevy_ecs::system::Query<'c, 'd, (bevy::bevy_ecs::entity::Entity, bevy::bevy_ecs::change_detection::Ref<'e, avian3d::prelude::RigidBody>), bevy::bevy_ecs::query::With<ImpliedStaticBody>>) {keep_changed_bodies}, for<'a, 'b, 'c, 'd> fn(bevy::bevy_ecs::system::Commands<'a, 'b>, bevy::bevy_ecs::system::Query<'c, 'd, bevy::bevy_ecs::entity::Entity, (bevy::bevy_ecs::query::With<ImpliedStaticBody>, bevy::bevy_ecs::query::Without<AvianCollider>)>) {remove_implied_bodies}, for<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i> fn(bevy::bevy_ecs::system::Commands<'a, 'b>, bevy::bevy_ecs::system::Query<'c, 'd, bevy::bevy_ecs::entity::Entity, (bevy::bevy_ecs::query::With<AvianCollider>, bevy::bevy_ecs::query::Without<avian3d::prelude::RigidBody>)>, bevy::bevy_ecs::system::Query<'e, 'f, &'g bevy::bevy_ecs::hierarchy::ChildOf>, bevy::bevy_ecs::system::Query<'h, 'i, (), bevy::bevy_ecs::query::Or<(bevy::bevy_ecs::query::With<avian3d::prelude::RigidBody>, bevy::bevy_ecs::query::With<AvianCollider>)>>) {add_implied_bodies}): bevy::bevy_curve::CurveExt<_>`
+           `(for<'a, 'b, 'c, 'd, 'e> fn(bevy::bevy_ecs::system::Commands<'a, 'b>, bevy::bevy_ecs::system::Query<'c, 'd, (bevy::bevy_ecs::entity::Entity, bevy::bevy_ecs::change_detection::Ref<'e, avian3d::prelude::RigidBody>), bevy::bevy_ecs::query::With<ImpliedStaticBody>>) {keep_changed_bodies}, for<'a, 'b, 'c, 'd> fn(bevy::bevy_ecs::system::Commands<'a, 'b>, bevy::bevy_ecs::system::Query<'c, 'd, bevy::bevy_ecs::entity::Entity, (bevy::bevy_ecs::query::With<ImpliedStaticBody>, bevy::bevy_ecs::query::Without<AvianCollider>)>) {remove_implied_bodies}, for<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i> fn(bevy::bevy_ecs::system::Commands<'a, 'b>, bevy::bevy_ecs::system::Query<'c, 'd, bevy::bevy_ecs::entity::Entity, (bevy::bevy_ecs::query::With<AvianCollider>, bevy::bevy_ecs::query::Without<avian3d::prelude::RigidBody>)>, bevy::bevy_ecs::system::Query<'e, 'f, &'g bevy::bevy_ecs::hierarchy::ChildOf>, bevy::bevy_ecs::system::Query<'h, 'i, (), bevy::bevy_ecs::query::Or<(bevy::bevy_ecs::query::With<avian3d::prelude::RigidBody>, bevy::bevy_ecs::query::With<AvianCollider>)>>) {add_implied_bodies}): Iterator`
+           which is required by `&mut (for<'a, 'b, 'c, 'd, 'e> fn(bevy::bevy_ecs::system::Commands<'a, 'b>, bevy::bevy_ecs::system::Query<'c, 'd, (bevy::bevy_ecs::entity::Entity, bevy::bevy_ecs::change_detection::Ref<'e, avian3d::prelude::RigidBody>), bevy::bevy_ecs::query::With<ImpliedStaticBody>>) {keep_changed_bodies}, for<'a, 'b, 'c, 'd> fn(bevy::bevy_ecs::system::Commands<'a, 'b>, bevy::bevy_ecs::system::Query<'c, 'd, bevy::bevy_ecs::entity::Entity, (bevy::bevy_ecs::query::With<ImpliedStaticBody>, bevy::bevy_ecs::query::Without<AvianCollider>)>) {remove_implied_bodies}, for<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i> fn(bevy::bevy_ecs::system::Commands<'a, 'b>, bevy::bevy_ecs::system::Query<'c, 'd, bevy::bevy_ecs::entity::Entity, (bevy::bevy_ecs::query::With<AvianCollider>, bevy::bevy_ecs::query::Without<avian3d::prelude::RigidBody>)>, bevy::bevy_ecs::system::Query<'e, 'f, &'g bevy::bevy_ecs::hierarchy::ChildOf>, bevy::bevy_ecs::system::Query<'h, 'i, (), bevy::bevy_ecs::query::Or<(bevy::bevy_ecs::query::With<avian3d::prelude::RigidBody>, bevy::bevy_ecs::query::With<AvianCollider>)>>) {add_implied_bodies}): Iterator`
+   = note: the full name for the type has been written to 'E:\Project\rust\jackdaw\target\debug\deps\jackdaw_avian_integration-f192302c80eca1c6.long-type-16361178964689419315.txt'
+   = note: consider using `--verbose` to print the full type name to the console
+
+error[E0277]: `avian3d::prelude::RigidBody` is not a `Component`
+   --> integrations\physics\jackdaw_avian_integration\src\static_bodies.rs:40:27
+    |
+ 40 |     for (entity, body) in &bodies {
+    |                           ^^^^^^^ invalid `Component`
+    |
+    = help: the trait `bevy::bevy_ecs::component::Component` is not implemented for `avian3d::prelude::RigidBody`
+    = note: consider annotating `avian3d::prelude::RigidBody` with `#[derive(Component)]`
+note: there are multiple different versions of crate `bevy_ecs` in the dependency graph
+   --> C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_ecs\src\component\mod.rs:530:1
+    |
+530 | pub trait Component: Send + Sync + 'static {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ this is the expected trait
+    |
+   ::: C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\bevy_ecs-0.20.0\src\component\mod.rs:530:1
+    |
+530 | pub trait Component: Send + Sync + 'static {
+    | ------------------------------------------ this is the found trait
+    = help: you can use `cargo tree` to explore your dependency tree
+    = help: the following other types implement trait `bevy::bevy_ecs::component::Component`:
+              AccessibilityNode
+              AccessibilityRequested
+              AccessibleLabel
+              AccumulatedMouseMotion
+              AccumulatedMouseScroll
+              ActivateOnPress
+              ActiveDescendant
+              AmbientLight
+            and 1035 others
+    = note: required for `bevy::bevy_ecs::change_detection::Ref<'_, avian3d::prelude::RigidBody>` to implement `QueryData`
+    = note: 1 redundant requirement hidden
+    = note: required for `(Entity, Ref<'_, RigidBody>)` to implement `QueryData`
+note: required by a bound in `bevy::bevy_ecs::system::Query`
+   --> C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_ecs\src\system\query.rs:488:37
+    |
+488 | pub struct Query<'world, 'state, D: QueryData, F: QueryFilter = ()> {
+    |                                     ^^^^^^^^^ required by this bound in `Query`
+    = note: the full name for the type has been written to 'E:\Project\rust\jackdaw\target\debug\deps\jackdaw_avian_integration-f192302c80eca1c6.long-type-3102720800443401371.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0277]: `&Query<'_, '_, (Entity, Ref<'_, RigidBody>), With<ImpliedStaticBody>>` is not an iterator
+    --> integrations\physics\jackdaw_avian_integration\src\static_bodies.rs:40:27
+     |
+  40 |     for (entity, body) in &bodies {
+     |                           ^^^^^^^ `&Query<'_, '_, (Entity, Ref<'_, RigidBody>), With<ImpliedStaticBody>>` is not an iterator
+     |
+     = help: the trait `IntoIterator` is not implemented for `&Query<'_, '_, (Entity, Ref<'_, RigidBody>), With<ImpliedStaticBody>>`
+help: the following other types implement trait `IntoIterator`
+    --> C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_ecs\src\system\query.rs:2889:1
+     |
+2889 | impl<'w, 's, D: IterQueryData, F: QueryFilter> IntoIterator for Query<'w, 's, D, F> {
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `bevy::bevy_ecs::system::Query<'_, '_, D, F>`
+...
+2898 | impl<'w, 's, D: QueryData, F: QueryFilter> IntoIterator for &'w Query<'_, 's, D, F> {
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `&bevy::bevy_ecs::system::Query<'_, '_, D, F>`
+...
+2907 | impl<'w, 's, D: IterQueryData, F: QueryFilter> IntoIterator for &'w mut Query<'_, 's, D, F> {
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `&mut bevy::bevy_ecs::system::Query<'_, '_, D, F>`
+     = note: there are multiple different versions of crate `bevy_ecs` in the dependency graph
+     = help: you can use `cargo tree` to explore your dependency tree
+     = note: the full name for the type has been written to 'E:\Project\rust\jackdaw\target\debug\deps\jackdaw_avian_integration-f192302c80eca1c6.long-type-3969405248223255086.txt'
+     = note: consider using `--verbose` to print the full type name to the console
+
+error[E0277]: `(avian3d::prelude::RigidBody, ImpliedStaticBody)` is not a `Bundle`
+    --> integrations\physics\jackdaw_avian_integration\src\static_bodies.rs:54:23
+     |
+  54 |             .remove::<(RigidBody, ImpliedStaticBody)>();
+     |              ------   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ invalid `Bundle`
+     |              |
+     |              required by a bound introduced by this call
+     |
+     = help: the trait `bevy::bevy_ecs::bundle::Bundle` is not implemented for `(avian3d::prelude::RigidBody, ImpliedStaticBody)`
+     = note: consider annotating `(avian3d::prelude::RigidBody, ImpliedStaticBody)` with `#[derive(Component)]` or `#[derive(Bundle)]`
+note: there are multiple different versions of crate `bevy_ecs` in the dependency graph
+    --> C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_ecs\src\bundle\mod.rs:202:1
+     |
+ 202 | pub unsafe trait Bundle: DynamicBundle + Send + Sync + 'static {
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ this is the expected trait
+     |
+    ::: C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\bevy_ecs-0.20.0\src\bundle\mod.rs:202:1
+     |
+ 202 | pub unsafe trait Bundle: DynamicBundle + Send + Sync + 'static {
+     | --------------------------------------------------------------
+     | |
+     | this is the found trait
+     | this is the found trait
+     = help: you can use `cargo tree` to explore your dependency tree
+     = help: the following other types implement trait `bevy::bevy_ecs::bundle::Bundle`:
+               (T₁, T₂, …, Tₙ) up to tuples of arity 15
+             and 8 others
+note: required by a bound in `EntityCommands::<'a>::remove`
+    --> C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_ecs\src\system\commands\mod.rs:1719:22
+     |
+1719 |     pub fn remove<B: Bundle>(&mut self) -> &mut Self {
+     |                      ^^^^^^ required by this bound in `EntityCommands::<'a>::remove`
+
+error[E0277]: `avian3d::prelude::RigidBody` is not a `Component`
+   --> integrations\physics\jackdaw_avian_integration\src\static_bodies.rs:66:19
+    |
+ 66 |     for entity in &colliders {
+    |                   ^^^^^^^^^^ invalid `Component`
+    |
+    = help: the trait `bevy::bevy_ecs::component::Component` is not implemented for `avian3d::prelude::RigidBody`
+    = note: consider annotating `avian3d::prelude::RigidBody` with `#[derive(Component)]`
+note: there are multiple different versions of crate `bevy_ecs` in the dependency graph
+   --> C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_ecs\src\component\mod.rs:530:1
+    |
+530 | pub trait Component: Send + Sync + 'static {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ this is the expected trait
+    |
+   ::: C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\bevy_ecs-0.20.0\src\component\mod.rs:530:1
+    |
+530 | pub trait Component: Send + Sync + 'static {
+    | ------------------------------------------ this is the found trait
+    = help: you can use `cargo tree` to explore your dependency tree
+    = help: the following other types implement trait `bevy::bevy_ecs::component::Component`:
+              AccessibilityNode
+              AccessibilityRequested
+              AccessibleLabel
+              AccumulatedMouseMotion
+              AccumulatedMouseScroll
+              ActivateOnPress
+              ActiveDescendant
+              AmbientLight
+            and 1035 others
+    = note: required for `bevy::bevy_ecs::query::Without<avian3d::prelude::RigidBody>` to implement `QueryFilter`
+    = note: 1 redundant requirement hidden
+    = note: required for `(With<AvianCollider>, Without<RigidBody>)` to implement `QueryFilter`
+note: required by a bound in `bevy::bevy_ecs::system::Query`
+   --> C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_ecs\src\system\query.rs:488:51
+    |
+488 | pub struct Query<'world, 'state, D: QueryData, F: QueryFilter = ()> {
+    |                                                   ^^^^^^^^^^^ required by this bound in `Query`
+    = note: the full name for the type has been written to 'E:\Project\rust\jackdaw\target\debug\deps\jackdaw_avian_integration-f192302c80eca1c6.long-type-14604831643608113412.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0277]: `&Query<'_, '_, Entity, (With<AvianCollider>, Without<RigidBody>)>` is not an iterator
+    --> integrations\physics\jackdaw_avian_integration\src\static_bodies.rs:66:19
+     |
+  66 |     for entity in &colliders {
+     |                   ^^^^^^^^^^ `&Query<'_, '_, Entity, (With<AvianCollider>, Without<RigidBody>)>` is not an iterator
+     |
+     = help: the trait `IntoIterator` is not implemented for `&Query<'_, '_, Entity, (With<AvianCollider>, Without<RigidBody>)>`
+help: the following other types implement trait `IntoIterator`
+    --> C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_ecs\src\system\query.rs:2889:1
+     |
+2889 | impl<'w, 's, D: IterQueryData, F: QueryFilter> IntoIterator for Query<'w, 's, D, F> {
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `bevy::bevy_ecs::system::Query<'_, '_, D, F>`
+...
+2898 | impl<'w, 's, D: QueryData, F: QueryFilter> IntoIterator for &'w Query<'_, 's, D, F> {
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `&bevy::bevy_ecs::system::Query<'_, '_, D, F>`
+...
+2907 | impl<'w, 's, D: IterQueryData, F: QueryFilter> IntoIterator for &'w mut Query<'_, 's, D, F> {
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `&mut bevy::bevy_ecs::system::Query<'_, '_, D, F>`
+     = note: there are multiple different versions of crate `bevy_ecs` in the dependency graph
+     = help: you can use `cargo tree` to explore your dependency tree
+     = note: the full name for the type has been written to 'E:\Project\rust\jackdaw\target\debug\deps\jackdaw_avian_integration-f192302c80eca1c6.long-type-2378241409505358773.txt'
+     = note: consider using `--verbose` to print the full type name to the console
+
+error[E0599]: the method `contains` exists for struct `Query<'_, '_, (), Or<(With<RigidBody>, With<AvianCollider>)>>`, but its trait bounds were not satisfied
+   --> integrations\physics\jackdaw_avian_integration\src\static_bodies.rs:69:36
+    |
+ 69 |             .any(|ancestor| owners.contains(ancestor))
+    |                                    ^^^^^^^^ method cannot be called due to unsatisfied trait bounds
+    |
+   ::: C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\avian3d-0.8.0\src\dynamics\rigid_body\mod.rs:285:1
+    |
+285 | pub enum RigidBody {
+    | ------------------ doesn't satisfy `_: Component`
+    |
+   ::: C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_ecs\src\query\filter.rs:400:1
+    |
+400 | pub struct Or<T>(PhantomData<T>);
+    | ---------------- doesn't satisfy `_: QueryFilter`
+    |
+    = note: the following trait bounds were not satisfied:
+            `avian3d::prelude::RigidBody: bevy::bevy_ecs::component::Component`
+            which is required by `bevy::bevy_ecs::query::Or<(bevy::bevy_ecs::query::With<avian3d::prelude::RigidBody>, bevy::bevy_ecs::query::With<AvianCollider>)>: QueryFilter`
+    = note: the full name for the type has been written to 'E:\Project\rust\jackdaw\target\debug\deps\jackdaw_avian_integration-f192302c80eca1c6.long-type-14037011991772855180.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0277]: `(avian3d::prelude::RigidBody, ImpliedStaticBody)` is not a `Bundle`
+    --> integrations\physics\jackdaw_avian_integration\src\static_bodies.rs:75:21
+     |
+  75 |             .insert((RigidBody::Static, ImpliedStaticBody));
+     |              ------ ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ invalid `Bundle`
+     |              |
+     |              required by a bound introduced by this call
+     |
+     = help: the trait `bevy::bevy_ecs::bundle::Bundle` is not implemented for `(avian3d::prelude::RigidBody, ImpliedStaticBody)`
+     = note: consider annotating `(avian3d::prelude::RigidBody, ImpliedStaticBody)` with `#[derive(Component)]` or `#[derive(Bundle)]`
+note: there are multiple different versions of crate `bevy_ecs` in the dependency graph
+    --> C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_ecs\src\bundle\mod.rs:202:1
+     |
+ 202 | pub unsafe trait Bundle: DynamicBundle + Send + Sync + 'static {
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ this is the expected trait
+     |
+    ::: C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\bevy_ecs-0.20.0\src\bundle\mod.rs:202:1
+     |
+ 202 | pub unsafe trait Bundle: DynamicBundle + Send + Sync + 'static {
+     | --------------------------------------------------------------
+     | |
+     | this is the found trait
+     | this is the found trait
+     = help: you can use `cargo tree` to explore your dependency tree
+     = help: the following other types implement trait `bevy::bevy_ecs::bundle::Bundle`:
+               (T₁, T₂, …, Tₙ) up to tuples of arity 15
+             and 8 others
+note: required by a bound in `EntityCommands::<'a>::insert`
+    --> C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_ecs\src\system\commands\mod.rs:1428:43
+     |
+1428 |     pub fn insert(&mut self, bundle: impl Bundle) -> &mut Self {
+     |                                           ^^^^^^ required by this bound in `EntityCommands::<'a>::insert`
+
+error[E0277]: `(Collider, RigidBody, Transform)` is not a `Bundle`
+    --> integrations\physics\jackdaw_avian_integration\src\terrain_ground.rs:88:56
+     |
+  88 |                         commands.entity(entity).insert(ground);
+     |                                                 ------ ^^^^^^ invalid `Bundle`
+     |                                                 |
+     |                                                 required by a bound introduced by this call
+     |
+     = help: the trait `bevy::bevy_ecs::bundle::Bundle` is not implemented for `(Collider, RigidBody, Transform)`
+     = note: consider annotating `(Collider, RigidBody, Transform)` with `#[derive(Component)]` or `#[derive(Bundle)]`
+note: there are multiple different versions of crate `bevy_ecs` in the dependency graph
+    --> C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_ecs\src\bundle\mod.rs:202:1
+     |
+ 202 | pub unsafe trait Bundle: DynamicBundle + Send + Sync + 'static {
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ this is the expected trait
+     |
+    ::: C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\bevy_ecs-0.20.0\src\bundle\mod.rs:202:1
+     |
+ 202 | pub unsafe trait Bundle: DynamicBundle + Send + Sync + 'static {
+     | --------------------------------------------------------------
+     | |
+     | this is the found trait
+     | this is the found trait
+     = help: you can use `cargo tree` to explore your dependency tree
+     = help: the following other types implement trait `bevy::bevy_ecs::bundle::Bundle`:
+               (T₁, T₂, …, Tₙ) up to tuples of arity 15
+             and 8 others
+note: required by a bound in `EntityCommands::<'a>::insert`
+    --> C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_ecs\src\system\commands\mod.rs:1428:43
+     |
+1428 |     pub fn insert(&mut self, bundle: impl Bundle) -> &mut Self {
+     |                                           ^^^^^^ required by this bound in `EntityCommands::<'a>::insert`
+     = note: the full name for the type has been written to 'E:\Project\rust\jackdaw\target\debug\deps\jackdaw_avian_integration-f192302c80eca1c6.long-type-17504391863726228359.txt'
+     = note: consider using `--verbose` to print the full type name to the console
+
+error[E0277]: `(TerrainGround, (Collider, RigidBody, Transform), ChildOf)` is not a `Bundle`
+   --> integrations\physics\jackdaw_avian_integration\src\terrain_ground.rs:91:40
+    |
+ 91 |                         commands.spawn((TerrainGround(terrain), ground, ChildOf(terrain)));
+    |                                  ----- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ invalid `Bundle`
+    |                                  |
+    |                                  required by a bound introduced by this call
+    |
+    = help: the trait `bevy::bevy_ecs::bundle::Bundle` is not implemented for `(TerrainGround, (Collider, RigidBody, Transform), ChildOf)`
+    = note: consider annotating `(TerrainGround, (Collider, RigidBody, Transform), ChildOf)` with `#[derive(Component)]` or `#[derive(Bundle)]`
+note: there are multiple different versions of crate `bevy_ecs` in the dependency graph
+   --> C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_ecs\src\bundle\mod.rs:202:1
+    |
+202 | pub unsafe trait Bundle: DynamicBundle + Send + Sync + 'static {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ this is the expected trait
+    |
+   ::: C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\bevy_ecs-0.20.0\src\bundle\mod.rs:202:1
+    |
+202 | pub unsafe trait Bundle: DynamicBundle + Send + Sync + 'static {
+    | --------------------------------------------------------------
+    | |
+    | this is the found trait
+    | this is the found trait
+    = help: you can use `cargo tree` to explore your dependency tree
+    = help: the following other types implement trait `bevy::bevy_ecs::bundle::Bundle`:
+              (T₁, T₂, …, Tₙ) up to tuples of arity 15
+            and 8 others
+note: required by a bound in `bevy::bevy_ecs::system::Commands::<'w, 's>::spawn`
+   --> C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_ecs\src\system\commands\mod.rs:283:21
+    |
+283 |     pub fn spawn<T: Bundle>(&mut self, bundle: T) -> EntityCommands<'_> {
+    |                     ^^^^^^ required by this bound in `Commands::<'w, 's>::spawn`
+    = note: the full name for the type has been written to 'E:\Project\rust\jackdaw\target\debug\deps\jackdaw_avian_integration-f192302c80eca1c6.long-type-3935913211829491133.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0277]: `avian3d::prelude::ColliderConstructor` does not implement `GetTypeRegistration` so cannot be registered for reflection
+  --> integrations\physics\jackdaw_avian_integration\src\lib.rs:40:30
+   |
+40 | pub struct AvianCollider(pub ColliderConstructor);
+   |                              ^^^^^^^^^^^^^^^^^^^ the trait `GetTypeRegistration` is not implemented for `avian3d::prelude::ColliderConstructor`
+   |
+   = note: consider annotating `avian3d::prelude::ColliderConstructor` with `#[derive(Reflect)]`
+note: there are multiple different versions of crate `bevy_reflect` in the dependency graph
+  --> C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_reflect\src\type_registry.rs:76:1
+   |
+76 | pub trait GetTypeRegistration: 'static {
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ this is the expected trait
+   |
+  ::: C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\bevy_reflect-0.20.0\src\type_registry.rs:76:1
+   |
+76 | pub trait GetTypeRegistration: 'static {
+   | -------------------------------------- this is the found trait
+   = help: you can use `cargo tree` to explore your dependency tree
+   = help: the following other types implement trait `GetTypeRegistration`:
+             &'static std::panic::Location<'static>
+             &'static std::path::Path
+             &'static str
+             ()
+             (A, B)
+             (A, B, C)
+             (A, B, C, D)
+             (A, B, C, D, E)
+           and 1255 others
+   = note: required for `avian3d::prelude::ColliderConstructor` to implement `bevy::bevy_reflect::__macro_exports::RegisterForReflection`
+
+error[E0277]: `avian3d::prelude::ColliderConstructor` does not implement `Typed` so cannot provide static type information
+  --> integrations\physics\jackdaw_avian_integration\src\lib.rs:40:30
+   |
+40 | pub struct AvianCollider(pub ColliderConstructor);
+   |                              ^^^^^^^^^^^^^^^^^^^ the trait `Typed` is not implemented for `avian3d::prelude::ColliderConstructor`
+   |
+   = note: consider annotating `avian3d::prelude::ColliderConstructor` with `#[derive(Reflect)]`
+note: there are multiple different versions of crate `bevy_reflect` in the dependency graph
+  --> C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_reflect\src\info\typed.rs:87:1
+   |
+87 | pub trait Typed: Reflect + TypePath {
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ this is the expected trait
+   |
+  ::: C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\bevy_reflect-0.20.0\src\info\typed.rs:87:1
+   |
+87 | pub trait Typed: Reflect + TypePath {
+   | ----------------------------------- this is the found trait
+   = help: you can use `cargo tree` to explore your dependency tree
+   = help: the following other types implement trait `Typed`:
+             &'static std::panic::Location<'static>
+             &'static std::path::Path
+             &'static str
+             ()
+             (A, B)
+             (A, B, C)
+             (A, B, C, D)
+             (A, B, C, D, E)
+           and 1256 others
+   = note: required for `avian3d::prelude::ColliderConstructor` to implement `bevy::bevy_reflect::MaybeTyped`
+note: required by a bound in `UnnamedField::new`
+  --> C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_reflect\src\fields.rs:85:36
+   |
+85 |     pub fn new<T: PartialReflect + MaybeTyped + TypePath>(index: usize) -> Self {
+   |                                    ^^^^^^^^^^ required by this bound in `UnnamedField::new`
+
+error[E0277]: `avian3d::prelude::ColliderConstructor` does not implement `PartialReflect` so cannot be introspected
+   --> integrations\physics\jackdaw_avian_integration\src\lib.rs:38:55
+    |
+ 38 | #[derive(Component, Clone, Debug, Default, PartialEq, Reflect)]
+    |                                                       ^^^^^^^ the trait `bevy::bevy_reflect::PartialReflect` is not implemented for `avian3d::prelude::ColliderConstructor`
+    |
+    = note: consider annotating `avian3d::prelude::ColliderConstructor` with `#[derive(Reflect)]`
+note: there are multiple different versions of crate `bevy_reflect` in the dependency graph
+   --> C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_reflect\src\reflect.rs:106:1
+    |
+106 | pub trait PartialReflect: DynamicTypePath + Send + Sync
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ this is the expected trait
+    |
+   ::: C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\bevy_reflect-0.20.0\src\reflect.rs:106:1
+    |
+106 | pub trait PartialReflect: DynamicTypePath + Send + Sync
+    | ------------------------------------------------------- this is the found trait
+    = help: you can use `cargo tree` to explore your dependency tree
+    = help: the following other types implement trait `bevy::bevy_reflect::PartialReflect`:
+              &'static std::panic::Location<'static>
+              &'static std::path::Path
+              &'static str
+              ()
+              (A, B)
+              (A, B, C)
+              (A, B, C, D)
+              (A, B, C, D, E)
+            and 1264 others
+    = note: required for the cast from `&avian3d::prelude::ColliderConstructor` to `&dyn bevy::bevy_reflect::PartialReflect`
+    = note: this error originates in the derive macro `Reflect` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0277]: `avian3d::prelude::ColliderConstructor` does not implement `PartialReflect` so cannot be introspected
+   --> integrations\physics\jackdaw_avian_integration\src\lib.rs:38:55
+    |
+ 38 | #[derive(Component, Clone, Debug, Default, PartialEq, Reflect)]
+    |                                                       ^^^^^^^ the trait `bevy::bevy_reflect::PartialReflect` is not implemented for `avian3d::prelude::ColliderConstructor`
+    |
+    = note: consider annotating `avian3d::prelude::ColliderConstructor` with `#[derive(Reflect)]`
+note: there are multiple different versions of crate `bevy_reflect` in the dependency graph
+   --> C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_reflect\src\reflect.rs:106:1
+    |
+106 | pub trait PartialReflect: DynamicTypePath + Send + Sync
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ this is the expected trait
+    |
+   ::: C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\bevy_reflect-0.20.0\src\reflect.rs:106:1
+    |
+106 | pub trait PartialReflect: DynamicTypePath + Send + Sync
+    | ------------------------------------------------------- this is the found trait
+    = help: you can use `cargo tree` to explore your dependency tree
+    = help: the following other types implement trait `bevy::bevy_reflect::PartialReflect`:
+              &'static std::panic::Location<'static>
+              &'static std::path::Path
+              &'static str
+              ()
+              (A, B)
+              (A, B, C)
+              (A, B, C, D)
+              (A, B, C, D, E)
+            and 1264 others
+    = note: required for the cast from `&mut avian3d::prelude::ColliderConstructor` to `&mut (dyn bevy::bevy_reflect::PartialReflect + 'static)`
+    = note: this error originates in the derive macro `Reflect` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0277]: `avian3d::prelude::ColliderConstructor` does not implement `PartialReflect` so cannot be introspected
+   --> integrations\physics\jackdaw_avian_integration\src\lib.rs:38:55
+    |
+ 38 | #[derive(Component, Clone, Debug, Default, PartialEq, Reflect)]
+    |                                                       ^^^^^^^ the trait `bevy::bevy_reflect::PartialReflect` is not implemented for `avian3d::prelude::ColliderConstructor`
+    |
+    = note: consider annotating `avian3d::prelude::ColliderConstructor` with `#[derive(Reflect)]`
+note: there are multiple different versions of crate `bevy_reflect` in the dependency graph
+   --> C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_reflect\src\reflect.rs:106:1
+    |
+106 | pub trait PartialReflect: DynamicTypePath + Send + Sync
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ this is the expected trait
+    |
+   ::: C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\bevy_reflect-0.20.0\src\reflect.rs:106:1
+    |
+106 | pub trait PartialReflect: DynamicTypePath + Send + Sync
+    | ------------------------------------------------------- this is the found trait
+    = help: you can use `cargo tree` to explore your dependency tree
+    = help: the following other types implement trait `bevy::bevy_reflect::PartialReflect`:
+              &'static std::panic::Location<'static>
+              &'static std::path::Path
+              &'static str
+              ()
+              (A, B)
+              (A, B, C)
+              (A, B, C, D)
+              (A, B, C, D, E)
+            and 1264 others
+    = note: this error originates in the derive macro `Reflect` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0277]: `avian3d::prelude::ColliderConstructor` does not implement `TypePath` so cannot provide dynamic type path information
+   --> integrations\physics\jackdaw_avian_integration\src\lib.rs:38:55
+    |
+ 38 | #[derive(Component, Clone, Debug, Default, PartialEq, Reflect)]
+    |                                                       ^^^^^^^ the trait `bevy::bevy_reflect::TypePath` is not implemented for `avian3d::prelude::ColliderConstructor`
+    |
+    = note: consider annotating `avian3d::prelude::ColliderConstructor` with `#[derive(Reflect)]` or `#[derive(TypePath)]`
+note: there are multiple different versions of crate `bevy_reflect` in the dependency graph
+   --> C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_reflect\src\type_path.rs:86:1
+    |
+ 86 | pub trait TypePath: 'static {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^ this is the expected trait
+    |
+   ::: C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\bevy_reflect-0.20.0\src\type_path.rs:86:1
+    |
+ 86 | pub trait TypePath: 'static {
+    | --------------------------- this is the found trait
+    = help: you can use `cargo tree` to explore your dependency tree
+    = help: the following other types implement trait `bevy::bevy_reflect::TypePath`:
+              &'static T
+              &'static mut T
+              &'static std::panic::Location<'static>
+              ()
+              (P,)
+              (P1, P0)
+              (P1, P2, P0)
+              (P1, P2, P3, P0)
+            and 1326 others
+    = note: required for `avian3d::prelude::ColliderConstructor` to implement `DynamicTypePath`
+note: required by a bound in `to_dynamic`
+   --> C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_reflect\src\reflect.rs:106:27
+    |
+106 | pub trait PartialReflect: DynamicTypePath + Send + Sync
+    |                           ^^^^^^^^^^^^^^^ required by this bound in `PartialReflect::to_dynamic`
+...
+285 |     fn to_dynamic(&self) -> Result<Box<dyn PartialReflect>, ReflectCloneError> {
+    |        ---------- required by a bound in this associated function
+    = note: this error originates in the derive macro `Reflect` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0277]: `avian3d::prelude::ColliderConstructor` does not implement `PartialReflect` so cannot be introspected
+   --> integrations\physics\jackdaw_avian_integration\src\lib.rs:40:30
+    |
+ 40 | pub struct AvianCollider(pub ColliderConstructor);
+    |                              ^^^^^^^^^^^^^^^^^^^ the trait `bevy::bevy_reflect::PartialReflect` is not implemented for `avian3d::prelude::ColliderConstructor`
+    |
+    = note: consider annotating `avian3d::prelude::ColliderConstructor` with `#[derive(Reflect)]`
+note: there are multiple different versions of crate `bevy_reflect` in the dependency graph
+   --> C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_reflect\src\reflect.rs:106:1
+    |
+106 | pub trait PartialReflect: DynamicTypePath + Send + Sync
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ this is the expected trait
+    |
+   ::: C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\bevy_reflect-0.20.0\src\reflect.rs:106:1
+    |
+106 | pub trait PartialReflect: DynamicTypePath + Send + Sync
+    | ------------------------------------------------------- this is the found trait
+    = help: you can use `cargo tree` to explore your dependency tree
+    = help: the following other types implement trait `bevy::bevy_reflect::PartialReflect`:
+              &'static std::panic::Location<'static>
+              &'static std::path::Path
+              &'static str
+              ()
+              (A, B)
+              (A, B, C)
+              (A, B, C, D)
+              (A, B, C, D, E)
+            and 1264 others
+
+error[E0277]: `avian3d::prelude::ColliderConstructor` does not implement `TypePath` so cannot provide static type path information
+   --> integrations\physics\jackdaw_avian_integration\src\lib.rs:40:30
+    |
+ 40 | pub struct AvianCollider(pub ColliderConstructor);
+    |                              ^^^^^^^^^^^^^^^^^^^ the trait `bevy::bevy_reflect::TypePath` is not implemented for `avian3d::prelude::ColliderConstructor`
+    |
+    = note: consider annotating `avian3d::prelude::ColliderConstructor` with `#[derive(Reflect)]` or `#[derive(TypePath)]`
+note: there are multiple different versions of crate `bevy_reflect` in the dependency graph
+   --> C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_reflect\src\type_path.rs:86:1
+    |
+ 86 | pub trait TypePath: 'static {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^ this is the expected trait
+    |
+   ::: C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\bevy_reflect-0.20.0\src\type_path.rs:86:1
+    |
+ 86 | pub trait TypePath: 'static {
+    | --------------------------- this is the found trait
+    = help: you can use `cargo tree` to explore your dependency tree
+    = help: the following other types implement trait `bevy::bevy_reflect::TypePath`:
+              &'static T
+              &'static mut T
+              &'static std::panic::Location<'static>
+              ()
+              (P,)
+              (P1, P0)
+              (P1, P2, P0)
+              (P1, P2, P3, P0)
+            and 1326 others
+note: required by a bound in `reflect_clone_and_take`
+   --> C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_reflect\src\reflect.rs:331:15
+    |
+329 |     fn reflect_clone_and_take<T: 'static>(&self) -> Result<T, ReflectCloneError>
+    |        ---------------------- required by a bound in this associated function
+330 |     where
+331 |         Self: TypePath + Sized,
+    |               ^^^^^^^^ required by this bound in `PartialReflect::reflect_clone_and_take`
+
+error[E0277]: `avian3d::prelude::ColliderConstructor` does not implement `FromReflect` so cannot be created through reflection
+  --> integrations\physics\jackdaw_avian_integration\src\lib.rs:40:30
+   |
+40 | pub struct AvianCollider(pub ColliderConstructor);
+   |                              ^^^^^^^^^^^^^^^^^^^ the trait `bevy::bevy_reflect::FromReflect` is not implemented for `avian3d::prelude::ColliderConstructor`
+   |
+   = note: consider annotating `avian3d::prelude::ColliderConstructor` with `#[derive(Reflect)]`
+note: there are multiple different versions of crate `bevy_reflect` in the dependency graph
+  --> C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_reflect\src\from_reflect.rs:29:1
+   |
+29 | pub trait FromReflect: Sized + 'static {
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ this is the expected trait
+   |
+  ::: C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\bevy_reflect-0.20.0\src\from_reflect.rs:29:1
+   |
+29 | pub trait FromReflect: Reflect + Sized {
+   | -------------------------------------- this is the found trait
+   = help: you can use `cargo tree` to explore your dependency tree
+   = help: the following other types implement trait `bevy::bevy_reflect::FromReflect`:
+             &'static std::panic::Location<'static>
+             &'static std::path::Path
+             &'static str
+             ()
+             (A, B)
+             (A, B, C)
+             (A, B, C, D)
+             (A, B, C, D, E)
+           and 1249 others
+
+error[E0277]: `avian3d::prelude::Collider` is not a `Bundle`
+    --> integrations\physics\jackdaw_avian_integration\src\lib.rs:79:44
+     |
+  79 |             commands.entity(entity).insert(collider);
+     |                                     ------ ^^^^^^^^ invalid `Bundle`
+     |                                     |
+     |                                     required by a bound introduced by this call
+     |
+     = help: the trait `bevy::bevy_ecs::component::Component` is not implemented for `avian3d::prelude::Collider`
+     = note: consider annotating `avian3d::prelude::Collider` with `#[derive(Component)]` or `#[derive(Bundle)]`
+note: there are multiple different versions of crate `bevy_ecs` in the dependency graph
+    --> C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_ecs\src\component\mod.rs:530:1
+     |
+ 530 | pub trait Component: Send + Sync + 'static {
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ this is the expected trait
+     |
+    ::: C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\bevy_ecs-0.20.0\src\component\mod.rs:530:1
+     |
+ 530 | pub trait Component: Send + Sync + 'static {
+     | ------------------------------------------ this is the found trait
+     = help: you can use `cargo tree` to explore your dependency tree
+     = help: the following other types implement trait `bevy::bevy_ecs::component::Component`:
+               AccessibilityNode
+               AccessibilityRequested
+               AccessibleLabel
+               AccumulatedMouseMotion
+               AccumulatedMouseScroll
+               ActivateOnPress
+               ActiveDescendant
+               AmbientLight
+             and 1035 others
+     = note: required for `avian3d::prelude::Collider` to implement `bevy::bevy_ecs::bundle::Bundle`
+note: required by a bound in `EntityCommands::<'a>::insert`
+    --> C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_ecs\src\system\commands\mod.rs:1428:43
+     |
+1428 |     pub fn insert(&mut self, bundle: impl Bundle) -> &mut Self {
+     |                                           ^^^^^^ required by this bound in `EntityCommands::<'a>::insert`
+
+error[E0277]: `avian3d::prelude::Collider` is not a `Bundle`
+    --> integrations\physics\jackdaw_avian_integration\src\lib.rs:89:25
+     |
+  89 |         ec.try_remove::<Collider>();
+     |            ----------   ^^^^^^^^ invalid `Bundle`
+     |            |
+     |            required by a bound introduced by this call
+     |
+     = help: the trait `bevy::bevy_ecs::component::Component` is not implemented for `avian3d::prelude::Collider`
+     = note: consider annotating `avian3d::prelude::Collider` with `#[derive(Component)]` or `#[derive(Bundle)]`
+note: there are multiple different versions of crate `bevy_ecs` in the dependency graph
+    --> C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_ecs\src\component\mod.rs:530:1
+     |
+ 530 | pub trait Component: Send + Sync + 'static {
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ this is the expected trait
+     |
+    ::: C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\bevy_ecs-0.20.0\src\component\mod.rs:530:1
+     |
+ 530 | pub trait Component: Send + Sync + 'static {
+     | ------------------------------------------ this is the found trait
+     = help: you can use `cargo tree` to explore your dependency tree
+     = help: the following other types implement trait `bevy::bevy_ecs::component::Component`:
+               AccessibilityNode
+               AccessibilityRequested
+               AccessibleLabel
+               AccumulatedMouseMotion
+               AccumulatedMouseScroll
+               ActivateOnPress
+               ActiveDescendant
+               AmbientLight
+             and 1035 others
+     = note: required for `avian3d::prelude::Collider` to implement `bevy::bevy_ecs::bundle::Bundle`
+note: required by a bound in `EntityCommands::<'a>::try_remove`
+    --> C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_ecs\src\system\commands\mod.rs:1820:26
+     |
+1820 |     pub fn try_remove<B: Bundle>(&mut self) -> &mut Self {
+     |                          ^^^^^^ required by this bound in `EntityCommands::<'a>::try_remove`
+
+error[E0308]: mismatched types
+   --> integrations\physics\jackdaw_avian_integration\src\lib.rs:128:56
+    |
+128 |     Collider::try_from_constructor(cfg.0.clone(), Some(&mesh))
+    |                                                   ---- ^^^^^ expected `bevy_mesh::mesh::Mesh`, found `bevy::bevy_mesh::Mesh`
+    |                                                   |
+    |                                                   arguments to this enum variant are incorrect
+    |
+note: there are multiple different versions of crate `bevy_mesh` in the dependency graph
+   --> C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\bevy_mesh-0.20.0\src\mesh.rs:230:1
+    |
+230 | pub struct Mesh {
+    | ^^^^^^^^^^^^^^^ this is the expected type
+    |
+   ::: C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_mesh\src\mesh.rs:230:1
+    |
+230 | pub struct Mesh {
+    | --------------- this is the found type
+    = help: you can use `cargo tree` to explore your dependency tree
+help: the type constructed contains `&bevy::bevy_mesh::Mesh` due to the type of the argument passed
+   --> integrations\physics\jackdaw_avian_integration\src\lib.rs:128:51
+    |
+128 |     Collider::try_from_constructor(cfg.0.clone(), Some(&mesh))
+    |                                                   ^^^^^-----^
+    |                                                        |
+    |                                                        this argument influences the type of `Some`
+note: tuple variant defined here
+   --> C:\Users\linbo.zhang\.rustup\toolchains\1.99.0-x86_64-pc-windows-msvc\lib/rustlib/src/rust\library\core\src\option.rs:606:5
+    |
+606 |     Some(#[stable(feature = "rust1", since = "1.0.0")] T),
+    |     ^^^^
+
+error[E0277]: `avian3d::prelude::RigidBody` does not implement `GetTypeRegistration` so cannot provide type registration information
+   --> integrations\physics\jackdaw_avian_integration\src\lib.rs:142:26
+    |
+142 |         .register_type::<RigidBody>()
+    |          -------------   ^^^^^^^^^ the trait `GetTypeRegistration` is not implemented for `avian3d::prelude::RigidBody`
+    |          |
+    |          required by a bound introduced by this call
+    |
+    = note: consider annotating `avian3d::prelude::RigidBody` with `#[derive(Reflect)]`
+note: there are multiple different versions of crate `bevy_reflect` in the dependency graph
+   --> C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_reflect\src\type_registry.rs:76:1
+    |
+ 76 | pub trait GetTypeRegistration: 'static {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ this is the expected trait
+    |
+   ::: C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\bevy_reflect-0.20.0\src\type_registry.rs:76:1
+    |
+ 76 | pub trait GetTypeRegistration: 'static {
+    | -------------------------------------- this is the found trait
+    = help: you can use `cargo tree` to explore your dependency tree
+    = help: the following other types implement trait `GetTypeRegistration`:
+              &'static std::panic::Location<'static>
+              &'static std::path::Path
+              &'static str
+              ()
+              (A, B)
+              (A, B, C)
+              (A, B, C, D)
+              (A, B, C, D, E)
+            and 1255 others
+note: required by a bound in `bevy::bevy_app::App::register_type`
+   --> C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_app\src\app.rs:664:29
+    |
+664 |     pub fn register_type<T: bevy_reflect::GetTypeRegistration>(&mut self) -> &mut Self {
+    |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ required by this bound in `App::register_type`
+
+error[E0277]: `avian3d::prelude::Sensor` does not implement `GetTypeRegistration` so cannot provide type registration information
+   --> integrations\physics\jackdaw_avian_integration\src\lib.rs:145:26
+    |
+145 |         .register_type::<Sensor>()
+    |          -------------   ^^^^^^ the trait `GetTypeRegistration` is not implemented for `avian3d::prelude::Sensor`
+    |          |
+    |          required by a bound introduced by this call
+    |
+    = note: consider annotating `avian3d::prelude::Sensor` with `#[derive(Reflect)]`
+note: there are multiple different versions of crate `bevy_reflect` in the dependency graph
+   --> C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_reflect\src\type_registry.rs:76:1
+    |
+ 76 | pub trait GetTypeRegistration: 'static {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ this is the expected trait
+    |
+   ::: C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\bevy_reflect-0.20.0\src\type_registry.rs:76:1
+    |
+ 76 | pub trait GetTypeRegistration: 'static {
+    | -------------------------------------- this is the found trait
+    = help: you can use `cargo tree` to explore your dependency tree
+    = help: the following other types implement trait `GetTypeRegistration`:
+              &'static std::panic::Location<'static>
+              &'static std::path::Path
+              &'static str
+              ()
+              (A, B)
+              (A, B, C)
+              (A, B, C, D)
+              (A, B, C, D, E)
+            and 1255 others
+note: required by a bound in `bevy::bevy_app::App::register_type`
+   --> C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_app\src\app.rs:664:29
+    |
+664 |     pub fn register_type<T: bevy_reflect::GetTypeRegistration>(&mut self) -> &mut Self {
+    |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ required by this bound in `App::register_type`
+
+    Checking jackdaw_dylib v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_dylib)
+    Checking jackdaw_loader v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_loader)
+error[E0277]: `avian3d::prelude::LinearVelocity` does not implement `GetTypeRegistration` so cannot provide type registration information
+   --> integrations\physics\jackdaw_avian_integration\src\lib.rs:148:26
+    |
+148 |         .register_type::<LinearVelocity>()
+    |          -------------   ^^^^^^^^^^^^^^ the trait `GetTypeRegistration` is not implemented for `avian3d::prelude::LinearVelocity`
+    |          |
+    |          required by a bound introduced by this call
+    |
+    = note: consider annotating `avian3d::prelude::LinearVelocity` with `#[derive(Reflect)]`
+note: there are multiple different versions of crate `bevy_reflect` in the dependency graph
+   --> C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_reflect\src\type_registry.rs:76:1
+    |
+ 76 | pub trait GetTypeRegistration: 'static {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ this is the expected trait
+    |
+   ::: C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\bevy_reflect-0.20.0\src\type_registry.rs:76:1
+    |
+ 76 | pub trait GetTypeRegistration: 'static {
+    | -------------------------------------- this is the found trait
+    = help: you can use `cargo tree` to explore your dependency tree
+    = help: the following other types implement trait `GetTypeRegistration`:
+              &'static std::panic::Location<'static>
+              &'static std::path::Path
+              &'static str
+              ()
+              (A, B)
+              (A, B, C)
+              (A, B, C, D)
+              (A, B, C, D, E)
+            and 1255 others
+note: required by a bound in `bevy::bevy_app::App::register_type`
+   --> C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_app\src\app.rs:664:29
+    |
+664 |     pub fn register_type<T: bevy_reflect::GetTypeRegistration>(&mut self) -> &mut Self {
+    |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ required by this bound in `App::register_type`
+
+error[E0277]: `avian3d::prelude::AngularVelocity` does not implement `GetTypeRegistration` so cannot provide type registration information
+   --> integrations\physics\jackdaw_avian_integration\src\lib.rs:149:26
+    |
+149 |         .register_type::<AngularVelocity>()
+    |          -------------   ^^^^^^^^^^^^^^^ the trait `GetTypeRegistration` is not implemented for `avian3d::prelude::AngularVelocity`
+    |          |
+    |          required by a bound introduced by this call
+    |
+    = note: consider annotating `avian3d::prelude::AngularVelocity` with `#[derive(Reflect)]`
+note: there are multiple different versions of crate `bevy_reflect` in the dependency graph
+   --> C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_reflect\src\type_registry.rs:76:1
+    |
+ 76 | pub trait GetTypeRegistration: 'static {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ this is the expected trait
+    |
+   ::: C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\bevy_reflect-0.20.0\src\type_registry.rs:76:1
+    |
+ 76 | pub trait GetTypeRegistration: 'static {
+    | -------------------------------------- this is the found trait
+    = help: you can use `cargo tree` to explore your dependency tree
+    = help: the following other types implement trait `GetTypeRegistration`:
+              &'static std::panic::Location<'static>
+              &'static std::path::Path
+              &'static str
+              ()
+              (A, B)
+              (A, B, C)
+              (A, B, C, D)
+              (A, B, C, D, E)
+            and 1255 others
+note: required by a bound in `bevy::bevy_app::App::register_type`
+   --> C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_app\src\app.rs:664:29
+    |
+664 |     pub fn register_type<T: bevy_reflect::GetTypeRegistration>(&mut self) -> &mut Self {
+    |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ required by this bound in `App::register_type`
+
+error[E0277]: `avian3d::prelude::MaxLinearSpeed` does not implement `GetTypeRegistration` so cannot provide type registration information
+   --> integrations\physics\jackdaw_avian_integration\src\lib.rs:150:26
+    |
+150 |         .register_type::<MaxLinearSpeed>()
+    |          -------------   ^^^^^^^^^^^^^^ the trait `GetTypeRegistration` is not implemented for `avian3d::prelude::MaxLinearSpeed`
+    |          |
+    |          required by a bound introduced by this call
+    |
+    = note: consider annotating `avian3d::prelude::MaxLinearSpeed` with `#[derive(Reflect)]`
+note: there are multiple different versions of crate `bevy_reflect` in the dependency graph
+   --> C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_reflect\src\type_registry.rs:76:1
+    |
+ 76 | pub trait GetTypeRegistration: 'static {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ this is the expected trait
+    |
+   ::: C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\bevy_reflect-0.20.0\src\type_registry.rs:76:1
+    |
+ 76 | pub trait GetTypeRegistration: 'static {
+    | -------------------------------------- this is the found trait
+    = help: you can use `cargo tree` to explore your dependency tree
+    = help: the following other types implement trait `GetTypeRegistration`:
+              &'static std::panic::Location<'static>
+              &'static std::path::Path
+              &'static str
+              ()
+              (A, B)
+              (A, B, C)
+              (A, B, C, D)
+              (A, B, C, D, E)
+            and 1255 others
+note: required by a bound in `bevy::bevy_app::App::register_type`
+   --> C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_app\src\app.rs:664:29
+    |
+664 |     pub fn register_type<T: bevy_reflect::GetTypeRegistration>(&mut self) -> &mut Self {
+    |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ required by this bound in `App::register_type`
+
+error[E0277]: `avian3d::prelude::MaxAngularSpeed` does not implement `GetTypeRegistration` so cannot provide type registration information
+   --> integrations\physics\jackdaw_avian_integration\src\lib.rs:151:26
+    |
+151 |         .register_type::<MaxAngularSpeed>()
+    |          -------------   ^^^^^^^^^^^^^^^ the trait `GetTypeRegistration` is not implemented for `avian3d::prelude::MaxAngularSpeed`
+    |          |
+    |          required by a bound introduced by this call
+    |
+    = note: consider annotating `avian3d::prelude::MaxAngularSpeed` with `#[derive(Reflect)]`
+note: there are multiple different versions of crate `bevy_reflect` in the dependency graph
+   --> C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_reflect\src\type_registry.rs:76:1
+    |
+ 76 | pub trait GetTypeRegistration: 'static {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ this is the expected trait
+    |
+   ::: C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\bevy_reflect-0.20.0\src\type_registry.rs:76:1
+    |
+ 76 | pub trait GetTypeRegistration: 'static {
+    | -------------------------------------- this is the found trait
+    = help: you can use `cargo tree` to explore your dependency tree
+    = help: the following other types implement trait `GetTypeRegistration`:
+              &'static std::panic::Location<'static>
+              &'static std::path::Path
+              &'static str
+              ()
+              (A, B)
+              (A, B, C)
+              (A, B, C, D)
+              (A, B, C, D, E)
+            and 1255 others
+note: required by a bound in `bevy::bevy_app::App::register_type`
+   --> C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_app\src\app.rs:664:29
+    |
+664 |     pub fn register_type<T: bevy_reflect::GetTypeRegistration>(&mut self) -> &mut Self {
+    |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ required by this bound in `App::register_type`
+
+error[E0277]: `avian3d::prelude::GravityScale` does not implement `GetTypeRegistration` so cannot provide type registration information
+   --> integrations\physics\jackdaw_avian_integration\src\lib.rs:153:26
+    |
+153 |         .register_type::<GravityScale>()
+    |          -------------   ^^^^^^^^^^^^ the trait `GetTypeRegistration` is not implemented for `avian3d::prelude::GravityScale`
+    |          |
+    |          required by a bound introduced by this call
+    |
+    = note: consider annotating `avian3d::prelude::GravityScale` with `#[derive(Reflect)]`
+note: there are multiple different versions of crate `bevy_reflect` in the dependency graph
+   --> C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_reflect\src\type_registry.rs:76:1
+    |
+ 76 | pub trait GetTypeRegistration: 'static {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ this is the expected trait
+    |
+   ::: C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\bevy_reflect-0.20.0\src\type_registry.rs:76:1
+    |
+ 76 | pub trait GetTypeRegistration: 'static {
+    | -------------------------------------- this is the found trait
+    = help: you can use `cargo tree` to explore your dependency tree
+    = help: the following other types implement trait `GetTypeRegistration`:
+              &'static std::panic::Location<'static>
+              &'static std::path::Path
+              &'static str
+              ()
+              (A, B)
+              (A, B, C)
+              (A, B, C, D)
+              (A, B, C, D, E)
+            and 1255 others
+note: required by a bound in `bevy::bevy_app::App::register_type`
+   --> C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_app\src\app.rs:664:29
+    |
+664 |     pub fn register_type<T: bevy_reflect::GetTypeRegistration>(&mut self) -> &mut Self {
+    |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ required by this bound in `App::register_type`
+
+error[E0277]: `avian3d::prelude::LinearDamping` does not implement `GetTypeRegistration` so cannot provide type registration information
+   --> integrations\physics\jackdaw_avian_integration\src\lib.rs:154:26
+    |
+154 |         .register_type::<LinearDamping>()
+    |          -------------   ^^^^^^^^^^^^^ the trait `GetTypeRegistration` is not implemented for `avian3d::prelude::LinearDamping`
+    |          |
+    |          required by a bound introduced by this call
+    |
+    = note: consider annotating `avian3d::prelude::LinearDamping` with `#[derive(Reflect)]`
+note: there are multiple different versions of crate `bevy_reflect` in the dependency graph
+   --> C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_reflect\src\type_registry.rs:76:1
+    |
+ 76 | pub trait GetTypeRegistration: 'static {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ this is the expected trait
+    |
+   ::: C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\bevy_reflect-0.20.0\src\type_registry.rs:76:1
+    |
+ 76 | pub trait GetTypeRegistration: 'static {
+    | -------------------------------------- this is the found trait
+    = help: you can use `cargo tree` to explore your dependency tree
+    = help: the following other types implement trait `GetTypeRegistration`:
+              &'static std::panic::Location<'static>
+              &'static std::path::Path
+              &'static str
+              ()
+              (A, B)
+              (A, B, C)
+              (A, B, C, D)
+              (A, B, C, D, E)
+            and 1255 others
+note: required by a bound in `bevy::bevy_app::App::register_type`
+   --> C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_app\src\app.rs:664:29
+    |
+664 |     pub fn register_type<T: bevy_reflect::GetTypeRegistration>(&mut self) -> &mut Self {
+    |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ required by this bound in `App::register_type`
+
+error[E0277]: `avian3d::prelude::AngularDamping` does not implement `GetTypeRegistration` so cannot provide type registration information
+   --> integrations\physics\jackdaw_avian_integration\src\lib.rs:155:26
+    |
+155 |         .register_type::<AngularDamping>()
+    |          -------------   ^^^^^^^^^^^^^^ the trait `GetTypeRegistration` is not implemented for `avian3d::prelude::AngularDamping`
+    |          |
+    |          required by a bound introduced by this call
+    |
+    = note: consider annotating `avian3d::prelude::AngularDamping` with `#[derive(Reflect)]`
+note: there are multiple different versions of crate `bevy_reflect` in the dependency graph
+   --> C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_reflect\src\type_registry.rs:76:1
+    |
+ 76 | pub trait GetTypeRegistration: 'static {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ this is the expected trait
+    |
+   ::: C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\bevy_reflect-0.20.0\src\type_registry.rs:76:1
+    |
+ 76 | pub trait GetTypeRegistration: 'static {
+    | -------------------------------------- this is the found trait
+    = help: you can use `cargo tree` to explore your dependency tree
+    = help: the following other types implement trait `GetTypeRegistration`:
+              &'static std::panic::Location<'static>
+              &'static std::path::Path
+              &'static str
+              ()
+              (A, B)
+              (A, B, C)
+              (A, B, C, D)
+              (A, B, C, D, E)
+            and 1255 others
+note: required by a bound in `bevy::bevy_app::App::register_type`
+   --> C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_app\src\app.rs:664:29
+    |
+664 |     pub fn register_type<T: bevy_reflect::GetTypeRegistration>(&mut self) -> &mut Self {
+    |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ required by this bound in `App::register_type`
+
+error[E0277]: `avian3d::prelude::LockedAxes` does not implement `GetTypeRegistration` so cannot provide type registration information
+   --> integrations\physics\jackdaw_avian_integration\src\lib.rs:156:26
+    |
+156 |         .register_type::<LockedAxes>()
+    |          -------------   ^^^^^^^^^^ the trait `GetTypeRegistration` is not implemented for `avian3d::prelude::LockedAxes`
+    |          |
+    |          required by a bound introduced by this call
+    |
+    = note: consider annotating `avian3d::prelude::LockedAxes` with `#[derive(Reflect)]`
+note: there are multiple different versions of crate `bevy_reflect` in the dependency graph
+   --> C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_reflect\src\type_registry.rs:76:1
+    |
+ 76 | pub trait GetTypeRegistration: 'static {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ this is the expected trait
+    |
+   ::: C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\bevy_reflect-0.20.0\src\type_registry.rs:76:1
+    |
+ 76 | pub trait GetTypeRegistration: 'static {
+    | -------------------------------------- this is the found trait
+    = help: you can use `cargo tree` to explore your dependency tree
+    = help: the following other types implement trait `GetTypeRegistration`:
+              &'static std::panic::Location<'static>
+              &'static std::path::Path
+              &'static str
+              ()
+              (A, B)
+              (A, B, C)
+              (A, B, C, D)
+              (A, B, C, D, E)
+            and 1255 others
+note: required by a bound in `bevy::bevy_app::App::register_type`
+   --> C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_app\src\app.rs:664:29
+    |
+664 |     pub fn register_type<T: bevy_reflect::GetTypeRegistration>(&mut self) -> &mut Self {
+    |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ required by this bound in `App::register_type`
+
+error[E0277]: `avian3d::prelude::ConstantForce` does not implement `GetTypeRegistration` so cannot provide type registration information
+   --> integrations\physics\jackdaw_avian_integration\src\lib.rs:158:26
+    |
+158 |         .register_type::<ConstantForce>()
+    |          -------------   ^^^^^^^^^^^^^ the trait `GetTypeRegistration` is not implemented for `avian3d::prelude::ConstantForce`
+    |          |
+    |          required by a bound introduced by this call
+    |
+    = note: consider annotating `avian3d::prelude::ConstantForce` with `#[derive(Reflect)]`
+note: there are multiple different versions of crate `bevy_reflect` in the dependency graph
+   --> C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_reflect\src\type_registry.rs:76:1
+    |
+ 76 | pub trait GetTypeRegistration: 'static {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ this is the expected trait
+    |
+   ::: C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\bevy_reflect-0.20.0\src\type_registry.rs:76:1
+    |
+ 76 | pub trait GetTypeRegistration: 'static {
+    | -------------------------------------- this is the found trait
+    = help: you can use `cargo tree` to explore your dependency tree
+    = help: the following other types implement trait `GetTypeRegistration`:
+              &'static std::panic::Location<'static>
+              &'static std::path::Path
+              &'static str
+              ()
+              (A, B)
+              (A, B, C)
+              (A, B, C, D)
+              (A, B, C, D, E)
+            and 1255 others
+note: required by a bound in `bevy::bevy_app::App::register_type`
+   --> C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_app\src\app.rs:664:29
+    |
+664 |     pub fn register_type<T: bevy_reflect::GetTypeRegistration>(&mut self) -> &mut Self {
+    |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ required by this bound in `App::register_type`
+
+error[E0277]: `avian3d::prelude::ConstantTorque` does not implement `GetTypeRegistration` so cannot provide type registration information
+   --> integrations\physics\jackdaw_avian_integration\src\lib.rs:159:26
+    |
+159 |         .register_type::<ConstantTorque>()
+    |          -------------   ^^^^^^^^^^^^^^ the trait `GetTypeRegistration` is not implemented for `avian3d::prelude::ConstantTorque`
+    |          |
+    |          required by a bound introduced by this call
+    |
+    = note: consider annotating `avian3d::prelude::ConstantTorque` with `#[derive(Reflect)]`
+note: there are multiple different versions of crate `bevy_reflect` in the dependency graph
+   --> C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_reflect\src\type_registry.rs:76:1
+    |
+ 76 | pub trait GetTypeRegistration: 'static {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ this is the expected trait
+    |
+   ::: C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\bevy_reflect-0.20.0\src\type_registry.rs:76:1
+    |
+ 76 | pub trait GetTypeRegistration: 'static {
+    | -------------------------------------- this is the found trait
+    = help: you can use `cargo tree` to explore your dependency tree
+    = help: the following other types implement trait `GetTypeRegistration`:
+              &'static std::panic::Location<'static>
+              &'static std::path::Path
+              &'static str
+              ()
+              (A, B)
+              (A, B, C)
+              (A, B, C, D)
+              (A, B, C, D, E)
+            and 1255 others
+note: required by a bound in `bevy::bevy_app::App::register_type`
+   --> C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_app\src\app.rs:664:29
+    |
+664 |     pub fn register_type<T: bevy_reflect::GetTypeRegistration>(&mut self) -> &mut Self {
+    |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ required by this bound in `App::register_type`
+
+error[E0277]: `avian3d::prelude::ConstantLocalForce` does not implement `GetTypeRegistration` so cannot provide type registration information
+   --> integrations\physics\jackdaw_avian_integration\src\lib.rs:160:26
+    |
+160 |         .register_type::<ConstantLocalForce>()
+    |          -------------   ^^^^^^^^^^^^^^^^^^ the trait `GetTypeRegistration` is not implemented for `avian3d::prelude::ConstantLocalForce`
+    |          |
+    |          required by a bound introduced by this call
+    |
+    = note: consider annotating `avian3d::prelude::ConstantLocalForce` with `#[derive(Reflect)]`
+note: there are multiple different versions of crate `bevy_reflect` in the dependency graph
+   --> C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_reflect\src\type_registry.rs:76:1
+    |
+ 76 | pub trait GetTypeRegistration: 'static {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ this is the expected trait
+    |
+   ::: C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\bevy_reflect-0.20.0\src\type_registry.rs:76:1
+    |
+ 76 | pub trait GetTypeRegistration: 'static {
+    | -------------------------------------- this is the found trait
+    = help: you can use `cargo tree` to explore your dependency tree
+    = help: the following other types implement trait `GetTypeRegistration`:
+              &'static std::panic::Location<'static>
+              &'static std::path::Path
+              &'static str
+              ()
+              (A, B)
+              (A, B, C)
+              (A, B, C, D)
+              (A, B, C, D, E)
+            and 1255 others
+note: required by a bound in `bevy::bevy_app::App::register_type`
+   --> C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_app\src\app.rs:664:29
+    |
+664 |     pub fn register_type<T: bevy_reflect::GetTypeRegistration>(&mut self) -> &mut Self {
+    |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ required by this bound in `App::register_type`
+
+error[E0277]: `avian3d::prelude::RigidBodyDisabled` does not implement `GetTypeRegistration` so cannot provide type registration information
+   --> integrations\physics\jackdaw_avian_integration\src\lib.rs:162:26
+    |
+162 |         .register_type::<RigidBodyDisabled>()
+    |          -------------   ^^^^^^^^^^^^^^^^^ the trait `GetTypeRegistration` is not implemented for `avian3d::prelude::RigidBodyDisabled`
+    |          |
+    |          required by a bound introduced by this call
+    |
+    = note: consider annotating `avian3d::prelude::RigidBodyDisabled` with `#[derive(Reflect)]`
+note: there are multiple different versions of crate `bevy_reflect` in the dependency graph
+   --> C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_reflect\src\type_registry.rs:76:1
+    |
+ 76 | pub trait GetTypeRegistration: 'static {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ this is the expected trait
+    |
+   ::: C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\bevy_reflect-0.20.0\src\type_registry.rs:76:1
+    |
+ 76 | pub trait GetTypeRegistration: 'static {
+    | -------------------------------------- this is the found trait
+    = help: you can use `cargo tree` to explore your dependency tree
+    = help: the following other types implement trait `GetTypeRegistration`:
+              &'static std::panic::Location<'static>
+              &'static std::path::Path
+              &'static str
+              ()
+              (A, B)
+              (A, B, C)
+              (A, B, C, D)
+              (A, B, C, D, E)
+            and 1255 others
+note: required by a bound in `bevy::bevy_app::App::register_type`
+   --> C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_app\src\app.rs:664:29
+    |
+664 |     pub fn register_type<T: bevy_reflect::GetTypeRegistration>(&mut self) -> &mut Self {
+    |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ required by this bound in `App::register_type`
+
+error[E0277]: `avian3d::prelude::Sleeping` does not implement `GetTypeRegistration` so cannot provide type registration information
+   --> integrations\physics\jackdaw_avian_integration\src\lib.rs:163:26
+    |
+163 |         .register_type::<Sleeping>()
+    |          -------------   ^^^^^^^^ the trait `GetTypeRegistration` is not implemented for `avian3d::prelude::Sleeping`
+    |          |
+    |          required by a bound introduced by this call
+    |
+    = note: consider annotating `avian3d::prelude::Sleeping` with `#[derive(Reflect)]`
+note: there are multiple different versions of crate `bevy_reflect` in the dependency graph
+   --> C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_reflect\src\type_registry.rs:76:1
+    |
+ 76 | pub trait GetTypeRegistration: 'static {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ this is the expected trait
+    |
+   ::: C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\bevy_reflect-0.20.0\src\type_registry.rs:76:1
+    |
+ 76 | pub trait GetTypeRegistration: 'static {
+    | -------------------------------------- this is the found trait
+    = help: you can use `cargo tree` to explore your dependency tree
+    = help: the following other types implement trait `GetTypeRegistration`:
+              &'static std::panic::Location<'static>
+              &'static std::path::Path
+              &'static str
+              ()
+              (A, B)
+              (A, B, C)
+              (A, B, C, D)
+              (A, B, C, D, E)
+            and 1255 others
+note: required by a bound in `bevy::bevy_app::App::register_type`
+   --> C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_app\src\app.rs:664:29
+    |
+664 |     pub fn register_type<T: bevy_reflect::GetTypeRegistration>(&mut self) -> &mut Self {
+    |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ required by this bound in `App::register_type`
+
+error[E0277]: `avian3d::prelude::SleepingDisabled` does not implement `GetTypeRegistration` so cannot provide type registration information
+   --> integrations\physics\jackdaw_avian_integration\src\lib.rs:164:26
+    |
+164 |         .register_type::<SleepingDisabled>()
+    |          -------------   ^^^^^^^^^^^^^^^^ the trait `GetTypeRegistration` is not implemented for `avian3d::prelude::SleepingDisabled`
+    |          |
+    |          required by a bound introduced by this call
+    |
+    = note: consider annotating `avian3d::prelude::SleepingDisabled` with `#[derive(Reflect)]`
+note: there are multiple different versions of crate `bevy_reflect` in the dependency graph
+   --> C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_reflect\src\type_registry.rs:76:1
+    |
+ 76 | pub trait GetTypeRegistration: 'static {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ this is the expected trait
+    |
+   ::: C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\bevy_reflect-0.20.0\src\type_registry.rs:76:1
+    |
+ 76 | pub trait GetTypeRegistration: 'static {
+    | -------------------------------------- this is the found trait
+    = help: you can use `cargo tree` to explore your dependency tree
+    = help: the following other types implement trait `GetTypeRegistration`:
+              &'static std::panic::Location<'static>
+              &'static std::path::Path
+              &'static str
+              ()
+              (A, B)
+              (A, B, C)
+              (A, B, C, D)
+              (A, B, C, D, E)
+            and 1255 others
+note: required by a bound in `bevy::bevy_app::App::register_type`
+   --> C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_app\src\app.rs:664:29
+    |
+664 |     pub fn register_type<T: bevy_reflect::GetTypeRegistration>(&mut self) -> &mut Self {
+    |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ required by this bound in `App::register_type`
+
+error[E0277]: `avian3d::physics_transform::Position` does not implement `GetTypeRegistration` so cannot provide type registration information
+   --> integrations\physics\jackdaw_avian_integration\src\lib.rs:168:26
+    |
+168 |         .register_type::<Position>()
+    |          -------------   ^^^^^^^^ the trait `GetTypeRegistration` is not implemented for `avian3d::physics_transform::Position`
+    |          |
+    |          required by a bound introduced by this call
+    |
+    = note: consider annotating `avian3d::physics_transform::Position` with `#[derive(Reflect)]`
+note: there are multiple different versions of crate `bevy_reflect` in the dependency graph
+   --> C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_reflect\src\type_registry.rs:76:1
+    |
+ 76 | pub trait GetTypeRegistration: 'static {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ this is the expected trait
+    |
+   ::: C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\bevy_reflect-0.20.0\src\type_registry.rs:76:1
+    |
+ 76 | pub trait GetTypeRegistration: 'static {
+    | -------------------------------------- this is the found trait
+    = help: you can use `cargo tree` to explore your dependency tree
+    = help: the following other types implement trait `GetTypeRegistration`:
+              &'static std::panic::Location<'static>
+              &'static std::path::Path
+              &'static str
+              ()
+              (A, B)
+              (A, B, C)
+              (A, B, C, D)
+              (A, B, C, D, E)
+            and 1255 others
+note: required by a bound in `bevy::bevy_app::App::register_type`
+   --> C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_app\src\app.rs:664:29
+    |
+664 |     pub fn register_type<T: bevy_reflect::GetTypeRegistration>(&mut self) -> &mut Self {
+    |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ required by this bound in `App::register_type`
+
+error[E0277]: `avian3d::physics_transform::Rotation` does not implement `GetTypeRegistration` so cannot provide type registration information
+   --> integrations\physics\jackdaw_avian_integration\src\lib.rs:169:26
+    |
+169 |         .register_type::<Rotation>()
+    |          -------------   ^^^^^^^^ the trait `GetTypeRegistration` is not implemented for `avian3d::physics_transform::Rotation`
+    |          |
+    |          required by a bound introduced by this call
+    |
+    = note: consider annotating `avian3d::physics_transform::Rotation` with `#[derive(Reflect)]`
+note: there are multiple different versions of crate `bevy_reflect` in the dependency graph
+   --> C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_reflect\src\type_registry.rs:76:1
+    |
+ 76 | pub trait GetTypeRegistration: 'static {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ this is the expected trait
+    |
+   ::: C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\bevy_reflect-0.20.0\src\type_registry.rs:76:1
+    |
+ 76 | pub trait GetTypeRegistration: 'static {
+    | -------------------------------------- this is the found trait
+    = help: you can use `cargo tree` to explore your dependency tree
+    = help: the following other types implement trait `GetTypeRegistration`:
+              &'static std::panic::Location<'static>
+              &'static std::path::Path
+              &'static str
+              ()
+              (A, B)
+              (A, B, C)
+              (A, B, C, D)
+              (A, B, C, D, E)
+            and 1255 others
+note: required by a bound in `bevy::bevy_app::App::register_type`
+   --> C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_app\src\app.rs:664:29
+    |
+664 |     pub fn register_type<T: bevy_reflect::GetTypeRegistration>(&mut self) -> &mut Self {
+    |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ required by this bound in `App::register_type`
+
+error[E0277]: `avian3d::prelude::CollisionLayers` does not implement `GetTypeRegistration` so cannot provide type registration information
+   --> integrations\physics\jackdaw_avian_integration\src\lib.rs:170:26
+    |
+170 |         .register_type::<CollisionLayers>()
+    |          -------------   ^^^^^^^^^^^^^^^ the trait `GetTypeRegistration` is not implemented for `avian3d::prelude::CollisionLayers`
+    |          |
+    |          required by a bound introduced by this call
+    |
+    = note: consider annotating `avian3d::prelude::CollisionLayers` with `#[derive(Reflect)]`
+note: there are multiple different versions of crate `bevy_reflect` in the dependency graph
+   --> C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_reflect\src\type_registry.rs:76:1
+    |
+ 76 | pub trait GetTypeRegistration: 'static {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ this is the expected trait
+    |
+   ::: C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\bevy_reflect-0.20.0\src\type_registry.rs:76:1
+    |
+ 76 | pub trait GetTypeRegistration: 'static {
+    | -------------------------------------- this is the found trait
+    = help: you can use `cargo tree` to explore your dependency tree
+    = help: the following other types implement trait `GetTypeRegistration`:
+              &'static std::panic::Location<'static>
+              &'static std::path::Path
+              &'static str
+              ()
+              (A, B)
+              (A, B, C)
+              (A, B, C, D)
+              (A, B, C, D, E)
+            and 1255 others
+note: required by a bound in `bevy::bevy_app::App::register_type`
+   --> C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_app\src\app.rs:664:29
+    |
+664 |     pub fn register_type<T: bevy_reflect::GetTypeRegistration>(&mut self) -> &mut Self {
+    |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ required by this bound in `App::register_type`
+
+error[E0277]: `avian3d::prelude::ColliderDensity` does not implement `GetTypeRegistration` so cannot provide type registration information
+   --> integrations\physics\jackdaw_avian_integration\src\lib.rs:171:26
+    |
+171 |         .register_type::<ColliderDensity>()
+    |          -------------   ^^^^^^^^^^^^^^^ the trait `GetTypeRegistration` is not implemented for `avian3d::prelude::ColliderDensity`
+    |          |
+    |          required by a bound introduced by this call
+    |
+    = note: consider annotating `avian3d::prelude::ColliderDensity` with `#[derive(Reflect)]`
+note: there are multiple different versions of crate `bevy_reflect` in the dependency graph
+   --> C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_reflect\src\type_registry.rs:76:1
+    |
+ 76 | pub trait GetTypeRegistration: 'static {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ this is the expected trait
+    |
+   ::: C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\bevy_reflect-0.20.0\src\type_registry.rs:76:1
+    |
+ 76 | pub trait GetTypeRegistration: 'static {
+    | -------------------------------------- this is the found trait
+    = help: you can use `cargo tree` to explore your dependency tree
+    = help: the following other types implement trait `GetTypeRegistration`:
+              &'static std::panic::Location<'static>
+              &'static std::path::Path
+              &'static str
+              ()
+              (A, B)
+              (A, B, C)
+              (A, B, C, D)
+              (A, B, C, D, E)
+            and 1255 others
+note: required by a bound in `bevy::bevy_app::App::register_type`
+   --> C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_app\src\app.rs:664:29
+    |
+664 |     pub fn register_type<T: bevy_reflect::GetTypeRegistration>(&mut self) -> &mut Self {
+    |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ required by this bound in `App::register_type`
+
+error[E0277]: `avian3d::prelude::SleepThreshold` does not implement `GetTypeRegistration` so cannot provide type registration information
+   --> integrations\physics\jackdaw_avian_integration\src\lib.rs:172:26
+    |
+172 |         .register_type::<SleepThreshold>()
+    |          -------------   ^^^^^^^^^^^^^^ the trait `GetTypeRegistration` is not implemented for `avian3d::prelude::SleepThreshold`
+    |          |
+    |          required by a bound introduced by this call
+    |
+    = note: consider annotating `avian3d::prelude::SleepThreshold` with `#[derive(Reflect)]`
+note: there are multiple different versions of crate `bevy_reflect` in the dependency graph
+   --> C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_reflect\src\type_registry.rs:76:1
+    |
+ 76 | pub trait GetTypeRegistration: 'static {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ this is the expected trait
+    |
+   ::: C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\bevy_reflect-0.20.0\src\type_registry.rs:76:1
+    |
+ 76 | pub trait GetTypeRegistration: 'static {
+    | -------------------------------------- this is the found trait
+    = help: you can use `cargo tree` to explore your dependency tree
+    = help: the following other types implement trait `GetTypeRegistration`:
+              &'static std::panic::Location<'static>
+              &'static std::path::Path
+              &'static str
+              ()
+              (A, B)
+              (A, B, C)
+              (A, B, C, D)
+              (A, B, C, D, E)
+            and 1255 others
+note: required by a bound in `bevy::bevy_app::App::register_type`
+   --> C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_app\src\app.rs:664:29
+    |
+664 |     pub fn register_type<T: bevy_reflect::GetTypeRegistration>(&mut self) -> &mut Self {
+    |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ required by this bound in `App::register_type`
+
+error[E0277]: `avian3d::prelude::SleepTimer` does not implement `GetTypeRegistration` so cannot provide type registration information
+   --> integrations\physics\jackdaw_avian_integration\src\lib.rs:173:26
+    |
+173 |         .register_type::<SleepTimer>();
+    |          -------------   ^^^^^^^^^^ the trait `GetTypeRegistration` is not implemented for `avian3d::prelude::SleepTimer`
+    |          |
+    |          required by a bound introduced by this call
+    |
+    = note: consider annotating `avian3d::prelude::SleepTimer` with `#[derive(Reflect)]`
+note: there are multiple different versions of crate `bevy_reflect` in the dependency graph
+   --> C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_reflect\src\type_registry.rs:76:1
+    |
+ 76 | pub trait GetTypeRegistration: 'static {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ this is the expected trait
+    |
+   ::: C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\bevy_reflect-0.20.0\src\type_registry.rs:76:1
+    |
+ 76 | pub trait GetTypeRegistration: 'static {
+    | -------------------------------------- this is the found trait
+    = help: you can use `cargo tree` to explore your dependency tree
+    = help: the following other types implement trait `GetTypeRegistration`:
+              &'static std::panic::Location<'static>
+              &'static std::path::Path
+              &'static str
+              ()
+              (A, B)
+              (A, B, C)
+              (A, B, C, D)
+              (A, B, C, D, E)
+            and 1255 others
+note: required by a bound in `bevy::bevy_app::App::register_type`
+   --> C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_app\src\app.rs:664:29
+    |
+664 |     pub fn register_type<T: bevy_reflect::GetTypeRegistration>(&mut self) -> &mut Self {
+    |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ required by this bound in `App::register_type`
+
+Some errors have detailed explanations: E0277, E0308, E0599.
+For more information about an error, try `rustc --explain E0277`.
+error: could not compile `jackdaw_avian_integration` (lib) due to 66 previous errors
+warning: build failed, waiting for other jobs to finish...

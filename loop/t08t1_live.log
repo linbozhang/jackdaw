@@ -1,0 +1,12 @@
+editor BRP is up
+editor ready (prebuild done; GameConfig registered)
+asset.new: {"jsonrpc":"2.0","id":866190485,"result":{"entities":[],"id":"asset.new","reports":["game-config.bsn"],"result":"finished","warnings":[]}}
+game-config.bsn on disk:
+// jackdaw 0.21.0-dev | bevy main
+// jackdaw asset hworkspace_ait08t1_projmy_game::GameConfig
+#"game-config"
+hworkspace_ait08t1_projmy_game::GameConfig {
+    move_speed: 2.5,
+    gravity: -9.8100004196167,
+}
+

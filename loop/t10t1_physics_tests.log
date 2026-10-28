@@ -1,0 +1,428 @@
+warning: linker stderr: rust-lld: ignoring unknown argument '-fuse-ld=lld'
+  |
+  = note: `#[warn(linker_messages)]` on by default
+
+warning: `bevy_reflect_derive` (lib) generated 1 warning
+warning: `bevy_ecs_macros` (lib) generated 1 warning (1 duplicate)
+warning: `bevy_derive` (lib) generated 1 warning (1 duplicate)
+warning: `bevy_asset_macros` (lib) generated 1 warning (1 duplicate)
+warning: `bevy_extract_macros` (lib) generated 1 warning (1 duplicate)
+warning: `bevy_material_macros` (lib) generated 1 warning (1 duplicate)
+warning: `bevy_gizmos_macros` (lib) generated 1 warning (1 duplicate)
+warning: `bevy_render_macros` (lib) generated 1 warning (1 duplicate)
+warning: `bevy_encase_derive` (lib) generated 1 warning (1 duplicate)
+warning: `bevy_animation_macros` (lib) generated 1 warning (1 duplicate)
+warning: `bevy_state_macros` (lib) generated 1 warning (1 duplicate)
+warning: `bevy_scene_macros` (lib) generated 1 warning (1 duplicate)
+warning: `jackdaw_env` (build script) generated 1 warning (1 duplicate)
+warning: `jackdaw_api_macros` (lib) generated 1 warning (1 duplicate)
+warning: `jackdaw_package` (build script) generated 1 warning (1 duplicate)
+   Compiling jackdaw_avian_integration v0.21.0-dev (E:\Project\rust\jackdaw\integrations\physics\jackdaw_avian_integration)
+warning: `jackdaw_project_build` (build script) generated 1 warning (1 duplicate)
+   Compiling jackdaw_project_build v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_project_build)
+   Compiling jackdaw_physics v0.21.0-dev (E:\Project\rust\jackdaw\integrations\physics\jackdaw_physics)
+   Compiling jackdaw_scaffold v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_scaffold)
+   Compiling jackdaw v0.21.0-dev (E:\Project\rust\jackdaw)
+warning: `jackdaw_avian_integration` (test "static_bodies") generated 1 warning (1 duplicate)
+warning: `jackdaw_avian_integration` (test "model_colliders") generated 1 warning (1 duplicate)
+warning: `jackdaw_avian_integration` (lib test) generated 1 warning (1 duplicate)
+warning: `jackdaw_avian_integration` (test "terrain_ground_collider") generated 1 warning (1 duplicate)
+warning: `jackdaw_avian_integration` (test "scene_model_colliders") generated 1 warning (1 duplicate)
+warning: `jackdaw_avian_integration` (example "load_terrain_world") generated 1 warning (1 duplicate)
+warning: `jackdaw_physics` (lib test) generated 1 warning (1 duplicate)
+warning: `jackdaw_physics` (example "editor") generated 1 warning (1 duplicate)
+warning: `jackdaw_physics` (test "editor") generated 1 warning (1 duplicate)
+    Finished `test` profile [optimized + debuginfo] target(s) in 3m 31s
+     Running unittests src\lib.rs (target\debug\deps\jackdaw_avian_integration-62cc181942f49bf2.exe)
+
+running 4 tests
+test tests::convex_brush_honors_convex_hull_request ... ok
+test tests::cuboid_brush_builds_a_trimesh_collider ... ok
+test tests::bridge_inserts_collider_on_spawn ... ok
+test tests::cuboid_honors_convex_decomposition_request ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.22s
+
+     Running tests\model_colliders.rs (target\debug\deps\model_colliders-af57d7de9f6466e2.exe)
+
+running 4 tests
+test a_mesh_shape_builds_a_collider_on_the_models_mesh ... ok
+test parts_that_arrive_after_the_collider_get_it_too ... ok
+test removing_the_collider_takes_the_models_colliders_with_it ... ok
+test switching_shape_leaves_one_set_of_the_new_shape ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.05s
+
+     Running tests\scene_model_colliders.rs (target\debug\deps\scene_model_colliders-2114f2dc047e5c00.exe)
+
+running 6 tests
+test a_model_saved_with_a_primitive_collides_as_that_primitive ... ok
+test a_collider_on_a_lod_group_sits_on_its_first_levels_meshes ... ok
+test a_model_saved_with_a_trimesh_collides_on_its_mesh ... ok
+test a_model_saved_with_a_convex_hull_collides_on_its_mesh ... ok
+test a_model_switched_to_dynamic_falls ... ok
+test a_model_saved_with_only_a_collider_stops_a_falling_body ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.15s
+
+     Running tests\static_bodies.rs (target\debug\deps\static_bodies-12b2162f81730e18.exe)
+
+running 5 tests
+test a_collider_under_a_body_belongs_to_that_body ... ok
+test removing_the_collider_takes_its_static_body_with_it ... ok
+test a_collider_without_a_body_stands_as_a_static_body ... ok
+test removing_the_collider_leaves_an_authored_body ... ok
+test a_static_body_switched_to_dynamic_stays_when_the_collider_goes ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+
+     Running tests\terrain_ground_collider.rs (target\debug\deps\terrain_ground_collider-c39bf873a934ce22.exe)
+
+running 5 tests
+test a_terrain_with_no_cells_has_no_ground_to_collide_with ... ok
+test a_grid_anchored_away_from_its_entity_collides_where_it_draws ... ok
+test a_dropped_ray_meets_the_ground_the_sidecar_stores ... ok
+test a_reloaded_scene_brings_its_ground_back ... ok
+test a_falling_body_comes_to_rest_on_the_authored_ground ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.32s
+
+     Running unittests src\lib.rs (target\debug\deps\jackdaw_physics-e40e2366153ed07e.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\editor\main.rs (target\debug\deps\editor-3639526705a1aee4.exe)
+
+running 20 tests
+[2m2026-10-27T11:35:53.060315Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-27T11:35:53.060323Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-27T11:35:53.060319Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-27T11:35:53.060330Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-27T11:35:53.060323Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-27T11:35:53.060315Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-27T11:35:53.060315Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-27T11:35:53.060315Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-27T11:35:53.060315Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-27T11:35:53.060316Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global tracing subscriber as it is already set. Consider disabling LogPlugin.
+[2m2026-10-27T11:35:53.060315Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger as it is already set. Consider disabling LogPlugin.
+[2m2026-10-27T11:35:53.060315Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-27T11:35:53.060316Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-27T11:35:53.060315Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-27T11:35:53.060316Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-27T11:35:53.060323Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-27T11:35:53.063690Z[0m [32m INFO[0m [2mbevy_diagnostic::system_information_diagnostics_plugin::internal[0m[2m:[0m SystemInfo { os: "Windows 11 Pro", kernel: "26100", cpu: "AMD Ryzen 7 9700X 8-Core Processor", core_count: "8", memory: "93.4 GiB" }
+[2m2026-10-27T11:35:53.063803Z[0m [32m INFO[0m [2mbevy_diagnostic::system_information_diagnostics_plugin::internal[0m[2m:[0m SystemInfo { os: "Windows 11 Pro", kernel: "26100", cpu: "AMD Ryzen 7 9700X 8-Core Processor", core_count: "8", memory: "93.4 GiB" }
+[2m2026-10-27T11:35:53.063739Z[0m [32m INFO[0m [2mbevy_diagnostic::system_information_diagnostics_plugin::internal[0m[2m:[0m SystemInfo { os: "Windows 11 Pro", kernel: "26100", cpu: "AMD Ryzen 7 9700X 8-Core Processor", core_count: "8", memory: "93.4 GiB" }
+[2m2026-10-27T11:35:53.063729Z[0m [32m INFO[0m [2mbevy_diagnostic::system_information_diagnostics_plugin::internal[0m[2m:[0m SystemInfo { os: "Windows 11 Pro", kernel: "26100", cpu: "AMD Ryzen 7 9700X 8-Core Processor", core_count: "8", memory: "93.4 GiB" }
+[2m2026-10-27T11:35:53.063752Z[0m [32m INFO[0m [2mbevy_diagnostic::system_information_diagnostics_plugin::internal[0m[2m:[0m SystemInfo { os: "Windows 11 Pro", kernel: "26100", cpu: "AMD Ryzen 7 9700X 8-Core Processor", core_count: "8", memory: "93.4 GiB" }
+[2m2026-10-27T11:35:53.063760Z[0m [32m INFO[0m [2mbevy_diagnostic::system_information_diagnostics_plugin::internal[0m[2m:[0m SystemInfo { os: "Windows 11 Pro", kernel: "26100", cpu: "AMD Ryzen 7 9700X 8-Core Processor", core_count: "8", memory: "93.4 GiB" }
+[2m2026-10-27T11:35:53.063767Z[0m [32m INFO[0m [2mbevy_diagnostic::system_information_diagnostics_plugin::internal[0m[2m:[0m SystemInfo { os: "Windows 11 Pro", kernel: "26100", cpu: "AMD Ryzen 7 9700X 8-Core Processor", core_count: "8", memory: "93.4 GiB" }
+[2m2026-10-27T11:35:53.063775Z[0m [32m INFO[0m [2mbevy_diagnostic::system_information_diagnostics_plugin::internal[0m[2m:[0m SystemInfo { os: "Windows 11 Pro", kernel: "26100", cpu: "AMD Ryzen 7 9700X 8-Core Processor", core_count: "8", memory: "93.4 GiB" }
+[2m2026-10-27T11:35:53.063784Z[0m [32m INFO[0m [2mbevy_diagnostic::system_information_diagnostics_plugin::internal[0m[2m:[0m SystemInfo { os: "Windows 11 Pro", kernel: "26100", cpu: "AMD Ryzen 7 9700X 8-Core Processor", core_count: "8", memory: "93.4 GiB" }
+[2m2026-10-27T11:35:53.063785Z[0m [32m INFO[0m [2mbevy_diagnostic::system_information_diagnostics_plugin::internal[0m[2m:[0m SystemInfo { os: "Windows 11 Pro", kernel: "26100", cpu: "AMD Ryzen 7 9700X 8-Core Processor", core_count: "8", memory: "93.4 GiB" }
+[2m2026-10-27T11:35:53.063791Z[0m [32m INFO[0m [2mbevy_diagnostic::system_information_diagnostics_plugin::internal[0m[2m:[0m SystemInfo { os: "Windows 11 Pro", kernel: "26100", cpu: "AMD Ryzen 7 9700X 8-Core Processor", core_count: "8", memory: "93.4 GiB" }
+[2m2026-10-27T11:35:53.063731Z[0m [32m INFO[0m [2mbevy_diagnostic::system_information_diagnostics_plugin::internal[0m[2m:[0m SystemInfo { os: "Windows 11 Pro", kernel: "26100", cpu: "AMD Ryzen 7 9700X 8-Core Processor", core_count: "8", memory: "93.4 GiB" }
+[2m2026-10-27T11:35:53.063818Z[0m [32m INFO[0m [2mbevy_diagnostic::system_information_diagnostics_plugin::internal[0m[2m:[0m SystemInfo { os: "Windows 11 Pro", kernel: "26100", cpu: "AMD Ryzen 7 9700X 8-Core Processor", core_count: "8", memory: "93.4 GiB" }
+[2m2026-10-27T11:35:53.063861Z[0m [32m INFO[0m [2mbevy_diagnostic::system_information_diagnostics_plugin::internal[0m[2m:[0m SystemInfo { os: "Windows 11 Pro", kernel: "26100", cpu: "AMD Ryzen 7 9700X 8-Core Processor", core_count: "8", memory: "93.4 GiB" }
+[2m2026-10-27T11:35:53.063962Z[0m [32m INFO[0m [2mbevy_diagnostic::system_information_diagnostics_plugin::internal[0m[2m:[0m SystemInfo { os: "Windows 11 Pro", kernel: "26100", cpu: "AMD Ryzen 7 9700X 8-Core Processor", core_count: "8", memory: "93.4 GiB" }
+[2m2026-10-27T11:35:53.063969Z[0m [32m INFO[0m [2mbevy_diagnostic::system_information_diagnostics_plugin::internal[0m[2m:[0m SystemInfo { os: "Windows 11 Pro", kernel: "26100", cpu: "AMD Ryzen 7 9700X 8-Core Processor", core_count: "8", memory: "93.4 GiB" }
+[2m2026-10-27T11:35:53.066317Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-27T11:35:53.066318Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-27T11:35:53.066329Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-27T11:35:53.066670Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-27T11:35:53.066337Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-27T11:35:53.066340Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-27T11:35:53.066348Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-27T11:35:53.067002Z[0m [33m WARN[0m [2mbevy_asset::io::source[0m[2m:[0m Skip creating file watcher because path "E:\\Project\\rust\\jackdaw\\integrations\\physics\\jackdaw_physics\\assets" does not exist.
+[2m2026-10-27T11:35:53.067069Z[0m [33m WARN[0m [2mbevy_asset::io::source[0m[2m:[0m AssetSourceId::Default does not have an AssetWatcher configured. Consider adding an "assets" directory.
+[2m2026-10-27T11:35:53.066363Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-27T11:35:53.066361Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-27T11:35:53.067265Z[0m [33m WARN[0m [2mbevy_asset::io::source[0m[2m:[0m Skip creating file watcher because path "E:\\Project\\rust\\jackdaw\\integrations\\physics\\jackdaw_physics\\assets" does not exist.
+[2m2026-10-27T11:35:53.067344Z[0m [33m WARN[0m [2mbevy_asset::io::source[0m[2m:[0m AssetSourceId::Default does not have an AssetWatcher configured. Consider adding an "assets" directory.
+[2m2026-10-27T11:35:53.066647Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-27T11:35:53.066330Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-27T11:35:53.066730Z[0m [33m WARN[0m [2mbevy_asset::io::source[0m[2m:[0m Skip creating file watcher because path "E:\\Project\\rust\\jackdaw\\integrations\\physics\\jackdaw_physics\\assets" does not exist.
+[2m2026-10-27T11:35:53.067765Z[0m [33m WARN[0m [2mbevy_asset::io::source[0m[2m:[0m AssetSourceId::Default does not have an AssetWatcher configured. Consider adding an "assets" directory.
+[2m2026-10-27T11:35:53.066731Z[0m [33m WARN[0m [2mbevy_asset::io::source[0m[2m:[0m Skip creating file watcher because path "E:\\Project\\rust\\jackdaw\\integrations\\physics\\jackdaw_physics\\assets" does not exist.
+[2m2026-10-27T11:35:53.066731Z[0m [33m WARN[0m [2mbevy_asset::io::source[0m[2m:[0m Skip creating file watcher because path "E:\\Project\\rust\\jackdaw\\integrations\\physics\\jackdaw_physics\\assets" does not exist.
+[2m2026-10-27T11:35:53.066751Z[0m [33m WARN[0m [2mbevy_asset::io::source[0m[2m:[0m Skip creating file watcher because path "E:\\Project\\rust\\jackdaw\\integrations\\physics\\jackdaw_physics\\assets" does not exist.
+[2m2026-10-27T11:35:53.066833Z[0m [33m WARN[0m [2mbevy_asset::io::source[0m[2m:[0m Skip creating file watcher because path "E:\\Project\\rust\\jackdaw\\integrations\\physics\\jackdaw_physics\\assets" does not exist.
+[2m2026-10-27T11:35:53.066900Z[0m [33m WARN[0m [2mbevy_asset::io::source[0m[2m:[0m Skip creating file watcher because path "E:\\Project\\rust\\jackdaw\\integrations\\physics\\jackdaw_physics\\assets" does not exist.
+[2m2026-10-27T11:35:53.066356Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-27T11:35:53.067043Z[0m [33m WARN[0m [2mbevy_asset::io::source[0m[2m:[0m Skip creating file watcher because path "E:\\Project\\rust\\jackdaw\\integrations\\physics\\jackdaw_physics\\assets" does not exist.
+[2m2026-10-27T11:35:53.066355Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-27T11:35:53.066378Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-27T11:35:53.066482Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-27T11:35:53.067353Z[0m [33m WARN[0m [2mbevy_asset::io::source[0m[2m:[0m Skip creating file watcher because path "E:\\Project\\rust\\jackdaw\\integrations\\physics\\jackdaw_physics\\assets" does not exist.
+[2m2026-10-27T11:35:53.067637Z[0m [33m WARN[0m [2mbevy_asset::io::source[0m[2m:[0m Skip creating file watcher because path "E:\\Project\\rust\\jackdaw\\integrations\\physics\\jackdaw_physics\\assets" does not exist.
+[2m2026-10-27T11:35:53.067742Z[0m [33m WARN[0m [2mbevy_asset::io::source[0m[2m:[0m Skip creating file watcher because path "E:\\Project\\rust\\jackdaw\\integrations\\physics\\jackdaw_physics\\assets" does not exist.
+[2m2026-10-27T11:35:53.067985Z[0m [33m WARN[0m [2mbevy_asset::io::source[0m[2m:[0m AssetSourceId::Default does not have an AssetWatcher configured. Consider adding an "assets" directory.
+[2m2026-10-27T11:35:53.068079Z[0m [33m WARN[0m [2mbevy_asset::io::source[0m[2m:[0m AssetSourceId::Default does not have an AssetWatcher configured. Consider adding an "assets" directory.
+[2m2026-10-27T11:35:53.068169Z[0m [33m WARN[0m [2mbevy_asset::io::source[0m[2m:[0m AssetSourceId::Default does not have an AssetWatcher configured. Consider adding an "assets" directory.
+[2m2026-10-27T11:35:53.068358Z[0m [33m WARN[0m [2mbevy_asset::io::source[0m[2m:[0m AssetSourceId::Default does not have an AssetWatcher configured. Consider adding an "assets" directory.
+[2m2026-10-27T11:35:53.068461Z[0m [33m WARN[0m [2mbevy_asset::io::source[0m[2m:[0m AssetSourceId::Default does not have an AssetWatcher configured. Consider adding an "assets" directory.
+[2m2026-10-27T11:35:53.068651Z[0m [33m WARN[0m [2mbevy_asset::io::source[0m[2m:[0m AssetSourceId::Default does not have an AssetWatcher configured. Consider adding an "assets" directory.
+[2m2026-10-27T11:35:53.068681Z[0m [33m WARN[0m [2mbevy_asset::io::source[0m[2m:[0m Skip creating file watcher because path "E:\\Project\\rust\\jackdaw\\integrations\\physics\\jackdaw_physics\\assets" does not exist.
+[2m2026-10-27T11:35:53.068844Z[0m [33m WARN[0m [2mbevy_asset::io::source[0m[2m:[0m Skip creating file watcher because path "E:\\Project\\rust\\jackdaw\\integrations\\physics\\jackdaw_physics\\assets" does not exist.
+[2m2026-10-27T11:35:53.068945Z[0m [33m WARN[0m [2mbevy_asset::io::source[0m[2m:[0m Skip creating file watcher because path "E:\\Project\\rust\\jackdaw\\integrations\\physics\\jackdaw_physics\\assets" does not exist.
+[2m2026-10-27T11:35:53.070054Z[0m [31mERROR[0m [2mbevy_extract::extract_resource[0m[2m:[0m Sub app did not exist when trying to add `extract_resource` for <bevy_camera::clear_color::ClearColor>.
+[2m2026-10-27T11:35:53.069080Z[0m [33m WARN[0m [2mbevy_asset::io::source[0m[2m:[0m Skip creating file watcher because path "E:\\Project\\rust\\jackdaw\\integrations\\physics\\jackdaw_physics\\assets" does not exist.
+[2m2026-10-27T11:35:53.070296Z[0m [33m WARN[0m [2mbevy_asset::io::source[0m[2m:[0m AssetSourceId::Default does not have an AssetWatcher configured. Consider adding an "assets" directory.
+[2m2026-10-27T11:35:53.069162Z[0m [33m WARN[0m [2mbevy_asset::io::source[0m[2m:[0m AssetSourceId::Default does not have an AssetWatcher configured. Consider adding an "assets" directory.
+[2m2026-10-27T11:35:53.069244Z[0m [33m WARN[0m [2mbevy_asset::io::source[0m[2m:[0m AssetSourceId::Default does not have an AssetWatcher configured. Consider adding an "assets" directory.
+[2m2026-10-27T11:35:53.069867Z[0m [33m WARN[0m [2mbevy_asset::io::source[0m[2m:[0m AssetSourceId::Default does not have an AssetWatcher configured. Consider adding an "assets" directory.
+[2m2026-10-27T11:35:53.069974Z[0m [33m WARN[0m [2mbevy_asset::io::source[0m[2m:[0m AssetSourceId::Default does not have an AssetWatcher configured. Consider adding an "assets" directory.
+[2m2026-10-27T11:35:53.069073Z[0m [33m WARN[0m [2mbevy_asset::io::source[0m[2m:[0m AssetSourceId::Default does not have an AssetWatcher configured. Consider adding an "assets" directory.
+[2m2026-10-27T11:35:53.070058Z[0m [33m WARN[0m [2mbevy_asset::io::source[0m[2m:[0m AssetSourceId::Default does not have an AssetWatcher configured. Consider adding an "assets" directory.
+[2m2026-10-27T11:35:53.152020Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+[2m2026-10-27T11:35:53.152021Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+[2m2026-10-27T11:35:53.152020Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+[2m2026-10-27T11:35:53.152020Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+[2m2026-10-27T11:35:53.152038Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+[2m2026-10-27T11:35:53.152058Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+[2m2026-10-27T11:35:53.152058Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+[2m2026-10-27T11:35:53.152066Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+[2m2026-10-27T11:35:53.152081Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+[2m2026-10-27T11:35:53.152083Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+[2m2026-10-27T11:35:53.152092Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+[2m2026-10-27T11:35:53.152095Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+[2m2026-10-27T11:35:53.152208Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+[2m2026-10-27T11:35:53.152273Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+[2m2026-10-27T11:35:53.152337Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+[2m2026-10-27T11:35:53.152539Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+[2m2026-10-27T11:35:53.644384Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw::test_input::plugin` of extension `jackdaw.test_input`
+[2m2026-10-27T11:35:53.644521Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw::test_input::plugin` of extension `jackdaw.test_input`
+[2m2026-10-27T11:35:53.646804Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw_physics::PhysicsEditorPlugin` of extension `jackdaw.physics`
+[2m2026-10-27T11:35:53.646821Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw_physics::PhysicsEditorPlugin` of extension `jackdaw.physics`
+[2m2026-10-27T11:35:53.654177Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw_physics::PhysicsEditorPlugin` of extension `jackdaw.physics`
+[2m2026-10-27T11:35:53.654177Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw_physics::PhysicsEditorPlugin` of extension `jackdaw.physics`
+[2m2026-10-27T11:35:53.662541Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw::test_input::plugin` of extension `jackdaw.test_input`
+[2m2026-10-27T11:35:53.663001Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw_physics::PhysicsEditorPlugin` of extension `jackdaw.physics`
+[2m2026-10-27T11:35:53.665179Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw::test_input::plugin` of extension `jackdaw.test_input`
+[2m2026-10-27T11:35:53.665627Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw_physics::PhysicsEditorPlugin` of extension `jackdaw.physics`
+[2m2026-10-27T11:35:53.666707Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw_physics::PhysicsEditorPlugin` of extension `jackdaw.physics`
+[2m2026-10-27T11:35:53.668134Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw_physics::PhysicsEditorPlugin` of extension `jackdaw.physics`
+test physics_ops::component_remove_drops_authored_physics_from_the_document ... FAILED
+test preview_guard::previewed_physics_cannot_be_disabled_until_the_session_ends ... FAILED
+[2m2026-10-27T11:35:53.681137Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-27T11:35:53.681135Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-27T11:35:53.681973Z[0m [32m INFO[0m [2mbevy_diagnostic::system_information_diagnostics_plugin::internal[0m[2m:[0m SystemInfo { os: "Windows 11 Pro", kernel: "26100", cpu: "AMD Ryzen 7 9700X 8-Core Processor", core_count: "8", memory: "93.4 GiB" }
+[2m2026-10-27T11:35:53.682083Z[0m [32m INFO[0m [2mbevy_diagnostic::system_information_diagnostics_plugin::internal[0m[2m:[0m SystemInfo { os: "Windows 11 Pro", kernel: "26100", cpu: "AMD Ryzen 7 9700X 8-Core Processor", core_count: "8", memory: "93.4 GiB" }
+test picker::standalone_collider_constructor_is_hidden ... [2m2026-10-27T11:35:53.682691Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+FAILED
+[2m2026-10-27T11:35:53.683160Z[0m [33m WARN[0m [2mbevy_asset::io::source[0m[2m:[0m Skip creating file watcher because path "E:\\Project\\rust\\jackdaw\\integrations\\physics\\jackdaw_physics\\assets" does not exist.
+[2m2026-10-27T11:35:53.683394Z[0m [33m WARN[0m [2mbevy_asset::io::source[0m[2m:[0m AssetSourceId::Default does not have an AssetWatcher configured. Consider adding an "assets" directory.
+[2m2026-10-27T11:35:53.682714Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-27T11:35:53.683724Z[0m [33m WARN[0m [2mbevy_asset::io::source[0m[2m:[0m Skip creating file watcher because path "E:\\Project\\rust\\jackdaw\\integrations\\physics\\jackdaw_physics\\assets" does not exist.
+[2m2026-10-27T11:35:53.683805Z[0m [33m WARN[0m [2mbevy_asset::io::source[0m[2m:[0m AssetSourceId::Default does not have an AssetWatcher configured. Consider adding an "assets" directory.
+test physics_ops::component_remove_keeps_entity_identity_and_undo_restores_requires ... FAILED
+[2m2026-10-27T11:35:53.689321Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-27T11:35:53.690349Z[0m [32m INFO[0m [2mbevy_diagnostic::system_information_diagnostics_plugin::internal[0m[2m:[0m SystemInfo { os: "Windows 11 Pro", kernel: "26100", cpu: "AMD Ryzen 7 9700X 8-Core Processor", core_count: "8", memory: "93.4 GiB" }
+[2m2026-10-27T11:35:53.692177Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-27T11:35:53.692277Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-27T11:35:53.692567Z[0m [33m WARN[0m [2mbevy_asset::io::source[0m[2m:[0m Skip creating file watcher because path "E:\\Project\\rust\\jackdaw\\integrations\\physics\\jackdaw_physics\\assets" does not exist.
+[2m2026-10-27T11:35:53.692664Z[0m [33m WARN[0m [2mbevy_asset::io::source[0m[2m:[0m AssetSourceId::Default does not have an AssetWatcher configured. Consider adding an "assets" directory.
+[2m2026-10-27T11:35:53.692922Z[0m [32m INFO[0m [2mbevy_diagnostic::system_information_diagnostics_plugin::internal[0m[2m:[0m SystemInfo { os: "Windows 11 Pro", kernel: "26100", cpu: "AMD Ryzen 7 9700X 8-Core Processor", core_count: "8", memory: "93.4 GiB" }
+[2m2026-10-27T11:35:53.693976Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-27T11:35:53.694186Z[0m [33m WARN[0m [2mbevy_asset::io::source[0m[2m:[0m Skip creating file watcher because path "E:\\Project\\rust\\jackdaw\\integrations\\physics\\jackdaw_physics\\assets" does not exist.
+[2m2026-10-27T11:35:53.694528Z[0m [33m WARN[0m [2mbevy_asset::io::source[0m[2m:[0m AssetSourceId::Default does not have an AssetWatcher configured. Consider adding an "assets" directory.
+[2m2026-10-27T11:35:53.696532Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw::test_input::plugin` of extension `jackdaw.test_input`
+[2m2026-10-27T11:35:53.696953Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw_physics::PhysicsEditorPlugin` of extension `jackdaw.physics`
+[2m2026-10-27T11:35:53.699953Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw_physics::PhysicsEditorPlugin` of extension `jackdaw.physics`
+[2m2026-10-27T11:35:53.706079Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw::test_input::plugin` of extension `jackdaw.test_input`
+[2m2026-10-27T11:35:53.706598Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw_physics::PhysicsEditorPlugin` of extension `jackdaw.physics`
+[2m2026-10-27T11:35:53.708114Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+[2m2026-10-27T11:35:53.708637Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+[2m2026-10-27T11:35:53.709778Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw_physics::PhysicsEditorPlugin` of extension `jackdaw.physics`
+[2m2026-10-27T11:35:53.720642Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw::test_input::plugin` of extension `jackdaw.test_input`
+[2m2026-10-27T11:35:53.721201Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw_physics::PhysicsEditorPlugin` of extension `jackdaw.physics`
+[2m2026-10-27T11:35:53.721243Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+[2m2026-10-27T11:35:53.721244Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+[2m2026-10-27T11:35:53.724115Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw_physics::PhysicsEditorPlugin` of extension `jackdaw.physics`
+test physics_ops::enabling_physics_is_one_undo_step ... FAILED
+test round_trip::physics_components_resolve_and_survive_an_open_and_resave ... FAILED
+test physics_ops::a_collider_added_alone_stands_as_a_static_body_that_is_not_saved ... FAILED
+[2m2026-10-27T11:35:53.753315Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw::test_input::plugin` of extension `jackdaw.test_input`
+[2m2026-10-27T11:35:53.753776Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw_physics::PhysicsEditorPlugin` of extension `jackdaw.physics`
+[2m2026-10-27T11:35:53.756747Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw_physics::PhysicsEditorPlugin` of extension `jackdaw.physics`
+test physics_ops::enabling_physics_on_a_placed_model_authors_a_static_body ... FAILED
+[2m2026-10-27T11:35:53.778602Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw::test_input::plugin` of extension `jackdaw.test_input`
+[2m2026-10-27T11:35:53.779096Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw_physics::PhysicsEditorPlugin` of extension `jackdaw.physics`
+[2m2026-10-27T11:35:53.781956Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw_physics::PhysicsEditorPlugin` of extension `jackdaw.physics`
+test physics_ops::physics_enable_with_entity_param_attaches_components ... FAILED
+[2m2026-10-27T11:35:53.812797Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw::test_input::plugin` of extension `jackdaw.test_input`
+[2m2026-10-27T11:35:53.813311Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw_physics::PhysicsEditorPlugin` of extension `jackdaw.physics`
+[2m2026-10-27T11:35:53.816372Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw_physics::PhysicsEditorPlugin` of extension `jackdaw.physics`
+test physics_ops::a_new_brush_keeps_its_authored_static_body ... FAILED
+[2m2026-10-27T11:35:53.849233Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw::test_input::plugin` of extension `jackdaw.test_input`
+[2m2026-10-27T11:35:53.849733Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw_physics::PhysicsEditorPlugin` of extension `jackdaw.physics`
+[2m2026-10-27T11:35:53.853092Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw_physics::PhysicsEditorPlugin` of extension `jackdaw.physics`
+test toggles::the_collider_overlay_toggle_flips_the_overlay_and_its_menu_row ... FAILED
+[2m2026-10-27T11:35:53.881327Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw::test_input::plugin` of extension `jackdaw.test_input`
+[2m2026-10-27T11:35:53.881824Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw_physics::PhysicsEditorPlugin` of extension `jackdaw.physics`
+[2m2026-10-27T11:35:53.885073Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw_physics::PhysicsEditorPlugin` of extension `jackdaw.physics`
+[2m2026-10-27T11:35:53.886086Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw::test_input::plugin` of extension `jackdaw.test_input`
+[2m2026-10-27T11:35:53.886501Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw_physics::PhysicsEditorPlugin` of extension `jackdaw.physics`
+[2m2026-10-27T11:35:53.889241Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw_physics::PhysicsEditorPlugin` of extension `jackdaw.physics`
+[2m2026-10-27T11:35:53.897869Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw::test_input::plugin` of extension `jackdaw.test_input`
+[2m2026-10-27T11:35:53.899632Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw_physics::PhysicsEditorPlugin` of extension `jackdaw.physics`
+[2m2026-10-27T11:35:53.903039Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw_physics::PhysicsEditorPlugin` of extension `jackdaw.physics`
+test physics_ops::physics_disable_with_entity_param_detaches_components ... FAILED
+test picker::collider_constructor_hierarchy_is_pickable ... FAILED
+[2m2026-10-27T11:35:53.914243Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw::test_input::plugin` of extension `jackdaw.test_input`
+[2m2026-10-27T11:35:53.914831Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw_physics::PhysicsEditorPlugin` of extension `jackdaw.physics`
+[2m2026-10-27T11:35:53.917758Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw_physics::PhysicsEditorPlugin` of extension `jackdaw.physics`
+test picker::rigid_body_is_pickable ... FAILED
+test physics_ops::add_cube_authors_static_physics_by_default ... FAILED
+[2m2026-10-27T11:35:53.943288Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw::test_input::plugin` of extension `jackdaw.test_input`
+[2m2026-10-27T11:35:53.943804Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw_physics::PhysicsEditorPlugin` of extension `jackdaw.physics`
+[2m2026-10-27T11:35:53.947180Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw_physics::PhysicsEditorPlugin` of extension `jackdaw.physics`
+test picker::avian_collider_wrapper_is_pickable ... FAILED
+[2m2026-10-27T11:35:54.063383Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw::test_input::plugin` of extension `jackdaw.test_input`
+[2m2026-10-27T11:35:54.064087Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw_physics::PhysicsEditorPlugin` of extension `jackdaw.physics`
+[2m2026-10-27T11:35:54.067044Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw_physics::PhysicsEditorPlugin` of extension `jackdaw.physics`
+[2m2026-10-27T11:35:54.078433Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw::test_input::plugin` of extension `jackdaw.test_input`
+[2m2026-10-27T11:35:54.078777Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw_physics::PhysicsEditorPlugin` of extension `jackdaw.physics`
+[2m2026-10-27T11:35:54.081635Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw_physics::PhysicsEditorPlugin` of extension `jackdaw.physics`
+test toggles::the_physics_category_toggles_take_the_body_off_and_put_it_back ... FAILED
+[2m2026-10-27T11:35:54.089097Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw::test_input::plugin` of extension `jackdaw.test_input`
+[2m2026-10-27T11:35:54.089657Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw_physics::PhysicsEditorPlugin` of extension `jackdaw.physics`
+[2m2026-10-27T11:35:54.092614Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw_physics::PhysicsEditorPlugin` of extension `jackdaw.physics`
+test toggles::the_toolbar_button_starts_the_physics_tool_and_lights_while_it_runs ... FAILED
+[2m2026-10-27T11:35:54.098353Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw::test_input::plugin` of extension `jackdaw.test_input`
+[2m2026-10-27T11:35:54.098790Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw_physics::PhysicsEditorPlugin` of extension `jackdaw.physics`
+[2m2026-10-27T11:35:54.101682Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw_physics::PhysicsEditorPlugin` of extension `jackdaw.physics`
+test tool::space_keeps_where_a_thrown_body_settled_as_one_undo_step ... FAILED
+test tool::escape_puts_a_thrown_body_back ... FAILED
+
+failures:
+
+---- physics_ops::component_remove_drops_authored_physics_from_the_document stdout ----
+
+thread 'physics_ops::component_remove_drops_authored_physics_from_the_document' (55776) panicked at crates\jackdaw_api_internal\src\lifecycle.rs:504:9:
+Error adding plugin jackdaw_physics::PhysicsEditorPlugin: : plugin was already added in application
+
+---- preview_guard::previewed_physics_cannot_be_disabled_until_the_session_ends stdout ----
+
+thread 'preview_guard::previewed_physics_cannot_be_disabled_until_the_session_ends' (116024) panicked at crates\jackdaw_api_internal\src\lifecycle.rs:504:9:
+Error adding plugin jackdaw_physics::PhysicsEditorPlugin: : plugin was already added in application
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- picker::standalone_collider_constructor_is_hidden stdout ----
+
+thread 'picker::standalone_collider_constructor_is_hidden' (108236) panicked at crates\jackdaw_api_internal\src\lifecycle.rs:504:9:
+Error adding plugin jackdaw_physics::PhysicsEditorPlugin: : plugin was already added in application
+
+---- physics_ops::component_remove_keeps_entity_identity_and_undo_restores_requires stdout ----
+
+thread 'physics_ops::component_remove_keeps_entity_identity_and_undo_restores_requires' (97208) panicked at crates\jackdaw_api_internal\src\lifecycle.rs:504:9:
+Error adding plugin jackdaw_physics::PhysicsEditorPlugin: : plugin was already added in application
+
+---- physics_ops::enabling_physics_is_one_undo_step stdout ----
+
+thread 'physics_ops::enabling_physics_is_one_undo_step' (15296) panicked at crates\jackdaw_api_internal\src\lifecycle.rs:504:9:
+Error adding plugin jackdaw_physics::PhysicsEditorPlugin: : plugin was already added in application
+
+---- round_trip::physics_components_resolve_and_survive_an_open_and_resave stdout ----
+
+thread 'round_trip::physics_components_resolve_and_survive_an_open_and_resave' (71324) panicked at crates\jackdaw_api_internal\src\lifecycle.rs:504:9:
+Error adding plugin jackdaw_physics::PhysicsEditorPlugin: : plugin was already added in application
+
+---- physics_ops::a_collider_added_alone_stands_as_a_static_body_that_is_not_saved stdout ----
+
+thread 'physics_ops::a_collider_added_alone_stands_as_a_static_body_that_is_not_saved' (92968) panicked at crates\jackdaw_api_internal\src\lifecycle.rs:504:9:
+Error adding plugin jackdaw_physics::PhysicsEditorPlugin: : plugin was already added in application
+
+---- physics_ops::enabling_physics_on_a_placed_model_authors_a_static_body stdout ----
+
+thread 'physics_ops::enabling_physics_on_a_placed_model_authors_a_static_body' (44388) panicked at crates\jackdaw_api_internal\src\lifecycle.rs:504:9:
+Error adding plugin jackdaw_physics::PhysicsEditorPlugin: : plugin was already added in application
+
+---- physics_ops::physics_enable_with_entity_param_attaches_components stdout ----
+
+thread 'physics_ops::physics_enable_with_entity_param_attaches_components' (99964) panicked at crates\jackdaw_api_internal\src\lifecycle.rs:504:9:
+Error adding plugin jackdaw_physics::PhysicsEditorPlugin: : plugin was already added in application
+
+---- physics_ops::a_new_brush_keeps_its_authored_static_body stdout ----
+
+thread 'physics_ops::a_new_brush_keeps_its_authored_static_body' (19804) panicked at crates\jackdaw_api_internal\src\lifecycle.rs:504:9:
+Error adding plugin jackdaw_physics::PhysicsEditorPlugin: : plugin was already added in application
+
+---- toggles::the_collider_overlay_toggle_flips_the_overlay_and_its_menu_row stdout ----
+
+thread 'toggles::the_collider_overlay_toggle_flips_the_overlay_and_its_menu_row' (30900) panicked at crates\jackdaw_api_internal\src\lifecycle.rs:504:9:
+Error adding plugin jackdaw_physics::PhysicsEditorPlugin: : plugin was already added in application
+
+---- physics_ops::physics_disable_with_entity_param_detaches_components stdout ----
+
+thread 'physics_ops::physics_disable_with_entity_param_detaches_components' (32548) panicked at crates\jackdaw_api_internal\src\lifecycle.rs:504:9:
+Error adding plugin jackdaw_physics::PhysicsEditorPlugin: : plugin was already added in application
+
+---- picker::collider_constructor_hierarchy_is_pickable stdout ----
+
+thread 'picker::collider_constructor_hierarchy_is_pickable' (57916) panicked at crates\jackdaw_api_internal\src\lifecycle.rs:504:9:
+Error adding plugin jackdaw_physics::PhysicsEditorPlugin: : plugin was already added in application
+
+---- picker::rigid_body_is_pickable stdout ----
+
+thread 'picker::rigid_body_is_pickable' (36444) panicked at crates\jackdaw_api_internal\src\lifecycle.rs:504:9:
+Error adding plugin jackdaw_physics::PhysicsEditorPlugin: : plugin was already added in application
+
+---- physics_ops::add_cube_authors_static_physics_by_default stdout ----
+
+thread 'physics_ops::add_cube_authors_static_physics_by_default' (70464) panicked at crates\jackdaw_api_internal\src\lifecycle.rs:504:9:
+Error adding plugin jackdaw_physics::PhysicsEditorPlugin: : plugin was already added in application
+
+---- picker::avian_collider_wrapper_is_pickable stdout ----
+
+thread 'picker::avian_collider_wrapper_is_pickable' (100884) panicked at crates\jackdaw_api_internal\src\lifecycle.rs:504:9:
+Error adding plugin jackdaw_physics::PhysicsEditorPlugin: : plugin was already added in application
+
+---- toggles::the_physics_category_toggles_take_the_body_off_and_put_it_back stdout ----
+
+thread 'toggles::the_physics_category_toggles_take_the_body_off_and_put_it_back' (131188) panicked at crates\jackdaw_api_internal\src\lifecycle.rs:504:9:
+Error adding plugin jackdaw_physics::PhysicsEditorPlugin: : plugin was already added in application
+
+---- toggles::the_toolbar_button_starts_the_physics_tool_and_lights_while_it_runs stdout ----
+
+thread 'toggles::the_toolbar_button_starts_the_physics_tool_and_lights_while_it_runs' (75832) panicked at crates\jackdaw_api_internal\src\lifecycle.rs:504:9:
+Error adding plugin jackdaw_physics::PhysicsEditorPlugin: : plugin was already added in application
+
+---- tool::space_keeps_where_a_thrown_body_settled_as_one_undo_step stdout ----
+
+thread 'tool::space_keeps_where_a_thrown_body_settled_as_one_undo_step' (131288) panicked at crates\jackdaw_api_internal\src\lifecycle.rs:504:9:
+Error adding plugin jackdaw_physics::PhysicsEditorPlugin: : plugin was already added in application
+
+---- tool::escape_puts_a_thrown_body_back stdout ----
+
+thread 'tool::escape_puts_a_thrown_body_back' (101960) panicked at crates\jackdaw_api_internal\src\lifecycle.rs:504:9:
+Error adding plugin jackdaw_physics::PhysicsEditorPlugin: : plugin was already added in application
+
+
+failures:
+    physics_ops::a_collider_added_alone_stands_as_a_static_body_that_is_not_saved
+    physics_ops::a_new_brush_keeps_its_authored_static_body
+    physics_ops::add_cube_authors_static_physics_by_default
+    physics_ops::component_remove_drops_authored_physics_from_the_document
+    physics_ops::component_remove_keeps_entity_identity_and_undo_restores_requires
+    physics_ops::enabling_physics_is_one_undo_step
+    physics_ops::enabling_physics_on_a_placed_model_authors_a_static_body
+    physics_ops::physics_disable_with_entity_param_detaches_components
+    physics_ops::physics_enable_with_entity_param_attaches_components
+    picker::avian_collider_wrapper_is_pickable
+    picker::collider_constructor_hierarchy_is_pickable
+    picker::rigid_body_is_pickable
+    picker::standalone_collider_constructor_is_hidden
+    preview_guard::previewed_physics_cannot_be_disabled_until_the_session_ends
+    round_trip::physics_components_resolve_and_survive_an_open_and_resave
+    toggles::the_collider_overlay_toggle_flips_the_overlay_and_its_menu_row
+    toggles::the_physics_category_toggles_take_the_body_off_and_put_it_back
+    toggles::the_toolbar_button_starts_the_physics_tool_and_lights_while_it_runs
+    tool::escape_puts_a_thrown_body_back
+    tool::space_keeps_where_a_thrown_body_settled_as_one_undo_step
+
+test result: FAILED. 0 passed; 20 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.11s
+
+error: test failed, to rerun pass `-p jackdaw_physics --test editor`

@@ -1,0 +1,16 @@
+C0_PREP PlayerVelocity injected into document: True (backtick contamination: False)
+C1_BASE: placedPlayer y=0.860 tplPlayer=True placedRig materialized=True active=True tplRig materialized=True (template rig may win a startup race into lone-rig activation before the scene's entities spawn -- recorded, not asserted)
+C1_BASE_PASS
+C2_WALK z: 1.672 1.313 0.951 0.601 0.230 -0.132 -0.474 -0.869 -1.206 -1.615 -2.008 -2.373 -2.440 -2.440 -> end -2.440
+C2_WALK_PASS
+C5_FOLLOW local off=(0.00,3.15,4.61) |.|=5.578 -> (4.61,3.15,0.01) |.|=5.578 lenDrift=0.000 (initial pose matches distance-5 expectation (0,3.15,4.61), |.|~5.578)
+C5_FOLLOW_PASS
+C3_JUMP y: 1.498 1.777 1.945 2.007 1.962 1.808 1.514 1.151 0.860 0.860 0.860 0.860 0.860 0.860 0.860 0.860 0.860 0.860 0.860 0.860 0.860 0.860 0.860 0.860 0.860 0.860 0.860 0.860 0.860 0.860 apex=2.007 expected~1.892
+C3_JUMP_PASS
+C4_SLIDE x 2.31 -> 4.51 (travel 2.20 m), zEnd=-2.440 (wall face -2.8 + capsule -> ~-2.44 clamp)
+C4_SLIDE_PASS
+C6_SPEED placed=1.62 m/s (authored 2.0) template=3.25 m/s (4.0) over 1.82s
+C6_HALFSPEED_PASS
+C7_PREP stripped ActiveCameraRig: changed=True
+另一个程序正在使用此文件，进程无法访问。
+GAME_BOOT_FAIL

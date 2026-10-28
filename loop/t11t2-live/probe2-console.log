@@ -1,0 +1,1875 @@
+windowed toggle: {"jsonrpc":"2.0","id":447384926,"result":{"entities":[],"id":"pie.window_mode_toggle","result":"finished","warnings":[]}}
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+使用“1”个参数调用“ReadAllText”时发生异常:“文件“E:\Project\rust\jackdaw\loop\t11t2-live\probe2-editor.log”正由另
+一进程使用，因此该进程无法访问此文件。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-probe2.ps1:62 字符: 33
++ ...  (Test-Path $editorLog) { $txt = [IO.File]::ReadAllText($editorLog) }
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : IOException
+ 
+PROBE2 windowed PIE connected: False
+PROBE2_DONE

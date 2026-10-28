@@ -1,0 +1,10 @@
+    Updating git repository `https://github.com/bevyengine/bevy`
+    Updating crates.io index
+     Locking 0 packages to highest Rust 1.97.1 compatible versions
+    Removing bevy_macro_utils v0.20.0
+    Removing bevy_platform v0.20.0
+    Removing bevy_ptr v0.20.0
+    Removing bevy_reflect v0.20.0
+    Removing bevy_reflect_derive v0.20.0
+    Removing bevy_utils v0.20.0
+note: pass `--verbose` to see 23 unchanged dependencies behind latest

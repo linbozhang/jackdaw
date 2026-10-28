@@ -1,0 +1,22 @@
+text=Zone filter nodes: 4
+  hit e=4294963628 kind=text text=Jackdaw v0.21.0-dev | C:\Users\linbo.zhang\AppData\Local\Temp\t03t2-diag-1246545059\assets\zone.bsn rect=[379.0,1062.0,523.0,14.0] children=0
+  hit e=4294963570 kind=node text= rect=[8.0,127.0,278.0,905.0] children=1
+  hit e=4294962974 kind=node text= rect=[293.0,851.0,0.0,0.0] children=2
+  hit e=12884897425 kind=node text= rect=[436.0,6.0,87.0,22.0] children=5
+right-half text_inputs: 3
+  field e=4294963162 rect=[1673.0,35.0,0.0,0.0]
+  field e=4294963153 rect=[1716.0,122.0,187.0,18.0]
+  field e=4294963150 rect=[1673.0,35.0,0.0,0.0]
+Hierarchy-filter nodes: 0
+full walk nodes: 680
+rows with direct Zone child: 2
+  row e=12884897440 kind=node rect=[464.0,9.0,28.0,16.0]
+  row e=12884896870 kind=node rect=[8.0,127.0,278.0,28.0]
+nodes without children field: 0
+nodes with text Zone: 2
+  label e=12884897240 kind=text rect=[464.0,9.0,28.0,16.0]
+  label e=12884896874 kind=text rect=[49.0,133.0,192.0,16.0]
+QA Row-Of matches: 1
+  qa row e=12884896870 rect=[8.0,127.0,278.0,28.0]
+[history] HTTP 200 body: {"jsonrpc":"2.0","id":1,"result":{"dirty":false,"has_save_baseline":true,"redo":[],"redo_len":0,"saved_len":0,"top":null,"undo":[],"undo_len":0}}
+[status] HTTP 200 len 338

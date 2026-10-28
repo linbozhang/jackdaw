@@ -1,0 +1,18 @@
+[
+    "bevy_ecs::observer::distributed_storage::ObservedBy",
+    "bevy_extract::sync_world::SubEntity\u003cbevy_render::RenderApp\u003e",
+    "bevy_extract::sync_world::SyncToSubWorld\u003cbevy_render::RenderApp\u003e",
+    "bevy_picking::hover::PickingInteraction",
+    "bevy_window::cursor::CursorIcon",
+    "bevy_window::display_target::DisplayTarget",
+    "bevy_window::raw_handle::RawHandleWrapper",
+    "bevy_window::raw_handle::RawHandleWrapperHolder",
+    "bevy_window::window::CursorOptions",
+    "bevy_window::window::OnMonitor",
+    "bevy_window::window::PrimaryWindow",
+    "bevy_window::window::Window",
+    "bevy_winit::cursor::PendingCursor",
+    "bevy_winit::system::CachedCursorOptions",
+    "bevy_winit::system::CachedWindow",
+    "bevy_winit::system::WinitWindowPressedKeys"
+]

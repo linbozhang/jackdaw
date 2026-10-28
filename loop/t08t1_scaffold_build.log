@@ -1,0 +1,7 @@
+   Compiling hworkspace-ait08t1-projmy-game v0.1.0 (E:\Project\rust\jackdaw\hworkspace-ait08t1-projmy-game)
+warning: linker stderr: rust-lld: ignoring unknown argument '-fuse-ld=lld'
+  |
+  = note: `#[warn(linker_messages)]` on by default
+
+warning: `hworkspace-ait08t1-projmy-game` (bin "hworkspace-ait08t1-projmy-game") generated 1 warning
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 19.71s

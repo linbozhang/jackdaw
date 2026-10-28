@@ -1,0 +1,32 @@
+warning: linker stderr: rust-lld: ignoring unknown argument '-fuse-ld=lld'
+  |
+  = note: `#[warn(linker_messages)]` on by default
+
+warning: `jackdaw_env` (build script) generated 1 warning
+warning: `jackdaw_api_macros` (lib) generated 1 warning (1 duplicate)
+warning: `jackdaw_project_build` (build script) generated 1 warning (1 duplicate)
+warning: `jackdaw_package` (build script) generated 1 warning (1 duplicate)
+   Compiling jackdaw v0.21.0-dev (E:\Project\rust\jackdaw)
+   Compiling test_fixture_extension v0.0.0 (E:\Project\rust\jackdaw\tests\fixtures\test_fixture_extension)
+warning: `test_fixture_extension` (lib) generated 1 warning (1 duplicate)
+warning: `jackdaw` (bin "jackdaw-rustc-wrapper") generated 1 warning (1 duplicate)
+warning: `jackdaw` (test "mcp_smoke") generated 1 warning (1 duplicate)
+warning: `jackdaw` (bin "jackdaw") generated 1 warning (1 duplicate)
+    Finished `test` profile [optimized + debuginfo] target(s) in 39.34s
+     Running tests\mcp_smoke.rs (target\debug\deps\mcp_smoke-809ce829d8382105.exe)
+
+running 1 test
+
+thread 'jd_mcp_initializes_and_reaches_a_running_editor' (39164) panicked at tests\mcp_smoke.rs:146:9:
+the mcp smoke test was required but there is no DISPLAY or WAYLAND_DISPLAY
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test jd_mcp_initializes_and_reaches_a_running_editor ... FAILED
+
+failures:
+
+failures:
+    jd_mcp_initializes_and_reaches_a_running_editor
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `-p jackdaw --test mcp_smoke`
