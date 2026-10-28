@@ -107,8 +107,13 @@ fn emit_bevy_source(workspace: Option<&Path>) {
     let rev = workspace.and_then(|ws| {
         let lockfile = ws.join("Cargo.lock");
         println!("cargo:rerun-if-changed={}", lockfile.display());
+        // The manifest names the fork directory `fork_pinned_rev` patches
+        // to; without this watch a moved or repointed fork leaves
+        // `JACKDAW_BEVY_FORK` baked at its old path until a clean build.
+        let manifest = ws.join("Cargo.toml");
+        println!("cargo:rerun-if-changed={}", manifest.display());
         locked_bevy_rev(&fs::read_to_string(lockfile).ok()?)
-            .or_else(|| fork_pinned_rev(&fs::read_to_string(ws.join("Cargo.toml")).ok()?))
+            .or_else(|| fork_pinned_rev(&fs::read_to_string(manifest).ok()?))
     });
     let line = match &rev {
         Some(rev) => {

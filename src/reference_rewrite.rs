@@ -531,7 +531,7 @@ pub(crate) fn follow_a_move(world: &mut World, old: &Path, new: &Path, what: &st
 /// Answers the indices of the tabs that were retargeted, so the caller can
 /// recompute their clean baselines once the index has moved on.
 fn retarget_tabs(world: &mut World, old: &Path, new: &Path, moves: &[ReferenceMove]) -> Vec<usize> {
-    let old_canonical = dunce::canonicalize(old).unwrap_or_else(|_| old.to_path_buf());
+    let old_canonical = canonical_of_moved(old);
     let new_canonical = dunce::canonicalize(new).unwrap_or_else(|_| new.to_path_buf());
     let active = world.resource::<crate::scenes::Scenes>().active;
     let holding: Vec<usize> = {
@@ -555,7 +555,7 @@ fn retarget_tabs(world: &mut World, old: &Path, new: &Path, moves: &[ReferenceMo
                 .path
                 .clone()
                 .unwrap_or_else(|| new_canonical.clone());
-            let held = dunce::canonicalize(&held).unwrap_or(held);
+            let held = canonical_of_moved(&held);
             match held.strip_prefix(&old_canonical) {
                 Ok(tail) if !tail.as_os_str().is_empty() => new_canonical.join(tail),
                 _ => new_canonical.clone(),
@@ -677,9 +677,38 @@ fn recompute_clean_baselines(world: &mut World, holding: &[usize]) {
 /// Whether a tab's file is `moved` itself or sits under it.
 fn stands_on(tab: &crate::scenes::SceneTab, moved: &Path) -> bool {
     tab.path.as_ref().is_some_and(|path| {
-        let held = dunce::canonicalize(path).unwrap_or_else(|_| path.clone());
+        let held = canonical_of_moved(path);
         held == moved || folder_tail(&held.to_slash_lossy(), &moved.to_slash_lossy()).is_some()
     })
+}
+
+/// The canonical spelling of a path whose file may have just been moved
+/// away: plain `canonicalize` fails then (it needs the file to exist), and
+/// its raw-spelling fallback compares unequal to the canonical form a tab
+/// holds — on macOS the temp dirs differ by a symlink (`/var` reads as
+/// `/private/var`), so a rename's retarget would silently miss every tab.
+/// Canonicalize the deepest ancestor that still exists and rejoin the tail,
+/// which spells both sides the same way.
+fn canonical_of_moved(path: &Path) -> PathBuf {
+    if let Ok(canonical) = dunce::canonicalize(path) {
+        return canonical;
+    }
+    let mut tail = Vec::new();
+    let mut head = path;
+    while let Some(parent) = head.parent() {
+        if let Ok(canonical) = dunce::canonicalize(parent) {
+            let mut joined = canonical;
+            for part in tail.iter().rev() {
+                joined.push(part);
+            }
+            return joined;
+        }
+        if let Some(name) = head.file_name() {
+            tail.push(name.to_os_string());
+        }
+        head = parent;
+    }
+    path.to_path_buf()
 }
 
 /// Move the index entries under `old` onto the same files at `new`, keeping

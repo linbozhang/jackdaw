@@ -318,6 +318,16 @@ pub fn indexed_path(world: &World, path: &Path) -> Option<PathBuf> {
     if let Ok(relative) = path.strip_prefix(&assets) {
         return Some(relative.to_path_buf());
     }
+    // A canonicalized spelling of a project file (`/private/var/...` where
+    // the project root says `/var/...` on macOS) names the same file; strip
+    // it against the canonical assets dir before declaring it foreign, or
+    // the load-time audit warning never fires on such a machine.
+    if let (Ok(canonical_assets), Ok(canonical_path)) =
+        (dunce::canonicalize(&assets), dunce::canonicalize(path))
+        && let Ok(relative) = canonical_path.strip_prefix(&canonical_assets)
+    {
+        return Some(relative.to_path_buf());
+    }
     let stays_under = !path.has_root()
         && !path
             .components()

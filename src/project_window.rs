@@ -619,8 +619,12 @@ fn spawn_folder_row(
         ))
         .id();
 
-    commands.entity(content).observe(highlight_on_hover);
-    commands.entity(content).observe(unhighlight_on_out);
+    // Guarded: a panel rebuild in the same frame can despawn the tree this
+    // row lands in before the queue flushes, and the raw `observe` command
+    // would then error on a dead entity (the race `attach_or_despawn`
+    // guards for the tiles).
+    jackdaw_feathers::utils::observe_if_alive(commands, content, highlight_on_hover);
+    jackdaw_feathers::utils::observe_if_alive(commands, content, unhighlight_on_out);
 
     let disclosure = commands
         .spawn_scene(bsn! { @FeathersDisclosureToggle })
@@ -672,7 +676,9 @@ fn spawn_folder_row(
     }
 
     let folder = path.to_path_buf();
-    commands.entity(content).observe(
+    jackdaw_feathers::utils::observe_if_alive(
+        commands,
+        content,
         move |click: On<PointerClick>,
               mut commands: Commands,
               windows: Query<&Window>,
@@ -1325,14 +1331,16 @@ fn rename_field(path: &Path) -> impl Bundle {
 
 /// Click, double click, right click and drag, for one tile.
 fn attach_tile_behaviour(commands: &mut Commands, tile: Entity, entry: &DirEntry) {
-    commands
-        .entity(tile)
-        .observe(highlight_on_hover)
-        .observe(unhighlight_on_out);
+    // Guarded the way the tile's attach is: a same-frame panel rebuild can
+    // despawn the grid (and its tiles) before this queue flushes.
+    jackdaw_feathers::utils::observe_if_alive(commands, tile, highlight_on_hover);
+    jackdaw_feathers::utils::observe_if_alive(commands, tile, unhighlight_on_out);
 
     let path = entry.path.clone();
     let is_directory = entry.is_directory;
-    commands.entity(tile).observe(
+    jackdaw_feathers::utils::observe_if_alive(
+        commands,
+        tile,
         move |click: On<PointerClick>,
               mut state: ResMut<ProjectWindowState>,
               mut commands: Commands,
@@ -1361,7 +1369,9 @@ fn attach_tile_behaviour(commands: &mut Commands, tile: Entity, entry: &DirEntry
 
     let path = entry.path.clone();
     let is_directory = entry.is_directory;
-    commands.entity(tile).observe(
+    jackdaw_feathers::utils::observe_if_alive(
+        commands,
+        tile,
         move |click: On<PointerClick>,
               mut commands: Commands,
               windows: Query<&Window>,
@@ -1386,12 +1396,16 @@ fn attach_tile_behaviour(commands: &mut Commands, tile: Entity, entry: &DirEntry
         .is_some_and(TextureInfo::is_plain_2d)
     {
         let path = entry.path.clone();
-        commands.entity(tile).observe(
+        jackdaw_feathers::utils::observe_if_alive(
+            commands,
+            tile,
             move |_: On<PointerDragStart>, mut drag: ResMut<ActiveAssetDrag>| {
                 drag.image = Some(path.clone());
             },
         );
-        commands.entity(tile).observe(
+        jackdaw_feathers::utils::observe_if_alive(
+            commands,
+            tile,
             |_: On<PointerDragEnd>, mut drag: ResMut<ActiveAssetDrag>| {
                 drag.image = None;
             },
@@ -1400,12 +1414,16 @@ fn attach_tile_behaviour(commands: &mut Commands, tile: Entity, entry: &DirEntry
     }
     if entry.is_prefab() || jackdaw_bsn::is_document_path(&entry.path) {
         let path = entry.path.clone();
-        commands.entity(tile).observe(
+        jackdaw_feathers::utils::observe_if_alive(
+            commands,
+            tile,
             move |_: On<PointerDragStart>, mut drag: ResMut<ActiveAssetDrag>| {
                 drag.path = Some(path.clone());
             },
         );
-        commands.entity(tile).observe(
+        jackdaw_feathers::utils::observe_if_alive(
+            commands,
+            tile,
             |_: On<PointerDragEnd>, mut drag: ResMut<ActiveAssetDrag>| {
                 drag.path = None;
             },

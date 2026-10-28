@@ -1175,7 +1175,37 @@ fn author(
         .is_some()
     {
         let cache = world.resource::<crate::prefab::PrefabAstCache>();
-        let get_prefab = |p: &Path| cache.get(p);
+        // The live document spells `IsA` sources absolutely, and legacy
+        // scenes carry sources naming another machine's files (the load
+        // warns about them as strays). Such a source can never be in this
+        // project's cache, and probing for it walks the filesystem once per
+        // emission — on macOS `/home` is an autofs trigger, so one stale
+        // `/home/...` reference costs tens of milliseconds per emit, per
+        // journal write. Refuse those before the cache canonicalizes them;
+        // a miss is what the lookup would have paid for anyway.
+        //
+        // A source the project owns may be spelled either way — the raw
+        // project root (`/var/...`) or its canonical form (`/private/var/...`
+        // on macOS; the cache keys are canonical) — so both spellings count
+        // as inside.
+        let project = world
+            .get_resource::<crate::project::ProjectRoot>()
+            .map(|root| root.root.clone());
+        let canonical_project = project
+            .as_deref()
+            .and_then(|root| dunce::canonicalize(root).ok());
+        let get_prefab = |p: &Path| {
+            if let Some(root) = &project
+                && p.is_absolute()
+                && !p.starts_with(root)
+                && !canonical_project
+                    .as_ref()
+                    .is_some_and(|canonical| p.starts_with(canonical))
+            {
+                return None;
+            }
+            cache.get(p)
+        };
         crate::prefab::resolver_bsn::sparsify_inherited_descendants(&mut ast, &get_prefab);
     }
 

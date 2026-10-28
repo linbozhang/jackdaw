@@ -98,6 +98,27 @@ pub fn set_marker_if_alive<B: Bundle + Default>(
     }
 }
 
+/// Attach an entity observer at `Commands` flush time, skipping an entity
+/// that has gone away.
+///
+/// The raw `commands.entity(entity).observe(...)` queues a command that
+/// errors (`Entity despawned: ... is invalid`) when a panel or inspector
+/// rebuild despawns the widget between the queue and the flush — the same
+/// race [`attach_or_despawn`] guards for `add_child`. A hover highlight on
+/// a row that no longer exists has nothing to highlight; dropping the
+/// observer with the entity is the honest outcome.
+pub fn observe_if_alive<M>(
+    commands: &mut Commands,
+    entity: Entity,
+    observer: impl bevy::ecs::observer::IntoEntityObserver<M>,
+) {
+    commands.queue(move |world: &mut World| {
+        if let Ok(mut ec) = world.get_entity_mut(entity) {
+            ec.observe(observer);
+        }
+    });
+}
+
 pub fn is_descendant_of(entity: Entity, ancestor: Entity, parents: &Query<&ChildOf>) -> bool {
     let mut current = entity;
     for _ in 0..50 {
