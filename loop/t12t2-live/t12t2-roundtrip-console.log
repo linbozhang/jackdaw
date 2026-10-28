@@ -1,0 +1,6 @@
+hud.bsn sha256 before: 1007b0d3fddc43db28fad2e15d2d91388c94bfcda6799170724cd1929fd8baaf
+EDITOR_READY
+hud document confirmed open
+hud.bsn sha256 after:  1007b0d3fddc43db28fad2e15d2d91388c94bfcda6799170724cd1929fd8baaf
+VERDICT_ROUNDTRIP: PASS (zero diff)
+T12T2_ROUNDTRIP_DONE

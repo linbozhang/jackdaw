@@ -1,0 +1,192 @@
+// jackdaw 0.21.0-dev | bevy main
+#HudRoot
+jackdaw_scene_types::UiSceneRoot
+t12t1_game::HudRoot
+bevy_ui::ui_node::Node {
+    width: bevy_ui::geometry::Val::Percent(100.0),
+    height: bevy_ui::geometry::Val::Percent(100.0),
+    align_items: bevy_ui::ui_node::AlignItems::Start,
+}
+bevy_ecs::hierarchy::Children [
+    #Hud
+    bevy_camera::visibility::Visibility::Hidden
+    bevy_ui::ui_node::Node {
+        flex_direction: bevy_ui::ui_node::FlexDirection::Row,
+        align_items: bevy_ui::ui_node::AlignItems::Center,
+        column_gap: bevy_ui::geometry::Val::Px(12.0),
+        padding: bevy_ui::geometry::UiRect {
+            left: bevy_ui::geometry::Val::Px(12.0),
+            right: bevy_ui::geometry::Val::Px(12.0),
+            top: bevy_ui::geometry::Val::Px(12.0),
+            bottom: bevy_ui::geometry::Val::Px(12.0),
+        },
+    }
+    jackdaw_bind::types::Bindings([jackdaw_bind::types::Binding::Visible { read: jackdaw_bind::types::BindPath { raw: "Res(t12t1_game::GameState).menu" }, via: core::option::Option::Some("not") }])
+    bevy_ecs::hierarchy::Children [
+        #HealthBar
+        bevy_ui::ui_node::Node {
+            width: bevy_ui::geometry::Val::Px(180.0),
+            height: bevy_ui::geometry::Val::Px(10.0),
+        }
+        jackdaw_widgets_runtime::Progress {
+            value: 1.0,
+        }
+        bevy_feathers::theme::ThemeBackgroundColor(bevy_feathers::theme::ThemeToken("feathers.slider.bg"))
+        jackdaw_bind::types::Bindings([jackdaw_bind::types::Binding::Field { read: [jackdaw_bind::types::BindPath { raw: "t12t1_game::PlayerHealth.current" }, jackdaw_bind::types::BindPath { raw: "t12t1_game::PlayerHealth.max" }], via: core::option::Option::Some("ratio"), write: jackdaw_bind::types::BindPath { raw: "jackdaw_widgets_runtime::Progress.value" }, as_percent: false }])
+        bevy_ecs::hierarchy::Children [
+            #HealthFill
+            bevy_ui::ui_node::Node {
+                height: bevy_ui::geometry::Val::Percent(100.0),
+            }
+            jackdaw_widgets_runtime::ProgressFill
+            bevy_feathers::theme::ThemeBackgroundColor(bevy_feathers::theme::ThemeToken("feathers.slider.bar"))
+        ]
+        --
+        #HealthText
+        bevy_ui::widget::text::Text("100 / 100")
+        bevy_feathers::theme::ThemedText
+        jackdaw_bind::types::Bindings([jackdaw_bind::types::Binding::Text { format: "{} / {}", args: [jackdaw_bind::types::BindPath { raw: "t12t1_game::PlayerHealth.current" }, jackdaw_bind::types::BindPath { raw: "t12t1_game::PlayerHealth.max" }] }])
+        --
+        #PickupsText
+        bevy_ui::widget::text::Text("Pickups: 0")
+        bevy_feathers::theme::ThemedText
+        jackdaw_bind::types::Bindings([jackdaw_bind::types::Binding::Text { format: "Pickups: {}", args: [jackdaw_bind::types::BindPath { raw: "t12t1_game::PickupCount.0" }] }])
+    ]
+    --
+    #StartScreen
+    bevy_ui::ui_node::Node {
+        position_type: bevy_ui::ui_node::PositionType::Absolute,
+        left: bevy_ui::geometry::Val::Px(0.0),
+        right: bevy_ui::geometry::Val::Px(0.0),
+        top: bevy_ui::geometry::Val::Px(0.0),
+        bottom: bevy_ui::geometry::Val::Px(0.0),
+        width: bevy_ui::geometry::Val::Percent(100.0),
+        height: bevy_ui::geometry::Val::Percent(100.0),
+        flex_direction: bevy_ui::ui_node::FlexDirection::Column,
+        align_items: bevy_ui::ui_node::AlignItems::Center,
+        justify_content: bevy_ui::ui_node::JustifyContent::Center,
+        row_gap: bevy_ui::geometry::Val::Px(16.0),
+    }
+    bevy_feathers::theme::ThemeBackgroundColor(bevy_feathers::theme::ThemeToken("feathers.pane.body.bg"))
+    jackdaw_bind::types::Bindings([jackdaw_bind::types::Binding::Visible { read: jackdaw_bind::types::BindPath { raw: "Res(t12t1_game::GameState).menu" }, via: core::option::Option::None }])
+    bevy_ecs::hierarchy::Children [
+        #StartTitle
+        bevy_ui::widget::text::Text("T12t1 Game")
+        bevy_feathers::theme::ThemedText
+        --
+        #StartButton
+        bevy_ui::ui_node::Node {
+            min_width: bevy_ui::geometry::Val::Px(96.0),
+            min_height: bevy_ui::geometry::Val::Px(32.0),
+            justify_content: bevy_ui::ui_node::JustifyContent::Center,
+            align_items: bevy_ui::ui_node::AlignItems::Center,
+            padding: bevy_ui::geometry::UiRect {
+                left: bevy_ui::geometry::Val::Px(12.0),
+                right: bevy_ui::geometry::Val::Px(12.0),
+                top: bevy_ui::geometry::Val::Px(6.0),
+                bottom: bevy_ui::geometry::Val::Px(6.0),
+            },
+        }
+        bevy_ui_widgets::button::Button
+        bevy_feathers::theme::ThemeBackgroundColor(bevy_feathers::theme::ThemeToken("feathers.button.bg"))
+        bevy_feathers::theme::InheritableThemeTextColor(bevy_feathers::theme::ThemeToken("feathers.button.txt"))
+        jackdaw_bind::types::Bindings([jackdaw_bind::types::Binding::Action { event: "t12t1_game::ScreenPressed", fields: [], literals: [["button", "start"]] }])
+        bevy_ecs::hierarchy::Children [
+            #StartCaption
+            bevy_ui::widget::text::Text("Start")
+            bevy_feathers::theme::ThemedText
+        ]
+    ]
+    --
+    #PauseScreen
+    bevy_camera::visibility::Visibility::Hidden
+    bevy_ui::ui_node::Node {
+        position_type: bevy_ui::ui_node::PositionType::Absolute,
+        left: bevy_ui::geometry::Val::Px(0.0),
+        right: bevy_ui::geometry::Val::Px(0.0),
+        top: bevy_ui::geometry::Val::Px(0.0),
+        bottom: bevy_ui::geometry::Val::Px(0.0),
+        width: bevy_ui::geometry::Val::Percent(100.0),
+        height: bevy_ui::geometry::Val::Percent(100.0),
+        flex_direction: bevy_ui::ui_node::FlexDirection::Column,
+        align_items: bevy_ui::ui_node::AlignItems::Center,
+        justify_content: bevy_ui::ui_node::JustifyContent::Center,
+        row_gap: bevy_ui::geometry::Val::Px(16.0),
+    }
+    bevy_ui::ui_node::BackgroundColor(bevy_color::Color::Srgba(bevy_color::srgba::Srgba { red: 0.0, green: 0.0, blue: 0.0, alpha: 0.6 }))
+    jackdaw_bind::types::Bindings([jackdaw_bind::types::Binding::Visible { read: jackdaw_bind::types::BindPath { raw: "Res(t12t1_game::GameState).paused" }, via: core::option::Option::None }])
+    bevy_ecs::hierarchy::Children [
+        #PauseTitle
+        bevy_ui::widget::text::Text("Paused")
+        bevy_feathers::theme::ThemedText
+        --
+        #ResumeButton
+        bevy_ui::ui_node::Node {
+            min_width: bevy_ui::geometry::Val::Px(96.0),
+            min_height: bevy_ui::geometry::Val::Px(32.0),
+            justify_content: bevy_ui::ui_node::JustifyContent::Center,
+            align_items: bevy_ui::ui_node::AlignItems::Center,
+            padding: bevy_ui::geometry::UiRect {
+                left: bevy_ui::geometry::Val::Px(12.0),
+                right: bevy_ui::geometry::Val::Px(12.0),
+                top: bevy_ui::geometry::Val::Px(6.0),
+                bottom: bevy_ui::geometry::Val::Px(6.0),
+            },
+        }
+        bevy_ui_widgets::button::Button
+        bevy_feathers::theme::ThemeBackgroundColor(bevy_feathers::theme::ThemeToken("feathers.button.bg"))
+        bevy_feathers::theme::InheritableThemeTextColor(bevy_feathers::theme::ThemeToken("feathers.button.txt"))
+        jackdaw_bind::types::Bindings([jackdaw_bind::types::Binding::Action { event: "t12t1_game::ScreenPressed", fields: [], literals: [["button", "resume"]] }])
+        bevy_ecs::hierarchy::Children [
+            #ResumeCaption
+            bevy_ui::widget::text::Text("Resume")
+            bevy_feathers::theme::ThemedText
+        ]
+    ]
+    --
+    #GameOverScreen
+    bevy_camera::visibility::Visibility::Hidden
+    bevy_ui::ui_node::Node {
+        position_type: bevy_ui::ui_node::PositionType::Absolute,
+        left: bevy_ui::geometry::Val::Px(0.0),
+        right: bevy_ui::geometry::Val::Px(0.0),
+        top: bevy_ui::geometry::Val::Px(0.0),
+        bottom: bevy_ui::geometry::Val::Px(0.0),
+        width: bevy_ui::geometry::Val::Percent(100.0),
+        height: bevy_ui::geometry::Val::Percent(100.0),
+        flex_direction: bevy_ui::ui_node::FlexDirection::Column,
+        align_items: bevy_ui::ui_node::AlignItems::Center,
+        justify_content: bevy_ui::ui_node::JustifyContent::Center,
+        row_gap: bevy_ui::geometry::Val::Px(16.0),
+    }
+    bevy_ui::ui_node::BackgroundColor(bevy_color::Color::Srgba(bevy_color::srgba::Srgba { red: 0.0, green: 0.0, blue: 0.0, alpha: 0.92 }))
+    jackdaw_bind::types::Bindings([jackdaw_bind::types::Binding::Visible { read: jackdaw_bind::types::BindPath { raw: "Res(t12t1_game::GameState).game_over" }, via: core::option::Option::None }])
+    bevy_ecs::hierarchy::Children [
+        #GameOverTitle
+        bevy_ui::widget::text::Text("Game Over")
+        bevy_feathers::theme::ThemedText
+        --
+        #RestartButton
+        bevy_ui::ui_node::Node {
+            min_width: bevy_ui::geometry::Val::Px(96.0),
+            min_height: bevy_ui::geometry::Val::Px(32.0),
+            justify_content: bevy_ui::ui_node::JustifyContent::Center,
+            align_items: bevy_ui::ui_node::AlignItems::Center,
+            padding: bevy_ui::geometry::UiRect {
+                left: bevy_ui::geometry::Val::Px(12.0),
+                right: bevy_ui::geometry::Val::Px(12.0),
+                top: bevy_ui::geometry::Val::Px(6.0),
+                bottom: bevy_ui::geometry::Val::Px(6.0),
+            },
+        }
+        bevy_ui_widgets::button::Button
+        bevy_feathers::theme::ThemeBackgroundColor(bevy_feathers::theme::ThemeToken("feathers.button.bg"))
+        bevy_feathers::theme::InheritableThemeTextColor(bevy_feathers::theme::ThemeToken("feathers.button.txt"))
+        jackdaw_bind::types::Bindings([jackdaw_bind::types::Binding::Action { event: "t12t1_game::ScreenPressed", fields: [], literals: [["button", "restart"]] }])
+        bevy_ecs::hierarchy::Children [
+            #RestartCaption
+            bevy_ui::widget::text::Text("Restart")
+            bevy_feathers::theme::ThemedText
+        ]
+    ]
+]

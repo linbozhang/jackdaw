@@ -192,11 +192,12 @@ pub struct GamePlugin;
 
 impl Plugin for GamePlugin {
     fn build(&self, app: &mut App) {
-        // `spawn_hud` after `spawn_scene`: the main scene stays the
-        // first scene root (the one the editor's Play replaces with
-        // the scene it has in front), the hud rides along in every
-        // mode.
-        app.add_systems(Startup, (spawn_scene, spawn_hud))
+        // `spawn_hud` after `spawn_scene`, chained: the editor's Play
+        // swaps whichever scene root landed at the LOWEST entity index,
+        // and an unordered tuple is a coin flip on which root that is —
+        // a swapped hud root means Play runs with no UI at all (T12-T2
+        // caught this live). Chaining pins the main scene as first.
+        app.add_systems(Startup, (spawn_scene, spawn_hud).chain())
             .add_systems(Update, spin_cubes)
             // One line per config type: register it as an asset (so the
             // editor offers it in New Asset) and load `game-config.bsn`
@@ -235,15 +236,17 @@ impl Plugin for GamePlugin {
             .add_observer(on_screen_pressed)
             .add_systems(
                 Update,
-                (
-                    wire_hud,
-                    handle_pause_action,
-                    apply_health_from_config,
-                    update_game_over,
-                ),
+                // Chained: the player spawns with a zeroed `PlayerHealth`,
+                // and an `update_game_over` that ran first would read
+                // current <= 0 on frame one and boot the game straight
+                // into game over (T12-T2 caught this live in PIE).
+                (wire_hud, (apply_health_from_config, update_game_over).chain()),
             )
             // The pause flip owns the frame: a Pause press never also
-            // moves the player, whichever way the bool lands.
+            // moves the player, whichever way the bool lands. Registered
+            // HERE and only here — adding it twice (tuple + edge) runs
+            // the toggle twice per press and Escape never pauses
+            // (T12-T2 caught this live).
             .add_systems(Update, handle_pause_action.before(move_player));
 {{module_physics_statements}}
     }

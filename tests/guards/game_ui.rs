@@ -891,3 +891,85 @@ fn the_player_only_moves_while_no_screen_owns_the_moment() {
         "game over, the player stands still"
     );
 }
+
+// ---- 7. A typoed binding fails loudly, and fixing it lands (T12-T2) ---
+
+/// U2's headless half, at the classic field-typo shape (`Health.currrent`):
+/// a binding naming a field the component does not have warns into
+/// `BindFailures` and the widget keeps its authored value (the log face in
+/// Play/PIE is what makes the warn visible; this pins the ledger mechanics
+/// behind it). Correcting the path is enough — no re-spawn, no reset: the
+/// same binding evaluates, the value lands, and the ledger clears.
+#[test]
+fn a_typoed_field_fails_loudly_and_a_fix_lands_quietly() {
+    let mut app = game_app();
+    let player = spawn_player(
+        &mut app,
+        Some(PlayerHealth {
+            current: 87.0,
+            max: 100.0,
+        }),
+    );
+    let bar = app
+        .world_mut()
+        .spawn((
+            Name::new("HealthBar"),
+            Node::default(),
+            jackdaw_widgets_runtime::Progress { value: 1.0 },
+            BindContext(player),
+            jackdaw_bind::Bindings(vec![jackdaw_bind::Binding::Field {
+                read: vec![
+                    jackdaw_bind::BindPath::new("guards::game_ui::PlayerHealth.currrent"),
+                    jackdaw_bind::BindPath::new("guards::game_ui::PlayerHealth.max"),
+                ],
+                via: Some("ratio".to_owned()),
+                write: jackdaw_bind::BindPath::new("jackdaw_widgets_runtime::Progress.value"),
+                as_percent: false,
+            }]),
+        ))
+        .id();
+    for _ in 0..3 {
+        app.update();
+    }
+    assert!(
+        failure_count(&mut app) > 0,
+        "a field the component does not have is a loud failure, not a silent one"
+    );
+    let value = |app: &mut App| {
+        app.world()
+            .get::<jackdaw_widgets_runtime::Progress>(bar)
+            .unwrap()
+            .value
+    };
+    assert_eq!(
+        value(&mut app),
+        1.0,
+        "the bar keeps its authored value while the path is wrong"
+    );
+
+    // The fix: correct the field name on the same binding. The next frame
+    // evaluates, the ratio lands, and the failure clears from the ledger.
+    app.world_mut()
+        .get_mut::<jackdaw_bind::Bindings>(bar)
+        .unwrap()
+        .0[0] = jackdaw_bind::Binding::Field {
+        read: vec![
+            jackdaw_bind::BindPath::new("guards::game_ui::PlayerHealth.current"),
+            jackdaw_bind::BindPath::new("guards::game_ui::PlayerHealth.max"),
+        ],
+        via: Some("ratio".to_owned()),
+        write: jackdaw_bind::BindPath::new("jackdaw_widgets_runtime::Progress.value"),
+        as_percent: false,
+    };
+    app.update();
+    app.update();
+    assert!(
+        (value(&mut app) - 0.87).abs() < 1e-5,
+        "the corrected binding lands the ratio"
+    );
+    assert_eq!(
+        failure_count(&mut app),
+        0,
+        "the fix clears the ledger without a restart"
+    );
+}

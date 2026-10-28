@@ -94,6 +94,8 @@ mod pie;
 #[cfg(feature = "pie")]
 mod pie_frames;
 #[cfg(feature = "pie")]
+mod pie_log;
+#[cfg(feature = "pie")]
 mod pie_windowless;
 #[cfg(feature = "pie")]
 pub use pie_windowless::{maybe_windowless, windowless_requested};

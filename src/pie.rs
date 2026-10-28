@@ -2642,6 +2642,17 @@ fn drain_game_events(world: &mut World) {
                 continue;
             }
 
+            // A log line from the focused game lands in the Game panel's
+            // recent-log face; it is not scene data either.
+            if let StateEvent::Log { level, message } = &event {
+                if is_focused {
+                    world
+                        .resource_mut::<crate::pie_game_log::PieGameLog>()
+                        .push(level.clone(), message.clone());
+                }
+                continue;
+            }
+
             // Always accumulate into the per-instance buffer.
             world
                 .resource_mut::<PieInstances>()

@@ -72,6 +72,17 @@ pub struct GamePlayingChip;
 #[derive(Component)]
 pub struct GamePlayInputButton;
 
+/// How many recent game log lines the strip under the frame shows.
+const LOG_ROWS: usize = 4;
+
+/// Marker on the recent-game-log strip at the bottom of the panel.
+#[derive(Component)]
+pub struct GamePanelLogStrip;
+
+/// Marker on one log row, numbered from the top of the strip.
+#[derive(Component, Clone, Copy, Debug, PartialEq, Eq)]
+pub struct GameLogRow(pub usize);
+
 /// Whether Play brought the Game panel forward, and the tab its dock showed
 /// before, so the end of the session can put that tab back.
 #[derive(Resource, Default, Debug)]
@@ -228,7 +239,45 @@ pub fn game_panel_content() -> impl Bundle {
                     ),
                 ],
             ),
+            game_log_strip(),
         ],
+    )
+}
+
+/// The recent-game-log strip: the newest [`LOG_ROWS`] lines the focused game
+/// logged, each in its notice tier's color (warn speaks in the warning color,
+/// an error in the error color). Hidden until the game has said something.
+fn game_log_strip() -> impl Bundle {
+    (
+        GamePanelLogStrip,
+        Node {
+            flex_direction: FlexDirection::Column,
+            row_gap: px(2.0),
+            padding: UiRect::axes(px(tokens::SPACING_SM), px(2.0)),
+            flex_shrink: 0.0,
+            overflow: Overflow::clip(),
+            display: Display::None,
+            ..Default::default()
+        },
+        children![log_row(0), log_row(1), log_row(2), log_row(3),],
+    )
+}
+
+/// One row of the log strip: a clipped text line in the secondary color
+/// until a log entry claims it.
+fn log_row(row: usize) -> impl Bundle {
+    (
+        GameLogRow(row),
+        Node {
+            overflow: Overflow::clip(),
+            ..Default::default()
+        },
+        Text::new(""),
+        TextFont {
+            font_size: tokens::TEXT_SIZE_SM,
+            ..Default::default()
+        },
+        TextColor(tokens::TEXT_SECONDARY),
     )
 }
 
@@ -571,6 +620,54 @@ fn update_game_panel_chips(
     }
 }
 
+/// Write the newest log lines into the strip: row `i` shows entry
+/// `len - LOG_ROWS + i`, in the entry's notice-tier color. The strip stays
+/// hidden until the game has said something.
+fn sync_game_panel_log(
+    log: Option<Res<crate::pie_game_log::PieGameLog>>,
+    mut strip: Query<&mut Node, With<GamePanelLogStrip>>,
+    mut rows: Query<(&GameLogRow, &mut Text, &mut TextColor), Without<GamePanelLogStrip>>,
+) {
+    let Some(log) = log else {
+        return;
+    };
+    let entries: Vec<_> = log.entries().collect();
+    let show = !entries.is_empty();
+    let display = if show { Display::Flex } else { Display::None };
+    for mut node in &mut strip {
+        if node.display != display {
+            node.display = display;
+        }
+    }
+    let first = entries.len().saturating_sub(LOG_ROWS);
+    // Fewer entries than rows: the lines sit at the bottom of the strip
+    // (terminal order), so the leading rows stay blank.
+    let leading_blanks = LOG_ROWS.saturating_sub(entries.len());
+    for (row, mut text, mut color) in &mut rows {
+        let entry = if row.0 < leading_blanks {
+            None
+        } else {
+            entries.get(first + row.0 - leading_blanks)
+        };
+        match entry {
+            Some(entry) => {
+                if text.0 != entry.message {
+                    text.0 = entry.message.clone();
+                }
+                let tinted = entry.color();
+                if color.0 != tinted {
+                    color.0 = tinted;
+                }
+            }
+            None => {
+                if !text.0.is_empty() {
+                    text.0 = String::new();
+                }
+            }
+        }
+    }
+}
+
 /// While Select mode is active, forward the cursor position over the surface
 /// so the game's picking backend tracks hover before a pick click.
 fn forward_select_hover(
@@ -612,6 +709,7 @@ impl Plugin for GamePanelPlugin {
     fn build(&self, app: &mut App) {
         app.init_resource::<GamePanelMode>()
             .init_resource::<GamePanelSurfaced>()
+            .init_resource::<crate::pie_game_log::PieGameLog>()
             .add_systems(Update, surface_game_panel_on_play)
             .add_systems(
                 Update,
@@ -621,6 +719,7 @@ impl Plugin for GamePanelPlugin {
                     layout_game_panel_image,
                     update_game_mode_bar,
                     update_game_panel_chips,
+                    sync_game_panel_log,
                     forward_select_hover,
                 ),
             );
@@ -673,5 +772,88 @@ mod tests {
             Some(Vec2::new(600.0, 0.0))
         );
         assert_eq!(panel_to_stream(Vec2::ZERO, Vec2::ZERO, stream), None);
+    }
+
+    #[test]
+    fn the_log_strip_carries_the_newest_lines_in_tier_colors() {
+        use crate::pie_game_log::{PIE_GAME_LOG_CAP, PieGameLog};
+
+        let mut world = World::new();
+        world.init_resource::<PieGameLog>();
+        world.spawn((GamePanelLogStrip, Node::default()));
+        for row in 0..LOG_ROWS {
+            world.spawn((
+                GameLogRow(row),
+                Text::new(""),
+                TextColor(tokens::TEXT_SECONDARY),
+            ));
+        }
+        // Two lines: they fill the bottom rows, older rows stay empty, and the
+        // strip is visible.
+        world
+            .resource_mut::<PieGameLog>()
+            .push("warn", "binding 0 failed");
+        world.resource_mut::<PieGameLog>().push("info", "started");
+        world.run_system_cached(sync_game_panel_log).unwrap();
+        let strip = world
+            .query_filtered::<&Node, With<GamePanelLogStrip>>()
+            .single(&world)
+            .unwrap();
+        assert_eq!(strip.display, Display::Flex, "a line makes the strip show");
+        let rows = |world: &mut World| -> Vec<(usize, String, Color)> {
+            let mut rows: Vec<_> = world
+                .query::<(&GameLogRow, &Text, &TextColor)>()
+                .iter(world)
+                .map(|(row, text, color)| (row.0, text.0.clone(), color.0))
+                .collect();
+            rows.sort_by_key(|(row, _, _)| *row);
+            rows
+        };
+        let texts: Vec<String> = rows(&mut world)
+            .into_iter()
+            .map(|(_, text, _)| text)
+            .collect();
+        assert_eq!(
+            texts,
+            vec![
+                String::new(),
+                String::new(),
+                "binding 0 failed".to_owned(),
+                "started".to_owned()
+            ]
+        );
+        // Push past the cap: only the newest LOG_ROWS remain on the strip.
+        for n in 0..PIE_GAME_LOG_CAP {
+            world
+                .resource_mut::<PieGameLog>()
+                .push("error", format!("e{n}"));
+        }
+        world.run_system_cached(sync_game_panel_log).unwrap();
+        let entries: Vec<_> = world.resource::<PieGameLog>().entries().cloned().collect();
+        assert_eq!(entries.len(), PIE_GAME_LOG_CAP);
+        let texts: Vec<String> = rows(&mut world)
+            .into_iter()
+            .map(|(_, text, _)| text)
+            .collect();
+        let want: Vec<_> = entries[entries.len() - LOG_ROWS..]
+            .iter()
+            .map(|e| e.message.clone())
+            .collect();
+        assert_eq!(texts, want, "the newest lines are what the strip shows");
+        for (_, _, color) in rows(&mut world) {
+            assert_eq!(color, jackdaw_feathers::tokens::TEXT_ERROR);
+        }
+        // A warn speaks in the warning color, not the error or secondary one.
+        world.resource_mut::<PieGameLog>().push("warn", "last word");
+        world.run_system_cached(sync_game_panel_log).unwrap();
+        let last = rows(&mut world);
+        assert_eq!(
+            last[LOG_ROWS - 1],
+            (
+                LOG_ROWS - 1,
+                "last word".to_owned(),
+                jackdaw_feathers::tokens::TEXT_WARNING
+            )
+        );
     }
 }

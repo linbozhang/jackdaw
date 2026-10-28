@@ -1,12 +1,4 @@
-// Game UI, authored on the jackdaw 2D UI canvas; safe to edit by hand.
-// All four screens live in this one document under #HudRoot: the game
-// shows and hides them by binding Visibility to `GameState`, the buttons
-// send `ScreenPressed`, and the bar and counters read the player through
-// the `BindContext` the game's `wire_hud` system puts on the root.
-// Layout is percent and flex only, so every window size gets the same
-// anchors (the overlays stretch 100% x 100%, the HUD hugs the top-left
-// corner); pixel values are sizes and padding, not positions.
-
+// jackdaw 0.21.0-dev | bevy main
 #HudRoot
 jackdaw_scene_types::UiSceneRoot
 {{crate_name}}::HudRoot
@@ -29,24 +21,21 @@ bevy_ecs::hierarchy::Children [
             bottom: bevy_ui::geometry::Val::Px(12.0),
         },
     }
-    jackdaw_bind::types::Bindings([
-        jackdaw_bind::types::Binding::Visible { read: jackdaw_bind::types::BindPath { raw: "Res({{crate_name}}::GameState).menu" }, via: core::option::Option::Some("not") },
-    ])
+    jackdaw_bind::types::Bindings([jackdaw_bind::types::Binding::Visible { read: jackdaw_bind::types::BindPath { raw: "Res({{crate_name}}::GameState).menu" }, via: core::option::Option::Some("not") }])
     bevy_ecs::hierarchy::Children [
         #HealthBar
         bevy_ui::ui_node::Node {
             width: bevy_ui::geometry::Val::Px(180.0),
             height: bevy_ui::geometry::Val::Px(10.0),
         }
-        jackdaw_widgets_runtime::Progress { value: 1.0 }
+        jackdaw_widgets_runtime::Progress {
+            value: 1.0,
+        }
         bevy_feathers::theme::ThemeBackgroundColor(bevy_feathers::theme::ThemeToken("feathers.slider.bg"))
-        jackdaw_bind::types::Bindings([
-            jackdaw_bind::types::Binding::Field { read: [jackdaw_bind::types::BindPath { raw: "{{crate_name}}::PlayerHealth.current" }, jackdaw_bind::types::BindPath { raw: "{{crate_name}}::PlayerHealth.max" }], via: core::option::Option::Some("ratio"), write: jackdaw_bind::types::BindPath { raw: "jackdaw_widgets_runtime::Progress.value" }, as_percent: false },
-        ])
+        jackdaw_bind::types::Bindings([jackdaw_bind::types::Binding::Field { read: [jackdaw_bind::types::BindPath { raw: "{{crate_name}}::PlayerHealth.current" }, jackdaw_bind::types::BindPath { raw: "{{crate_name}}::PlayerHealth.max" }], via: core::option::Option::Some("ratio"), write: jackdaw_bind::types::BindPath { raw: "jackdaw_widgets_runtime::Progress.value" }, as_percent: false }])
         bevy_ecs::hierarchy::Children [
             #HealthFill
             bevy_ui::ui_node::Node {
-                width: bevy_ui::geometry::Val::Percent(100.0),
                 height: bevy_ui::geometry::Val::Percent(100.0),
             }
             jackdaw_widgets_runtime::ProgressFill
@@ -56,16 +45,12 @@ bevy_ecs::hierarchy::Children [
         #HealthText
         bevy_ui::widget::text::Text("100 / 100")
         bevy_feathers::theme::ThemedText
-        jackdaw_bind::types::Bindings([
-            jackdaw_bind::types::Binding::Text { format: "{} / {}", args: [jackdaw_bind::types::BindPath { raw: "{{crate_name}}::PlayerHealth.current" }, jackdaw_bind::types::BindPath { raw: "{{crate_name}}::PlayerHealth.max" }] },
-        ])
+        jackdaw_bind::types::Bindings([jackdaw_bind::types::Binding::Text { format: "{} / {}", args: [jackdaw_bind::types::BindPath { raw: "{{crate_name}}::PlayerHealth.current" }, jackdaw_bind::types::BindPath { raw: "{{crate_name}}::PlayerHealth.max" }] }])
         --
         #PickupsText
         bevy_ui::widget::text::Text("Pickups: 0")
         bevy_feathers::theme::ThemedText
-        jackdaw_bind::types::Bindings([
-            jackdaw_bind::types::Binding::Text { format: "Pickups: {}", args: [jackdaw_bind::types::BindPath { raw: "{{crate_name}}::PickupCount.0" }] },
-        ])
+        jackdaw_bind::types::Bindings([jackdaw_bind::types::Binding::Text { format: "Pickups: {}", args: [jackdaw_bind::types::BindPath { raw: "{{crate_name}}::PickupCount.0" }] }])
     ]
     --
     #StartScreen
@@ -83,9 +68,7 @@ bevy_ecs::hierarchy::Children [
         row_gap: bevy_ui::geometry::Val::Px(16.0),
     }
     bevy_feathers::theme::ThemeBackgroundColor(bevy_feathers::theme::ThemeToken("feathers.pane.body.bg"))
-    jackdaw_bind::types::Bindings([
-        jackdaw_bind::types::Binding::Visible { read: jackdaw_bind::types::BindPath { raw: "Res({{crate_name}}::GameState).menu" }, via: core::option::Option::None },
-    ])
+    jackdaw_bind::types::Bindings([jackdaw_bind::types::Binding::Visible { read: jackdaw_bind::types::BindPath { raw: "Res({{crate_name}}::GameState).menu" }, via: core::option::Option::None }])
     bevy_ecs::hierarchy::Children [
         #StartTitle
         bevy_ui::widget::text::Text("{{project-name | title_case}}")
@@ -107,9 +90,7 @@ bevy_ecs::hierarchy::Children [
         bevy_ui_widgets::button::Button
         bevy_feathers::theme::ThemeBackgroundColor(bevy_feathers::theme::ThemeToken("feathers.button.bg"))
         bevy_feathers::theme::InheritableThemeTextColor(bevy_feathers::theme::ThemeToken("feathers.button.txt"))
-        jackdaw_bind::types::Bindings([
-            jackdaw_bind::types::Binding::Action { event: "{{crate_name}}::ScreenPressed", fields: [], literals: [["button", "start"]] },
-        ])
+        jackdaw_bind::types::Bindings([jackdaw_bind::types::Binding::Action { event: "{{crate_name}}::ScreenPressed", fields: [], literals: [["button", "start"]] }])
         bevy_ecs::hierarchy::Children [
             #StartCaption
             bevy_ui::widget::text::Text("Start")
@@ -133,9 +114,7 @@ bevy_ecs::hierarchy::Children [
         row_gap: bevy_ui::geometry::Val::Px(16.0),
     }
     bevy_ui::ui_node::BackgroundColor(bevy_color::Color::Srgba(bevy_color::srgba::Srgba { red: 0.0, green: 0.0, blue: 0.0, alpha: 0.6 }))
-    jackdaw_bind::types::Bindings([
-        jackdaw_bind::types::Binding::Visible { read: jackdaw_bind::types::BindPath { raw: "Res({{crate_name}}::GameState).paused" }, via: core::option::Option::None },
-    ])
+    jackdaw_bind::types::Bindings([jackdaw_bind::types::Binding::Visible { read: jackdaw_bind::types::BindPath { raw: "Res({{crate_name}}::GameState).paused" }, via: core::option::Option::None }])
     bevy_ecs::hierarchy::Children [
         #PauseTitle
         bevy_ui::widget::text::Text("Paused")
@@ -157,9 +136,7 @@ bevy_ecs::hierarchy::Children [
         bevy_ui_widgets::button::Button
         bevy_feathers::theme::ThemeBackgroundColor(bevy_feathers::theme::ThemeToken("feathers.button.bg"))
         bevy_feathers::theme::InheritableThemeTextColor(bevy_feathers::theme::ThemeToken("feathers.button.txt"))
-        jackdaw_bind::types::Bindings([
-            jackdaw_bind::types::Binding::Action { event: "{{crate_name}}::ScreenPressed", fields: [], literals: [["button", "resume"]] },
-        ])
+        jackdaw_bind::types::Bindings([jackdaw_bind::types::Binding::Action { event: "{{crate_name}}::ScreenPressed", fields: [], literals: [["button", "resume"]] }])
         bevy_ecs::hierarchy::Children [
             #ResumeCaption
             bevy_ui::widget::text::Text("Resume")
@@ -183,9 +160,7 @@ bevy_ecs::hierarchy::Children [
         row_gap: bevy_ui::geometry::Val::Px(16.0),
     }
     bevy_ui::ui_node::BackgroundColor(bevy_color::Color::Srgba(bevy_color::srgba::Srgba { red: 0.0, green: 0.0, blue: 0.0, alpha: 0.92 }))
-    jackdaw_bind::types::Bindings([
-        jackdaw_bind::types::Binding::Visible { read: jackdaw_bind::types::BindPath { raw: "Res({{crate_name}}::GameState).game_over" }, via: core::option::Option::None },
-    ])
+    jackdaw_bind::types::Bindings([jackdaw_bind::types::Binding::Visible { read: jackdaw_bind::types::BindPath { raw: "Res({{crate_name}}::GameState).game_over" }, via: core::option::Option::None }])
     bevy_ecs::hierarchy::Children [
         #GameOverTitle
         bevy_ui::widget::text::Text("Game Over")
@@ -207,9 +182,7 @@ bevy_ecs::hierarchy::Children [
         bevy_ui_widgets::button::Button
         bevy_feathers::theme::ThemeBackgroundColor(bevy_feathers::theme::ThemeToken("feathers.button.bg"))
         bevy_feathers::theme::InheritableThemeTextColor(bevy_feathers::theme::ThemeToken("feathers.button.txt"))
-        jackdaw_bind::types::Bindings([
-            jackdaw_bind::types::Binding::Action { event: "{{crate_name}}::ScreenPressed", fields: [], literals: [["button", "restart"]] },
-        ])
+        jackdaw_bind::types::Bindings([jackdaw_bind::types::Binding::Action { event: "{{crate_name}}::ScreenPressed", fields: [], literals: [["button", "restart"]] }])
         bevy_ecs::hierarchy::Children [
             #RestartCaption
             bevy_ui::widget::text::Text("Restart")
