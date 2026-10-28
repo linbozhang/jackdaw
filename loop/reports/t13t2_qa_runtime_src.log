@@ -1,0 +1,30 @@
+
+     Running tests/pie_scene_override.rs (target/debug/deps/pie_scene_override-add861b888bec144)
+
+running 5 tests
+test without_the_env_the_named_scene_loads ... ok
+test pie_scene_or_picks_the_override_or_the_default ... ok
+test a_root_added_while_running_keeps_its_own_scene ... ok
+test the_override_scene_loads_in_place_of_the_named_one ... ok
+test only_the_first_scene_root_is_overridden ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.13s
+
+     Running tests/scene_root_change.rs (target/debug/deps/scene_root_change-54b8192707b0e70e)
+
+running 4 tests
+test rewriting_the_live_handle_is_not_a_switch ... ok
+test rebinding_a_spawned_root_swaps_the_scene_under_it ... ok
+test switching_twice_in_one_frame_lands_on_the_last_target ... ok
+test rebinding_to_a_broken_scene_refuses_and_a_later_rebind_recovers ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 4.22s
+
+     Running tests/ui_scene_ownership.rs (target/debug/deps/ui_scene_ownership-edc78766a773b7cb)
+
+running 2 tests
+test ui_root_is_an_ecs_root_but_is_destroyed_with_its_scene ... ok
+test destroying_one_scene_does_not_destroy_another_scenes_ui_root ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.08s
+

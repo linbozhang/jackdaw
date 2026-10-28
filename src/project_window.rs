@@ -684,7 +684,15 @@ fn spawn_folder_row(
               windows: Query<&Window>,
               mut menu: ResMut<jackdaw_widgets::context_menu::ContextMenuState>| {
             if click.event().button == PointerButton::Secondary {
-                open_context_menu(&mut commands, &windows, &mut menu, &folder, true);
+                open_context_menu(
+                    &mut commands,
+                    &windows,
+                    &mut menu,
+                    &folder,
+                    true,
+                    false,
+                    None,
+                );
                 return;
             }
             let path = folder.clone();
@@ -1375,11 +1383,28 @@ fn attach_tile_behaviour(commands: &mut Commands, tile: Entity, entry: &DirEntry
         move |click: On<PointerClick>,
               mut commands: Commands,
               windows: Query<&Window>,
-              mut menu: ResMut<jackdaw_widgets::context_menu::ContextMenuState>| {
+              mut menu: ResMut<jackdaw_widgets::context_menu::ContextMenuState>,
+              kinds: Res<AssetKinds>,
+              flow: Res<crate::game_flow::GameFlowState>| {
             if click.event().button != PointerButton::Secondary {
                 return;
             }
-            open_context_menu(&mut commands, &windows, &mut menu, &path, is_directory);
+            // The same distinction a double click opens by: a document
+            // that names no registered asset kind is a scene the game
+            // could start from.
+            let holds_an_asset = crate::asset_files::read_asset_kind(&path, &kinds)
+                .type_path()
+                .is_some_and(|type_path| kinds.by_type_path(type_path).is_some());
+            let is_scene_document = jackdaw_bsn::is_document_path(&path) && !holds_an_asset;
+            open_context_menu(
+                &mut commands,
+                &windows,
+                &mut menu,
+                &path,
+                is_directory,
+                is_scene_document,
+                flow.inspection.start_scene.as_deref(),
+            );
             let path = path.clone();
             commands.queue(move |world: &mut World| {
                 select_path(world, &path);
@@ -1672,6 +1697,7 @@ const REVEAL_ACTION: &str = "project.reveal";
 const DELETE_ACTION: &str = "project.delete";
 const CONVERT_TO_BINARY_ACTION: &str = "project.convert_to_binary";
 const CONVERT_TO_TEXT_ACTION: &str = "project.convert_to_text";
+const SET_START_SCENE_ACTION: &str = "project.set_start_scene";
 
 fn open_context_menu(
     commands: &mut Commands,
@@ -1679,6 +1705,8 @@ fn open_context_menu(
     menu: &mut jackdaw_widgets::context_menu::ContextMenuState,
     path: &Path,
     is_directory: bool,
+    is_scene_document: bool,
+    start_scene: Option<&str>,
 ) {
     let cursor = windows
         .single()
@@ -1702,6 +1730,29 @@ fn open_context_menu(
             true => (CONVERT_TO_TEXT_ACTION, "Convert to Text"),
             false => (CONVERT_TO_BINARY_ACTION, "Convert to Binary"),
         });
+    }
+    // A scene document the game could start from: the item names the
+    // action, and names the file that already holds the role.
+    if is_scene_document {
+        let is_start = start_scene.is_some_and(|start| {
+            crate::project::open_project_assets_dir()
+                .and_then(|assets| {
+                    jackdaw_project_build::flow::assets_relative_path(
+                        &assets,
+                        &path.to_string_lossy(),
+                    )
+                })
+                .as_deref()
+                == Some(start)
+        });
+        items.push((
+            SET_START_SCENE_ACTION,
+            if is_start {
+                "Startup Scene ✓"
+            } else {
+                "Set as Startup Scene"
+            },
+        ));
     }
     if !is_directory {
         items.push((DUPLICATE_ACTION, "Duplicate"));
@@ -1775,6 +1826,7 @@ fn operator_for_action(action: &str) -> Option<&'static str> {
         "delete" => Some("file.delete"),
         "convert_to_binary" => Some("file.convert_to_binary"),
         "convert_to_text" => Some("file.convert_to_text"),
+        "set_start_scene" => Some(crate::game_flow::GameSetStartSceneOp::ID),
         _ => None,
     }
 }

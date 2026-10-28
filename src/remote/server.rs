@@ -154,6 +154,7 @@ impl Plugin for JackdawEditorRemotePlugin {
                     .with_method_main("jackdaw/audit", audit_handler)
                     .with_method_main("jackdaw/pie", pie_handler)
                     .with_method_main("jackdaw/export", export_handler)
+                    .with_method_main("jackdaw/game_flow", game_flow_handler)
                     // The same snapshot the game's own remote serves, over
                     // the editor's port: QA drives behavior assertions
                     // against the editor-side mirror of a play session
@@ -725,6 +726,7 @@ pub fn export_handler(In(_): In<Option<Value>>, world: &mut World) -> BrpResult 
             skipped: None,
             profile: None,
             started_unix: None,
+            flow_warnings: Vec::new(),
         });
     Ok(json!({
         "state": face.state,
@@ -735,6 +737,49 @@ pub fn export_handler(In(_): In<Option<Value>>, world: &mut World) -> BrpResult 
         "skipped": face.skipped,
         "profile": face.profile,
         "started_at": face.started_unix,
+        "flow_warnings": face.flow_warnings,
+    }))
+}
+
+/// The open project's game flow as a structured face: whether the
+/// project has a `game.flow.json`, where it sits, the start scene it
+/// names, every listed scene with its on-disk verdict, and the
+/// validation warnings — what a QA caller asserts a
+/// `game.set_start_scene` round against, without editing JSON by hand
+/// or reading the editor's log. Reads the live state the per-frame
+/// poll keeps, or inspects fresh when it has not run yet.
+pub fn game_flow_handler(In(_): In<Option<Value>>, world: &mut World) -> BrpResult {
+    check_enabled(world)?;
+    let held = world.get_resource::<crate::game_flow::GameFlowState>();
+    let (inspection, file) = match held {
+        Some(state) if state.flow_file.is_some() => {
+            (state.inspection.clone(), state.flow_file.clone())
+        }
+        _ => {
+            let assets = world
+                .get_resource::<crate::project::ProjectRoot>()
+                .map(crate::project::ProjectRoot::assets_dir);
+            let file = assets
+                .as_ref()
+                .map(|assets| jackdaw_project_build::flow::flow_path(assets));
+            (
+                assets
+                    .map(|assets| jackdaw_project_build::flow::inspect_flow(&assets))
+                    .unwrap_or_default(),
+                file,
+            )
+        }
+    };
+    Ok(json!({
+        "present": inspection.present,
+        "path": file.map(|path| path.display().to_string()),
+        "start_scene": inspection.start_scene,
+        "scenes": inspection
+            .scenes
+            .iter()
+            .map(|scene| json!({ "path": scene.path, "on_disk": scene.on_disk }))
+            .collect::<Vec<_>>(),
+        "warnings": inspection.warnings,
     }))
 }
 

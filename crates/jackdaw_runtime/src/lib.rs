@@ -114,6 +114,12 @@ pub use game_input::{
 mod triggers;
 pub use triggers::{TriggerContact, TriggerEvents, TriggerPhase};
 
+// The project's game flow file (`game.flow.json`): which scene a game
+// starts from. A public module so the template's startup line spells
+// `flow::start_scene_or` — the project-level layer between the game's
+// own fallback scene and the editor's Play override.
+pub mod flow;
+
 // The camera rig a scene authors: the components and the runtime driver a
 // game wires with one line (`JackdawCameraRigPlugin`). Re-exported so games
 // and the runtime agree on one copy — a rig component the game's schema has
@@ -694,6 +700,11 @@ pub fn pie_scene_override() -> Option<String> {
 /// startup code spelling `assets.load(jackdaw_runtime::pie_scene_or(
 /// "scene.bsn"))` plays the scene in front of the editor when it was
 /// launched by Play, and its default scene when run on its own.
+///
+/// The project's own start scene composes between the two: the template
+/// spells `pie_scene_or(&flow::start_scene_or("scene.bsn"))` — the
+/// editor's override, then `game.flow.json`'s `start_scene` (see
+/// [`crate::flow`]), then the code's scene.
 pub fn pie_scene_or(default: &str) -> String {
     pie_scene_override().unwrap_or_else(|| default.to_string())
 }

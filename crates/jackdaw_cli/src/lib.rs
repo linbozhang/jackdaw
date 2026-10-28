@@ -808,6 +808,16 @@ fn cmd_export(args: &[String]) -> ExitCode {
         eprintln!("jd export: this project is an editor extension; only a game can be exported");
         return ExitCode::FAILURE;
     }
+    // The game flow file rides into the package with the assets tree,
+    // so it is checked before the build is paid for, never blocking:
+    // what it names but cannot find warns here, and the staged game
+    // will start from its code's scene until it is fixed.
+    let flow_assets = jackdaw_project_build::project_manifest::ProjectManifest::read(&root)
+        .assets_dir()
+        .to_path_buf();
+    for warning in jackdaw_project_build::flow::validate_flow(&root.join(&flow_assets)) {
+        eprintln!("jd export: warning: game flow: {warning}");
+    }
     let mut target = match parse_config_arg(args) {
         Some(label) => match resolve_run_config(&root, &label) {
             Ok(entry) => entry.target.as_ref().map(RunTargetSpec::cargo_target),

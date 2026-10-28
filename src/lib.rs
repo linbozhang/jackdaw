@@ -85,6 +85,7 @@ pub mod extensions_dialog;
 pub mod file_ops;
 pub mod fps_overlay;
 pub mod game_export;
+pub mod game_flow;
 pub mod hot_reload;
 pub mod launch;
 pub mod launcher;
@@ -539,6 +540,7 @@ impl Plugin for EditorCorePlugin {
         .add_plugins(extension_build::ExtensionBuildPlugin)
         .add_plugins(pie::PiePlugin)
         .add_plugins(game_export::GameExportPlugin)
+        .add_plugins(game_flow::GameFlowPlugin)
         .add_plugins(live_frame_view::LiveFrameViewPlugin)
         .add_plugins(live_input::LiveInputPlugin)
         .add_plugins(game_panel::GamePanelPlugin)

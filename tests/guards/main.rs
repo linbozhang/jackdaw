@@ -22,6 +22,7 @@ mod dirty_matrix;
 mod editor_remote;
 mod feathers_composition;
 mod game_flow;
+mod game_flow_config;
 mod game_input;
 mod game_ui;
 mod keyframe_undo;

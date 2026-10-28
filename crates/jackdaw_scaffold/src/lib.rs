@@ -4023,6 +4023,40 @@ mod tests {
         }
     }
 
+    /// The scene flow pattern the template teaches (T13): the project's
+    /// `game.flow.json` names the scene a standalone run starts from,
+    /// the startup line composes the editor's Play override around that
+    /// read, and the seed file ships so a new project is flow-configured
+    /// from its first `cargo run`.
+    #[test]
+    fn new_game_project_teaches_the_scene_flow_pattern() {
+        let dest = temp_dir("newgame-flow").join("my-game");
+        scaffold_new_project(&dest, "my-game", TemplateKind::Game).unwrap();
+        let lib = std::fs::read_to_string(dest.join("src/lib.rs")).unwrap();
+        for needle in [
+            // The doc names the file and its two readers.
+            "game.flow.json",
+            // The flow read and the Play override composed around it.
+            "flow::start_scene_or",
+            "pie_scene_or(",
+            // The code's scene is the innermost fallback.
+            "\"scene.bsn\"",
+        ] {
+            assert!(
+                lib.contains(needle),
+                "the template must teach `{needle}`; the scene flow pattern drifted"
+            );
+        }
+        // The seed file ships, names a start scene and lists it.
+        let flow_seed = std::fs::read_to_string(dest.join("assets/game.flow.json")).unwrap();
+        for needle in ["start_scene", "scene.bsn"] {
+            assert!(
+                flow_seed.contains(needle),
+                "the flow seed must carry `{needle}`; the scene flow seed drifted"
+            );
+        }
+    }
+
     /// Both `[patch]` sections a physics game carries must cover every
     /// fork crate: a git-source subcrate left unpatched floats to the
     /// remote branch head at resolve time — past the commit the lockfile
