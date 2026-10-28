@@ -1,0 +1,37 @@
+=== NEGATIVE REPRO: lib.rs reverted to e9666d65 (pre-T13)
+$ cargo test -p jackdaw_runtime --test scene_root_change
+
+running 4 tests
+test rewriting_the_live_handle_is_not_a_switch ... ok
+test rebinding_to_a_broken_scene_refuses_and_a_later_rebind_recovers ... FAILED
+test switching_twice_in_one_frame_lands_on_the_last_target ... FAILED
+test rebinding_a_spawned_root_swaps_the_scene_under_it ... FAILED
+
+failures:
+
+---- rebinding_to_a_broken_scene_refuses_and_a_later_rebind_recovers stdout ----
+
+thread 'rebinding_to_a_broken_scene_refuses_and_a_later_rebind_recovers' (15917306) panicked at crates/jackdaw_runtime/tests/scene_root_change.rs:279:5:
+the refused switch still unloads the previous scene: ["Anchor", "scene"]
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- switching_twice_in_one_frame_lands_on_the_last_target stdout ----
+
+thread 'switching_twice_in_one_frame_lands_on_the_last_target' (15917308) panicked at crates/jackdaw_runtime/tests/scene_root_change.rs:242:5:
+the last target of the frame wins: ["Anchor", "scene"]
+
+---- rebinding_a_spawned_root_swaps_the_scene_under_it stdout ----
+
+thread 'rebinding_a_spawned_root_swaps_the_scene_under_it' (15917305) panicked at crates/jackdaw_runtime/tests/scene_root_change.rs:146:5:
+the rebound scene spawns: ["Anchor", "scene"]
+
+
+failures:
+    rebinding_a_spawned_root_swaps_the_scene_under_it
+    rebinding_to_a_broken_scene_refuses_and_a_later_rebind_recovers
+    switching_twice_in_one_frame_lands_on_the_last_target
+
+test result: FAILED. 1 passed; 3 failed; 0 ignored; 0 measured; 0 filtered out; finished in 4.13s
+
+error: test failed, to rerun pass `-p jackdaw_runtime --test scene_root_change`
+EXIT=0
