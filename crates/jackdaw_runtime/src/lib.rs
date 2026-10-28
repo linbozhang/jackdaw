@@ -312,6 +312,7 @@ impl Plugin for JackdawPlugin {
             (
                 clear_modified_scene_roots,
                 apply_pie_scene_override,
+                respawn_on_scene_root_change,
                 spawn_loaded_scenes,
                 cleanup_orphaned_scene_members,
             )
@@ -485,6 +486,13 @@ struct SceneInstanceMembers(Vec<Entity>);
 #[derive(Component)]
 struct SceneSpawned;
 
+/// The scene a root's current [`SceneSpawned`] verdict is about, set
+/// wherever `SceneSpawned` is. The rebind switch compares it against the
+/// rebound handle, so re-writing the handle of the scene that is already
+/// live is a no-op rather than a teardown-and-rebuild of a running scene.
+#[derive(Component, Clone, Copy, Debug, PartialEq, Eq)]
+struct SpawnedSceneId(AssetId<JackdawScene>);
+
 /// Marks a scene root the loader would not spawn.
 ///
 /// A refused scene and a scene that held nothing both leave the root with no
@@ -585,13 +593,61 @@ fn clear_modified_scene_roots(
         if !modified.contains(&root.0.id()) {
             continue;
         }
-        for &member in &members.0 {
-            commands.entity(member).despawn();
+        clear_scene_instance(&mut commands, root_entity, members);
+    }
+}
+
+/// The one reload mechanic, shared by both of its triggers: despawn the
+/// members the scene spawned, clear `SceneSpawned` and reset the member
+/// list, so the next `spawn_loaded_scenes` tick re-instantiates — from
+/// changed asset content (hot reload) or from the newly bound handle (a
+/// runtime scene switch).
+fn clear_scene_instance(
+    commands: &mut Commands,
+    root_entity: Entity,
+    members: &SceneInstanceMembers,
+) {
+    for &member in &members.0 {
+        commands.entity(member).despawn();
+    }
+    commands
+        .entity(root_entity)
+        .remove::<SceneSpawned>()
+        .insert(SceneInstanceMembers::default());
+}
+
+/// Rebinding a spawned root's [`JackdawSceneRoot`] to another scene is the
+/// runtime scene switch: the old scene's members despawn and the newly
+/// bound one instantiates, while the root entity — the `Name`, the tags and
+/// every component the game put on it — stays put, so a game's flow code is
+/// one line: rebind the component.
+///
+/// The bound scene may still be loading; the root idles empty until
+/// `spawn_loaded_scenes`' readiness gate lets it spawn, and a target the
+/// loader refuses lands as [`SceneRefused`] exactly like a first load
+/// would. Re-writing the handle of the scene that is already live is a
+/// no-op, not a reload. The same switch issued twice in one frame merges:
+/// the last target of the frame wins. One boundary follows from the
+/// change-tick trigger: a rebind that lands while the previous target is
+/// still loading is superseded (the change tick is consumed by the pass
+/// that cannot act on it) — rebind once more to recover.
+fn respawn_on_scene_root_change(
+    mut switched: Query<
+        (
+            Entity,
+            &JackdawSceneRoot,
+            &SceneInstanceMembers,
+            Option<&SpawnedSceneId>,
+        ),
+        (Changed<JackdawSceneRoot>, With<SceneSpawned>),
+    >,
+    mut commands: Commands,
+) {
+    for (root_entity, root, members, spawned) in &mut switched {
+        if spawned.is_some_and(|spawned| spawned.0 == root.0.id()) {
+            continue;
         }
-        commands
-            .entity(root_entity)
-            .remove::<SceneSpawned>()
-            .insert(SceneInstanceMembers::default());
+        clear_scene_instance(&mut commands, root_entity, members);
     }
 }
 
@@ -713,12 +769,20 @@ pub(crate) fn spawn_loaded_scenes(
         let Some((bsn, parent_path, stem)) = loaded else {
             // A document the asset loader refuses never reaches the gates
             // below, so the root would otherwise sit empty with nothing to say
-            // why.
+            // why. The failure names the scene's path, so a switch to a
+            // target that cannot load says which target it lost.
             if let Some(err) = scene_load_failure(world, &handle) {
-                warn!("Cannot spawn scene: {err}");
-                world
-                    .entity_mut(root_entity)
-                    .insert((SceneSpawned, SceneRefused));
+                let path = world
+                    .resource::<AssetServer>()
+                    .get_path(handle.id())
+                    .map(|path| path.to_string())
+                    .unwrap_or_default();
+                warn!("Cannot spawn scene '{path}': {err}");
+                world.entity_mut(root_entity).insert((
+                    SceneSpawned,
+                    SceneRefused,
+                    SpawnedSceneId(handle.id()),
+                ));
             }
             continue;
         };
@@ -727,9 +791,11 @@ pub(crate) fn spawn_loaded_scenes(
             Ok(ast) => ast,
             Err(err) => {
                 warn!("Failed to parse scene .bsn: {err}");
-                world
-                    .entity_mut(root_entity)
-                    .insert((SceneSpawned, SceneRefused));
+                world.entity_mut(root_entity).insert((
+                    SceneSpawned,
+                    SceneRefused,
+                    SpawnedSceneId(handle.id()),
+                ));
                 continue;
             }
         };
@@ -751,9 +817,11 @@ pub(crate) fn spawn_loaded_scenes(
         // whose own file never names it.
         if let Err(err) = jackdaw_bsn::reject_retired_ui_components(&ast) {
             warn!("Cannot spawn scene '{scene_name}': {err}");
-            world
-                .entity_mut(root_entity)
-                .insert((SceneSpawned, SceneRefused));
+            world.entity_mut(root_entity).insert((
+                SceneSpawned,
+                SceneRefused,
+                SpawnedSceneId(handle.id()),
+            ));
             continue;
         }
 
@@ -787,7 +855,9 @@ pub(crate) fn spawn_loaded_scenes(
                 .insert(jackdaw_scene_types::SceneRootTag);
         }
 
-        world.entity_mut(root_entity).insert(SceneSpawned);
+        world
+            .entity_mut(root_entity)
+            .insert((SceneSpawned, SpawnedSceneId(handle.id())));
     }
 }
 

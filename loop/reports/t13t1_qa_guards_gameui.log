@@ -1,0 +1,15 @@
+$ cargo test -p jackdaw --test guards game_ui
+     Running tests/guards/main.rs (target/debug/deps/guards-f290a7d65ab86725)
+
+running 7 tests
+test game_ui::the_player_only_moves_while_no_screen_owns_the_moment ... ok
+test game_ui::a_typoed_field_fails_loudly_and_a_fix_lands_quietly ... ok
+test game_ui::flipping_game_state_moves_the_screens ... ok
+test game_ui::the_bar_follows_player_health_and_misses_it_loudly ... ok
+test game_ui::the_hud_is_the_only_ui_and_it_loads_with_its_bindings_resolved ... ok
+test game_ui::buttons_flip_state_only_through_the_observer ... ok
+test game_ui::one_layout_holds_across_the_four_common_resolutions ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 227 filtered out; finished in 1.84s
+
+EXIT=0
