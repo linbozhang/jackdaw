@@ -1,0 +1,15 @@
+EDITOR_READY
+hud open: true
+--- P1: editor world.query over document entities (Bindings)
+P1: {"jsonrpc":"2.0","id":10078,"result":[{"components":{"jackdaw_bind::types::Bindings":[{"Visible":{"read":{"raw":"Res(t12t1_game::GameState).menu"},"via":null}}]},"entity":"4675v0"},{"components":{"jackdaw_bind::types::Bindings":[{"Text":{"args":[{"raw":"t12t1_game::PickupCount.0"}],"format":"Pickups: {}"}}]},"entity":"4674v0"},{"components":{"jackdaw_bind::types::Bindings":[{"Text":{"args":[{"raw":"t12t1_game::PlayerHealth.current"},{"raw":"t12t1_game::PlayerHealth.max"}],"format":"{} / {}"}}]},"entity":"4673v0"},{"components":{"jackdaw_bind::types::Bindings":[{"Action":{"event":"t12t1_game::S
+--- P2: component.set typo on the HealthBar Bindings (card commit chain)
+HealthBar entity: 4671v0
+current Bindings: 
+new Bindings json: 
+--- P3: select the entity, read the bindings card text
+select attempt: {"jsonrpc":"2.0","id":12321,"result":{"entities":[],"id":"component.set","result":"cancelled","warnings":["component.set: `entity` was not set: `4671v0` names no entity in this scene, or more than one
+P3 card texts: FPS:  ||  || Main scene ||  || Embedded || Ready || Jackdaw v0.21.0-dev | /Users/zhanglinbo/workspace/loop-mac/t12t1-game/t12t1-game/assets/hud.bsn ||  || Select (World) || Disconnected || Outliner ||  || Import ||  ||  ||  ||  || Scene ||  || Live ||  || LIVE ||  || 0 edits ||  || Add Entity || 0 entities  0 meshes  0 lights  0 cameras || Import || Viewport ||  ||  ||  ||  ||  ||  ||  ||  ||  ||  ||  ||  ||  ||  ||  ||  || 0.25 ||  ||  ||  || Realtime off || 3D || 2D ||  ||  ||  ||  ||  ||  ||  ||  || hud || 8 px || 79% || Edit || Interact || 3D || 2D ||  ||  ||  ||  ||  || Play || Select || no signal || Playing, Shift+Esc to release || Press Play to run the game here ||  ||  ||  ||  || No build running || building the game
+building t12t1-game as a cargo binary in /
+--- P4: history.undo reverts the document edit
+P4 scene_bsn 'currrent' count after undo: 0 (want 0)
+T12T3_PROBE_DONE

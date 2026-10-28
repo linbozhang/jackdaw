@@ -34,6 +34,10 @@ looks, and the body turns to face the way it moves. The one source of
 truth for "which way is forward" is the camera's `CameraLook.yaw`;
 the player transform never stores a look direction.
 
+This is also the entity the HUD watches: the template's health bar and
+texts are bindings on this player's `PlayerHealth` and `PickupCount`
+([Game UI](game-ui.md) covers the binding side).
+
 ## The follow camera is a child
 
 The template's camera is a `CameraRig` parented under the player —

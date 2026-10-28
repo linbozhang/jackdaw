@@ -1,0 +1,10 @@
+   Compiling jackdaw v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw)
+    Finished `test` profile [optimized + debuginfo] target(s) in 3.93s
+     Running tests/guards/main.rs (target/debug/deps/guards-f290a7d65ab86725)
+
+running 1 test
+QA-PROBE canonical spelling: PauseScreen Color=Some(Srgba(Srgba { red: 0.0, green: 0.0, blue: 0.0, alpha: 0.6 }))
+test game_ui::qa_t12t1_red_probe_canonical_srgba_fixes_the_veil ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 229 filtered out; finished in 0.45s
+

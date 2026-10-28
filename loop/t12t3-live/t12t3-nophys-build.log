@@ -1,0 +1,5 @@
+jackdaw build: building /Users/zhanglinbo/workspace/loop-mac/t12t3/t12t3-nophys
+building t12t3-nophys as a cargo binary in /Users/zhanglinbo/workspace/loop-mac/t12t3/t12t3-nophys, into /Users/zhanglinbo/workspace/loop-mac/t12t3/t12t3-nophys/.jackdaw/target/game
+moved bevy from 4cdbe88ec49f408e6be203efc307823f63abfa83 to c9c397ba1a73e6cfffe957318e0359330b701865, the commit this editor is built against
+jackdaw build: ok (500 components); binary at /Users/zhanglinbo/workspace/loop-mac/t12t3/t12t3-nophys/.jackdaw/target/game/debug/t12t3-nophys, schema at /Users/zhanglinbo/workspace/loop-mac/t12t3/t12t3-nophys/.jackdaw/schema.json
+NOPHYS_BUILD_EXIT=0

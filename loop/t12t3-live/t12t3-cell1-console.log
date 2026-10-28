@@ -1,0 +1,9 @@
+EDITOR_READY (fresh project /Users/zhanglinbo/workspace/loop-mac/t12t3/t12t3-ui)
+boot: state=true,false,false StartScreen=Inherited Hud=Hidden
+log strip texts: Main scene ||  || Embedded || Ready || Jackdaw v0.21.0-dev | /Users/zhanglinbo/workspace/loop-mac/t12t3/t12t3-ui/assets/scene.bsn ||  || Select (World) || Disconnected || Outliner ||  || Import ||  ||  ||  ||  || Scene || Live ||  || LIVE  Play #1 || Play #1 ||  || Add Entity
+CELL1_STARTSCREEN_FIRST_PASS
+sweep_click: hit at (700,787)
+after Start: state=false,false,false Hud=Inherited Start=Hidden pickups=3 FallingCube=1 player=1 rig=1 health_text='100 / 100'
+CELL1_START_TO_WORLD_PASS
+VERDICT_CELL1: CELL1_STARTSCREEN_FIRST=PASS CELL1_START_TO_WORLD=PASS 
+T12T3_CELL1_DONE

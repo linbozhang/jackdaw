@@ -131,6 +131,11 @@ hazard cannot collect the pickups for the player. Layer masks
 edit as numbers in the Components panel and round-trip through
 save and reload unchanged.
 
+The template's hazards do real work through exactly that row:
+`hazard_damage` burns 15 health per touch, and the HUD's health
+bar and text are bound to the same `PlayerHealth` the sensor
+writes — [Game UI](game-ui.md) covers the screen side.
+
 One engine boundary worth knowing: the broad phase pairs bodies
 when they enter the simulation. Re-layering a body that then
 stays perfectly still may not re-pair it until something moves —
