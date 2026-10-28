@@ -1,0 +1,47 @@
+   Compiling jackdaw_feathers v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_feathers)
+   Compiling jackdaw_project_build v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_project_build)
+   Compiling jackdaw_scaffold v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_scaffold)
+   Compiling jackdaw_panels v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_panels)
+   Compiling jackdaw_node_graph v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_node_graph)
+   Compiling jackdaw_api_internal v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_api_internal)
+   Compiling jackdaw_animation v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_animation)
+   Compiling jackdaw_loader v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_loader)
+   Compiling jackdaw_dylib v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_dylib)
+   Compiling jackdaw_api v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_api)
+   Compiling jackdaw_physics v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/integrations/physics/jackdaw_physics)
+   Compiling jackdaw_multiplayer_editor v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_multiplayer_editor)
+   Compiling jackdaw_extension v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_extension)
+   Compiling test_fixture_extension v0.0.0 (/Users/zhanglinbo/workspace/jackdaw/tests/fixtures/test_fixture_extension)
+   Compiling jackdaw v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw)
+    Finished `test` profile [optimized + debuginfo] target(s) in 1m 22s
+────────────
+ Nextest run ID ba56a282-7063-4121-b022-5ecb64154d46 with nextest profile: default
+    Starting 26 tests across 1 binary (196 tests skipped)
+        PASS [   1.332s] ( 1/26) jackdaw::guards reference_audit::asset_missing_list_gathers_the_findings_headless
+        PASS [   1.332s] ( 2/26) jackdaw::guards reference_audit::a_loaded_scene_leaves_one_summary_warning
+        PASS [   1.339s] ( 3/26) jackdaw::guards reference_audit::asset_audit_reports_and_fills_the_findings
+        PASS [   1.752s] ( 4/26) jackdaw::guards reference_audit::an_open_tabs_isa_source_is_judged_by_its_relative_spelling
+        PASS [   1.079s] ( 5/26) jackdaw::guards reference_rewrite::a_dirty_tab_journals_under_the_renamed_path
+        PASS [   0.815s] ( 6/26) jackdaw::guards reference_rewrite::a_rename_that_differs_only_in_case_lands
+        PASS [   1.235s] ( 7/26) jackdaw::guards reference_audit::the_startup_walk_fills_the_index_without_a_manual_rescan
+        PASS [   1.265s] ( 8/26) jackdaw::guards reference_rewrite::a_forced_delete_that_would_close_the_last_tab_is_refused
+        PASS [   1.098s] ( 9/26) jackdaw::guards reference_rewrite::a_rewritten_document_is_not_read_back_and_a_reimport_reloads_in_place
+        PASS [   0.958s] (10/26) jackdaw::guards reference_rewrite::dropping_a_file_already_in_the_assets_copies_nothing
+        PASS [   1.133s] (11/26) jackdaw::guards reference_rewrite::moving_a_file_rewrites_references_and_retargets_the_card
+        PASS [   1.320s] (12/26) jackdaw::guards reference_rewrite::deleting_an_open_scene_is_refused_and_forced_close_removes_it
+        PASS [   0.931s] (13/26) jackdaw::guards reference_rewrite::renaming_a_folder_rewrites_prefixed_references_on_component_boundaries
+        PASS [   1.097s] (14/26) jackdaw::guards reference_rewrite::renaming_a_folder_retargets_a_tab_under_it_onto_the_same_tail
+        PASS [   1.053s] (15/26) jackdaw::guards reference_rewrite::renaming_a_referenced_file_rewrites_its_referrers_and_nothing_else
+        PASS [   1.042s] (16/26) jackdaw::guards reference_rewrite::renaming_a_referenced_material_under_a_dirty_tab_keeps_it_dirty_and_in_step
+        PASS [   1.053s] (17/26) jackdaw::guards reference_rewrite::renaming_an_open_clean_scene_retargets_its_tab
+        PASS [   0.040s] (18/26) jackdaw::guards session_journal::a_damaged_journal_reads_as_none_and_stays_on_disk
+        PASS [   1.029s] (19/26) jackdaw::guards session_journal::a_clean_tab_journals_nothing
+        PASS [   1.212s] (20/26) jackdaw::guards session_journal::a_clean_exit_removes_the_session_directory
+        PASS [   1.184s] (21/26) jackdaw::guards session_journal::a_crashed_session_leaves_its_journal_behind
+        PASS [   0.601s] (22/26) jackdaw::guards session_journal::beginning_a_session_rotates_old_ones_beyond_five
+        PASS [   1.200s] (23/26) jackdaw::guards session_journal::a_dirty_tab_journals_the_save_emitters_own_text
+        PASS [   1.249s] (24/26) jackdaw::guards session_journal::a_successful_save_spends_the_entry_and_backups_the_old_file
+        PASS [   1.098s] (25/26) jackdaw::guards session_journal::the_journal_lives_under_the_overridden_config_dir
+        PASS [   2.862s] (26/26) jackdaw::guards session_journal::the_journal_write_costs_no_more_than_five_milliseconds
+────────────
+     Summary [   9.285s] 26 tests run: 26 passed, 196 skipped

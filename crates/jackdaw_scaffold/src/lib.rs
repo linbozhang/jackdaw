@@ -2096,17 +2096,22 @@ fn add_module_crates(
     }
     if modules.contains("physics") {
         match jackdaw_project_build::BEVY_FORK {
-            Some(fork) => {
+            // The fork lives on the machine this editor was built on; a
+            // project it is written into is not portable, so only a dev
+            // checkout — running out of the tree the fork sits beside —
+            // patches the game to it. Everyone else gets the note below.
+            Some(fork) if crate::dev_checkout::jackdaw_dev_checkout().is_some() => {
                 add_bevy_fork_patch(doc, fork);
                 notes.push(String::from(
                     "Cargo.toml: patches bevy to the version-pinned fork, the one bevy \
                      this editor was built against",
                 ));
             }
-            None => notes.push(String::from(
-                "physics: this build names no bevy fork to patch the game's avian to; \
-                 if the build fails to resolve two bevies, add the [patch] sections this \
-                 editor's own Cargo.toml carries",
+            _ => notes.push(String::from(
+                "physics: this build cannot share its bevy fork patch with the game; \
+                 if the build fails to resolve two bevies, remake the fork with this \
+                 jackdaw's scripts/make-bevy-fork.ps1 and add the [patch] sections \
+                 it writes",
             )),
         }
     }
@@ -2722,8 +2727,11 @@ fn module_crate_lines(modules: &ModuleSet) -> String {
 /// (empty when none apply). The physics module rides avian, whose registry
 /// bevy must be redirected to the version-pinned fork this editor was
 /// built against — the same patch this editor's own workspace carries.
+/// Only a dev checkout writes them: the fork is a directory on the machine
+/// this editor was built on, so a shipped binary naming it hands every new
+/// project a `[patch]` that resolves nowhere on the user's machine.
 fn module_patch_lines(modules: &ModuleSet) -> String {
-    if !modules.contains("physics") {
+    if !modules.contains("physics") || !crate::dev_checkout::jackdaw_dev_checkout().is_some() {
         return String::new();
     }
     let Some(fork) = jackdaw_project_build::BEVY_FORK else {

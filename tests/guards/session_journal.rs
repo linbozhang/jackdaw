@@ -111,9 +111,16 @@ fn a_dirty_tab_journals_the_save_emitters_own_text() {
     assert_eq!(journal.tabs.len(), 1, "one entry for the one dirty tab");
     let entry = &journal.tabs[0];
     let entry_path = Path::new(entry.path.as_deref().expect("the entry names a file"));
+    // The tab holds the canonical spelling of its file; on macOS the temp
+    // dir's canonical form differs by a symlink (`/var` reads as
+    // `/private/var`), so compare both sides through the same resolver.
+    let entry_canonical =
+        std::fs::canonicalize(entry_path).unwrap_or_else(|_| entry_path.to_path_buf());
+    let tmp_canonical =
+        std::fs::canonicalize(tmp.path()).unwrap_or_else(|_| tmp.path().to_path_buf());
     assert!(
-        entry_path.starts_with(tmp.path())
-            && entry_path.ends_with(Path::new("assets").join("zone.bsn")),
+        entry_canonical.starts_with(&tmp_canonical)
+            && entry_canonical.ends_with(Path::new("assets").join("zone.bsn")),
         "the entry names the tab's file: {}",
         entry_path.display()
     );

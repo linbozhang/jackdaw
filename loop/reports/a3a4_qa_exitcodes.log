@@ -1,0 +1,6 @@
+EXIT_fmt=0
+EXIT_clippy_ws=0
+EXIT_clippy_phy=0
+EXIT_libtests=0
+EXIT_fast=0
+EXIT_integration=0

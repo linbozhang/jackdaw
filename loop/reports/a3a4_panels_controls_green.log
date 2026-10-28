@@ -1,0 +1,62 @@
+   Compiling jackdaw v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw)
+    Finished `test` profile [optimized + debuginfo] target(s) in 2.73s
+────────────
+ Nextest run ID c80b93a1-4bee-4f74-85fb-b828aaa40015 with nextest profile: default
+    Starting 55 tests across 2 binaries
+        PASS [   0.058s] ( 1/55) jackdaw::panels keybind::shift_space_does_not_activate_a_focused_tree_row
+        PASS [   0.785s] ( 2/55) jackdaw::panels keybind::shift_space_is_toggle_maximize_alone
+        PASS [   0.786s] ( 3/55) jackdaw::controls button_operator_dispatch::a_button_without_an_operator_call_dispatches_nothing
+        PASS [   0.844s] ( 4/55) jackdaw::controls button_operator_dispatch::activating_an_operator_button_runs_its_operator
+        PASS [   1.302s] ( 5/55) jackdaw::controls checkboxes::a_disabled_checkbox_refuses_a_click
+        PASS [   1.495s] ( 6/55) jackdaw::controls checkboxes::a_disabled_checkbox_is_outlined_in_the_disabled_colour
+        PASS [   1.726s] ( 7/55) jackdaw::panels maximize_toggle::a_toggle_hides_the_siblings_and_a_second_restores_them
+        PASS [   1.041s] ( 8/55) jackdaw::controls color_picker::a_drag_on_the_plane_writes_the_colour
+        PASS [   1.840s] ( 9/55) jackdaw::panels maximize_toggle::a_root_leaf_layout_refuses_to_maximize
+        PASS [   1.017s] (10/55) jackdaw::controls color_picker::the_picker_is_built_from_the_feathers_colour_controls
+        PASS [   0.787s] (11/55) jackdaw::controls color_picker::the_plane_shows_the_colour_the_picker_holds
+        PASS [   0.594s] (12/55) jackdaw::controls comboboxes::a_combobox_opens_a_feathers_menu_popup_of_menu_items
+        PASS [   2.467s] (13/55) jackdaw::panels persistence_roundtrip::reloading_a_layout_starts_unmaximized
+        PASS [   0.815s] (14/55) jackdaw::controls comboboxes::activating_a_row_picks_its_option
+        PASS [   1.859s] (15/55) jackdaw::panels persistence_roundtrip::saving_while_maximized_writes_the_unmaximized_tree
+        PASS [   0.972s] (16/55) jackdaw::controls comboboxes::the_picked_option_is_the_row_with_a_ticked_box
+        PASS [   0.746s] (17/55) jackdaw::controls context_menus::a_context_menu_stands_where_it_was_opened
+        PASS [   0.748s] (18/55) jackdaw::controls context_menus::a_context_menu_is_a_feathers_menu_popup_of_menu_items
+        PASS [   0.634s] (19/55) jackdaw::controls context_menus::activating_a_row_closes_the_menu
+        PASS [   1.448s] (20/55) jackdaw::panels reconcile::a_maximized_persistent_leaf_keeps_the_maximize_when_emptied
+        PASS [   1.562s] (21/55) jackdaw::panels reconcile::a_maximized_leaf_draining_ends_the_maximize
+        PASS [   0.856s] (22/55) jackdaw::controls context_menus::activating_a_row_dispatches_its_action
+        PASS [   0.853s] (23/55) jackdaw::controls lists_and_scroll::a_list_row_keeps_the_layout_it_was_spawned_with
+        PASS [   1.176s] (24/55) jackdaw::panels reconcile::an_unknown_window_cancels_and_a_stale_id_still_restores
+        PASS [   0.880s] (25/55) jackdaw::controls lists_and_scroll::a_list_is_a_list_box_and_its_rows_are_list_items
+        PASS [   0.935s] (26/55) jackdaw::controls lists_and_scroll::a_scrollbar_is_the_widget_aimed_at_its_container
+        PASS [   1.754s] (27/55) jackdaw::panels reconcile::opening_a_window_into_a_hidden_leaf_restores_the_layout_first
+        PASS [   0.739s] (28/55) jackdaw::controls lists_and_scroll::scrolling_a_scroll_area_moves_its_scroll_position
+        PASS [   1.552s] (29/55) jackdaw::panels tab_button::clicking_the_button_maximizes_and_restores_the_leaf
+        PASS [   1.178s] (30/55) jackdaw::controls menu_bar_clicks::a_click_on_a_checked_row_leaves_the_menu_open
+        PASS [   1.633s] (31/55) jackdaw::panels reconcile::switching_workspaces_clears_the_maximized_leaf
+        PASS [   1.303s] (32/55) jackdaw::panels tab_button::every_tabbed_leaf_bar_grows_a_maximize_button
+        PASS [   1.371s] (33/55) jackdaw::controls menu_bar_clicks::a_click_on_a_panel_header_menu_row_runs_its_operator
+        PASS [   0.924s] (34/55) jackdaw::controls menu_bar_clicks::a_click_on_a_plain_row_runs_its_operator_and_closes_the_menu
+        PASS [   0.876s] (35/55) jackdaw::controls menu_bar_clicks::a_click_on_a_submenu_row_runs_its_operator
+        PASS [   1.028s] (36/55) jackdaw::panels tab_button::the_maximized_leaf_s_button_swaps_to_the_restore_glyph
+        PASS [   0.679s] (37/55) jackdaw::controls menu_bar_clicks::a_press_outside_the_menu_closes_it
+        PASS [   0.530s] (38/55) jackdaw::controls popovers::a_popover_asked_for_at_a_position_is_anchored_there
+        PASS [   0.680s] (39/55) jackdaw::controls menu_bar_clicks::the_row_under_the_pointer_is_the_one_that_runs
+        PASS [   0.485s] (40/55) jackdaw::controls popovers::a_popover_is_placed_by_the_widget_against_its_anchor
+        PASS [   0.472s] (41/55) jackdaw::controls segmented_controls::clicking_a_game_mode_segment_moves_the_mode
+        PASS [   0.511s] (42/55) jackdaw::controls segmented_controls::the_game_mode_bar_is_a_radio_group
+        PASS [   0.571s] (43/55) jackdaw::controls segmented_controls::the_scene_live_toggle_is_a_radio_group
+        PASS [   0.589s] (44/55) jackdaw::controls segmented_controls::the_workspace_tab_strip_is_a_radio_group
+        PASS [   0.561s] (45/55) jackdaw::controls synthetic_click::a_click_beside_the_button_activates_nothing
+        PASS [   0.558s] (46/55) jackdaw::controls synthetic_click::a_synthetic_click_activates_the_button_under_it
+        PASS [   0.510s] (47/55) jackdaw::controls text_fields::a_text_field_is_a_feathers_text_input
+        PASS [   0.515s] (48/55) jackdaw::controls text_fields::a_text_field_keeps_the_frame_layout_it_was_spawned_with
+        PASS [   0.504s] (49/55) jackdaw::controls text_fields::typing_into_a_text_field_commits_on_blur
+        PASS [   0.587s] (50/55) jackdaw::controls ui_probe_click::a_ui_click_located_by_text_activates_the_button
+        PASS [   0.628s] (51/55) jackdaw::controls ui_probe_click::a_ui_click_refuses_what_it_cannot_honestly_click
+        PASS [   0.696s] (52/55) jackdaw::controls ui_probe_click::a_ui_drag_moves_a_slider
+        PASS [   0.451s] (53/55) jackdaw::controls ui_probe_click::camera_state_reports_compass_yaw_and_pitch
+        PASS [   0.733s] (54/55) jackdaw::controls ui_probe_click::a_ui_input_types_and_commits_in_one_gesture
+        PASS [   0.472s] (55/55) jackdaw::controls ui_probe_click::injected_motion_accumulates_the_frame_it_is_queued
+────────────
+     Summary [   7.950s] 55 tests run: 55 passed, 0 skipped

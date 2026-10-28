@@ -575,10 +575,18 @@ pub(crate) fn enter_gesture(frames: u32) -> Vec<Beat> {
     vec![beat(ButtonState::Pressed), beat(ButtonState::Released)]
 }
 
-/// A Ctrl+A tap: the way a person replaces what a field holds. A click that
-/// focuses positions the caret — it does not select — so typing after one
-/// appends unless everything is selected first.
+/// A select-all tap: the way a person replaces what a field holds. A click
+/// that focuses positions the caret — it does not select — so typing after
+/// one appends unless everything is selected first. The modifier is the
+/// platform's command key — the widget layer (bevy's text input) binds
+/// select-all to Cmd on macOS and Ctrl elsewhere, and a Ctrl+A on a Mac
+/// keyboard is a no-op the typing then appends past.
 pub(crate) fn select_all_gesture(frames: u32) -> Vec<Beat> {
+    let (modifier_key, modifier_logical) = if cfg!(target_os = "macos") {
+        (KeyCode::SuperLeft, Key::Super)
+    } else {
+        (KeyCode::ControlLeft, Key::Control)
+    };
     let key = |state| Beat {
         events: vec![Emit::Key {
             key: KeyCode::KeyA,
@@ -591,8 +599,8 @@ pub(crate) fn select_all_gesture(frames: u32) -> Vec<Beat> {
     vec![
         Beat {
             events: vec![Emit::Key {
-                key: KeyCode::ControlLeft,
-                logical: Key::Control,
+                key: modifier_key,
+                logical: modifier_logical.clone(),
                 text: None,
                 state: ButtonState::Pressed,
             }],
@@ -602,8 +610,8 @@ pub(crate) fn select_all_gesture(frames: u32) -> Vec<Beat> {
         key(ButtonState::Released),
         Beat {
             events: vec![Emit::Key {
-                key: KeyCode::ControlLeft,
-                logical: Key::Control,
+                key: modifier_key,
+                logical: modifier_logical,
                 text: None,
                 state: ButtonState::Released,
             }],
