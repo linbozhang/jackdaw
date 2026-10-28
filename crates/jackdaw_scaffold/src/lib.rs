@@ -2777,12 +2777,14 @@ fn module_physics_statements(modules: &ModuleSet) -> String {
     }
     [
         "        // Physics & triggers (the docs at the top walk the pattern):\n",
-        "        // the bridge turns sensor contacts into `TriggerEvents`,\n",
-        "        // `collect_pickups` reads it, `apply_gravity_from_config`\n",
-        "        // hands the config's gravity number to the engine.\n",
+        "        // the bridge turns sensor contacts into `TriggerEvents` —\n",
+        "        // `collect_pickups` and `hazard_damage` read it — and\n",
+        "        // `apply_gravity_from_config` hands the config's gravity\n",
+        "        // number to the engine.\n",
         "        app.add_plugins(jackdaw_avian_integration::TriggerPlugin)\n",
-        "            .add_systems(Startup, (spawn_stage, spawn_pickups, spawn_walls))\n",
-        "            .add_systems(Update, (collect_pickups, apply_gravity_from_config));\n",
+        "            .add_systems(Startup, (spawn_stage, spawn_pickups, spawn_walls, spawn_hazards))\n",
+        "            .add_systems(Update, (collect_pickups, hazard_damage, apply_gravity_from_config))\n",
+        "            .add_observer(respawn_pickups_on_restart);\n",
     ]
     .concat()
 }
@@ -2885,12 +2887,23 @@ fn module_physics_player_move(modules: &ModuleSet) -> String {
 /// camera-relative, frame-rate-correct input handling, applied as a
 /// plain transform step. Nothing stops the player and there is no
 /// jump — collision and falling are what the physics module adds.
+/// The Interact key stands in for the hazard sensors a physical game
+/// has: no module means no sensors to walk into, so pressing it takes
+/// the damage directly and the health bar has a live number in every
+/// project.
 fn move_player(
     actions: Res<GameActions>,
+    state: Res<GameState>,
     time: Res<Time>,
     mut players: Query<(&PlayerController, &mut Transform), With<PlayerMarker>>,
+    mut healths: Query<&mut PlayerHealth, With<PlayerMarker>>,
     look: Query<&CameraLook>,
 ) {
+    // While a screen owns the moment — menu, pause veil, game over —
+    // the player stands still: this gate is the whole pause.
+    if state.menu || state.paused || state.game_over {
+        return;
+    }
     let dt = time.delta_secs();
     let camera_yaw = look.single().map(|camera| camera.yaw).unwrap_or(0.0);
     let direction = move_direction(actions.value("Move"), camera_yaw);
@@ -2902,10 +2915,9 @@ fn move_player(
         info!("Jump! (needs the physics module to leave the ground)");
     }
     if actions.just_pressed("Interact") {
-        info!("Interact!");
-    }
-    if actions.just_pressed("Pause") {
-        info!("Pause!");
+        for mut health in &mut healths {
+            take_damage(&mut health, PLAYER_DAMAGE);
+        }
     }
 }
 "#
@@ -2933,8 +2945,13 @@ pub struct PlayerVelocity(pub Vec3);
 ///   in the way, and back out of anything already penetrated — that
 ///   sweep is the "collides with walls" half of a controller, and it
 ///   hands back the position and the leftover (slid) velocity.
+///
+/// None of it runs while a screen owns the moment (menu, pause veil,
+/// game over): the early return is the whole pause, and the state
+/// behind it is the same `GameState` the hud's screens bind to.
 fn move_player(
     actions: Res<GameActions>,
+    state: Res<GameState>,
     config: Res<GameConfig>,
     time: Res<Time>,
     move_and_slide: avian3d::prelude::MoveAndSlide,
@@ -2950,6 +2967,9 @@ fn move_player(
     >,
     look: Query<&CameraLook>,
 ) {
+    if state.menu || state.paused || state.game_over {
+        return;
+    }
     use avian3d::math::{ToF32Precision, ToRealPrecision};
     let dt = time.delta_secs();
     let camera_yaw = look.single().map(|camera| camera.yaw).unwrap_or(0.0);
@@ -2998,9 +3018,6 @@ fn move_player(
     }
     if actions.just_pressed("Interact") {
         info!("Interact!");
-    }
-    if actions.just_pressed("Pause") {
-        info!("Pause!");
     }
 }
 "#
@@ -3055,10 +3072,22 @@ fn spawn_stage(
 }
 
 /// Three pickups in a line between the player and the falling cube.
+/// (`respawn_pickups_on_restart` respawns the same line when a run
+/// restarts.)
 fn spawn_pickups(
     mut commands: Commands,
     mut meshes: ResMut<Assets<Mesh>>,
     mut materials: ResMut<Assets<StandardMaterial>>,
+) {
+    spawn_pickup_line(&mut commands, &mut meshes, &mut materials);
+}
+
+/// The pickup cubes themselves, one line of three. Its own function so
+/// a restart can lay the line down again after the run despawned it.
+fn spawn_pickup_line(
+    commands: &mut Commands,
+    meshes: &mut Assets<Mesh>,
+    materials: &mut Assets<StandardMaterial>,
 ) {
     for i in 0..3 {
         commands.spawn((
@@ -3154,6 +3183,94 @@ fn apply_gravity_from_config(
 ) {
     if config.is_changed() {
         gravity.0 = Vec3::new(0.0, config.gravity, 0.0);
+    }
+}
+
+/// A thing that hurts to touch: a glowing red sensor on the walk
+/// line. Carries the collision-layer row the docs' table gives
+/// hazards (member of layer 3, filtered against layer 1), so its
+/// contacts exist with the player and nothing else — the pickups and
+/// walls it passes never feel it.
+#[derive(Component, Reflect, Default)]
+#[reflect(Component, Default, @EditorCategory::new("Actor"))]
+pub struct Hazard;
+
+fn spawn_hazards(
+    mut commands: Commands,
+    mut meshes: ResMut<Assets<Mesh>>,
+    mut materials: ResMut<Assets<StandardMaterial>>,
+) {
+    commands.spawn((
+        Hazard,
+        Mesh3d(meshes.add(Cuboid::new(0.4, 0.4, 0.4))),
+        MeshMaterial3d(materials.add(StandardMaterial {
+            base_color: Color::srgb(0.8, 0.1, 0.1),
+            emissive: LinearRgba::rgb(1.2, 0.1, 0.1),
+            ..default()
+        })),
+        Transform::from_xyz(2.0, 0.5, 0.0),
+        jackdaw_avian_integration::AvianCollider(
+            avian3d::prelude::ColliderConstructor::Sphere {
+                radius: 0.35,
+            },
+        ),
+        avian3d::prelude::Sensor,
+        // The docs' hazard row, live: `memberships 0b100, filters
+        // 0b001` — hazard hits the player only.
+        avian3d::prelude::CollisionLayers::new(
+            avian3d::prelude::LayerMask(0b100),
+            avian3d::prelude::LayerMask(0b001),
+        ),
+    ));
+}
+
+/// The hazard pattern, the other half of `collect_pickups`: when the
+/// *player* starts touching a `Hazard`, health drops (`take_damage`,
+/// in the game-UI section above) and the hud's bar follows the
+/// component. `enters()` fires when the overlap starts, not every
+/// frame — walk out and back in to take it again. Nothing fires while
+/// a screen owns the moment: the same `GameState` gate as the
+/// movement system.
+fn hazard_damage(
+    triggers: Res<TriggerEvents>,
+    state: Res<GameState>,
+    hazards: Query<(), With<Hazard>>,
+    mut players: Query<&mut PlayerHealth, With<PlayerMarker>>,
+) {
+    if state.menu || state.paused || state.game_over {
+        return;
+    }
+    for contact in triggers.enters() {
+        if hazards.contains(contact.trigger) && players.contains(contact.other) {
+            if let Ok(mut health) = players.single_mut() {
+                take_damage(&mut health, PLAYER_DAMAGE);
+            }
+        }
+    }
+}
+
+/// The physics half of a restart: whatever pickups survived despawn
+/// and a fresh line spawns, and the counter and any leftover velocity
+/// reset — the game-UI observer already put the health and the player
+/// back; this puts the level back with them.
+fn respawn_pickups_on_restart(
+    press: On<ScreenPressed>,
+    mut commands: Commands,
+    mut meshes: ResMut<Assets<Mesh>>,
+    mut materials: ResMut<Assets<StandardMaterial>>,
+    pickups: Query<Entity, With<Pickup>>,
+    mut players: Query<(&mut PickupCount, &mut PlayerVelocity), With<PlayerMarker>>,
+) {
+    if press.event().button != "restart" {
+        return;
+    }
+    for pickup in &pickups {
+        commands.entity(pickup).despawn();
+    }
+    spawn_pickup_line(&mut commands, &mut meshes, &mut materials);
+    for (mut count, mut velocity) in &mut players {
+        count.0 = 0;
+        velocity.0 = Vec3::ZERO;
     }
 }
 "#
@@ -3721,6 +3838,185 @@ mod tests {
                 .find(|line| line.contains("{{"))
                 .unwrap_or("…")
         );
+    }
+
+    /// The game UI pattern the template teaches: one hud document with
+    /// the four screens, a state resource the screens' `Visibility`
+    /// binds to, an event the buttons send with their own literal, the
+    /// via functions a binding may call registered by hand, and the
+    /// one-line `BindContext` wire from the document's root marker to
+    /// the player. The UI is not module-gated: the same document and
+    /// the same code ship with and without physics.
+    #[test]
+    fn new_game_project_teaches_the_ui_pattern() {
+        let dest = temp_dir("newgame-ui").join("my-game");
+        scaffold_new_project(&dest, "my-game", TemplateKind::Game).unwrap();
+        let lib = std::fs::read_to_string(dest.join("src/lib.rs")).unwrap();
+        for needle in [
+            "struct GameState",
+            "menu: true",
+            "struct ScreenPressed",
+            "register_function(ratio)",
+            "register_function(is_zero)",
+            "register_function(not)",
+            "fn spawn_hud",
+            "JackdawSceneRoot(asset_server.load(\"hud.bsn\"))",
+            "fn wire_hud",
+            "BindContext(player)",
+            "struct HudRoot",
+            "Added<HudRoot>",
+            "fn on_screen_pressed",
+            "\"start\" => state.menu = false",
+            "\"resume\" => state.paused = false",
+            "\"restart\" =>",
+            "fn handle_pause_action",
+            "just_pressed(\"Pause\")",
+        ] {
+            assert!(
+                lib.contains(needle),
+                "the template must teach `{needle}`; the game UI pattern drifted"
+            );
+        }
+        // The hud document itself: the four screens, the state the
+        // screens' visibility follows, the bindings that carry the
+        // pattern, and the bar half that turns two fields into a fill.
+        let hud = std::fs::read_to_string(dest.join("assets/hud.bsn")).unwrap();
+        for needle in [
+            "UiSceneRoot",
+            "#StartScreen",
+            "#Hud",
+            "#PauseScreen",
+            "#GameOverScreen",
+            "my_game::GameState",
+            "my_game::PlayerHealth",
+            "Binding::Visible",
+            "Binding::Action",
+            "Binding::Field",
+            "Binding::Text",
+            "via: core::option::Option::Some(\"ratio\")",
+            "via: core::option::Option::Some(\"not\")",
+            "[[\"button\", \"start\"]]",
+            "ProgressFill",
+        ] {
+            assert!(
+                hud.contains(needle),
+                "the hud seed must carry `{needle}`; the game UI document drifted"
+            );
+        }
+        assert!(
+            !lib.contains("{{"),
+            "every placeholder is substituted, got:\n{}",
+            lib.lines().find(|line| line.contains("{{")).unwrap_or("…")
+        );
+
+        // The UI is not module-gated: a no-physics project ships the
+        // same screens, the same state machine and the same wiring,
+        // with only the damage source traded for the Interact key.
+        let plain = temp_dir("newgame-ui-plain").join("my-game");
+        scaffold_new_project_with(
+            &plain,
+            "my-game",
+            TemplateKind::Game,
+            &modules(&["navmesh"]),
+        )
+        .unwrap();
+        let plain_lib = std::fs::read_to_string(plain.join("src/lib.rs")).unwrap();
+        for stays in [
+            "struct GameState",
+            "fn spawn_hud",
+            "register_function(ratio)",
+            "fn wire_hud",
+            "BindContext(player)",
+            "fn on_screen_pressed",
+        ] {
+            assert!(
+                plain_lib.contains(stays),
+                "without the physics module `{stays}` must stay"
+            );
+        }
+        let plain_hud = std::fs::read_to_string(plain.join("assets/hud.bsn")).unwrap();
+        assert!(
+            plain_hud.contains("UiSceneRoot") && plain_hud.contains("#StartScreen"),
+            "the hud document ships without the physics module too"
+        );
+    }
+
+    /// The health pattern the template teaches: a live component on the
+    /// player, the config's number handed over on load, damage clamped
+    /// at zero, game over read off the same component. With physics the
+    /// damage source is a hazard sensor carrying the docs' collision-
+    /// layer row and the restart respawns the pickups; without it the
+    /// Interact key stands in — component, bar and gate are the same.
+    #[test]
+    fn new_game_project_teaches_the_health_pattern() {
+        let dest = temp_dir("newgame-health").join("my-game");
+        scaffold_new_project(&dest, "my-game", TemplateKind::Game).unwrap();
+        let lib = std::fs::read_to_string(dest.join("src/lib.rs")).unwrap();
+        for needle in [
+            "struct PlayerHealth",
+            "PlayerHealth::default()",
+            "pub current: f32",
+            "pub max: f32",
+            "fn apply_health_from_config",
+            "config.player_health",
+            "fn take_damage",
+            "const PLAYER_DAMAGE: f32 = 15.0",
+            "fn update_game_over",
+            "health.current = health.max",
+            "const PLAYER_SPAWN: Vec3",
+            "fn ratio(",
+        ] {
+            assert!(
+                lib.contains(needle),
+                "the template must teach `{needle}`; the health pattern drifted"
+            );
+        }
+        // The physics damage source: a hazard sensor on the docs' row.
+        for needle in [
+            "struct Hazard",
+            "fn spawn_hazards",
+            "fn hazard_damage",
+            "fn respawn_pickups_on_restart",
+            "CollisionLayers::new",
+            "LayerMask(0b100)",
+            "LayerMask(0b001)",
+        ] {
+            assert!(
+                lib.contains(needle),
+                "the template must teach `{needle}`; the hazard pattern drifted"
+            );
+        }
+
+        // Without the physics module the same health degrades, it does
+        // not vanish: the Interact key takes the damage instead of a
+        // sensor, and no avian anything remains.
+        let plain = temp_dir("newgame-health-plain").join("my-game");
+        scaffold_new_project_with(
+            &plain,
+            "my-game",
+            TemplateKind::Game,
+            &modules(&["navmesh"]),
+        )
+        .unwrap();
+        let plain_lib = std::fs::read_to_string(plain.join("src/lib.rs")).unwrap();
+        for gone in ["struct Hazard", "fn hazard_damage", "avian3d"] {
+            assert!(
+                !plain_lib.contains(gone),
+                "without the physics module `{gone}` must not appear"
+            );
+        }
+        for stays in [
+            "struct PlayerHealth",
+            "fn apply_health_from_config",
+            "fn take_damage",
+            "take_damage(&mut health, PLAYER_DAMAGE)",
+            "fn update_game_over",
+        ] {
+            assert!(
+                plain_lib.contains(stays),
+                "without the physics module `{stays}` must stay"
+            );
+        }
     }
 
     /// Both `[patch]` sections a physics game carries must cover every

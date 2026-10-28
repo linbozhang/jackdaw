@@ -121,6 +121,12 @@ pub use jackdaw_camera_rig::{
     JackdawCameraRigTypesPlugin,
 };
 
+// The handle a game puts on a UI scene's root so the document's bindings
+// resolve against a game entity (`wire_hud` in the template is the pattern).
+// Re-exported so a game's `Cargo.toml` needs nothing beyond the runtime it
+// already carries to point a hud at its player.
+pub use jackdaw_bind::BindContext;
+
 pub mod frame_work;
 #[cfg(feature = "render")]
 mod live_levels;
@@ -180,6 +186,7 @@ pub mod prelude {
     };
     #[cfg(feature = "terrain")]
     pub use crate::{DetailPressers, DetailSettings, DetailViewer, TerrainViewer};
+    pub use jackdaw_bind::BindContext;
 }
 
 /// Marks the transform trees of entities spawned into a freed entity index as changed, which

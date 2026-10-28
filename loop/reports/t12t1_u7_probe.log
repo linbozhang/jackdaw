@@ -1,0 +1,30 @@
+    Blocking waiting for file lock on build directory
+    Finished `test` profile [optimized + debuginfo] target(s) in 2m 30s
+     Running tests/action_bindings.rs (target/debug/deps/action_bindings-a098d61568d19ab5)
+
+running 21 tests
+test a_literal_that_cannot_coerce_is_refused_with_one_warning ... ok
+test a_nan_is_refused_rather_than_sent_as_zero ... ok
+test a_literal_naming_no_field_of_the_event_is_reported_before_the_first_click ... ok
+test a_bound_field_wins_over_a_literal_naming_the_same_field ... ok
+test a_unit_struct_event_is_sent_by_a_fieldless_action ... ok
+test a_tuple_struct_event_is_refused_instead_of_panicking ... ok
+test a_number_too_big_for_the_field_is_refused_not_wrapped ... ok
+test activate_triggers_mapped_game_event ... ok
+test activate_without_action_bindings_dispatches_nothing ... ok
+test an_action_with_no_resolved_context_sends_nothing ... ok
+test an_event_with_no_named_fields_is_reported_before_the_first_click ... ok
+test an_action_sends_the_constant_its_binding_carries ... ok
+test an_entity_target_the_registry_cannot_see_is_refused_not_defaulted ... ok
+test an_action_with_a_resolved_context_still_sends ... ok
+test an_enum_event_is_refused_instead_of_panicking ... ok
+test field_not_declared_on_the_event_is_an_error ... ok
+test field_of_an_unlisted_type_is_an_error_not_a_silent_default ... ok
+test string_mapped_onto_a_numeric_field_warns_instead_of_panicking ... ok
+test unfillable_event_warns_instead_of_panicking ... ok
+test string_and_bool_fields_dispatch_when_the_types_line_up ... ok
+test unknown_event_type_warns_instead_of_panicking ... ok
+
+test result: ok. 21 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.05s
+
+U7_EXIT=0
