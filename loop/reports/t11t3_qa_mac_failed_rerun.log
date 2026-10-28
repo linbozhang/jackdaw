@@ -1,0 +1,1458 @@
+   Compiling quote v1.0.47
+   Compiling serde_core v1.0.229
+   Compiling downcast-rs v2.0.2
+   Compiling futures-task v0.3.34
+   Compiling hashbrown v0.16.1
+   Compiling base64 v0.23.1
+   Compiling tokio v1.54.1
+   Compiling zeroize v1.9.1
+   Compiling base64 v0.22.1
+   Compiling syn v3.0.9
+   Compiling syn v2.0.119
+   Compiling curve25519-dalek v4.1.3
+   Compiling weak-table v0.4.0
+   Compiling variadics_please v2.0.0
+   Compiling proc-macro-error-attr3 v3.1.1
+   Compiling ed25519-dalek v2.2.0
+   Compiling include_dir_macros v0.7.4
+   Compiling hashbrown v0.17.1
+   Compiling uuid v1.29.0
+   Compiling erased-serde v0.4.11
+   Compiling toml_datetime v1.1.2+spec-1.1.0
+   Compiling serde_spanned v1.1.2
+   Compiling indexmap v2.14.2
+   Compiling serde_json v1.0.154
+   Compiling include_dir v0.7.4
+   Compiling toml v1.1.8+spec-1.1.0
+   Compiling toml_edit v0.25.17+spec-1.1.0
+   Compiling bevy_macro_utils v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_macro_utils)
+   Compiling encase_derive_impl v0.13.0
+   Compiling bevy_ecs_macro_logic v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_ecs/macro_logic)
+   Compiling synstructure v0.14.0
+   Compiling logos-codegen v0.16.1
+   Compiling proc-macro-error3 v3.1.1
+   Compiling derive_more-impl v2.1.1
+   Compiling assert_type_match v0.1.1
+   Compiling zerocopy-derive v0.8.63
+   Compiling tracing-attributes v0.1.31
+   Compiling logos-derive v0.16.1
+   Compiling logos v0.16.1
+   Compiling enumn v0.1.14
+   Compiling gltf-derive v1.4.1
+   Compiling bytemuck_derive v1.12.1
+   Compiling serde_derive v1.0.229
+   Compiling thiserror-impl v2.0.21
+   Compiling encase_derive v0.13.0
+   Compiling bevy_reflect_derive v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_reflect/derive)
+   Compiling bevy_ecs_macros v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_ecs/macros)
+   Compiling bytemuck v1.25.2
+   Compiling bevy_derive v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_derive)
+   Compiling bitflags v2.13.2
+   Compiling dispatch2 v0.3.1
+   Compiling objc2-core-foundation v0.3.2
+   Compiling rustix v1.1.6
+   Compiling zerocopy v0.8.63
+   Compiling thiserror v2.0.21
+   Compiling encase v0.13.0
+   Compiling polling v3.11.0
+   Compiling async-io v2.6.0
+   Compiling serde v1.0.229
+   Compiling nix v0.31.3
+   Compiling glam v0.33.12
+   Compiling ctrlc v3.5.2
+   Compiling tracing v0.1.44
+   Compiling smallvec v1.16.4
+   Compiling naga-types v30.0.1
+   Compiling bevy_platform v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_platform)
+   Compiling wgpu-types v30.0.1
+   Compiling smol_str v0.2.2
+   Compiling bevy_utils v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_utils)
+   Compiling petgraph v0.8.3
+   Compiling half v2.7.1
+   Compiling objc2-io-kit v0.3.2
+   Compiling objc2-core-services v0.3.2
+   Compiling notify-types v2.1.0
+   Compiling sysinfo v0.39.6
+   Compiling notify v8.2.1
+   Compiling futures-macro v0.3.34
+   Compiling notify-debouncer-full v0.7.0
+   Compiling ron v0.12.2
+   Compiling objc2-foundation v0.3.2
+   Compiling bevy_asset_macros v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_asset/macros)
+   Compiling derive_more v2.1.1
+   Compiling zerofrom-derive v0.1.8
+   Compiling yoke-derive v0.8.4
+   Compiling bevy_tasks v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_tasks)
+   Compiling bevy_reflect v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_reflect)
+   Compiling displaydoc v0.2.7
+   Compiling zerovec-derive v0.11.7
+   Compiling tiff v0.11.3
+   Compiling futures-util v0.3.34
+   Compiling png v0.18.1
+   Compiling image v0.25.10
+   Compiling ktx2 v0.5.0
+   Compiling hexasphere v19.0.0
+   Compiling objc2-core-graphics v0.3.2
+   Compiling tracing-subscriber v0.3.23
+   Compiling objc2-metal v0.3.2
+   Compiling wgsl-types v0.6.0
+   Compiling bevy_ecs v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_ecs)
+   Compiling bevy_math v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_math)
+   Compiling objc2-quartz-core v0.3.2
+   Compiling bevy_curve v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_curve)
+   Compiling bevy_shape v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_shape)
+   Compiling zerofrom v0.1.8
+   Compiling yoke v0.8.4
+   Compiling bevy_color v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_color)
+   Compiling zerovec v0.11.9
+   Compiling tinystr v0.8.5
+   Compiling potential_utf v0.1.6
+   Compiling icu_locale_core v2.4.0
+   Compiling zerotrie v0.2.5
+   Compiling naga v30.0.1
+   Compiling icu_provider v2.4.0
+   Compiling parking_lot_core v0.9.12
+   Compiling font-types v0.12.7
+   Compiling read-fonts v0.41.0
+   Compiling parking_lot v0.12.5
+   Compiling icu_collections v2.4.0
+   Compiling raw-window-metal v1.1.0
+   Compiling wgsl-parse v0.6.0
+   Compiling wesl-macros v0.6.0
+   Compiling bevy_app v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_app)
+   Compiling bevy_time v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_time)
+   Compiling bevy_diagnostic v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_diagnostic)
+   Compiling bevy_asset v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_asset)
+   Compiling bevy_transform v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_transform)
+   Compiling bevy_input v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_input)
+   Compiling bevy_image v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_image)
+   Compiling bevy_mesh v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_mesh)
+   Compiling bevy_window v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_window)
+   Compiling bevy_log v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_log)
+   Compiling wgpu-naga-bridge v30.0.1
+   Compiling wgpu-hal v30.0.1
+   Compiling wesl v0.6.0
+   Compiling objc2-app-kit v0.3.2
+   Compiling bevy_camera v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_camera)
+   Compiling wgpu-core-deps-apple v30.0.1
+   Compiling bevy_material_macros v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_material/macros)
+   Compiling bevy_extract_macros v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_extract/macros)
+   Compiling bevy_shader v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_shader)
+   Compiling bevy_gizmos_macros v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_gizmos/macros)
+   Compiling bevy_material v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_material)
+   Compiling wgpu-core v30.0.1
+   Compiling skrifa v0.44.0
+   Compiling bevy_gizmos v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_gizmos)
+   Compiling icu_properties v2.4.0
+   Compiling icu_locale_fallback v2.4.0
+   Compiling objc2-core-text v0.3.2
+   Compiling fontique v0.11.1
+   Compiling bevy_light v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_light)
+   Compiling wgpu v30.0.1
+   Compiling icu_segmenter v2.4.0
+   Compiling parley_data v0.11.1
+   Compiling bevy_extract v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_extract)
+   Compiling bevy_render_macros v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_render/macros)
+   Compiling bevy_picking v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_picking)
+   Compiling arboard v3.7.0
+   Compiling harfrust v0.12.0
+   Compiling icu_normalizer v2.4.0
+   Compiling accesskit v0.25.2
+   Compiling bevy_encase_derive v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_encase_derive)
+   Compiling bevy_clipboard v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_clipboard)
+   Compiling parley v0.11.1
+   Compiling swash v0.2.10
+   Compiling objc2-core-audio-types v0.3.2
+   Compiling objc2-core-audio v0.3.2
+   Compiling bevy_render v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_render)
+   Compiling bevy_a11y v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_a11y)
+   Compiling bevy_input_focus v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_input_focus)
+   Compiling bevy_text v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_text)
+   Compiling objc2-audio-toolbox v0.3.2
+   Compiling taffy v0.14.0
+   Compiling gltf-json v1.4.1
+   Compiling bevy_animation_macros v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_animation/macros)
+   Compiling bevy_sprite v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_sprite)
+   Compiling bevy_animation v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_animation)
+   Compiling bevy_core_pipeline v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_core_pipeline)
+   Compiling bevy_ui v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_ui)
+   Compiling bevy_sprite_render v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_sprite_render)
+   Compiling gltf v1.4.1
+   Compiling coreaudio-rs v0.14.2
+   Compiling bevy_world_serialization v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_world_serialization)
+   Compiling objc2-foundation v0.2.2
+   Compiling foreign-types-macros v0.2.4
+   Compiling objc2-app-kit v0.2.2
+   Compiling foreign-types v0.5.0
+   Compiling bevy_gltf v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_gltf)
+   Compiling cpal v0.17.3
+   Compiling bevy_pbr v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_pbr)
+   Compiling rodio v0.22.2
+   Compiling core-graphics v0.23.2
+   Compiling bevy_ui_render v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_ui_render)
+   Compiling bevy_ui_widgets v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_ui_widgets)
+   Compiling accesskit_consumer v0.39.2
+   Compiling bevy_state_macros v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_state/macros)
+   Compiling bevy_state v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_state)
+   Compiling accesskit_macos v0.27.2
+   Compiling winit v0.30.13
+   Compiling bevy_audio v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_audio)
+   Compiling gilrs-core v0.6.8
+   Compiling hyper v1.12.0
+   Compiling bevy_scene_macros v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_scene/macros)
+   Compiling smol-hyper v0.1.1
+   Compiling gilrs v0.11.2
+   Compiling bevy_dev_tools v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_dev_tools)
+   Compiling accesskit_winit v0.34.2
+   Compiling bevy_annotations v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_annotations)
+   Compiling bevy_winit v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_winit)
+   Compiling bevy_remote v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_remote)
+   Compiling bevy_scene v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_scene)
+   Compiling bevy_feathers v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_feathers)
+   Compiling bevy_gilrs v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_gilrs)
+   Compiling bevy_gizmos_render v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_gizmos_render)
+   Compiling bevy_anti_alias v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_anti_alias)
+   Compiling bevy_post_process v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_post_process)
+   Compiling bevy_internal v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_internal)
+   Compiling thiserror-impl v1.0.69
+   Compiling meshopt v0.6.2
+   Compiling unic-langid-impl v0.9.6
+   Compiling jackdaw_env v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_env)
+   Compiling unic-langid-macros-impl v0.9.6
+   Compiling jackdaw_api_macros v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_api_macros)
+   Compiling unic-langid-macros v0.9.6
+   Compiling wide v1.7.1
+   Compiling spade v2.15.1
+   Compiling unic-langid v0.9.6
+   Compiling fluent-langneg v0.13.1
+   Compiling intl-memoizer v0.5.3
+   Compiling intl_pluralrules v7.0.2
+   Compiling rstar v0.13.0
+   Compiling ppv-lite86 v0.2.21
+   Compiling num-derive v0.5.1
+   Compiling rand_chacha v0.9.0
+   Compiling glam_matrix_extras v0.4.0
+   Compiling thiserror v1.0.69
+   Compiling cdt v0.1.0
+   Compiling fluent-syntax v0.11.1
+   Compiling fluent-bundle v0.15.3
+   Compiling simba v0.10.2
+   Compiling fluent v0.16.1
+   Compiling fluent_content v0.0.5
+   Compiling cobs v0.3.0
+   Compiling glam v0.34.1
+   Compiling postcard v1.1.3
+   Compiling bevy_heavy v0.6.0
+   Compiling glamx v0.3.1
+   Compiling parry3d v0.31.1
+   Compiling rand v0.9.5
+   Compiling avian_derive v0.2.3
+   Compiling ipc-channel v0.22.0
+   Compiling obvhs v0.4.0
+   Compiling jackdaw_package v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_package)
+   Compiling jackdaw_releases v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_releases)
+   Compiling rfd v0.15.4
+   Compiling jackdaw_rustc_wrapper v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_rustc_wrapper)
+   Compiling jackdaw_snap v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_snap)
+   Compiling tempfile v3.27.0
+   Compiling bevy_dylib v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_dylib)
+   Compiling bevy v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned)
+   Compiling jackdaw_geometry v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_geometry)
+   Compiling jackdaw_commands v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_commands)
+   Compiling jackdaw_input v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_input)
+   Compiling jackdaw_localization v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_localization)
+   Compiling jackdaw_bsn v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_bsn)
+   Compiling jackdaw_widgets_runtime v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_widgets_runtime)
+   Compiling jackdaw_bind v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_bind)
+   Compiling bevy_transform_interpolation v0.6.0
+   Compiling jackdaw_widgets v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_widgets)
+   Compiling jackdaw_scene_types v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_scene_types)
+   Compiling jackdaw_prefab v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_prefab)
+   Compiling avian3d v0.8.0
+   Compiling jackdaw_feathers v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_feathers)
+   Compiling jackdaw_terrain v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_terrain)
+   Compiling jackdaw_schema v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_schema)
+   Compiling jackdaw_camera_rig v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_camera_rig)
+   Compiling jackdaw_surface v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_surface)
+   Compiling jackdaw_project_build v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_project_build)
+   Compiling jackdaw_multiplayer v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_multiplayer)
+   Compiling jackdaw_panels v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_panels)
+   Compiling jackdaw_node_graph v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_node_graph)
+   Compiling jackdaw_api_internal v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_api_internal)
+   Compiling jackdaw_runtime v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_runtime)
+   Compiling jackdaw_avian_integration v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/integrations/physics/jackdaw_avian_integration)
+   Compiling jackdaw_animation_runtime v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_animation_runtime)
+   Compiling jackdaw_pie_protocol v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_pie_protocol)
+   Compiling jackdaw_animation v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_animation)
+   Compiling jackdaw_remote v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_remote)
+   Compiling jackdaw_loader v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_loader)
+   Compiling jackdaw_scaffold v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_scaffold)
+   Compiling jackdaw_jsn v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_jsn)
+   Compiling jackdaw_pick v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_pick)
+   Compiling jackdaw_csg v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_csg)
+   Compiling jackdaw_uv v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_uv)
+   Compiling jackdaw_hull v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_hull)
+   Compiling jackdaw_select v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_select)
+   Compiling jackdaw_camera v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_camera)
+   Compiling bevy_window_chrome v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/bevy_window_chrome)
+   Compiling jackdaw_dylib v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_dylib)
+   Compiling jackdaw_api v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_api)
+   Compiling jackdaw_multiplayer_editor v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_multiplayer_editor)
+   Compiling jackdaw_physics v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/integrations/physics/jackdaw_physics)
+   Compiling jackdaw v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw)
+   Compiling jackdaw_extension v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_extension)
+   Compiling test_fixture_extension v0.0.0 (/Users/zhanglinbo/workspace/jackdaw/tests/fixtures/test_fixture_extension)
+    Finished `test` profile [optimized + debuginfo] target(s) in 9m 30s
+────────────
+ Nextest run ID 3fe22be6-0419-460f-aed2-74c29ee5e2e0 with nextest profile: default
+    Starting 10 tests across 30 binaries (2972 tests skipped)
+        FAIL [   2.222s] ( 1/10) jackdaw::guards reference_rewrite::a_dirty_tab_journals_under_the_renamed_path
+  stdout ───
+
+    running 1 test
+    test reference_rewrite::a_dirty_tab_journals_under_the_renamed_path ... FAILED
+
+    failures:
+
+    failures:
+        reference_rewrite::a_dirty_tab_journals_under_the_renamed_path
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 221 filtered out; finished in 2.14s
+
+  stderr ───
+    2026-10-28T06:20:02.885476Z ERROR bevy_extract::extract_resource: Sub app did not exist when trying to add `extract_resource` for <bevy_camera::clear_color::ClearColor>.
+    2026-10-28T06:20:03.596981Z  WARN bevy_gizmos_render: bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+    2026-10-28T06:20:03.732557Z  INFO jackdaw_api_internal::lifecycle: Adding the App plugin `jackdaw::test_input::plugin` of extension `jackdaw.test_input`
+    2026-10-28T06:20:03.732920Z  INFO jackdaw_api_internal::lifecycle: Adding the App plugin `jackdaw_physics::PhysicsEditorPlugin` of extension `jackdaw.physics`
+    2026-10-28T06:20:03.754559Z  WARN bevy_render::texture: CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+    2026-10-28T06:20:03.754752Z  WARN bevy_gltf: CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+    2026-10-28T06:20:03.782689Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.test_input
+    2026-10-28T06:20:03.782805Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.ui_palette
+    2026-10-28T06:20:03.782862Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.multiplayer
+    2026-10-28T06:20:03.782879Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.core_windows
+    2026-10-28T06:20:03.782923Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.build_panel
+    2026-10-28T06:20:03.782930Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.animation_graph
+    2026-10-28T06:20:03.782938Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.physics
+    2026-10-28T06:20:03.783156Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.core
+    2026-10-28T06:20:03.785098Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.project_window
+    2026-10-28T06:20:03.785697Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.viewport_panel
+    2026-10-28T06:20:03.785756Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.game_panel
+    2026-10-28T06:20:03.785764Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.timeline
+    2026-10-28T06:20:03.785785Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.inspector
+    2026-10-28T06:20:03.793400Z  WARN jackdaw_api_internal::keymap::apply: preset 'classic' has 10 chords claimed by more than one action: ["Delete (Press, Operators): clip.delete_keyframes, entity.delete, brush.delete_element", "Backspace (Press, Operators): clip.delete_keyframes, viewport.draw_brush.remove_last_vertex, brush.delete_element", "Home (Press, Operators): clip.timeline.jump_start, view.frame_all, viewport2d.frame", "Super+KeyC (Press, Operators): clip.copy_keyframes, entity.copy", "Super+KeyV (Press, Operators): clip.paste_keyframes, entity.paste", "Tab (Press, Operators): viewport.draw_brush.toggle_mode, brush.clip.cycle_mode", "Enter (Press, Operators): viewport.draw_brush.commit_polygon, brush.clip.apply", "KeyE (Press, Operators): tool.rotate, brush.mesh.extrude", "Escape (Press, Operators): brush.exit_edit_mode, selection.clear, brush.clip.clear, terrain.tool.exit_to_select", "Super+KeyB (Press, Operators): brush.mesh.edge_bevel, brush.mesh.vertex_bevel"]
+    2026-10-28T06:20:03.793430Z  INFO jackdaw::extension_lifecycle: applied keymap preset 'classic': 112 entries, 112 bindings, 0 user rows
+    2026-10-28T06:20:04.260595Z  INFO jackdaw::asset_index: asset index: walking /var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/jackdaw-reference-rewrite-qSLYOm/assets recursively
+    2026-10-28T06:20:04.261409Z  INFO jackdaw::asset_catalog: No asset catalog found, starting with empty catalog
+    2026-10-28T06:20:04.445457Z  WARN jackdaw::pie: PIE: cannot build /var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/jackdaw-reference-rewrite-qSLYOm: cargo could not read /var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/jackdaw-reference-rewrite-qSLYOm: error: could not find `Cargo.toml` in `/private/var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/jackdaw-reference-rewrite-qSLYOm` or any parent directory
+    2026-10-28T06:20:04.450445Z  INFO jackdaw::material_browser: update_material_browser_ui: rebuilding with 1 entries
+    2026-10-28T06:20:04.466911Z  WARN bevy_ui::ui_node: Two or more Entities with IsDefaultUiCamera found when only one Camera with this marker is allowed.
+    2026-10-28T06:20:04.605485Z  INFO jackdaw_api_internal::operator: OPERATOR: scene.open
+    2026-10-28T06:20:04.678352Z  INFO jackdaw::material_browser: update_material_browser_ui: rebuilding with 2 entries
+    2026-10-28T06:20:04.679447Z  INFO jackdaw::asset_index: asset index: walk landed (documents 2, typed 2, referencing 1)
+    2026-10-28T06:20:04.679466Z  INFO jackdaw::asset_index: asset index: walk out of date (writes 0 -> 2), walking again
+    2026-10-28T06:20:04.679470Z  INFO jackdaw::asset_index: asset index: walking /var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/jackdaw-reference-rewrite-qSLYOm/assets recursively
+    2026-10-28T06:20:04.722623Z  INFO jackdaw_api_internal::operator: OPERATOR: file.rename
+    2026-10-28T06:20:04.729272Z  INFO jackdaw_api_internal::operator: renamed; rewrote 0 references
+
+    thread 'reference_rewrite::a_dirty_tab_journals_under_the_renamed_path' (13436980) panicked at tests/guards/reference_rewrite.rs:698:5:
+    the journaled path is the new one: /private/var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/jackdaw-reference-rewrite-qSLYOm/assets/zones/hedgerow.bsn
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+        FAIL [   2.224s] ( 2/10) jackdaw::guards reference_audit::a_loaded_scene_leaves_one_summary_warning
+  stdout ───
+
+    running 1 test
+    test reference_audit::a_loaded_scene_leaves_one_summary_warning ... FAILED
+
+    failures:
+
+    failures:
+        reference_audit::a_loaded_scene_leaves_one_summary_warning
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 221 filtered out; finished in 2.13s
+
+  stderr ───
+    2026-10-28T06:20:03.004894Z ERROR bevy_extract::extract_resource: Sub app did not exist when trying to add `extract_resource` for <bevy_camera::clear_color::ClearColor>.
+    2026-10-28T06:20:03.621681Z  WARN bevy_gizmos_render: bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+    2026-10-28T06:20:03.731270Z  INFO jackdaw_api_internal::lifecycle: Adding the App plugin `jackdaw::test_input::plugin` of extension `jackdaw.test_input`
+    2026-10-28T06:20:03.733922Z  INFO jackdaw_api_internal::lifecycle: Adding the App plugin `jackdaw_physics::PhysicsEditorPlugin` of extension `jackdaw.physics`
+    2026-10-28T06:20:03.737594Z  WARN bevy_render::texture: CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+    2026-10-28T06:20:03.737810Z  WARN bevy_gltf: CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+    2026-10-28T06:20:03.757020Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.core_windows
+    2026-10-28T06:20:03.757721Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.physics
+    2026-10-28T06:20:03.758186Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.core
+    2026-10-28T06:20:03.773905Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.test_input
+    2026-10-28T06:20:03.773949Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.timeline
+    2026-10-28T06:20:03.773964Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.multiplayer
+    2026-10-28T06:20:03.773980Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.project_window
+    2026-10-28T06:20:03.773992Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.build_panel
+    2026-10-28T06:20:03.774003Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.ui_palette
+    2026-10-28T06:20:03.774052Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.game_panel
+    2026-10-28T06:20:03.774063Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.inspector
+    2026-10-28T06:20:03.774079Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.viewport_panel
+    2026-10-28T06:20:03.774138Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.animation_graph
+    2026-10-28T06:20:03.782179Z  WARN jackdaw_api_internal::keymap::apply: preset 'classic' has 10 chords claimed by more than one action: ["Delete (Press, Operators): clip.delete_keyframes, entity.delete, brush.delete_element", "Backspace (Press, Operators): clip.delete_keyframes, viewport.draw_brush.remove_last_vertex, brush.delete_element", "Home (Press, Operators): clip.timeline.jump_start, view.frame_all, viewport2d.frame", "Super+KeyC (Press, Operators): clip.copy_keyframes, entity.copy", "Super+KeyV (Press, Operators): clip.paste_keyframes, entity.paste", "Tab (Press, Operators): viewport.draw_brush.toggle_mode, brush.clip.cycle_mode", "Enter (Press, Operators): viewport.draw_brush.commit_polygon, brush.clip.apply", "KeyE (Press, Operators): tool.rotate, brush.mesh.extrude", "Escape (Press, Operators): brush.exit_edit_mode, selection.clear, brush.clip.clear, terrain.tool.exit_to_select", "Super+KeyB (Press, Operators): brush.mesh.edge_bevel, brush.mesh.vertex_bevel"]
+    2026-10-28T06:20:03.782295Z  INFO jackdaw::extension_lifecycle: applied keymap preset 'classic': 112 entries, 112 bindings, 0 user rows
+    2026-10-28T06:20:04.227502Z  INFO jackdaw::asset_index: asset index: walking /var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/jackdaw-reference-audit-Be3eGX/assets recursively
+    2026-10-28T06:20:04.227728Z  INFO jackdaw::asset_catalog: No asset catalog found, starting with empty catalog
+    2026-10-28T06:20:04.491657Z  WARN jackdaw::pie: PIE: cannot build /var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/jackdaw-reference-audit-Be3eGX: cargo could not read /var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/jackdaw-reference-audit-Be3eGX: error: could not find `Cargo.toml` in `/private/var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/jackdaw-reference-audit-Be3eGX` or any parent directory
+    2026-10-28T06:20:04.494588Z  INFO jackdaw::material_browser: update_material_browser_ui: rebuilding with 1 entries
+    2026-10-28T06:20:04.518595Z  WARN bevy_ui::ui_node: Two or more Entities with IsDefaultUiCamera found when only one Camera with this marker is allowed.
+    2026-10-28T06:20:04.667630Z  INFO jackdaw_api_internal::operator: OPERATOR: scene.open
+    2026-10-28T06:20:04.668045Z  WARN jackdaw_bsn::apply: BSN entity has 2 #names; a missing comma between sibling entities merges them into one. Check the scene file for a patch group holding more than one #name.
+    2026-10-28T06:20:04.669308Z ERROR bevy_asset::server: Could not find an asset loader matching: Asset Type: Some(TypeId(0x37d071f0f533985eee2f012167a453dd)); Path: "materials/gone.material.bsn";
+    2026-10-28T06:20:04.669308Z ERROR bevy_asset::server: Could not find an asset loader matching: Asset Type: Some(TypeId(0x37d071f0f533985eee2f012167a453dd)); Path: "materials/also-gone.material.bsn";
+    2026-10-28T06:20:04.765940Z  INFO jackdaw::material_browser: update_material_browser_ui: rebuilding with 2 entries
+    2026-10-28T06:20:04.766943Z  INFO jackdaw::asset_index: asset index: walk landed (documents 2, typed 2, referencing 1)
+    2026-10-28T06:20:04.766958Z  INFO jackdaw::asset_index: asset index: walk out of date (writes 0 -> 2), walking again
+    2026-10-28T06:20:04.766961Z  INFO jackdaw::asset_index: asset index: walking /var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/jackdaw-reference-audit-Be3eGX/assets recursively
+
+    thread 'reference_audit::a_loaded_scene_leaves_one_summary_warning' (13436982) panicked at tests/guards/reference_audit.rs:170:5:
+    assertion `left == right` failed: one line for the loaded scene's broken references: []
+      left: 0
+     right: 1
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+        PASS [   2.410s] ( 3/10) jackdaw::panels maximize_toggle::a_root_leaf_layout_refuses_to_maximize
+        FAIL [   2.604s] ( 4/10) jackdaw::controls ui_probe_click::a_ui_input_types_and_commits_in_one_gesture
+  stdout ───
+
+    running 1 test
+    test ui_probe_click::a_ui_input_types_and_commits_in_one_gesture ... FAILED
+
+    failures:
+
+    failures:
+        ui_probe_click::a_ui_input_types_and_commits_in_one_gesture
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 40 filtered out; finished in 2.47s
+
+  stderr ───
+    2026-10-28T06:20:03.266699Z ERROR bevy_extract::extract_resource: Sub app did not exist when trying to add `extract_resource` for <bevy_camera::clear_color::ClearColor>.
+    2026-10-28T06:20:03.761864Z  WARN bevy_gizmos_render: bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+    2026-10-28T06:20:03.942564Z  INFO jackdaw_api_internal::lifecycle: Adding the App plugin `jackdaw::test_input::plugin` of extension `jackdaw.test_input`
+    2026-10-28T06:20:03.942869Z  INFO jackdaw_api_internal::lifecycle: Adding the App plugin `jackdaw_physics::PhysicsEditorPlugin` of extension `jackdaw.physics`
+    2026-10-28T06:20:03.949070Z  WARN bevy_render::texture: CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+    2026-10-28T06:20:03.949314Z  WARN bevy_gltf: CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+    2026-10-28T06:20:03.959165Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.physics
+    2026-10-28T06:20:03.959465Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.project_window
+    2026-10-28T06:20:03.959497Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.build_panel
+    2026-10-28T06:20:03.959507Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.inspector
+    2026-10-28T06:20:03.959522Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.multiplayer
+    2026-10-28T06:20:03.959538Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.test_input
+    2026-10-28T06:20:03.959620Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.game_panel
+    2026-10-28T06:20:03.959629Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.timeline
+    2026-10-28T06:20:03.959636Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.core_windows
+    2026-10-28T06:20:03.959677Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.core
+    2026-10-28T06:20:03.962144Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.animation_graph
+    2026-10-28T06:20:03.962166Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.ui_palette
+    2026-10-28T06:20:03.962215Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.viewport_panel
+    2026-10-28T06:20:03.965848Z  WARN jackdaw_api_internal::keymap::apply: preset 'classic' has 10 chords claimed by more than one action: ["Delete (Press, Operators): clip.delete_keyframes, entity.delete, brush.delete_element", "Backspace (Press, Operators): clip.delete_keyframes, viewport.draw_brush.remove_last_vertex, brush.delete_element", "Home (Press, Operators): clip.timeline.jump_start, view.frame_all, viewport2d.frame", "Super+KeyC (Press, Operators): clip.copy_keyframes, entity.copy", "Super+KeyV (Press, Operators): clip.paste_keyframes, entity.paste", "Tab (Press, Operators): viewport.draw_brush.toggle_mode, brush.clip.cycle_mode", "Enter (Press, Operators): viewport.draw_brush.commit_polygon, brush.clip.apply", "KeyE (Press, Operators): tool.rotate, brush.mesh.extrude", "Escape (Press, Operators): brush.exit_edit_mode, selection.clear, brush.clip.clear, terrain.tool.exit_to_select", "Super+KeyB (Press, Operators): brush.mesh.edge_bevel, brush.mesh.vertex_bevel"]
+    2026-10-28T06:20:03.965877Z  INFO jackdaw::extension_lifecycle: applied keymap preset 'classic': 112 entries, 112 bindings, 0 user rows
+
+    thread 'ui_probe_click::a_ui_input_types_and_commits_in_one_gesture' (13436985) panicked at tests/controls/ui_probe_click.rs:261:5:
+    assertion `left == right` failed: the typed text did not reach the focused field (got "0entity: 42")
+      left: "0entity: 42"
+     right: "entity: 42"
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+        FAIL [   2.626s] ( 5/10) jackdaw::guards reference_rewrite::renaming_a_folder_retargets_a_tab_under_it_onto_the_same_tail
+  stdout ───
+
+    running 1 test
+    test reference_rewrite::renaming_a_folder_retargets_a_tab_under_it_onto_the_same_tail ... FAILED
+
+    failures:
+
+    failures:
+        reference_rewrite::renaming_a_folder_retargets_a_tab_under_it_onto_the_same_tail
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 221 filtered out; finished in 2.46s
+
+  stderr ───
+    2026-10-28T06:20:03.604993Z ERROR bevy_extract::extract_resource: Sub app did not exist when trying to add `extract_resource` for <bevy_camera::clear_color::ClearColor>.
+    2026-10-28T06:20:04.040359Z  WARN bevy_gizmos_render: bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+    2026-10-28T06:20:04.164215Z  INFO jackdaw_api_internal::lifecycle: Adding the App plugin `jackdaw::test_input::plugin` of extension `jackdaw.test_input`
+    2026-10-28T06:20:04.164495Z  INFO jackdaw_api_internal::lifecycle: Adding the App plugin `jackdaw_physics::PhysicsEditorPlugin` of extension `jackdaw.physics`
+    2026-10-28T06:20:04.166906Z  WARN bevy_render::texture: CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+    2026-10-28T06:20:04.167016Z  WARN bevy_gltf: CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+    2026-10-28T06:20:04.172467Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.inspector
+    2026-10-28T06:20:04.172591Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.physics
+    2026-10-28T06:20:04.173181Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.core_windows
+    2026-10-28T06:20:04.173243Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.game_panel
+    2026-10-28T06:20:04.173251Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.timeline
+    2026-10-28T06:20:04.173259Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.viewport_panel
+    2026-10-28T06:20:04.173337Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.project_window
+    2026-10-28T06:20:04.173349Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.animation_graph
+    2026-10-28T06:20:04.173355Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.ui_palette
+    2026-10-28T06:20:04.173399Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.build_panel
+    2026-10-28T06:20:04.173407Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.test_input
+    2026-10-28T06:20:04.173424Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.core
+    2026-10-28T06:20:04.175120Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.multiplayer
+    2026-10-28T06:20:04.177145Z  WARN jackdaw_api_internal::keymap::apply: preset 'classic' has 10 chords claimed by more than one action: ["Home (Press, Operators): viewport2d.frame, clip.timeline.jump_start, view.frame_all", "Delete (Press, Operators): clip.delete_keyframes, entity.delete, brush.delete_element", "Backspace (Press, Operators): clip.delete_keyframes, viewport.draw_brush.remove_last_vertex, brush.delete_element", "Super+KeyC (Press, Operators): clip.copy_keyframes, entity.copy", "Super+KeyV (Press, Operators): clip.paste_keyframes, entity.paste", "Tab (Press, Operators): viewport.draw_brush.toggle_mode, brush.clip.cycle_mode", "Enter (Press, Operators): viewport.draw_brush.commit_polygon, brush.clip.apply", "KeyE (Press, Operators): tool.rotate, brush.mesh.extrude", "Escape (Press, Operators): brush.exit_edit_mode, selection.clear, brush.clip.clear, terrain.tool.exit_to_select", "Super+KeyB (Press, Operators): brush.mesh.edge_bevel, brush.mesh.vertex_bevel"]
+    2026-10-28T06:20:04.177170Z  INFO jackdaw::extension_lifecycle: applied keymap preset 'classic': 112 entries, 112 bindings, 0 user rows
+    2026-10-28T06:20:04.741344Z  INFO jackdaw::asset_index: asset index: walking /var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/jackdaw-reference-folder-tab-kouWlf/assets recursively
+    2026-10-28T06:20:04.744306Z  INFO jackdaw::asset_catalog: No asset catalog found, starting with empty catalog
+    2026-10-28T06:20:04.939960Z  WARN jackdaw::pie: PIE: cannot build /var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/jackdaw-reference-folder-tab-kouWlf: cargo could not read /var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/jackdaw-reference-folder-tab-kouWlf: error: could not find `Cargo.toml` in `/private/var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/jackdaw-reference-folder-tab-kouWlf` or any parent directory
+    2026-10-28T06:20:04.945394Z  INFO jackdaw::material_browser: update_material_browser_ui: rebuilding with 1 entries
+    2026-10-28T06:20:04.961327Z  WARN bevy_ui::ui_node: Two or more Entities with IsDefaultUiCamera found when only one Camera with this marker is allowed.
+    2026-10-28T06:20:05.083825Z  INFO jackdaw_api_internal::operator: OPERATOR: scene.open
+    2026-10-28T06:20:05.191710Z  INFO jackdaw::asset_index: asset index: walk landed (documents 1, typed 1, referencing 0)
+    2026-10-28T06:20:05.191826Z  INFO jackdaw::asset_index: asset index: applied with nothing added (removed 0, reloaded 0)
+    2026-10-28T06:20:05.242630Z  INFO jackdaw_api_internal::operator: OPERATOR: file.rename
+    2026-10-28T06:20:05.262897Z  INFO jackdaw_api_internal::operator: renamed; rewrote 0 references
+
+    thread 'reference_rewrite::renaming_a_folder_retargets_a_tab_under_it_onto_the_same_tail' (13437065) panicked at tests/guards/reference_rewrite.rs:745:5:
+    the tab keeps its place under the renamed folder: /private/var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/jackdaw-reference-folder-tab-kouWlf/assets/props/sub/scene.bsn
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+        PASS [   2.873s] ( 6/10) jackdaw::panels reconcile::switching_workspaces_clears_the_maximized_leaf
+        FAIL [   3.592s] ( 7/10) jackdaw::panels reconcile::a_maximized_leaf_draining_ends_the_maximize
+  stdout ───
+
+    running 1 test
+    test reconcile::a_maximized_leaf_draining_ends_the_maximize ... FAILED
+
+    failures:
+
+    failures:
+        reconcile::a_maximized_leaf_draining_ends_the_maximize
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 13 filtered out; finished in 3.44s
+
+  stderr ───
+    2026-10-28T06:20:03.437216Z ERROR bevy_extract::extract_resource: Sub app did not exist when trying to add `extract_resource` for <bevy_camera::clear_color::ClearColor>.
+    2026-10-28T06:20:03.907055Z  WARN bevy_gizmos_render: bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+    2026-10-28T06:20:04.046322Z  INFO jackdaw_api_internal::lifecycle: Adding the App plugin `jackdaw::test_input::plugin` of extension `jackdaw.test_input`
+    2026-10-28T06:20:04.046635Z  INFO jackdaw_api_internal::lifecycle: Adding the App plugin `jackdaw_physics::PhysicsEditorPlugin` of extension `jackdaw.physics`
+    2026-10-28T06:20:04.049094Z  WARN bevy_render::texture: CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+    2026-10-28T06:20:04.049197Z  WARN bevy_gltf: CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+    2026-10-28T06:20:04.056078Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.core_windows
+    2026-10-28T06:20:04.056582Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.project_window
+    2026-10-28T06:20:04.056625Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.timeline
+    2026-10-28T06:20:04.056657Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.animation_graph
+    2026-10-28T06:20:04.056720Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.game_panel
+    2026-10-28T06:20:04.056755Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.test_input
+    2026-10-28T06:20:04.056875Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.viewport_panel
+    2026-10-28T06:20:04.057271Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.multiplayer
+    2026-10-28T06:20:04.057300Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.physics
+    2026-10-28T06:20:04.057436Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.core
+    2026-10-28T06:20:04.059065Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.build_panel
+    2026-10-28T06:20:04.059079Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.inspector
+    2026-10-28T06:20:04.059093Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.ui_palette
+    2026-10-28T06:20:04.060793Z  WARN jackdaw_api_internal::keymap::apply: preset 'classic' has 10 chords claimed by more than one action: ["Home (Press, Operators): viewport2d.frame, clip.timeline.jump_start, view.frame_all", "Delete (Press, Operators): clip.delete_keyframes, entity.delete, brush.delete_element", "Backspace (Press, Operators): clip.delete_keyframes, viewport.draw_brush.remove_last_vertex, brush.delete_element", "Super+KeyC (Press, Operators): clip.copy_keyframes, entity.copy", "Super+KeyV (Press, Operators): clip.paste_keyframes, entity.paste", "Tab (Press, Operators): viewport.draw_brush.toggle_mode, brush.clip.cycle_mode", "Enter (Press, Operators): viewport.draw_brush.commit_polygon, brush.clip.apply", "KeyE (Press, Operators): tool.rotate, brush.mesh.extrude", "Escape (Press, Operators): brush.exit_edit_mode, selection.clear, brush.clip.clear, terrain.tool.exit_to_select", "Super+KeyB (Press, Operators): brush.mesh.edge_bevel, brush.mesh.vertex_bevel"]
+    2026-10-28T06:20:04.060817Z  INFO jackdaw::extension_lifecycle: applied keymap preset 'classic': 112 entries, 112 bindings, 0 user rows
+    2026-10-28T06:20:04.511888Z  INFO jackdaw::asset_index: asset index: walk asked with no assets directory open
+    2026-10-28T06:20:04.511950Z  INFO jackdaw::asset_catalog: No project root, skipping catalog load
+    2026-10-28T06:20:04.755640Z  INFO jackdaw::material_browser: update_material_browser_ui: rebuilding with 1 entries
+    2026-10-28T06:20:04.773781Z  WARN bevy_ui::ui_node: Two or more Entities with IsDefaultUiCamera found when only one Camera with this marker is allowed.
+    2026-10-28T06:20:05.145330Z  WARN bevy_ecs::error::handler: Encountered an error in command `<bevy_ecs::system::commands::entity_command::despawn::{{closure}} as bevy_ecs::system::commands::entity_command::EntityCommand>::with_entity::{{closure}}`: Entity despawned: The entity with ID 4397v1 is invalid; its index now has generation 2.
+    Note that interacting with a despawned entity is the most common cause of this error but there are others
+
+        If you were attempting to apply a command to this entity,
+        and want to handle this error gracefully, consider using `EntityCommands::queue_handled` or `queue_silenced`.
+
+    2026-10-28T06:20:05.145421Z  WARN bevy_ecs::error::handler: Encountered an error in command `<bevy_ecs::system::commands::entity_command::despawn::{{closure}} as bevy_ecs::system::commands::entity_command::EntityCommand>::with_entity::{{closure}}`: Entity despawned: The entity with ID 4332v1 is invalid; its index now has generation 2.
+    Note that interacting with a despawned entity is the most common cause of this error but there are others
+
+        If you were attempting to apply a command to this entity,
+        and want to handle this error gracefully, consider using `EntityCommands::queue_handled` or `queue_silenced`.
+
+    2026-10-28T06:20:05.145432Z  WARN bevy_ecs::error::handler: Encountered an error in command `<bevy_ecs::system::commands::entity_command::despawn::{{closure}} as bevy_ecs::system::commands::entity_command::EntityCommand>::with_entity::{{closure}}`: Entity despawned: The entity with ID 4331v1 is invalid; its index now has generation 2.
+    Note that interacting with a despawned entity is the most common cause of this error but there are others
+
+        If you were attempting to apply a command to this entity,
+        and want to handle this error gracefully, consider using `EntityCommands::queue_handled` or `queue_silenced`.
+
+    2026-10-28T06:20:05.145441Z  WARN bevy_ecs::error::handler: Encountered an error in command `<bevy_ecs::system::commands::entity_command::despawn::{{closure}} as bevy_ecs::system::commands::entity_command::EntityCommand>::with_entity::{{closure}}`: Entity despawned: The entity with ID 4399v1 is invalid; its index now has generation 2.
+    Note that interacting with a despawned entity is the most common cause of this error but there are others
+
+        If you were attempting to apply a command to this entity,
+        and want to handle this error gracefully, consider using `EntityCommands::queue_handled` or `queue_silenced`.
+
+    2026-10-28T06:20:05.145457Z  WARN bevy_ecs::error::handler: Encountered an error in command `<bevy_ecs::system::commands::entity_command::despawn::{{closure}} as bevy_ecs::system::commands::entity_command::EntityCommand>::with_entity::{{closure}}`: Entity despawned: The entity with ID 4324v1 is invalid; its index now has generation 2.
+    Note that interacting with a despawned entity is the most common cause of this error but there are others
+
+        If you were attempting to apply a command to this entity,
+        and want to handle this error gracefully, consider using `EntityCommands::queue_handled` or `queue_silenced`.
+
+    2026-10-28T06:20:05.145467Z  WARN bevy_ecs::error::handler: Encountered an error in command `<bevy_ecs::system::commands::entity_command::despawn::{{closure}} as bevy_ecs::system::commands::entity_command::EntityCommand>::with_entity::{{closure}}`: Entity despawned: The entity with ID 4328v1 is invalid; its index now has generation 2.
+    Note that interacting with a despawned entity is the most common cause of this error but there are others
+
+        If you were attempting to apply a command to this entity,
+        and want to handle this error gracefully, consider using `EntityCommands::queue_handled` or `queue_silenced`.
+
+    2026-10-28T06:20:05.145475Z  WARN bevy_ecs::error::handler: Encountered an error in command `<bevy_ecs::system::commands::entity_command::despawn::{{closure}} as bevy_ecs::system::commands::entity_command::EntityCommand>::with_entity::{{closure}}`: Entity despawned: The entity with ID 4325v1 is invalid; its index now has generation 2.
+    Note that interacting with a despawned entity is the most common cause of this error but there are others
+
+        If you were attempting to apply a command to this entity,
+        and want to handle this error gracefully, consider using `EntityCommands::queue_handled` or `queue_silenced`.
+
+    2026-10-28T06:20:05.145484Z  WARN bevy_ecs::error::handler: Encountered an error in command `<bevy_ecs::system::commands::entity_command::despawn::{{closure}} as bevy_ecs::system::commands::entity_command::EntityCommand>::with_entity::{{closure}}`: Entity despawned: The entity with ID 4396v1 is invalid; its index now has generation 2.
+    Note that interacting with a despawned entity is the most common cause of this error but there are others
+
+        If you were attempting to apply a command to this entity,
+        and want to handle this error gracefully, consider using `EntityCommands::queue_handled` or `queue_silenced`.
+
+    2026-10-28T06:20:05.145494Z  WARN bevy_ecs::error::handler: Encountered an error in command `<bevy_ecs::system::commands::entity_command::despawn::{{closure}} as bevy_ecs::system::commands::entity_command::EntityCommand>::with_entity::{{closure}}`: Entity despawned: The entity with ID 4394v1 is invalid; its index now has generation 2.
+    Note that interacting with a despawned entity is the most common cause of this error but there are others
+
+        If you were attempting to apply a command to this entity,
+        and want to handle this error gracefully, consider using `EntityCommands::queue_handled` or `queue_silenced`.
+
+    2026-10-28T06:20:05.145504Z  WARN bevy_ecs::error::handler: Encountered an error in command `<bevy_ecs::system::commands::entity_command::despawn::{{closure}} as bevy_ecs::system::commands::entity_command::EntityCommand>::with_entity::{{closure}}`: Entity despawned: The entity with ID 4393v1 is invalid; its index now has generation 2.
+    Note that interacting with a despawned entity is the most common cause of this error but there are others
+
+        If you were attempting to apply a command to this entity,
+        and want to handle this error gracefully, consider using `EntityCommands::queue_handled` or `queue_silenced`.
+
+    2026-10-28T06:20:05.145514Z  WARN bevy_ecs::error::handler: Encountered an error in command `<bevy_ecs::system::commands::entity_command::despawn::{{closure}} as bevy_ecs::system::commands::entity_command::EntityCommand>::with_entity::{{closure}}`: Entity despawned: The entity with ID 4327v1 is invalid; its index now has generation 2.
+    Note that interacting with a despawned entity is the most common cause of this error but there are others
+
+        If you were attempting to apply a command to this entity,
+        and want to handle this error gracefully, consider using `EntityCommands::queue_handled` or `queue_silenced`.
+
+    2026-10-28T06:20:05.145525Z  WARN bevy_ecs::error::handler: Encountered an error in command `<bevy_ecs::system::commands::entity_command::despawn::{{closure}} as bevy_ecs::system::commands::entity_command::EntityCommand>::with_entity::{{closure}}`: Entity despawned: The entity with ID 4326v1 is invalid; its index now has generation 2.
+    Note that interacting with a despawned entity is the most common cause of this error but there are others
+
+        If you were attempting to apply a command to this entity,
+        and want to handle this error gracefully, consider using `EntityCommands::queue_handled` or `queue_silenced`.
+
+    2026-10-28T06:20:05.145535Z  WARN bevy_ecs::error::handler: Encountered an error in command `<bevy_ecs::system::commands::entity_command::despawn::{{closure}} as bevy_ecs::system::commands::entity_command::EntityCommand>::with_entity::{{closure}}`: Entity despawned: The entity with ID 4395v1 is invalid; its index now has generation 2.
+    Note that interacting with a despawned entity is the most common cause of this error but there are others
+
+        If you were attempting to apply a command to this entity,
+        and want to handle this error gracefully, consider using `EntityCommands::queue_handled` or `queue_silenced`.
+
+    2026-10-28T06:20:05.145545Z  WARN bevy_ecs::error::handler: Encountered an error in command `<bevy_ecs::system::commands::entity_command::despawn::{{closure}} as bevy_ecs::system::commands::entity_command::EntityCommand>::with_entity::{{closure}}`: Entity despawned: The entity with ID 4319v1 is invalid; its index now has generation 2.
+    Note that interacting with a despawned entity is the most common cause of this error but there are others
+
+        If you were attempting to apply a command to this entity,
+        and want to handle this error gracefully, consider using `EntityCommands::queue_handled` or `queue_silenced`.
+
+    2026-10-28T06:20:05.145603Z  WARN bevy_ecs::error::handler: Encountered an error in command `<bevy_ecs::system::commands::entity_command::despawn::{{closure}} as bevy_ecs::system::commands::entity_command::EntityCommand>::with_entity::{{closure}}`: Entity despawned: The entity with ID 4323v1 is invalid; its index now has generation 2.
+    Note that interacting with a despawned entity is the most common cause of this error but there are others
+
+        If you were attempting to apply a command to this entity,
+        and want to handle this error gracefully, consider using `EntityCommands::queue_handled` or `queue_silenced`.
+
+    2026-10-28T06:20:05.145617Z  WARN bevy_ecs::error::handler: Encountered an error in command `<bevy_ecs::system::commands::entity_command::despawn::{{closure}} as bevy_ecs::system::commands::entity_command::EntityCommand>::with_entity::{{closure}}`: Entity despawned: The entity with ID 4320v1 is invalid; its index now has generation 2.
+    Note that interacting with a despawned entity is the most common cause of this error but there are others
+
+        If you were attempting to apply a command to this entity,
+        and want to handle this error gracefully, consider using `EntityCommands::queue_handled` or `queue_silenced`.
+
+    2026-10-28T06:20:05.145627Z  WARN bevy_ecs::error::handler: Encountered an error in command `<bevy_ecs::system::commands::entity_command::despawn::{{closure}} as bevy_ecs::system::commands::entity_command::EntityCommand>::with_entity::{{closure}}`: Entity despawned: The entity with ID 4392v1 is invalid; its index now has generation 2.
+    Note that interacting with a despawned entity is the most common cause of this error but there are others
+
+        If you were attempting to apply a command to this entity,
+        and want to handle this error gracefully, consider using `EntityCommands::queue_handled` or `queue_silenced`.
+
+    2026-10-28T06:20:05.145637Z  WARN bevy_ecs::error::handler: Encountered an error in command `<bevy_ecs::system::commands::entity_command::despawn::{{closure}} as bevy_ecs::system::commands::entity_command::EntityCommand>::with_entity::{{closure}}`: Entity despawned: The entity with ID 4390v1 is invalid; its index now has generation 2.
+    Note that interacting with a despawned entity is the most common cause of this error but there are others
+
+        If you were attempting to apply a command to this entity,
+        and want to handle this error gracefully, consider using `EntityCommands::queue_handled` or `queue_silenced`.
+
+    2026-10-28T06:20:05.145647Z  WARN bevy_ecs::error::handler: Encountered an error in command `<bevy_ecs::system::commands::entity_command::despawn::{{closure}} as bevy_ecs::system::commands::entity_command::EntityCommand>::with_entity::{{closure}}`: Entity despawned: The entity with ID 4389v1 is invalid; its index now has generation 2.
+    Note that interacting with a despawned entity is the most common cause of this error but there are others
+
+        If you were attempting to apply a command to this entity,
+        and want to handle this error gracefully, consider using `EntityCommands::queue_handled` or `queue_silenced`.
+
+    2026-10-28T06:20:05.145656Z  WARN bevy_ecs::error::handler: Encountered an error in command `<bevy_ecs::system::commands::entity_command::despawn::{{closure}} as bevy_ecs::system::commands::entity_command::EntityCommand>::with_entity::{{closure}}`: Entity despawned: The entity with ID 4322v1 is invalid; its index now has generation 2.
+    Note that interacting with a despawned entity is the most common cause of this error but there are others
+
+        If you were attempting to apply a command to this entity,
+        and want to handle this error gracefully, consider using `EntityCommands::queue_handled` or `queue_silenced`.
+
+    2026-10-28T06:20:05.145665Z  WARN bevy_ecs::error::handler: Encountered an error in command `<bevy_ecs::system::commands::entity_command::despawn::{{closure}} as bevy_ecs::system::commands::entity_command::EntityCommand>::with_entity::{{closure}}`: Entity despawned: The entity with ID 4321v1 is invalid; its index now has generation 2.
+    Note that interacting with a despawned entity is the most common cause of this error but there are others
+
+        If you were attempting to apply a command to this entity,
+        and want to handle this error gracefully, consider using `EntityCommands::queue_handled` or `queue_silenced`.
+
+
+    thread 'reconcile::a_maximized_leaf_draining_ends_the_maximize' (13437023) panicked at /Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_ecs/src/error/handler.rs:128:1:
+    Encountered an error in command `<bevy_ecs::system::commands::entity_command::observe<(bevy_picking::events::PointerOver, (bevy_ecs::system::function_system::IsFunctionSystem, (bevy_ecs::system::function_system::HasSystemInput, fn(bevy_ecs::observer::system_param::On<'_, bevy_picking::events::PointerOver>, bevy_ecs::system::query::Query<'_, '_, &mut bevy_ui::ui_node::BackgroundColor>)))), jackdaw::project_window::highlight_on_hover>::{{closure}} as bevy_ecs::system::commands::entity_command::EntityCommand>::with_entity::{{closure}}`: Entity despawned: The entity with ID 4779v1 is invalid; its index now has generation 2.
+    Note that interacting with a despawned entity is the most common cause of this error but there are others
+
+        If you were attempting to apply a command to this entity,
+        and want to handle this error gracefully, consider using `EntityCommands::queue_handled` or `queue_silenced`.
+
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+    2026-10-28T06:20:05.683784Z  WARN bevy_ecs::world::command_queue: CommandQueue has un-applied commands being dropped. Did you forget to call SystemState::apply?
+    2026-10-28T06:20:05.684331Z  WARN bevy_ecs::world::command_queue: CommandQueue has un-applied commands being dropped. Did you forget to call SystemState::apply?
+    2026-10-28T06:20:05.684371Z  WARN bevy_ecs::world::command_queue: CommandQueue has un-applied commands being dropped. Did you forget to call SystemState::apply?
+
+        FAIL [   1.493s] ( 8/10) jackdaw::guards reference_rewrite::renaming_an_open_clean_scene_retargets_its_tab
+  stdout ───
+
+    running 1 test
+    test reference_rewrite::renaming_an_open_clean_scene_retargets_its_tab ... FAILED
+
+    failures:
+
+    failures:
+        reference_rewrite::renaming_an_open_clean_scene_retargets_its_tab
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 221 filtered out; finished in 1.44s
+
+  stderr ───
+    2026-10-28T06:20:04.983914Z ERROR bevy_extract::extract_resource: Sub app did not exist when trying to add `extract_resource` for <bevy_camera::clear_color::ClearColor>.
+    2026-10-28T06:20:05.366350Z  WARN bevy_gizmos_render: bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+    2026-10-28T06:20:05.501505Z  INFO jackdaw_api_internal::lifecycle: Adding the App plugin `jackdaw::test_input::plugin` of extension `jackdaw.test_input`
+    2026-10-28T06:20:05.501775Z  INFO jackdaw_api_internal::lifecycle: Adding the App plugin `jackdaw_physics::PhysicsEditorPlugin` of extension `jackdaw.physics`
+    2026-10-28T06:20:05.503558Z  WARN bevy_render::texture: CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+    2026-10-28T06:20:05.503658Z  WARN bevy_gltf: CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+    2026-10-28T06:20:05.507521Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.multiplayer
+    2026-10-28T06:20:05.507603Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.physics
+    2026-10-28T06:20:05.507952Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.viewport_panel
+    2026-10-28T06:20:05.508064Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.animation_graph
+    2026-10-28T06:20:05.508087Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.inspector
+    2026-10-28T06:20:05.508109Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.core_windows
+    2026-10-28T06:20:05.508150Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.project_window
+    2026-10-28T06:20:05.508160Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.game_panel
+    2026-10-28T06:20:05.508171Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.timeline
+    2026-10-28T06:20:05.508180Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.build_panel
+    2026-10-28T06:20:05.508299Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.core
+    2026-10-28T06:20:05.512852Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.ui_palette
+    2026-10-28T06:20:05.512949Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.test_input
+    2026-10-28T06:20:05.515757Z  WARN jackdaw_api_internal::keymap::apply: preset 'classic' has 10 chords claimed by more than one action: ["Home (Press, Operators): viewport2d.frame, clip.timeline.jump_start, view.frame_all", "Delete (Press, Operators): clip.delete_keyframes, entity.delete, brush.delete_element", "Backspace (Press, Operators): clip.delete_keyframes, viewport.draw_brush.remove_last_vertex, brush.delete_element", "Super+KeyC (Press, Operators): clip.copy_keyframes, entity.copy", "Super+KeyV (Press, Operators): clip.paste_keyframes, entity.paste", "Tab (Press, Operators): viewport.draw_brush.toggle_mode, brush.clip.cycle_mode", "Enter (Press, Operators): viewport.draw_brush.commit_polygon, brush.clip.apply", "KeyE (Press, Operators): tool.rotate, brush.mesh.extrude", "Escape (Press, Operators): brush.exit_edit_mode, selection.clear, brush.clip.clear, terrain.tool.exit_to_select", "Super+KeyB (Press, Operators): brush.mesh.edge_bevel, brush.mesh.vertex_bevel"]
+    2026-10-28T06:20:05.515790Z  INFO jackdaw::extension_lifecycle: applied keymap preset 'classic': 112 entries, 112 bindings, 0 user rows
+    2026-10-28T06:20:05.867619Z  INFO jackdaw::asset_index: asset index: walking /var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/jackdaw-reference-rewrite-OKLFgv/assets recursively
+    2026-10-28T06:20:05.868132Z  INFO jackdaw::asset_catalog: No asset catalog found, starting with empty catalog
+    2026-10-28T06:20:06.011690Z  WARN jackdaw::pie: PIE: cannot build /var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/jackdaw-reference-rewrite-OKLFgv: cargo could not read /var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/jackdaw-reference-rewrite-OKLFgv: error: could not find `Cargo.toml` in `/private/var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/jackdaw-reference-rewrite-OKLFgv` or any parent directory
+    2026-10-28T06:20:06.016737Z  INFO jackdaw::material_browser: update_material_browser_ui: rebuilding with 1 entries
+    2026-10-28T06:20:06.047292Z  WARN bevy_ui::ui_node: Two or more Entities with IsDefaultUiCamera found when only one Camera with this marker is allowed.
+    2026-10-28T06:20:06.127817Z  INFO jackdaw_api_internal::operator: OPERATOR: scene.open
+    2026-10-28T06:20:06.227356Z  INFO jackdaw::material_browser: update_material_browser_ui: rebuilding with 2 entries
+    2026-10-28T06:20:06.231610Z  INFO jackdaw::asset_index: asset index: walk landed (documents 2, typed 2, referencing 1)
+    2026-10-28T06:20:06.231628Z  INFO jackdaw::asset_index: asset index: walk out of date (writes 0 -> 2), walking again
+    2026-10-28T06:20:06.231634Z  INFO jackdaw::asset_index: asset index: walking /var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/jackdaw-reference-rewrite-OKLFgv/assets recursively
+    2026-10-28T06:20:06.289606Z  INFO jackdaw_api_internal::operator: OPERATOR: file.rename
+    2026-10-28T06:20:06.290347Z  INFO jackdaw_api_internal::operator: renamed; rewrote 0 references
+
+    thread 'reference_rewrite::renaming_an_open_clean_scene_retargets_its_tab' (13437512) panicked at tests/guards/reference_rewrite.rs:314:5:
+    the tab saves through the new path: /private/var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/jackdaw-reference-rewrite-OKLFgv/assets/zones/hedgerow.bsn
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+        FAIL [   1.752s] ( 9/10) jackdaw::guards session_journal::a_dirty_tab_journals_the_save_emitters_own_text
+  stdout ───
+
+    running 1 test
+    test session_journal::a_dirty_tab_journals_the_save_emitters_own_text ... FAILED
+
+    failures:
+
+    failures:
+        session_journal::a_dirty_tab_journals_the_save_emitters_own_text
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 221 filtered out; finished in 1.70s
+
+  stderr ───
+    2026-10-28T06:20:05.019986Z ERROR bevy_extract::extract_resource: Sub app did not exist when trying to add `extract_resource` for <bevy_camera::clear_color::ClearColor>.
+    2026-10-28T06:20:05.337057Z  WARN bevy_gizmos_render: bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+    2026-10-28T06:20:05.457267Z  INFO jackdaw_api_internal::lifecycle: Adding the App plugin `jackdaw::test_input::plugin` of extension `jackdaw.test_input`
+    2026-10-28T06:20:05.471717Z  INFO jackdaw_api_internal::lifecycle: Adding the App plugin `jackdaw_physics::PhysicsEditorPlugin` of extension `jackdaw.physics`
+    2026-10-28T06:20:05.482019Z  WARN bevy_render::texture: CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+    2026-10-28T06:20:05.482142Z  WARN bevy_gltf: CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+    2026-10-28T06:20:05.502377Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.build_panel
+    2026-10-28T06:20:05.502793Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.core
+    2026-10-28T06:20:05.504626Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.game_panel
+    2026-10-28T06:20:05.504656Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.viewport_panel
+    2026-10-28T06:20:05.504735Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.ui_palette
+    2026-10-28T06:20:05.504789Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.timeline
+    2026-10-28T06:20:05.504797Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.animation_graph
+    2026-10-28T06:20:05.504806Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.inspector
+    2026-10-28T06:20:05.504821Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.test_input
+    2026-10-28T06:20:05.504833Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.core_windows
+    2026-10-28T06:20:05.504860Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.multiplayer
+    2026-10-28T06:20:05.504886Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.project_window
+    2026-10-28T06:20:05.504899Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.physics
+    2026-10-28T06:20:05.509616Z  WARN jackdaw_api_internal::keymap::apply: preset 'classic' has 10 chords claimed by more than one action: ["Delete (Press, Operators): clip.delete_keyframes, entity.delete, brush.delete_element", "Backspace (Press, Operators): clip.delete_keyframes, viewport.draw_brush.remove_last_vertex, brush.delete_element", "Home (Press, Operators): clip.timeline.jump_start, view.frame_all, viewport2d.frame", "Super+KeyC (Press, Operators): clip.copy_keyframes, entity.copy", "Super+KeyV (Press, Operators): clip.paste_keyframes, entity.paste", "Tab (Press, Operators): viewport.draw_brush.toggle_mode, brush.clip.cycle_mode", "Enter (Press, Operators): viewport.draw_brush.commit_polygon, brush.clip.apply", "KeyE (Press, Operators): tool.rotate, brush.mesh.extrude", "Escape (Press, Operators): brush.exit_edit_mode, selection.clear, brush.clip.clear, terrain.tool.exit_to_select", "Super+KeyB (Press, Operators): brush.mesh.edge_bevel, brush.mesh.vertex_bevel"]
+    2026-10-28T06:20:05.509649Z  INFO jackdaw::extension_lifecycle: applied keymap preset 'classic': 112 entries, 112 bindings, 0 user rows
+    2026-10-28T06:20:05.835803Z  INFO jackdaw::asset_index: asset index: walking /var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/jackdaw-session-journal-ZuytiN/assets recursively
+    2026-10-28T06:20:05.836298Z  INFO jackdaw::asset_catalog: No asset catalog found, starting with empty catalog
+    2026-10-28T06:20:05.991676Z  WARN jackdaw::pie: PIE: cannot build /var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/jackdaw-session-journal-ZuytiN: cargo could not read /var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/jackdaw-session-journal-ZuytiN: error: could not find `Cargo.toml` in `/private/var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/jackdaw-session-journal-ZuytiN` or any parent directory
+    2026-10-28T06:20:05.995468Z  INFO jackdaw::material_browser: update_material_browser_ui: rebuilding with 1 entries
+    2026-10-28T06:20:06.022261Z  WARN bevy_ui::ui_node: Two or more Entities with IsDefaultUiCamera found when only one Camera with this marker is allowed.
+    2026-10-28T06:20:06.098157Z  INFO jackdaw_api_internal::operator: OPERATOR: scene.open
+    2026-10-28T06:20:06.166720Z  INFO jackdaw::asset_index: asset index: walk landed (documents 2, typed 2, referencing 0)
+    2026-10-28T06:20:06.166822Z  INFO jackdaw::asset_index: asset index: applied with nothing added (removed 0, reloaded 0)
+    2026-10-28T06:20:06.269240Z  INFO jackdaw_api_internal::operator: OPERATOR: prefab.spawn_instance
+
+    thread 'session_journal::a_dirty_tab_journals_the_save_emitters_own_text' (13437511) panicked at tests/guards/session_journal.rs:114:5:
+    the entry names the tab's file: /private/var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/jackdaw-session-journal-ZuytiN/assets/zone.bsn
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+        FAIL [   9.552s] (10/10) jackdaw::guards session_journal::the_journal_write_costs_no_more_than_five_milliseconds
+  stdout ───
+
+    running 1 test
+    test session_journal::the_journal_write_costs_no_more_than_five_milliseconds ... FAILED
+
+    failures:
+
+    failures:
+        session_journal::the_journal_write_costs_no_more_than_five_milliseconds
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 221 filtered out; finished in 9.50s
+
+  stderr ───
+    2026-10-28T06:20:05.378781Z ERROR bevy_extract::extract_resource: Sub app did not exist when trying to add `extract_resource` for <bevy_camera::clear_color::ClearColor>.
+    2026-10-28T06:20:05.632839Z  WARN bevy_gizmos_render: bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+    2026-10-28T06:20:05.711704Z  INFO jackdaw_api_internal::lifecycle: Adding the App plugin `jackdaw::test_input::plugin` of extension `jackdaw.test_input`
+    2026-10-28T06:20:05.712627Z  INFO jackdaw_api_internal::lifecycle: Adding the App plugin `jackdaw_physics::PhysicsEditorPlugin` of extension `jackdaw.physics`
+    2026-10-28T06:20:05.715344Z  WARN bevy_render::texture: CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+    2026-10-28T06:20:05.715464Z  WARN bevy_gltf: CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+    2026-10-28T06:20:05.722014Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.multiplayer
+    2026-10-28T06:20:05.722214Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.build_panel
+    2026-10-28T06:20:05.722459Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.viewport_panel
+    2026-10-28T06:20:05.722699Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.project_window
+    2026-10-28T06:20:05.722714Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.game_panel
+    2026-10-28T06:20:05.722723Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.timeline
+    2026-10-28T06:20:05.722731Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.animation_graph
+    2026-10-28T06:20:05.722740Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.test_input
+    2026-10-28T06:20:05.722757Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.physics
+    2026-10-28T06:20:05.722866Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.core_windows
+    2026-10-28T06:20:05.722906Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.ui_palette
+    2026-10-28T06:20:05.722952Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.inspector
+    2026-10-28T06:20:05.722970Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.core
+    2026-10-28T06:20:05.726164Z  WARN jackdaw_api_internal::keymap::apply: preset 'classic' has 10 chords claimed by more than one action: ["Home (Press, Operators): viewport2d.frame, clip.timeline.jump_start, view.frame_all", "Delete (Press, Operators): clip.delete_keyframes, entity.delete, brush.delete_element", "Backspace (Press, Operators): clip.delete_keyframes, viewport.draw_brush.remove_last_vertex, brush.delete_element", "Super+KeyC (Press, Operators): clip.copy_keyframes, entity.copy", "Super+KeyV (Press, Operators): clip.paste_keyframes, entity.paste", "Tab (Press, Operators): viewport.draw_brush.toggle_mode, brush.clip.cycle_mode", "Enter (Press, Operators): viewport.draw_brush.commit_polygon, brush.clip.apply", "KeyE (Press, Operators): tool.rotate, brush.mesh.extrude", "Escape (Press, Operators): brush.exit_edit_mode, selection.clear, brush.clip.clear, terrain.tool.exit_to_select", "Super+KeyB (Press, Operators): brush.mesh.edge_bevel, brush.mesh.vertex_bevel"]
+    2026-10-28T06:20:05.726186Z  INFO jackdaw::extension_lifecycle: applied keymap preset 'classic': 112 entries, 112 bindings, 0 user rows
+    2026-10-28T06:20:06.111090Z  INFO jackdaw::asset_index: asset index: walking /var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/jackdaw-journal-perf-BLcSzi/assets recursively
+    2026-10-28T06:20:06.111502Z  INFO jackdaw::asset_catalog: No asset catalog found, starting with empty catalog
+    2026-10-28T06:20:06.285688Z  WARN jackdaw::pie: PIE: cannot build /var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/jackdaw-journal-perf-BLcSzi: cargo could not read /var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/jackdaw-journal-perf-BLcSzi: error: could not find `Cargo.toml` in `/private/var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/jackdaw-journal-perf-BLcSzi` or any parent directory
+    2026-10-28T06:20:06.288197Z  INFO jackdaw::material_browser: update_material_browser_ui: rebuilding with 1 entries
+    2026-10-28T06:20:06.320420Z  WARN bevy_ui::ui_node: Two or more Entities with IsDefaultUiCamera found when only one Camera with this marker is allowed.
+    2026-10-28T06:20:06.397064Z  INFO jackdaw_api_internal::operator: OPERATOR: scene.open
+    2026-10-28T06:20:06.402215Z  WARN jackdaw_bsn::apply: BSN entity has 401 #names; a missing comma between sibling entities merges them into one. Check the scene file for a patch group holding more than one #name.
+    2026-10-28T06:20:06.463007Z  INFO jackdaw::asset_index: asset index: walk landed (documents 2, typed 2, referencing 0)
+    2026-10-28T06:20:06.463225Z  INFO jackdaw::asset_index: asset index: applied with nothing added (removed 0, reloaded 0)
+    2026-10-28T06:20:06.520655Z  INFO jackdaw_api_internal::operator: OPERATOR: prefab.spawn_instance
+    2026-10-28T06:20:06.576736Z  WARN jackdaw_bsn::apply: BSN entity has 401 #names; a missing comma between sibling entities merges them into one. Check the scene file for a patch group holding more than one #name.
+    2026-10-28T06:20:06.618346Z  INFO guards::session_journal: journal emit only (400-entity generated): 1.074125ms
+    2026-10-28T06:20:06.619069Z  INFO guards::session_journal: journal main-thread cost (400-entity generated): 705.375µs
+    2026-10-28T06:20:06.684758Z ERROR bevy_log: Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+    2026-10-28T06:20:06.685213Z  INFO bevy_app::terminal_ctrl_c_handler: Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+    2026-10-28T06:20:06.788114Z  WARN bevy_gizmos_render: bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+    2026-10-28T06:20:06.868393Z  INFO jackdaw_api_internal::lifecycle: Adding the App plugin `jackdaw::test_input::plugin` of extension `jackdaw.test_input`
+    2026-10-28T06:20:06.868500Z  INFO jackdaw_api_internal::lifecycle: Adding the App plugin `jackdaw_physics::PhysicsEditorPlugin` of extension `jackdaw.physics`
+    2026-10-28T06:20:06.869762Z  WARN bevy_render::texture: CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+    2026-10-28T06:20:06.869852Z  WARN bevy_gltf: CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+    2026-10-28T06:20:06.874205Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.inspector
+    2026-10-28T06:20:06.874446Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.ui_palette
+    2026-10-28T06:20:06.874674Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.animation_graph
+    2026-10-28T06:20:06.874706Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.core
+    2026-10-28T06:20:06.878905Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.test_input
+    2026-10-28T06:20:06.878992Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.physics
+    2026-10-28T06:20:06.879329Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.viewport_panel
+    2026-10-28T06:20:06.879445Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.core_windows
+    2026-10-28T06:20:06.879526Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.build_panel
+    2026-10-28T06:20:06.879546Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.multiplayer
+    2026-10-28T06:20:06.879572Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.project_window
+    2026-10-28T06:20:06.879596Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.timeline
+    2026-10-28T06:20:06.879616Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.game_panel
+    2026-10-28T06:20:06.882052Z  WARN jackdaw_api_internal::keymap::apply: preset 'classic' has 10 chords claimed by more than one action: ["Delete (Press, Operators): clip.delete_keyframes, entity.delete, brush.delete_element", "Backspace (Press, Operators): clip.delete_keyframes, viewport.draw_brush.remove_last_vertex, brush.delete_element", "Home (Press, Operators): clip.timeline.jump_start, view.frame_all, viewport2d.frame", "Super+KeyC (Press, Operators): clip.copy_keyframes, entity.copy", "Super+KeyV (Press, Operators): clip.paste_keyframes, entity.paste", "Tab (Press, Operators): viewport.draw_brush.toggle_mode, brush.clip.cycle_mode", "Enter (Press, Operators): viewport.draw_brush.commit_polygon, brush.clip.apply", "KeyE (Press, Operators): tool.rotate, brush.mesh.extrude", "Escape (Press, Operators): brush.exit_edit_mode, selection.clear, brush.clip.clear, terrain.tool.exit_to_select", "Super+KeyB (Press, Operators): brush.mesh.edge_bevel, brush.mesh.vertex_bevel"]
+    2026-10-28T06:20:06.882081Z  INFO jackdaw::extension_lifecycle: applied keymap preset 'classic': 112 entries, 112 bindings, 0 user rows
+    2026-10-28T06:20:07.095138Z  INFO jackdaw::asset_index: asset index: walking /var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/jackdaw-journal-perf-DCcK9B/assets recursively
+    2026-10-28T06:20:07.096210Z  INFO jackdaw::asset_catalog: No asset catalog found, starting with empty catalog
+    2026-10-28T06:20:07.335594Z  WARN jackdaw::pie: PIE: cannot build /var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/jackdaw-journal-perf-DCcK9B: cargo could not read /var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/jackdaw-journal-perf-DCcK9B: error: could not find `Cargo.toml` in `/private/var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/jackdaw-journal-perf-DCcK9B` or any parent directory
+    2026-10-28T06:20:07.367140Z  INFO jackdaw::material_browser: update_material_browser_ui: rebuilding with 1 entries
+    2026-10-28T06:20:07.479218Z  INFO jackdaw_api_internal::operator: OPERATOR: scene.open
+    2026-10-28T06:20:09.503437Z  WARN jackdaw_api_internal::operator: scene '/private/var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/jackdaw-journal-perf-DCcK9B/assets/zone.bsn': the prefab '/home/joe/Workspace/jackdaw/assets/prefabs/box.jsn' is not in the project, so the instance naming it inherits nothing
+    2026-10-28T06:20:10.095326Z  WARN jackdaw::prefab::watcher: watch failed for /home/joe/Workspace/jackdaw/assets/prefabs: No path was found. about ["/home/joe/Workspace/jackdaw/assets/prefabs"]
+    2026-10-28T06:20:10.187516Z  INFO jackdaw::asset_index: asset index: walk landed (documents 2, typed 2, referencing 1)
+    2026-10-28T06:20:10.237454Z  INFO jackdaw::asset_index: asset index: applied with nothing added (removed 0, reloaded 0)
+    2026-10-28T06:20:10.618839Z  WARN bevy_app::hierarchy: warning[B0004]: Entity 4531v0 with the InheritedVisibility component has a parent (the Brush entity) without InheritedVisibility.
+    This will cause inconsistent behaviors! See: https://bevy.org/learn/errors/b0004
+    2026-10-28T06:20:10.956061Z  INFO jackdaw_api_internal::operator: OPERATOR: prefab.spawn_instance
+    2026-10-28T06:20:11.516701Z  WARN jackdaw::prefab::watcher: watch failed for /home/joe/Workspace/jackdaw/assets/prefabs: No path was found. about ["/home/joe/Workspace/jackdaw/assets/prefabs"]
+    2026-10-28T06:20:12.280756Z  WARN jackdaw::prefab::watcher: prefab reload parse failed for /home/joe/Workspace/jackdaw/assets/prefabs/box.jsn: legacy .jsn prefab /home/joe/Workspace/jackdaw/assets/prefabs/box.jsn cannot be cached as a BSN document without a world; keeping the last copy that parsed
+    2026-10-28T06:20:13.901011Z  WARN bevy_app::hierarchy: warning[B0004]: Entity 4576v0 with the InheritedVisibility component has a parent (the Brush entity) without InheritedVisibility.
+    This will cause inconsistent behaviors! See: https://bevy.org/learn/errors/b0004
+    2026-10-28T06:20:14.230580Z  INFO guards::session_journal: journal emit only (terrain-patch fixture): 329.347ms
+    2026-10-28T06:20:14.490017Z  WARN jackdaw::scene_io::session_journal: session journal: scene emit refused (an asset is named by an absolute path, which holds only on this machine: jackdaw::prefab::components::IsA.source names '/home/joe/Workspace/jackdaw/assets/prefabs/box.jsn'. Name it relative to the project's assets folder); snapshotting as held
+    2026-10-28T06:20:14.798625Z  INFO guards::session_journal: journal main-thread cost (terrain-patch fixture): 568.011792ms
+
+    thread 'session_journal::the_journal_write_costs_no_more_than_five_milliseconds' (13437553) panicked at tests/guards/session_journal.rs:410:9:
+    terrain-patch fixture: journal write took 568.011792ms, over the 5 ms frame budget
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+────────────
+     Summary [  12.180s] 10 tests run: 2 passed, 8 failed, 2972 skipped
+        FAIL [   2.222s] ( 1/10) jackdaw::guards reference_rewrite::a_dirty_tab_journals_under_the_renamed_path
+  stdout ───
+
+    running 1 test
+    test reference_rewrite::a_dirty_tab_journals_under_the_renamed_path ... FAILED
+
+    failures:
+
+    failures:
+        reference_rewrite::a_dirty_tab_journals_under_the_renamed_path
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 221 filtered out; finished in 2.14s
+
+  stderr ───
+    2026-10-28T06:20:02.885476Z ERROR bevy_extract::extract_resource: Sub app did not exist when trying to add `extract_resource` for <bevy_camera::clear_color::ClearColor>.
+    2026-10-28T06:20:03.596981Z  WARN bevy_gizmos_render: bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+    2026-10-28T06:20:03.732557Z  INFO jackdaw_api_internal::lifecycle: Adding the App plugin `jackdaw::test_input::plugin` of extension `jackdaw.test_input`
+    2026-10-28T06:20:03.732920Z  INFO jackdaw_api_internal::lifecycle: Adding the App plugin `jackdaw_physics::PhysicsEditorPlugin` of extension `jackdaw.physics`
+    2026-10-28T06:20:03.754559Z  WARN bevy_render::texture: CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+    2026-10-28T06:20:03.754752Z  WARN bevy_gltf: CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+    2026-10-28T06:20:03.782689Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.test_input
+    2026-10-28T06:20:03.782805Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.ui_palette
+    2026-10-28T06:20:03.782862Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.multiplayer
+    2026-10-28T06:20:03.782879Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.core_windows
+    2026-10-28T06:20:03.782923Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.build_panel
+    2026-10-28T06:20:03.782930Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.animation_graph
+    2026-10-28T06:20:03.782938Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.physics
+    2026-10-28T06:20:03.783156Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.core
+    2026-10-28T06:20:03.785098Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.project_window
+    2026-10-28T06:20:03.785697Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.viewport_panel
+    2026-10-28T06:20:03.785756Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.game_panel
+    2026-10-28T06:20:03.785764Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.timeline
+    2026-10-28T06:20:03.785785Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.inspector
+    2026-10-28T06:20:03.793400Z  WARN jackdaw_api_internal::keymap::apply: preset 'classic' has 10 chords claimed by more than one action: ["Delete (Press, Operators): clip.delete_keyframes, entity.delete, brush.delete_element", "Backspace (Press, Operators): clip.delete_keyframes, viewport.draw_brush.remove_last_vertex, brush.delete_element", "Home (Press, Operators): clip.timeline.jump_start, view.frame_all, viewport2d.frame", "Super+KeyC (Press, Operators): clip.copy_keyframes, entity.copy", "Super+KeyV (Press, Operators): clip.paste_keyframes, entity.paste", "Tab (Press, Operators): viewport.draw_brush.toggle_mode, brush.clip.cycle_mode", "Enter (Press, Operators): viewport.draw_brush.commit_polygon, brush.clip.apply", "KeyE (Press, Operators): tool.rotate, brush.mesh.extrude", "Escape (Press, Operators): brush.exit_edit_mode, selection.clear, brush.clip.clear, terrain.tool.exit_to_select", "Super+KeyB (Press, Operators): brush.mesh.edge_bevel, brush.mesh.vertex_bevel"]
+    2026-10-28T06:20:03.793430Z  INFO jackdaw::extension_lifecycle: applied keymap preset 'classic': 112 entries, 112 bindings, 0 user rows
+    2026-10-28T06:20:04.260595Z  INFO jackdaw::asset_index: asset index: walking /var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/jackdaw-reference-rewrite-qSLYOm/assets recursively
+    2026-10-28T06:20:04.261409Z  INFO jackdaw::asset_catalog: No asset catalog found, starting with empty catalog
+    2026-10-28T06:20:04.445457Z  WARN jackdaw::pie: PIE: cannot build /var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/jackdaw-reference-rewrite-qSLYOm: cargo could not read /var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/jackdaw-reference-rewrite-qSLYOm: error: could not find `Cargo.toml` in `/private/var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/jackdaw-reference-rewrite-qSLYOm` or any parent directory
+    2026-10-28T06:20:04.450445Z  INFO jackdaw::material_browser: update_material_browser_ui: rebuilding with 1 entries
+    2026-10-28T06:20:04.466911Z  WARN bevy_ui::ui_node: Two or more Entities with IsDefaultUiCamera found when only one Camera with this marker is allowed.
+    2026-10-28T06:20:04.605485Z  INFO jackdaw_api_internal::operator: OPERATOR: scene.open
+    2026-10-28T06:20:04.678352Z  INFO jackdaw::material_browser: update_material_browser_ui: rebuilding with 2 entries
+    2026-10-28T06:20:04.679447Z  INFO jackdaw::asset_index: asset index: walk landed (documents 2, typed 2, referencing 1)
+    2026-10-28T06:20:04.679466Z  INFO jackdaw::asset_index: asset index: walk out of date (writes 0 -> 2), walking again
+    2026-10-28T06:20:04.679470Z  INFO jackdaw::asset_index: asset index: walking /var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/jackdaw-reference-rewrite-qSLYOm/assets recursively
+    2026-10-28T06:20:04.722623Z  INFO jackdaw_api_internal::operator: OPERATOR: file.rename
+    2026-10-28T06:20:04.729272Z  INFO jackdaw_api_internal::operator: renamed; rewrote 0 references
+
+    thread 'reference_rewrite::a_dirty_tab_journals_under_the_renamed_path' (13436980) panicked at tests/guards/reference_rewrite.rs:698:5:
+    the journaled path is the new one: /private/var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/jackdaw-reference-rewrite-qSLYOm/assets/zones/hedgerow.bsn
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+        FAIL [   2.224s] ( 2/10) jackdaw::guards reference_audit::a_loaded_scene_leaves_one_summary_warning
+  stdout ───
+
+    running 1 test
+    test reference_audit::a_loaded_scene_leaves_one_summary_warning ... FAILED
+
+    failures:
+
+    failures:
+        reference_audit::a_loaded_scene_leaves_one_summary_warning
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 221 filtered out; finished in 2.13s
+
+  stderr ───
+    2026-10-28T06:20:03.004894Z ERROR bevy_extract::extract_resource: Sub app did not exist when trying to add `extract_resource` for <bevy_camera::clear_color::ClearColor>.
+    2026-10-28T06:20:03.621681Z  WARN bevy_gizmos_render: bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+    2026-10-28T06:20:03.731270Z  INFO jackdaw_api_internal::lifecycle: Adding the App plugin `jackdaw::test_input::plugin` of extension `jackdaw.test_input`
+    2026-10-28T06:20:03.733922Z  INFO jackdaw_api_internal::lifecycle: Adding the App plugin `jackdaw_physics::PhysicsEditorPlugin` of extension `jackdaw.physics`
+    2026-10-28T06:20:03.737594Z  WARN bevy_render::texture: CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+    2026-10-28T06:20:03.737810Z  WARN bevy_gltf: CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+    2026-10-28T06:20:03.757020Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.core_windows
+    2026-10-28T06:20:03.757721Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.physics
+    2026-10-28T06:20:03.758186Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.core
+    2026-10-28T06:20:03.773905Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.test_input
+    2026-10-28T06:20:03.773949Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.timeline
+    2026-10-28T06:20:03.773964Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.multiplayer
+    2026-10-28T06:20:03.773980Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.project_window
+    2026-10-28T06:20:03.773992Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.build_panel
+    2026-10-28T06:20:03.774003Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.ui_palette
+    2026-10-28T06:20:03.774052Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.game_panel
+    2026-10-28T06:20:03.774063Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.inspector
+    2026-10-28T06:20:03.774079Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.viewport_panel
+    2026-10-28T06:20:03.774138Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.animation_graph
+    2026-10-28T06:20:03.782179Z  WARN jackdaw_api_internal::keymap::apply: preset 'classic' has 10 chords claimed by more than one action: ["Delete (Press, Operators): clip.delete_keyframes, entity.delete, brush.delete_element", "Backspace (Press, Operators): clip.delete_keyframes, viewport.draw_brush.remove_last_vertex, brush.delete_element", "Home (Press, Operators): clip.timeline.jump_start, view.frame_all, viewport2d.frame", "Super+KeyC (Press, Operators): clip.copy_keyframes, entity.copy", "Super+KeyV (Press, Operators): clip.paste_keyframes, entity.paste", "Tab (Press, Operators): viewport.draw_brush.toggle_mode, brush.clip.cycle_mode", "Enter (Press, Operators): viewport.draw_brush.commit_polygon, brush.clip.apply", "KeyE (Press, Operators): tool.rotate, brush.mesh.extrude", "Escape (Press, Operators): brush.exit_edit_mode, selection.clear, brush.clip.clear, terrain.tool.exit_to_select", "Super+KeyB (Press, Operators): brush.mesh.edge_bevel, brush.mesh.vertex_bevel"]
+    2026-10-28T06:20:03.782295Z  INFO jackdaw::extension_lifecycle: applied keymap preset 'classic': 112 entries, 112 bindings, 0 user rows
+    2026-10-28T06:20:04.227502Z  INFO jackdaw::asset_index: asset index: walking /var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/jackdaw-reference-audit-Be3eGX/assets recursively
+    2026-10-28T06:20:04.227728Z  INFO jackdaw::asset_catalog: No asset catalog found, starting with empty catalog
+    2026-10-28T06:20:04.491657Z  WARN jackdaw::pie: PIE: cannot build /var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/jackdaw-reference-audit-Be3eGX: cargo could not read /var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/jackdaw-reference-audit-Be3eGX: error: could not find `Cargo.toml` in `/private/var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/jackdaw-reference-audit-Be3eGX` or any parent directory
+    2026-10-28T06:20:04.494588Z  INFO jackdaw::material_browser: update_material_browser_ui: rebuilding with 1 entries
+    2026-10-28T06:20:04.518595Z  WARN bevy_ui::ui_node: Two or more Entities with IsDefaultUiCamera found when only one Camera with this marker is allowed.
+    2026-10-28T06:20:04.667630Z  INFO jackdaw_api_internal::operator: OPERATOR: scene.open
+    2026-10-28T06:20:04.668045Z  WARN jackdaw_bsn::apply: BSN entity has 2 #names; a missing comma between sibling entities merges them into one. Check the scene file for a patch group holding more than one #name.
+    2026-10-28T06:20:04.669308Z ERROR bevy_asset::server: Could not find an asset loader matching: Asset Type: Some(TypeId(0x37d071f0f533985eee2f012167a453dd)); Path: "materials/gone.material.bsn";
+    2026-10-28T06:20:04.669308Z ERROR bevy_asset::server: Could not find an asset loader matching: Asset Type: Some(TypeId(0x37d071f0f533985eee2f012167a453dd)); Path: "materials/also-gone.material.bsn";
+    2026-10-28T06:20:04.765940Z  INFO jackdaw::material_browser: update_material_browser_ui: rebuilding with 2 entries
+    2026-10-28T06:20:04.766943Z  INFO jackdaw::asset_index: asset index: walk landed (documents 2, typed 2, referencing 1)
+    2026-10-28T06:20:04.766958Z  INFO jackdaw::asset_index: asset index: walk out of date (writes 0 -> 2), walking again
+    2026-10-28T06:20:04.766961Z  INFO jackdaw::asset_index: asset index: walking /var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/jackdaw-reference-audit-Be3eGX/assets recursively
+
+    thread 'reference_audit::a_loaded_scene_leaves_one_summary_warning' (13436982) panicked at tests/guards/reference_audit.rs:170:5:
+    assertion `left == right` failed: one line for the loaded scene's broken references: []
+      left: 0
+     right: 1
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+        FAIL [   2.604s] ( 4/10) jackdaw::controls ui_probe_click::a_ui_input_types_and_commits_in_one_gesture
+  stdout ───
+
+    running 1 test
+    test ui_probe_click::a_ui_input_types_and_commits_in_one_gesture ... FAILED
+
+    failures:
+
+    failures:
+        ui_probe_click::a_ui_input_types_and_commits_in_one_gesture
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 40 filtered out; finished in 2.47s
+
+  stderr ───
+    2026-10-28T06:20:03.266699Z ERROR bevy_extract::extract_resource: Sub app did not exist when trying to add `extract_resource` for <bevy_camera::clear_color::ClearColor>.
+    2026-10-28T06:20:03.761864Z  WARN bevy_gizmos_render: bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+    2026-10-28T06:20:03.942564Z  INFO jackdaw_api_internal::lifecycle: Adding the App plugin `jackdaw::test_input::plugin` of extension `jackdaw.test_input`
+    2026-10-28T06:20:03.942869Z  INFO jackdaw_api_internal::lifecycle: Adding the App plugin `jackdaw_physics::PhysicsEditorPlugin` of extension `jackdaw.physics`
+    2026-10-28T06:20:03.949070Z  WARN bevy_render::texture: CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+    2026-10-28T06:20:03.949314Z  WARN bevy_gltf: CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+    2026-10-28T06:20:03.959165Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.physics
+    2026-10-28T06:20:03.959465Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.project_window
+    2026-10-28T06:20:03.959497Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.build_panel
+    2026-10-28T06:20:03.959507Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.inspector
+    2026-10-28T06:20:03.959522Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.multiplayer
+    2026-10-28T06:20:03.959538Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.test_input
+    2026-10-28T06:20:03.959620Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.game_panel
+    2026-10-28T06:20:03.959629Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.timeline
+    2026-10-28T06:20:03.959636Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.core_windows
+    2026-10-28T06:20:03.959677Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.core
+    2026-10-28T06:20:03.962144Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.animation_graph
+    2026-10-28T06:20:03.962166Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.ui_palette
+    2026-10-28T06:20:03.962215Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.viewport_panel
+    2026-10-28T06:20:03.965848Z  WARN jackdaw_api_internal::keymap::apply: preset 'classic' has 10 chords claimed by more than one action: ["Delete (Press, Operators): clip.delete_keyframes, entity.delete, brush.delete_element", "Backspace (Press, Operators): clip.delete_keyframes, viewport.draw_brush.remove_last_vertex, brush.delete_element", "Home (Press, Operators): clip.timeline.jump_start, view.frame_all, viewport2d.frame", "Super+KeyC (Press, Operators): clip.copy_keyframes, entity.copy", "Super+KeyV (Press, Operators): clip.paste_keyframes, entity.paste", "Tab (Press, Operators): viewport.draw_brush.toggle_mode, brush.clip.cycle_mode", "Enter (Press, Operators): viewport.draw_brush.commit_polygon, brush.clip.apply", "KeyE (Press, Operators): tool.rotate, brush.mesh.extrude", "Escape (Press, Operators): brush.exit_edit_mode, selection.clear, brush.clip.clear, terrain.tool.exit_to_select", "Super+KeyB (Press, Operators): brush.mesh.edge_bevel, brush.mesh.vertex_bevel"]
+    2026-10-28T06:20:03.965877Z  INFO jackdaw::extension_lifecycle: applied keymap preset 'classic': 112 entries, 112 bindings, 0 user rows
+
+    thread 'ui_probe_click::a_ui_input_types_and_commits_in_one_gesture' (13436985) panicked at tests/controls/ui_probe_click.rs:261:5:
+    assertion `left == right` failed: the typed text did not reach the focused field (got "0entity: 42")
+      left: "0entity: 42"
+     right: "entity: 42"
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+        FAIL [   2.626s] ( 5/10) jackdaw::guards reference_rewrite::renaming_a_folder_retargets_a_tab_under_it_onto_the_same_tail
+  stdout ───
+
+    running 1 test
+    test reference_rewrite::renaming_a_folder_retargets_a_tab_under_it_onto_the_same_tail ... FAILED
+
+    failures:
+
+    failures:
+        reference_rewrite::renaming_a_folder_retargets_a_tab_under_it_onto_the_same_tail
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 221 filtered out; finished in 2.46s
+
+  stderr ───
+    2026-10-28T06:20:03.604993Z ERROR bevy_extract::extract_resource: Sub app did not exist when trying to add `extract_resource` for <bevy_camera::clear_color::ClearColor>.
+    2026-10-28T06:20:04.040359Z  WARN bevy_gizmos_render: bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+    2026-10-28T06:20:04.164215Z  INFO jackdaw_api_internal::lifecycle: Adding the App plugin `jackdaw::test_input::plugin` of extension `jackdaw.test_input`
+    2026-10-28T06:20:04.164495Z  INFO jackdaw_api_internal::lifecycle: Adding the App plugin `jackdaw_physics::PhysicsEditorPlugin` of extension `jackdaw.physics`
+    2026-10-28T06:20:04.166906Z  WARN bevy_render::texture: CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+    2026-10-28T06:20:04.167016Z  WARN bevy_gltf: CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+    2026-10-28T06:20:04.172467Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.inspector
+    2026-10-28T06:20:04.172591Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.physics
+    2026-10-28T06:20:04.173181Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.core_windows
+    2026-10-28T06:20:04.173243Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.game_panel
+    2026-10-28T06:20:04.173251Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.timeline
+    2026-10-28T06:20:04.173259Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.viewport_panel
+    2026-10-28T06:20:04.173337Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.project_window
+    2026-10-28T06:20:04.173349Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.animation_graph
+    2026-10-28T06:20:04.173355Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.ui_palette
+    2026-10-28T06:20:04.173399Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.build_panel
+    2026-10-28T06:20:04.173407Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.test_input
+    2026-10-28T06:20:04.173424Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.core
+    2026-10-28T06:20:04.175120Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.multiplayer
+    2026-10-28T06:20:04.177145Z  WARN jackdaw_api_internal::keymap::apply: preset 'classic' has 10 chords claimed by more than one action: ["Home (Press, Operators): viewport2d.frame, clip.timeline.jump_start, view.frame_all", "Delete (Press, Operators): clip.delete_keyframes, entity.delete, brush.delete_element", "Backspace (Press, Operators): clip.delete_keyframes, viewport.draw_brush.remove_last_vertex, brush.delete_element", "Super+KeyC (Press, Operators): clip.copy_keyframes, entity.copy", "Super+KeyV (Press, Operators): clip.paste_keyframes, entity.paste", "Tab (Press, Operators): viewport.draw_brush.toggle_mode, brush.clip.cycle_mode", "Enter (Press, Operators): viewport.draw_brush.commit_polygon, brush.clip.apply", "KeyE (Press, Operators): tool.rotate, brush.mesh.extrude", "Escape (Press, Operators): brush.exit_edit_mode, selection.clear, brush.clip.clear, terrain.tool.exit_to_select", "Super+KeyB (Press, Operators): brush.mesh.edge_bevel, brush.mesh.vertex_bevel"]
+    2026-10-28T06:20:04.177170Z  INFO jackdaw::extension_lifecycle: applied keymap preset 'classic': 112 entries, 112 bindings, 0 user rows
+    2026-10-28T06:20:04.741344Z  INFO jackdaw::asset_index: asset index: walking /var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/jackdaw-reference-folder-tab-kouWlf/assets recursively
+    2026-10-28T06:20:04.744306Z  INFO jackdaw::asset_catalog: No asset catalog found, starting with empty catalog
+    2026-10-28T06:20:04.939960Z  WARN jackdaw::pie: PIE: cannot build /var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/jackdaw-reference-folder-tab-kouWlf: cargo could not read /var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/jackdaw-reference-folder-tab-kouWlf: error: could not find `Cargo.toml` in `/private/var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/jackdaw-reference-folder-tab-kouWlf` or any parent directory
+    2026-10-28T06:20:04.945394Z  INFO jackdaw::material_browser: update_material_browser_ui: rebuilding with 1 entries
+    2026-10-28T06:20:04.961327Z  WARN bevy_ui::ui_node: Two or more Entities with IsDefaultUiCamera found when only one Camera with this marker is allowed.
+    2026-10-28T06:20:05.083825Z  INFO jackdaw_api_internal::operator: OPERATOR: scene.open
+    2026-10-28T06:20:05.191710Z  INFO jackdaw::asset_index: asset index: walk landed (documents 1, typed 1, referencing 0)
+    2026-10-28T06:20:05.191826Z  INFO jackdaw::asset_index: asset index: applied with nothing added (removed 0, reloaded 0)
+    2026-10-28T06:20:05.242630Z  INFO jackdaw_api_internal::operator: OPERATOR: file.rename
+    2026-10-28T06:20:05.262897Z  INFO jackdaw_api_internal::operator: renamed; rewrote 0 references
+
+    thread 'reference_rewrite::renaming_a_folder_retargets_a_tab_under_it_onto_the_same_tail' (13437065) panicked at tests/guards/reference_rewrite.rs:745:5:
+    the tab keeps its place under the renamed folder: /private/var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/jackdaw-reference-folder-tab-kouWlf/assets/props/sub/scene.bsn
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+        FAIL [   3.592s] ( 7/10) jackdaw::panels reconcile::a_maximized_leaf_draining_ends_the_maximize
+  stdout ───
+
+    running 1 test
+    test reconcile::a_maximized_leaf_draining_ends_the_maximize ... FAILED
+
+    failures:
+
+    failures:
+        reconcile::a_maximized_leaf_draining_ends_the_maximize
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 13 filtered out; finished in 3.44s
+
+  stderr ───
+    2026-10-28T06:20:03.437216Z ERROR bevy_extract::extract_resource: Sub app did not exist when trying to add `extract_resource` for <bevy_camera::clear_color::ClearColor>.
+    2026-10-28T06:20:03.907055Z  WARN bevy_gizmos_render: bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+    2026-10-28T06:20:04.046322Z  INFO jackdaw_api_internal::lifecycle: Adding the App plugin `jackdaw::test_input::plugin` of extension `jackdaw.test_input`
+    2026-10-28T06:20:04.046635Z  INFO jackdaw_api_internal::lifecycle: Adding the App plugin `jackdaw_physics::PhysicsEditorPlugin` of extension `jackdaw.physics`
+    2026-10-28T06:20:04.049094Z  WARN bevy_render::texture: CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+    2026-10-28T06:20:04.049197Z  WARN bevy_gltf: CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+    2026-10-28T06:20:04.056078Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.core_windows
+    2026-10-28T06:20:04.056582Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.project_window
+    2026-10-28T06:20:04.056625Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.timeline
+    2026-10-28T06:20:04.056657Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.animation_graph
+    2026-10-28T06:20:04.056720Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.game_panel
+    2026-10-28T06:20:04.056755Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.test_input
+    2026-10-28T06:20:04.056875Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.viewport_panel
+    2026-10-28T06:20:04.057271Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.multiplayer
+    2026-10-28T06:20:04.057300Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.physics
+    2026-10-28T06:20:04.057436Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.core
+    2026-10-28T06:20:04.059065Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.build_panel
+    2026-10-28T06:20:04.059079Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.inspector
+    2026-10-28T06:20:04.059093Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.ui_palette
+    2026-10-28T06:20:04.060793Z  WARN jackdaw_api_internal::keymap::apply: preset 'classic' has 10 chords claimed by more than one action: ["Home (Press, Operators): viewport2d.frame, clip.timeline.jump_start, view.frame_all", "Delete (Press, Operators): clip.delete_keyframes, entity.delete, brush.delete_element", "Backspace (Press, Operators): clip.delete_keyframes, viewport.draw_brush.remove_last_vertex, brush.delete_element", "Super+KeyC (Press, Operators): clip.copy_keyframes, entity.copy", "Super+KeyV (Press, Operators): clip.paste_keyframes, entity.paste", "Tab (Press, Operators): viewport.draw_brush.toggle_mode, brush.clip.cycle_mode", "Enter (Press, Operators): viewport.draw_brush.commit_polygon, brush.clip.apply", "KeyE (Press, Operators): tool.rotate, brush.mesh.extrude", "Escape (Press, Operators): brush.exit_edit_mode, selection.clear, brush.clip.clear, terrain.tool.exit_to_select", "Super+KeyB (Press, Operators): brush.mesh.edge_bevel, brush.mesh.vertex_bevel"]
+    2026-10-28T06:20:04.060817Z  INFO jackdaw::extension_lifecycle: applied keymap preset 'classic': 112 entries, 112 bindings, 0 user rows
+    2026-10-28T06:20:04.511888Z  INFO jackdaw::asset_index: asset index: walk asked with no assets directory open
+    2026-10-28T06:20:04.511950Z  INFO jackdaw::asset_catalog: No project root, skipping catalog load
+    2026-10-28T06:20:04.755640Z  INFO jackdaw::material_browser: update_material_browser_ui: rebuilding with 1 entries
+    2026-10-28T06:20:04.773781Z  WARN bevy_ui::ui_node: Two or more Entities with IsDefaultUiCamera found when only one Camera with this marker is allowed.
+    2026-10-28T06:20:05.145330Z  WARN bevy_ecs::error::handler: Encountered an error in command `<bevy_ecs::system::commands::entity_command::despawn::{{closure}} as bevy_ecs::system::commands::entity_command::EntityCommand>::with_entity::{{closure}}`: Entity despawned: The entity with ID 4397v1 is invalid; its index now has generation 2.
+    Note that interacting with a despawned entity is the most common cause of this error but there are others
+
+        If you were attempting to apply a command to this entity,
+        and want to handle this error gracefully, consider using `EntityCommands::queue_handled` or `queue_silenced`.
+
+    2026-10-28T06:20:05.145421Z  WARN bevy_ecs::error::handler: Encountered an error in command `<bevy_ecs::system::commands::entity_command::despawn::{{closure}} as bevy_ecs::system::commands::entity_command::EntityCommand>::with_entity::{{closure}}`: Entity despawned: The entity with ID 4332v1 is invalid; its index now has generation 2.
+    Note that interacting with a despawned entity is the most common cause of this error but there are others
+
+        If you were attempting to apply a command to this entity,
+        and want to handle this error gracefully, consider using `EntityCommands::queue_handled` or `queue_silenced`.
+
+    2026-10-28T06:20:05.145432Z  WARN bevy_ecs::error::handler: Encountered an error in command `<bevy_ecs::system::commands::entity_command::despawn::{{closure}} as bevy_ecs::system::commands::entity_command::EntityCommand>::with_entity::{{closure}}`: Entity despawned: The entity with ID 4331v1 is invalid; its index now has generation 2.
+    Note that interacting with a despawned entity is the most common cause of this error but there are others
+
+        If you were attempting to apply a command to this entity,
+        and want to handle this error gracefully, consider using `EntityCommands::queue_handled` or `queue_silenced`.
+
+    2026-10-28T06:20:05.145441Z  WARN bevy_ecs::error::handler: Encountered an error in command `<bevy_ecs::system::commands::entity_command::despawn::{{closure}} as bevy_ecs::system::commands::entity_command::EntityCommand>::with_entity::{{closure}}`: Entity despawned: The entity with ID 4399v1 is invalid; its index now has generation 2.
+    Note that interacting with a despawned entity is the most common cause of this error but there are others
+
+        If you were attempting to apply a command to this entity,
+        and want to handle this error gracefully, consider using `EntityCommands::queue_handled` or `queue_silenced`.
+
+    2026-10-28T06:20:05.145457Z  WARN bevy_ecs::error::handler: Encountered an error in command `<bevy_ecs::system::commands::entity_command::despawn::{{closure}} as bevy_ecs::system::commands::entity_command::EntityCommand>::with_entity::{{closure}}`: Entity despawned: The entity with ID 4324v1 is invalid; its index now has generation 2.
+    Note that interacting with a despawned entity is the most common cause of this error but there are others
+
+        If you were attempting to apply a command to this entity,
+        and want to handle this error gracefully, consider using `EntityCommands::queue_handled` or `queue_silenced`.
+
+    2026-10-28T06:20:05.145467Z  WARN bevy_ecs::error::handler: Encountered an error in command `<bevy_ecs::system::commands::entity_command::despawn::{{closure}} as bevy_ecs::system::commands::entity_command::EntityCommand>::with_entity::{{closure}}`: Entity despawned: The entity with ID 4328v1 is invalid; its index now has generation 2.
+    Note that interacting with a despawned entity is the most common cause of this error but there are others
+
+        If you were attempting to apply a command to this entity,
+        and want to handle this error gracefully, consider using `EntityCommands::queue_handled` or `queue_silenced`.
+
+    2026-10-28T06:20:05.145475Z  WARN bevy_ecs::error::handler: Encountered an error in command `<bevy_ecs::system::commands::entity_command::despawn::{{closure}} as bevy_ecs::system::commands::entity_command::EntityCommand>::with_entity::{{closure}}`: Entity despawned: The entity with ID 4325v1 is invalid; its index now has generation 2.
+    Note that interacting with a despawned entity is the most common cause of this error but there are others
+
+        If you were attempting to apply a command to this entity,
+        and want to handle this error gracefully, consider using `EntityCommands::queue_handled` or `queue_silenced`.
+
+    2026-10-28T06:20:05.145484Z  WARN bevy_ecs::error::handler: Encountered an error in command `<bevy_ecs::system::commands::entity_command::despawn::{{closure}} as bevy_ecs::system::commands::entity_command::EntityCommand>::with_entity::{{closure}}`: Entity despawned: The entity with ID 4396v1 is invalid; its index now has generation 2.
+    Note that interacting with a despawned entity is the most common cause of this error but there are others
+
+        If you were attempting to apply a command to this entity,
+        and want to handle this error gracefully, consider using `EntityCommands::queue_handled` or `queue_silenced`.
+
+    2026-10-28T06:20:05.145494Z  WARN bevy_ecs::error::handler: Encountered an error in command `<bevy_ecs::system::commands::entity_command::despawn::{{closure}} as bevy_ecs::system::commands::entity_command::EntityCommand>::with_entity::{{closure}}`: Entity despawned: The entity with ID 4394v1 is invalid; its index now has generation 2.
+    Note that interacting with a despawned entity is the most common cause of this error but there are others
+
+        If you were attempting to apply a command to this entity,
+        and want to handle this error gracefully, consider using `EntityCommands::queue_handled` or `queue_silenced`.
+
+    2026-10-28T06:20:05.145504Z  WARN bevy_ecs::error::handler: Encountered an error in command `<bevy_ecs::system::commands::entity_command::despawn::{{closure}} as bevy_ecs::system::commands::entity_command::EntityCommand>::with_entity::{{closure}}`: Entity despawned: The entity with ID 4393v1 is invalid; its index now has generation 2.
+    Note that interacting with a despawned entity is the most common cause of this error but there are others
+
+        If you were attempting to apply a command to this entity,
+        and want to handle this error gracefully, consider using `EntityCommands::queue_handled` or `queue_silenced`.
+
+    2026-10-28T06:20:05.145514Z  WARN bevy_ecs::error::handler: Encountered an error in command `<bevy_ecs::system::commands::entity_command::despawn::{{closure}} as bevy_ecs::system::commands::entity_command::EntityCommand>::with_entity::{{closure}}`: Entity despawned: The entity with ID 4327v1 is invalid; its index now has generation 2.
+    Note that interacting with a despawned entity is the most common cause of this error but there are others
+
+        If you were attempting to apply a command to this entity,
+        and want to handle this error gracefully, consider using `EntityCommands::queue_handled` or `queue_silenced`.
+
+    2026-10-28T06:20:05.145525Z  WARN bevy_ecs::error::handler: Encountered an error in command `<bevy_ecs::system::commands::entity_command::despawn::{{closure}} as bevy_ecs::system::commands::entity_command::EntityCommand>::with_entity::{{closure}}`: Entity despawned: The entity with ID 4326v1 is invalid; its index now has generation 2.
+    Note that interacting with a despawned entity is the most common cause of this error but there are others
+
+        If you were attempting to apply a command to this entity,
+        and want to handle this error gracefully, consider using `EntityCommands::queue_handled` or `queue_silenced`.
+
+    2026-10-28T06:20:05.145535Z  WARN bevy_ecs::error::handler: Encountered an error in command `<bevy_ecs::system::commands::entity_command::despawn::{{closure}} as bevy_ecs::system::commands::entity_command::EntityCommand>::with_entity::{{closure}}`: Entity despawned: The entity with ID 4395v1 is invalid; its index now has generation 2.
+    Note that interacting with a despawned entity is the most common cause of this error but there are others
+
+        If you were attempting to apply a command to this entity,
+        and want to handle this error gracefully, consider using `EntityCommands::queue_handled` or `queue_silenced`.
+
+    2026-10-28T06:20:05.145545Z  WARN bevy_ecs::error::handler: Encountered an error in command `<bevy_ecs::system::commands::entity_command::despawn::{{closure}} as bevy_ecs::system::commands::entity_command::EntityCommand>::with_entity::{{closure}}`: Entity despawned: The entity with ID 4319v1 is invalid; its index now has generation 2.
+    Note that interacting with a despawned entity is the most common cause of this error but there are others
+
+        If you were attempting to apply a command to this entity,
+        and want to handle this error gracefully, consider using `EntityCommands::queue_handled` or `queue_silenced`.
+
+    2026-10-28T06:20:05.145603Z  WARN bevy_ecs::error::handler: Encountered an error in command `<bevy_ecs::system::commands::entity_command::despawn::{{closure}} as bevy_ecs::system::commands::entity_command::EntityCommand>::with_entity::{{closure}}`: Entity despawned: The entity with ID 4323v1 is invalid; its index now has generation 2.
+    Note that interacting with a despawned entity is the most common cause of this error but there are others
+
+        If you were attempting to apply a command to this entity,
+        and want to handle this error gracefully, consider using `EntityCommands::queue_handled` or `queue_silenced`.
+
+    2026-10-28T06:20:05.145617Z  WARN bevy_ecs::error::handler: Encountered an error in command `<bevy_ecs::system::commands::entity_command::despawn::{{closure}} as bevy_ecs::system::commands::entity_command::EntityCommand>::with_entity::{{closure}}`: Entity despawned: The entity with ID 4320v1 is invalid; its index now has generation 2.
+    Note that interacting with a despawned entity is the most common cause of this error but there are others
+
+        If you were attempting to apply a command to this entity,
+        and want to handle this error gracefully, consider using `EntityCommands::queue_handled` or `queue_silenced`.
+
+    2026-10-28T06:20:05.145627Z  WARN bevy_ecs::error::handler: Encountered an error in command `<bevy_ecs::system::commands::entity_command::despawn::{{closure}} as bevy_ecs::system::commands::entity_command::EntityCommand>::with_entity::{{closure}}`: Entity despawned: The entity with ID 4392v1 is invalid; its index now has generation 2.
+    Note that interacting with a despawned entity is the most common cause of this error but there are others
+
+        If you were attempting to apply a command to this entity,
+        and want to handle this error gracefully, consider using `EntityCommands::queue_handled` or `queue_silenced`.
+
+    2026-10-28T06:20:05.145637Z  WARN bevy_ecs::error::handler: Encountered an error in command `<bevy_ecs::system::commands::entity_command::despawn::{{closure}} as bevy_ecs::system::commands::entity_command::EntityCommand>::with_entity::{{closure}}`: Entity despawned: The entity with ID 4390v1 is invalid; its index now has generation 2.
+    Note that interacting with a despawned entity is the most common cause of this error but there are others
+
+        If you were attempting to apply a command to this entity,
+        and want to handle this error gracefully, consider using `EntityCommands::queue_handled` or `queue_silenced`.
+
+    2026-10-28T06:20:05.145647Z  WARN bevy_ecs::error::handler: Encountered an error in command `<bevy_ecs::system::commands::entity_command::despawn::{{closure}} as bevy_ecs::system::commands::entity_command::EntityCommand>::with_entity::{{closure}}`: Entity despawned: The entity with ID 4389v1 is invalid; its index now has generation 2.
+    Note that interacting with a despawned entity is the most common cause of this error but there are others
+
+        If you were attempting to apply a command to this entity,
+        and want to handle this error gracefully, consider using `EntityCommands::queue_handled` or `queue_silenced`.
+
+    2026-10-28T06:20:05.145656Z  WARN bevy_ecs::error::handler: Encountered an error in command `<bevy_ecs::system::commands::entity_command::despawn::{{closure}} as bevy_ecs::system::commands::entity_command::EntityCommand>::with_entity::{{closure}}`: Entity despawned: The entity with ID 4322v1 is invalid; its index now has generation 2.
+    Note that interacting with a despawned entity is the most common cause of this error but there are others
+
+        If you were attempting to apply a command to this entity,
+        and want to handle this error gracefully, consider using `EntityCommands::queue_handled` or `queue_silenced`.
+
+    2026-10-28T06:20:05.145665Z  WARN bevy_ecs::error::handler: Encountered an error in command `<bevy_ecs::system::commands::entity_command::despawn::{{closure}} as bevy_ecs::system::commands::entity_command::EntityCommand>::with_entity::{{closure}}`: Entity despawned: The entity with ID 4321v1 is invalid; its index now has generation 2.
+    Note that interacting with a despawned entity is the most common cause of this error but there are others
+
+        If you were attempting to apply a command to this entity,
+        and want to handle this error gracefully, consider using `EntityCommands::queue_handled` or `queue_silenced`.
+
+
+    thread 'reconcile::a_maximized_leaf_draining_ends_the_maximize' (13437023) panicked at /Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_ecs/src/error/handler.rs:128:1:
+    Encountered an error in command `<bevy_ecs::system::commands::entity_command::observe<(bevy_picking::events::PointerOver, (bevy_ecs::system::function_system::IsFunctionSystem, (bevy_ecs::system::function_system::HasSystemInput, fn(bevy_ecs::observer::system_param::On<'_, bevy_picking::events::PointerOver>, bevy_ecs::system::query::Query<'_, '_, &mut bevy_ui::ui_node::BackgroundColor>)))), jackdaw::project_window::highlight_on_hover>::{{closure}} as bevy_ecs::system::commands::entity_command::EntityCommand>::with_entity::{{closure}}`: Entity despawned: The entity with ID 4779v1 is invalid; its index now has generation 2.
+    Note that interacting with a despawned entity is the most common cause of this error but there are others
+
+        If you were attempting to apply a command to this entity,
+        and want to handle this error gracefully, consider using `EntityCommands::queue_handled` or `queue_silenced`.
+
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+    2026-10-28T06:20:05.683784Z  WARN bevy_ecs::world::command_queue: CommandQueue has un-applied commands being dropped. Did you forget to call SystemState::apply?
+    2026-10-28T06:20:05.684331Z  WARN bevy_ecs::world::command_queue: CommandQueue has un-applied commands being dropped. Did you forget to call SystemState::apply?
+    2026-10-28T06:20:05.684371Z  WARN bevy_ecs::world::command_queue: CommandQueue has un-applied commands being dropped. Did you forget to call SystemState::apply?
+
+        FAIL [   1.493s] ( 8/10) jackdaw::guards reference_rewrite::renaming_an_open_clean_scene_retargets_its_tab
+  stdout ───
+
+    running 1 test
+    test reference_rewrite::renaming_an_open_clean_scene_retargets_its_tab ... FAILED
+
+    failures:
+
+    failures:
+        reference_rewrite::renaming_an_open_clean_scene_retargets_its_tab
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 221 filtered out; finished in 1.44s
+
+  stderr ───
+    2026-10-28T06:20:04.983914Z ERROR bevy_extract::extract_resource: Sub app did not exist when trying to add `extract_resource` for <bevy_camera::clear_color::ClearColor>.
+    2026-10-28T06:20:05.366350Z  WARN bevy_gizmos_render: bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+    2026-10-28T06:20:05.501505Z  INFO jackdaw_api_internal::lifecycle: Adding the App plugin `jackdaw::test_input::plugin` of extension `jackdaw.test_input`
+    2026-10-28T06:20:05.501775Z  INFO jackdaw_api_internal::lifecycle: Adding the App plugin `jackdaw_physics::PhysicsEditorPlugin` of extension `jackdaw.physics`
+    2026-10-28T06:20:05.503558Z  WARN bevy_render::texture: CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+    2026-10-28T06:20:05.503658Z  WARN bevy_gltf: CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+    2026-10-28T06:20:05.507521Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.multiplayer
+    2026-10-28T06:20:05.507603Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.physics
+    2026-10-28T06:20:05.507952Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.viewport_panel
+    2026-10-28T06:20:05.508064Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.animation_graph
+    2026-10-28T06:20:05.508087Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.inspector
+    2026-10-28T06:20:05.508109Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.core_windows
+    2026-10-28T06:20:05.508150Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.project_window
+    2026-10-28T06:20:05.508160Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.game_panel
+    2026-10-28T06:20:05.508171Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.timeline
+    2026-10-28T06:20:05.508180Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.build_panel
+    2026-10-28T06:20:05.508299Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.core
+    2026-10-28T06:20:05.512852Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.ui_palette
+    2026-10-28T06:20:05.512949Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.test_input
+    2026-10-28T06:20:05.515757Z  WARN jackdaw_api_internal::keymap::apply: preset 'classic' has 10 chords claimed by more than one action: ["Home (Press, Operators): viewport2d.frame, clip.timeline.jump_start, view.frame_all", "Delete (Press, Operators): clip.delete_keyframes, entity.delete, brush.delete_element", "Backspace (Press, Operators): clip.delete_keyframes, viewport.draw_brush.remove_last_vertex, brush.delete_element", "Super+KeyC (Press, Operators): clip.copy_keyframes, entity.copy", "Super+KeyV (Press, Operators): clip.paste_keyframes, entity.paste", "Tab (Press, Operators): viewport.draw_brush.toggle_mode, brush.clip.cycle_mode", "Enter (Press, Operators): viewport.draw_brush.commit_polygon, brush.clip.apply", "KeyE (Press, Operators): tool.rotate, brush.mesh.extrude", "Escape (Press, Operators): brush.exit_edit_mode, selection.clear, brush.clip.clear, terrain.tool.exit_to_select", "Super+KeyB (Press, Operators): brush.mesh.edge_bevel, brush.mesh.vertex_bevel"]
+    2026-10-28T06:20:05.515790Z  INFO jackdaw::extension_lifecycle: applied keymap preset 'classic': 112 entries, 112 bindings, 0 user rows
+    2026-10-28T06:20:05.867619Z  INFO jackdaw::asset_index: asset index: walking /var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/jackdaw-reference-rewrite-OKLFgv/assets recursively
+    2026-10-28T06:20:05.868132Z  INFO jackdaw::asset_catalog: No asset catalog found, starting with empty catalog
+    2026-10-28T06:20:06.011690Z  WARN jackdaw::pie: PIE: cannot build /var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/jackdaw-reference-rewrite-OKLFgv: cargo could not read /var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/jackdaw-reference-rewrite-OKLFgv: error: could not find `Cargo.toml` in `/private/var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/jackdaw-reference-rewrite-OKLFgv` or any parent directory
+    2026-10-28T06:20:06.016737Z  INFO jackdaw::material_browser: update_material_browser_ui: rebuilding with 1 entries
+    2026-10-28T06:20:06.047292Z  WARN bevy_ui::ui_node: Two or more Entities with IsDefaultUiCamera found when only one Camera with this marker is allowed.
+    2026-10-28T06:20:06.127817Z  INFO jackdaw_api_internal::operator: OPERATOR: scene.open
+    2026-10-28T06:20:06.227356Z  INFO jackdaw::material_browser: update_material_browser_ui: rebuilding with 2 entries
+    2026-10-28T06:20:06.231610Z  INFO jackdaw::asset_index: asset index: walk landed (documents 2, typed 2, referencing 1)
+    2026-10-28T06:20:06.231628Z  INFO jackdaw::asset_index: asset index: walk out of date (writes 0 -> 2), walking again
+    2026-10-28T06:20:06.231634Z  INFO jackdaw::asset_index: asset index: walking /var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/jackdaw-reference-rewrite-OKLFgv/assets recursively
+    2026-10-28T06:20:06.289606Z  INFO jackdaw_api_internal::operator: OPERATOR: file.rename
+    2026-10-28T06:20:06.290347Z  INFO jackdaw_api_internal::operator: renamed; rewrote 0 references
+
+    thread 'reference_rewrite::renaming_an_open_clean_scene_retargets_its_tab' (13437512) panicked at tests/guards/reference_rewrite.rs:314:5:
+    the tab saves through the new path: /private/var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/jackdaw-reference-rewrite-OKLFgv/assets/zones/hedgerow.bsn
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+        FAIL [   1.752s] ( 9/10) jackdaw::guards session_journal::a_dirty_tab_journals_the_save_emitters_own_text
+  stdout ───
+
+    running 1 test
+    test session_journal::a_dirty_tab_journals_the_save_emitters_own_text ... FAILED
+
+    failures:
+
+    failures:
+        session_journal::a_dirty_tab_journals_the_save_emitters_own_text
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 221 filtered out; finished in 1.70s
+
+  stderr ───
+    2026-10-28T06:20:05.019986Z ERROR bevy_extract::extract_resource: Sub app did not exist when trying to add `extract_resource` for <bevy_camera::clear_color::ClearColor>.
+    2026-10-28T06:20:05.337057Z  WARN bevy_gizmos_render: bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+    2026-10-28T06:20:05.457267Z  INFO jackdaw_api_internal::lifecycle: Adding the App plugin `jackdaw::test_input::plugin` of extension `jackdaw.test_input`
+    2026-10-28T06:20:05.471717Z  INFO jackdaw_api_internal::lifecycle: Adding the App plugin `jackdaw_physics::PhysicsEditorPlugin` of extension `jackdaw.physics`
+    2026-10-28T06:20:05.482019Z  WARN bevy_render::texture: CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+    2026-10-28T06:20:05.482142Z  WARN bevy_gltf: CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+    2026-10-28T06:20:05.502377Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.build_panel
+    2026-10-28T06:20:05.502793Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.core
+    2026-10-28T06:20:05.504626Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.game_panel
+    2026-10-28T06:20:05.504656Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.viewport_panel
+    2026-10-28T06:20:05.504735Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.ui_palette
+    2026-10-28T06:20:05.504789Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.timeline
+    2026-10-28T06:20:05.504797Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.animation_graph
+    2026-10-28T06:20:05.504806Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.inspector
+    2026-10-28T06:20:05.504821Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.test_input
+    2026-10-28T06:20:05.504833Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.core_windows
+    2026-10-28T06:20:05.504860Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.multiplayer
+    2026-10-28T06:20:05.504886Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.project_window
+    2026-10-28T06:20:05.504899Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.physics
+    2026-10-28T06:20:05.509616Z  WARN jackdaw_api_internal::keymap::apply: preset 'classic' has 10 chords claimed by more than one action: ["Delete (Press, Operators): clip.delete_keyframes, entity.delete, brush.delete_element", "Backspace (Press, Operators): clip.delete_keyframes, viewport.draw_brush.remove_last_vertex, brush.delete_element", "Home (Press, Operators): clip.timeline.jump_start, view.frame_all, viewport2d.frame", "Super+KeyC (Press, Operators): clip.copy_keyframes, entity.copy", "Super+KeyV (Press, Operators): clip.paste_keyframes, entity.paste", "Tab (Press, Operators): viewport.draw_brush.toggle_mode, brush.clip.cycle_mode", "Enter (Press, Operators): viewport.draw_brush.commit_polygon, brush.clip.apply", "KeyE (Press, Operators): tool.rotate, brush.mesh.extrude", "Escape (Press, Operators): brush.exit_edit_mode, selection.clear, brush.clip.clear, terrain.tool.exit_to_select", "Super+KeyB (Press, Operators): brush.mesh.edge_bevel, brush.mesh.vertex_bevel"]
+    2026-10-28T06:20:05.509649Z  INFO jackdaw::extension_lifecycle: applied keymap preset 'classic': 112 entries, 112 bindings, 0 user rows
+    2026-10-28T06:20:05.835803Z  INFO jackdaw::asset_index: asset index: walking /var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/jackdaw-session-journal-ZuytiN/assets recursively
+    2026-10-28T06:20:05.836298Z  INFO jackdaw::asset_catalog: No asset catalog found, starting with empty catalog
+    2026-10-28T06:20:05.991676Z  WARN jackdaw::pie: PIE: cannot build /var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/jackdaw-session-journal-ZuytiN: cargo could not read /var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/jackdaw-session-journal-ZuytiN: error: could not find `Cargo.toml` in `/private/var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/jackdaw-session-journal-ZuytiN` or any parent directory
+    2026-10-28T06:20:05.995468Z  INFO jackdaw::material_browser: update_material_browser_ui: rebuilding with 1 entries
+    2026-10-28T06:20:06.022261Z  WARN bevy_ui::ui_node: Two or more Entities with IsDefaultUiCamera found when only one Camera with this marker is allowed.
+    2026-10-28T06:20:06.098157Z  INFO jackdaw_api_internal::operator: OPERATOR: scene.open
+    2026-10-28T06:20:06.166720Z  INFO jackdaw::asset_index: asset index: walk landed (documents 2, typed 2, referencing 0)
+    2026-10-28T06:20:06.166822Z  INFO jackdaw::asset_index: asset index: applied with nothing added (removed 0, reloaded 0)
+    2026-10-28T06:20:06.269240Z  INFO jackdaw_api_internal::operator: OPERATOR: prefab.spawn_instance
+
+    thread 'session_journal::a_dirty_tab_journals_the_save_emitters_own_text' (13437511) panicked at tests/guards/session_journal.rs:114:5:
+    the entry names the tab's file: /private/var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/jackdaw-session-journal-ZuytiN/assets/zone.bsn
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+        FAIL [   9.552s] (10/10) jackdaw::guards session_journal::the_journal_write_costs_no_more_than_five_milliseconds
+  stdout ───
+
+    running 1 test
+    test session_journal::the_journal_write_costs_no_more_than_five_milliseconds ... FAILED
+
+    failures:
+
+    failures:
+        session_journal::the_journal_write_costs_no_more_than_five_milliseconds
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 221 filtered out; finished in 9.50s
+
+  stderr ───
+    2026-10-28T06:20:05.378781Z ERROR bevy_extract::extract_resource: Sub app did not exist when trying to add `extract_resource` for <bevy_camera::clear_color::ClearColor>.
+    2026-10-28T06:20:05.632839Z  WARN bevy_gizmos_render: bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+    2026-10-28T06:20:05.711704Z  INFO jackdaw_api_internal::lifecycle: Adding the App plugin `jackdaw::test_input::plugin` of extension `jackdaw.test_input`
+    2026-10-28T06:20:05.712627Z  INFO jackdaw_api_internal::lifecycle: Adding the App plugin `jackdaw_physics::PhysicsEditorPlugin` of extension `jackdaw.physics`
+    2026-10-28T06:20:05.715344Z  WARN bevy_render::texture: CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+    2026-10-28T06:20:05.715464Z  WARN bevy_gltf: CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+    2026-10-28T06:20:05.722014Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.multiplayer
+    2026-10-28T06:20:05.722214Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.build_panel
+    2026-10-28T06:20:05.722459Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.viewport_panel
+    2026-10-28T06:20:05.722699Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.project_window
+    2026-10-28T06:20:05.722714Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.game_panel
+    2026-10-28T06:20:05.722723Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.timeline
+    2026-10-28T06:20:05.722731Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.animation_graph
+    2026-10-28T06:20:05.722740Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.test_input
+    2026-10-28T06:20:05.722757Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.physics
+    2026-10-28T06:20:05.722866Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.core_windows
+    2026-10-28T06:20:05.722906Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.ui_palette
+    2026-10-28T06:20:05.722952Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.inspector
+    2026-10-28T06:20:05.722970Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.core
+    2026-10-28T06:20:05.726164Z  WARN jackdaw_api_internal::keymap::apply: preset 'classic' has 10 chords claimed by more than one action: ["Home (Press, Operators): viewport2d.frame, clip.timeline.jump_start, view.frame_all", "Delete (Press, Operators): clip.delete_keyframes, entity.delete, brush.delete_element", "Backspace (Press, Operators): clip.delete_keyframes, viewport.draw_brush.remove_last_vertex, brush.delete_element", "Super+KeyC (Press, Operators): clip.copy_keyframes, entity.copy", "Super+KeyV (Press, Operators): clip.paste_keyframes, entity.paste", "Tab (Press, Operators): viewport.draw_brush.toggle_mode, brush.clip.cycle_mode", "Enter (Press, Operators): viewport.draw_brush.commit_polygon, brush.clip.apply", "KeyE (Press, Operators): tool.rotate, brush.mesh.extrude", "Escape (Press, Operators): brush.exit_edit_mode, selection.clear, brush.clip.clear, terrain.tool.exit_to_select", "Super+KeyB (Press, Operators): brush.mesh.edge_bevel, brush.mesh.vertex_bevel"]
+    2026-10-28T06:20:05.726186Z  INFO jackdaw::extension_lifecycle: applied keymap preset 'classic': 112 entries, 112 bindings, 0 user rows
+    2026-10-28T06:20:06.111090Z  INFO jackdaw::asset_index: asset index: walking /var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/jackdaw-journal-perf-BLcSzi/assets recursively
+    2026-10-28T06:20:06.111502Z  INFO jackdaw::asset_catalog: No asset catalog found, starting with empty catalog
+    2026-10-28T06:20:06.285688Z  WARN jackdaw::pie: PIE: cannot build /var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/jackdaw-journal-perf-BLcSzi: cargo could not read /var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/jackdaw-journal-perf-BLcSzi: error: could not find `Cargo.toml` in `/private/var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/jackdaw-journal-perf-BLcSzi` or any parent directory
+    2026-10-28T06:20:06.288197Z  INFO jackdaw::material_browser: update_material_browser_ui: rebuilding with 1 entries
+    2026-10-28T06:20:06.320420Z  WARN bevy_ui::ui_node: Two or more Entities with IsDefaultUiCamera found when only one Camera with this marker is allowed.
+    2026-10-28T06:20:06.397064Z  INFO jackdaw_api_internal::operator: OPERATOR: scene.open
+    2026-10-28T06:20:06.402215Z  WARN jackdaw_bsn::apply: BSN entity has 401 #names; a missing comma between sibling entities merges them into one. Check the scene file for a patch group holding more than one #name.
+    2026-10-28T06:20:06.463007Z  INFO jackdaw::asset_index: asset index: walk landed (documents 2, typed 2, referencing 0)
+    2026-10-28T06:20:06.463225Z  INFO jackdaw::asset_index: asset index: applied with nothing added (removed 0, reloaded 0)
+    2026-10-28T06:20:06.520655Z  INFO jackdaw_api_internal::operator: OPERATOR: prefab.spawn_instance
+    2026-10-28T06:20:06.576736Z  WARN jackdaw_bsn::apply: BSN entity has 401 #names; a missing comma between sibling entities merges them into one. Check the scene file for a patch group holding more than one #name.
+    2026-10-28T06:20:06.618346Z  INFO guards::session_journal: journal emit only (400-entity generated): 1.074125ms
+    2026-10-28T06:20:06.619069Z  INFO guards::session_journal: journal main-thread cost (400-entity generated): 705.375µs
+    2026-10-28T06:20:06.684758Z ERROR bevy_log: Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+    2026-10-28T06:20:06.685213Z  INFO bevy_app::terminal_ctrl_c_handler: Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+    2026-10-28T06:20:06.788114Z  WARN bevy_gizmos_render: bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+    2026-10-28T06:20:06.868393Z  INFO jackdaw_api_internal::lifecycle: Adding the App plugin `jackdaw::test_input::plugin` of extension `jackdaw.test_input`
+    2026-10-28T06:20:06.868500Z  INFO jackdaw_api_internal::lifecycle: Adding the App plugin `jackdaw_physics::PhysicsEditorPlugin` of extension `jackdaw.physics`
+    2026-10-28T06:20:06.869762Z  WARN bevy_render::texture: CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+    2026-10-28T06:20:06.869852Z  WARN bevy_gltf: CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+    2026-10-28T06:20:06.874205Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.inspector
+    2026-10-28T06:20:06.874446Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.ui_palette
+    2026-10-28T06:20:06.874674Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.animation_graph
+    2026-10-28T06:20:06.874706Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.core
+    2026-10-28T06:20:06.878905Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.test_input
+    2026-10-28T06:20:06.878992Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.physics
+    2026-10-28T06:20:06.879329Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.viewport_panel
+    2026-10-28T06:20:06.879445Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.core_windows
+    2026-10-28T06:20:06.879526Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.build_panel
+    2026-10-28T06:20:06.879546Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.multiplayer
+    2026-10-28T06:20:06.879572Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.project_window
+    2026-10-28T06:20:06.879596Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.timeline
+    2026-10-28T06:20:06.879616Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.game_panel
+    2026-10-28T06:20:06.882052Z  WARN jackdaw_api_internal::keymap::apply: preset 'classic' has 10 chords claimed by more than one action: ["Delete (Press, Operators): clip.delete_keyframes, entity.delete, brush.delete_element", "Backspace (Press, Operators): clip.delete_keyframes, viewport.draw_brush.remove_last_vertex, brush.delete_element", "Home (Press, Operators): clip.timeline.jump_start, view.frame_all, viewport2d.frame", "Super+KeyC (Press, Operators): clip.copy_keyframes, entity.copy", "Super+KeyV (Press, Operators): clip.paste_keyframes, entity.paste", "Tab (Press, Operators): viewport.draw_brush.toggle_mode, brush.clip.cycle_mode", "Enter (Press, Operators): viewport.draw_brush.commit_polygon, brush.clip.apply", "KeyE (Press, Operators): tool.rotate, brush.mesh.extrude", "Escape (Press, Operators): brush.exit_edit_mode, selection.clear, brush.clip.clear, terrain.tool.exit_to_select", "Super+KeyB (Press, Operators): brush.mesh.edge_bevel, brush.mesh.vertex_bevel"]
+    2026-10-28T06:20:06.882081Z  INFO jackdaw::extension_lifecycle: applied keymap preset 'classic': 112 entries, 112 bindings, 0 user rows
+    2026-10-28T06:20:07.095138Z  INFO jackdaw::asset_index: asset index: walking /var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/jackdaw-journal-perf-DCcK9B/assets recursively
+    2026-10-28T06:20:07.096210Z  INFO jackdaw::asset_catalog: No asset catalog found, starting with empty catalog
+    2026-10-28T06:20:07.335594Z  WARN jackdaw::pie: PIE: cannot build /var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/jackdaw-journal-perf-DCcK9B: cargo could not read /var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/jackdaw-journal-perf-DCcK9B: error: could not find `Cargo.toml` in `/private/var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/jackdaw-journal-perf-DCcK9B` or any parent directory
+    2026-10-28T06:20:07.367140Z  INFO jackdaw::material_browser: update_material_browser_ui: rebuilding with 1 entries
+    2026-10-28T06:20:07.479218Z  INFO jackdaw_api_internal::operator: OPERATOR: scene.open
+    2026-10-28T06:20:09.503437Z  WARN jackdaw_api_internal::operator: scene '/private/var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/jackdaw-journal-perf-DCcK9B/assets/zone.bsn': the prefab '/home/joe/Workspace/jackdaw/assets/prefabs/box.jsn' is not in the project, so the instance naming it inherits nothing
+    2026-10-28T06:20:10.095326Z  WARN jackdaw::prefab::watcher: watch failed for /home/joe/Workspace/jackdaw/assets/prefabs: No path was found. about ["/home/joe/Workspace/jackdaw/assets/prefabs"]
+    2026-10-28T06:20:10.187516Z  INFO jackdaw::asset_index: asset index: walk landed (documents 2, typed 2, referencing 1)
+    2026-10-28T06:20:10.237454Z  INFO jackdaw::asset_index: asset index: applied with nothing added (removed 0, reloaded 0)
+    2026-10-28T06:20:10.618839Z  WARN bevy_app::hierarchy: warning[B0004]: Entity 4531v0 with the InheritedVisibility component has a parent (the Brush entity) without InheritedVisibility.
+    This will cause inconsistent behaviors! See: https://bevy.org/learn/errors/b0004
+    2026-10-28T06:20:10.956061Z  INFO jackdaw_api_internal::operator: OPERATOR: prefab.spawn_instance
+    2026-10-28T06:20:11.516701Z  WARN jackdaw::prefab::watcher: watch failed for /home/joe/Workspace/jackdaw/assets/prefabs: No path was found. about ["/home/joe/Workspace/jackdaw/assets/prefabs"]
+    2026-10-28T06:20:12.280756Z  WARN jackdaw::prefab::watcher: prefab reload parse failed for /home/joe/Workspace/jackdaw/assets/prefabs/box.jsn: legacy .jsn prefab /home/joe/Workspace/jackdaw/assets/prefabs/box.jsn cannot be cached as a BSN document without a world; keeping the last copy that parsed
+    2026-10-28T06:20:13.901011Z  WARN bevy_app::hierarchy: warning[B0004]: Entity 4576v0 with the InheritedVisibility component has a parent (the Brush entity) without InheritedVisibility.
+    This will cause inconsistent behaviors! See: https://bevy.org/learn/errors/b0004
+    2026-10-28T06:20:14.230580Z  INFO guards::session_journal: journal emit only (terrain-patch fixture): 329.347ms
+    2026-10-28T06:20:14.490017Z  WARN jackdaw::scene_io::session_journal: session journal: scene emit refused (an asset is named by an absolute path, which holds only on this machine: jackdaw::prefab::components::IsA.source names '/home/joe/Workspace/jackdaw/assets/prefabs/box.jsn'. Name it relative to the project's assets folder); snapshotting as held
+    2026-10-28T06:20:14.798625Z  INFO guards::session_journal: journal main-thread cost (terrain-patch fixture): 568.011792ms
+
+    thread 'session_journal::the_journal_write_costs_no_more_than_five_milliseconds' (13437553) panicked at tests/guards/session_journal.rs:410:9:
+    terrain-patch fixture: journal write took 568.011792ms, over the 5 ms frame budget
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+error: test run failed
+EXIT=100

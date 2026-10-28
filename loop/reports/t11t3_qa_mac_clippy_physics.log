@@ -1,0 +1,302 @@
+   Compiling serde_core v1.0.229
+   Compiling serde v1.0.229
+   Compiling quote v1.0.47
+    Checking downcast-rs v2.0.2
+   Compiling nix v0.31.3
+    Checking futures-task v0.3.34
+    Checking hashbrown v0.16.1
+    Checking base64 v0.23.1
+    Checking tokio v1.54.1
+    Checking zeroize v1.9.1
+    Checking curve25519-dalek v4.1.3
+    Checking weak-table v0.4.0
+   Compiling syn v3.0.9
+   Compiling syn v2.0.119
+   Compiling jackdaw_project_build v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_project_build)
+    Checking ed25519-dalek v2.2.0
+   Compiling variadics_please v2.0.0
+   Compiling proc-macro-error-attr3 v3.1.1
+   Compiling include_dir_macros v0.7.4
+    Checking base64 v0.22.1
+    Checking include_dir v0.7.4
+    Checking hashbrown v0.17.1
+    Checking uuid v1.29.0
+    Checking erased-serde v0.4.11
+    Checking toml_datetime v1.1.2+spec-1.1.0
+    Checking indexmap v2.14.2
+    Checking serde_spanned v1.1.2
+    Checking serde_json v1.0.154
+    Checking toml v1.1.8+spec-1.1.0
+   Compiling bevy_macro_utils v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_macro_utils)
+   Compiling encase_derive_impl v0.13.0
+   Compiling synstructure v0.14.0
+   Compiling logos-codegen v0.16.1
+   Compiling bevy_ecs_macro_logic v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_ecs/macro_logic)
+   Compiling proc-macro-error3 v3.1.1
+    Checking toml_edit v0.25.17+spec-1.1.0
+   Compiling derive_more-impl v2.1.1
+   Compiling assert_type_match v0.1.1
+   Compiling zerocopy-derive v0.8.63
+   Compiling tracing-attributes v0.1.31
+   Compiling logos-derive v0.16.1
+    Checking logos v0.16.1
+   Compiling enumn v0.1.14
+   Compiling gltf-derive v1.4.1
+   Compiling bytemuck_derive v1.12.1
+   Compiling serde_derive v1.0.229
+   Compiling thiserror-impl v2.0.21
+   Compiling encase_derive v0.13.0
+   Compiling bevy_reflect_derive v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_reflect/derive)
+   Compiling bevy_ecs_macros v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_ecs/macros)
+    Checking bytemuck v1.25.2
+   Compiling bevy_derive v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_derive)
+    Checking bitflags v2.13.2
+    Checking dispatch2 v0.3.1
+    Checking objc2-core-foundation v0.3.2
+    Checking rustix v1.1.6
+    Checking zerocopy v0.8.63
+    Checking polling v3.11.0
+    Checking async-io v2.6.0
+    Checking ctrlc v3.5.2
+    Checking tracing v0.1.44
+    Checking thiserror v2.0.21
+    Checking objc2-io-kit v0.3.2
+    Checking objc2-core-services v0.3.2
+    Checking notify-types v2.1.0
+    Checking notify v8.2.1
+    Checking sysinfo v0.39.6
+    Checking encase v0.13.0
+   Compiling futures-macro v0.3.34
+    Checking notify-debouncer-full v0.7.0
+    Checking objc2-foundation v0.3.2
+   Compiling zerofrom-derive v0.1.8
+    Checking smallvec v1.16.4
+    Checking naga-types v30.0.1
+    Checking wgpu-types v30.0.1
+    Checking glam v0.33.12
+    Checking smol_str v0.2.2
+    Checking bevy_platform v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_platform)
+    Checking bevy_utils v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_utils)
+    Checking petgraph v0.8.3
+    Checking half v2.7.1
+    Checking derive_more v2.1.1
+    Checking ron v0.12.2
+   Compiling bevy_asset_macros v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_asset/macros)
+    Checking bevy_tasks v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_tasks)
+   Compiling displaydoc v0.2.7
+   Compiling yoke-derive v0.8.4
+   Compiling zerovec-derive v0.11.7
+    Checking bevy_reflect v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_reflect)
+    Checking tiff v0.11.3
+    Checking futures-util v0.3.34
+    Checking png v0.18.1
+    Checking ktx2 v0.5.0
+    Checking hexasphere v19.0.0
+    Checking image v0.25.10
+    Checking objc2-core-graphics v0.3.2
+    Checking tracing-subscriber v0.3.23
+    Checking objc2-metal v0.3.2
+    Checking wgsl-types v0.6.0
+    Checking naga v30.0.1
+    Checking parking_lot_core v0.9.12
+    Checking font-types v0.12.7
+    Checking wgsl-parse v0.6.0
+    Checking read-fonts v0.41.0
+    Checking parking_lot v0.12.5
+   Compiling wesl-macros v0.6.0
+    Checking objc2-quartz-core v0.3.2
+    Checking raw-window-metal v1.1.0
+    Checking objc2-app-kit v0.3.2
+    Checking bevy_ecs v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_ecs)
+    Checking bevy_math v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_math)
+    Checking wgpu-naga-bridge v30.0.1
+   Compiling bevy_extract_macros v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_extract/macros)
+    Checking bevy_curve v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_curve)
+    Checking bevy_shape v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_shape)
+    Checking wgpu-hal v30.0.1
+    Checking zerofrom v0.1.8
+   Compiling bevy_gizmos_macros v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_gizmos/macros)
+    Checking bevy_color v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_color)
+   Compiling bevy_material_macros v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_material/macros)
+    Checking wesl v0.6.0
+    Checking wgpu-core-deps-apple v30.0.1
+    Checking wgpu-core v30.0.1
+    Checking skrifa v0.44.0
+    Checking yoke v0.8.4
+    Checking objc2-core-text v0.3.2
+    Checking fontique v0.11.1
+    Checking zerovec v0.11.9
+    Checking zerotrie v0.2.5
+    Checking harfrust v0.12.0
+    Checking arboard v3.7.0
+   Compiling bevy_render_macros v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_render/macros)
+    Checking accesskit v0.25.2
+    Checking tinystr v0.8.5
+    Checking icu_locale_core v2.4.0
+    Checking potential_utf v0.1.6
+    Checking icu_collections v2.4.0
+    Checking wgpu v30.0.1
+   Compiling bevy_encase_derive v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_encase_derive)
+    Checking icu_provider v2.4.0
+    Checking icu_locale_fallback v2.4.0
+    Checking icu_properties v2.4.0
+    Checking icu_segmenter v2.4.0
+    Checking icu_normalizer v2.4.0
+    Checking bevy_app v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_app)
+    Checking swash v0.2.10
+    Checking objc2-core-audio-types v0.3.2
+    Checking objc2-core-audio v0.3.2
+    Checking parley_data v0.11.1
+    Checking taffy v0.14.0
+    Checking objc2-audio-toolbox v0.3.2
+    Checking parley v0.11.1
+    Checking gltf-json v1.4.1
+   Compiling bevy_animation_macros v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_animation/macros)
+    Checking bevy_time v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_time)
+    Checking bevy_transform v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_transform)
+    Checking bevy_input v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_input)
+    Checking bevy_diagnostic v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_diagnostic)
+    Checking bevy_log v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_log)
+    Checking bevy_asset v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_asset)
+    Checking bevy_a11y v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_a11y)
+    Checking coreaudio-rs v0.14.2
+    Checking objc2-foundation v0.2.2
+   Compiling foreign-types-macros v0.2.4
+    Checking gltf v1.4.1
+    Checking cpal v0.17.3
+    Checking accesskit_consumer v0.39.2
+    Checking rodio v0.22.2
+   Compiling bevy_state_macros v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_state/macros)
+    Checking hyper v1.12.0
+    Checking gilrs-core v0.6.8
+   Compiling bevy_scene_macros v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_scene/macros)
+    Checking smol-hyper v0.1.1
+    Checking objc2-app-kit v0.2.2
+    Checking gilrs v0.11.2
+    Checking bevy_annotations v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_annotations)
+    Checking bevy_gilrs v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_gilrs)
+   Compiling thiserror-impl v1.0.69
+    Checking meshopt v0.6.2
+   Compiling unic-langid-impl v0.9.6
+    Checking bevy_image v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_image)
+    Checking bevy_mesh v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_mesh)
+    Checking bevy_shader v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_shader)
+    Checking foreign-types v0.5.0
+    Checking bevy_window v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_window)
+    Checking bevy_clipboard v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_clipboard)
+    Checking bevy_text v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_text)
+    Checking core-graphics v0.23.2
+    Checking winit v0.30.13
+    Checking bevy_material v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_material)
+    Checking bevy_animation v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_animation)
+    Checking accesskit_macos v0.27.2
+    Checking bevy_camera v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_camera)
+    Checking bevy_audio v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_audio)
+    Checking bevy_state v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_state)
+    Checking accesskit_winit v0.34.2
+   Compiling unic-langid-macros-impl v0.9.6
+    Checking wide v1.7.1
+    Checking bevy_gizmos v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_gizmos)
+    Checking bevy_picking v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_picking)
+    Checking bevy_extract v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_extract)
+    Checking bevy_world_serialization v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_world_serialization)
+    Checking bevy_light v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_light)
+    Checking unic-langid-macros v0.9.6
+    Checking bevy_sprite v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_sprite)
+    Checking bevy_input_focus v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_input_focus)
+    Checking bevy_render v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_render)
+    Checking unic-langid v0.9.6
+    Checking intl-memoizer v0.5.3
+    Checking bevy_gltf v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_gltf)
+    Checking intl_pluralrules v7.0.2
+    Checking bevy_ui v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_ui)
+    Checking bevy_winit v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_winit)
+    Checking simba v0.10.2
+    Checking fluent-langneg v0.13.1
+    Checking rstar v0.13.0
+    Checking spade v2.15.1
+    Checking thiserror v1.0.69
+   Compiling num-derive v0.5.1
+    Checking cdt v0.1.0
+    Checking fluent-syntax v0.11.1
+    Checking glam_matrix_extras v0.4.0
+    Checking glam v0.34.1
+    Checking fluent-bundle v0.15.3
+    Checking fluent v0.16.1
+    Checking fluent_content v0.0.5
+   Compiling avian_derive v0.2.3
+    Checking bevy_heavy v0.6.0
+    Checking jackdaw_env v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_env)
+    Checking glamx v0.3.1
+    Checking ppv-lite86 v0.2.21
+   Compiling jackdaw_api_macros v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_api_macros)
+    Checking rand_chacha v0.9.0
+    Checking cobs v0.3.0
+    Checking postcard v1.1.3
+    Checking rand v0.9.5
+    Checking tempfile v3.27.0
+    Checking jackdaw_package v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_package)
+    Checking bevy_scene v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_scene)
+    Checking ipc-channel v0.22.0
+    Checking jackdaw_releases v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_releases)
+    Checking bevy_ui_widgets v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_ui_widgets)
+    Checking rfd v0.15.4
+    Checking jackdaw_rustc_wrapper v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_rustc_wrapper)
+    Checking jackdaw_snap v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_snap)
+    Checking parry3d v0.31.1
+    Checking obvhs v0.4.0
+    Checking bevy_core_pipeline v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_core_pipeline)
+    Checking bevy_sprite_render v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_sprite_render)
+    Checking bevy_pbr v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_pbr)
+    Checking bevy_post_process v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_post_process)
+    Checking bevy_anti_alias v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_anti_alias)
+    Checking bevy_ui_render v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_ui_render)
+    Checking bevy_feathers v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_feathers)
+    Checking bevy_dev_tools v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_dev_tools)
+    Checking bevy_gizmos_render v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_gizmos_render)
+    Checking bevy_remote v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_remote)
+    Checking bevy_internal v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_internal)
+    Checking bevy v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned)
+    Checking jackdaw_geometry v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_geometry)
+    Checking jackdaw_bsn v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_bsn)
+    Checking jackdaw_commands v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_commands)
+    Checking jackdaw_widgets_runtime v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_widgets_runtime)
+    Checking jackdaw_bind v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_bind)
+    Checking bevy_transform_interpolation v0.6.0
+    Checking jackdaw_input v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_input)
+    Checking jackdaw_localization v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_localization)
+    Checking jackdaw_pie_protocol v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_pie_protocol)
+    Checking jackdaw_camera v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_camera)
+    Checking jackdaw_widgets v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_widgets)
+    Checking bevy_window_chrome v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/bevy_window_chrome)
+    Checking avian3d v0.8.0
+    Checking jackdaw_prefab v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_prefab)
+    Checking jackdaw_animation_runtime v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_animation_runtime)
+    Checking jackdaw_remote v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_remote)
+    Checking jackdaw_scene_types v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_scene_types)
+    Checking jackdaw_pick v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_pick)
+    Checking jackdaw_csg v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_csg)
+    Checking jackdaw_hull v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_hull)
+    Checking jackdaw_uv v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_uv)
+    Checking jackdaw_select v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_select)
+    Checking jackdaw_terrain v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_terrain)
+    Checking jackdaw_schema v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_schema)
+    Checking jackdaw_camera_rig v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_camera_rig)
+    Checking jackdaw_surface v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_surface)
+    Checking jackdaw_feathers v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_feathers)
+    Checking jackdaw_multiplayer v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_multiplayer)
+    Checking jackdaw_jsn v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_jsn)
+    Checking jackdaw_scaffold v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_scaffold)
+    Checking jackdaw_runtime v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_runtime)
+    Checking jackdaw_panels v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_panels)
+    Checking jackdaw_node_graph v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_node_graph)
+    Checking jackdaw_api_internal v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_api_internal)
+    Checking jackdaw_animation v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_animation)
+    Checking jackdaw_api v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_api)
+    Checking jackdaw_loader v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_loader)
+    Checking jackdaw_multiplayer_editor v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_multiplayer_editor)
+    Checking jackdaw_avian_integration v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/integrations/physics/jackdaw_avian_integration)
+    Checking jackdaw_physics v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/integrations/physics/jackdaw_physics)
+    Checking jackdaw v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw)
+    Finished `dev` profile [optimized + debuginfo] target(s) in 1m 44s
+EXIT=0

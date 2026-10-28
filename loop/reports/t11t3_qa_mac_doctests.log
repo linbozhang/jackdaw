@@ -1,0 +1,81 @@
+warning: doc tests are not supported for crate type(s) `dylib` in package `jackdaw_dylib`
+   Compiling ring v0.17.14
+   Compiling jackdaw_editor v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_editor)
+   Compiling rustls v0.23.46
+   Compiling rustls-webpki v0.103.16
+   Compiling ureq v2.12.1
+   Compiling jd v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jd)
+    Finished `test` profile [optimized + debuginfo] target(s) in 10.40s
+   Doc-tests bevy_window_chrome
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests dynamic_extension
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests jackdaw
+
+running 3 tests
+test src/lib.rs - JackdawEditorPlugins (line 296) ... ignored
+test src/lib.rs - JackdawEditorPlugins (line 307) ... ignored
+test src/lib.rs - JackdawEditorPlugins (line 319) ... ignored
+
+test result: ok. 0 passed; 0 failed; 3 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+all doctests ran in 0.63s; merged doctests compilation took 0.20s
+   Doc-tests jackdaw_animation
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests jackdaw_animation_runtime
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests jackdaw_api
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests jackdaw_api_internal
+
+running 5 tests
+test crates/jackdaw_api_internal/src/lib.rs - (line 11) ... ignored
+test crates/jackdaw_api_internal/src/operator.rs - operator::Operator (line 22) ... ignored
+test crates/jackdaw_api_internal/src/operator.rs - operator::Operator (line 49) ... ignored
+test crates/jackdaw_api_internal/src/operator.rs - operator::OperatorWorldExt (line 304) ... ignored
+test crates/jackdaw_api_internal/src/pie.rs - pie (line 6) ... ignored
+
+test result: ok. 0 passed; 0 failed; 5 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+all doctests ran in 0.62s; merged doctests compilation took 0.18s
+   Doc-tests jackdaw_api_macros
+
+running 1 test
+test crates/jackdaw_api_macros/src/lib.rs - operator (line 34) ... ignored
+
+test result: ok. 0 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+all doctests ran in 0.59s; merged doctests compilation took 0.17s
+   Doc-tests jackdaw_avian_integration
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests jackdaw_bind
+dyld[34921]: Library not loaded: @rpath/libstd-614bb9b33bbc23af.dylib
+  Referenced from: <A3A3631D-C6AB-3F41-A562-AF3975B1A935> /private/var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/rustdoctestfL9jLW/rust_out
+  Reason: tried: '/Users/zhanglinbo/workspace/jackdaw/target/debug/build/basis-universal-sys-1d2decb566d1977e/out/libstd-614bb9b33bbc23af.dylib' (no such file), '/Users/zhanglinbo/workspace/jackdaw/target/debug/build/blake3-c268c8804592e62e/out/libstd-614bb9b33bbc23af.dylib' (no such file), '/Users/zhanglinbo/workspace/jackdaw/target/debug/build/meshopt-173921558df877b9/out/libstd-614bb9b33bbc23af.dylib' (no such file), '/Users/zhanglinbo/workspace/jackdaw/target/debug/build/ring-89ca7c83ea2e6b35/out/libstd-614bb9b33bbc23af.dylib' (no such file), '/Users/zhanglinbo/workspace/jackdaw/target/debug/deps/libstd-614bb9b33bbc23af.dylib' (no such file), '/Users/zhanglinbo/.rustup/toolchains/1.99.0-aarch64-apple-darwin/lib/libstd-614bb9b33bbc23af.dylib' (no such file), '/Users/zhanglinbo/lib/libstd-614bb9b33bbc23af.dylib' (no such file), '/usr/local/lib/libstd-614bb9b33bbc23af.dylib' (no such file), '/usr/lib/libstd-614bb9b33bbc23af.dylib' (no such file, not in dyld cache)
+all doctests ran in 1.42s; merged doctests compilation took 0.80s
+error: doctest failed, to rerun pass `-p jackdaw_bind --doc`
+EXIT=101

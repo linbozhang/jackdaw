@@ -1,0 +1,196 @@
+   Compiling proc-macro2 v1.0.107
+   Compiling stable_deref_trait v1.2.1
+   Compiling serde v1.0.229
+   Compiling serde_json v1.0.154
+   Compiling writeable v0.6.4
+   Compiling litemap v0.8.3
+   Compiling winnow v1.0.4
+   Compiling toml_datetime v1.1.2+spec-1.1.0
+   Compiling hashbrown v0.17.1
+   Compiling smallvec v1.16.4
+   Compiling toml_parser v1.1.5+spec-1.1.0
+   Compiling tracing-core v0.1.36
+   Compiling serde_spanned v1.1.2
+   Compiling bitflags v2.13.2
+   Compiling nix v0.31.3
+   Compiling indexmap v2.14.2
+   Compiling toml v1.1.8+spec-1.1.0
+   Compiling toml_edit v0.25.17+spec-1.1.0
+   Compiling simd-adler32 v0.3.10
+   Compiling percent-encoding v2.3.2
+   Compiling quote v1.0.47
+   Compiling form_urlencoded v1.2.2
+   Compiling syn v3.0.9
+   Compiling syn v2.0.119
+   Compiling miniz_oxide v0.9.1
+   Compiling log v0.4.34
+   Compiling getrandom v0.3.4
+   Compiling include_dir_macros v0.7.4
+   Compiling synstructure v0.14.0
+   Compiling include_dir v0.7.4
+   Compiling rustls v0.23.46
+   Compiling flate2 v1.1.10
+   Compiling rustix v1.1.6
+   Compiling jackdaw_project_build v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_project_build)
+   Compiling zip v9.1.2
+   Compiling tempfile v3.27.0
+   Compiling zerofrom-derive v0.1.8
+   Compiling yoke-derive v0.8.4
+   Compiling zerovec-derive v0.11.7
+   Compiling displaydoc v0.2.7
+   Compiling serde_derive v1.0.229
+   Compiling tracing-attributes v0.1.31
+   Compiling zerofrom v0.1.8
+   Compiling yoke v0.8.4
+   Compiling zerovec v0.11.9
+   Compiling zerotrie v0.2.5
+   Compiling tinystr v0.8.5
+   Compiling potential_utf v0.1.6
+   Compiling icu_collections v2.4.0
+   Compiling tracing v0.1.44
+   Compiling icu_locale_core v2.4.0
+   Compiling icu_provider v2.4.0
+   Compiling icu_normalizer v2.4.0
+   Compiling icu_properties v2.4.0
+   Compiling jackdaw_env v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_env)
+   Compiling jackdaw_schema v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_schema)
+   Compiling jackdaw_package v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_package)
+   Compiling jackdaw_releases v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_releases)
+   Compiling idna_adapter v1.2.2
+   Compiling idna v1.1.0
+   Compiling url v2.5.8
+   Compiling ureq v2.12.1
+   Compiling jackdaw_scaffold v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_scaffold)
+   Compiling jackdaw_cli_internal v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_cli)
+   Compiling jd v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jd)
+    Finished `test` profile [optimized + debuginfo] target(s) in 29.00s
+────────────
+ Nextest run ID 98ebb8a8-25b8-488b-b495-b139ee09eb2b with nextest profile: default
+    Starting 1 test across 4 binaries (47 tests skipped)
+        FAIL [  16.352s] (1/1) jd::standalone_scaffold the_shipped_binary_scaffolds_without_a_checkout
+  stdout ───
+
+    running 1 test
+    test the_shipped_binary_scaffolds_without_a_checkout ... FAILED
+
+    failures:
+
+    failures:
+        the_shipped_binary_scaffolds_without_a_checkout
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 2 filtered out; finished in 16.34s
+
+  stderr ───
+
+    thread 'the_shipped_binary_scaffolds_without_a_checkout' (13445730) panicked at crates/jd/tests/standalone_scaffold.rs:132:5:
+    a shipped binary must scaffold registry dependencies, not local paths:
+    [package]
+    name = "standalone-game"
+    version = "0.1.0"
+    edition = "2024"
+    authors = [""]
+
+    # jackdaw builds its editor artifacts in .jackdaw/ and edits this manifest
+    # only when you change the project's modules; `cargo run` works with or
+    # without the editor installed.
+
+    # Keeps this project out of any cargo workspace it was created inside.
+    # Delete to join the surrounding workspace instead.
+    [workspace]
+
+    [dependencies]
+    # Bevy's main branch. Cargo.lock holds it at the commit this jackdaw is
+    # built against, recorded as `bevy_rev` in jackdaw.toml:
+    # c9c397ba1a73e6cfffe957318e0359330b701865
+    # The editor moves the lockfile back to it before each build.
+    bevy = { git = "https://github.com/bevyengine/bevy", branch = "main" }
+    # Loads authored scenes (assets/*.bsn). `terrain` draws authored terrain and
+    # `pie` connects the editor's Play button; drop `pie` for a shipping build.
+    # The other features and crates come from the modules in jackdaw.toml.
+    jackdaw_runtime = { git = "https://github.com/jbuehler23/jackdaw", rev = "9fb392f9f5384950b665dbecb14eaea454ba258f", features = ["terrain", "pie"] }
+    avian3d = "0.8"
+    jackdaw_avian_integration = { git = "https://github.com/jbuehler23/jackdaw", rev = "9fb392f9f5384950b665dbecb14eaea454ba258f" }
+    # One bevy for everything: avian tracks the registry's bevy, this
+    # game's own bevy comes from git, and only the fork below satisfies
+    # both. Remade by this jackdaw's scripts/make-bevy-fork.ps1.
+    [patch.crates-io]
+    bevy = { path = "/Users/zhanglinbo/workspace/bevy-fork-pinned" }
+    bevy_curve = { path = "/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_curve" }
+    bevy_math = { path = "/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_math" }
+    bevy_reflect = { path = "/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_reflect" }
+    bevy_shape = { path = "/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_shape" }
+    [patch."https://github.com/bevyengine/bevy"]
+    bevy = { path = "/Users/zhanglinbo/workspace/bevy-fork-pinned" }
+    bevy_curve = { path = "/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_curve" }
+    bevy_math = { path = "/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_math" }
+    bevy_reflect = { path = "/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_reflect" }
+    bevy_shape = { path = "/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_shape" }
+
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+  Cancelling due to test failure
+────────────
+     Summary [  16.353s] 1 test run: 0 passed, 1 failed, 47 skipped
+        FAIL [  16.352s] (1/1) jd::standalone_scaffold the_shipped_binary_scaffolds_without_a_checkout
+  stdout ───
+
+    running 1 test
+    test the_shipped_binary_scaffolds_without_a_checkout ... FAILED
+
+    failures:
+
+    failures:
+        the_shipped_binary_scaffolds_without_a_checkout
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 2 filtered out; finished in 16.34s
+
+  stderr ───
+
+    thread 'the_shipped_binary_scaffolds_without_a_checkout' (13445730) panicked at crates/jd/tests/standalone_scaffold.rs:132:5:
+    a shipped binary must scaffold registry dependencies, not local paths:
+    [package]
+    name = "standalone-game"
+    version = "0.1.0"
+    edition = "2024"
+    authors = [""]
+
+    # jackdaw builds its editor artifacts in .jackdaw/ and edits this manifest
+    # only when you change the project's modules; `cargo run` works with or
+    # without the editor installed.
+
+    # Keeps this project out of any cargo workspace it was created inside.
+    # Delete to join the surrounding workspace instead.
+    [workspace]
+
+    [dependencies]
+    # Bevy's main branch. Cargo.lock holds it at the commit this jackdaw is
+    # built against, recorded as `bevy_rev` in jackdaw.toml:
+    # c9c397ba1a73e6cfffe957318e0359330b701865
+    # The editor moves the lockfile back to it before each build.
+    bevy = { git = "https://github.com/bevyengine/bevy", branch = "main" }
+    # Loads authored scenes (assets/*.bsn). `terrain` draws authored terrain and
+    # `pie` connects the editor's Play button; drop `pie` for a shipping build.
+    # The other features and crates come from the modules in jackdaw.toml.
+    jackdaw_runtime = { git = "https://github.com/jbuehler23/jackdaw", rev = "9fb392f9f5384950b665dbecb14eaea454ba258f", features = ["terrain", "pie"] }
+    avian3d = "0.8"
+    jackdaw_avian_integration = { git = "https://github.com/jbuehler23/jackdaw", rev = "9fb392f9f5384950b665dbecb14eaea454ba258f" }
+    # One bevy for everything: avian tracks the registry's bevy, this
+    # game's own bevy comes from git, and only the fork below satisfies
+    # both. Remade by this jackdaw's scripts/make-bevy-fork.ps1.
+    [patch.crates-io]
+    bevy = { path = "/Users/zhanglinbo/workspace/bevy-fork-pinned" }
+    bevy_curve = { path = "/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_curve" }
+    bevy_math = { path = "/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_math" }
+    bevy_reflect = { path = "/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_reflect" }
+    bevy_shape = { path = "/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_shape" }
+    [patch."https://github.com/bevyengine/bevy"]
+    bevy = { path = "/Users/zhanglinbo/workspace/bevy-fork-pinned" }
+    bevy_curve = { path = "/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_curve" }
+    bevy_math = { path = "/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_math" }
+    bevy_reflect = { path = "/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_reflect" }
+    bevy_shape = { path = "/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_shape" }
+
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+error: test run failed
+EXIT=100
