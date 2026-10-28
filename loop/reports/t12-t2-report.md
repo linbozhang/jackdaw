@@ -2,8 +2,10 @@
 
 > 任务：`loop/plans/t12-game-ui.md` §二-T2（241-280 行）；§0 架构事实作地基。分支
 > `loop/t12-game-ui`（自 main 7ab807ca 续做，已并 main）。真机证据 `loop/t12t2-live/`
-> （22 件），脚本 `loop/qa/t12t2-*.sh`（7 件），门禁归档 `loop/reports/t12t2_*.log`。
+> （24 件），脚本 `loop/qa/t12t2-*.sh`（6 件），门禁归档 `loop/reports/t12t2_*.log`。
 > 暖工程 `/Users/zhanglinbo/workspace/loop-mac/t12t1-game/t12t1-game` 复用（T1 遗产）。
+> （勘误 2026-10-28 主控，QA t12-t2-qa.md 回流①：证据/脚本计数以 QA 亲数为准 24/6；
+> 日志条行数两处 8→4，见 :14/:76。）
 
 ## 〇、执行摘要
 
@@ -11,7 +13,7 @@
 `bevy_log/src/lib.rs:236` 钩子、:323 与既有 subscriber 组合，零双订阅；EnvFilter 在
 custom layer 之后叠加，转发只见到过了滤的事件），未回落 4-B。runtime 侧转发层
 （`crates/jackdaw_runtime/src/pie_log.rs`，tracing Layer→mpsc→`StateEvent::Log` Reliable，
-去重+每秒上限节流）+ 编辑器侧 `PieGameLog`（上限 100）+ Game 面板日志条（8 行，W13 三档
+去重+每秒上限节流）+ 编辑器侧 `PieGameLog`（上限 100）+ Game 面板日志条（4 行，W13 三档
 色）。**真机十腿 + 分辨率两档 + direct/导出 parity + Stop 铁证 + 编辑器往返全 PASS**
 （归档齐全）。**真机腿抓出三处 T1 潜伏模板缺陷并已修**（spawn 序竞态/暂停双注册/开局
 game_over 竞态——guards 与 teaches 都看不见它们，只有真机能踩出来）。
@@ -73,7 +75,7 @@ bug 不再依赖 QA 探针才能发现」）已闭环。
 2. **编辑器**：`src/pie_game_log.rs`（新）＝`PieGameLog` 资源（VecDeque 上限 100，旧行
    滚出；`GameLogEntry::color()` 走 W13 三档：error→`TEXT_ERROR`、warn→`TEXT_WARNING`、
    info→`TEXT_SECONDARY`）；`src/pie.rs drain_game_events` 增 `StateEvent::Log` 分支
-   （聚焦实例才入账）；`src/game_panel.rs` 面板底部日志条（8 行，新条目沉底，warn 警告
+   （聚焦实例才入账）；`src/game_panel.rs` 面板底部日志条（4 行，新条目沉底，warn 警告
    色/error 错误色/info 次要色，无日志时整条隐藏）。
 3. **测试（产品侧代码全带测试）**：runtime pie_log 4 件（layer 层级过滤/结构化字段/
    节流去重+上限+窗口滚动/溢出保新+明报）——注意 pie 模块单包运行需
