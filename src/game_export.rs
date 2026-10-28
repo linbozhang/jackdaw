@@ -51,6 +51,11 @@ pub struct GameExports {
     /// The error of the export that failed last, kept until the next
     /// one starts.
     pub(crate) last_error: Option<String>,
+    /// What the project's `game.flow.json` had wrong when this export
+    /// set out (empty when nothing did): the export stages it whole and
+    /// the game falls back at startup, so the export still proceeds —
+    /// the warnings ride along on the face and the notifications.
+    pub(crate) flow_warnings: Vec<String>,
 }
 
 impl GameExports {
@@ -96,6 +101,7 @@ impl GameExports {
                 .is_some()
                 .then(|| EXPORT_PROFILE.to_string()),
             started_unix: self.started_unix,
+            flow_warnings: self.flow_warnings.clone(),
         }
     }
 }
@@ -114,6 +120,9 @@ pub struct ExportFace {
     pub skipped: Option<usize>,
     pub profile: Option<String>,
     pub started_unix: Option<u64>,
+    /// What the project's game flow file had wrong when the export set
+    /// out; the staged game falls back at startup until it is fixed.
+    pub flow_warnings: Vec<String>,
 }
 
 /// Whether the Build Game entry can run: a project is open, and no
@@ -159,6 +168,17 @@ fn start_game_export(world: &mut World) {
         );
         return;
     }
+    // The flow file rides into the package with the assets tree, so it
+    // is checked, never blocking: what it names but cannot find warns
+    // now (before a release build is paid for) and again with the
+    // finished export, because the staged game will start from its
+    // code's scene until it is fixed.
+    let flow_warnings = crate::game_flow::inspect_project_flow(&root).warnings;
+    for warning in &flow_warnings {
+        crate::status_bar::notify_warn(world, format!("game flow: {warning}"));
+    }
+    // This run's answer, whichever way it ends.
+    world.resource_mut::<GameExports>().flow_warnings = flow_warnings.clone();
     if let Err(message) = crate::pie::save_scenes_before_launch(world, "exporting") {
         crate::status_bar::notify_error(world, message);
         return;
@@ -230,7 +250,7 @@ fn spawn_export_task(
 /// `BuildStatus` the footer and Build panel render, notify, and open the
 /// staging directory so the finished export is where the user looks.
 fn poll_game_export(world: &mut World) {
-    let (task, progress) = {
+    let (task, progress, flow_warnings) = {
         let mut exports = world.resource_mut::<GameExports>();
         if !exports
             .task
@@ -239,7 +259,11 @@ fn poll_game_export(world: &mut World) {
         {
             return;
         }
-        (exports.task.take(), exports.progress.take())
+        (
+            exports.task.take(),
+            exports.progress.take(),
+            exports.flow_warnings.clone(),
+        )
     };
     let Some(task) = task else {
         return;
@@ -253,6 +277,19 @@ fn poll_game_export(world: &mut World) {
                 exports.last_error = None;
             }
             report_export_success(world, &outcome);
+            // The flow warnings that rode along on this export: the
+            // package is out and playable, but the start scene it names
+            // will not be the one it starts from until they are fixed.
+            if !flow_warnings.is_empty() {
+                crate::status_bar::notify_warn(
+                    world,
+                    format!(
+                        "exported, but the game flow file has problems the game will fall \
+                         back on: {}",
+                        flow_warnings.join("; ")
+                    ),
+                );
+            }
             // Failing to open the folder is not failing to export.
             if let Err(err) = export::reveal_in_file_manager(&report.dist_dir) {
                 warn!("could not open the export folder: {err}");

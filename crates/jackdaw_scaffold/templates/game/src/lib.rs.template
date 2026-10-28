@@ -253,12 +253,17 @@ impl Plugin for GamePlugin {
 }
 
 /// Load the authored scene; `JackdawPlugin` spawns its entities as
-/// children of this root. Launched by the editor's Play, the game plays
-/// the scene the editor has in front (any scene, saved or not); run on
-/// its own, it falls back to `scene.bsn`.
+/// children of this root. The project's `assets/game.flow.json` names
+/// the scene a standalone run starts from (`start_scene`); launched by
+/// the editor's Play, the game plays the scene the editor has in front
+/// (any scene, saved or not) — the override composes around the flow
+/// read. A broken or missing flow file warns and falls back to
+/// `scene.bsn` here.
 fn spawn_scene(mut commands: Commands, asset_server: Res<AssetServer>) {
     commands.spawn(JackdawSceneRoot(
-        asset_server.load(jackdaw_runtime::pie_scene_or("scene.bsn")),
+        asset_server.load(jackdaw_runtime::pie_scene_or(
+            &jackdaw_runtime::flow::start_scene_or("scene.bsn"),
+        )),
     ));
 }
 
