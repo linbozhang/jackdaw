@@ -1,0 +1,144 @@
+   Compiling jackdaw_project_build v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_project_build)
+   Compiling jackdaw_scaffold v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_scaffold)
+   Compiling jackdaw_cli_internal v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_cli)
+   Compiling jd v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jd)
+    Finished `test` profile [optimized + debuginfo] target(s) in 6.85s
+────────────
+ Nextest run ID 8490c76c-72a8-43d6-837d-b93d20e78a21 with nextest profile: default
+    Starting 133 tests across 5 binaries
+        PASS [   0.014s] (  1/133) jackdaw_scaffold dev_checkout::tests::dev_checkout_rewrites_runtime_and_extension_deps
+        PASS [   0.014s] (  2/133) jackdaw_scaffold dev_checkout::tests::rewrite_dep_lines_returns_none_when_no_dep
+        PASS [   0.014s] (  3/133) jackdaw_scaffold dev_checkout::tests::rewrite_dep_lines_ignores_default_features_key
+        PASS [   0.015s] (  4/133) jackdaw_scaffold dev_checkout::tests::rewrite_dep_lines_preserves_features_and_optional
+        PASS [   0.015s] (  5/133) jackdaw_scaffold dev_checkout::tests::a_binary_running_outside_the_checkout_is_not_a_dev_build
+        PASS [   0.018s] (  6/133) jackdaw_scaffold dev_checkout::tests::rewrite_dep_lines_handles_windows_backslashes
+        PASS [   0.019s] (  7/133) jackdaw_scaffold dev_checkout::tests::rewrite_dep_lines_is_idempotent
+        PASS [   0.022s] (  8/133) jackdaw_scaffold dev_checkout::tests::rewrite_dep_lines_leaves_other_lines_intact
+        PASS [   0.012s] (  9/133) jackdaw_scaffold dev_checkout::tests::rewrite_dep_lines_rewrites_plain_version_strings
+        PASS [   0.014s] ( 10/133) jackdaw_scaffold migrate::tests::declines_unsupported_shape
+        PASS [   0.019s] ( 11/133) jackdaw_scaffold migrate::tests::declines_when_no_main
+        PASS [   0.096s] ( 12/133) jackdaw_scaffold migrate::tests::apply_writes_files_and_backup
+        PASS [   0.098s] ( 13/133) jackdaw_scaffold migrate::tests::an_existing_game_plugin_is_not_redefined
+        PASS [   0.100s] ( 14/133) jackdaw_scaffold migrate::tests::a_gated_add_systems_keeps_its_turbofish
+        PASS [   0.100s] ( 15/133) jackdaw_scaffold migrate::tests::an_empty_plugin_body_has_no_unused_parameter
+        PASS [   0.093s] ( 16/133) jackdaw_scaffold migrate::tests::generic_builder_calls_keep_their_turbofish
+        PASS [   0.082s] ( 17/133) jackdaw_scaffold migrate::tests::migrates_chained_builder
+        PASS [   0.095s] ( 18/133) jackdaw_scaffold migrate::tests::migrates_a_single_line_main
+        PASS [   0.014s] ( 19/133) jackdaw_scaffold tests::a_jackdaw_crate_a_module_adds_comes_from_where_the_runtime_does
+        PASS [   0.095s] ( 20/133) jackdaw_scaffold migrate::tests::migrates_let_form_builder
+        PASS [   0.011s] ( 21/133) jackdaw_scaffold tests::a_malformed_settings_file_is_reported_not_ignored
+        PASS [   0.042s] ( 22/133) jackdaw_scaffold tests::a_broken_manifest_reports_what_cargo_said
+        PASS [   0.055s] ( 23/133) jackdaw_scaffold tests::a_member_inherits_the_runtime_its_workspace_declares
+        PASS [   0.056s] ( 24/133) jackdaw_scaffold tests::a_new_game_carries_the_workspace_lock_snapshot
+        PASS [   0.015s] ( 25/133) jackdaw_scaffold tests::a_project_in_a_clean_location_has_no_warnings
+        PASS [   0.089s] ( 26/133) jackdaw_scaffold migrate::tests::migration_names_no_undeclared_crates
+        PASS [   0.087s] ( 27/133) jackdaw_scaffold migrate::tests::the_windowless_binding_follows_locals_the_plugins_use
+        PASS [   0.089s] ( 28/133) jackdaw_scaffold migrate::tests::migration_uses_the_runtime_when_it_is_a_dependency
+        PASS [   0.022s] ( 29/133) jackdaw_scaffold tests::a_project_inside_a_workspace_that_stops_resolving_is_warned_about
+        PASS [   0.012s] ( 30/133) jackdaw_scaffold tests::a_project_name_that_is_really_a_path_is_refused_with_guidance
+        PASS [   0.013s] ( 31/133) jackdaw_scaffold tests::a_project_whose_dependencies_do_not_resolve_is_warned_about
+        PASS [   0.060s] ( 32/133) jackdaw_scaffold tests::a_physics_game_patches_every_fork_crate_on_both_sources
+        PASS [   0.128s] ( 33/133) jackdaw_scaffold tests::a_created_game_plugin_is_recorded
+        PASS [   0.047s] ( 34/133) jackdaw_scaffold tests::a_target_specific_runtime_is_not_declared_again
+        PASS [   0.058s] ( 35/133) jackdaw_scaffold tests::a_renamed_runtime_is_not_declared_twice
+        PASS [   0.048s] ( 36/133) jackdaw_scaffold tests::an_optional_runtime_gets_notes_not_edits
+        PASS [   0.045s] ( 37/133) jackdaw_scaffold tests::an_undetectable_plugin_is_flagged_not_asserted
+        PASS [   0.053s] ( 38/133) jackdaw_scaffold tests::an_uneditable_plugin_keeps_the_manual_note
+        PASS [   0.012s] ( 39/133) jackdaw_scaffold tests::crlf_templates_still_get_their_module_lines
+        PASS [   0.152s] ( 40/133) jackdaw_scaffold tests::a_new_game_writes_its_modules_into_cargo_toml_main_and_jackdaw_toml
+        PASS [   0.098s] ( 41/133) jackdaw_scaffold tests::a_second_import_has_nothing_to_do
+        PASS [   0.047s] ( 42/133) jackdaw_scaffold tests::import_adds_the_runtime_alongside_its_own_files
+        PASS [   0.048s] ( 43/133) jackdaw_scaffold tests::import_checks_a_workspace_inherited_bevy_version
+        PASS [   0.061s] ( 44/133) jackdaw_scaffold tests::enabling_pie_keeps_a_trailing_comment
+        PASS [   0.081s] ( 45/133) jackdaw_scaffold tests::import_adds_pie_to_a_workspace_inherited_runtime
+        PASS [   0.050s] ( 46/133) jackdaw_scaffold tests::import_drops_a_removed_runtime_feature
+        PASS [   0.081s] ( 47/133) jackdaw_scaffold tests::import_asks_which_member_when_several_use_bevy
+        PASS [   0.060s] ( 48/133) jackdaw_scaffold tests::import_offers_a_stub_for_bin_only_projects
+        PASS [   0.040s] ( 49/133) jackdaw_scaffold tests::import_records_package_when_the_game_is_the_workspace_root
+        PASS [   0.077s] ( 50/133) jackdaw_scaffold tests::import_enables_pie_on_an_existing_runtime_dependency
+        PASS [   0.047s] ( 51/133) jackdaw_scaffold tests::import_rejects_a_bevy_minor_mismatch
+        PASS [   0.047s] ( 52/133) jackdaw_scaffold tests::import_resolves_the_game_member_of_a_workspace
+        PASS [   0.137s] ( 53/133) jackdaw_scaffold tests::import_detects_the_modules_a_game_already_uses_and_adds_the_chosen_ones_once
+        PASS [   0.190s] ( 54/133) jackdaw_scaffold tests::changing_modules_later_edits_both_manifests_and_keeps_the_games_crates
+        PASS [   0.056s] ( 55/133) jackdaw_scaffold tests::import_wires_the_runtime_into_a_plain_bevy_game
+        PASS [   0.055s] ( 56/133) jackdaw_scaffold tests::new_extension_project_uses_the_api
+        PASS [   0.058s] ( 57/133) jackdaw_scaffold tests::new_game_project_has_the_contract_files
+        PASS [   0.060s] ( 58/133) jackdaw_scaffold tests::new_game_project_teaches_the_config_pattern
+        PASS [   0.141s] ( 59/133) jackdaw_scaffold tests::import_plan_is_side_effect_free_until_applied
+        PASS [   0.011s] ( 60/133) jackdaw_scaffold tests::project_names_that_cannot_be_crate_names_are_rejected
+        PASS [   0.015s] ( 61/133) jackdaw_scaffold tests::refreshing_pins_keeps_the_table_in_place
+        PASS [   0.062s] ( 62/133) jackdaw_scaffold tests::new_game_project_teaches_the_input_action_pattern
+        PASS [   0.055s] ( 63/133) jackdaw_scaffold tests::no_plugin_means_no_plugin_key
+        PASS [   0.013s] ( 64/133) jackdaw_scaffold tests::the_modules_flags_choose_the_modules_and_refuse_nonsense
+        PASS [   0.052s] ( 65/133) jackdaw_scaffold tests::pie_from_a_package_feature_is_not_forced_on
+        PASS [   0.060s] ( 66/133) jackdaw_scaffold tests::scaffolded_projects_record_their_versions
+        PASS [   0.045s] ( 67/133) jackdaw_scaffold tests::setup_records_the_versions_it_was_created_with
+        PASS [   0.057s] ( 68/133) jackdaw_scaffold tests::setting_up_past_a_mismatch_records_the_projects_bevy
+        PASS [   0.105s] ( 69/133) jackdaw_scaffold tests::new_game_project_teaches_the_physics_and_trigger_pattern
+        PASS [   0.107s] ( 70/133) jackdaw_scaffold tests::new_game_project_teaches_the_player_controller_pattern
+        PASS [   0.013s] ( 71/133) jackdaw_scaffold tests::the_templates_state_the_requirement_this_build_can_resolve
+        PASS [   0.014s] ( 72/133) jackdaw_scaffold tests::upgrade_leaves_path_dependencies_alone
+        PASS [   0.050s] ( 73/133) jackdaw_scaffold tests::the_runtime_edit_keeps_manifest_comments_and_order
+        PASS [   0.060s] ( 74/133) jackdaw_scaffold tests::the_plan_states_which_plugin_it_recorded
+        PASS [   0.011s] ( 75/133) jackdaw_scaffold tests::upgrade_pins_a_prerelease_editor_to_its_exact_version
+        PASS [   0.012s] ( 76/133) jackdaw_scaffold tests::upgrade_reaches_target_specific_dependencies
+        PASS [   0.014s] ( 77/133) jackdaw_scaffold tests::upgrade_reaches_workspace_dependencies
+        PASS [   0.014s] ( 78/133) jackdaw_scaffold tests::upgrade_refuses_a_project_that_was_never_set_up
+        PASS [   0.011s] ( 79/133) jackdaw_scaffold tests::version_requirements_are_compared_not_prefix_matched
+        PASS [   0.012s] ( 80/133) jd archive::tests::a_gzipped_tarball_unpacks_under_its_single_folder
+        PASS [   0.012s] ( 81/133) jd archive::tests::a_zip_unpacks_its_files
+        PASS [   0.012s] ( 82/133) jd archive::tests::formats_follow_the_published_extension
+        PASS [   0.014s] ( 83/133) jd editor_cli::tests::installs_are_grouped_by_bevy_line_with_main_first
+        PASS [   0.012s] ( 84/133) jd editor_cli::tests::newer_patches_and_nightlies_are_reported_for_installed_lines_only
+        PASS [   0.082s] ( 85/133) jackdaw_scaffold tests::upgrade_drops_a_removed_runtime_feature_from_the_workspace_entry
+        PASS [   0.095s] ( 86/133) jackdaw_scaffold tests::upgrade_does_not_launder_away_a_bevy_mismatch
+        PASS [   0.010s] ( 87/133) jd editors::tests::a_pinned_project_prefers_its_install_over_the_editor_beside_jd
+        PASS [   0.011s] ( 88/133) jd editors::tests::a_missing_line_names_the_install_command_unless_jd_ships_that_line
+        PASS [   0.090s] ( 89/133) jackdaw_scaffold tests::upgrade_is_a_no_op_on_a_current_project
+        PASS [   0.015s] ( 90/133) jd editors::tests::an_unpinned_project_opens_with_the_default_editor
+        PASS [   0.013s] ( 91/133) jd editors::tests::names_that_could_leave_their_directory_are_refused
+        PASS [   0.012s] ( 92/133) jd editors::tests::version_lines_are_read_from_editor_output
+        PASS [   0.012s] ( 93/133) jd editors::tests::the_exact_editor_beside_jd_wins_over_an_older_install_of_its_line
+        PASS [   0.015s] ( 94/133) jd fetch::tests::plain_http_is_refused_before_connecting
+        PASS [   0.014s] ( 95/133) jd fetch::tests::windows_file_urls_drop_the_slash_before_the_drive
+        PASS [   0.094s] ( 96/133) jackdaw_scaffold tests::upgrade_refreshes_the_pins_and_the_crate_requirements
+        PASS [   0.281s] ( 97/133) jackdaw_scaffold tests::import_wraps_default_plugins_in_the_common_main_shapes
+        PASS [   0.014s] ( 98/133) jd self_update::tests::a_cargo_installed_jd_is_left_to_cargo
+        PASS [   0.030s] ( 99/133) jd fetch::tests::file_urls_read_and_hash_local_files
+        PASS [   0.014s] (100/133) jd self_update::tests::a_jd_beside_its_editor_or_sdk_stays_with_that_bundle
+        PASS [   0.011s] (101/133) jd self_update::tests::a_standalone_release_jd_may_update_itself
+        PASS [   0.012s] (102/133) jd self_update::tests::a_jd_inside_a_managed_install_names_that_install
+        PASS [   0.013s] (103/133) jd sign::tests::existing_publisher_key_reproduces_its_signature
+        PASS [   0.015s] (104/133) jd self_update::tests::development_and_prerelease_builds_are_not_replaced
+        PASS [   0.015s] (105/133) jd sign::tests::packed_bundles_verify_and_detect_tampering
+        PASS [   0.015s] (106/133) jd sign::tests::generated_keys_round_trip_through_pkcs8
+        PASS [   0.162s] (107/133) jackdaw_scaffold tests::upgrade_drops_a_removed_runtime_feature_and_records_its_module
+        PASS [   0.843s] (108/133) jd::editor_installs a_tampered_index_is_refused
+        PASS [   0.846s] (109/133) jd::editor_installs a_failed_json_command_ends_with_an_error_event
+        PASS [   0.830s] (110/133) jd::editor_installs an_index_override_is_announced
+        PASS [   0.864s] (111/133) jd::editor_installs a_bundle_with_a_wrong_checksum_leaves_nothing_installed
+        PASS [   0.851s] (112/133) jd::editor_installs an_index_older_than_the_cached_one_is_not_used
+        PASS [   0.036s] (113/133) jd::editor_installs json_refresh_caches_the_index_and_says_where_it_came_from
+        PASS [   1.730s] (114/133) jd::editor_installs a_bundle_reporting_another_version_is_not_installed
+        PASS [   2.159s] (115/133) jd::editor_installs a_nightly_built_against_another_bevy_commit_is_not_installed
+        PASS [   0.029s] (116/133) jd::editor_installs open_names_the_install_command_for_a_line_that_is_not_installed
+        PASS [   2.628s] (117/133) jd::editor_installs json_output_reports_download_progress_stages_and_the_result
+        PASS [   2.695s] (118/133) jd::editor_installs installing_a_line_registers_its_newest_patch_as_the_default
+        PASS [   2.822s] (119/133) jd::editor_installs modules_are_fetched_from_the_signed_modules_list
+        PASS [   0.025s] (120/133) jd::editor_installs the_cached_index_serves_listings_when_the_mirror_is_unreachable
+        PASS [   4.103s] (121/133) jd::editor_installs a_bleeding_edge_project_opens_in_the_nightly_and_bevy_commit_it_pins
+        PASS [   2.604s] (122/133) jd::editor_installs open_launches_the_pinned_line_and_remove_then_needs_force
+        PASS [   2.616s] (123/133) jd::editor_installs self_update_leaves_a_cargo_installed_jd_to_cargo
+        PASS [   0.012s] (124/133) jd::bin/jd tests::a_command_without_config_rejects_it
+        PASS [   0.010s] (125/133) jd::bin/jd tests::export_accepts_config_profile_and_out_with_values
+        PASS [   0.011s] (126/133) jd::bin/jd tests::run_and_build_accept_config_with_a_value
+        PASS [   4.512s] (127/133) jd::editor_installs default_and_locate_manage_editors_installed_elsewhere
+        PASS [   2.551s] (128/133) jd::editor_installs self_update_refuses_a_prerelease_or_bundled_jd
+        PASS [   2.926s] (129/133) jd::editor_installs self_update_swaps_in_the_new_jd_only_after_it_reports_its_version
+        PASS [   3.319s] (130/133) jd::standalone_scaffold the_shipped_binary_imports_without_a_checkout
+        PASS [   6.865s] (131/133) jd::editor_installs clean_keeps_the_newest_known_good_and_pinned_nightlies
+        PASS [  19.238s] (132/133) jd::standalone_scaffold the_shipped_binary_scaffolds_an_extension_without_a_checkout
+        SLOW [> 30.000s] (───────) jd::standalone_scaffold the_shipped_binary_scaffolds_without_a_checkout
+        PASS [  34.659s] (133/133) jd::standalone_scaffold the_shipped_binary_scaffolds_without_a_checkout
+────────────
+     Summary [  39.657s] 133 tests run: 133 passed (1 slow), 0 skipped

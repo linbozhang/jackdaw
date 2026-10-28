@@ -1,0 +1,394 @@
+   Compiling jackdaw v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw)
+    Finished `test` profile [optimized + debuginfo] target(s) in 19.45s
+     Running tests/guards/main.rs (target/debug/deps/guards-f290a7d65ab86725)
+
+running 1 test
+[2m2026-10-28T07:45:32.239447Z[0m [31mERROR[0m [2mbevy_extract::extract_resource[0m[2m:[0m Sub app did not exist when trying to add `extract_resource` for <bevy_camera::clear_color::ClearColor>.
+[2m2026-10-28T07:45:32.457128Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+[2m2026-10-28T07:45:32.519274Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw::test_input::plugin` of extension `jackdaw.test_input`
+[2m2026-10-28T07:45:32.519582Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw_physics::PhysicsEditorPlugin` of extension `jackdaw.physics`
+[2m2026-10-28T07:45:32.523420Z[0m [33m WARN[0m [2mbevy_render::texture[0m[2m:[0m CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+[2m2026-10-28T07:45:32.523550Z[0m [33m WARN[0m [2mbevy_gltf[0m[2m:[0m CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+[2m2026-10-28T07:45:32.527655Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.physics
+[2m2026-10-28T07:45:32.527928Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.build_panel
+[2m2026-10-28T07:45:32.527973Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.game_panel
+[2m2026-10-28T07:45:32.527991Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.multiplayer
+[2m2026-10-28T07:45:32.528008Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.inspector
+[2m2026-10-28T07:45:32.528029Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.viewport_panel
+[2m2026-10-28T07:45:32.528297Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core
+[2m2026-10-28T07:45:32.530816Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core_windows
+[2m2026-10-28T07:45:32.530869Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.ui_palette
+[2m2026-10-28T07:45:32.530934Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.project_window
+[2m2026-10-28T07:45:32.530950Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.timeline
+[2m2026-10-28T07:45:32.530961Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.animation_graph
+[2m2026-10-28T07:45:32.530972Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.test_input
+[2m2026-10-28T07:45:32.533121Z[0m [33m WARN[0m [2mjackdaw_api_internal::keymap::apply[0m[2m:[0m preset 'classic' has 10 chords claimed by more than one action: ["Home (Press, Operators): viewport2d.frame, clip.timeline.jump_start, view.frame_all", "Delete (Press, Operators): clip.delete_keyframes, entity.delete, brush.delete_element", "Backspace (Press, Operators): clip.delete_keyframes, viewport.draw_brush.remove_last_vertex, brush.delete_element", "Super+KeyC (Press, Operators): clip.copy_keyframes, entity.copy", "Super+KeyV (Press, Operators): clip.paste_keyframes, entity.paste", "Tab (Press, Operators): viewport.draw_brush.toggle_mode, brush.clip.cycle_mode", "Enter (Press, Operators): viewport.draw_brush.commit_polygon, brush.clip.apply", "KeyE (Press, Operators): tool.rotate, brush.mesh.extrude", "Escape (Press, Operators): brush.exit_edit_mode, selection.clear, brush.clip.clear, terrain.tool.exit_to_select", "Super+KeyB (Press, Operators): brush.mesh.edge_bevel, brush.mesh.vertex_bevel"]
+[2m2026-10-28T07:45:32.533200Z[0m [32m INFO[0m [2mjackdaw::extension_lifecycle[0m[2m:[0m applied keymap preset 'classic': 112 entries, 112 bindings, 0 user rows
+[2m2026-10-28T07:45:32.716770Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking /var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/jackdaw-journal-perf-OuaiSN/assets recursively
+[2m2026-10-28T07:45:32.716946Z[0m [32m INFO[0m [2mjackdaw::asset_catalog[0m[2m:[0m No asset catalog found, starting with empty catalog
+[2m2026-10-28T07:45:32.824998Z[0m [33m WARN[0m [2mjackdaw::pie[0m[2m:[0m PIE: cannot build /var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/jackdaw-journal-perf-OuaiSN: cargo could not read /var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/jackdaw-journal-perf-OuaiSN: error: could not find `Cargo.toml` in `/private/var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/jackdaw-journal-perf-OuaiSN` or any parent directory
+[2m2026-10-28T07:45:32.826296Z[0m [32m INFO[0m [2mjackdaw::material_browser[0m[2m:[0m update_material_browser_ui: rebuilding with 1 entries
+[2m2026-10-28T07:45:32.838292Z[0m [33m WARN[0m [2mbevy_ui::ui_node[0m[2m:[0m Two or more Entities with IsDefaultUiCamera found when only one Camera with this marker is allowed.
+[2m2026-10-28T07:45:32.891851Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: scene.open
+[2m2026-10-28T07:45:32.896278Z[0m [33m WARN[0m [2mjackdaw_bsn::apply[0m[2m:[0m BSN entity has 401 #names; a missing comma between sibling entities merges them into one. Check the scene file for a patch group holding more than one #name.
+[2m2026-10-28T07:45:32.941929Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 2, typed 2, referencing 0)
+[2m2026-10-28T07:45:32.942031Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 0)
+[2m2026-10-28T07:45:32.975934Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: prefab.spawn_instance
+[2m2026-10-28T07:45:33.017818Z[0m [33m WARN[0m [2mjackdaw_bsn::apply[0m[2m:[0m BSN entity has 401 #names; a missing comma between sibling entities merges them into one. Check the scene file for a patch group holding more than one #name.
+[2m2026-10-28T07:45:33.027734Z[0m [32m INFO[0m [2mguards::session_journal[0m[2m:[0m journal emit only (400-entity generated): 1.100833ms
+PROBE 400-entity generated #0: 715.541µs canon_calls=1
+PROBE 400-entity generated #1: 579.5µs canon_calls=1
+PROBE 400-entity generated #2: 564.791µs canon_calls=1
+PROBE 400-entity generated #3: 566.042µs canon_calls=1
+PROBE 400-entity generated #4: 561.083µs canon_calls=1
+PROBE 400-entity generated #5: 560.708µs canon_calls=1
+PROBE 400-entity generated #6: 581.166µs canon_calls=1
+PROBE 400-entity generated #7: 555.958µs canon_calls=1
+PROBE 400-entity generated #8: 556.875µs canon_calls=1
+PROBE 400-entity generated #9: 558.792µs canon_calls=1
+PROBE 400-entity generated #10: 555.375µs canon_calls=1
+PROBE 400-entity generated #11: 557.958µs canon_calls=1
+PROBE 400-entity generated #12: 600.083µs canon_calls=1
+PROBE 400-entity generated #13: 561.5µs canon_calls=1
+PROBE 400-entity generated #14: 679.042µs canon_calls=1
+PROBE 400-entity generated #15: 809.375µs canon_calls=1
+PROBE 400-entity generated #16: 569.667µs canon_calls=1
+PROBE 400-entity generated #17: 581.167µs canon_calls=1
+PROBE 400-entity generated #18: 577.292µs canon_calls=1
+PROBE 400-entity generated #19: 576.25µs canon_calls=1
+PROBE 400-entity generated #20: 555.625µs canon_calls=1
+PROBE 400-entity generated #21: 556.333µs canon_calls=1
+PROBE 400-entity generated #22: 555.708µs canon_calls=1
+PROBE 400-entity generated #23: 556.083µs canon_calls=1
+PROBE 400-entity generated #24: 556.542µs canon_calls=1
+PROBE 400-entity generated #25: 588.375µs canon_calls=1
+PROBE 400-entity generated #26: 568.667µs canon_calls=1
+PROBE 400-entity generated #27: 559.5µs canon_calls=1
+PROBE 400-entity generated #28: 568.333µs canon_calls=1
+PROBE 400-entity generated #29: 570.208µs canon_calls=1
+PROBE 400-entity generated #30: 566.042µs canon_calls=1
+PROBE 400-entity generated #31: 935.917µs canon_calls=1
+PROBE 400-entity generated #32: 714.084µs canon_calls=1
+PROBE 400-entity generated #33: 588.5µs canon_calls=1
+PROBE 400-entity generated #34: 593µs canon_calls=1
+PROBE 400-entity generated #35: 567.958µs canon_calls=1
+PROBE 400-entity generated #36: 568.792µs canon_calls=1
+PROBE 400-entity generated #37: 572.375µs canon_calls=1
+PROBE 400-entity generated #38: 566.75µs canon_calls=1
+PROBE 400-entity generated #39: 568.833µs canon_calls=1
+PROBE 400-entity generated #40: 580.375µs canon_calls=1
+PROBE 400-entity generated #41: 566.458µs canon_calls=1
+PROBE 400-entity generated #42: 691µs canon_calls=1
+PROBE 400-entity generated #43: 581.791µs canon_calls=1
+PROBE 400-entity generated #44: 557.666µs canon_calls=1
+PROBE 400-entity generated #45: 559.875µs canon_calls=1
+PROBE 400-entity generated #46: 565.208µs canon_calls=1
+PROBE 400-entity generated #47: 937.375µs canon_calls=1
+PROBE 400-entity generated #48: 618.583µs canon_calls=1
+PROBE 400-entity generated #49: 572.25µs canon_calls=1
+PROBE 400-entity generated #50: 560.084µs canon_calls=1
+PROBE 400-entity generated #51: 569.959µs canon_calls=1
+PROBE 400-entity generated #52: 581.625µs canon_calls=1
+PROBE 400-entity generated #53: 557.333µs canon_calls=1
+PROBE 400-entity generated #54: 556.125µs canon_calls=1
+PROBE 400-entity generated #55: 681.417µs canon_calls=1
+PROBE 400-entity generated #56: 605.875µs canon_calls=1
+PROBE 400-entity generated #57: 597.958µs canon_calls=1
+PROBE 400-entity generated #58: 561.708µs canon_calls=1
+PROBE 400-entity generated #59: 587.458µs canon_calls=1
+PROBE 400-entity generated #60: 563.125µs canon_calls=1
+PROBE 400-entity generated #61: 557.875µs canon_calls=1
+PROBE 400-entity generated #62: 562.459µs canon_calls=1
+PROBE 400-entity generated #63: 890.708µs canon_calls=1
+PROBE 400-entity generated #64: 640.959µs canon_calls=1
+PROBE 400-entity generated #65: 592.167µs canon_calls=1
+PROBE 400-entity generated #66: 558.125µs canon_calls=1
+PROBE 400-entity generated #67: 557.125µs canon_calls=1
+PROBE 400-entity generated #68: 646.5µs canon_calls=1
+PROBE 400-entity generated #69: 646.959µs canon_calls=1
+PROBE 400-entity generated #70: 759.875µs canon_calls=1
+PROBE 400-entity generated #71: 615µs canon_calls=1
+PROBE 400-entity generated #72: 581.416µs canon_calls=1
+PROBE 400-entity generated #73: 559µs canon_calls=1
+PROBE 400-entity generated #74: 563.75µs canon_calls=1
+PROBE 400-entity generated #75: 561.708µs canon_calls=1
+PROBE 400-entity generated #76: 560.375µs canon_calls=1
+PROBE 400-entity generated #77: 559.458µs canon_calls=1
+PROBE 400-entity generated #78: 611.542µs canon_calls=1
+PROBE 400-entity generated #79: 728.75µs canon_calls=1
+PROBE 400-entity generated #80: 584µs canon_calls=1
+PROBE 400-entity generated #81: 630.291µs canon_calls=1
+PROBE 400-entity generated #82: 592.625µs canon_calls=1
+PROBE 400-entity generated #83: 586.292µs canon_calls=1
+PROBE 400-entity generated #84: 593.083µs canon_calls=1
+PROBE 400-entity generated #85: 575.417µs canon_calls=1
+PROBE 400-entity generated #86: 574.625µs canon_calls=1
+PROBE 400-entity generated #87: 558.625µs canon_calls=1
+PROBE 400-entity generated #88: 561.584µs canon_calls=1
+PROBE 400-entity generated #89: 565.583µs canon_calls=1
+PROBE 400-entity generated #90: 570.25µs canon_calls=1
+PROBE 400-entity generated #91: 560.208µs canon_calls=1
+PROBE 400-entity generated #92: 558.584µs canon_calls=1
+PROBE 400-entity generated #93: 566.458µs canon_calls=1
+PROBE 400-entity generated #94: 557.291µs canon_calls=1
+PROBE 400-entity generated #95: 629.541µs canon_calls=1
+PROBE 400-entity generated #96: 559.959µs canon_calls=1
+PROBE 400-entity generated #97: 582.5µs canon_calls=1
+PROBE 400-entity generated #98: 589.5µs canon_calls=1
+PROBE 400-entity generated #99: 565.333µs canon_calls=1
+PROBE 400-entity generated #100: 557.125µs canon_calls=1
+PROBE 400-entity generated #101: 557.083µs canon_calls=1
+PROBE 400-entity generated #102: 562.709µs canon_calls=1
+PROBE 400-entity generated #103: 559.333µs canon_calls=1
+PROBE 400-entity generated #104: 563.25µs canon_calls=1
+PROBE 400-entity generated #105: 558.583µs canon_calls=1
+PROBE 400-entity generated #106: 579.375µs canon_calls=1
+PROBE 400-entity generated #107: 582.917µs canon_calls=1
+PROBE 400-entity generated #108: 558.583µs canon_calls=1
+PROBE 400-entity generated #109: 556.875µs canon_calls=1
+PROBE 400-entity generated #110: 559.916µs canon_calls=1
+PROBE 400-entity generated #111: 560.833µs canon_calls=1
+PROBE 400-entity generated #112: 1.089709ms canon_calls=1
+PROBE 400-entity generated #113: 699.666µs canon_calls=1
+PROBE 400-entity generated #114: 577.833µs canon_calls=1
+PROBE 400-entity generated #115: 570.541µs canon_calls=1
+PROBE 400-entity generated #116: 563.334µs canon_calls=1
+PROBE 400-entity generated #117: 565.875µs canon_calls=1
+PROBE 400-entity generated #118: 584µs canon_calls=1
+PROBE 400-entity generated #119: 578.792µs canon_calls=1
+PROBE 400-entity generated #120: 566.917µs canon_calls=1
+PROBE 400-entity generated #121: 561µs canon_calls=1
+PROBE 400-entity generated #122: 680.334µs canon_calls=1
+PROBE 400-entity generated #123: 587.041µs canon_calls=1
+PROBE 400-entity generated #124: 566.042µs canon_calls=1
+PROBE 400-entity generated #125: 593.375µs canon_calls=1
+PROBE 400-entity generated #126: 559.75µs canon_calls=1
+PROBE 400-entity generated #127: 642.709µs canon_calls=1
+PROBE 400-entity generated #128: 759.708µs canon_calls=1
+PROBE 400-entity generated #129: 578.375µs canon_calls=1
+PROBE 400-entity generated #130: 567µs canon_calls=1
+PROBE 400-entity generated #131: 560.375µs canon_calls=1
+PROBE 400-entity generated #132: 603.583µs canon_calls=1
+PROBE 400-entity generated #133: 567.958µs canon_calls=1
+PROBE 400-entity generated #134: 559.084µs canon_calls=1
+PROBE 400-entity generated #135: 559.166µs canon_calls=1
+PROBE 400-entity generated #136: 654.75µs canon_calls=1
+PROBE 400-entity generated #137: 581.375µs canon_calls=1
+PROBE 400-entity generated #138: 592.083µs canon_calls=1
+PROBE 400-entity generated #139: 558.125µs canon_calls=1
+PROBE 400-entity generated #140: 574µs canon_calls=1
+PROBE 400-entity generated #141: 557.292µs canon_calls=1
+PROBE 400-entity generated #142: 557.333µs canon_calls=1
+PROBE 400-entity generated #143: 562µs canon_calls=1
+PROBE 400-entity generated #144: 823.041µs canon_calls=1
+PROBE 400-entity generated #145: 715.167µs canon_calls=1
+PROBE 400-entity generated #146: 678.125µs canon_calls=1
+PROBE 400-entity generated #147: 585.958µs canon_calls=1
+PROBE 400-entity generated #148: 562.541µs canon_calls=1
+PROBE 400-entity generated #149: 557.958µs canon_calls=1
+[2m2026-10-28T07:45:33.121691Z[0m [32m INFO[0m [2mguards::session_journal[0m[2m:[0m journal main-thread cost (400-entity generated): 636.917µs
+[2m2026-10-28T07:45:33.166788Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-28T07:45:33.167213Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-28T07:45:33.256687Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+[2m2026-10-28T07:45:33.296476Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw::test_input::plugin` of extension `jackdaw.test_input`
+[2m2026-10-28T07:45:33.296588Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw_physics::PhysicsEditorPlugin` of extension `jackdaw.physics`
+[2m2026-10-28T07:45:33.297824Z[0m [33m WARN[0m [2mbevy_render::texture[0m[2m:[0m CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+[2m2026-10-28T07:45:33.297910Z[0m [33m WARN[0m [2mbevy_gltf[0m[2m:[0m CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+[2m2026-10-28T07:45:33.299648Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.multiplayer
+[2m2026-10-28T07:45:33.299689Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.timeline
+[2m2026-10-28T07:45:33.299727Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.build_panel
+[2m2026-10-28T07:45:33.299741Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.inspector
+[2m2026-10-28T07:45:33.299760Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.test_input
+[2m2026-10-28T07:45:33.299799Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.animation_graph
+[2m2026-10-28T07:45:33.299812Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.physics
+[2m2026-10-28T07:45:33.300017Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core
+[2m2026-10-28T07:45:33.301403Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.viewport_panel
+[2m2026-10-28T07:45:33.301445Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core_windows
+[2m2026-10-28T07:45:33.301472Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.ui_palette
+[2m2026-10-28T07:45:33.301516Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.project_window
+[2m2026-10-28T07:45:33.301528Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.game_panel
+[2m2026-10-28T07:45:33.303047Z[0m [33m WARN[0m [2mjackdaw_api_internal::keymap::apply[0m[2m:[0m preset 'classic' has 10 chords claimed by more than one action: ["Delete (Press, Operators): clip.delete_keyframes, entity.delete, brush.delete_element", "Backspace (Press, Operators): clip.delete_keyframes, viewport.draw_brush.remove_last_vertex, brush.delete_element", "Home (Press, Operators): clip.timeline.jump_start, view.frame_all, viewport2d.frame", "Super+KeyC (Press, Operators): clip.copy_keyframes, entity.copy", "Super+KeyV (Press, Operators): clip.paste_keyframes, entity.paste", "Tab (Press, Operators): viewport.draw_brush.toggle_mode, brush.clip.cycle_mode", "Enter (Press, Operators): viewport.draw_brush.commit_polygon, brush.clip.apply", "KeyE (Press, Operators): tool.rotate, brush.mesh.extrude", "Escape (Press, Operators): brush.exit_edit_mode, selection.clear, brush.clip.clear, terrain.tool.exit_to_select", "Super+KeyB (Press, Operators): brush.mesh.edge_bevel, brush.mesh.vertex_bevel"]
+[2m2026-10-28T07:45:33.303098Z[0m [32m INFO[0m [2mjackdaw::extension_lifecycle[0m[2m:[0m applied keymap preset 'classic': 112 entries, 112 bindings, 0 user rows
+[2m2026-10-28T07:45:33.469255Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking /var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/jackdaw-journal-perf-T2EEr8/assets recursively
+[2m2026-10-28T07:45:33.469381Z[0m [32m INFO[0m [2mjackdaw::asset_catalog[0m[2m:[0m No asset catalog found, starting with empty catalog
+[2m2026-10-28T07:45:33.546782Z[0m [33m WARN[0m [2mjackdaw::pie[0m[2m:[0m PIE: cannot build /var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/jackdaw-journal-perf-T2EEr8: cargo could not read /var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/jackdaw-journal-perf-T2EEr8: error: could not find `Cargo.toml` in `/private/var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/jackdaw-journal-perf-T2EEr8` or any parent directory
+[2m2026-10-28T07:45:33.547953Z[0m [32m INFO[0m [2mjackdaw::material_browser[0m[2m:[0m update_material_browser_ui: rebuilding with 1 entries
+[2m2026-10-28T07:45:33.610266Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: scene.open
+[2m2026-10-28T07:45:34.135430Z[0m [33m WARN[0m [2mjackdaw_api_internal::operator[0m[2m:[0m scene '/private/var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/jackdaw-journal-perf-T2EEr8/assets/zone.bsn': the prefab '/home/joe/Workspace/jackdaw/assets/prefabs/box.jsn' is not in the project, so the instance naming it inherits nothing
+[2m2026-10-28T07:45:34.324049Z[0m [33m WARN[0m [2mjackdaw::prefab::watcher[0m[2m:[0m watch failed for /home/joe/Workspace/jackdaw/assets/prefabs: No path was found. about ["/home/joe/Workspace/jackdaw/assets/prefabs"]
+[2m2026-10-28T07:45:34.354988Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 2, typed 2, referencing 1)
+[2m2026-10-28T07:45:34.366944Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 0)
+[2m2026-10-28T07:45:34.473647Z[0m [33m WARN[0m [2mbevy_app::hierarchy[0m[2m:[0m warning[B0004]: Entity 4531v0 with the InheritedVisibility component has a parent (the Brush entity) without InheritedVisibility.
+This will cause inconsistent behaviors! See: https://bevy.org/learn/errors/b0004
+[2m2026-10-28T07:45:34.565378Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: prefab.spawn_instance
+[2m2026-10-28T07:45:34.726949Z[0m [33m WARN[0m [2mjackdaw::prefab::watcher[0m[2m:[0m watch failed for /home/joe/Workspace/jackdaw/assets/prefabs: No path was found. about ["/home/joe/Workspace/jackdaw/assets/prefabs"]
+[2m2026-10-28T07:45:34.946946Z[0m [33m WARN[0m [2mjackdaw::prefab::watcher[0m[2m:[0m prefab reload parse failed for /home/joe/Workspace/jackdaw/assets/prefabs/box.jsn: legacy .jsn prefab /home/joe/Workspace/jackdaw/assets/prefabs/box.jsn cannot be cached as a BSN document without a world; keeping the last copy that parsed
+[2m2026-10-28T07:45:35.369996Z[0m [33m WARN[0m [2mbevy_app::hierarchy[0m[2m:[0m warning[B0004]: Entity 4576v0 with the InheritedVisibility component has a parent (the Brush entity) without InheritedVisibility.
+This will cause inconsistent behaviors! See: https://bevy.org/learn/errors/b0004
+[2m2026-10-28T07:45:35.452480Z[0m [32m INFO[0m [2mguards::session_journal[0m[2m:[0m journal emit only (terrain-patch fixture): 82.362792ms
+PROBE terrain-patch fixture #0: 81.79475ms canon_calls=2
+PROBE terrain-patch fixture #1: 82.468958ms canon_calls=2
+PROBE terrain-patch fixture #2: 81.629792ms canon_calls=2
+PROBE terrain-patch fixture #3: 82.563583ms canon_calls=2
+PROBE terrain-patch fixture #4: 83.641875ms canon_calls=2
+PROBE terrain-patch fixture #5: 79.315542ms canon_calls=2
+PROBE terrain-patch fixture #6: 81.305791ms canon_calls=2
+PROBE terrain-patch fixture #7: 83.900416ms canon_calls=2
+PROBE terrain-patch fixture #8: 89.536ms canon_calls=2
+PROBE terrain-patch fixture #9: 82.983375ms canon_calls=2
+PROBE terrain-patch fixture #10: 82.16675ms canon_calls=2
+PROBE terrain-patch fixture #11: 82.54175ms canon_calls=2
+PROBE terrain-patch fixture #12: 85.568292ms canon_calls=2
+PROBE terrain-patch fixture #13: 82.985625ms canon_calls=2
+PROBE terrain-patch fixture #14: 87.142417ms canon_calls=2
+PROBE terrain-patch fixture #15: 86.550292ms canon_calls=2
+PROBE terrain-patch fixture #16: 83.051916ms canon_calls=2
+PROBE terrain-patch fixture #17: 83.933084ms canon_calls=2
+PROBE terrain-patch fixture #18: 80.08575ms canon_calls=2
+PROBE terrain-patch fixture #19: 84.256666ms canon_calls=2
+PROBE terrain-patch fixture #20: 82.457125ms canon_calls=2
+PROBE terrain-patch fixture #21: 81.085833ms canon_calls=2
+PROBE terrain-patch fixture #22: 83.25925ms canon_calls=2
+PROBE terrain-patch fixture #23: 81.555167ms canon_calls=2
+PROBE terrain-patch fixture #24: 90.04425ms canon_calls=2
+PROBE terrain-patch fixture #25: 83.7535ms canon_calls=2
+PROBE terrain-patch fixture #26: 84.812917ms canon_calls=2
+PROBE terrain-patch fixture #27: 87.159583ms canon_calls=2
+PROBE terrain-patch fixture #28: 85.122709ms canon_calls=2
+PROBE terrain-patch fixture #29: 79.890667ms canon_calls=2
+PROBE terrain-patch fixture #30: 82.157667ms canon_calls=2
+PROBE terrain-patch fixture #31: 83.4355ms canon_calls=2
+PROBE terrain-patch fixture #32: 121.913291ms canon_calls=2
+PROBE terrain-patch fixture #33: 97.189959ms canon_calls=2
+PROBE terrain-patch fixture #34: 83.823375ms canon_calls=2
+PROBE terrain-patch fixture #35: 88.290416ms canon_calls=2
+PROBE terrain-patch fixture #36: 93.630333ms canon_calls=2
+PROBE terrain-patch fixture #37: 102.992208ms canon_calls=2
+PROBE terrain-patch fixture #38: 83.751583ms canon_calls=2
+PROBE terrain-patch fixture #39: 82.391ms canon_calls=2
+PROBE terrain-patch fixture #40: 86.628416ms canon_calls=2
+PROBE terrain-patch fixture #41: 84.511041ms canon_calls=2
+PROBE terrain-patch fixture #42: 110.139625ms canon_calls=2
+PROBE terrain-patch fixture #43: 82.360292ms canon_calls=2
+PROBE terrain-patch fixture #44: 83.501167ms canon_calls=2
+PROBE terrain-patch fixture #45: 86.9295ms canon_calls=2
+PROBE terrain-patch fixture #46: 100.405709ms canon_calls=2
+PROBE terrain-patch fixture #47: 78.822333ms canon_calls=2
+PROBE terrain-patch fixture #48: 91.425375ms canon_calls=2
+PROBE terrain-patch fixture #49: 80.34625ms canon_calls=2
+PROBE terrain-patch fixture #50: 83.017667ms canon_calls=2
+PROBE terrain-patch fixture #51: 95.61125ms canon_calls=2
+PROBE terrain-patch fixture #52: 84.782833ms canon_calls=2
+PROBE terrain-patch fixture #53: 107.021959ms canon_calls=2
+PROBE terrain-patch fixture #54: 85.916625ms canon_calls=2
+PROBE terrain-patch fixture #55: 87.116375ms canon_calls=2
+PROBE terrain-patch fixture #56: 86.174375ms canon_calls=2
+PROBE terrain-patch fixture #57: 90.657084ms canon_calls=2
+PROBE terrain-patch fixture #58: 86.698875ms canon_calls=2
+PROBE terrain-patch fixture #59: 83.269875ms canon_calls=2
+PROBE terrain-patch fixture #60: 90.932958ms canon_calls=2
+PROBE terrain-patch fixture #61: 89.748958ms canon_calls=2
+PROBE terrain-patch fixture #62: 87.26625ms canon_calls=2
+PROBE terrain-patch fixture #63: 87.682791ms canon_calls=2
+PROBE terrain-patch fixture #64: 85.434625ms canon_calls=2
+PROBE terrain-patch fixture #65: 86.073125ms canon_calls=2
+PROBE terrain-patch fixture #66: 88.355958ms canon_calls=2
+PROBE terrain-patch fixture #67: 85.81275ms canon_calls=2
+PROBE terrain-patch fixture #68: 88.6885ms canon_calls=2
+PROBE terrain-patch fixture #69: 90.837666ms canon_calls=2
+PROBE terrain-patch fixture #70: 89.388833ms canon_calls=2
+PROBE terrain-patch fixture #71: 84.179292ms canon_calls=2
+PROBE terrain-patch fixture #72: 85.205541ms canon_calls=2
+PROBE terrain-patch fixture #73: 85.611833ms canon_calls=2
+PROBE terrain-patch fixture #74: 85.705291ms canon_calls=2
+PROBE terrain-patch fixture #75: 86.137792ms canon_calls=2
+PROBE terrain-patch fixture #76: 84.493291ms canon_calls=2
+PROBE terrain-patch fixture #77: 78.7925ms canon_calls=2
+PROBE terrain-patch fixture #78: 88.265166ms canon_calls=2
+PROBE terrain-patch fixture #79: 84.99375ms canon_calls=2
+PROBE terrain-patch fixture #80: 80.544042ms canon_calls=2
+PROBE terrain-patch fixture #81: 81.688416ms canon_calls=2
+PROBE terrain-patch fixture #82: 87.3875ms canon_calls=2
+PROBE terrain-patch fixture #83: 83.668375ms canon_calls=2
+PROBE terrain-patch fixture #84: 87.232958ms canon_calls=2
+PROBE terrain-patch fixture #85: 81.305958ms canon_calls=2
+PROBE terrain-patch fixture #86: 78.244875ms canon_calls=2
+PROBE terrain-patch fixture #87: 88.430125ms canon_calls=2
+PROBE terrain-patch fixture #88: 82.886458ms canon_calls=2
+PROBE terrain-patch fixture #89: 81.284333ms canon_calls=2
+PROBE terrain-patch fixture #90: 80.518708ms canon_calls=2
+PROBE terrain-patch fixture #91: 83.560416ms canon_calls=2
+PROBE terrain-patch fixture #92: 82.999792ms canon_calls=2
+PROBE terrain-patch fixture #93: 79.810208ms canon_calls=2
+PROBE terrain-patch fixture #94: 84.631917ms canon_calls=2
+PROBE terrain-patch fixture #95: 80.247125ms canon_calls=2
+PROBE terrain-patch fixture #96: 81.7355ms canon_calls=2
+PROBE terrain-patch fixture #97: 81.007958ms canon_calls=2
+PROBE terrain-patch fixture #98: 81.789791ms canon_calls=2
+PROBE terrain-patch fixture #99: 80.119667ms canon_calls=2
+PROBE terrain-patch fixture #100: 83.391708ms canon_calls=2
+PROBE terrain-patch fixture #101: 84.12825ms canon_calls=2
+PROBE terrain-patch fixture #102: 82.21075ms canon_calls=2
+PROBE terrain-patch fixture #103: 79.586375ms canon_calls=2
+PROBE terrain-patch fixture #104: 81.577708ms canon_calls=2
+PROBE terrain-patch fixture #105: 85.27725ms canon_calls=2
+PROBE terrain-patch fixture #106: 83.773ms canon_calls=2
+PROBE terrain-patch fixture #107: 81.085958ms canon_calls=2
+PROBE terrain-patch fixture #108: 83.644ms canon_calls=2
+PROBE terrain-patch fixture #109: 81.978083ms canon_calls=2
+PROBE terrain-patch fixture #110: 87.287209ms canon_calls=2
+PROBE terrain-patch fixture #111: 80.648ms canon_calls=2
+PROBE terrain-patch fixture #112: 86.571167ms canon_calls=2
+PROBE terrain-patch fixture #113: 81.402084ms canon_calls=2
+PROBE terrain-patch fixture #114: 82.29125ms canon_calls=2
+PROBE terrain-patch fixture #115: 80.855584ms canon_calls=2
+PROBE terrain-patch fixture #116: 81.695666ms canon_calls=2
+PROBE terrain-patch fixture #117: 81.009458ms canon_calls=2
+PROBE terrain-patch fixture #118: 94.113417ms canon_calls=2
+PROBE terrain-patch fixture #119: 85.108542ms canon_calls=2
+PROBE terrain-patch fixture #120: 84.9695ms canon_calls=2
+PROBE terrain-patch fixture #121: 81.727833ms canon_calls=2
+PROBE terrain-patch fixture #122: 86.449166ms canon_calls=2
+PROBE terrain-patch fixture #123: 91.83625ms canon_calls=2
+PROBE terrain-patch fixture #124: 99.932375ms canon_calls=2
+PROBE terrain-patch fixture #125: 80.295375ms canon_calls=2
+PROBE terrain-patch fixture #126: 81.519416ms canon_calls=2
+PROBE terrain-patch fixture #127: 84.314792ms canon_calls=2
+PROBE terrain-patch fixture #128: 81.849417ms canon_calls=2
+PROBE terrain-patch fixture #129: 80.724167ms canon_calls=2
+PROBE terrain-patch fixture #130: 101.795875ms canon_calls=2
+PROBE terrain-patch fixture #131: 80.386459ms canon_calls=2
+PROBE terrain-patch fixture #132: 82.128791ms canon_calls=2
+PROBE terrain-patch fixture #133: 101.413792ms canon_calls=2
+PROBE terrain-patch fixture #134: 98.00225ms canon_calls=2
+PROBE terrain-patch fixture #135: 80.069792ms canon_calls=2
+PROBE terrain-patch fixture #136: 83.469083ms canon_calls=2
+PROBE terrain-patch fixture #137: 78.103625ms canon_calls=2
+PROBE terrain-patch fixture #138: 93.756334ms canon_calls=2
+PROBE terrain-patch fixture #139: 82.073792ms canon_calls=2
+PROBE terrain-patch fixture #140: 85.728541ms canon_calls=2
+PROBE terrain-patch fixture #141: 79.233084ms canon_calls=2
+PROBE terrain-patch fixture #142: 80.932709ms canon_calls=2
+PROBE terrain-patch fixture #143: 81.168666ms canon_calls=2
+PROBE terrain-patch fixture #144: 87.879ms canon_calls=2
+PROBE terrain-patch fixture #145: 77.135833ms canon_calls=2
+PROBE terrain-patch fixture #146: 80.718833ms canon_calls=2
+PROBE terrain-patch fixture #147: 87.406792ms canon_calls=2
+PROBE terrain-patch fixture #148: 80.871166ms canon_calls=2
+PROBE terrain-patch fixture #149: 83.74625ms canon_calls=2
+[2m2026-10-28T07:45:48.378159Z[0m [33m WARN[0m [2mjackdaw::scene_io::session_journal[0m[2m:[0m session journal: scene emit refused (an asset is named by an absolute path, which holds only on this machine: jackdaw::prefab::components::IsA.source names '/home/joe/Workspace/jackdaw/assets/prefabs/box.jsn'. Name it relative to the project's assets folder); snapshotting as held
+[2m2026-10-28T07:45:48.473062Z[0m [32m INFO[0m [2mguards::session_journal[0m[2m:[0m journal main-thread cost (terrain-patch fixture): 200.457667ms
+
+thread 'session_journal::the_journal_write_costs_no_more_than_five_milliseconds' (13544392) panicked at tests/guards/session_journal.rs:426:9:
+terrain-patch fixture: journal write took 200.457667ms, over the 5 ms frame budget
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test session_journal::the_journal_write_costs_no_more_than_five_milliseconds ... FAILED
+
+failures:
+
+failures:
+    session_journal::the_journal_write_costs_no_more_than_five_milliseconds
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 221 filtered out; finished in 16.30s
+
+error: test failed, to rerun pass `-p jackdaw --test guards`
