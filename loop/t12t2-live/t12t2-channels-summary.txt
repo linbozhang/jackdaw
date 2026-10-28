@@ -1,1 +1,10 @@
-PARITY_DIRECT=FAIL PARITY_EXPORT=FAIL RES_A_1600x900=FAIL RES_B_1920x1080=FAIL 
+# STALE-INTERMEDIATE-ROUND SUMMARY (re-archived by T12-T3, 2026-10-28)
+# The four FAIL verdicts below are from the t12t2-channels.sh MIDDLE round,
+# kept on purpose: this round's console (t12t2-channels-console.log) holds the
+# live proof of template defects 1-3 (boot state=true,false,true is defect 3's
+# smoking gun), so the round is evidence, not a final verdict.
+# The FINAL round's verdicts live in these per-leg archives instead:
+#   parity: t12t2-parity-DIRECT-console.log / t12t2-parity-EXPORT-console.log (both PASS)
+#   resolution: t12t2-resolution-summary.txt (both tiers PASS)
+# Read this file only for the defect history; never as the T2 channel outcome.
+PARITY_DIRECT=FAIL PARITY_EXPORT=FAIL RES_A_1600x900=FAIL RES_B_1920x1080=FAIL
