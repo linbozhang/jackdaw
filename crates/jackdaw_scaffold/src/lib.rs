@@ -2591,6 +2591,11 @@ fn substitute_placeholders(
     );
     let text = replace_line(
         &text,
+        "{{module_physics_player_doc}}",
+        &module_physics_player_doc(modules),
+    );
+    let text = replace_line(
+        &text,
         "{{module_physics_player_move}}",
         &module_physics_player_move(modules),
     );
@@ -2812,6 +2817,33 @@ fn module_physics_manual_gravity(modules: &ModuleSet) -> String {
 /// the transform — `move_player` sweeps it with avian's move-and-slide,
 /// so the player slides along walls instead of through them and walks
 /// into sensors without being pushed around by them.
+/// The header doc's "place your own player" bullet. With physics it
+/// names the five components `move_player` queries together — a
+/// hand-authored entity missing any of them does not move at all
+/// (C10: the doc used to name two and an editor-placed player stood
+/// frozen mid-air). Without the module the walk system's query is the
+/// two-component set, and that is what the doc teaches.
+fn module_physics_player_doc(modules: &ModuleSet) -> String {
+    if !modules.contains("physics") {
+        return r#"//! * **A hand-placed player needs two components:**
+//!   `PlayerMarker` and `PlayerController` — the walk system below
+//!   drives any entity carrying them (no jump and nothing stops it;
+//!   that half is what the physics module adds). Parent a `CameraRig`
+//!   under it for the follow camera.
+"#
+        .to_string();
+    }
+    r#"//! * **A hand-placed player needs the full set.** `move_player`
+//!   queries five components together, so an entity authored in the
+//!   editor only moves when it carries `PlayerMarker`,
+//!   `PlayerController`, a zero `PlayerVelocity`, a Kinematic
+//!   `RigidBody`, and an `AvianCollider` (a capsule of radius 0.35
+//!   and height 1.0 matches the template's). Parent a `CameraRig`
+//!   under it and the game plays your level.
+"#
+    .to_string()
+}
+
 fn module_physics_player_body(modules: &ModuleSet) -> String {
     if !modules.contains("physics") {
         return String::new();
@@ -3612,6 +3644,12 @@ mod tests {
             "SpatialQueryFilter::from_excluded_entities",
             "just_pressed(\"Jump\")",
             "spawn_walls",
+            // C10: the header doc must spell the full five-component
+            // set a hand-placed player needs — two names left an
+            // editor-placed player frozen (QA t11-t2).
+            "queries five components together",
+            "zero `PlayerVelocity`",
+            "`AvianCollider` (a capsule of radius 0.35",
         ] {
             assert!(
                 lib.contains(needle),
@@ -3658,6 +3696,9 @@ mod tests {
             "CameraRig::default()",
             "JackdawCameraRigPlugin",
             "just_pressed(\"Jump\")",
+            // The no-physics doc teaches the two-component set the
+            // walk query actually is.
+            "needs two components",
         ] {
             assert!(
                 plain_lib.contains(stays),

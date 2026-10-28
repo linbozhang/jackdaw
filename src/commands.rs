@@ -1516,6 +1516,19 @@ impl EditorCommand for SetBsnField {
         if self.old_value.is_none() && !self.field_path.is_empty() && live_before && !had_patch {
             self.old_value = live_bsn_field(world, self.entity, &self.type_path, &self.field_path);
         }
+        // A project component's first field edit must land in a complete
+        // block: the field-less patch `component.add` (or a bare-type
+        // scene authoring) leaves would keep only the edited field after
+        // a save (N14). Fill the patch from the schema's default first,
+        // so every sibling field is spelled on disk with it.
+        let project_backfill = (is_project
+            && !self.field_path.is_empty()
+            && world
+                .resource::<jackdaw_bsn::SceneBsnAst>()
+                .ast_for(self.entity)
+                .is_some_and(|node| project_patch_is_fieldless(world, node, &self.type_path)))
+        .then(|| project_schema_default_bsn(world, &self.type_path))
+        .flatten();
         {
             let registry = world.resource::<AppTypeRegistry>().clone();
             let registry = registry.read();
@@ -1528,6 +1541,12 @@ impl EditorCommand for SetBsnField {
                 return;
             };
             if is_project {
+                if let Some(jackdaw_bsn::BsnValue::Struct(full)) = project_backfill
+                    && let Some(pe) = ast.find_patch_by_type_path(patches_entity, &self.type_path)
+                    && let Some(patch) = ast.world.get_mut::<jackdaw_bsn::BsnPatch>(pe)
+                {
+                    *patch.into_inner() = jackdaw_bsn::BsnPatch::Struct(full);
+                }
                 set_project_field(
                     &mut ast,
                     patches_entity,
@@ -2247,6 +2266,36 @@ fn authored_project_field_json(
 /// named field directly on the node's struct patch instead. A path reaching
 /// deeper names the same top-level field, whose whole new value
 /// [`project_field_edit_to_bsn_value`] has already merged.
+/// Whether the document node carries a patch for this component that
+/// spells no field at all �?the bare type a scene may author, or the
+/// field-less block `AddProjectComponent` writes (both mean "every
+/// field is the type's default"). A single-field edit into such a
+/// block would author only that field and a save would drop every
+/// sibling to whatever the type's default happens to be then (N14).
+fn project_patch_is_fieldless(world: &World, node: Entity, type_path: &str) -> bool {
+    let ast = world.resource::<jackdaw_bsn::SceneBsnAst>();
+    ast.find_patch_by_type_path(node, type_path)
+        .is_some_and(|pe| match ast.get_patch(pe) {
+            Some(jackdaw_bsn::BsnPatch::Type(_)) => true,
+            Some(jackdaw_bsn::BsnPatch::Struct(data)) => data.fields.0.is_empty(),
+            _ => false,
+        })
+}
+
+/// The schema-extracted default for a project component, as the
+/// complete struct value the document authors. `None` when the schema
+/// carries no default (extraction never ran, or the type is not
+/// default-constructible), in which case edits keep the sparse shape.
+fn project_schema_default_bsn(world: &World, type_path: &str) -> Option<jackdaw_bsn::BsnValue> {
+    let types = world.get_resource::<crate::project_types::ProjectTypes>()?;
+    let schema = types.component(type_path)?;
+    let default = schema.default.as_ref()?;
+    // The schema default is `ReflectSerializer`-wrapped:
+    // `{type_path: value}`.
+    let inner = default.get(type_path)?;
+    crate::schema_values::bsn_for_json(world, types, type_path, inner)
+}
+
 fn set_project_field(
     ast: &mut jackdaw_bsn::SceneBsnAst,
     node: Entity,

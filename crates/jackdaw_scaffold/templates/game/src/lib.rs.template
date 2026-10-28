@@ -130,6 +130,7 @@
 //!   it: head-on you stop, diagonally you slide). Without the physics
 //!   module the player still walks, camera-relative and
 //!   frame-rate-independent, but does not jump or collide.
+{{module_physics_player_doc}}
 
 use bevy::prelude::*;
 use jackdaw_runtime::prelude::*;
@@ -275,9 +276,10 @@ fn falling_cubes(
 }
 
 /// Marks the entity the five input actions drive. The template spawns
-/// one; to make your own, add `PlayerMarker` and `PlayerController` to
-/// any entity in the Components panel (its camera then needs an
-/// `ActiveCameraRig`, see the "Player controller" docs above).
+/// one complete; the full set a hand-authored player needs is listed
+/// under "Player controller" above (with physics: five components,
+/// two without). Its camera is a rig parented under it — or an
+/// `ActiveCameraRig` when another rig already exists.
 #[derive(Component, Reflect, Default)]
 #[reflect(Component, Default, @EditorCategory::new("Actor"))]
 pub struct PlayerMarker;

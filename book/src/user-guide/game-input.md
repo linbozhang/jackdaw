@@ -37,8 +37,12 @@ fn move_player(
 Scale every held input by delta time, so the same input covers the same
 ground at any frame rate. The template's own `move_player` is the full
 controller this grows into — camera-relative movement, a jump, and
-(with the physics module) a swept capsule that slides along walls; the
-sample above is the minimal shape.
+(with the physics module) a swept capsule that slides along walls;
+[The Player Controller](player-controller.md) covers it chapter-length.
+The sample above is the minimal shape, and `Look` is the one action the
+controller consumes indirectly: it writes the camera rig's look state
+(`CameraLook.yaw`), which movement is measured against — the player
+body itself never turns on look.
 
 ## Rebinding is editing one file
 
