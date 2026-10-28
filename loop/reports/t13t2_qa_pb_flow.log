@@ -1,0 +1,11 @@
+   Compiling jackdaw_project_build v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_project_build)
+    Finished `test` profile [optimized + debuginfo] target(s) in 3.82s
+     Running unittests src/lib.rs (target/debug/deps/jackdaw_project_build-e99d5356603b0fd7)
+
+running 3 tests
+test flow::tests::the_relative_form_accepts_both_spellings ... ok
+test flow::tests::a_non_object_file_warns_instead_of_refusing ... ok
+test flow::tests::an_absent_file_is_the_quiet_default ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 221 filtered out; finished in 0.00s
+

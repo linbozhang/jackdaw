@@ -1,0 +1,17 @@
+    Finished `test` profile [optimized + debuginfo] target(s) in 0.25s
+     Running tests/game_flow.rs (target/debug/deps/game_flow-3153d2c41297d991)
+
+running 10 tests
+test no_flow_file_falls_back_quietly ... ok
+test a_scene_list_is_read_but_not_enforced ... ok
+test a_broken_flow_file_falls_back_loudly ... ok
+test a_start_scene_off_disk_falls_back_naming_it ... ok
+test the_flow_file_names_the_start_scene ... ok
+test an_unusable_start_scene_falls_back_loudly ... ok
+test unknown_fields_are_warned_not_fatal ... ok
+test a_standalone_run_starts_from_the_flow_file ... ok
+test the_pie_override_wins_over_the_flow_file ... ok
+test the_public_reader_resolves_the_asset_root ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
