@@ -28,8 +28,8 @@ layout, `Button`, `Text`, `Progress`, ...) plus the one that makes it
 game-aware: a **`Bindings`** component. The whole deal is editable in
 the Inspector — the bindings card there edits each binding with
 dropdowns for the type, the fields and the event, and flags anything
-that names nothing (see [When a binding is wrong](#when-a-binding-is-
-wrong)).
+that names nothing (see
+[When a binding is wrong](#when-a-binding-is-wrong)).
 
 `UiSceneRoot.reference_size` (1280×720 on a fresh canvas) is the
 canvas's design basis — the size you lay out against in the editor.

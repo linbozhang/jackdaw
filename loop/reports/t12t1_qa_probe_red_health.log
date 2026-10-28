@@ -1,0 +1,27 @@
+   Compiling jackdaw v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw)
+    Finished `test` profile [optimized + debuginfo] target(s) in 3.87s
+     Running tests/guards/main.rs (target/debug/deps/guards-f290a7d65ab86725)
+
+running 1 test
+[2m2026-10-28T11:56:37.535490Z[0m [32m INFO[0m [2mjackdaw_runtime[0m[2m:[0m Loaded project catalog with 0 entries from /Users/zhanglinbo/workspace/jackdaw/assets/catalog.bsn
+[2m2026-10-28T11:56:37.539690Z[0m [33m WARN[0m [2mjackdaw_bsn::apply[0m[2m:[0m cannot read 'bevy_color::color::Color::Srgba': value 0 does not read as 'bevy_color::srgba::Srgba'
+[2m2026-10-28T11:56:37.539733Z[0m [33m WARN[0m [2mjackdaw_bsn::apply[0m[2m:[0m cannot apply value 0 of 'bevy_ui::ui_node::BackgroundColor': it does not read as 'bevy_color::color::Color'
+[2m2026-10-28T11:56:37.539794Z[0m [33m WARN[0m [2mjackdaw_bsn::apply[0m[2m:[0m cannot read 'bevy_color::color::Color::Srgba': value 0 does not read as 'bevy_color::srgba::Srgba'
+[2m2026-10-28T11:56:37.539804Z[0m [33m WARN[0m [2mjackdaw_bsn::apply[0m[2m:[0m cannot apply value 0 of 'bevy_ui::ui_node::BackgroundColor': it does not read as 'bevy_color::color::Color'
+[2m2026-10-28T11:56:37.539964Z[0m [33m WARN[0m [2mjackdaw_runtime::terrain[0m[2m:[0m no active Camera3d, so terrain has no viewer to lay its levels around and will not draw
+[2m2026-10-28T11:56:37.543786Z[0m [33m WARN[0m [2mjackdaw_bind::evaluate[0m[2m:[0m binding 0 on 226v0: no context for 'guards::game_ui::PickupCount.0'
+[2m2026-10-28T11:56:37.543813Z[0m [33m WARN[0m [2mjackdaw_bind::evaluate[0m[2m:[0m binding 0 on 225v0: no context for 'guards::game_ui::PlayerHealth.current'
+[2m2026-10-28T11:56:37.543819Z[0m [33m WARN[0m [2mjackdaw_bind::evaluate[0m[2m:[0m binding 0 on 223v0: no context for 'guards::game_ui::PlayerHealth.current'
+[2m2026-10-28T11:56:37.557805Z[0m [33m WARN[0m [2mjackdaw_bind::evaluate[0m[2m:[0m binding 0 on 225v0: context entity lacks 'guards::game_ui::PlayerHealth'
+[2m2026-10-28T11:56:37.557855Z[0m [33m WARN[0m [2mjackdaw_bind::evaluate[0m[2m:[0m binding 0 on 223v0: context entity lacks 'guards::game_ui::PlayerHealth'
+QA-PROBE BindFailures entries = 2
+QA-PROBE   ledger: entity 223v0 binding 0
+QA-PROBE   ledger: entity 225v0 binding 0
+QA-PROBE Progress.value stays at authored 1
+QA-PROBE PauseScreen: Color=Some(LinearRgba(LinearRgba { red: 0.0, green: 0.0, blue: 0.0, alpha: 0.0 })) ThemeBackgroundColor=false
+QA-PROBE GameOverScreen: Color=Some(LinearRgba(LinearRgba { red: 0.0, green: 0.0, blue: 0.0, alpha: 0.0 })) ThemeBackgroundColor=false
+QA-PROBE StartScreen: Color=Some(LinearRgba(LinearRgba { red: 0.0, green: 0.0, blue: 0.0, alpha: 0.0 })) ThemeBackgroundColor=true
+test game_ui::qa_t12t1_red_probe_missing_health_fails_loudly ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 228 filtered out; finished in 0.43s
+

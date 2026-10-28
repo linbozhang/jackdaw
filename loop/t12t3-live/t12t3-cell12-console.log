@@ -1,0 +1,26 @@
+EDITOR_READY (no-modules project /Users/zhanglinbo/workspace/loop-mac/t12t3/t12t3-nophys)
+capture on: 0
+boot: state=true,false,false StartScreen=Inherited pickups_text='Pickups: 0' health_text='100 / 100' warn_on_strip=true
+strip: jackdaw_bind::evaluate: binding 0 on 597v0: no context for 't12t3_nophys::PlayerHealth.current' || jackdaw_bind::evaluate: binding 0 on 600v0: unknown type 't12t3_nophys::PickupCount' || jackdaw_bind::evaluate: binding 0 on 599v0: no context for 't12t3_nophys::PlayerHealth.current' || jackdaw_runtime::pie_frames: PIE frames: windowless streaming at 1920x151 || Components ||  || Terrain ||  || Preview ||  || Materials ||  || Resources ||  || Systems ||  || Graphics ||  ||  ||  ||  ||  ||  || Object ||  || Save to Scene || File || Edit || Add || View || Tools || Window || X || Y || Z || Filter... || Filter... ||  || Play Input ||  ||  ||  ||  ||  ||  ||  ||  ||  ||  || scene ||  ||  || Add Component || Restart || Game Over || Resume || Paused || Start || T12t3 Nophys || Pickups: 0 || 100 / 100 ||  || HudRoot ||  ||  || scene ||  ||  || hud ||  ||  ||  || 
+CELL12_UI_PRESENT_PASS
+frame center measured at (1512,900); clicking it
+sweep_click (1512,900): state=true,false,false
+sweep_click (1472,900): state=true,false,false
+sweep_click (1552,900): state=true,false,false
+sweep_click (1512,880): state=true,false,false
+sweep_click (1512,920): state=true,false,false
+falling back to the fixed grid
+sweep_click (800,772): state=true,false,false
+sweep_click (787,772): state=true,false,false
+sweep_click (875,772): state=true,false,false
+sweep_click (700,772): state=true,false,false
+sweep_click (550,772): state=true,false,false
+sweep_click (1025,772): state=true,false,false
+sweep_click (800,787): state=true,false,false
+sweep_click: hit at (787,787)
+Interact: health 100.0 -> 85.0 Progress.value=0.8500000238418579 text='85 / 100' state=false,false,false
+CELL12_INTERACT_DAMAGE_PASS
+no-avian: RigidBody query len=0/0 schema avian hits=0
+CELL12_NO_AVIAN_PASS
+VERDICT_CELL12: CELL12_INTERACT_DAMAGE=PASS CELL12_NO_AVIAN=PASS CELL12_UI_PRESENT=PASS 
+T12T3_CELL12_DONE

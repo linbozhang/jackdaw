@@ -1,0 +1,3 @@
+dyld[36421]: Symbol not found: __RINvMNtCs8I7pTwBXuTa_8bevy_ecs9lifecycleNtB3_14ComponentHooks21update_from_componentINtNtCsj2F1Sb0LCBr_8bevy_pbr13mesh_material14MeshMaterial3dNtNtB1p_12pbr_material16StandardMaterialEECs6jqkuIVcMfr_19jackdaw_scene_types
+  Referenced from: <BFFCB45C-9AC9-334D-BAE7-2D0F6106666F> /Users/zhanglinbo/workspace/jackdaw/target/debug/jackdaw
+  Expected in:     <B7A595AF-3306-3AAE-92FD-1BC5FD5A2364> /Users/zhanglinbo/workspace/jackdaw/target/debug/deps/libjackdaw_dylib.dylib

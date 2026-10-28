@@ -1,0 +1,23 @@
+EDITOR_READY
+window entity: 697v0
+STAND_CHAIN: boot=true,false,false HudRoot=1 pickups_alive=3 FallingCube=1 hud_swap_defect_line=false
+STAND_CHAIN_PASS
+sweep_click: hit at (700,787)
+after Start: Hud=Inherited StartScreen=Hidden
+STAND_PAUSE: after tap1=false,true,false after tap2=false,false,false (each tap flips once)
+STAND_PAUSE_SINGLE_PASS
+at spawn: count=0 text='Pickups: 0' health=100.0 (expect 0 / 'Pickups: 0')
+pickup walk: 0->0/3/3->3 text='Pickups: 3' pos=1.9664767980575562 0.8600000143051147 0.22426652908325195 health=85.0
+note: health 100.0 -> 85.0 on the walk (hazard contact en route; the damage channel is live)
+level-clear line in the Game panel log strip: true
+CELL4_PICKUPS_PASS
+paused: screen=Inherited pos 1.9664767980575562 0.8600000143051147 0.22426652908325195 -> 1.9664767980575562 0.8600000143051147 0.22426652908325195 (held W; frozen=true)
+sweep_click: hit at (700,787)
+after Resume click: state=false,false,false PauseScreen=Hidden
+CELL5_PAUSE_DOORS_PASS
+before Restart: state=false,false,true GameOverScreen=Inherited pickups_alive=0
+sweep_click: hit at (700,787)
+after Restart: state=false,false,false health=100.0 PickupCount=0 pickups_alive=3 pos=-2.0 0.8600000143051147 0.0
+CELL2_RESTART_RESET_PASS
+VERDICT_LIVE_CHAINS: CELL2_RESTART_RESET=PASS CELL4_PICKUPS=PASS CELL5_PAUSE_DOORS=PASS STAND_CHAIN=PASS STAND_PAUSE_SINGLE=PASS 
+T12T3_LIVE_CHAINS_DONE

@@ -1,0 +1,194 @@
+    Checking jackdaw_feathers v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_feathers)
+   Compiling jackdaw_project_build v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_project_build)
+    Checking jackdaw_runtime v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_runtime)
+    Checking ring v0.17.14
+ Documenting jackdaw_mcp v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_mcp)
+ Documenting jackdaw_api_macros v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_api_macros)
+ Documenting jackdaw_material v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_material)
+ Documenting jackdaw_csg v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_csg)
+    Checking rustls-webpki v0.103.16
+    Checking rustls v0.23.46
+    Checking jackdaw_avian_integration v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/integrations/physics/jackdaw_avian_integration)
+    Checking jackdaw_scaffold v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_scaffold)
+    Checking jackdaw_cli_internal v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_cli)
+ Documenting jackdaw_cli_internal v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_cli)
+ Documenting jackdaw_scaffold v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_scaffold)
+    Checking jackdaw_panels v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_panels)
+    Checking jackdaw_node_graph v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_node_graph)
+    Checking ureq v2.12.1
+    Checking jackdaw_api_internal v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_api_internal)
+    Checking jackdaw_animation v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_animation)
+ Documenting jd v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jd)
+    Checking jackdaw_dylib v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_dylib)
+    Checking jackdaw_loader v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_loader)
+    Checking jackdaw_api v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_api)
+ Documenting jackdaw_api v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_api)
+    Checking jackdaw_extension v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_extension)
+    Checking jackdaw_multiplayer_editor v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_multiplayer_editor)
+    Checking jackdaw_physics v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/integrations/physics/jackdaw_physics)
+    Checking jackdaw v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw)
+ Documenting jackdaw v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw)
+ Documenting viewable_camera_extension v0.1.0 (/Users/zhanglinbo/workspace/jackdaw/examples/extension/viewable_camera_extension)
+ Documenting dynamic_extension v0.1.0 (/Users/zhanglinbo/workspace/jackdaw/examples/extension/dynamic_extension)
+ Documenting test_fixture_extension v0.0.0 (/Users/zhanglinbo/workspace/jackdaw/tests/fixtures/test_fixture_extension)
+ Documenting jackdaw_extension v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_extension)
+ Documenting jackdaw_physics v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/integrations/physics/jackdaw_physics)
+ Documenting jackdaw_sdk v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_sdk)
+ Documenting jackdaw_multiplayer_editor v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_multiplayer_editor)
+ Documenting jackdaw_dylib v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_dylib)
+warning: public documentation for `GameExportPlugin` links to private item `add_to_extension`
+   --> src/game_export.rs:316:7
+    |
+316 | /// [`add_to_extension`], like every operator.
+    |       ^^^^^^^^^^^^^^^^ this item is private
+    |
+    = note: this link will resolve properly if you pass `--document-private-items`
+    = note: `#[warn(rustdoc::private_intra_doc_links)]` on by default
+
+warning: public documentation for `pie` links to private item `BuildKey`
+  --> src/pie.rs:10:45
+   |
+10 | //! instance number). Builds are keyed by [`BuildKey`]: the project root
+   |                                             ^^^^^^^^ this item is private
+   |
+   = note: this link will resolve properly if you pass `--document-private-items`
+
+warning: public documentation for `handle_reload` links to private item `force_stop_all`
+   --> src/pie.rs:682:30
+    |
+682 | /// The stop is immediate ([`force_stop_all`]), not graceful: a rebuilt
+    |                              ^^^^^^^^^^^^^^ this item is private
+    |
+    = note: this link will resolve properly if you pass `--document-private-items`
+
+warning: public documentation for `handle_stop` links to private item `GRACEFUL_STOP_DEADLINE`
+    --> src/pie.rs:1261:7
+     |
+1261 | /// [`GRACEFUL_STOP_DEADLINE`] window, reaped by [`advance_child`] as they
+     |       ^^^^^^^^^^^^^^^^^^^^^^ this item is private
+     |
+     = note: this link will resolve properly if you pass `--document-private-items`
+
+warning: public documentation for `handle_stop` links to private item `advance_child`
+    --> src/pie.rs:1261:52
+     |
+1261 | /// [`GRACEFUL_STOP_DEADLINE`] window, reaped by [`advance_child`] as they
+     |                                                    ^^^^^^^^^^^^^ this item is private
+     |
+     = note: this link will resolve properly if you pass `--document-private-items`
+
+warning: unresolved link to `StateEvent::Log`
+ --> src/pie_game_log.rs:4:7
+  |
+4 | //! [`StateEvent::Log`]s and the Game panel shows the newest few, so a runtime
+  |       ^^^^^^^^^^^^^^^ no item named `StateEvent` in scope
+  |
+  = note: `#[warn(rustdoc::broken_intra_doc_links)]` on by default
+
+warning: public documentation for `transition_to_editor` links to private item `open_pending_scenes`
+   --> src/project_select.rs:498:7
+    |
+498 | /// [`open_pending_scenes`] takes them one a frame, and falls back to
+    |       ^^^^^^^^^^^^^^^^^^^ this item is private
+    |
+    = note: this link will resolve properly if you pass `--document-private-items`
+
+warning: public documentation for `reference_rewrite` links to private item `follow_a_move`
+ --> src/reference_rewrite.rs:7:30
+  |
+7 | //! arrives at a new path, [`follow_a_move`] rewrites every document that
+  |                              ^^^^^^^^^^^^^ this item is private
+  |
+  = note: this link will resolve properly if you pass `--document-private-items`
+
+warning: public documentation for `begin_session` links to private item `KEPT_SESSIONS`
+   --> src/scene_io/session_journal.rs:116:52
+    |
+116 | /// the state tree, sweep crash leftovers beyond [`KEPT_SESSIONS`], and
+    |                                                    ^^^^^^^^^^^^^ this item is private
+    |
+    = note: this link will resolve properly if you pass `--document-private-items`
+
+warning: public documentation for `test_input` links to private item `Emit::Motion`
+  --> src/test_input.rs:13:10
+   |
+13 | //! is [`Emit::Motion`]: raw relative motion arrives from winit as a
+   |          ^^^^^^^^^^^^ this item is private
+   |
+   = note: this link will resolve properly if you pass `--document-private-items`
+
+ Documenting jackdaw_loader v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_loader)
+ Documenting jackdaw_animation v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_animation)
+warning: `jackdaw` (lib doc) generated 10 warnings
+ Documenting jackdaw_api_internal v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_api_internal)
+ Documenting jackdaw_node_graph v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_node_graph)
+ Documenting jackdaw_editor v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_editor)
+warning: public documentation for `sweep_orphan_temp_files` links to private item `TEMP_FRESH_WINDOW`
+   --> crates/jackdaw_api_internal/src/document.rs:207:14
+    |
+207 | /// within [`TEMP_FRESH_WINDOW`] are left alone (another editor instance may
+    |              ^^^^^^^^^^^^^^^^^ this item is private
+    |
+    = note: this link will resolve properly if you pass `--document-private-items`
+    = note: `#[warn(rustdoc::private_intra_doc_links)]` on by default
+
+ Documenting jackdaw_panels v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_panels)
+ Documenting jackdaw_avian_integration v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/integrations/physics/jackdaw_avian_integration)
+ Documenting jackdaw_project_build v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_project_build)
+warning: public documentation for `ExportManifest` links to private item `EXPORT_MANIFEST`
+   --> crates/jackdaw_project_build/src/export.rs:149:12
+    |
+149 | /// (see [`EXPORT_MANIFEST`]): the receipt that makes "same input, same
+    |            ^^^^^^^^^^^^^^^ this item is private
+    |
+    = note: this link will resolve properly if you pass `--document-private-items`
+    = note: `#[warn(rustdoc::private_intra_doc_links)]` on by default
+
+ Documenting jackdaw_releases v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_releases)
+warning: `jackdaw_project_build` (lib doc) generated 1 warning
+ Documenting jackdaw_package v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_package)
+ Documenting jackdaw_runtime v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_runtime)
+ Documenting jackdaw_hull v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_hull)
+warning: `jackdaw_api_internal` (lib doc) generated 1 warning
+ Documenting jackdaw_remote v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_remote)
+warning: public documentation for `system_access_entries` links to private item `ambiguities_for`
+   --> crates/jackdaw_remote/src/ecs_methods.rs:147:42
+    |
+147 | /// unregistered (the same fallback as [`ambiguities_for`]).
+    |                                          ^^^^^^^^^^^^^^^ this item is private
+    |
+    = note: this link will resolve properly if you pass `--document-private-items`
+    = note: `#[warn(rustdoc::private_intra_doc_links)]` on by default
+
+ Documenting jackdaw_pie_protocol v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_pie_protocol)
+warning: `jackdaw_remote` (lib doc) generated 1 warning
+ Documenting jackdaw_feathers v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_feathers)
+ Documenting jackdaw_localization v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_localization)
+ Documenting jackdaw_terrain v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_terrain)
+ Documenting jackdaw_prefab v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_prefab)
+ Documenting jackdaw_jsn v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_jsn)
+ Documenting jackdaw_animation_runtime v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_animation_runtime)
+ Documenting jackdaw_bsn v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_bsn)
+ Documenting jackdaw_camera_rig v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_camera_rig)
+ Documenting jackdaw_schema v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_schema)
+ Documenting jackdaw_multiplayer v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_multiplayer)
+ Documenting jackdaw_surface v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_surface)
+ Documenting jackdaw_fuzzy v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_fuzzy)
+ Documenting jackdaw_widgets v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_widgets)
+ Documenting jackdaw_select v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_select)
+ Documenting jackdaw_uv v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_uv)
+ Documenting jackdaw_pick v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_pick)
+ Documenting jackdaw_env v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_env)
+ Documenting jackdaw_scene_types v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_scene_types)
+ Documenting jackdaw_input v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_input)
+ Documenting jackdaw_bind v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_bind)
+ Documenting jackdaw_geometry v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_geometry)
+ Documenting jackdaw_widgets_runtime v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_widgets_runtime)
+ Documenting bevy_window_chrome v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/bevy_window_chrome)
+ Documenting jackdaw_camera v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_camera)
+ Documenting jackdaw_commands v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_commands)
+ Documenting jackdaw_rustc_wrapper v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_rustc_wrapper)
+ Documenting jackdaw_snap v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_snap)
+    Finished `dev` profile [optimized + debuginfo] target(s) in 1m 39s
+   Generated /Users/zhanglinbo/workspace/jackdaw/target/doc/bevy_window_chrome/index.html and 58 other files
+EXIT=0

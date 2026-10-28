@@ -1,0 +1,3 @@
+jackdaw build: building /Users/zhanglinbo/workspace/loop-mac/t12t3/t12t3-nophys
+building t12t3-nophys as a cargo binary in /Users/zhanglinbo/workspace/loop-mac/t12t3/t12t3-nophys, into /Users/zhanglinbo/workspace/loop-mac/t12t3/t12t3-nophys/.jackdaw/target/game
+jackdaw build: ok (508 components); binary at /Users/zhanglinbo/workspace/loop-mac/t12t3/t12t3-nophys/.jackdaw/target/game/debug/t12t3-nophys, schema at /Users/zhanglinbo/workspace/loop-mac/t12t3/t12t3-nophys/.jackdaw/schema.json

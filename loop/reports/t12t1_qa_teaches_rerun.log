@@ -1,0 +1,96 @@
+   Compiling jackdaw_project_build v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_project_build)
+   Compiling jackdaw_scaffold v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_scaffold)
+    Finished `test` profile [optimized + debuginfo] target(s) in 4.93s
+     Running unittests src/lib.rs (target/debug/deps/jackdaw_scaffold-7e9aed5f1ffff4b1)
+
+running 87 tests
+test dev_checkout::tests::rewrite_dep_lines_is_idempotent ... ok
+test dev_checkout::tests::rewrite_dep_lines_leaves_other_lines_intact ... ok
+test dev_checkout::tests::rewrite_dep_lines_returns_none_when_no_dep ... ok
+test dev_checkout::tests::rewrite_dep_lines_preserves_features_and_optional ... ok
+test dev_checkout::tests::rewrite_dep_lines_ignores_default_features_key ... ok
+test dev_checkout::tests::rewrite_dep_lines_handles_windows_backslashes ... ok
+test dev_checkout::tests::rewrite_dep_lines_rewrites_plain_version_strings ... ok
+test dev_checkout::tests::a_binary_running_outside_the_checkout_is_not_a_dev_build ... ok
+test migrate::tests::declines_when_no_main ... ok
+test dev_checkout::tests::dev_checkout_rewrites_runtime_and_extension_deps ... ok
+test migrate::tests::declines_unsupported_shape ... ok
+test migrate::tests::a_gated_add_systems_keeps_its_turbofish ... ok
+test migrate::tests::migrates_let_form_builder ... ok
+test migrate::tests::migrates_a_single_line_main ... ok
+test migrate::tests::an_existing_game_plugin_is_not_redefined ... ok
+test migrate::tests::apply_writes_files_and_backup ... ok
+test migrate::tests::an_empty_plugin_body_has_no_unused_parameter ... ok
+test tests::a_jackdaw_crate_a_module_adds_comes_from_where_the_runtime_does ... ok
+test tests::a_malformed_settings_file_is_reported_not_ignored ... ok
+test migrate::tests::generic_builder_calls_keep_their_turbofish ... ok
+test migrate::tests::migrates_chained_builder ... ok
+test tests::a_broken_manifest_reports_what_cargo_said ... ok
+test tests::a_member_inherits_the_runtime_its_workspace_declares ... ok
+test tests::a_project_in_a_clean_location_has_no_warnings ... ok
+test tests::a_project_inside_a_workspace_that_stops_resolving_is_warned_about ... ok
+test tests::a_project_name_that_is_really_a_path_is_refused_with_guidance ... ok
+test tests::a_project_whose_dependencies_do_not_resolve_is_warned_about ... ok
+test tests::a_new_game_carries_the_workspace_lock_snapshot ... ok
+test migrate::tests::the_windowless_binding_follows_locals_the_plugins_use ... ok
+test tests::a_renamed_runtime_is_not_declared_twice ... ok
+test migrate::tests::migration_names_no_undeclared_crates ... ok
+test tests::a_physics_game_patches_every_fork_crate_on_both_sources ... ok
+test migrate::tests::migration_uses_the_runtime_when_it_is_a_dependency ... ok
+test tests::a_target_specific_runtime_is_not_declared_again ... ok
+test tests::an_undetectable_plugin_is_flagged_not_asserted ... ok
+test tests::crlf_templates_still_get_their_module_lines ... ok
+test tests::an_optional_runtime_gets_notes_not_edits ... ok
+test tests::a_created_game_plugin_is_recorded ... ok
+test tests::an_uneditable_plugin_keeps_the_manual_note ... ok
+test tests::a_second_import_has_nothing_to_do ... ok
+test tests::enabling_pie_keeps_a_trailing_comment ... ok
+test tests::import_adds_the_runtime_alongside_its_own_files ... ok
+test tests::a_new_game_writes_its_modules_into_cargo_toml_main_and_jackdaw_toml ... ok
+test tests::import_checks_a_workspace_inherited_bevy_version ... ok
+test tests::import_asks_which_member_when_several_use_bevy ... ok
+test tests::import_adds_pie_to_a_workspace_inherited_runtime ... ok
+test tests::import_drops_a_removed_runtime_feature ... ok
+test tests::import_offers_a_stub_for_bin_only_projects ... ok
+test tests::import_rejects_a_bevy_minor_mismatch ... ok
+test tests::import_records_package_when_the_game_is_the_workspace_root ... ok
+test tests::import_enables_pie_on_an_existing_runtime_dependency ... ok
+test tests::import_resolves_the_game_member_of_a_workspace ... ok
+test tests::import_wires_the_runtime_into_a_plain_bevy_game ... ok
+test tests::import_detects_the_modules_a_game_already_uses_and_adds_the_chosen_ones_once ... ok
+test tests::new_extension_project_uses_the_api ... ok
+test tests::new_game_project_has_the_contract_files ... ok
+test tests::new_game_project_teaches_the_config_pattern ... ok
+test tests::changing_modules_later_edits_both_manifests_and_keeps_the_games_crates ... ok
+test tests::import_plan_is_side_effect_free_until_applied ... ok
+test tests::new_game_project_teaches_the_input_action_pattern ... ok
+test tests::project_names_that_cannot_be_crate_names_are_rejected ... ok
+test tests::refreshing_pins_keeps_the_table_in_place ... ok
+test tests::no_plugin_means_no_plugin_key ... ok
+test tests::pie_from_a_package_feature_is_not_forced_on ... ok
+test tests::new_game_project_teaches_the_health_pattern ... ok
+test tests::the_modules_flags_choose_the_modules_and_refuse_nonsense ... ok
+test tests::new_game_project_teaches_the_physics_and_trigger_pattern ... ok
+test tests::scaffolded_projects_record_their_versions ... ok
+test tests::the_templates_state_the_requirement_this_build_can_resolve ... ok
+test tests::new_game_project_teaches_the_player_controller_pattern ... ok
+test tests::setting_up_past_a_mismatch_records_the_projects_bevy ... ok
+test tests::setup_records_the_versions_it_was_created_with ... ok
+test tests::new_game_project_teaches_the_ui_pattern ... ok
+test tests::upgrade_leaves_path_dependencies_alone ... ok
+test tests::upgrade_pins_a_prerelease_editor_to_its_exact_version ... ok
+test tests::upgrade_reaches_target_specific_dependencies ... ok
+test tests::upgrade_reaches_workspace_dependencies ... ok
+test tests::the_plan_states_which_plugin_it_recorded ... ok
+test tests::upgrade_refuses_a_project_that_was_never_set_up ... ok
+test tests::version_requirements_are_compared_not_prefix_matched ... ok
+test tests::the_runtime_edit_keeps_manifest_comments_and_order ... ok
+test tests::upgrade_does_not_launder_away_a_bevy_mismatch ... ok
+test tests::upgrade_is_a_no_op_on_a_current_project ... ok
+test tests::upgrade_drops_a_removed_runtime_feature_from_the_workspace_entry ... ok
+test tests::upgrade_refreshes_the_pins_and_the_crate_requirements ... ok
+test tests::import_wraps_default_plugins_in_the_common_main_shapes ... ok
+test tests::upgrade_drops_a_removed_runtime_feature_and_records_its_module ... ok
+
+test result: ok. 87 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.51s
+
