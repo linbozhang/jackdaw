@@ -155,15 +155,29 @@ gate**：menu/paused/game_over 三态 W 按住零位移；运行态 4 m/s×dt �
    runtime 改动）：模板与 guards 只依赖 `jackdaw_runtime`（不直接依赖 jackdaw_bind），
    `wire_hud` 需要 `BindContext` 类型；T11 CameraRig re-export 同款先例（决策 2 同
    精神：存量工程零 Cargo 改动）。一行+注释，runtime 侧无逻辑改动。
-2. **⚪ 种子三处形状 bug 被探针/guards 先后捕获**（手工种子的风险项实测发生，机制
-   全数钉进测试）：①`Text` 的 TypePath 是 `bevy_ui::widget::text::Text`（编辑器
-   Label 同款），不是 `bevy_text::text::Text`——错误路径静默不落组件、绑定进
-   `BindFailures`（runtime loader 集成探针捕获）；②`Node` 无 `position:` 字段——
-   遮罩定位须写 `left/right/top/bottom` 四字段（组件级静默丢弃，guards 加 Node 在场
-   断言钉死）；③**裸类型行（HudRoot 标记）需 `#[reflect(Component, Default)]`**——
-   apply 走 ReflectDefault 构造，缺 Default 时类型已在注册表但**静默不落**、也不进
-   UnresolvedTypes（guards ①「marker loaded」红→绿捕获）。「编辑器实开往返零 diff」
-   的验收钉按方案归 T2/T3 真机腿。
+2. **🟡→已修 种子形状 bug 四处**（前三处⚪为本轮探针/guards 捕获；第四处为 QA
+   红证复演发现、按 `t12-t1-qa.md` §四修正单返工——QA 判 FAIL 退回一轮小修）：
+   ①`Text` 的 TypePath 是 `bevy_ui::widget::text::Text`（编辑器 Label 同款），不是
+   `bevy_text::text::Text`——错误路径静默不落组件、绑定进 `BindFailures`（runtime
+   loader 集成探针捕获）；②`Node` 无 `position:` 字段——遮罩定位须写
+   `left/right/top/bottom` 四字段（组件级静默丢弃，guards 加 Node 在场断言钉死）；
+   ③**裸类型行（HudRoot 标记）需 `#[reflect(Component, Default)]`**——apply 走
+   ReflectDefault 构造，缺 Default 时类型已在注册表但**静默不落**、也不进
+   UnresolvedTypes（guards ①「marker loaded」红→绿捕获）；
+   ④**【QA 新发现】暂停/结束屏遮罩 `BackgroundColor` 静默全透明**——种子
+   `bevy_color::Color::Srgba(bevy_color::Srgba { … })` 内层 `Srgba` 用了 re-export
+   路径，规范 TypePath 是 `bevy_color::srgba::Srgba`（fork srgba.rs:30；编辑器亲存
+   `t02t2-light/13-scene-on-disk.bsn:21` 同款拼写为铁证）：组件仍插入但值落回退默认
+   `LinearRgba(0,0,0,0)`——「半透明遮罩」实际不生效，不进 BindFailures 不可见。
+   首轮归档 `t12t1_guards.log` 内本有 20 处该 warn 未复核（QA 计数核实），漏网通道
+   与 §六-2①③同族。修正：两行改规范路径（:135/:185）+ guards ①新增遮罩色永久
+   断言（`BackgroundColor == Srgba(0,0,0,0.6/0.92)` 精确相等；负向复演：回退旧路径
+   断言即红，落 LinearRgba(0,0,0,0)）；暖工程 `assets/hud.bsn` 已手工同步；guards
+   全量 228/228 重跑覆盖归档，**warn 形态扫描（cannot apply/cannot read/does not
+   read as）20→0**（余 1 条=`scaffolded_component_flow.rs` 故意的 `NotBuiltYet`
+   fixture——该测试的对象本身，非漏网）。「编辑器实开往返零 diff」的验收钉按方案
+   归 T2/T3 真机腿。**修正提交**：本报告所在的 rework 提交（`loop/t12-game-ui`
+   HEAD，标题 `T12-T1 rework (QA correction, t12-t1-qa.md §四): ...`）。
 3. **⚪ guards 布局断言用 `UiGlobalTransform`+`ComputedNode`**：taffy `ComputedLayout`
    非 bevy_ui 公开导出（`pub use layout::*` 未含——内部私有 use）；transform 平移=
    节点中心，断言换算 `center - size/2` 为左上角（文件注释钉死）。
@@ -200,7 +214,12 @@ gate**：menu/paused/game_over 三态 W 按住零位移；运行态 4 m/s×dt �
 ## 八、工程处置与移交
 
 - 暖工程 `/Users/zhanglinbo/workspace/loop-mac/t12t1-game/t12t1-game` **保留**
-  （T2 绑定错误可见/真机四链直接复用；main.rs 的 JackdawRemotePlugin 为测试注入）。
+  （T2 绑定错误可见/真机四链直接复用；main.rs 的 JackdawRemotePlugin 为测试注入；
+  `assets/hud.bsn` 已随 rework 手工同步规范 Srgba 路径）。
+- **门禁日志纪律（QA 修正单要求，两轮漏网教训）**：后续每轮归档日志做 warn 形态
+  扫描——`grep -E "cannot apply|cannot read|does not read as|UnresolvedTypes"`，
+  逐条归因（测试故意 fixture 与真漏网分开计数）；本轮 rework 已执行（20→0，余 1 条
+  为 scaffolded_component_flow 的测试对象）。
 - 给 QA 的注意事项：
   1. **hazard 触碰即扣血**：物理形态走到 (2, 0.5, 0) 的红色传感器→血条 100→85；
      `enters()` 只在重叠开始帧触发（离开再进再扣）；menu/paused/game_over 态不扣。

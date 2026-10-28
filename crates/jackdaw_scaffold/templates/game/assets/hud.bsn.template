@@ -132,7 +132,7 @@ bevy_ecs::hierarchy::Children [
         justify_content: bevy_ui::ui_node::JustifyContent::Center,
         row_gap: bevy_ui::geometry::Val::Px(16.0),
     }
-    bevy_ui::ui_node::BackgroundColor(bevy_color::Color::Srgba(bevy_color::Srgba { red: 0.0, green: 0.0, blue: 0.0, alpha: 0.6 }))
+    bevy_ui::ui_node::BackgroundColor(bevy_color::Color::Srgba(bevy_color::srgba::Srgba { red: 0.0, green: 0.0, blue: 0.0, alpha: 0.6 }))
     jackdaw_bind::types::Bindings([
         jackdaw_bind::types::Binding::Visible { read: jackdaw_bind::types::BindPath { raw: "Res({{crate_name}}::GameState).paused" }, via: core::option::Option::None },
     ])
@@ -182,7 +182,7 @@ bevy_ecs::hierarchy::Children [
         justify_content: bevy_ui::ui_node::JustifyContent::Center,
         row_gap: bevy_ui::geometry::Val::Px(16.0),
     }
-    bevy_ui::ui_node::BackgroundColor(bevy_color::Color::Srgba(bevy_color::Srgba { red: 0.0, green: 0.0, blue: 0.0, alpha: 0.92 }))
+    bevy_ui::ui_node::BackgroundColor(bevy_color::Color::Srgba(bevy_color::srgba::Srgba { red: 0.0, green: 0.0, blue: 0.0, alpha: 0.92 }))
     jackdaw_bind::types::Bindings([
         jackdaw_bind::types::Binding::Visible { read: jackdaw_bind::types::BindPath { raw: "Res({{crate_name}}::GameState).game_over" }, via: core::option::Option::None },
     ])

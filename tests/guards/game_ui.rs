@@ -421,6 +421,19 @@ fn the_hud_is_the_only_ui_and_it_loads_with_its_bindings_resolved() {
             "{screen} carries visibility"
         );
     }
+    // The veils' authored colors land exactly: a wrong value TypePath
+    // (the re-export spelling `bevy_color::Srgba` instead of the
+    // canonical `bevy_color::srgba::Srgba`, QA t12-t1 §四) still inserts
+    // the component but at the fallback default — fully transparent,
+    // with no BindFailures and no UnresolvedTypes to catch it.
+    for (screen, alpha) in [("PauseScreen", 0.6), ("GameOverScreen", 0.92)] {
+        let e = named(world, screen);
+        assert_eq!(
+            world.get::<BackgroundColor>(e),
+            Some(&BackgroundColor(Color::srgba(0.0, 0.0, 0.0, alpha))),
+            "{screen}: the authored veil color must land exactly"
+        );
+    }
     for part in [
         "HealthBar",
         "HealthFill",
