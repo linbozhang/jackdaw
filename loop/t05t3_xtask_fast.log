@@ -1,0 +1,94 @@
+warning: linker stderr: rust-lld: ignoring unknown argument '-fuse-ld=lld'
+  |
+  = note: `#[warn(linker_messages)]` on by default
+
++ cargo fmt --all --check
+the core crates depend on no third-party Bevy crate
+67 manifests and the module catalog take nothing from git but bevy main at c9c397ba1a73e6cfffe957318e0359330b701865
++ cargo clippy --workspace --all-targets --features dylib -- --deny warnings
+   Compiling jackdaw_env v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_env)
+   Compiling jackdaw_api_macros v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_api_macros)
+    Checking jackdaw_fuzzy v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_fuzzy)
+warning: linker stderr: rust-lld: ignoring unknown argument '-fuse-ld=lld'
+  |
+  = note: `#[warn(linker_messages)]` on by default
+  = note: the `linker_messages` lint ignores `-D warnings`
+
+   Compiling jackdaw_package v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_package)
+warning: `jackdaw_project_build` (build script) generated 1 warning
+    Checking jackdaw_geometry v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_geometry)
+    Checking jackdaw_bsn v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_bsn)
+    Checking jackdaw_bind v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_bind)
+    Checking jackdaw_commands v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_commands)
+    Checking jackdaw_input v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_input)
+    Checking jackdaw_widgets_runtime v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_widgets_runtime)
+    Checking jackdaw_pie_protocol v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_pie_protocol)
+   Compiling jackdaw_project_build v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_project_build)
+    Checking jackdaw_localization v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_localization)
+    Checking jackdaw_rustc_wrapper v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_rustc_wrapper)
+    Checking bevy_window_chrome v0.21.0-dev (E:\Project\rust\jackdaw\crates\bevy_window_chrome)
+    Checking jackdaw_material v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_material)
+    Checking jackdaw_camera v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_camera)
+warning: `jackdaw_env` (build script) generated 1 warning (1 duplicate)
+warning: `jackdaw_package` (build script) generated 1 warning (1 duplicate)
+    Checking jackdaw_snap v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_snap)
+    Checking jackdaw_widgets v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_widgets)
+   Compiling ring v0.17.14
+warning: `jackdaw_api_macros` (lib) generated 1 warning (1 duplicate)
+    Checking jackdaw_animation_runtime v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_animation_runtime)
+    Checking jackdaw_prefab v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_prefab)
+    Checking jackdaw_remote v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_remote)
+    Checking jackdaw_scene_types v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_scene_types)
+    Checking jackdaw_releases v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_releases)
+    Checking jackdaw_csg v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_csg)
+    Checking jackdaw_hull v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_hull)
+    Checking jackdaw_select v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_select)
+    Checking jackdaw_uv v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_uv)
+    Checking jackdaw_pick v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_pick)
+    Checking jackdaw_mcp v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_mcp)
+    Checking jackdaw_terrain v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_terrain)
+    Checking jackdaw_schema v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_schema)
+    Checking jackdaw_feathers v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_feathers)
+    Checking jackdaw_camera_rig v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_camera_rig)
+    Checking jackdaw_surface v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_surface)
+    Checking jackdaw_multiplayer v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_multiplayer)
+    Checking jackdaw_jsn v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_jsn)
+   Compiling rustls v0.23.43
+    Checking rustls-webpki v0.103.14
+    Checking jackdaw_scaffold v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_scaffold)
+    Checking jackdaw_cli_internal v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_cli)
+    Checking jackdaw_runtime v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_runtime)
+    Checking jackdaw_panels v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_panels)
+    Checking jackdaw_node_graph v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_node_graph)
+    Checking jackdaw_api_internal v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_api_internal)
+    Checking ureq v2.12.1
+    Checking jackdaw_animation v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_animation)
+    Checking jd v0.21.0-dev (E:\Project\rust\jackdaw\crates\jd)
+    Checking jackdaw_dylib v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_dylib)
+    Checking jackdaw_loader v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_loader)
+    Checking jackdaw_api v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_api)
+    Checking jackdaw_extension v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_extension)
+    Checking jackdaw_multiplayer_editor v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_multiplayer_editor)
+    Checking jackdaw_sdk v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_sdk)
+    Checking test_fixture_extension v0.0.0 (E:\Project\rust\jackdaw\tests\fixtures\test_fixture_extension)
+    Checking dynamic_extension v0.1.0 (E:\Project\rust\jackdaw\examples\extension\dynamic_extension)
+    Checking viewable_camera_extension v0.1.0 (E:\Project\rust\jackdaw\examples\extension\viewable_camera_extension)
+    Checking jackdaw v0.21.0-dev (E:\Project\rust\jackdaw)
+    Checking jackdaw_editor v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_editor)
+error: item in documentation is missing backticks
+   --> tests\guards\reference_audit.rs:253:61
+    |
+253 | /// it. This is the guard that keeps the real-machine path (OnEnter the
+    |                                                             ^^^^^^^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#doc_markdown
+    = note: `-D clippy::doc-markdown` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::doc_markdown)]`
+help: try
+    |
+253 - /// it. This is the guard that keeps the real-machine path (OnEnter the
+253 + /// it. This is the guard that keeps the real-machine path (`OnEnter` the
+    |
+
+error: could not compile `jackdaw` (test "guards") due to 1 previous error
+warning: build failed, waiting for other jobs to finish...

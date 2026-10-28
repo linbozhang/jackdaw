@@ -1,0 +1,31 @@
+warning: linker stderr: rust-lld: ignoring unknown argument '-fuse-ld=lld'
+  |
+  = note: `#[warn(linker_messages)]` on by default
+
+warning: `jackdaw_env` (build script) generated 1 warning
+warning: `jackdaw_api_macros` (lib) generated 1 warning (1 duplicate)
+warning: `jackdaw_project_build` (build script) generated 1 warning (1 duplicate)
+warning: `jackdaw_package` (build script) generated 1 warning (1 duplicate)
+warning: `test_fixture_extension` (lib) generated 1 warning (1 duplicate)
+   Compiling jackdaw v0.21.0-dev (E:\Project\rust\jackdaw)
+warning: `jackdaw` (lib test) generated 1 warning (1 duplicate)
+    Finished `test` profile [optimized + debuginfo] target(s) in 1m 13s
+     Running unittests src\lib.rs (target\debug\deps\jackdaw-b8bb05f875dbf70a.exe)
+
+running 13 tests
+test asset_migration::tests::a_project_with_no_assets_directory_is_said_so_rather_than_walked ... ok
+test asset_migration::tests::a_project_with_unsaved_edits_open_is_refused ... ok
+test asset_migration::tests::a_name_no_file_carries_is_left_alone_and_reported ... ok
+test asset_migration::tests::a_sidecar_slot_naming_no_file_keeps_its_name_and_is_reported ... ok
+test asset_migration::tests::a_file_with_no_header_is_given_one ... ok
+test asset_migration::tests::a_catalog_entry_that_would_land_on_a_file_is_left_alone ... ok
+test asset_migration::tests::a_sidecar_written_before_paths_is_re_encoded_with_its_slots_as_paths ... ok
+test asset_migration::tests::a_reference_that_already_spells_its_file_is_left_as_it_is ... ok
+test asset_migration::tests::a_name_a_prefab_spells_becomes_a_path_too ... ok
+test asset_migration::tests::a_name_a_scene_spells_becomes_the_path_of_the_file_it_names ... ok
+test asset_migration::tests::a_catalog_entry_is_written_out_as_a_file_of_its_own ... ok
+test asset_migration::tests::a_name_two_files_carry_is_left_alone_and_both_are_named ... ok
+test asset_migration::tests::a_second_run_has_nothing_to_do ... ok
+
+test result: ok. 13 passed; 0 failed; 0 ignored; 0 measured; 1122 filtered out; finished in 0.08s
+

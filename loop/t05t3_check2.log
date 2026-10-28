@@ -1,0 +1,28 @@
+warning: linker stderr: rust-lld: ignoring unknown argument '-fuse-ld=lld'
+  |
+  = note: `#[warn(linker_messages)]` on by default
+
+warning: `jackdaw_env` (build script) generated 1 warning
+warning: `jackdaw_api_macros` (lib) generated 1 warning (1 duplicate)
+    Checking jackdaw_env v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_env)
+    Checking jackdaw_bsn v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_bsn)
+warning: `jackdaw_project_build` (build script) generated 1 warning (1 duplicate)
+warning: `jackdaw_package` (build script) generated 1 warning (1 duplicate)
+   Compiling jackdaw_project_build v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_project_build)
+    Checking jackdaw_api_internal v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_api_internal)
+    Checking jackdaw_package v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_package)
+    Checking jackdaw_releases v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_releases)
+    Checking jackdaw_prefab v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_prefab)
+    Checking jackdaw_animation_runtime v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_animation_runtime)
+    Checking jackdaw_remote v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_remote)
+    Checking jackdaw_jsn v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_jsn)
+    Checking jackdaw_api v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_api)
+    Checking jackdaw_loader v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_loader)
+    Checking jackdaw_runtime v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_runtime)
+    Checking jackdaw_extension v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_extension)
+    Checking jackdaw_multiplayer_editor v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_multiplayer_editor)
+    Checking test_fixture_extension v0.0.0 (E:\Project\rust\jackdaw\tests\fixtures\test_fixture_extension)
+    Checking jackdaw_scaffold v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_scaffold)
+    Checking jackdaw_animation v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_animation)
+    Checking jackdaw v0.21.0-dev (E:\Project\rust\jackdaw)
+    Finished `dev` profile [optimized + debuginfo] target(s) in 30.54s

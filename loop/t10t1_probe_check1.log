@@ -1,0 +1,1368 @@
+ Downloading crates ...
+  Downloaded num-modular v0.6.5
+  Downloaded ipnet v2.12.2
+  Downloaded schemars_derive v1.2.3
+  Downloaded rmcp-macros v3.8.0
+  Downloaded want v0.3.2
+  Downloaded zeroize v1.9.1
+  Downloaded notify v8.2.1
+  Downloaded schemars v1.2.3
+  Downloaded hyper-util v0.1.21
+  Downloaded typed-path v0.13.0
+  Downloaded tokio-util v0.7.20
+  Downloaded webpki-roots v1.0.11
+  Downloaded zip v9.1.2
+  Downloaded rustls v0.23.46
+  Downloaded rustix v1.1.6
+  Downloaded rmcp v3.8.0
+  Downloaded glam v0.34.1
+   Compiling unicode-ident v1.0.27
+    Checking cfg-if v1.0.5
+    Checking equivalent v1.0.3
+    Checking windows-sys v0.61.2
+   Compiling thiserror v2.0.21
+    Checking log v0.4.34
+   Compiling crossbeam-utils v0.8.23
+    Checking cpufeatures v0.3.1
+    Checking disqualified v1.1.0
+   Compiling erased-serde v0.4.11
+    Checking inventory v0.3.25
+   Compiling find-msvc-tools v0.1.15
+    Checking either v1.19.0
+   Compiling zerocopy v0.8.63
+    Checking getrandom v0.4.3
+    Checking hashbrown v0.17.1
+   Compiling proc-macro2 v1.0.107
+   Compiling indexmap v2.14.2
+    Checking chacha20 v0.10.2
+    Checking thread_local v1.1.10
+   Compiling rustix v1.1.6
+    Checking bevy_ptr v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#2759b0c1)
+   Compiling crc32fast v1.5.3
+    Checking uuid v1.29.0
+    Checking itertools v0.14.0
+   Compiling libc v0.2.191
+    Checking miniz_oxide v0.9.1
+    Checking rand v0.10.3
+   Compiling quote v1.0.47
+   Compiling toml_edit v0.25.17+spec-1.1.0
+   Compiling unsynn v0.3.0
+   Compiling cc v1.10.0
+   Compiling syn v3.0.9
+   Compiling syn v2.0.119
+    Checking lazy_static v1.5.1
+    Checking rand_distr v0.6.0
+    Checking windows-sys v0.60.2
+    Checking tracing-log v0.2.0
+    Checking sharded-slab v0.1.7
+    Checking hashbrown v0.16.1
+    Checking concurrent-queue v2.5.0
+    Checking crossbeam-queue v0.3.14
+    Checking crossbeam-channel v0.5.17
+    Checking flate2 v1.1.10
+    Checking twox-hash v2.1.5
+    Checking async-channel v2.5.0
+    Checking async-executor v1.14.0
+   Compiling lalrpop-util v0.23.2
+    Checking ruzstd v0.9.1
+    Checking itertools v0.15.0
+    Checking blocking v1.7.0
+    Checking annotate-snippets v0.12.17
+   Compiling icu_properties_data v2.4.0
+    Checking file-id v0.2.3
+    Checking toml v1.1.8+spec-1.1.0
+    Checking async-fs v2.2.0
+   Compiling icu_normalizer_data v2.4.0
+    Checking ordered-float v5.5.1
+   Compiling litrs v1.0.1
+   Compiling serde_json v1.0.154
+    Checking weak-table v0.4.0
+    Checking offset-allocator v0.2.0
+   Compiling variadics_please v2.0.0
+   Compiling icu_locale_fallback_data v2.4.0
+   Compiling icu_segmenter_data v2.4.0
+    Checking clipboard-win v5.4.3
+    Checking memmap2 v0.9.12
+    Checking parlance v0.1.1
+    Checking want v0.3.2
+   Compiling cpal v0.18.2
+    Checking tinyvec v1.13.3
+    Checking ctrlc v3.5.2
+    Checking errno v0.3.14
+    Checking polling v3.11.0
+   Compiling encase_derive_impl v0.13.0
+   Compiling bevy_macro_utils v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#2759b0c1)
+   Compiling synstructure v0.14.0
+    Checking winapi-util v0.1.11
+    Checking nu-ansi-term v0.50.3
+   Compiling logos-codegen v0.16.1
+    Checking anstyle-query v1.1.5
+    Checking anstyle-wincon v3.0.11
+   Compiling document-features v0.2.12
+    Checking same-file v1.0.6
+   Compiling bevy_ecs_macro_logic v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#2759b0c1)
+    Checking mio v1.2.4
+    Checking anstream v1.0.0
+    Checking walkdir v2.5.0
+    Checking socket2 v0.6.5
+    Checking lewton v0.10.2
+   Compiling bevy_macro_utils v0.20.0 (E:\Project\rust\bevy-fork-pinned\crates\bevy_macro_utils)
+    Checking earcutr v0.5.0
+    Checking bevy_ptr v0.20.0 (E:\Project\rust\bevy-fork-pinned\crates\bevy_ptr)
+    Checking dirs-sys v0.5.0
+warning: linker stderr: rust-lld: ignoring unknown argument '-fuse-ld=lld'
+  |
+  = note: `#[warn(linker_messages)]` on by default
+
+warning: `jackdaw_env` (build script) generated 1 warning
+    Checking rand v0.8.8
+    Checking dirs v6.0.0
+    Checking zeroize v1.9.1
+    Checking sha2 v0.10.9
+   Compiling bevy_ecs_macro_logic v0.20.0 (E:\Project\rust\bevy-fork-pinned\crates\bevy_ecs\macro_logic)
+    Checking crossbeam-epoch v0.9.21
+    Checking noise v0.9.0
+    Checking crossbeam-deque v0.8.8
+    Checking rayon-core v1.13.0
+    Checking ena v0.14.4
+    Checking rayon v1.12.0
+warning: `jackdaw_package` (build script) generated 1 warning (1 duplicate)
+   Compiling jackdaw_package v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_package)
+   Compiling include_dir_macros v0.7.4
+    Checking num-modular v0.6.5
+    Checking rustls-pki-types v1.15.1
+   Compiling bevy_macro_utils v0.20.0
+    Checking dashu-int v0.5.1
+    Checking include_dir v0.7.4
+   Compiling darling_core v0.24.1
+    Checking getrandom v0.2.17
+   Compiling serde_derive_internals v0.30.0
+   Compiling proc-macro-error-attr3 v3.1.1
+    Checking dashu-ratio v0.5.1
+   Compiling blake3 v1.8.7
+   Compiling basis-universal-sys v0.3.1
+   Compiling meshopt v0.6.2
+   Compiling ring v0.17.14
+   Compiling jackdaw_project_build v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_project_build)
+    Checking manifold-rust v0.16.0
+   Compiling rustls v0.23.46
+warning: `jackdaw_project_build` (build script) generated 1 warning (1 duplicate)
+   Compiling proc-macro-error3 v3.1.1
+    Checking rfd v0.15.4
+    Checking webpki-roots v1.0.11
+   Compiling rmcp v3.8.0
+    Checking ipnet v2.12.2
+    Checking webpki-roots v0.26.11
+    Checking filetime v0.2.29
+    Checking typed-path v0.13.0
+    Checking getrandom v0.3.4
+    Checking ruzstd v0.8.3
+    Checking tar v0.4.46
+    Checking zip v9.1.2
+    Checking jackdaw_api_macros v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_api_macros)
+    Checking rustls-webpki v0.103.16
+   Compiling derive_more-impl v2.1.1
+   Compiling assert_type_match v0.1.1
+   Compiling windows-interface v0.59.3
+   Compiling windows-implement v0.60.2
+   Compiling tracing-attributes v0.1.31
+   Compiling zerocopy-derive v0.8.63
+   Compiling logos-derive v0.16.1
+   Compiling enumn v0.1.14
+   Compiling gltf-derive v1.4.1
+   Compiling thiserror-impl v1.0.69
+   Compiling curve25519-dalek-derive v0.1.1
+   Compiling serde_derive v1.0.229
+   Compiling bytemuck_derive v1.12.1
+   Compiling thiserror-impl v2.0.21
+   Compiling encase_derive v0.13.0
+warning: `jackdaw_api_macros` (lib) generated 1 warning (1 duplicate)
+   Compiling futures-macro v0.3.34
+   Compiling bevy_reflect_derive v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#2759b0c1)
+   Compiling bevy_ecs_macros v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#2759b0c1)
+   Compiling bevy_derive v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#2759b0c1)
+   Compiling zerofrom-derive v0.1.8
+   Compiling yoke-derive v0.8.4
+   Compiling displaydoc v0.2.7
+    Checking windows-core v0.62.2
+    Checking windows-numerics v0.3.1
+    Checking windows-future v0.3.2
+    Checking windows-collections v0.3.2
+    Checking windows v0.62.2
+   Compiling zerovec-derive v0.11.7
+    Checking futures-util v0.3.34
+    Checking bytemuck v1.25.2
+    Checking bitflags v2.13.2
+    Checking async-io v2.6.0
+    Checking png v0.18.1
+    Checking notify-types v2.1.0
+   Compiling bevy_asset_macros v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#2759b0c1)
+    Checking notify v8.2.1
+    Checking image v0.25.10
+    Checking notify-debouncer-full v0.7.0
+    Checking ktx2 v0.5.0
+    Checking logos v0.16.1
+    Checking spirv v0.4.0+sdk-1.4.341.0
+    Checking tracing v0.1.44
+   Compiling wesl-macros v0.6.0
+    Checking font-types v0.12.7
+   Compiling bevy_gizmos_macros v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#2759b0c1)
+    Checking read-fonts v0.41.0
+   Compiling bevy_material_macros v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#2759b0c1)
+    Checking encase v0.13.0
+   Compiling bevy_extract_macros v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#2759b0c1)
+    Checking glam v0.33.12
+    Checking skrifa v0.44.0
+   Compiling tokio-macros v2.7.2
+    Checking arboard v3.7.0
+   Compiling bevy_encase_derive v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#2759b0c1)
+   Compiling bevy_animation_macros v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#2759b0c1)
+    Checking serde v1.0.229
+   Compiling bevy_state_macros v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#2759b0c1)
+    Checking swash v0.2.10
+    Checking smallvec v1.16.4
+    Checking naga-types v30.0.1
+    Checking smol_str v0.2.2
+    Checking wgpu-types v30.0.1
+    Checking bevy_platform v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#2759b0c1)
+    Checking petgraph v0.8.3
+    Checking bevy_utils v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#2759b0c1)
+    Checking ron v0.12.2
+    Checking tracing-subscriber v0.3.23
+    Checking hexasphere v19.0.0
+    Checking parking_lot_core v0.9.12
+    Checking accesskit v0.25.2
+    Checking harfrust v0.12.0
+    Checking taffy v0.15.1
+    Checking parking_lot v0.12.5
+    Checking half v2.7.1
+    Checking gltf-json v1.4.1
+    Checking zerofrom v0.1.8
+    Checking wgsl-types v0.6.0
+    Checking yoke v0.8.4
+    Checking naga v30.0.1
+   Compiling bevy_render_macros v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#2759b0c1)
+    Checking accesskit_consumer v0.39.2
+    Checking winit v0.30.13
+    Checking zerovec v0.11.9
+    Checking zerotrie v0.2.5
+   Compiling bevy_scene_macros v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#2759b0c1)
+    Checking thiserror v1.0.69
+    Checking bevy_platform v0.20.0 (E:\Project\rust\bevy-fork-pinned\crates\bevy_platform)
+   Compiling bevy_reflect_derive v0.20.0 (E:\Project\rust\bevy-fork-pinned\crates\bevy_reflect\derive)
+    Checking tinystr v0.8.5
+    Checking potential_utf v0.1.6
+    Checking gltf v1.4.1
+    Checking cdt v0.1.0
+    Checking bevy_utils v0.20.0 (E:\Project\rust\bevy-fork-pinned\crates\bevy_utils)
+    Checking icu_locale_core v2.4.0
+    Checking icu_collections v2.4.0
+   Compiling unic-langid-impl v0.9.6
+   Compiling bevy_ecs_macros v0.20.0 (E:\Project\rust\bevy-fork-pinned\crates\bevy_ecs\macros)
+   Compiling bevy_derive v0.20.0 (E:\Project\rust\bevy-fork-pinned\crates\bevy_derive)
+    Checking jackdaw_env v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_env)
+    Checking fluent-syntax v0.11.1
+   Compiling bevy_asset_macros v0.20.0 (E:\Project\rust\bevy-fork-pinned\crates\bevy_asset\macros)
+    Checking windows-core v0.61.2
+    Checking cobs v0.3.0
+    Checking safe_arch v1.2.0
+    Checking icu_provider v2.4.0
+    Checking postcard v1.1.3
+    Checking windows-numerics v0.2.0
+    Checking icu_properties v2.4.0
+    Checking icu_normalizer v2.4.0
+    Checking icu_locale_fallback v2.4.0
+    Checking windows-collections v0.2.0
+   Compiling unic-langid-macros-impl v0.9.6
+    Checking icu_segmenter v2.4.0
+    Checking windows-future v0.2.1
+    Checking wide v1.7.1
+    Checking windows v0.61.3
+    Checking parley_data v0.11.1
+    Checking curve25519-dalek v4.1.3
+    Checking idna_adapter v1.2.2
+    Checking basis-universal v0.3.1
+    Checking spade v2.15.1
+    Checking unic-langid-macros v0.9.6
+    Checking rstar v0.13.0
+    Checking derive_more v2.1.1
+    Checking ed25519-dalek v2.2.0
+   Compiling bevy_extract_macros v0.20.0 (E:\Project\rust\bevy-fork-pinned\crates\bevy_extract\macros)
+    Checking tokio v1.54.1
+    Checking unic-langid v0.9.6
+   Compiling num-derive v0.5.1
+    Checking intl_pluralrules v7.0.2
+    Checking bevy_reflect v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#2759b0c1)
+    Checking bevy_tasks v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#2759b0c1)
+    Checking wgsl-parse v0.6.0
+    Checking wgpu-naga-bridge v30.0.1
+    Checking bevy_tasks v0.20.0 (E:\Project\rust\bevy-fork-pinned\crates\bevy_tasks)
+    Checking fluent-langneg v0.13.1
+    Checking intl-memoizer v0.5.3
+    Checking ipc-channel v0.22.0
+    Checking idna v1.1.0
+    Checking fluent-bundle v0.15.3
+   Compiling bevy_material_macros v0.20.0 (E:\Project\rust\bevy-fork-pinned\crates\bevy_material\macros)
+    Checking url v2.5.8
+    Checking fluent v0.16.1
+    Checking fluent_content v0.0.5
+warning: `bevy_asset_macros` (lib) generated 1 warning (1 duplicate)
+    Checking bevy_platform v0.20.0
+   Compiling bevy_encase_derive v0.20.0 (E:\Project\rust\bevy-fork-pinned\crates\bevy_encase_derive)
+   Compiling bevy_gizmos_macros v0.20.0 (E:\Project\rust\bevy-fork-pinned\crates\bevy_gizmos\macros)
+    Checking bevy_utils v0.20.0
+    Checking simba v0.10.2
+    Checking jackdaw_releases v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_releases)
+    Checking hyper v1.12.0
+   Compiling bevy_reflect_derive v0.20.0
+    Checking smol-hyper v0.1.1
+    Checking jackdaw_rustc_wrapper v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_rustc_wrapper)
+   Compiling darling_macro v0.24.1
+    Checking wesl v0.6.0
+    Checking glamx v0.3.1
+   Compiling ref-cast-impl v1.0.27
+    Checking parry3d v0.31.1
+warning: `bevy_material_macros` (lib) generated 1 warning (1 duplicate)
+    Checking tower v0.5.3
+    Checking jackdaw_snap v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_snap)
+    Checking bevy_ecs v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#2759b0c1)
+    Checking bevy_math v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#2759b0c1)
+    Checking bevy_curve v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#2759b0c1)
+warning: `bevy_extract_macros` (lib) generated 1 warning (1 duplicate)
+    Checking bevy_shape v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#2759b0c1)
+warning: `bevy_encase_derive` (lib) generated 1 warning (1 duplicate)
+    Checking bevy_annotations v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#2759b0c1)
+   Compiling bevy_render_macros v0.20.0 (E:\Project\rust\bevy-fork-pinned\crates\bevy_render\macros)
+warning: `bevy_derive` (lib) generated 1 warning (1 duplicate)
+   Compiling darling v0.24.1
+    Checking chrono v0.4.45
+    Checking futures-executor v0.3.34
+    Checking glam v0.34.1
+   Compiling schemars_derive v1.2.3
+    Checking futures v0.3.34
+   Compiling rmcp-macros v3.8.0
+    Checking tower-http v0.6.11
+    Checking hyper-util v0.1.21
+    Checking bevy_color v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#2759b0c1)
+    Checking tokio-util v0.7.20
+warning: `bevy_gizmos_macros` (lib) generated 1 warning (1 duplicate)
+    Checking serde_urlencoded v0.7.1
+   Compiling avian_derive v0.2.3
+    Checking ureq v2.12.1
+    Checking ref-cast v1.0.27
+    Checking reqwest v0.12.28
+    Checking obvhs v0.4.0
+warning: `bevy_ecs_macros` (lib) generated 1 warning (1 duplicate)
+warning: `bevy_reflect_derive` (lib) generated 1 warning (1 duplicate)
+    Checking bevy_reflect v0.20.0 (E:\Project\rust\bevy-fork-pinned\crates\bevy_reflect)
+    Checking bevy_app v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#2759b0c1)
+    Checking bevy_time v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#2759b0c1)
+    Checking sysinfo v0.39.6
+    Checking bevy_transform v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#2759b0c1)
+    Checking bevy_input v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#2759b0c1)
+    Checking bevy_log v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#2759b0c1)
+    Checking gpu-allocator v0.28.0
+    Checking bevy_diagnostic v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#2759b0c1)
+    Checking fontique v0.11.1
+    Checking bevy_a11y v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#2759b0c1)
+    Checking accesskit_windows v0.35.2
+    Checking gilrs-core v0.6.8
+    Checking bevy_state v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#2759b0c1)
+    Checking bevy_asset v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#2759b0c1)
+    Checking wgpu-hal v30.0.1
+    Checking bevy_reflect v0.20.0
+    Checking gilrs v0.11.2
+    Checking parley v0.11.1
+    Checking rodio v0.23.0
+warning: `bevy_render_macros` (lib) generated 1 warning (1 duplicate)
+    Checking accesskit_winit v0.34.2
+    Checking bevy_ecs v0.20.0 (E:\Project\rust\bevy-fork-pinned\crates\bevy_ecs)
+    Checking bevy_math v0.20.0 (E:\Project\rust\bevy-fork-pinned\crates\bevy_math)
+    Checking bevy_annotations v0.20.0 (E:\Project\rust\bevy-fork-pinned\crates\bevy_annotations)
+    Checking bevy_gilrs v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#2759b0c1)
+    Checking schemars v1.2.3
+    Checking bevy_shape v0.20.0 (E:\Project\rust\bevy-fork-pinned\crates\bevy_shape)
+    Checking bevy_curve v0.20.0 (E:\Project\rust\bevy-fork-pinned\crates\bevy_curve)
+    Checking wgpu-core-deps-windows-linux-android v30.0.1
+    Checking wgpu-core v30.0.1
+    Checking bevy_color v0.20.0 (E:\Project\rust\bevy-fork-pinned\crates\bevy_color)
+    Checking bevy_image v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#2759b0c1)
+    Checking bevy_mesh v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#2759b0c1)
+    Checking bevy_shader v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#2759b0c1)
+    Checking bevy_audio v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#2759b0c1)
+    Checking bevy_scene v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#2759b0c1)
+    Checking glam_matrix_extras v0.4.0
+    Checking bevy_window v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#2759b0c1)
+    Checking bevy_clipboard v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#2759b0c1)
+    Checking bevy_text v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#2759b0c1)
+    Checking bevy_heavy v0.6.0
+    Checking bevy_material v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#2759b0c1)
+    Checking bevy_animation v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#2759b0c1)
+    Checking bevy_camera v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#2759b0c1)
+    Checking wgpu v30.0.1
+    Checking jackdaw_mcp v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_mcp)
+    Checking bevy_gizmos v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#2759b0c1)
+    Checking bevy_picking v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#2759b0c1)
+    Checking bevy_extract v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#2759b0c1)
+    Checking bevy_world_serialization v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#2759b0c1)
+warning: use of deprecated type alias `rmcp::model::ServerInfo`: use `ServerConfig` instead
+  --> crates\jackdaw_mcp\src\lib.rs:24:5
+   |
+24 |     ServerInfo,
+   |     ^^^^^^^^^^
+   |
+   = note: `#[warn(deprecated)]` on by default
+
+warning: use of deprecated type alias `rmcp::model::ServerInfo`: use `ServerConfig` instead
+   --> crates\jackdaw_mcp\src\lib.rs:864:27
+    |
+864 |     fn get_info(&self) -> ServerInfo {
+    |                           ^^^^^^^^^^
+
+warning: use of deprecated type alias `rmcp::model::ServerInfo`: use `ServerConfig` instead
+   --> crates\jackdaw_mcp\src\lib.rs:865:24
+    |
+865 |         let mut info = ServerInfo::new(
+    |                        ^^^^^^^^^^
+
+warning: `jackdaw_mcp` (lib) generated 3 warnings
+    Checking bevy_render v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#2759b0c1)
+    Checking bevy_app v0.20.0 (E:\Project\rust\bevy-fork-pinned\crates\bevy_app)
+    Checking bevy_light v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#2759b0c1)
+    Checking bevy_sprite v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#2759b0c1)
+    Checking bevy_input_focus v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#2759b0c1)
+    Checking bevy_time v0.20.0 (E:\Project\rust\bevy-fork-pinned\crates\bevy_time)
+    Checking bevy_transform v0.20.0 (E:\Project\rust\bevy-fork-pinned\crates\bevy_transform)
+    Checking bevy_input v0.20.0 (E:\Project\rust\bevy-fork-pinned\crates\bevy_input)
+    Checking bevy_log v0.20.0 (E:\Project\rust\bevy-fork-pinned\crates\bevy_log)
+    Checking bevy_a11y v0.20.0 (E:\Project\rust\bevy-fork-pinned\crates\bevy_a11y)
+    Checking bevy_diagnostic v0.20.0 (E:\Project\rust\bevy-fork-pinned\crates\bevy_diagnostic)
+    Checking bevy_winit v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#2759b0c1)
+    Checking bevy_ui v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#2759b0c1)
+    Checking bevy_gltf v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#2759b0c1)
+    Checking bevy_asset v0.20.0 (E:\Project\rust\bevy-fork-pinned\crates\bevy_asset)
+    Checking bevy_window v0.20.0 (E:\Project\rust\bevy-fork-pinned\crates\bevy_window)
+    Checking bevy_mesh v0.20.0 (E:\Project\rust\bevy-fork-pinned\crates\bevy_mesh)
+    Checking bevy_image v0.20.0 (E:\Project\rust\bevy-fork-pinned\crates\bevy_image)
+    Checking bevy_shader v0.20.0 (E:\Project\rust\bevy-fork-pinned\crates\bevy_shader)
+    Checking bevy_core_pipeline v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#2759b0c1)
+    Checking bevy_ui_widgets v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#2759b0c1)
+    Checking bevy_camera v0.20.0 (E:\Project\rust\bevy-fork-pinned\crates\bevy_camera)
+    Checking bevy_material v0.20.0 (E:\Project\rust\bevy-fork-pinned\crates\bevy_material)
+    Checking bevy_sprite_render v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#2759b0c1)
+    Checking bevy_pbr v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#2759b0c1)
+    Checking bevy_anti_alias v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#2759b0c1)
+    Checking bevy_post_process v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#2759b0c1)
+    Checking bevy_extract v0.20.0 (E:\Project\rust\bevy-fork-pinned\crates\bevy_extract)
+    Checking bevy_world_serialization v0.20.0 (E:\Project\rust\bevy-fork-pinned\crates\bevy_world_serialization)
+    Checking bevy_gizmos v0.20.0 (E:\Project\rust\bevy-fork-pinned\crates\bevy_gizmos)
+    Checking bevy_picking v0.20.0 (E:\Project\rust\bevy-fork-pinned\crates\bevy_picking)
+    Checking bevy_render v0.20.0 (E:\Project\rust\bevy-fork-pinned\crates\bevy_render)
+    Checking bevy_ui_render v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#2759b0c1)
+    Checking bevy_feathers v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#2759b0c1)
+    Checking bevy_internal v0.20.0 (E:\Project\rust\bevy-fork-pinned\crates\bevy_internal)
+    Checking bevy v0.20.0 (E:\Project\rust\bevy-fork-pinned)
+    Checking bevy_transform_interpolation v0.6.0
+    Checking avian3d v0.8.0
+    Checking bevy_dev_tools v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#2759b0c1)
+    Checking bevy_gizmos_render v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#2759b0c1)
+    Checking bevy_remote v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#2759b0c1)
+error[E0277]: `MassProperties3d` does not implement `GetTypeRegistration` so cannot be registered for reflection
+  --> C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\avian3d-0.8.0\src\dynamics\rigid_body\mass_properties\components\collider.rs:80:35
+   |
+80 | pub struct ColliderMassProperties(MassProperties);
+   |                                   ^^^^^^^^^^^^^^ the trait `GetTypeRegistration` is not implemented for `MassProperties3d`
+   |
+   = note: consider annotating `MassProperties3d` with `#[derive(Reflect)]`
+note: there are multiple different versions of crate `bevy_reflect` in the dependency graph
+  --> E:\Project\rust\bevy-fork-pinned\crates\bevy_reflect\src\type_registry.rs:76:1
+   |
+76 | pub trait GetTypeRegistration: 'static {
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ this is the expected trait
+   |
+  ::: C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\bevy_reflect-0.20.0\src\type_registry.rs:76:1
+   |
+76 | pub trait GetTypeRegistration: 'static {
+   | -------------------------------------- this is the found trait
+   = help: you can use `cargo tree` to explore your dependency tree
+   = help: the following other types implement trait `GetTypeRegistration`:
+             &'static std::panic::Location<'static>
+             &'static std::path::Path
+             &'static str
+             ()
+             (A, B)
+             (A, B, C)
+             (A, B, C, D)
+             (A, B, C, D, E)
+           and 746 others
+   = note: required for `MassProperties3d` to implement `bevy::bevy_reflect::__macro_exports::RegisterForReflection`
+
+error[E0277]: `MassProperties3d` does not implement `Typed` so cannot provide static type information
+  --> C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\avian3d-0.8.0\src\dynamics\rigid_body\mass_properties\components\collider.rs:80:35
+   |
+80 | pub struct ColliderMassProperties(MassProperties);
+   |                                   ^^^^^^^^^^^^^^ the trait `Typed` is not implemented for `MassProperties3d`
+   |
+   = note: consider annotating `MassProperties3d` with `#[derive(Reflect)]`
+note: there are multiple different versions of crate `bevy_reflect` in the dependency graph
+  --> E:\Project\rust\bevy-fork-pinned\crates\bevy_reflect\src\info\typed.rs:87:1
+   |
+87 | pub trait Typed: Reflect + TypePath {
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ this is the expected trait
+   |
+  ::: C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\bevy_reflect-0.20.0\src\info\typed.rs:87:1
+   |
+87 | pub trait Typed: Reflect + TypePath {
+   | ----------------------------------- this is the found trait
+   = help: you can use `cargo tree` to explore your dependency tree
+   = help: the following other types implement trait `Typed`:
+             &'static std::panic::Location<'static>
+             &'static std::path::Path
+             &'static str
+             ()
+             (A, B)
+             (A, B, C)
+             (A, B, C, D)
+             (A, B, C, D, E)
+           and 747 others
+   = note: required for `MassProperties3d` to implement `bevy::bevy_reflect::MaybeTyped`
+note: required by a bound in `UnnamedField::new`
+  --> E:\Project\rust\bevy-fork-pinned\crates\bevy_reflect\src\fields.rs:85:36
+   |
+85 |     pub fn new<T: PartialReflect + MaybeTyped + TypePath>(index: usize) -> Self {
+   |                                    ^^^^^^^^^^ required by this bound in `UnnamedField::new`
+
+error[E0277]: `MassProperties3d` does not implement `PartialReflect` so cannot be introspected
+   --> C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\avian3d-0.8.0\src\dynamics\rigid_body\mass_properties\components\collider.rs:76:10
+    |
+ 76 | #[derive(Reflect, Clone, Copy, Component, Debug, Default, Deref, PartialEq, From)]
+    |          ^^^^^^^ the trait `bevy::bevy_reflect::PartialReflect` is not implemented for `MassProperties3d`
+    |
+    = note: consider annotating `MassProperties3d` with `#[derive(Reflect)]`
+note: there are multiple different versions of crate `bevy_reflect` in the dependency graph
+   --> E:\Project\rust\bevy-fork-pinned\crates\bevy_reflect\src\reflect.rs:106:1
+    |
+106 | pub trait PartialReflect: DynamicTypePath + Send + Sync
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ this is the expected trait
+    |
+   ::: C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\bevy_reflect-0.20.0\src\reflect.rs:106:1
+    |
+106 | pub trait PartialReflect: DynamicTypePath + Send + Sync
+    | ------------------------------------------------------- this is the found trait
+    = help: you can use `cargo tree` to explore your dependency tree
+    = help: the following other types implement trait `bevy::bevy_reflect::PartialReflect`:
+              &'static std::panic::Location<'static>
+              &'static std::path::Path
+              &'static str
+              ()
+              (A, B)
+              (A, B, C)
+              (A, B, C, D)
+              (A, B, C, D, E)
+            and 754 others
+    = note: required for the cast from `&MassProperties3d` to `&dyn bevy::bevy_reflect::PartialReflect`
+    = note: this error originates in the derive macro `Reflect` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0277]: `MassProperties3d` does not implement `PartialReflect` so cannot be introspected
+   --> C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\avian3d-0.8.0\src\dynamics\rigid_body\mass_properties\components\collider.rs:76:10
+    |
+ 76 | #[derive(Reflect, Clone, Copy, Component, Debug, Default, Deref, PartialEq, From)]
+    |          ^^^^^^^ the trait `bevy::bevy_reflect::PartialReflect` is not implemented for `MassProperties3d`
+    |
+    = note: consider annotating `MassProperties3d` with `#[derive(Reflect)]`
+note: there are multiple different versions of crate `bevy_reflect` in the dependency graph
+   --> E:\Project\rust\bevy-fork-pinned\crates\bevy_reflect\src\reflect.rs:106:1
+    |
+106 | pub trait PartialReflect: DynamicTypePath + Send + Sync
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ this is the expected trait
+    |
+   ::: C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\bevy_reflect-0.20.0\src\reflect.rs:106:1
+    |
+106 | pub trait PartialReflect: DynamicTypePath + Send + Sync
+    | ------------------------------------------------------- this is the found trait
+    = help: you can use `cargo tree` to explore your dependency tree
+    = help: the following other types implement trait `bevy::bevy_reflect::PartialReflect`:
+              &'static std::panic::Location<'static>
+              &'static std::path::Path
+              &'static str
+              ()
+              (A, B)
+              (A, B, C)
+              (A, B, C, D)
+              (A, B, C, D, E)
+            and 754 others
+    = note: required for the cast from `&mut MassProperties3d` to `&mut (dyn bevy::bevy_reflect::PartialReflect + 'static)`
+    = note: this error originates in the derive macro `Reflect` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0277]: `MassProperties3d` does not implement `PartialReflect` so cannot be introspected
+   --> C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\avian3d-0.8.0\src\dynamics\rigid_body\mass_properties\components\collider.rs:76:10
+    |
+ 76 | #[derive(Reflect, Clone, Copy, Component, Debug, Default, Deref, PartialEq, From)]
+    |          ^^^^^^^ the trait `bevy::bevy_reflect::PartialReflect` is not implemented for `MassProperties3d`
+    |
+    = note: consider annotating `MassProperties3d` with `#[derive(Reflect)]`
+note: there are multiple different versions of crate `bevy_reflect` in the dependency graph
+   --> E:\Project\rust\bevy-fork-pinned\crates\bevy_reflect\src\reflect.rs:106:1
+    |
+106 | pub trait PartialReflect: DynamicTypePath + Send + Sync
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ this is the expected trait
+    |
+   ::: C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\bevy_reflect-0.20.0\src\reflect.rs:106:1
+    |
+106 | pub trait PartialReflect: DynamicTypePath + Send + Sync
+    | ------------------------------------------------------- this is the found trait
+    = help: you can use `cargo tree` to explore your dependency tree
+    = help: the following other types implement trait `bevy::bevy_reflect::PartialReflect`:
+              &'static std::panic::Location<'static>
+              &'static std::path::Path
+              &'static str
+              ()
+              (A, B)
+              (A, B, C)
+              (A, B, C, D)
+              (A, B, C, D, E)
+            and 754 others
+    = note: this error originates in the derive macro `Reflect` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0277]: `MassProperties3d` does not implement `TypePath` so cannot provide dynamic type path information
+   --> C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\avian3d-0.8.0\src\dynamics\rigid_body\mass_properties\components\collider.rs:76:10
+    |
+ 76 | #[derive(Reflect, Clone, Copy, Component, Debug, Default, Deref, PartialEq, From)]
+    |          ^^^^^^^ the trait `bevy::bevy_reflect::TypePath` is not implemented for `MassProperties3d`
+    |
+    = note: consider annotating `MassProperties3d` with `#[derive(Reflect)]` or `#[derive(TypePath)]`
+note: there are multiple different versions of crate `bevy_reflect` in the dependency graph
+   --> E:\Project\rust\bevy-fork-pinned\crates\bevy_reflect\src\type_path.rs:86:1
+    |
+ 86 | pub trait TypePath: 'static {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^ this is the expected trait
+    |
+   ::: C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\bevy_reflect-0.20.0\src\type_path.rs:86:1
+    |
+ 86 | pub trait TypePath: 'static {
+    | --------------------------- this is the found trait
+    = help: you can use `cargo tree` to explore your dependency tree
+    = help: the following other types implement trait `bevy::bevy_reflect::TypePath`:
+              &'static T
+              &'static mut T
+              &'static std::panic::Location<'static>
+              ()
+              (P,)
+              (P1, P0)
+              (P1, P2, P0)
+              (P1, P2, P3, P0)
+            and 787 others
+    = note: required for `MassProperties3d` to implement `DynamicTypePath`
+note: required by a bound in `to_dynamic`
+   --> E:\Project\rust\bevy-fork-pinned\crates\bevy_reflect\src\reflect.rs:106:27
+    |
+106 | pub trait PartialReflect: DynamicTypePath + Send + Sync
+    |                           ^^^^^^^^^^^^^^^ required by this bound in `PartialReflect::to_dynamic`
+...
+285 |     fn to_dynamic(&self) -> Result<Box<dyn PartialReflect>, ReflectCloneError> {
+    |        ---------- required by a bound in this associated function
+    = note: this error originates in the derive macro `Reflect` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0277]: `MassProperties3d` does not implement `PartialReflect` so cannot be introspected
+   --> C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\avian3d-0.8.0\src\dynamics\rigid_body\mass_properties\components\collider.rs:80:35
+    |
+ 80 | pub struct ColliderMassProperties(MassProperties);
+    |                                   ^^^^^^^^^^^^^^ the trait `bevy::bevy_reflect::PartialReflect` is not implemented for `MassProperties3d`
+    |
+    = note: consider annotating `MassProperties3d` with `#[derive(Reflect)]`
+note: there are multiple different versions of crate `bevy_reflect` in the dependency graph
+   --> E:\Project\rust\bevy-fork-pinned\crates\bevy_reflect\src\reflect.rs:106:1
+    |
+106 | pub trait PartialReflect: DynamicTypePath + Send + Sync
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ this is the expected trait
+    |
+   ::: C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\bevy_reflect-0.20.0\src\reflect.rs:106:1
+    |
+106 | pub trait PartialReflect: DynamicTypePath + Send + Sync
+    | ------------------------------------------------------- this is the found trait
+    = help: you can use `cargo tree` to explore your dependency tree
+    = help: the following other types implement trait `bevy::bevy_reflect::PartialReflect`:
+              &'static std::panic::Location<'static>
+              &'static std::path::Path
+              &'static str
+              ()
+              (A, B)
+              (A, B, C)
+              (A, B, C, D)
+              (A, B, C, D, E)
+            and 754 others
+
+error[E0277]: `MassProperties3d` does not implement `TypePath` so cannot provide static type path information
+   --> C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\avian3d-0.8.0\src\dynamics\rigid_body\mass_properties\components\collider.rs:80:35
+    |
+ 80 | pub struct ColliderMassProperties(MassProperties);
+    |                                   ^^^^^^^^^^^^^^ the trait `bevy::bevy_reflect::TypePath` is not implemented for `MassProperties3d`
+    |
+    = note: consider annotating `MassProperties3d` with `#[derive(Reflect)]` or `#[derive(TypePath)]`
+note: there are multiple different versions of crate `bevy_reflect` in the dependency graph
+   --> E:\Project\rust\bevy-fork-pinned\crates\bevy_reflect\src\type_path.rs:86:1
+    |
+ 86 | pub trait TypePath: 'static {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^ this is the expected trait
+    |
+   ::: C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\bevy_reflect-0.20.0\src\type_path.rs:86:1
+    |
+ 86 | pub trait TypePath: 'static {
+    | --------------------------- this is the found trait
+    = help: you can use `cargo tree` to explore your dependency tree
+    = help: the following other types implement trait `bevy::bevy_reflect::TypePath`:
+              &'static T
+              &'static mut T
+              &'static std::panic::Location<'static>
+              ()
+              (P,)
+              (P1, P0)
+              (P1, P2, P0)
+              (P1, P2, P3, P0)
+            and 787 others
+note: required by a bound in `reflect_clone_and_take`
+   --> E:\Project\rust\bevy-fork-pinned\crates\bevy_reflect\src\reflect.rs:331:15
+    |
+329 |     fn reflect_clone_and_take<T: 'static>(&self) -> Result<T, ReflectCloneError>
+    |        ---------------------- required by a bound in this associated function
+330 |     where
+331 |         Self: TypePath + Sized,
+    |               ^^^^^^^^ required by this bound in `PartialReflect::reflect_clone_and_take`
+
+error[E0277]: `MassProperties3d` does not implement `FromReflect` so cannot be created through reflection
+  --> C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\avian3d-0.8.0\src\dynamics\rigid_body\mass_properties\components\collider.rs:80:35
+   |
+80 | pub struct ColliderMassProperties(MassProperties);
+   |                                   ^^^^^^^^^^^^^^ the trait `bevy::bevy_reflect::FromReflect` is not implemented for `MassProperties3d`
+   |
+   = note: consider annotating `MassProperties3d` with `#[derive(Reflect)]`
+note: there are multiple different versions of crate `bevy_reflect` in the dependency graph
+  --> E:\Project\rust\bevy-fork-pinned\crates\bevy_reflect\src\from_reflect.rs:29:1
+   |
+29 | pub trait FromReflect: Sized + 'static {
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ this is the expected trait
+   |
+  ::: C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\bevy_reflect-0.20.0\src\from_reflect.rs:29:1
+   |
+29 | pub trait FromReflect: Reflect + Sized {
+   | -------------------------------------- this is the found trait
+   = help: you can use `cargo tree` to explore your dependency tree
+   = help: the following other types implement trait `bevy::bevy_reflect::FromReflect`:
+             &'static std::panic::Location<'static>
+             &'static std::path::Path
+             &'static str
+             ()
+             (A, B)
+             (A, B, C)
+             (A, B, C, D)
+             (A, B, C, D, E)
+           and 746 others
+
+error[E0277]: `SymmetricMat3` does not implement `GetTypeRegistration` so cannot be registered for reflection
+   --> C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\avian3d-0.8.0\src\dynamics\rigid_body\mass_properties\components\computed.rs:429:14
+    |
+429 |     inverse: SymmetricTensor,
+    |              ^^^^^^^^^^^^^^^ the trait `GetTypeRegistration` is not implemented for `SymmetricMat3`
+    |
+    = note: consider annotating `SymmetricMat3` with `#[derive(Reflect)]`
+note: there are multiple different versions of crate `bevy_reflect` in the dependency graph
+   --> E:\Project\rust\bevy-fork-pinned\crates\bevy_reflect\src\type_registry.rs:76:1
+    |
+ 76 | pub trait GetTypeRegistration: 'static {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ this is the expected trait
+    |
+   ::: C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\bevy_reflect-0.20.0\src\type_registry.rs:76:1
+    |
+ 76 | pub trait GetTypeRegistration: 'static {
+    | -------------------------------------- this is the found trait
+    = help: you can use `cargo tree` to explore your dependency tree
+    = help: the following other types implement trait `GetTypeRegistration`:
+              &'static std::panic::Location<'static>
+              &'static std::path::Path
+              &'static str
+              ()
+              (A, B)
+              (A, B, C)
+              (A, B, C, D)
+              (A, B, C, D, E)
+            and 746 others
+    = note: required for `SymmetricMat3` to implement `bevy::bevy_reflect::__macro_exports::RegisterForReflection`
+
+error[E0277]: `SymmetricMat3` does not implement `Typed` so cannot provide static type information
+   --> C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\avian3d-0.8.0\src\dynamics\rigid_body\mass_properties\components\computed.rs:429:14
+    |
+429 |     inverse: SymmetricTensor,
+    |              ^^^^^^^^^^^^^^^ the trait `Typed` is not implemented for `SymmetricMat3`
+    |
+    = note: consider annotating `SymmetricMat3` with `#[derive(Reflect)]`
+note: there are multiple different versions of crate `bevy_reflect` in the dependency graph
+   --> E:\Project\rust\bevy-fork-pinned\crates\bevy_reflect\src\info\typed.rs:87:1
+    |
+ 87 | pub trait Typed: Reflect + TypePath {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ this is the expected trait
+    |
+   ::: C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\bevy_reflect-0.20.0\src\info\typed.rs:87:1
+    |
+ 87 | pub trait Typed: Reflect + TypePath {
+    | ----------------------------------- this is the found trait
+    = help: you can use `cargo tree` to explore your dependency tree
+    = help: the following other types implement trait `Typed`:
+              &'static std::panic::Location<'static>
+              &'static std::path::Path
+              &'static str
+              ()
+              (A, B)
+              (A, B, C)
+              (A, B, C, D)
+              (A, B, C, D, E)
+            and 747 others
+    = note: required for `SymmetricMat3` to implement `bevy::bevy_reflect::MaybeTyped`
+note: required by a bound in `NamedField::new`
+   --> E:\Project\rust\bevy-fork-pinned\crates\bevy_reflect\src\fields.rs:22:36
+    |
+ 22 |     pub fn new<T: PartialReflect + MaybeTyped + TypePath>(name: &'static str) -> Self {
+    |                                    ^^^^^^^^^^ required by this bound in `NamedField::new`
+
+error[E0277]: `SymmetricMat3` does not implement `PartialReflect` so cannot be introspected
+   --> C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\avian3d-0.8.0\src\dynamics\rigid_body\mass_properties\components\computed.rs:423:10
+    |
+423 | #[derive(Reflect, Clone, Copy, Component, Debug, PartialEq)]
+    |          ^^^^^^^ the trait `bevy::bevy_reflect::PartialReflect` is not implemented for `SymmetricMat3`
+    |
+    = note: consider annotating `SymmetricMat3` with `#[derive(Reflect)]`
+note: there are multiple different versions of crate `bevy_reflect` in the dependency graph
+   --> E:\Project\rust\bevy-fork-pinned\crates\bevy_reflect\src\reflect.rs:106:1
+    |
+106 | pub trait PartialReflect: DynamicTypePath + Send + Sync
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ this is the expected trait
+    |
+   ::: C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\bevy_reflect-0.20.0\src\reflect.rs:106:1
+    |
+106 | pub trait PartialReflect: DynamicTypePath + Send + Sync
+    | ------------------------------------------------------- this is the found trait
+    = help: you can use `cargo tree` to explore your dependency tree
+    = help: the following other types implement trait `bevy::bevy_reflect::PartialReflect`:
+              &'static std::panic::Location<'static>
+              &'static std::path::Path
+              &'static str
+              ()
+              (A, B)
+              (A, B, C)
+              (A, B, C, D)
+              (A, B, C, D, E)
+            and 754 others
+    = note: required for the cast from `&SymmetricMat3` to `&dyn bevy::bevy_reflect::PartialReflect`
+    = note: this error originates in the derive macro `Reflect` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0277]: `SymmetricMat3` does not implement `PartialReflect` so cannot be introspected
+   --> C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\avian3d-0.8.0\src\dynamics\rigid_body\mass_properties\components\computed.rs:423:10
+    |
+423 | #[derive(Reflect, Clone, Copy, Component, Debug, PartialEq)]
+    |          ^^^^^^^ the trait `bevy::bevy_reflect::PartialReflect` is not implemented for `SymmetricMat3`
+    |
+    = note: consider annotating `SymmetricMat3` with `#[derive(Reflect)]`
+note: there are multiple different versions of crate `bevy_reflect` in the dependency graph
+   --> E:\Project\rust\bevy-fork-pinned\crates\bevy_reflect\src\reflect.rs:106:1
+    |
+106 | pub trait PartialReflect: DynamicTypePath + Send + Sync
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ this is the expected trait
+    |
+   ::: C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\bevy_reflect-0.20.0\src\reflect.rs:106:1
+    |
+106 | pub trait PartialReflect: DynamicTypePath + Send + Sync
+    | ------------------------------------------------------- this is the found trait
+    = help: you can use `cargo tree` to explore your dependency tree
+    = help: the following other types implement trait `bevy::bevy_reflect::PartialReflect`:
+              &'static std::panic::Location<'static>
+              &'static std::path::Path
+              &'static str
+              ()
+              (A, B)
+              (A, B, C)
+              (A, B, C, D)
+              (A, B, C, D, E)
+            and 754 others
+    = note: required for the cast from `&mut SymmetricMat3` to `&mut (dyn bevy::bevy_reflect::PartialReflect + 'static)`
+    = note: this error originates in the derive macro `Reflect` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0277]: `SymmetricMat3` does not implement `PartialReflect` so cannot be introspected
+   --> C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\avian3d-0.8.0\src\dynamics\rigid_body\mass_properties\components\computed.rs:423:10
+    |
+423 | #[derive(Reflect, Clone, Copy, Component, Debug, PartialEq)]
+    |          ^^^^^^^ the trait `bevy::bevy_reflect::PartialReflect` is not implemented for `SymmetricMat3`
+    |
+    = note: consider annotating `SymmetricMat3` with `#[derive(Reflect)]`
+note: there are multiple different versions of crate `bevy_reflect` in the dependency graph
+   --> E:\Project\rust\bevy-fork-pinned\crates\bevy_reflect\src\reflect.rs:106:1
+    |
+106 | pub trait PartialReflect: DynamicTypePath + Send + Sync
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ this is the expected trait
+    |
+   ::: C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\bevy_reflect-0.20.0\src\reflect.rs:106:1
+    |
+106 | pub trait PartialReflect: DynamicTypePath + Send + Sync
+    | ------------------------------------------------------- this is the found trait
+    = help: you can use `cargo tree` to explore your dependency tree
+    = help: the following other types implement trait `bevy::bevy_reflect::PartialReflect`:
+              &'static std::panic::Location<'static>
+              &'static std::path::Path
+              &'static str
+              ()
+              (A, B)
+              (A, B, C)
+              (A, B, C, D)
+              (A, B, C, D, E)
+            and 754 others
+    = note: this error originates in the derive macro `Reflect` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0277]: `SymmetricMat3` does not implement `TypePath` so cannot provide dynamic type path information
+   --> C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\avian3d-0.8.0\src\dynamics\rigid_body\mass_properties\components\computed.rs:423:10
+    |
+423 | #[derive(Reflect, Clone, Copy, Component, Debug, PartialEq)]
+    |          ^^^^^^^ the trait `bevy::bevy_reflect::TypePath` is not implemented for `SymmetricMat3`
+    |
+    = note: consider annotating `SymmetricMat3` with `#[derive(Reflect)]` or `#[derive(TypePath)]`
+note: there are multiple different versions of crate `bevy_reflect` in the dependency graph
+   --> E:\Project\rust\bevy-fork-pinned\crates\bevy_reflect\src\type_path.rs:86:1
+    |
+ 86 | pub trait TypePath: 'static {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^ this is the expected trait
+    |
+   ::: C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\bevy_reflect-0.20.0\src\type_path.rs:86:1
+    |
+ 86 | pub trait TypePath: 'static {
+    | --------------------------- this is the found trait
+    = help: you can use `cargo tree` to explore your dependency tree
+    = help: the following other types implement trait `bevy::bevy_reflect::TypePath`:
+              &'static T
+              &'static mut T
+              &'static std::panic::Location<'static>
+              ()
+              (P,)
+              (P1, P0)
+              (P1, P2, P0)
+              (P1, P2, P3, P0)
+            and 787 others
+    = note: required for `SymmetricMat3` to implement `DynamicTypePath`
+note: required by a bound in `to_dynamic`
+   --> E:\Project\rust\bevy-fork-pinned\crates\bevy_reflect\src\reflect.rs:106:27
+    |
+106 | pub trait PartialReflect: DynamicTypePath + Send + Sync
+    |                           ^^^^^^^^^^^^^^^ required by this bound in `PartialReflect::to_dynamic`
+...
+285 |     fn to_dynamic(&self) -> Result<Box<dyn PartialReflect>, ReflectCloneError> {
+    |        ---------- required by a bound in this associated function
+    = note: this error originates in the derive macro `Reflect` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0277]: `SymmetricMat3` does not implement `PartialReflect` so cannot be introspected
+   --> C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\avian3d-0.8.0\src\dynamics\rigid_body\mass_properties\components\computed.rs:429:14
+    |
+429 |     inverse: SymmetricTensor,
+    |              ^^^^^^^^^^^^^^^ the trait `bevy::bevy_reflect::PartialReflect` is not implemented for `SymmetricMat3`
+    |
+    = note: consider annotating `SymmetricMat3` with `#[derive(Reflect)]`
+note: there are multiple different versions of crate `bevy_reflect` in the dependency graph
+   --> E:\Project\rust\bevy-fork-pinned\crates\bevy_reflect\src\reflect.rs:106:1
+    |
+106 | pub trait PartialReflect: DynamicTypePath + Send + Sync
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ this is the expected trait
+    |
+   ::: C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\bevy_reflect-0.20.0\src\reflect.rs:106:1
+    |
+106 | pub trait PartialReflect: DynamicTypePath + Send + Sync
+    | ------------------------------------------------------- this is the found trait
+    = help: you can use `cargo tree` to explore your dependency tree
+    = help: the following other types implement trait `bevy::bevy_reflect::PartialReflect`:
+              &'static std::panic::Location<'static>
+              &'static std::path::Path
+              &'static str
+              ()
+              (A, B)
+              (A, B, C)
+              (A, B, C, D)
+              (A, B, C, D, E)
+            and 754 others
+
+error[E0277]: `SymmetricMat3` does not implement `TypePath` so cannot provide static type path information
+   --> C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\avian3d-0.8.0\src\dynamics\rigid_body\mass_properties\components\computed.rs:429:14
+    |
+429 |     inverse: SymmetricTensor,
+    |              ^^^^^^^^^^^^^^^ the trait `bevy::bevy_reflect::TypePath` is not implemented for `SymmetricMat3`
+    |
+    = note: consider annotating `SymmetricMat3` with `#[derive(Reflect)]` or `#[derive(TypePath)]`
+note: there are multiple different versions of crate `bevy_reflect` in the dependency graph
+   --> E:\Project\rust\bevy-fork-pinned\crates\bevy_reflect\src\type_path.rs:86:1
+    |
+ 86 | pub trait TypePath: 'static {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^ this is the expected trait
+    |
+   ::: C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\bevy_reflect-0.20.0\src\type_path.rs:86:1
+    |
+ 86 | pub trait TypePath: 'static {
+    | --------------------------- this is the found trait
+    = help: you can use `cargo tree` to explore your dependency tree
+    = help: the following other types implement trait `bevy::bevy_reflect::TypePath`:
+              &'static T
+              &'static mut T
+              &'static std::panic::Location<'static>
+              ()
+              (P,)
+              (P1, P0)
+              (P1, P2, P0)
+              (P1, P2, P3, P0)
+            and 787 others
+note: required by a bound in `reflect_clone_and_take`
+   --> E:\Project\rust\bevy-fork-pinned\crates\bevy_reflect\src\reflect.rs:331:15
+    |
+329 |     fn reflect_clone_and_take<T: 'static>(&self) -> Result<T, ReflectCloneError>
+    |        ---------------------- required by a bound in this associated function
+330 |     where
+331 |         Self: TypePath + Sized,
+    |               ^^^^^^^^ required by this bound in `PartialReflect::reflect_clone_and_take`
+
+error[E0277]: `SymmetricMat3` does not implement `FromReflect` so cannot be created through reflection
+   --> C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\avian3d-0.8.0\src\dynamics\rigid_body\mass_properties\components\computed.rs:429:14
+    |
+429 |     inverse: SymmetricTensor,
+    |              ^^^^^^^^^^^^^^^ the trait `bevy::bevy_reflect::FromReflect` is not implemented for `SymmetricMat3`
+    |
+    = note: consider annotating `SymmetricMat3` with `#[derive(Reflect)]`
+note: there are multiple different versions of crate `bevy_reflect` in the dependency graph
+   --> E:\Project\rust\bevy-fork-pinned\crates\bevy_reflect\src\from_reflect.rs:29:1
+    |
+ 29 | pub trait FromReflect: Sized + 'static {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ this is the expected trait
+    |
+   ::: C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\bevy_reflect-0.20.0\src\from_reflect.rs:29:1
+    |
+ 29 | pub trait FromReflect: Reflect + Sized {
+    | -------------------------------------- this is the found trait
+    = help: you can use `cargo tree` to explore your dependency tree
+    = help: the following other types implement trait `bevy::bevy_reflect::FromReflect`:
+              &'static std::panic::Location<'static>
+              &'static std::path::Path
+              &'static str
+              ()
+              (A, B)
+              (A, B, C)
+              (A, B, C, D)
+              (A, B, C, D, E)
+            and 746 others
+
+    Checking bevy_internal v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#2759b0c1)
+error[E0277]: `SymmetricMat3` does not implement `GetTypeRegistration` so cannot be registered for reflection
+   --> C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\avian3d-0.8.0\src\dynamics\solver\solver_body\mod.rs:256:36
+    |
+256 |     effective_inv_angular_inertia: SymmetricTensor,
+    |                                    ^^^^^^^^^^^^^^^ the trait `GetTypeRegistration` is not implemented for `SymmetricMat3`
+    |
+    = note: consider annotating `SymmetricMat3` with `#[derive(Reflect)]`
+note: there are multiple different versions of crate `bevy_reflect` in the dependency graph
+   --> E:\Project\rust\bevy-fork-pinned\crates\bevy_reflect\src\type_registry.rs:76:1
+    |
+ 76 | pub trait GetTypeRegistration: 'static {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ this is the expected trait
+    |
+   ::: C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\bevy_reflect-0.20.0\src\type_registry.rs:76:1
+    |
+ 76 | pub trait GetTypeRegistration: 'static {
+    | -------------------------------------- this is the found trait
+    = help: you can use `cargo tree` to explore your dependency tree
+    = help: the following other types implement trait `GetTypeRegistration`:
+              &'static std::panic::Location<'static>
+              &'static std::path::Path
+              &'static str
+              ()
+              (A, B)
+              (A, B, C)
+              (A, B, C, D)
+              (A, B, C, D, E)
+            and 746 others
+    = note: required for `SymmetricMat3` to implement `bevy::bevy_reflect::__macro_exports::RegisterForReflection`
+
+error[E0277]: `SymmetricMat3` does not implement `Typed` so cannot provide static type information
+   --> C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\avian3d-0.8.0\src\dynamics\solver\solver_body\mod.rs:256:36
+    |
+256 |     effective_inv_angular_inertia: SymmetricTensor,
+    |                                    ^^^^^^^^^^^^^^^ the trait `Typed` is not implemented for `SymmetricMat3`
+    |
+    = note: consider annotating `SymmetricMat3` with `#[derive(Reflect)]`
+note: there are multiple different versions of crate `bevy_reflect` in the dependency graph
+   --> E:\Project\rust\bevy-fork-pinned\crates\bevy_reflect\src\info\typed.rs:87:1
+    |
+ 87 | pub trait Typed: Reflect + TypePath {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ this is the expected trait
+    |
+   ::: C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\bevy_reflect-0.20.0\src\info\typed.rs:87:1
+    |
+ 87 | pub trait Typed: Reflect + TypePath {
+    | ----------------------------------- this is the found trait
+    = help: you can use `cargo tree` to explore your dependency tree
+    = help: the following other types implement trait `Typed`:
+              &'static std::panic::Location<'static>
+              &'static std::path::Path
+              &'static str
+              ()
+              (A, B)
+              (A, B, C)
+              (A, B, C, D)
+              (A, B, C, D, E)
+            and 747 others
+    = note: required for `SymmetricMat3` to implement `bevy::bevy_reflect::MaybeTyped`
+note: required by a bound in `NamedField::new`
+   --> E:\Project\rust\bevy-fork-pinned\crates\bevy_reflect\src\fields.rs:22:36
+    |
+ 22 |     pub fn new<T: PartialReflect + MaybeTyped + TypePath>(name: &'static str) -> Self {
+    |                                    ^^^^^^^^^^ required by this bound in `NamedField::new`
+
+error[E0277]: `SymmetricMat3` does not implement `PartialReflect` so cannot be introspected
+   --> C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\avian3d-0.8.0\src\dynamics\solver\solver_body\mod.rs:227:24
+    |
+227 | #[derive(Clone, Debug, Reflect)]
+    |                        ^^^^^^^ the trait `bevy::bevy_reflect::PartialReflect` is not implemented for `SymmetricMat3`
+    |
+    = note: consider annotating `SymmetricMat3` with `#[derive(Reflect)]`
+note: there are multiple different versions of crate `bevy_reflect` in the dependency graph
+   --> E:\Project\rust\bevy-fork-pinned\crates\bevy_reflect\src\reflect.rs:106:1
+    |
+106 | pub trait PartialReflect: DynamicTypePath + Send + Sync
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ this is the expected trait
+    |
+   ::: C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\bevy_reflect-0.20.0\src\reflect.rs:106:1
+    |
+106 | pub trait PartialReflect: DynamicTypePath + Send + Sync
+    | ------------------------------------------------------- this is the found trait
+    = help: you can use `cargo tree` to explore your dependency tree
+    = help: the following other types implement trait `bevy::bevy_reflect::PartialReflect`:
+              &'static std::panic::Location<'static>
+              &'static std::path::Path
+              &'static str
+              ()
+              (A, B)
+              (A, B, C)
+              (A, B, C, D)
+              (A, B, C, D, E)
+            and 754 others
+    = note: required for the cast from `&SymmetricMat3` to `&dyn bevy::bevy_reflect::PartialReflect`
+    = note: this error originates in the derive macro `Reflect` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0277]: `SymmetricMat3` does not implement `PartialReflect` so cannot be introspected
+   --> C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\avian3d-0.8.0\src\dynamics\solver\solver_body\mod.rs:227:24
+    |
+227 | #[derive(Clone, Debug, Reflect)]
+    |                        ^^^^^^^ the trait `bevy::bevy_reflect::PartialReflect` is not implemented for `SymmetricMat3`
+    |
+    = note: consider annotating `SymmetricMat3` with `#[derive(Reflect)]`
+note: there are multiple different versions of crate `bevy_reflect` in the dependency graph
+   --> E:\Project\rust\bevy-fork-pinned\crates\bevy_reflect\src\reflect.rs:106:1
+    |
+106 | pub trait PartialReflect: DynamicTypePath + Send + Sync
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ this is the expected trait
+    |
+   ::: C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\bevy_reflect-0.20.0\src\reflect.rs:106:1
+    |
+106 | pub trait PartialReflect: DynamicTypePath + Send + Sync
+    | ------------------------------------------------------- this is the found trait
+    = help: you can use `cargo tree` to explore your dependency tree
+    = help: the following other types implement trait `bevy::bevy_reflect::PartialReflect`:
+              &'static std::panic::Location<'static>
+              &'static std::path::Path
+              &'static str
+              ()
+              (A, B)
+              (A, B, C)
+              (A, B, C, D)
+              (A, B, C, D, E)
+            and 754 others
+    = note: required for the cast from `&mut SymmetricMat3` to `&mut (dyn bevy::bevy_reflect::PartialReflect + 'static)`
+    = note: this error originates in the derive macro `Reflect` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0277]: `SymmetricMat3` does not implement `PartialReflect` so cannot be introspected
+   --> C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\avian3d-0.8.0\src\dynamics\solver\solver_body\mod.rs:227:24
+    |
+227 | #[derive(Clone, Debug, Reflect)]
+    |                        ^^^^^^^ the trait `bevy::bevy_reflect::PartialReflect` is not implemented for `SymmetricMat3`
+    |
+    = note: consider annotating `SymmetricMat3` with `#[derive(Reflect)]`
+note: there are multiple different versions of crate `bevy_reflect` in the dependency graph
+   --> E:\Project\rust\bevy-fork-pinned\crates\bevy_reflect\src\reflect.rs:106:1
+    |
+106 | pub trait PartialReflect: DynamicTypePath + Send + Sync
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ this is the expected trait
+    |
+   ::: C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\bevy_reflect-0.20.0\src\reflect.rs:106:1
+    |
+106 | pub trait PartialReflect: DynamicTypePath + Send + Sync
+    | ------------------------------------------------------- this is the found trait
+    = help: you can use `cargo tree` to explore your dependency tree
+    = help: the following other types implement trait `bevy::bevy_reflect::PartialReflect`:
+              &'static std::panic::Location<'static>
+              &'static std::path::Path
+              &'static str
+              ()
+              (A, B)
+              (A, B, C)
+              (A, B, C, D)
+              (A, B, C, D, E)
+            and 754 others
+    = note: this error originates in the derive macro `Reflect` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0277]: `SymmetricMat3` does not implement `TypePath` so cannot provide dynamic type path information
+   --> C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\avian3d-0.8.0\src\dynamics\solver\solver_body\mod.rs:227:24
+    |
+227 | #[derive(Clone, Debug, Reflect)]
+    |                        ^^^^^^^ the trait `bevy::bevy_reflect::TypePath` is not implemented for `SymmetricMat3`
+    |
+    = note: consider annotating `SymmetricMat3` with `#[derive(Reflect)]` or `#[derive(TypePath)]`
+note: there are multiple different versions of crate `bevy_reflect` in the dependency graph
+   --> E:\Project\rust\bevy-fork-pinned\crates\bevy_reflect\src\type_path.rs:86:1
+    |
+ 86 | pub trait TypePath: 'static {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^ this is the expected trait
+    |
+   ::: C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\bevy_reflect-0.20.0\src\type_path.rs:86:1
+    |
+ 86 | pub trait TypePath: 'static {
+    | --------------------------- this is the found trait
+    = help: you can use `cargo tree` to explore your dependency tree
+    = help: the following other types implement trait `bevy::bevy_reflect::TypePath`:
+              &'static T
+              &'static mut T
+              &'static std::panic::Location<'static>
+              ()
+              (P,)
+              (P1, P0)
+              (P1, P2, P0)
+              (P1, P2, P3, P0)
+            and 787 others
+    = note: required for `SymmetricMat3` to implement `DynamicTypePath`
+note: required by a bound in `to_dynamic`
+   --> E:\Project\rust\bevy-fork-pinned\crates\bevy_reflect\src\reflect.rs:106:27
+    |
+106 | pub trait PartialReflect: DynamicTypePath + Send + Sync
+    |                           ^^^^^^^^^^^^^^^ required by this bound in `PartialReflect::to_dynamic`
+...
+285 |     fn to_dynamic(&self) -> Result<Box<dyn PartialReflect>, ReflectCloneError> {
+    |        ---------- required by a bound in this associated function
+    = note: this error originates in the derive macro `Reflect` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0277]: `SymmetricMat3` does not implement `PartialReflect` so cannot be introspected
+   --> C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\avian3d-0.8.0\src\dynamics\solver\solver_body\mod.rs:256:36
+    |
+256 |     effective_inv_angular_inertia: SymmetricTensor,
+    |                                    ^^^^^^^^^^^^^^^ the trait `bevy::bevy_reflect::PartialReflect` is not implemented for `SymmetricMat3`
+    |
+    = note: consider annotating `SymmetricMat3` with `#[derive(Reflect)]`
+note: there are multiple different versions of crate `bevy_reflect` in the dependency graph
+   --> E:\Project\rust\bevy-fork-pinned\crates\bevy_reflect\src\reflect.rs:106:1
+    |
+106 | pub trait PartialReflect: DynamicTypePath + Send + Sync
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ this is the expected trait
+    |
+   ::: C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\bevy_reflect-0.20.0\src\reflect.rs:106:1
+    |
+106 | pub trait PartialReflect: DynamicTypePath + Send + Sync
+    | ------------------------------------------------------- this is the found trait
+    = help: you can use `cargo tree` to explore your dependency tree
+    = help: the following other types implement trait `bevy::bevy_reflect::PartialReflect`:
+              &'static std::panic::Location<'static>
+              &'static std::path::Path
+              &'static str
+              ()
+              (A, B)
+              (A, B, C)
+              (A, B, C, D)
+              (A, B, C, D, E)
+            and 754 others
+
+error[E0277]: `SymmetricMat3` does not implement `TypePath` so cannot provide static type path information
+   --> C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\avian3d-0.8.0\src\dynamics\solver\solver_body\mod.rs:256:36
+    |
+256 |     effective_inv_angular_inertia: SymmetricTensor,
+    |                                    ^^^^^^^^^^^^^^^ the trait `bevy::bevy_reflect::TypePath` is not implemented for `SymmetricMat3`
+    |
+    = note: consider annotating `SymmetricMat3` with `#[derive(Reflect)]` or `#[derive(TypePath)]`
+note: there are multiple different versions of crate `bevy_reflect` in the dependency graph
+   --> E:\Project\rust\bevy-fork-pinned\crates\bevy_reflect\src\type_path.rs:86:1
+    |
+ 86 | pub trait TypePath: 'static {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^ this is the expected trait
+    |
+   ::: C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\bevy_reflect-0.20.0\src\type_path.rs:86:1
+    |
+ 86 | pub trait TypePath: 'static {
+    | --------------------------- this is the found trait
+    = help: you can use `cargo tree` to explore your dependency tree
+    = help: the following other types implement trait `bevy::bevy_reflect::TypePath`:
+              &'static T
+              &'static mut T
+              &'static std::panic::Location<'static>
+              ()
+              (P,)
+              (P1, P0)
+              (P1, P2, P0)
+              (P1, P2, P3, P0)
+            and 787 others
+note: required by a bound in `reflect_clone_and_take`
+   --> E:\Project\rust\bevy-fork-pinned\crates\bevy_reflect\src\reflect.rs:331:15
+    |
+329 |     fn reflect_clone_and_take<T: 'static>(&self) -> Result<T, ReflectCloneError>
+    |        ---------------------- required by a bound in this associated function
+330 |     where
+331 |         Self: TypePath + Sized,
+    |               ^^^^^^^^ required by this bound in `PartialReflect::reflect_clone_and_take`
+
+error[E0277]: `SymmetricMat3` does not implement `FromReflect` so cannot be created through reflection
+   --> C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\avian3d-0.8.0\src\dynamics\solver\solver_body\mod.rs:256:36
+    |
+256 |     effective_inv_angular_inertia: SymmetricTensor,
+    |                                    ^^^^^^^^^^^^^^^ the trait `bevy::bevy_reflect::FromReflect` is not implemented for `SymmetricMat3`
+    |
+    = note: consider annotating `SymmetricMat3` with `#[derive(Reflect)]`
+note: there are multiple different versions of crate `bevy_reflect` in the dependency graph
+   --> E:\Project\rust\bevy-fork-pinned\crates\bevy_reflect\src\from_reflect.rs:29:1
+    |
+ 29 | pub trait FromReflect: Sized + 'static {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ this is the expected trait
+    |
+   ::: C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\bevy_reflect-0.20.0\src\from_reflect.rs:29:1
+    |
+ 29 | pub trait FromReflect: Reflect + Sized {
+    | -------------------------------------- this is the found trait
+    = help: you can use `cargo tree` to explore your dependency tree
+    = help: the following other types implement trait `bevy::bevy_reflect::FromReflect`:
+              &'static std::panic::Location<'static>
+              &'static std::path::Path
+              &'static str
+              ()
+              (A, B)
+              (A, B, C)
+              (A, B, C, D)
+              (A, B, C, D, E)
+            and 746 others
+
+    Checking bevy_dylib v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#2759b0c1)
+    Checking bevy v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#2759b0c1)
+    Checking jackdaw_geometry v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_geometry)
+    Checking jackdaw_input v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_input)
+    Checking jackdaw_commands v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_commands)
+    Checking jackdaw_localization v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_localization)
+    Checking jackdaw_bsn v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_bsn)
+    Checking jackdaw_pie_protocol v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_pie_protocol)
+    Checking jackdaw_bind v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_bind)
+    Checking jackdaw_widgets_runtime v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_widgets_runtime)
+    Checking jackdaw_camera v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_camera)
+    Checking bevy_window_chrome v0.21.0-dev (E:\Project\rust\jackdaw\crates\bevy_window_chrome)
+    Checking jackdaw_widgets v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_widgets)
+    Checking jackdaw_animation_runtime v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_animation_runtime)
+    Checking jackdaw_prefab v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_prefab)
+    Checking jackdaw_remote v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_remote)
+    Checking jackdaw_scene_types v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_scene_types)
+    Checking jackdaw_csg v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_csg)
+    Checking jackdaw_select v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_select)
+    Checking jackdaw_pick v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_pick)
+    Checking jackdaw_hull v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_hull)
+    Checking jackdaw_uv v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_uv)
+For more information about this error, try `rustc --explain E0277`.
+error: could not compile `avian3d` (lib) due to 27 previous errors
+warning: build failed, waiting for other jobs to finish...

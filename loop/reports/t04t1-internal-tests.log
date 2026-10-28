@@ -1,0 +1,30 @@
+warning: linker stderr: rust-lld: ignoring unknown argument '-fuse-ld=lld'
+  |
+  = note: `#[warn(linker_messages)]` on by default
+
+   Compiling jackdaw_api_macros v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_api_macros)
+   Compiling tempfile v3.27.0
+warning: `jackdaw_env` (build script) generated 1 warning
+   Compiling dirs-sys v0.5.0
+   Compiling jackdaw_commands v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_commands)
+   Compiling jackdaw_localization v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_localization)
+   Compiling jackdaw_terrain v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_terrain)
+   Compiling dirs v6.0.0
+   Compiling jackdaw_env v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_env)
+warning: `jackdaw_api_macros` (lib) generated 1 warning (1 duplicate)
+   Compiling jackdaw_widgets v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_widgets)
+   Compiling jackdaw_feathers v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_feathers)
+   Compiling jackdaw_panels v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_panels)
+   Compiling jackdaw_api_internal v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_api_internal)
+warning: `jackdaw_api_internal` (lib test) generated 1 warning (1 duplicate)
+    Finished `test` profile [optimized + debuginfo] target(s) in 32.42s
+     Running unittests src\lib.rs (target\debug\deps\jackdaw_api_internal-3fc001d67c83e305.exe)
+
+running 4 tests
+test keymap::types::tests::serialized_shape_is_the_documented_contract ... ok
+test document::tests::write_atomic_failure_leaves_the_old_file ... ok
+test document::tests::write_atomic_replaces_and_cleans_up ... ok
+test document::tests::sweep_takes_only_stale_editor_temps ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 62 filtered out; finished in 0.01s
+

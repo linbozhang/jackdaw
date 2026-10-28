@@ -1,0 +1,37 @@
+True
+
+entities     id              result   warnings
+--------     --              ------   --------
+{}           scene.open      finished {}      
+{4294962828} entity.add.cube finished {}      
+play_current (dirty, save policy) â€?expecting the freeze
+{}           pie.play_cur... finished {}      
+FROZE as expected; stderr tail:
+[2m2026-10-26T04:16:38.158854Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.project_window
+[2m2026-10-26T04:16:38.179312Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.build_panel
+[2m2026-10-26T04:16:38.179655Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.inspector
+[2m2026-10-26T04:16:38.179937Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.test_input
+[2m2026-10-26T04:16:38.180307Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.ui_palette
+[2m2026-10-26T04:16:38.180662Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.animation_graph
+[2m2026-10-26T04:16:38.180933Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core_windows
+[2m2026-10-26T04:16:38.181218Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.multiplayer
+[2m2026-10-26T04:16:38.181533Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.timeline
+[2m2026-10-26T04:16:38.181922Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.viewport_panel
+[2m2026-10-26T04:16:38.182530Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.game_panel
+[2m2026-10-26T04:16:38.182826Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core
+[2m2026-10-26T04:16:38.187725Z[0m [33m WARN[0m [2mjackdaw_api_internal::keymap::apply[0m[2m:[0m preset 'classic' has 10 chords claimed by more than one action: ["Home (Press, Operators): viewport2d.frame, clip.timeline.jump_start, view.frame_all", "Delete (Press, Operators): clip.delete_keyframes, entity.delete, brush.delete_element", "Backspace (Press, Operators): clip.delete_keyframes, viewport.draw_brush.remove_last_vertex, brush.delete_element", "Ctrl+KeyC (Press, Operators): clip.copy_keyframes, entity.copy", "Ctrl+KeyV (Press, Operators): clip.paste_keyframes, entity.paste", "Tab (Press, Operators): viewport.draw_brush.toggle_mode, brush.clip.cycle_mode", "Enter (Press, Operators): viewport.draw_brush.commit_polygon, brush.clip.apply", "KeyE (Press, Operators): tool.rotate, brush.mesh.extrude", "Escape (Press, Operators): brush.exit_edit_mode, selection.clear, brush.clip.clear, terrain.tool.exit_to_select", "Ctrl+KeyB (Press, Operators): brush.mesh.edge_bevel, brush.mesh.vertex_bevel"]
+[2m2026-10-26T04:16:38.188076Z[0m [32m INFO[0m [2mjackdaw::extension_lifecycle[0m[2m:[0m applied keymap preset 'classic': 110 entries, 110 bindings, 0 user rows
+[2m2026-10-26T04:16:38.240009Z[0m [32m INFO[0m [2mjackdaw::project_select[0m[2m:[0m recovery: 3 leftover session(s) from a crash; the recovery dialog will offer them
+[2m2026-10-26T04:16:38.344255Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking C:\Users\linbo.zhang\Projects\my-game\assets recursively
+[2m2026-10-26T04:16:38.344948Z[0m [32m INFO[0m [2mjackdaw::asset_catalog[0m[2m:[0m No asset catalog found, starting with empty catalog
+[2m2026-10-26T04:16:38.531504Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: pre-building the game in the background for a fast first Play
+[2m2026-10-26T04:16:38.533056Z[0m [32m INFO[0m [2mjackdaw::material_browser[0m[2m:[0m update_material_browser_ui: rebuilding with 1 entries
+[2m2026-10-26T04:16:38.752421Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 2, typed 2, referencing 0)
+[2m2026-10-26T04:16:38.753115Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 0)
+[2m2026-10-26T04:16:41.063194Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: scene.open
+[2m2026-10-26T04:16:41.125830Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: refreshed project types from schema (1 project components)
+[2m2026-10-26T04:16:43.092562Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: entity.add.cube
+[2m2026-10-26T04:16:44.136543Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: pie.play_current
+CPU/3s: 4.9
+
+

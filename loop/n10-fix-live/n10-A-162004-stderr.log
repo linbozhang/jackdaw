@@ -1,0 +1,278 @@
+[2m2026-10-26T08:20:05.415728Z[0m [32m INFO[0m [2mbevy_diagnostic::system_information_diagnostics_plugin::internal[0m[2m:[0m SystemInfo { os: "Windows 11 Pro", kernel: "26100", cpu: "AMD Ryzen 7 9700X 8-Core Processor", core_count: "8", memory: "93.4 GiB" }
+[2m2026-10-26T08:20:09.213243Z[0m [32m INFO[0m [2mbevy_render::renderer[0m[2m:[0m AdapterInfo { name: "NVIDIA GeForce RTX 5070", vendor: 4318, device: 12036, device_type: DiscreteGpu, device_pci_bus_id: "0000:01:00.0", driver: "32.0.15.9186", driver_info: "", backend: Dx12, subgroup_min_size: 32, subgroup_max_size: 32, transient_saves_memory: Some(false), limit_bucket: None }
+[2m2026-10-26T08:20:09.773150Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw::test_input::plugin` of extension `jackdaw.test_input`
+[2m2026-10-26T08:20:09.789162Z[0m [32m INFO[0m [2mbevy_pbr::cluster[0m[2m:[0m GPU clustering is supported on this device.
+[2m2026-10-26T08:20:09.789617Z[0m [32m INFO[0m [2mbevy_render::batching::gpu_preprocessing[0m[2m:[0m GPU preprocessing is fully supported on this device.
+[2m2026-10-26T08:20:09.791631Z[0m [32m INFO[0m [2mbevy_winit::system[0m[2m:[0m Creating new window jackdaw (71v0)
+[2m2026-10-26T08:20:10.101940Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE reset_view_mode_on_stop
+[2m2026-10-26T08:20:10.102479Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE cleanup_session_on_stop enter
+[2m2026-10-26T08:20:10.102968Z[0m [32m INFO[0m [2mjackdaw::pie_projection[0m[2m:[0m N10PROBE revert_preview enter
+[2m2026-10-26T08:20:10.103411Z[0m [32m INFO[0m [2mjackdaw::pie_projection[0m[2m:[0m N10PROBE revert_preview exit
+[2m2026-10-26T08:20:10.255248Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.build_panel
+[2m2026-10-26T08:20:10.256141Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.test_input
+[2m2026-10-26T08:20:10.256901Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.inspector
+[2m2026-10-26T08:20:10.257361Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.animation_graph
+[2m2026-10-26T08:20:10.257756Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.multiplayer
+[2m2026-10-26T08:20:10.260121Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.project_window
+[2m2026-10-26T08:20:10.260597Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.viewport_panel
+[2m2026-10-26T08:20:10.261473Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core
+[2m2026-10-26T08:20:10.266209Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.ui_palette
+[2m2026-10-26T08:20:10.266957Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.game_panel
+[2m2026-10-26T08:20:10.267349Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core_windows
+[2m2026-10-26T08:20:10.267777Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.timeline
+[2m2026-10-26T08:20:10.271609Z[0m [33m WARN[0m [2mjackdaw_api_internal::keymap::apply[0m[2m:[0m preset 'classic' has 10 chords claimed by more than one action: ["Home (Press, Operators): viewport2d.frame, clip.timeline.jump_start, view.frame_all", "Delete (Press, Operators): clip.delete_keyframes, entity.delete, brush.delete_element", "Backspace (Press, Operators): clip.delete_keyframes, viewport.draw_brush.remove_last_vertex, brush.delete_element", "Ctrl+KeyC (Press, Operators): clip.copy_keyframes, entity.copy", "Ctrl+KeyV (Press, Operators): clip.paste_keyframes, entity.paste", "Tab (Press, Operators): viewport.draw_brush.toggle_mode, brush.clip.cycle_mode", "Enter (Press, Operators): viewport.draw_brush.commit_polygon, brush.clip.apply", "KeyE (Press, Operators): tool.rotate, brush.mesh.extrude", "Escape (Press, Operators): brush.exit_edit_mode, selection.clear, brush.clip.clear, terrain.tool.exit_to_select", "Ctrl+KeyB (Press, Operators): brush.mesh.edge_bevel, brush.mesh.vertex_bevel"]
+[2m2026-10-26T08:20:10.272221Z[0m [32m INFO[0m [2mjackdaw::extension_lifecycle[0m[2m:[0m applied keymap preset 'classic': 110 entries, 110 bindings, 0 user rows
+[2m2026-10-26T08:20:10.544587Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking C:\Users\linbo.zhang\Projects\my-game\assets recursively
+[2m2026-10-26T08:20:10.554753Z[0m [32m INFO[0m [2mjackdaw::asset_catalog[0m[2m:[0m No asset catalog found, starting with empty catalog
+[2m2026-10-26T08:20:10.848805Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: pre-building the game in the background for a fast first Play
+[2m2026-10-26T08:20:10.862621Z[0m [32m INFO[0m [2mjackdaw::material_browser[0m[2m:[0m update_material_browser_ui: rebuilding with 1 entries
+[2m2026-10-26T08:20:11.162476Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: scene.open
+[2m2026-10-26T08:20:11.208876Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 2, typed 2, referencing 0)
+[2m2026-10-26T08:20:11.209551Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 0)
+[2m2026-10-26T08:20:13.228711Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: entity.add.cube
+[2m2026-10-26T08:20:14.333446Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: pie.play_current
+[2m2026-10-26T08:20:14.334542Z[0m [32m INFO[0m [2mjackdaw::pie_current[0m[2m:[0m N10PROBE launch_current_scene enter (save_first=true)
+[2m2026-10-26T08:20:14.334985Z[0m [32m INFO[0m [2mjackdaw::pie_current[0m[2m:[0m N10PROBE launch_current_scene resolving override
+[2m2026-10-26T08:20:14.342863Z[0m [32m INFO[0m [2mjackdaw::scene_io::save[0m[2m:[0m Scene saved to C:\Users\linbo.zhang\Projects\my-game\assets\t06-qa-n10.bsn
+[2m2026-10-26T08:20:14.343836Z[0m [32m INFO[0m [2mjackdaw::scene_io::session_journal[0m[2m:[0m session journal: C:\Users\linbo.zhang\Projects\my-game\assets\t06-qa-n10.bsn reached disk; dropping its entry
+[2m2026-10-26T08:20:14.348844Z[0m [32m INFO[0m [2mjackdaw::pie_current[0m[2m:[0m N10PROBE launch_current_scene override resolved; launching
+[2m2026-10-26T08:20:15.747867Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE spawn_instance accept task spawned
+[2m2026-10-26T08:20:15.750983Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 launched, awaiting connection
+[2m2026-10-26T08:20:15.751534Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 launched with scene override 't06-qa-n10.bsn' (the editor's scene)
+[2m2026-10-26T08:20:15.754369Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking C:\Users\linbo.zhang\Projects\my-game\assets recursively
+[2m2026-10-26T08:20:15.820160Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: refreshed project types from schema (1 project components)
+[2m2026-10-26T08:20:15.822105Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 2, typed 2, referencing 0)
+[2m2026-10-26T08:20:15.822585Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 0)
+[2m2026-10-26T08:20:15.998194Z[0m [33m WARN[0m [2mbevy_ecs::relationship[0m[2m:[0m The bevy_ecs::hierarchy::ChildOf(4608v1) relationship on entity 4570v1 relates to an entity that does not exist. The invalid bevy_ecs::hierarchy::ChildOf relationship has been removed.
+[2m2026-10-26T08:20:18.201947Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 connected
+[2m2026-10-26T08:20:18.629648Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 1 events for Play #1
+[2m2026-10-26T08:20:18.639606Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE enter_live_view
+[2m2026-10-26T08:20:18.640259Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE enter_live_view done
+[2m2026-10-26T08:20:18.692449Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 1 events for Play #1
+[2m2026-10-26T08:20:19.877822Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 5 events for Play #1
+[2m2026-10-26T08:20:19.931845Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:19.969729Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:20.010847Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 4 events for Play #1
+[2m2026-10-26T08:20:20.033655Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:20.076505Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:20.097895Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:20.114407Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:20.164650Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:20.187924Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:20.211204Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:20.239768Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:20.258027Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:20.304291Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:20.328719Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:20.360072Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:20.380261Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:20.399787Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:20.417445Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:20.439452Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:20.475899Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:20.496462Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:20.518188Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:20.542970Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:20.576567Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:20.594786Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:20.617755Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:20.651376Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:20.672212Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:20.694933Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:20.714652Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:20.749235Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:20.766753Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:20.788635Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:20.820399Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:20.838393Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:20.857824Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:20.892092Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:20.911028Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:20.934392Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:20.954973Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:20.970978Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:20.995943Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:21.025789Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:21.045017Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:21.066481Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:21.085311Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:21.106859Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:21.126173Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:21.157993Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:21.179238Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:21.198352Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:21.239714Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:21.256943Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:21.275243Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:21.293177Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:21.311851Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:21.333104Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:21.352852Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:21.370355Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:21.409349Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:21.429118Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:21.443822Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:21.459864Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:21.481608Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:21.500704Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:21.537093Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:21.554387Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:21.572251Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:21.596298Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:21.613099Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:21.630712Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:21.662584Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:21.678440Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:21.710880Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:21.736562Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:21.754589Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:21.771123Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:21.789585Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:21.806132Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:21.823680Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:21.840805Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:21.879517Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:21.896537Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:21.913027Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:21.928063Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:21.968702Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:21.988448Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:22.004940Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:22.033435Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:22.055675Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:22.078265Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:22.095882Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:22.117397Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:22.139540Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:22.157186Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:22.188498Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:22.207014Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:22.230145Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:22.249606Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:22.266223Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:22.283547Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:22.310965Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:22.343823Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:22.361327Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:22.379417Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:22.396818Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:22.437266Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:22.452528Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:22.469727Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:22.486097Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:22.503793Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:22.523999Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:22.559694Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:22.576241Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:22.593129Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:22.613929Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:22.633998Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:22.655524Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:22.670540Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:22.687829Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:22.732836Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:22.755234Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:22.772750Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:22.788683Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:22.807322Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:22.839586Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:22.856670Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:22.873248Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:22.893377Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:22.911051Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:22.930359Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:22.965191Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:22.982846Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:23.000835Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:23.023084Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:23.040070Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:23.073809Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:23.091601Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:23.111496Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:23.130097Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:23.162574Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:23.182937Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:23.205489Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:23.222168Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:23.239243Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:23.257129Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:23.275125Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:23.289761Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:23.325452Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:23.343929Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:23.359979Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:23.378574Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:23.402584Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:23.418260Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:23.453974Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:23.472227Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:23.494680Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:23.528294Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:23.545490Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:23.563729Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:23.582200Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:23.618526Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:23.637432Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:23.657115Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:23.677345Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:23.697908Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:23.720078Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:23.740890Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:23.760877Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:23.777785Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:23.824652Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:23.845016Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:23.868753Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:23.886707Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:23.908592Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:23.946029Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:23.962479Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:23.982132Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:24.024440Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:24.040505Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:24.058843Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:24.089536Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:24.110194Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:24.129257Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:24.162907Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:24.180149Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:24.198567Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:24.216901Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:24.239632Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:24.257841Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:24.274053Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:24.308284Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:24.332276Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:24.349297Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:24.366699Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:24.383977Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:24.417250Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:24.433544Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:24.449990Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:24.486020Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:24.504281Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:24.519255Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:24.540518Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:24.578113Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:24.600074Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:24.619100Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:24.655961Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:24.674505Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:24.693243Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:24.711178Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:24.727133Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:24.766984Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:24.785564Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:24.803329Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:24.822416Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:24.840774Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:24.857869Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:24.874790Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:24.893756Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:24.912116Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:24.929399Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:24.962706Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:24.980759Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:25.000164Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:25.020259Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1
+[2m2026-10-26T08:20:25.035724Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m N10PROBE drain_game_events projecting 2 events for Play #1

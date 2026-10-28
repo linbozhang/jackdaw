@@ -1,0 +1,22 @@
+    Blocking waiting for file lock on build directory
+warning: linker stderr: rust-lld: ignoring unknown argument '-fuse-ld=lld'
+  |
+  = note: `#[warn(linker_messages)]` on by default
+
+warning: `jackdaw_env` (build script) generated 1 warning
+   Compiling jackdaw_env v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_env)
+warning: `jackdaw_project_build` (build script) generated 1 warning (1 duplicate)
+   Compiling jackdaw_project_build v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_project_build)
+warning: `jackdaw_package` (build script) generated 1 warning (1 duplicate)
+warning: `jackdaw_api_macros` (lib) generated 1 warning (1 duplicate)
+    Checking jackdaw_api_internal v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_api_internal)
+    Checking jackdaw_package v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_package)
+    Checking jackdaw_releases v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_releases)
+    Checking jackdaw_api v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_api)
+    Checking jackdaw_loader v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_loader)
+    Checking jackdaw_multiplayer_editor v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_multiplayer_editor)
+    Checking jackdaw_scaffold v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_scaffold)
+    Checking jackdaw_cli_internal v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_cli)
+    Checking jackdaw v0.21.0-dev (E:\Project\rust\jackdaw)
+    Checking jd v0.21.0-dev (E:\Project\rust\jackdaw\crates\jd)
+    Finished `dev` profile [optimized + debuginfo] target(s) in 44.73s

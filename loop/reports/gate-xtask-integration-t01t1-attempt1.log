@@ -1,0 +1,117 @@
+warning: linker stderr: rust-lld: ignoring unknown argument '-fuse-ld=lld'
+  |
+  = note: `#[warn(linker_messages)]` on by default
+
++ cargo nextest run --profile ci --workspace --features dylib --tests -E not (binary(bsn_game_run) | binary(editor_journey) | binary(stress_reload) | binary(scaffold_e2e) | binary(reflect_auto_register) | binary(component_shape_refresh) | binary(dylib_linkage_identity) | binary(extern_redirect_ecosystem) | binary(mcp_smoke))
+warning: linker stderr: rust-lld: ignoring unknown argument '-fuse-ld=lld'
+  |
+  = note: `#[warn(linker_messages)]` on by default
+
+warning: `jackdaw_env` (build script) generated 1 warning
+warning: `jackdaw_api_macros` (lib) generated 1 warning (1 duplicate)
+warning: `jackdaw_package` (build script) generated 1 warning (1 duplicate)
+warning: `jackdaw_project_build` (build script) generated 1 warning (1 duplicate)
+warning: `jackdaw_api_internal` (lib test) generated 1 warning (1 duplicate)
+warning: `jackdaw_animation` (lib test) generated 1 warning (1 duplicate)
+warning: `jackdaw_node_graph` (lib test) generated 1 warning (1 duplicate)
+warning: `jackdaw_panels` (lib test) generated 1 warning (1 duplicate)
+warning: `jackdaw_feathers` (lib test) generated 1 warning (1 duplicate)
+warning: `jackdaw_csg` (test "brush_booleans") generated 1 warning (1 duplicate)
+warning: `jackdaw_dylib` (lib) generated 1 warning (1 duplicate)
+warning: `jackdaw_loader` (lib test) generated 1 warning (1 duplicate)
+warning: `jackdaw_dylib` (lib test) generated 1 warning (1 duplicate)
+warning: `jackdaw_runtime` (test "ui_scene_ownership") generated 1 warning (1 duplicate)
+warning: `jackdaw_runtime` (test "gltf_source_paths") generated 1 warning (1 duplicate)
+warning: `jackdaw_runtime` (test "model_parts") generated 1 warning (1 duplicate)
+warning: `jackdaw_runtime` (test "prefab_resolution") generated 1 warning (1 duplicate)
+warning: `jackdaw_runtime` (test "retired_ui_components") generated 1 warning (1 duplicate)
+warning: `jackdaw_scaffold` (lib test) generated 1 warning (1 duplicate)
+warning: `jackdaw_runtime` (test "text_value_bindings") generated 1 warning (1 duplicate)
+warning: `jackdaw_runtime` (test "animation_scene_load") generated 1 warning (1 duplicate)
+warning: `jackdaw_runtime` (test "progress_bindings") generated 1 warning (1 duplicate)
+   Compiling jd v0.21.0-dev (E:\Project\rust\jackdaw\crates\jd)
+warning: `jackdaw_api` (lib test) generated 1 warning (1 duplicate)
+warning: `jd` (lib test) generated 1 warning (1 duplicate)
+warning: `jackdaw_runtime` (test "binary_assets") generated 1 warning (1 duplicate)
+warning: `jackdaw_runtime` (test "insert_observer_global_transform") generated 1 warning (1 duplicate)
+warning: `jackdaw_csg` (test "box_cutter_against_concave") generated 1 warning (1 duplicate)
+warning: `jackdaw_runtime` (test "scene_root_name") generated 1 warning (1 duplicate)
+warning: `jackdaw_runtime` (test "texture_import") generated 1 warning (1 duplicate)
+warning: `jackdaw_cli_internal` (lib test) generated 1 warning (1 duplicate)
+warning: `jackdaw_runtime` (test "authored_widgets") generated 1 warning (1 duplicate)
+warning: `jackdaw_runtime` (test "runtime_bindings") generated 1 warning (1 duplicate)
+warning: `jackdaw_localization` (lib test) generated 1 warning (1 duplicate)
+warning: `jackdaw_csg` (test "corner_bite_subtract") generated 1 warning (1 duplicate)
+warning: `jackdaw_csg` (test "beveled_cube_subtract") generated 1 warning (1 duplicate)
+   Compiling jackdaw_mcp v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_mcp)
+warning: `jackdaw_sdk` (lib) generated 1 warning (1 duplicate)
+warning: `jackdaw_multiplayer_editor` (lib test) generated 1 warning (1 duplicate)
+warning: `jackdaw_mcp` (lib test) generated 1 warning (1 duplicate)
+warning: `jackdaw_extension` (lib test) generated 1 warning (1 duplicate)
+warning: `jackdaw_sdk` (lib test) generated 1 warning (1 duplicate)
+warning: `jackdaw_runtime` (test "headless_render_brush_load") generated 1 warning (1 duplicate)
+warning: `jackdaw_runtime` (test "terrain_scene_load") generated 1 warning (1 duplicate)
+warning: `jackdaw_runtime` (test "headless_brush_load") generated 1 warning (1 duplicate)
+warning: `jackdaw_runtime` (test "model_lod") generated 1 warning (1 duplicate)
+warning: `jackdaw_runtime` (test "navmesh_scene_load") generated 1 warning (1 duplicate)
+warning: `jackdaw_runtime` (test "document_twins") generated 1 warning (1 duplicate)
+warning: `jackdaw_csg` (test "boolean_no_bevy") generated 1 warning (1 duplicate)
+warning: `test_fixture_extension` (lib) generated 1 warning (1 duplicate)
+warning: `viewable_camera_extension` (lib test) generated 1 warning (1 duplicate)
+warning: `test_fixture_extension` (lib test) generated 1 warning (1 duplicate)
+warning: `dynamic_extension` (lib test) generated 1 warning (1 duplicate)
+warning: `jackdaw_runtime` (test "lod_group") generated 1 warning (1 duplicate)
+warning: `jackdaw_runtime` (test "replaced_children_transforms") generated 1 warning (1 duplicate)
+warning: `jackdaw_runtime` (test "headless_bsn_load") generated 1 warning (1 duplicate)
+warning: `jackdaw_runtime` (test "catalog_loading") generated 1 warning (1 duplicate)
+warning: `jackdaw_project_build` (lib test) generated 1 warning (1 duplicate)
+warning: `jackdaw_releases` (lib test) generated 1 warning (1 duplicate)
+warning: `jackdaw_rustc_wrapper` (bin "jackdaw-rustc-wrapper" test) generated 1 warning (1 duplicate)
+warning: `jackdaw_csg` (lib test) generated 1 warning (1 duplicate)
+warning: `jackdaw_package` (lib test) generated 1 warning (1 duplicate)
+   Compiling jackdaw v0.21.0-dev (E:\Project\rust\jackdaw)
+warning: `jackdaw` (test "mcp_smoke") generated 1 warning (1 duplicate)
+error[E0786]: found invalid metadata files for crate `jackdaw`
+  --> tests\operators\..\util\mod.rs:11:5
+   |
+11 | use jackdaw::prelude::*;
+   |     ^^^^^^^
+   |
+   = note: failed to mmap file '\\?\E:\Project\rust\jackdaw\target\debug\deps\libjackdaw-a6ca96663d430eff.rlib': 页面文件太小，无法完成操作。 (os error 1455)
+
+For more information about this error, try `rustc --explain E0786`.
+error[E0463]: can't find crate for `jackdaw`
+  --> tests\bsn_game_run.rs:20:5
+   |
+20 | use jackdaw::project_build::build_project_binary;
+   |     ^^^^^^^ can't find crate
+
+error[E0463]: can't find crate for `bevy`
+ --> tests\util\mod.rs:3:5
+  |
+3 | use bevy::{
+  |     ^^^^ can't find crate
+
+error[E0463]: can't find crate for `jackdaw_api_internal`
+  --> tests\util\mod.rs:12:5
+   |
+12 | use jackdaw_api_internal::lifecycle::{ExtensionAppExt as _, OperatorEntity, enable_extension};
+   |     ^^^^^^^^^^^^^^^^^^^^ can't find crate
+
+For more information about this error, try `rustc --explain E0463`.
+error: could not compile `jackdaw` (test "operators") due to 1 previous error
+warning: build failed, waiting for other jobs to finish...
+error: could not compile `jackdaw` (test "bsn_game_run") due to 3 previous errors
+warning: `jackdaw` (test "sdk_recipe") generated 1 warning (1 duplicate)
+warning: `jackdaw` (bin "jackdaw" test) generated 1 warning (1 duplicate)
+warning: `jackdaw` (test "sdk_feature_superset") generated 1 warning (1 duplicate)
+warning: `jackdaw` (test "scaffold_e2e") generated 1 warning (1 duplicate)
+warning: `jackdaw` (test "reflect_auto_register") generated 1 warning (1 duplicate)
+warning: `jackdaw` (test "stress_reload") generated 1 warning (1 duplicate)
+warning: `jackdaw` (bin "jackdaw") generated 1 warning (1 duplicate)
+warning: `jackdaw` (test "controls") generated 1 warning (1 duplicate)
+warning: `jackdaw` (test "guards") generated 1 warning (1 duplicate)
+warning: `jackdaw` (test "prefabs") generated 1 warning (1 duplicate)
+warning: `jackdaw` (test "inspector") generated 1 warning (1 duplicate)
+warning: `jackdaw` (test "stage") generated 1 warning (1 duplicate)
+error: command `'C:\Users\linbo.zhang\.rustup\toolchains\1.99.0-x86_64-pc-windows-msvc\bin\cargo.exe' '--color=auto' test --no-run --message-format json-render-diagnostics --workspace --tests --features dylib` exited with code 101

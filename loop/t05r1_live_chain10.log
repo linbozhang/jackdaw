@@ -1,0 +1,7 @@
+PASS: startup walk logged "Indexed 1 asset files"
+PASS: audit names the gone prefab Missing (relative spelling)
+PASS: the Missing list shows the row and its Rebind
+PASS: authored bsn names the held prefab
+PASS: the file on disk names the held prefab
+PASS: the reopened scene audits clean
+CHAIN ALL PASS

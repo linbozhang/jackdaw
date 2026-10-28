@@ -1,0 +1,19 @@
+jackdaw export: building E:\Project\rust\jackdaw\loop\t07-final-live\cell7\bsn_game with profile dev
+jackdaw build: building E:\Project\rust\jackdaw\loop\t07-final-live\cell7\bsn_game
+building bsn_scene_game as a cargo binary in E:\Project\rust\jackdaw\loop\t07-final-live\cell7\bsn_game, into E:\Project\rust\jackdaw\loop\t07-final-live\cell7\bsn_game\.jackdaw\target/game
+no rust-toolchain.toml in E:\Project\rust\jackdaw\loop\t07-final-live\cell7\bsn_game; builds use the default toolchain — add one to pin the compiler (new jackdaw projects do)
+warning: linker stderr: rust-lld: ignoring unknown argument '-fuse-ld=lld'
+  |
+  = note: `#[warn(linker_messages)]` on by default
+
+warning: linker stderr: rust-lld: ignoring unknown argument '-fuse-ld=lld'
+  |
+  = note: `#[warn(linker_messages)]` on by default
+
+warning: linker stderr: rust-lld: ignoring unknown argument '-fuse-ld=lld'
+  |
+  = note: `#[warn(linker_messages)]` on by default
+
+jackdaw build: ok (502 components); binary at E:\Project\rust\jackdaw\loop\t07-final-live\cell7\bsn_game\.jackdaw\target/game\debug\bsn_scene_game.exe, schema at E:\Project\rust\jackdaw\loop\t07-final-live\cell7\bsn_game\.jackdaw\schema.json
+jackdaw export: staged E:\Project\rust\jackdaw\loop\t07-final-live\cell7\bsn_game\.jackdaw\dist\dev\bsn_scene_game.exe (2 files) in E:\Project\rust\jackdaw\loop\t07-final-live\cell7\bsn_game\.jackdaw\dist\dev
+jackdaw export: manifest written: E:\Project\rust\jackdaw\loop\t07-final-live\cell7\bsn_game\.jackdaw\dist\dev\export-manifest.json (2 files with sha256)

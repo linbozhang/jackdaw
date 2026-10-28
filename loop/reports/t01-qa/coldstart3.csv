@@ -1,0 +1,12 @@
+﻿probe,item,value,expected,ok
+COLD3,inputfocus_no_click,,non-null(window),False
+COLD3,cursor_rows_no_click,e71v0:cur=,all null,True
+COLD3,camera_entity,3716v0,non-null,True
+COLD3,state_no_click,enabled=False fly=False,enabled=F fly=F,True
+COLD3,cursor_rows_after_inproc_move,e71v0:cur=,primary non-null,True
+COLD3,os_rmb_after_inproc_move,True,True(鑻S鎸夐挳鍙揪),True
+COLD3,A_fly_on_rmb_noclick,True,True,True
+COLD3,B_enabled_windowfocus,True,True (D5#1 core),True
+COLD3,C1_zero_jump_press,dyaw=0.0000 dpitch=0.0000 posPress=0.0000 posHold=0.0000,<0.005/<0.01,True
+COLD3,C2_wasd_forward_noclick,len=0.00,>0.5 (鏃х爜=0),False
+COLD3,D_fly_after_release,p1=True p2=True p3=True p4=True p5=True p6=True,some poll=False,False

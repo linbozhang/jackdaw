@@ -1,0 +1,54 @@
+﻿{
+    "tree":  [
+                 {
+                     "children":  [
+
+                                  ],
+                     "components":  [
+                                        "bevy_camera::visibility::InheritedVisibility",
+                                        "bevy_camera::visibility::ViewVisibility",
+                                        "bevy_camera::visibility::Visibility",
+                                        "bevy_ecs::name::Name",
+                                        "bevy_transform::components::global_transform::GlobalTransform",
+                                        "bevy_transform::components::transform::Transform",
+                                        "bevy_transform::components::transform::TransformTreeChanged",
+                                        "jackdaw_bsn::document::AstNodeRef",
+                                        "jackdaw_scene_types::node_id::SceneNodeId",
+                                        "jackdaw_scene_types::types::Brush",
+                                        "jackdaw_widgets_runtime::AuthoredWidget"
+                                    ],
+                     "entity":  4294963721,
+                     "missing_source":  null,
+                     "name":  "Cube"
+                 },
+                 {
+                     "children":  [
+
+                                  ],
+                     "components":  [
+                                        "bevy_camera::primitives::CubemapFrusta",
+                                        "bevy_camera::primitives::Sphere",
+                                        "bevy_camera::visibility::CubemapVisibleEntities",
+                                        "bevy_camera::visibility::InheritedVisibility",
+                                        "bevy_camera::visibility::ViewVisibility",
+                                        "bevy_camera::visibility::Visibility",
+                                        "bevy_camera::visibility::VisibilityClass",
+                                        "bevy_ecs::name::Name",
+                                        "bevy_extract::sync_world::SubEntity\u003cbevy_render::RenderApp\u003e",
+                                        "bevy_extract::sync_world::SyncToSubWorld\u003cbevy_render::RenderApp\u003e",
+                                        "bevy_light::point_light::PointLight",
+                                        "bevy_transform::components::global_transform::GlobalTransform",
+                                        "bevy_transform::components::transform::Transform",
+                                        "bevy_transform::components::transform::TransformTreeChanged",
+                                        "jackdaw::entity_ops::SceneLight",
+                                        "jackdaw_api_internal::selection::Selected",
+                                        "jackdaw_bsn::document::AstNodeRef",
+                                        "jackdaw_scene_types::node_id::SceneNodeId",
+                                        "jackdaw_widgets_runtime::AuthoredWidget"
+                                    ],
+                     "entity":  4294963716,
+                     "missing_source":  null,
+                     "name":  "Point Light"
+                 }
+             ]
+}

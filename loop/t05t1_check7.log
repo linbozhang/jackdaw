@@ -1,0 +1,43 @@
+warning: linker stderr: rust-lld: ignoring unknown argument '-fuse-ld=lld'
+  |
+  = note: `#[warn(linker_messages)]` on by default
+
+warning: `jackdaw_env` (build script) generated 1 warning
+warning: `jackdaw_api_macros` (lib) generated 1 warning (1 duplicate)
+warning: `jackdaw_project_build` (build script) generated 1 warning (1 duplicate)
+warning: `jackdaw_package` (build script) generated 1 warning (1 duplicate)
+    Checking jackdaw v0.21.0-dev (E:\Project\rust\jackdaw)
+error[E0308]: mismatched types
+   --> tests\guards\reference_rewrite.rs:182:32
+    |
+182 |     let board = signpost_board(&app);
+    |                 -------------- ^^^^ types differ in mutability
+    |                 |
+    |                 arguments to this function are incorrect
+    |
+    = note: expected mutable reference `&mut App`
+                       found reference `&App`
+note: function defined here
+   --> tests\guards\reference_rewrite.rs:124:4
+    |
+124 | fn signpost_board(app: &mut App) -> Handle<StandardMaterial> {
+    |    ^^^^^^^^^^^^^^ -------------
+
+error[E0308]: mismatched types
+   --> tests\guards\reference_rewrite.rs:540:32
+    |
+540 |     let board = signpost_board(&app);
+    |                 -------------- ^^^^ types differ in mutability
+    |                 |
+    |                 arguments to this function are incorrect
+    |
+    = note: expected mutable reference `&mut App`
+                       found reference `&App`
+note: function defined here
+   --> tests\guards\reference_rewrite.rs:124:4
+    |
+124 | fn signpost_board(app: &mut App) -> Handle<StandardMaterial> {
+    |    ^^^^^^^^^^^^^^ -------------
+
+For more information about this error, try `rustc --explain E0308`.
+error: could not compile `jackdaw` (test "guards") due to 2 previous errors

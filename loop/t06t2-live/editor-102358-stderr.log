@@ -1,0 +1,48 @@
+[2m2026-10-26T02:23:59.217175Z[0m [32m INFO[0m [2mbevy_diagnostic::system_information_diagnostics_plugin::internal[0m[2m:[0m SystemInfo { os: "Windows 11 Pro", kernel: "26100", cpu: "AMD Ryzen 7 9700X 8-Core Processor", core_count: "8", memory: "93.4 GiB" }
+[2m2026-10-26T02:23:59.648127Z[0m [32m INFO[0m [2mbevy_render::renderer[0m[2m:[0m AdapterInfo { name: "NVIDIA GeForce RTX 5070", vendor: 4318, device: 12036, device_type: DiscreteGpu, device_pci_bus_id: "0000:01:00.0", driver: "32.0.15.9186", driver_info: "", backend: Dx12, subgroup_min_size: 32, subgroup_max_size: 32, transient_saves_memory: Some(false), limit_bucket: None }
+[2m2026-10-26T02:24:00.184280Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw::test_input::plugin` of extension `jackdaw.test_input`
+[2m2026-10-26T02:24:00.189508Z[0m [32m INFO[0m [2mbevy_pbr::cluster[0m[2m:[0m GPU clustering is supported on this device.
+[2m2026-10-26T02:24:00.189934Z[0m [32m INFO[0m [2mbevy_render::batching::gpu_preprocessing[0m[2m:[0m GPU preprocessing is fully supported on this device.
+[2m2026-10-26T02:24:00.191519Z[0m [32m INFO[0m [2mbevy_winit::system[0m[2m:[0m Creating new window jackdaw (71v0)
+[2m2026-10-26T02:24:00.409648Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.viewport_panel
+[2m2026-10-26T02:24:00.419466Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.game_panel
+[2m2026-10-26T02:24:00.419811Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.animation_graph
+[2m2026-10-26T02:24:00.420014Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.test_input
+[2m2026-10-26T02:24:00.420212Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.project_window
+[2m2026-10-26T02:24:00.420376Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core
+[2m2026-10-26T02:24:00.422878Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.multiplayer
+[2m2026-10-26T02:24:00.423186Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.build_panel
+[2m2026-10-26T02:24:00.423428Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core_windows
+[2m2026-10-26T02:24:00.423651Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.timeline
+[2m2026-10-26T02:24:00.423845Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.inspector
+[2m2026-10-26T02:24:00.424010Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.ui_palette
+[2m2026-10-26T02:24:00.427025Z[0m [33m WARN[0m [2mjackdaw_api_internal::keymap::apply[0m[2m:[0m preset 'classic' has 10 chords claimed by more than one action: ["Home (Press, Operators): viewport2d.frame, clip.timeline.jump_start, view.frame_all", "Delete (Press, Operators): clip.delete_keyframes, entity.delete, brush.delete_element", "Backspace (Press, Operators): clip.delete_keyframes, viewport.draw_brush.remove_last_vertex, brush.delete_element", "Ctrl+KeyC (Press, Operators): clip.copy_keyframes, entity.copy", "Ctrl+KeyV (Press, Operators): clip.paste_keyframes, entity.paste", "Tab (Press, Operators): viewport.draw_brush.toggle_mode, brush.clip.cycle_mode", "Enter (Press, Operators): viewport.draw_brush.commit_polygon, brush.clip.apply", "KeyE (Press, Operators): tool.rotate, brush.mesh.extrude", "Escape (Press, Operators): brush.exit_edit_mode, selection.clear, brush.clip.clear, terrain.tool.exit_to_select", "Ctrl+KeyB (Press, Operators): brush.mesh.edge_bevel, brush.mesh.vertex_bevel"]
+[2m2026-10-26T02:24:00.427286Z[0m [32m INFO[0m [2mjackdaw::extension_lifecycle[0m[2m:[0m applied keymap preset 'classic': 110 entries, 110 bindings, 0 user rows
+[2m2026-10-26T02:24:00.577069Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking C:\Users\linbo.zhang\Projects\my-game\assets recursively
+[2m2026-10-26T02:24:00.578038Z[0m [32m INFO[0m [2mjackdaw::asset_catalog[0m[2m:[0m No asset catalog found, starting with empty catalog
+[2m2026-10-26T02:24:00.795743Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: pre-building the game in the background for a fast first Play
+[2m2026-10-26T02:24:00.807418Z[0m [32m INFO[0m [2mjackdaw::material_browser[0m[2m:[0m update_material_browser_ui: rebuilding with 1 entries
+[2m2026-10-26T02:24:01.020654Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 3, typed 3, referencing 0)
+[2m2026-10-26T02:24:01.030236Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 0)
+[2m2026-10-26T02:24:03.236197Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: scene.open
+[2m2026-10-26T02:24:03.434033Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: refreshed project types from schema (1 project components)
+[2m2026-10-26T02:24:05.273332Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: scene.save
+[2m2026-10-26T02:24:05.286452Z[0m [32m INFO[0m [2mjackdaw::scene_io::save[0m[2m:[0m Scene saved to C:\Users\linbo.zhang\Projects\my-game\assets\t06-spin.bsn
+[2m2026-10-26T02:24:05.286920Z[0m [32m INFO[0m [2mjackdaw::scene_io::session_journal[0m[2m:[0m session journal: C:\Users\linbo.zhang\Projects\my-game\assets\t06-spin.bsn reached disk; dropping its entry
+[2m2026-10-26T02:24:05.294571Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking C:\Users\linbo.zhang\Projects\my-game\assets recursively
+[2m2026-10-26T02:24:05.305145Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 3, typed 3, referencing 0)
+[2m2026-10-26T02:24:05.305631Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 0)
+[2m2026-10-26T02:24:05.371106Z[0m [33m WARN[0m [2mbevy_ecs::relationship[0m[2m:[0m The bevy_ecs::hierarchy::ChildOf(4522v0) relationship on entity 4551v0 relates to an entity that does not exist. The invalid bevy_ecs::hierarchy::ChildOf relationship has been removed.
+[2m2026-10-26T02:24:05.940039Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: pie.play_current
+[2m2026-10-26T02:24:05.961300Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 launched, awaiting connection
+[2m2026-10-26T02:24:05.961874Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 launched with scene override 't06-spin.bsn' (the editor's scene)
+[2m2026-10-26T02:24:07.052112Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 connected
+[2m2026-10-26T02:24:14.264206Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: pie.stop
+[2m2026-10-26T02:24:14.273680Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 asked to stop; exiting on its own for 2s
+[2m2026-10-26T02:24:14.456656Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 exited
+[2m2026-10-26T02:24:15.629895Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: pie.play_current
+[2m2026-10-26T02:24:15.734999Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: building the game for Play #1
+[2m2026-10-26T02:24:18.090087Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 launched, awaiting connection
+[2m2026-10-26T02:24:18.099656Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 launched with scene override 't06-spin.bsn' (the editor's scene)
+[2m2026-10-26T02:24:18.447243Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: refreshed project types from schema (1 project components)
+[2m2026-10-26T02:24:19.128194Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 connected

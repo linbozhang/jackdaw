@@ -1,0 +1,56 @@
+# 新 Roadmap：支撑基础游戏开发（用户裁定 2026-10-24）
+
+> **本文件是 Loop 的需求真理之源（最高优先级）**，取代官方 Bevy Roadmap 的选题地位（官方盘点表降为参考）。
+> 来源：编辑器设计专家视角的任务清单（用户确认派发）。每个任务按 Loop 契约走完整 策划→程序→QA。
+> 通用交付要求：交互功能必须真机操作验证；涉及数据的功能必须验证「编辑→保存→重开→Play→导出」全链一致。
+> 完成一个任务勾掉一项并更新台账；顺序原则 P0→P1→P2→P3，同优先级内按编号。
+
+## P0 编辑器可靠性（先行）
+
+- [x] T01 视口导航与工具取消完整验收 ✅（2026-10-24 闭环：🔴 稳态 InputFocus 相机哑火修复——冷启动右键即环视；矩阵 25 格 21 全过/4 项用户终审兜底/0 FAIL；幅度闸论证入 open-challenges；book 三处文档。终验 loop/reports/t01-final-qa.md；用户终审清单在其 §6，重点：磁铁按钮在 150% 缩放下疑似被工具栏裁剪。）对齐 Unity（右键环视/中键平移/WASD+QE/滚轮/F 聚焦）；所有工具 Esc/RMB 取消与焦点切换。验收=真实连续操作、多次进出、不同 DPI 不跳视角；**测试必须确认导航已激活**（BRP 断言 fly 态）——既往「按下零变化」实验有 fly 未激活嫌疑，不得沿用旧 PASS。涉及 viewport.rs / input_contexts.rs / modal 链（R1b、专项#5 已有大改，本任务以验证+收尾为主）。
+- [x] T02 Inspector 参数编辑闭环 ✅（2026-10-25 闭环，main 4a9f331e：🔴 提交链绑定实体门——同帧「提交A的编辑+切B」不再写错实体（红→绿实证+dogfood 真机 5/5 零污染）；三处一致矩阵补齐；三处静默丢弃补 warn；可发现性两招（分类 tooltip+常显标头）；灯 color 闭环全数字验证（ECS+bsn+像素diff+重开保持）。终验 loop/reports/t02-final-qa.md，用户 30 秒清单在其文末，含 🟡 环境性兜底项（当日键盘提交链失效判环境性，手测异常需回报）。）相机/灯光/模型/材质/自定义组件的分类显示编辑刷新；切换实体后不得编辑旧目标。验收=改参数三处（组件/视口/存档）一致，重开一致，无隐藏无静默失败。（#6T1 已修分类，本任务收尾 #6T2 遗留：tooltip+标头、灯色编辑验证、全量 CI。）
+- [x] T03 Undo/Redo 与脏状态加固 ✅（2026-10-25 闭环，main 9175028f（T2 段）：任务1 b9a8842d/f558ec2f——数值变换与关键帧四命令落文档（despawn_scene_entity+register_entity_in_ast）、脏标记改 per-tab 全指纹（saved_doc_hash+saved_undo_len）；任务2 6df9ac89+返工 765b4599/4a2cf332——52 个自推 op 声明 undo-transparent（SELF_PUSHING 清单钉死+scan-selfpush.ps1 扫描 0 漏网，键位路径双记录 🔴 两轮返工红→绿）、hierarchy 右键 duplicate、unpack 单写路径、BRP jackdaw/history+MCP 工具；guards 138/138、integration 5074、真机探针全 failures=0。终验 loop/reports/t03-r2-qa.md（含两轮 FAIL→回流史：键位派发路径漏检、二层间接扫描盲区——教训入 loop 契约意识）。buglist 打钩 R1/R2/Y1/Y2/Y4；新发现 buglist A1（join recenter 位移不入撤销，范围外另立）。）创建/删除/复制/改父级/组件增删/数值拖拽/资源编辑/Prefab 操作全覆盖。验收=一次连续操作一条记录；取消不留痕；undo 后再编辑、保存后 undo 的脏标记恒正确。
+- [x] T04 场景保存、自动备份与崩溃恢复 ✅（2026-10-25 闭环，main c6279d61，三任务全绿：T1 写盘原子化 160893e6/17272f8f——全权威写点 write_atomic+fsync、损坏配置 .corrupt 备份、untitled Save→Save As（修反语义 🔴）、吸收 Y9/W9；T2 crash journal 75bfc76e/75278e5b——脏变化 2s 防抖同源 emit 落盘、保存 .bak 单份轮转、kill 后 journal 残留、性能闸 962µs~1.45ms、吸收 convert_to_binary；T3 恢复入口 7caf0bad/c6279d61——恢复对话框（预览+逐 tab，恢复不写盘、SHA 逐字节铁证）、N9 关闭对话框 11 格真机走查、jackdaw/recovery BRP+MCP 22 工具、book 文档。终验 loop/reports/t04-t3-qa.md PASS（终验链两句话独立复跑：kill→恢复→原文件 SHA 不变→显式保存才变；保存中断故障注入常驻）；一次提交落错分支事故已纠正+亲核。教训入契：门禁证据标准升级（日志全文复核）。）未保存恢复、多标签关闭提示、自动备份、场景+附属文件一致性。验收=异常退出可恢复（预览+选择，不覆盖）；保存中断不损坏旧文件。
+- [x] T05 资产与实体引用稳定性 ✅（2026-10-26 闭环，main 213e3370，三任务：T1 6ba0ce4b/573dc204——reference_rewrite AST 级联动重写器+rename/move/delete 引用感知+tab retarget（含 Windows watcher 句柄平台修复）+修复轮 1（文件夹 tail 拼接/全-tab 守卫）；T2 abf00a31/a034595b——asset.audit+Missing 清单+asset.rebind 结构化重绑+Y31 两阶段加载，修复轮 1 根因反转（QA「启动链未完成」被诊断 log 推翻=picker 文档面缺失+观测盲，守卫测试防再掩盖）；T3 396073fa/213e3370——MCP 23 工具+矩阵 10/10（三真机即修缺口）+book。终验 loop/reports/t05-t3-qa.md PASS：验收三句真机+headless 双侧闭环、不丢引用三腿铁证、N1/N3/Y8 红绿在。buglist +7 勾（Y8/W8/W10/W11/W12/Y31/W7）。）纹理/模型/材质/Prefab/实体引用在改名/移动/删除/重导入后的行为，补稳定标识或引用更新。验收=改名移动不丢引用；删除示影响面；缺失可定位重绑。（file.rename 现不联动引用，为已知切入点。）
+- [x] T06「当前场景 Play」与编辑态隔离 ✅（2026-10-26 闭环，main d4d49dca，三任务：T1 1bf371c1/fd37a79e——env 换把+pie.play_current+三态策略+temp 副本（决策 6 点前缀真机通过；限额中断续跑；分支交错事故一次被主控拦截）；T2 af93e730/66ef15e8——优雅停止 2s deadline+W26 降级+W17 守卫+Stop 还原 SHA 双腿铁证链（journal 计时门 HEAVY_EDITOR_LOCK 治本获独立验证）；T3 4937db6c/d4d49dca——jackdaw/pie+MCP 24 工具+矩阵 10/10+六欠账全处置+book。终验 t06-t3-qa.md PASS：验收三句真机闭环、硬条件（selection.set+#7 selection 面收口）字面满足。**尾巴（QA 三条硬性后续）**：N10 dirty+Save play_current 冻结（QA 四轮零复现=口径过强、触发面更窄；规避先 Ctrl+S）**立即立项高优另修+修后补一步回归**；N11 Inspector 合成提交工具缺口同批排期收口 #7 按钮链；台账带尾巴标记。buglist +3 勾（Y34/W26/W17）+新记 N10/N11/N12。）区分「运行当前场景」vs「启动场景运行」，处理未保存场景，摆脱模板固定 scene.bsn。验收=任意打开场景可运行；Stop 后编辑态还原；运行态修改不写回。（pie.rs:741 保存链、模板 lib.rs.template:42 固定加载为切入点。）
+- [x] T07 导出安全与可复现构建 ✅（2026-10-26 闭环，main 6119a066，三任务：T1 ef353c57/01eb4883——staging 原子交换（打包→旧 dist 转 trash→交换→清理，任一步失败旧产物完好）+大小写护栏组件级+assets_dir 配置化+名单过滤+.jackdaw-export 标记门（红证铁证级 4→0）；T2 9a80bcbc/5eae7988——--locked 四入口统一（stale-lock 真跑用例含 cargo 原始拒绝+remedy）+R9 面板（bevy 上游自愈源码级核实+显式化+真机铁证）；T3 7eae91a9/6119a066——heavy 挪盘异目录启动回归（本机全绿）+export-manifest.json（SHA-256/幂等/篡改可检出）+jackdaw/export BRP+MCP 第 25 工具+矩阵 10/10+book。终验 t07-t3-qa.md PASS：force 遗漏考古属实（T1 起 CLI --force 从未可达，本轮修复三段验证）。**P0 收官：T01-T07 七项全部闭环**。）临时目录打包后替换（失败保留旧产物）；保护非本工具目录；统一 --locked 锁定策略；导出→挪目录→异目录启动的最小自动化回归。（export.rs:168 现先清空再拷、binary.rs 无 --locked 为切入点。）
+
+## P1 基础游戏开发能力
+
+- [x] T08 游戏参数配置与运行时加载 ✅（2026-10-27 闭环，main 9a874945，四段全绿：T1 69cc71cb/211092ec——ConfigLoader/ConfigPlugin（catalog/walk 路线，.bsn 不走 bevy loader）+模板 GameConfig+往返契约+scene_snapshot 端口破案接线；T2 d213f627+返工 afe4ec41/e70348d5——三腿保护（Play/导出前自动保存 dirty 资产+退出对话框）+touches_scene_document 脏标隔离（Case 14 期望显形）+W13 三档警告色+dirty_matrix 零退化；前置 lockfix c0f9929e/3bbd5a8d——scaffold 内嵌 workspace lock 快照（pin 单包不重排传递树无原语可修，快照使 metadata 变好锁修剪器）+jd new 路径名拒绝；T3 57aa302d/9a874945——两评审项一行修（AnimationGraphDoc 保存腿+stop 关卡选区清空误判）+三态矩阵 10/10+book game-parameters 节。终验 t08-t3-qa.md PASS：三态各有直接证据（重启 C2 交叉/Play C4 QA 实测 gravity 精确加倍/导出 C7 QA LEGB 独立直证）。**尾巴**：环境事件致 C2/C7 本轮降级交叉口径（机器空窗补跑 t08-t3-qa.ps1，并入 T09 前置或用户清单）；stop 关卡残留路径挂 open-challenges。buglist +W13（累计 27 勾）。）游戏组件/配置资产/游戏 Resource 初值的作者态持久化+运行时注入（与 editor 会话态 Resources 面板区分）。验收=生命值/移速/重力等重启+Play+导出三态一致。
+- [x] T09 游戏 Input Action 配置 ✅（2026-10-27 闭环，main e0df824e，四段全绿：T0 前置（环境事件第 3 次阻断 T08 补验→后于 T2 终验窗口销案，环境归因修正=exe/deps dll 失配部分误判为机器劣化，38s 重编可解）；T1 f06b63ed/96656896——InputActionsPlugin 求值引擎+input-actions.bsn（并集合并治 Y36 病）+I3 捕获鼠标双维压制+改绑红绿机制层实证+bevy 树逐条核实 API 适配；T2 d0c2c959/bca7c5ba——三层缺口（schema 过滤/enum tuple serde/手柄评估死代码破案改 Query<&Gamepad>）+真机五项 4.5/5；T3 5fd729a3/e0df824e——矩阵 12/12 含**「不混用」双向铁证**（捕获态游戏键位直达编辑器压制/未捕获态正反）+book game-input 节+四 backlog 入 ledger。终验 t09-t3-qa.md PASS：五动作三源各有格证、双向铁证数字级复现。尾巴：实体手柄腿（无硬件）+watcher 时序+PIE 日志面+doctests bind flaky 第三次（根治建议）挂 backlog；嵌套路径 ⚪ 归 definition-assets 域。）游戏侧动作系统（键盘/鼠标/基础手柄），动作名+绑定+轴+死区+保存。验收=Move/Look/Jump/Interact/Pause 可配置生效；不与编辑器键位混用。
+- [x] T10 物理与触发器制作闭环 ✅（2026-10-28 闭环，main 75a0d0be，四段全绿：T0 探针 FAIL→主控重裁 **A+ 路线**（git bevy 树版本 0.20.0-dev 系 pre-release，[patch.crates-io] 被 semver 静默忽略→fork bevy@c9c397ba 仅改版本串 0.20.0，scripts/make-bevy-fork.ps1 入仓随 pin 重制）；T1 0972ee41+小修 357b6f80/dc4c0845——三源统一解封 avian 0.8 零 API 漂移+物理编进编辑器+默认开箱+六件封装测试复活（QA FAIL 一轮小修 unused imports 后复验 PASS）；T2 bd83b3da/1d0574be——TriggerEvents 薄桥（On<Add<Sensor>> observer 时序获 avian 0.8.0 源码三重印证）+碰撞层 bitmask 红绿+模板物理化收编/拾取过关教学+**真机不穿地首证 y=0.3000 零穿透+拾取链端到端 PickupCount**；T3 132ae3b7/75a0d0be——矩阵 12 格（7 直证+5 降级记档，格 5 玩家拾取双向区分）+**顺带修复 2 个 T1/T2 潜伏缺陷**（scaffold [patch."git"] 段缺 4 条 bevy 子 crate 致新工程 --locked 拒绝；编辑器漏 register_avian_types 致 Inspector 不可作者物理组件）+scaffold_e2e 冷编落袋+physics.md 五节。终验 t10-t3-qa.md PASS：**T10 可勾选**（验收句四腿=不穿地/受力/拾取过关/Play=导出各有独立证据+QA 亲验）。尾巴：0xc0000005 调查与 integration 9 红清理两小任务插队 T11 前（见 T10a/T10b）；层命名资产/静止体改层不重配对（avian 引擎边界）挂 ledger。）复用 Avian 集成，完善 Collider/RigidBody/Sensor/碰撞层/调试显示；触发器连游戏行为。验收=不穿地/受力正确/拾取过关可做；Play 与导出一致。
+- [x] T10a（插队·来源 T10 终验 QA 裁定）integration 9 红清理 ✅（2026-10-28 闭环，main 7dc1f7a8，单段绿：程序 bb178d11——9/9 复现→9/9 修复（6 断言漂移对齐+#4 顺带补 T1 漏加的 SELECTION_FALLBACK_OPS 两条+SDK feature 集合真缺 7 项修集合+1 测试路径 bug+#8 降级断言漂移）+同型扫描无遗漏+激活一个静默跳过的假绿测试；QA t10a-qa.md PASS：主门亲跑 5303/5303（9 failed→0）、9/9 期望变更有据（feature 名 registry 抽查 3/3、T1 漏加 git 考古坐实）、零🔴零🟡。main integration 门回绿。）
+- [x] T10b（插队·来源 T10 矩阵降级格+T2 QA 扩界）0xc0000005 启动崩溃调查 ✅（2026-10-28 闭环，零代码改动：程序调查+QA 核验 PASS 有条件→返工轮全处置。**根因=NVIDIA 驱动 591.86 nvcuda64.dll（环境）+进程创建形态为辅，代码缺陷排除**——事件日志 61/61 零例外同偏移 0x3ab984；15 格形态矩阵+QA 6 次复验；T2 旧「windowless×RemotePlugin」定性被四面夹逼推翻。**驱动态两段漂移**（Vulkan 崩→Vulkan 活+DX12 OOM），指南按时效性核对结构交付 loop/qa/t10b-crash-workaround.md（当下口径=start /B 可用、WGPU_BACKEND=dx12 禁用直至复验、根治=驱动更新/回滚待用户）。**附带产出 N13**：PIE connected 1.9s 后 drain_game_events swap_remove panic（非必现 1 hit/1 clean；签名 index 1<len 1=陈旧 EntityLocation；判 N10 外第三种独立问题，🔴候选）已立 buglist，复发率测定（connected ×10+RUST_BACKTRACE=1）折入 T11-T2 真机腿。）
+- [ ] T11 最小玩家控制器模板：复用 CameraRig，开箱即用玩家（移动/转向/跳跃/碰撞/跟随）。验收=新工程放玩家+地面即玩；关键参数 Inspector 可调。
+- [ ] T12 游戏 UI 制作与交互闭环：补齐 UI 画布/布局/按钮事件/数据绑定+四个示例界面（开始/HUD/暂停/结束）。验收=按钮触发真行为、血条绑数据、常用分辨率布局正确、绑定错误可见。
+- [ ] T13 启动场景、场景列表与切换：启动场景+构建场景清单+运行时切换+跨场景对象规则。验收=菜单↔关卡↔结束往返无残留/重复加载；导出从指定场景启动。
+- [ ] T14 Prefab 工作流完整验收：验证既有创建/实例/覆盖/应用/还原/嵌套/变体（不另起系统）。验收=改 Prefab 多实例更新+实例独有保留；undo/重开/导出一致。
+- [ ] T15 基础动画制作闭环：片段选择/预览/循环/状态切换/过渡/参数驱动。验收=待机↔行走↔跳跃可配；编辑器预览=游戏运行；坏引用有提示。
+- [ ] T16 基础音频播放与音量：Audio Source 从标记补齐为功能（引用/播放/停止/循环/音量/空间衰减）。验收=BGM/按钮音/场景音 Play+导出可响；主音量/音乐/音效三类控制。
+- [ ] T17 游戏存档与玩家设置：运行时存档接口+示例（进度/解锁/音量/输入设置），与场景文件分开。验收=重启恢复；缺文件/旧版/损坏安全回退不崩。
+- [ ] T18 资产导入与热重载闭环：PNG/JPG/GLTF(GLB)/材质/音频优先；导入选项/预览刷新/重导入/失败反馈。验收=外部改资产视口+Inspector+缩略图正确更新；坏文件不崩不丢引用。
+- [ ] T19 画质设置与游戏输出一致性：Graphics 面板边界验证+游戏运行/导出应用链路。验收=场景级曝光/Bloom/AA 在 Play+导出生效；editor 偏好不污染游戏；GI 保持禁用说明。
+- [ ] T20 最小完整示例游戏端到端验收：开始菜单+玩家移动+碰撞+拾取+胜负+音效+重开。验收=新建工程主要靠编辑器配置完成；可独立导出运行（无工具链环境）。
+
+## P2 扩展制作能力（若首款游戏是 2D，T21/T22 升 P1）
+
+- [ ] T21 完整 Sprite 作者流程：导入/PPU/Pivot/过滤/图集切分/绘制顺序/预览。验收=图片或 Sheet→可编辑可保存可运行的 2D 对象。
+- [ ] T22 Tilemap 与 2D 碰撞关卡：调色板/绘制/擦除/填充/图层/碰撞配置。验收=可制作并运行含地面/墙/触发区的小 2D 关卡；undo/保存/重开。
+- [ ] T23 模型局部材质覆盖持久化：GLTF 子节点材质覆盖+重名/重导入/失效路径处理。验收=局部换材质重开+导出保留；结构变化明确报告不静默丢。
+- [ ] T24 调试反馈与错误定位：错误关联资产/实体/组件/代码位置跳转。验收=编译失败/资产缺失/绑定错误可从面板定位。
+- [ ] T25 运行态调参与选择性回写：有限白名单组件 Live 编辑+停止后选择性保留。验收=预览差异→应用/放弃；不自动保存运行时对象。
+
+## P3（不阻塞基础开发；按用户既有裁定）
+
+- [ ] 实时 GI/Solari 接入与光照烘焙（等引擎侧成熟）
+- [ ] 高级粒子/材质节点/动画创作工具（按具体游戏需求定）
+- [ ] 大世界流送/多人协作/联网工具链
+- [ ] 亮色主题与明暗切换（用户裁定最低优先）
+- [ ] 编辑器全局键盘 UI 导航补全（用户裁定最低优先；不影响 T09）
+
+## 维护规则
+
+- 每任务闭环后：勾选 + loop/progress.md 记一行（commit/报告路径/遗留）。
+- 执行中发现清单外依赖（如 T10 依赖引擎物理版本），按需插入并标注来源任务。
+- 官方 roadmap 盘点表（roadmap-gap-analysis.md）保留作参考，不再作为选题依据。

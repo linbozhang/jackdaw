@@ -1,0 +1,52 @@
+ITEM3 gamepad devices present: 0
+True
+editor ready (schema settled)
+ITEM1a asset.new GameInputConfig: ok
+ITEM1b asset.set actions: {"jsonrpc":"2.0","id":247978917,"result":{"entities":[],"id":"asset.set","reports":["Set actions"],"result":"finished","warnings":[]}}
+input-actions.bsn on disk:
+// jackdaw 0.21.0-dev | bevy main
+// jackdaw asset jackdaw_runtime::game_input::GameInputConfig
+#"input-actions"
+jackdaw_runtime::game_input::GameInputConfig {
+    actions: [
+        jackdaw_runtime::game_input::GameActionDef {
+            name: "Move",
+            kind: jackdaw_runtime::game_input::GameActionKind::Axis2D,
+            bindings: [
+                jackdaw_runtime::game_input::GameInputBinding::Key(bevy_input::keyboard::KeyCode::ArrowUp),
+                jackdaw_runtime::game_input::GameInputBinding::Key(bevy_input::keyboard::KeyCode::ArrowDown),
+                jackdaw_runtime::game_input::GameInputBinding::Key(bevy_input::keyboard::KeyCode::ArrowLeft),
+                jackdaw_runtime::game_input::GameInputBinding::Key(bevy_input::keyboard::KeyCode::ArrowRight),
+                jackdaw_runtime::game_input::GameInputBinding::GamepadAxis {
+                    axis: bevy_input::gamepad::GamepadAxis::LeftStickX,
+                    deadzone: 0.5,
+                },
+            ],
+        },
+        jackdaw_runtime::game_input::GameActionDef {
+            name: "Jump",
+            kind: jackdaw_runtime::game_input::GameActionKind::Button,
+            bindings: [
+                jackdaw_runtime::game_input::GameInputBinding::MouseButton(bevy_input::mouse::MouseButton::Left),
+            ],
+        },
+    ],
+}
+
+ITEM1c the rebinding landed on disk: True
+True
+projection entity count: 20
+ITEM2a capture engage: {"jsonrpc":"2.0","id":234248963,"result":{"entities":[],"id":"pie.play_input_toggle","result":"finished","warnings":[]}}
+ITEM4a ArrowUp held (2s): {"dx":0,"ry":0,"dz":-12.200032711029053}
+ITEM4a PlayerMarker moves on the file's binding: True
+ITEM4b W held (2s): {"dx":0,"ry":0,"dz":0}
+ITEM4b/ITEM1d W no longer moves (the file's table won): True
+ITEM5 motion dx=240: yaw delta = -0.932039141654968
+ITEM5 mouse motion reaches the game's Look: True
+ITEM2b after Shift+Esc, ArrowUp held: {"dx":0,"ry":0,"dz":0}
+ITEM2b release stops the forwarding: True
+ITEM2c re-engaged, ArrowUp held: {"dx":0,"ry":0,"dz":-11.899978637695313}
+ITEM2c re-engage resumes the forwarding: True
+True
+CHECKLIST: item1(rebind3)=True item2(capture)=True item3(pad probe above) item4(marker)=True item5(mouse)=True
+T09_T2_LIVE_DONE

@@ -1,0 +1,40 @@
+[2m2026-10-26T19:06:58.788405Z[0m [32m INFO[0m [2mbevy_diagnostic::system_information_diagnostics_plugin::internal[0m[2m:[0m SystemInfo { os: "Windows 11 Pro", kernel: "26100", cpu: "AMD Ryzen 7 9700X 8-Core Processor", core_count: "8", memory: "93.4 GiB" }
+[2m2026-10-26T19:06:59.308293Z[0m [32m INFO[0m [2mbevy_render::renderer[0m[2m:[0m AdapterInfo { name: "NVIDIA GeForce RTX 5070", vendor: 4318, device: 12036, device_type: DiscreteGpu, device_pci_bus_id: "0000:01:00.0", driver: "32.0.15.9186", driver_info: "", backend: Dx12, subgroup_min_size: 32, subgroup_max_size: 32, transient_saves_memory: Some(false), limit_bucket: None }
+[2m2026-10-26T19:06:59.689753Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw::test_input::plugin` of extension `jackdaw.test_input`
+[2m2026-10-26T19:06:59.704223Z[0m [32m INFO[0m [2mbevy_pbr::cluster[0m[2m:[0m GPU clustering is supported on this device.
+[2m2026-10-26T19:06:59.704707Z[0m [32m INFO[0m [2mbevy_render::batching::gpu_preprocessing[0m[2m:[0m GPU preprocessing is fully supported on this device.
+[2m2026-10-26T19:06:59.706223Z[0m [32m INFO[0m [2mbevy_winit::system[0m[2m:[0m Creating new window jackdaw (71v0)
+[2m2026-10-26T19:07:00.000272Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core_windows
+[2m2026-10-26T19:07:00.001038Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core
+[2m2026-10-26T19:07:00.003714Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.timeline
+[2m2026-10-26T19:07:00.004124Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.build_panel
+[2m2026-10-26T19:07:00.004391Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.project_window
+[2m2026-10-26T19:07:00.004706Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.inspector
+[2m2026-10-26T19:07:00.005007Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.test_input
+[2m2026-10-26T19:07:00.005323Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.viewport_panel
+[2m2026-10-26T19:07:00.005713Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.ui_palette
+[2m2026-10-26T19:07:00.005998Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.animation_graph
+[2m2026-10-26T19:07:00.006240Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.multiplayer
+[2m2026-10-26T19:07:00.006463Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.game_panel
+[2m2026-10-26T19:07:00.008966Z[0m [33m WARN[0m [2mjackdaw_api_internal::keymap::apply[0m[2m:[0m preset 'classic' has 10 chords claimed by more than one action: ["Delete (Press, Operators): clip.delete_keyframes, entity.delete, brush.delete_element", "Backspace (Press, Operators): clip.delete_keyframes, viewport.draw_brush.remove_last_vertex, brush.delete_element", "Home (Press, Operators): clip.timeline.jump_start, view.frame_all, viewport2d.frame", "Ctrl+KeyC (Press, Operators): clip.copy_keyframes, entity.copy", "Ctrl+KeyV (Press, Operators): clip.paste_keyframes, entity.paste", "Tab (Press, Operators): viewport.draw_brush.toggle_mode, brush.clip.cycle_mode", "Enter (Press, Operators): viewport.draw_brush.commit_polygon, brush.clip.apply", "KeyE (Press, Operators): tool.rotate, brush.mesh.extrude", "Escape (Press, Operators): brush.exit_edit_mode, selection.clear, brush.clip.clear, terrain.tool.exit_to_select", "Ctrl+KeyB (Press, Operators): brush.mesh.edge_bevel, brush.mesh.vertex_bevel"]
+[2m2026-10-26T19:07:00.009276Z[0m [32m INFO[0m [2mjackdaw::extension_lifecycle[0m[2m:[0m applied keymap preset 'classic': 110 entries, 110 bindings, 0 user rows
+[2m2026-10-26T19:07:00.150092Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking E:\Project\rust\jackdaw\loop\qa-fixture\t08t2qa-fixture\assets recursively
+[2m2026-10-26T19:07:00.151176Z[0m [32m INFO[0m [2mjackdaw::asset_catalog[0m[2m:[0m No asset catalog found, starting with empty catalog
+[2m2026-10-26T19:07:00.332441Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: pre-building the game in the background for a fast first Play
+[2m2026-10-26T19:07:00.334719Z[0m [32m INFO[0m [2mjackdaw::material_browser[0m[2m:[0m update_material_browser_ui: rebuilding with 1 entries
+[2m2026-10-26T19:07:00.567022Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 1, typed 0, referencing 0)
+[2m2026-10-26T19:07:00.567587Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 0)
+[2m2026-10-26T19:09:47.001914Z[0m [33m WARN[0m [2mjackdaw::pie[0m[2m:[0m warning: linker stderr: rust-lld: ignoring unknown argument '-fuse-ld=lld'
+[2m2026-10-26T19:09:52.376119Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: asset.new
+[2m2026-10-26T19:09:52.376712Z[0m [33m WARN[0m [2mjackdaw_api_internal::operator[0m[2m:[0m asset.new: nothing registers 'game_config'; name its id, its type path, or the label the New Asset list shows
+[2m2026-10-26T19:09:52.376977Z[0m [33m WARN[0m [2mjackdaw_api_internal::operator[0m[2m:[0m asset.new: nothing was created, and no asset is open now
+[2m2026-10-26T19:09:52.394245Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: asset.set
+[2m2026-10-26T19:09:52.394782Z[0m [33m WARN[0m [2mjackdaw_api_internal::operator[0m[2m:[0m asset.set: no asset is open
+[2m2026-10-26T19:09:52.410538Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: asset.set
+[2m2026-10-26T19:09:52.411117Z[0m [33m WARN[0m [2mjackdaw_api_internal::operator[0m[2m:[0m asset.set: no asset is open
+[2m2026-10-26T19:09:52.426403Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: asset.save
+[2m2026-10-26T19:09:52.426922Z[0m [33m WARN[0m [2mjackdaw_api_internal::operator[0m[2m:[0m asset.save: no asset is open
+[2m2026-10-26T19:09:52.701004Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: refreshed project types from schema (3 project components)
+[2m2026-10-26T19:09:52.701980Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking E:\Project\rust\jackdaw\loop\qa-fixture\t08t2qa-fixture\assets recursively
+[2m2026-10-26T19:09:52.709011Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 1, typed 0, referencing 0)
+[2m2026-10-26T19:09:52.709427Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 0)

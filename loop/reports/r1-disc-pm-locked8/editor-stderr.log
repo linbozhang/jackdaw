@@ -1,0 +1,86 @@
+[2m2026-10-23T12:17:19.928702Z[0m [32m INFO[0m [2mbevy_diagnostic::system_information_diagnostics_plugin::internal[0m[2m:[0m SystemInfo { os: "Windows 11 Pro", kernel: "26100", cpu: "AMD Ryzen 7 9700X 8-Core Processor", core_count: "8", memory: "93.4 GiB" }
+[2m2026-10-23T12:17:20.613469Z[0m [32m INFO[0m [2mbevy_render::renderer[0m[2m:[0m AdapterInfo { name: "NVIDIA GeForce RTX 5070", vendor: 4318, device: 12036, device_type: DiscreteGpu, device_pci_bus_id: "0000:01:00.0", driver: "NVIDIA", driver_info: "591.86", backend: Vulkan, subgroup_min_size: 32, subgroup_max_size: 32, transient_saves_memory: Some(false), limit_bucket: None }
+[2m2026-10-23T12:17:21.119146Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw::test_input::plugin` of extension `jackdaw.test_input`
+[2m2026-10-23T12:17:21.124594Z[0m [32m INFO[0m [2mbevy_pbr::cluster[0m[2m:[0m GPU clustering is supported on this device.
+[2m2026-10-23T12:17:21.125094Z[0m [32m INFO[0m [2mbevy_render::batching::gpu_preprocessing[0m[2m:[0m GPU preprocessing is fully supported on this device.
+[2m2026-10-23T12:17:21.126655Z[0m [32m INFO[0m [2mbevy_winit::system[0m[2m:[0m Creating new window jackdaw (71v0)
+[2m2026-10-23T12:17:21.316884Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core_windows
+[2m2026-10-23T12:17:21.317537Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.project_window
+[2m2026-10-23T12:17:21.317871Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.animation_graph
+[2m2026-10-23T12:17:21.318128Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.game_panel
+[2m2026-10-23T12:17:21.318505Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.viewport_panel
+[2m2026-10-23T12:17:21.319231Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.ui_palette
+[2m2026-10-23T12:17:21.319637Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.timeline
+[2m2026-10-23T12:17:21.319928Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.inspector
+[2m2026-10-23T12:17:21.320155Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.test_input
+[2m2026-10-23T12:17:21.320376Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.build_panel
+[2m2026-10-23T12:17:21.320672Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.multiplayer
+[2m2026-10-23T12:17:21.321086Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core
+[2m2026-10-23T12:17:21.325640Z[0m [33m WARN[0m [2mjackdaw_api_internal::keymap::apply[0m[2m:[0m preset 'classic' has 10 chords claimed by more than one action: ["Home (Press, Operators): viewport2d.frame, clip.timeline.jump_start, view.frame_all", "Delete (Press, Operators): clip.delete_keyframes, entity.delete, brush.delete_element", "Backspace (Press, Operators): clip.delete_keyframes, viewport.draw_brush.remove_last_vertex, brush.delete_element", "Ctrl+KeyC (Press, Operators): clip.copy_keyframes, entity.copy", "Ctrl+KeyV (Press, Operators): clip.paste_keyframes, entity.paste", "Tab (Press, Operators): viewport.draw_brush.toggle_mode, brush.clip.cycle_mode", "Enter (Press, Operators): viewport.draw_brush.commit_polygon, brush.clip.apply", "KeyE (Press, Operators): tool.rotate, brush.mesh.extrude", "Escape (Press, Operators): brush.exit_edit_mode, selection.clear, brush.clip.clear, terrain.tool.exit_to_select", "Ctrl+KeyB (Press, Operators): brush.mesh.edge_bevel, brush.mesh.vertex_bevel"]
+[2m2026-10-23T12:17:21.326060Z[0m [32m INFO[0m [2mjackdaw::extension_lifecycle[0m[2m:[0m applied keymap preset 'classic': 109 entries, 109 bindings, 0 user rows
+[2m2026-10-23T12:17:21.331296Z[0m [32m INFO[0m [2mjackdaw::input_contexts[0m[2m:[0m [R1DBG] frame=0 edge+0 fly=false delta=Vec2(0.0, 0.0) len=0.00
+[2m2026-10-23T12:17:21.371316Z[0m [32m INFO[0m [2mjackdaw::viewport[0m[2m:[0m [R1DBG] frame=0 GRAB_APPLY None fly=false
+[2m2026-10-23T12:17:21.447620Z[0m [32m INFO[0m [2mjackdaw::input_contexts[0m[2m:[0m [R1DBG] frame=1 edge+1 fly=false delta=Vec2(0.0, 0.0) len=0.00
+[2m2026-10-23T12:17:21.478985Z[0m [32m INFO[0m [2mjackdaw::asset_catalog[0m[2m:[0m No asset catalog found, starting with empty catalog
+[2m2026-10-23T12:17:21.642981Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: pre-building the game in the background for a fast first Play
+[2m2026-10-23T12:17:21.647110Z[0m [32m INFO[0m [2mjackdaw::material_browser[0m[2m:[0m update_material_browser_ui: rebuilding with 1 entries
+[2m2026-10-23T12:17:21.862533Z[0m [32m INFO[0m [2mjackdaw::input_contexts[0m[2m:[0m [R1DBG] frame=2 edge+2 fly=false delta=Vec2(0.0, 0.0) len=0.00
+[2m2026-10-23T12:17:22.819080Z[0m [31mERROR[0m [2mjackdaw::pie[0m[2m:[0m PIE: game build of my-game failed: error: rustc 1.96.0 is not supported by the following packages:
+[2m2026-10-23T12:17:23.974834Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: hierarchy.open_context_menu
+[2m2026-10-23T12:17:23.984790Z[0m [32m INFO[0m [2mjackdaw::input_contexts[0m[2m:[0m [R1DBG] frame=124 FLY_EDGE delta=Vec2(15.0, 0.0) len=15.00
+[2m2026-10-23T12:17:23.985250Z[0m [33m WARN[0m [2mjackdaw::input_contexts[0m[2m:[0m [R1DBG] frame=124 BIG_DELTA_AT_PRESS edge+0 len=15.00
+[2m2026-10-23T12:17:23.992561Z[0m [32m INFO[0m [2mjackdaw::input_contexts[0m[2m:[0m [R1DBG] frame=125 edge+1 fly=true delta=Vec2(0.0, 0.0) len=0.00
+[2m2026-10-23T12:17:23.993149Z[0m [32m INFO[0m [2mjackdaw::viewport[0m[2m:[0m [R1DBG] frame=125 GRAB_APPLY Locked fly=true
+[2m2026-10-23T12:17:24.002744Z[0m [32m INFO[0m [2mjackdaw::input_contexts[0m[2m:[0m [R1DBG] frame=126 edge+2 fly=true delta=Vec2(0.0, 0.0) len=0.00
+[2m2026-10-23T12:17:24.602775Z[0m [32m INFO[0m [2mjackdaw::viewport[0m[2m:[0m [R1DBG] frame=162 GRAB_APPLY None fly=false
+[2m2026-10-23T12:17:26.387036Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: hierarchy.open_context_menu
+[2m2026-10-23T12:17:26.387848Z[0m [32m INFO[0m [2mjackdaw::input_contexts[0m[2m:[0m [R1DBG] frame=268 FLY_EDGE delta=Vec2(15.0, 0.0) len=15.00
+[2m2026-10-23T12:17:26.388244Z[0m [33m WARN[0m [2mjackdaw::input_contexts[0m[2m:[0m [R1DBG] frame=268 BIG_DELTA_AT_PRESS edge+0 len=15.00
+[2m2026-10-23T12:17:26.402075Z[0m [32m INFO[0m [2mjackdaw::input_contexts[0m[2m:[0m [R1DBG] frame=269 edge+1 fly=true delta=Vec2(0.0, 0.0) len=0.00
+[2m2026-10-23T12:17:26.402834Z[0m [32m INFO[0m [2mjackdaw::viewport[0m[2m:[0m [R1DBG] frame=269 GRAB_APPLY Locked fly=true
+[2m2026-10-23T12:17:26.420542Z[0m [32m INFO[0m [2mjackdaw::input_contexts[0m[2m:[0m [R1DBG] frame=270 edge+2 fly=true delta=Vec2(0.0, 0.0) len=0.00
+[2m2026-10-23T12:17:27.037400Z[0m [32m INFO[0m [2mjackdaw::viewport[0m[2m:[0m [R1DBG] frame=307 GRAB_APPLY None fly=false
+[2m2026-10-23T12:17:28.803168Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: hierarchy.open_context_menu
+[2m2026-10-23T12:17:28.812652Z[0m [32m INFO[0m [2mjackdaw::input_contexts[0m[2m:[0m [R1DBG] frame=413 FLY_EDGE delta=Vec2(15.0, 0.0) len=15.00
+[2m2026-10-23T12:17:28.812954Z[0m [33m WARN[0m [2mjackdaw::input_contexts[0m[2m:[0m [R1DBG] frame=413 BIG_DELTA_AT_PRESS edge+0 len=15.00
+[2m2026-10-23T12:17:28.820277Z[0m [32m INFO[0m [2mjackdaw::input_contexts[0m[2m:[0m [R1DBG] frame=414 edge+1 fly=true delta=Vec2(0.0, 0.0) len=0.00
+[2m2026-10-23T12:17:28.821069Z[0m [32m INFO[0m [2mjackdaw::viewport[0m[2m:[0m [R1DBG] frame=414 GRAB_APPLY Locked fly=true
+[2m2026-10-23T12:17:28.835721Z[0m [32m INFO[0m [2mjackdaw::input_contexts[0m[2m:[0m [R1DBG] frame=415 edge+2 fly=true delta=Vec2(0.0, 0.0) len=0.00
+[2m2026-10-23T12:17:29.452515Z[0m [32m INFO[0m [2mjackdaw::viewport[0m[2m:[0m [R1DBG] frame=452 GRAB_APPLY None fly=false
+[2m2026-10-23T12:17:31.172470Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: hierarchy.open_context_menu
+[2m2026-10-23T12:17:31.182006Z[0m [32m INFO[0m [2mjackdaw::input_contexts[0m[2m:[0m [R1DBG] frame=554 FLY_EDGE delta=Vec2(15.0, 0.0) len=15.00
+[2m2026-10-23T12:17:31.182511Z[0m [33m WARN[0m [2mjackdaw::input_contexts[0m[2m:[0m [R1DBG] frame=554 BIG_DELTA_AT_PRESS edge+0 len=15.00
+[2m2026-10-23T12:17:31.190184Z[0m [32m INFO[0m [2mjackdaw::input_contexts[0m[2m:[0m [R1DBG] frame=555 edge+1 fly=true delta=Vec2(0.0, 0.0) len=0.00
+[2m2026-10-23T12:17:31.190950Z[0m [32m INFO[0m [2mjackdaw::viewport[0m[2m:[0m [R1DBG] frame=555 GRAB_APPLY Locked fly=true
+[2m2026-10-23T12:17:31.203743Z[0m [32m INFO[0m [2mjackdaw::input_contexts[0m[2m:[0m [R1DBG] frame=556 edge+2 fly=true delta=Vec2(15.0, 0.0) len=15.00
+[2m2026-10-23T12:17:31.204310Z[0m [33m WARN[0m [2mjackdaw::input_contexts[0m[2m:[0m [R1DBG] frame=556 BIG_DELTA_AT_PRESS edge+2 len=15.00
+[2m2026-10-23T12:17:31.819905Z[0m [32m INFO[0m [2mjackdaw::viewport[0m[2m:[0m [R1DBG] frame=593 GRAB_APPLY None fly=false
+[2m2026-10-23T12:17:33.572625Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: hierarchy.open_context_menu
+[2m2026-10-23T12:17:33.582229Z[0m [32m INFO[0m [2mjackdaw::input_contexts[0m[2m:[0m [R1DBG] frame=698 FLY_EDGE delta=Vec2(15.0, 0.0) len=15.00
+[2m2026-10-23T12:17:33.582672Z[0m [33m WARN[0m [2mjackdaw::input_contexts[0m[2m:[0m [R1DBG] frame=698 BIG_DELTA_AT_PRESS edge+0 len=15.00
+[2m2026-10-23T12:17:33.590656Z[0m [32m INFO[0m [2mjackdaw::input_contexts[0m[2m:[0m [R1DBG] frame=699 edge+1 fly=true delta=Vec2(0.0, 0.0) len=0.00
+[2m2026-10-23T12:17:33.591444Z[0m [32m INFO[0m [2mjackdaw::viewport[0m[2m:[0m [R1DBG] frame=699 GRAB_APPLY Locked fly=true
+[2m2026-10-23T12:17:33.604031Z[0m [32m INFO[0m [2mjackdaw::input_contexts[0m[2m:[0m [R1DBG] frame=700 edge+2 fly=true delta=Vec2(15.0, 0.0) len=15.00
+[2m2026-10-23T12:17:33.604548Z[0m [33m WARN[0m [2mjackdaw::input_contexts[0m[2m:[0m [R1DBG] frame=700 BIG_DELTA_AT_PRESS edge+2 len=15.00
+[2m2026-10-23T12:17:34.220309Z[0m [32m INFO[0m [2mjackdaw::viewport[0m[2m:[0m [R1DBG] frame=737 GRAB_APPLY None fly=false
+[2m2026-10-23T12:17:35.971489Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: hierarchy.open_context_menu
+[2m2026-10-23T12:17:35.972196Z[0m [32m INFO[0m [2mjackdaw::input_contexts[0m[2m:[0m [R1DBG] frame=842 FLY_EDGE delta=Vec2(15.0, 0.0) len=15.00
+[2m2026-10-23T12:17:35.972509Z[0m [33m WARN[0m [2mjackdaw::input_contexts[0m[2m:[0m [R1DBG] frame=842 BIG_DELTA_AT_PRESS edge+0 len=15.00
+[2m2026-10-23T12:17:35.986176Z[0m [32m INFO[0m [2mjackdaw::input_contexts[0m[2m:[0m [R1DBG] frame=843 edge+1 fly=true delta=Vec2(0.0, 0.0) len=0.00
+[2m2026-10-23T12:17:35.987031Z[0m [32m INFO[0m [2mjackdaw::viewport[0m[2m:[0m [R1DBG] frame=843 GRAB_APPLY Locked fly=true
+[2m2026-10-23T12:17:36.003685Z[0m [32m INFO[0m [2mjackdaw::input_contexts[0m[2m:[0m [R1DBG] frame=844 edge+2 fly=true delta=Vec2(0.0, 0.0) len=0.00
+[2m2026-10-23T12:17:36.619520Z[0m [32m INFO[0m [2mjackdaw::viewport[0m[2m:[0m [R1DBG] frame=881 GRAB_APPLY None fly=false
+[2m2026-10-23T12:17:38.369826Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: hierarchy.open_context_menu
+[2m2026-10-23T12:17:38.379333Z[0m [32m INFO[0m [2mjackdaw::input_contexts[0m[2m:[0m [R1DBG] frame=986 FLY_EDGE delta=Vec2(15.0, 0.0) len=15.00
+[2m2026-10-23T12:17:38.379781Z[0m [33m WARN[0m [2mjackdaw::input_contexts[0m[2m:[0m [R1DBG] frame=986 BIG_DELTA_AT_PRESS edge+0 len=15.00
+[2m2026-10-23T12:17:38.388048Z[0m [32m INFO[0m [2mjackdaw::input_contexts[0m[2m:[0m [R1DBG] frame=987 edge+1 fly=true delta=Vec2(0.0, 0.0) len=0.00
+[2m2026-10-23T12:17:38.388850Z[0m [32m INFO[0m [2mjackdaw::viewport[0m[2m:[0m [R1DBG] frame=987 GRAB_APPLY Locked fly=true
+[2m2026-10-23T12:17:38.403064Z[0m [32m INFO[0m [2mjackdaw::input_contexts[0m[2m:[0m [R1DBG] frame=988 edge+2 fly=true delta=Vec2(0.0, 0.0) len=0.00
+[2m2026-10-23T12:17:39.019989Z[0m [32m INFO[0m [2mjackdaw::viewport[0m[2m:[0m [R1DBG] frame=1025 GRAB_APPLY None fly=false
+[2m2026-10-23T12:17:40.771071Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: hierarchy.open_context_menu
+[2m2026-10-23T12:17:40.780768Z[0m [32m INFO[0m [2mjackdaw::input_contexts[0m[2m:[0m [R1DBG] frame=1130 FLY_EDGE delta=Vec2(15.0, 0.0) len=15.00
+[2m2026-10-23T12:17:40.781469Z[0m [33m WARN[0m [2mjackdaw::input_contexts[0m[2m:[0m [R1DBG] frame=1130 BIG_DELTA_AT_PRESS edge+0 len=15.00
+[2m2026-10-23T12:17:40.791206Z[0m [32m INFO[0m [2mjackdaw::input_contexts[0m[2m:[0m [R1DBG] frame=1131 edge+1 fly=true delta=Vec2(0.0, 0.0) len=0.00
+[2m2026-10-23T12:17:40.792007Z[0m [32m INFO[0m [2mjackdaw::viewport[0m[2m:[0m [R1DBG] frame=1131 GRAB_APPLY Locked fly=true
+[2m2026-10-23T12:17:40.803512Z[0m [32m INFO[0m [2mjackdaw::input_contexts[0m[2m:[0m [R1DBG] frame=1132 edge+2 fly=true delta=Vec2(0.0, 0.0) len=0.00
+[2m2026-10-23T12:17:41.436629Z[0m [32m INFO[0m [2mjackdaw::viewport[0m[2m:[0m [R1DBG] frame=1169 GRAB_APPLY None fly=false

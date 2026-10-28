@@ -1,0 +1,26 @@
+editor ready pid=31884
+editor idle
+== case A: untitled scene -> temp copy ==
+
+  ok: authored preview holds the new cube (count=2)
+entities id               result   warnings
+-------- --               ------   --------
+{}       scene.new        finished {}      
+{}       pie.play_current finished {}      
+pie running (08:21:18)
+  ok: editor alive while playing an untitled scene
+  ok: one temp run copy exists: current-untitled-1-31884.bsn
+  ok: the temp copy carries the cube document
+switched to Live view (entity 4294963586)
+  live tree: count=3 names=[current-untitled-1-31884,Cube,Directional Light]
+  ok: the game is playing the tiny probe scene, not scene.bsn (count=3)
+{}       pie.stop         finished {}      
+editor killed
+Invoke-RestMethod : 请求被中止: 操作超时。
+所在位置 E:\Project\rust\jackdaw\loop\qa\brp.ps1:25 字符: 9
++         Invoke-RestMethod -Uri "http://127.0.0.1:$script:BrpPort/" -M ...
++         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (System.Net.HttpWebRequest:HttpWebRequest) [Invoke-RestMethod]，WebExce
+    ption
+    + FullyQualifiedErrorId : WebCmdletWebResponseException,Microsoft.PowerShell.Commands.InvokeRestMethodCommand
+ 

@@ -1,0 +1,98 @@
+warning: linker stderr: rust-lld: ignoring unknown argument '-fuse-ld=lld'
+  |
+  = note: `#[warn(linker_messages)]` on by default
+
+warning: `jackdaw_env` (build script) generated 1 warning
+   Compiling jackdaw_env v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_env)
+warning: `jackdaw_api_macros` (lib) generated 1 warning (1 duplicate)
+warning: `jackdaw_project_build` (build script) generated 1 warning (1 duplicate)
+   Compiling jackdaw_project_build v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_project_build)
+warning: `jackdaw_package` (build script) generated 1 warning (1 duplicate)
+   Compiling jackdaw_runtime v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_runtime)
+   Compiling jackdaw_api_internal v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_api_internal)
+   Compiling jackdaw_package v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_package)
+   Compiling jackdaw_releases v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_releases)
+   Compiling jackdaw_api v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_api)
+   Compiling jackdaw_loader v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_loader)
+   Compiling jackdaw_extension v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_extension)
+   Compiling jackdaw_multiplayer_editor v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_multiplayer_editor)
+   Compiling jackdaw_scaffold v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_scaffold)
+   Compiling test_fixture_extension v0.0.0 (E:\Project\rust\jackdaw\tests\fixtures\test_fixture_extension)
+warning: `test_fixture_extension` (lib) generated 1 warning (1 duplicate)
+   Compiling jackdaw v0.21.0-dev (E:\Project\rust\jackdaw)
+error[E0425]: cannot find type `CommandHistory` in this scope
+   --> src\inspector\val_field.rs:689:31
+    |
+689 |         world.init_resource::<CommandHistory>();
+    |                               ^^^^^^^^^^^^^^ not found in this scope
+    |
+help: you might be missing a type parameter
+    |
+680 |     fn world_with_resource_card<CommandHistory>() -> (World, String) {
+    |                                ++++++++++++++++
+
+error[E0425]: cannot find type `CommandHistory` in this scope
+   --> src\inspector\val_field.rs:742:30
+    |
+742 |             world.resource::<CommandHistory>().undo_stack.len(),
+    |                              ^^^^^^^^^^^^^^ not found in this scope
+    |
+help: you might be missing a type parameter
+    |
+729 |     fn a_resource_val_tick_previews_onto_the_resource<CommandHistory>() {
+    |                                                      ++++++++++++++++
+
+error[E0425]: cannot find type `CommandHistory` in this scope
+   --> src\inspector\val_field.rs:764:30
+    |
+764 |             world.resource::<CommandHistory>().undo_stack.len(),
+    |                              ^^^^^^^^^^^^^^ not found in this scope
+    |
+help: you might be missing a type parameter
+    |
+751 |     fn a_resource_val_commit_is_one_resource_undo_entry<CommandHistory>() {
+    |                                                        ++++++++++++++++
+
+error[E0603]: function `live_resource_entity` is private
+   --> src\inspector\val_field.rs:667:56
+    |
+667 |         ResourceFieldEditSessions, is_resource_entity, live_resource_entity,
+    |                                                        ^^^^^^^^^^^^^^^^^^^^ private function
+    |
+note: the function `live_resource_entity` is defined here
+   --> src\inspector\resource_commands.rs:56:1
+    |
+ 56 | fn live_resource_entity(world: &mut World, type_path: &str) -> Option<(ComponentId, Entity)> {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error[E0061]: this function takes 2 arguments but 1 argument was supplied
+   --> src\inspector\val_field.rs:769:9
+    |
+769 |         jackdaw_commands::CommandHistory::undo(world.resource_mut());
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^---------------------- argument #2 of type `&mut bevy::bevy_ecs::world::World` is missing
+    |
+note: expected `&mut CommandHistory`, found `Mut<'_, _>`
+   --> src\inspector\val_field.rs:769:48
+    |
+769 |         jackdaw_commands::CommandHistory::undo(world.resource_mut());
+    |                                                ^^^^^^^^^^^^^^^^^^^^
+    = note: expected mutable reference `&mut jackdaw_commands::CommandHistory`
+                          found struct `bevy::bevy_ecs::change_detection::Mut<'_, _>`
+note: method defined here
+   --> crates\jackdaw_commands\src\lib.rs:171:12
+    |
+171 |     pub fn undo(&mut self, world: &mut World) {
+    |            ^^^^
+help: consider mutably borrowing here
+    |
+769 |         jackdaw_commands::CommandHistory::undo(&mut world.resource_mut());
+    |                                                ++++
+help: provide the argument
+    |
+769 -         jackdaw_commands::CommandHistory::undo(world.resource_mut());
+769 +         jackdaw_commands::CommandHistory::undo(/* &mut CommandHistory */, /* &mut World */);
+    |
+
+Some errors have detailed explanations: E0061, E0425, E0603.
+For more information about an error, try `rustc --explain E0061`.
+error: could not compile `jackdaw` (lib test) due to 5 previous errors

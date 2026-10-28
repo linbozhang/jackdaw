@@ -1,0 +1,34 @@
+warning: linker stderr: rust-lld: ignoring unknown argument '-fuse-ld=lld'
+  |
+  = note: `#[warn(linker_messages)]` on by default
+
+warning: `jackdaw_env` (build script) generated 1 warning
+warning: `jackdaw_api_macros` (lib) generated 1 warning (1 duplicate)
+warning: `jackdaw_project_build` (build script) generated 1 warning (1 duplicate)
+warning: `jackdaw_package` (build script) generated 1 warning (1 duplicate)
+   Compiling jackdaw_project_build v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_project_build)
+warning: `test_fixture_extension` (lib) generated 1 warning (1 duplicate)
+   Compiling jackdaw_scaffold v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_scaffold)
+   Compiling jackdaw v0.21.0-dev (E:\Project\rust\jackdaw)
+warning: `jackdaw` (lib test) generated 1 warning (1 duplicate)
+    Finished `test` profile [optimized + debuginfo] target(s) in 57.52s
+     Running unittests src\lib.rs (target\debug\deps\jackdaw-065bbaf80d9bc6c2.exe)
+
+running 1 test
+test viewport::tests::the_startup_window_focus_does_not_disable_the_camera ... FAILED
+
+failures:
+
+---- viewport::tests::the_startup_window_focus_does_not_disable_the_camera stdout ----
+
+thread 'viewport::tests::the_startup_window_focus_does_not_disable_the_camera' (13400) panicked at src\viewport.rs:1254:9:
+a fly session must engage while only the startup window focus is held
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    viewport::tests::the_startup_window_focus_does_not_disable_the_camera
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1118 filtered out; finished in 0.03s
+
+error: test failed, to rerun pass `-p jackdaw --lib`

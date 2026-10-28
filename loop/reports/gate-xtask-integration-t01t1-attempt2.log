@@ -1,0 +1,276 @@
+warning: linker stderr: rust-lld: ignoring unknown argument '-fuse-ld=lld'
+  |
+  = note: `#[warn(linker_messages)]` on by default
+
++ cargo nextest run --profile ci --workspace --features dylib --tests -E not (binary(bsn_game_run) | binary(editor_journey) | binary(stress_reload) | binary(scaffold_e2e) | binary(reflect_auto_register) | binary(component_shape_refresh) | binary(dylib_linkage_identity) | binary(extern_redirect_ecosystem) | binary(mcp_smoke))
+warning: linker stderr: rust-lld: ignoring unknown argument '-fuse-ld=lld'
+  |
+  = note: `#[warn(linker_messages)]` on by default
+
+warning: `jackdaw_env` (build script) generated 1 warning
+warning: `jackdaw_api_macros` (lib) generated 1 warning (1 duplicate)
+warning: `jackdaw_package` (build script) generated 1 warning (1 duplicate)
+warning: `jackdaw_project_build` (build script) generated 1 warning (1 duplicate)
+warning: `jackdaw_api_internal` (lib test) generated 1 warning (1 duplicate)
+warning: `jackdaw_animation` (lib test) generated 1 warning (1 duplicate)
+warning: `jackdaw_node_graph` (lib test) generated 1 warning (1 duplicate)
+warning: `jackdaw_panels` (lib test) generated 1 warning (1 duplicate)
+warning: `jackdaw_feathers` (lib test) generated 1 warning (1 duplicate)
+warning: `jackdaw_runtime` (test "texture_import") generated 1 warning (1 duplicate)
+warning: `jackdaw_dylib` (lib) generated 1 warning (1 duplicate)
+warning: `jackdaw_dylib` (lib test) generated 1 warning (1 duplicate)
+warning: `jackdaw_loader` (lib test) generated 1 warning (1 duplicate)
+warning: `jackdaw_runtime` (test "gltf_source_paths") generated 1 warning (1 duplicate)
+warning: `jackdaw_runtime` (test "replaced_children_transforms") generated 1 warning (1 duplicate)
+warning: `jackdaw_runtime` (test "retired_ui_components") generated 1 warning (1 duplicate)
+warning: `jackdaw_csg` (test "brush_booleans") generated 1 warning (1 duplicate)
+warning: `jackdaw_runtime` (test "text_value_bindings") generated 1 warning (1 duplicate)
+warning: `jackdaw_runtime` (test "headless_brush_load") generated 1 warning (1 duplicate)
+warning: `jackdaw_runtime` (test "animation_scene_load") generated 1 warning (1 duplicate)
+warning: `jackdaw_runtime` (test "model_lod") generated 1 warning (1 duplicate)
+warning: `jackdaw_runtime` (test "model_parts") generated 1 warning (1 duplicate)
+warning: `jackdaw_api` (lib test) generated 1 warning (1 duplicate)
+warning: `jd` (lib test) generated 1 warning (1 duplicate)
+warning: `jackdaw_runtime` (test "headless_bsn_load") generated 1 warning (1 duplicate)
+warning: `jackdaw_runtime` (test "insert_observer_global_transform") generated 1 warning (1 duplicate)
+warning: `jackdaw_runtime` (test "binary_assets") generated 1 warning (1 duplicate)
+warning: `jackdaw_scaffold` (lib test) generated 1 warning (1 duplicate)
+warning: `jackdaw_csg` (test "beveled_cube_subtract") generated 1 warning (1 duplicate)
+warning: `jackdaw_runtime` (test "terrain_scene_load") generated 1 warning (1 duplicate)
+warning: `jackdaw_runtime` (test "headless_render_brush_load") generated 1 warning (1 duplicate)
+warning: `jackdaw_runtime` (test "navmesh_scene_load") generated 1 warning (1 duplicate)
+warning: `jackdaw_cli_internal` (lib test) generated 1 warning (1 duplicate)
+warning: `jackdaw_runtime` (test "lod_group") generated 1 warning (1 duplicate)
+warning: `jackdaw_runtime` (test "catalog_loading") generated 1 warning (1 duplicate)
+   Compiling jd v0.21.0-dev (E:\Project\rust\jackdaw\crates\jd)
+warning: `jackdaw_sdk` (lib) generated 1 warning (1 duplicate)
+warning: `jackdaw_extension` (lib test) generated 1 warning (1 duplicate)
+warning: `jackdaw_multiplayer_editor` (lib test) generated 1 warning (1 duplicate)
+warning: `jackdaw_mcp` (lib test) generated 1 warning (1 duplicate)
+warning: `jackdaw_sdk` (lib test) generated 1 warning (1 duplicate)
+warning: `jackdaw_runtime` (test "ui_scene_ownership") generated 1 warning (1 duplicate)
+warning: `jackdaw_localization` (lib test) generated 1 warning (1 duplicate)
+warning: `jackdaw_runtime` (test "scene_root_name") generated 1 warning (1 duplicate)
+warning: `jackdaw_runtime` (test "prefab_resolution") generated 1 warning (1 duplicate)
+   Compiling jackdaw_mcp v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_mcp)
+warning: `test_fixture_extension` (lib) generated 1 warning (1 duplicate)
+warning: `test_fixture_extension` (lib test) generated 1 warning (1 duplicate)
+warning: `viewable_camera_extension` (lib test) generated 1 warning (1 duplicate)
+warning: `dynamic_extension` (lib test) generated 1 warning (1 duplicate)
+warning: `jackdaw_csg` (test "box_cutter_against_concave") generated 1 warning (1 duplicate)
+warning: `jackdaw_runtime` (test "authored_widgets") generated 1 warning (1 duplicate)
+warning: `jackdaw_runtime` (test "document_twins") generated 1 warning (1 duplicate)
+warning: `jackdaw_csg` (test "boolean_no_bevy") generated 1 warning (1 duplicate)
+warning: `jackdaw_runtime` (test "progress_bindings") generated 1 warning (1 duplicate)
+warning: `jackdaw_runtime` (test "runtime_bindings") generated 1 warning (1 duplicate)
+   Compiling jackdaw v0.21.0-dev (E:\Project\rust\jackdaw)
+warning: `jackdaw` (bin "jackdaw" test) generated 1 warning (1 duplicate)
+warning: `jackdaw` (test "stress_reload") generated 1 warning (1 duplicate)
+warning: `jackdaw` (test "prefabs") generated 1 warning (1 duplicate)
+warning: `jackdaw` (test "stage") generated 1 warning (1 duplicate)
+warning: `jackdaw` (test "reflect_auto_register") generated 1 warning (1 duplicate)
+warning: `jackdaw` (test "guards") generated 1 warning (1 duplicate)
+warning: `jackdaw` (test "controls") generated 1 warning (1 duplicate)
+warning: `jackdaw` (bin "jackdaw") generated 1 warning (1 duplicate)
+warning: `jackdaw` (test "inspector") generated 1 warning (1 duplicate)
+warning: `jd` (test "editor_installs") generated 1 warning (1 duplicate)
+warning: `jackdaw_mcp` (bin "jd-mcp" test) generated 1 warning (1 duplicate)
+warning: `jackdaw` (bin "jackdaw-rustc-wrapper" test) generated 1 warning (1 duplicate)
+warning: `jackdaw_editor` (lib test) generated 1 warning (1 duplicate)
+warning: `jackdaw` (test "mcp_smoke") generated 1 warning (1 duplicate)
+warning: `jackdaw` (test "sdk_recipe") generated 1 warning (1 duplicate)
+warning: `jackdaw` (test "scaffold_e2e") generated 1 warning (1 duplicate)
+warning: `jackdaw` (test "sdk_feature_superset") generated 1 warning (1 duplicate)
+warning: `jackdaw` (bin "jackdaw-rustc-wrapper") generated 1 warning (1 duplicate)
+warning: `jackdaw` (lib test) generated 1 warning (1 duplicate)
+error[E0786]: found invalid metadata files for crate `jackdaw`
+  --> tests\resource_panel\..\util\mod.rs:11:5
+   |
+11 | use jackdaw::prelude::*;
+   |     ^^^^^^^
+   |
+   = note: failed to mmap file '\\?\E:\Project\rust\jackdaw\target\debug\deps\libjackdaw-a6ca96663d430eff.rlib': 页面文件太小，无法完成操作。 (os error 1455)
+
+For more information about this error, try `rustc --explain E0786`.
+error[E0432]: unresolved imports `jackdaw::project_build::plan::SdkManifest`, `crate::util`, `crate::INSPECTOR`, `crate::editor_app`, `crate::fractions`, `crate::leaf_displays`, `crate::settle`, `crate::toggle`, `crate::util`, `crate::INSPECTOR`, `crate::fractions`, `crate::toggle`, `crate::INSPECTOR`, `crate::editor_app`, `crate::leaf_displays`, `crate::settle`, `crate::toggle`, `crate::INSPECTOR`, `crate::editor_app`, `crate::settle`, `crate::toggle`, `jackdaw::AppState`
+   --> tests\panels\main.rs:17:5
+    |
+ 17 | use jackdaw::AppState;
+    |     ^^^^^^^^^^^^^^^^^
+    |
+   ::: tests\panels\..\util\mod.rs:466:9
+    |
+466 |     use jackdaw::project_build::plan::SdkManifest;
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: tests\panels\keybind.rs:13:5
+    |
+ 13 | use crate::util;
+    |     ^^^^^^^^^^^
+    |
+   ::: tests\panels\maximize_toggle.rs:12:13
+    |
+ 12 | use crate::{INSPECTOR, editor_app, fractions, leaf_displays, settle, toggle};
+    |             ^^^^^^^^^  ^^^^^^^^^^  ^^^^^^^^^  ^^^^^^^^^^^^^  ^^^^^^  ^^^^^^
+    |
+   ::: tests\panels\persistence_roundtrip.rs:11:5
+    |
+ 11 | use crate::util;
+    |     ^^^^^^^^^^^
+ 12 | use crate::{INSPECTOR, fractions, toggle};
+    |             ^^^^^^^^^  ^^^^^^^^^  ^^^^^^
+    |
+   ::: tests\panels\reconcile.rs:14:13
+    |
+ 14 | use crate::{INSPECTOR, editor_app, leaf_displays, settle, toggle};
+    |             ^^^^^^^^^  ^^^^^^^^^^  ^^^^^^^^^^^^^  ^^^^^^  ^^^^^^
+    |
+   ::: tests\panels\tab_button.rs:21:13
+    |
+ 21 | use crate::{INSPECTOR, editor_app, settle, toggle};
+    |             ^^^^^^^^^  ^^^^^^^^^^  ^^^^^^  ^^^^^^
+
+error: could not compile `jackdaw` (test "resource_panel") due to 1 previous error
+warning: build failed, waiting for other jobs to finish...
+error[E0432]: unresolved import `jackdaw::project_build::plan::SdkManifest`
+   --> tests\keymap\..\util\mod.rs:466:9
+    |
+466 |     use jackdaw::project_build::plan::SdkManifest;
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error[E0405]: cannot find trait `JackdawExtension` in this scope
+   --> tests\keymap\..\util\mod.rs:222:41
+    |
+222 | pub fn register_and_enable_extension<T: JackdawExtension + Default>(app: &mut App) {
+    |                                         ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `OperatorResult` in this scope
+   --> tests\keymap\..\util\mod.rs:435:28
+    |
+420 | pub trait OperatorResultExt: Copy {
+    | --------------------------------- similarly named trait `OperatorResultExt` defined here
+...
+435 | impl OperatorResultExt for OperatorResult {
+    |                            ^^^^^^^^^^^^^^
+    |
+help: a trait with a similar name exists
+    |
+435 | impl OperatorResultExt for OperatorResultExt {
+    |                                          +++
+
+error[E0405]: cannot find trait `JackdawExtension` in this scope
+   --> tests\panels\..\util\mod.rs:222:41
+    |
+222 | pub fn register_and_enable_extension<T: JackdawExtension + Default>(app: &mut App) {
+    |                                         ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `OperatorResult` in this scope
+   --> tests\panels\..\util\mod.rs:435:28
+    |
+420 | pub trait OperatorResultExt: Copy {
+    | --------------------------------- similarly named trait `OperatorResultExt` defined here
+...
+435 | impl OperatorResultExt for OperatorResult {
+    |                            ^^^^^^^^^^^^^^
+    |
+help: a trait with a similar name exists
+    |
+435 | impl OperatorResultExt for OperatorResultExt {
+    |                                          +++
+
+error[E0433]: cannot find type `JackdawEditorPlugins` in this scope
+   --> tests\keymap\..\util\mod.rs:104:21
+    |
+104 |     app.add_plugins(JackdawEditorPlugins::default());
+    |                     ^^^^^^^^^^^^^^^^^^^^ use of undeclared type `JackdawEditorPlugins`
+
+error[E0433]: cannot find type `OperatorResult` in this scope
+   --> tests\keymap\..\util\mod.rs:437:26
+    |
+437 |         assert_eq!(self, OperatorResult::Finished, "Operator failed to finish");
+    |                          ^^^^^^^^^^^^^^ use of undeclared type `OperatorResult`
+    |
+help: a trait with a similar name exists
+    |
+437 |         assert_eq!(self, OperatorResultExt::Finished, "Operator failed to finish");
+    |                                        +++
+
+error[E0433]: cannot find type `OperatorResult` in this scope
+   --> tests\keymap\..\util\mod.rs:442:13
+    |
+442 |             OperatorResult::Cancelled,
+    |             ^^^^^^^^^^^^^^ use of undeclared type `OperatorResult`
+    |
+help: a trait with a similar name exists
+    |
+442 |             OperatorResultExt::Cancelled,
+    |                           +++
+
+error[E0433]: cannot find type `OperatorResult` in this scope
+   --> tests\keymap\..\util\mod.rs:449:13
+    |
+449 |             OperatorResult::Running,
+    |             ^^^^^^^^^^^^^^ use of undeclared type `OperatorResult`
+    |
+help: a trait with a similar name exists
+    |
+449 |             OperatorResultExt::Running,
+    |                           +++
+
+Some errors have detailed explanations: E0405, E0425, E0432, E0433.
+For more information about an error, try `rustc --explain E0405`.
+error[E0433]: cannot find type `JackdawEditorPlugins` in this scope
+   --> tests\panels\..\util\mod.rs:104:21
+    |
+104 |     app.add_plugins(JackdawEditorPlugins::default());
+    |                     ^^^^^^^^^^^^^^^^^^^^ use of undeclared type `JackdawEditorPlugins`
+
+error[E0433]: cannot find type `OperatorResult` in this scope
+   --> tests\panels\..\util\mod.rs:437:26
+    |
+437 |         assert_eq!(self, OperatorResult::Finished, "Operator failed to finish");
+    |                          ^^^^^^^^^^^^^^ use of undeclared type `OperatorResult`
+    |
+help: a trait with a similar name exists
+    |
+437 |         assert_eq!(self, OperatorResultExt::Finished, "Operator failed to finish");
+    |                                        +++
+
+error[E0433]: cannot find type `OperatorResult` in this scope
+   --> tests\panels\..\util\mod.rs:442:13
+    |
+442 |             OperatorResult::Cancelled,
+    |             ^^^^^^^^^^^^^^ use of undeclared type `OperatorResult`
+    |
+help: a trait with a similar name exists
+    |
+442 |             OperatorResultExt::Cancelled,
+    |                           +++
+
+error[E0433]: cannot find type `OperatorResult` in this scope
+   --> tests\panels\..\util\mod.rs:449:13
+    |
+449 |             OperatorResult::Running,
+    |             ^^^^^^^^^^^^^^ use of undeclared type `OperatorResult`
+    |
+help: a trait with a similar name exists
+    |
+449 |             OperatorResultExt::Running,
+    |                           +++
+
+error: could not compile `jackdaw` (test "keymap") due to 7 previous errors
+error: could not compile `jackdaw` (test "panels") due to 7 previous errors
+warning: `jd` (bin "jd" test) generated 1 warning (1 duplicate)
+warning: `jd` (test "standalone_scaffold") generated 1 warning (1 duplicate)
+warning: `jd` (bin "jd") generated 1 warning (1 duplicate)
+warning: `jackdaw` (test "bsn_game_run") generated 1 warning (1 duplicate)
+warning: `jackdaw` (test "component_shape_refresh") generated 1 warning (1 duplicate)
+warning: `jackdaw` (test "dylib_linkage_identity") generated 1 warning (1 duplicate)
+warning: `jackdaw` (test "sdk_layout") generated 1 warning (1 duplicate)
+warning: `jackdaw` (test "editor_journey") generated 1 warning (1 duplicate)
+warning: `jackdaw` (test "terrain") generated 1 warning (1 duplicate)
+warning: `jackdaw` (test "scenes") generated 1 warning (1 duplicate)
+warning: `jackdaw` (test "operators") generated 1 warning (1 duplicate)
+warning: `jackdaw` (test "viewport") generated 1 warning (1 duplicate)
+warning: `jackdaw` (test "outliner") generated 1 warning (1 duplicate)
+error: command `'C:\Users\linbo.zhang\.rustup\toolchains\1.99.0-x86_64-pc-windows-msvc\bin\cargo.exe' '--color=auto' test --no-run --message-format json-render-diagnostics --workspace --tests --features dylib` exited with code 101

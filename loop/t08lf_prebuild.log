@@ -1,0 +1,5 @@
+BRP up; waiting idle (prebuild = dev build of the whole bevy tree first time)...
+IDLE reached
+PREBUILD-SCHEMA: True
+EDITOR-ALIVE: True
+PIE-STATUS: stopped

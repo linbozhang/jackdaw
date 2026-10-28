@@ -1,0 +1,22 @@
+warning: linker stderr: rust-lld: ignoring unknown argument '-fuse-ld=lld'
+  |
+  = note: `#[warn(linker_messages)]` on by default
+
+warning: `jackdaw_env` (build script) generated 1 warning
+warning: `jackdaw_api_macros` (lib) generated 1 warning (1 duplicate)
+warning: `jackdaw_package` (build script) generated 1 warning (1 duplicate)
+warning: `jackdaw_project_build` (build script) generated 1 warning (1 duplicate)
+    Checking jackdaw v0.21.0-dev (E:\Project\rust\jackdaw)
+error: couldn't read `src\file_ops.rs`: stream did not contain valid UTF-8
+   --> src\lib.rs:85:1
+    |
+ 85 | pub mod file_ops;
+    | ^^^^^^^^^^^^^^^^^
+    |
+note: bytes `[226, 128]` are not valid utf-8
+   --> src\file_ops.rs:112:59
+    |
+112 | /// card is standing on is refused outright unless forced �?deleting it would
+    |                                                           ^
+
+error: could not compile `jackdaw` (lib) due to 1 previous error

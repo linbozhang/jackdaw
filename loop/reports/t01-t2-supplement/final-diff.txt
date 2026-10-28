@@ -1,0 +1,105 @@
+diff --git a/book/src/developer-guide/open-challenges.md b/book/src/developer-guide/open-challenges.md
+index e21b9ca5..dbaa2690 100644
+--- a/book/src/developer-guide/open-challenges.md
++++ b/book/src/developer-guide/open-challenges.md
+@@ -193,3 +193,48 @@ names.
+ Where to dig in: the name-path walk and its refusal on
+ ambiguous siblings, which is where the design either holds or
+ needs a stable per-node id from the loader instead.
++
++## Pointer-delta gate headroom
++
++Every frame's accumulated pointer motion passes a gate
++(`drop_synthetic_pointer_jump` in `src/input_contexts.rs`) that
++drops the whole frame's delta when it exceeds
++`MAX_PLAUSIBLE_POINTER_DELTA`, 1000 px per frame. It exists
++because the pointer stack itself lies: RDP sessions and some
++vendor drivers re-anchor the cursor around a grab transition and
++report 37k-850k px in a single frame, which fed straight into the
++camera is the "the view snaps when I right-click" report. The
++gate is measured against that population
++(`loop/reports/r1-disc-*`, 2026-10-23).
++
++The gate judges the frame-accumulated sum, after the per-event
++deltas are folded, and it drops rather than clamps -- a clamp
++would still turn the view by the clamp bound. That choice has two
++known corners where a real gesture can be dropped whole:
++
++- High-DPI fast swipes. At 800 DPI a 1 m/s swipe is ~525 px/frame
++  at 60 fps (safe); at 1600 DPI and 2 m/s it is ~2100 px/frame,
++  past the gate. Hardware that fast is unusual for editor work,
++  but not impossible.
++- Hitch-frame backlog. Because the sum grows with frame time, a
++  200 ms hitch that batches a merely moderate swipe accumulates
++  on the order of 1300 px into one frame, past the gate -- and
++  the drop is not recovered afterwards.
++
++For calibration, the safe side of the line: a normal editor swipe
++(0.25 s across a 2560 px screen at 150% DPI) is ~171 px/frame,
++5.8x under the gate; an aggressive full-screen flick (0.1 s) is
++~427 px/frame, 2.3x under. A measured 600 px/frame drag releases
++cleanly, and a single 50000 px synthetic jump is dropped whole --
++both ends verified live (`loop/reports/t01-v5`, V2g/V2s). Any
++threshold change should keep both of those pinned.
++
++If the corners above start mattering, the candidate shapes are:
++gate each event before the fold (a backlog of small real deltas
++then sums through), or scale the threshold by the frame duration
++so a hitch frame does not shrink it. Clamping is not on the table
++-- it reintroduces the press-snap this gate fixed.
++
++Where to dig in: `src/input_contexts.rs`
++(`MAX_PLAUSIBLE_POINTER_DELTA`, `drop_synthetic_pointer_jump`)
++and the r1-disc measurement notes under `loop/reports/`.
+diff --git a/book/src/user-guide/keyboard-shortcuts.md b/book/src/user-guide/keyboard-shortcuts.md
+index 485e8a46..d42d0f1a 100644
+--- a/book/src/user-guide/keyboard-shortcuts.md
++++ b/book/src/user-guide/keyboard-shortcuts.md
+@@ -58,12 +58,13 @@
+ | 2 | Edge mode |
+ | 3 | Face mode |
+ | 4 | Clip mode |
++| K | Knife mode |
+ | X / Y / Z | Constrain axis |
+ | Shift+Click | Multi-select |
+ | Delete | Delete selected element |
+ | PageUp/PageDown | Nudge selected vertices/edges/faces up/down |
+ | Enter | Apply clip plane |
+-| Esc | Exit brush edit |
++| Esc | Exit brush edit (and deselect; press `1`-`4` again after re-clicking an entity) |
+ 
+ ## Brush Draw
+ 
+diff --git a/book/src/user-guide/viewport-navigation.md b/book/src/user-guide/viewport-navigation.md
+index b6306d10..71bdd3c8 100644
+--- a/book/src/user-guide/viewport-navigation.md
++++ b/book/src/user-guide/viewport-navigation.md
+@@ -25,6 +25,28 @@ If you don't want to lift your hand, scrolling without RMB
+ held dollies the camera forward and back along the look axis.
+ Useful for small framing tweaks while a tool is active.
+ 
++## Pan with the middle mouse button
++
++Hold the middle mouse button and drag to pan the view, the same
++gesture as the Unity Scene view. Panning moves the camera in the
++plane of the screen; the yaw and pitch never change.
++
++A middle click without dragging means something else: it toggles
++snapping for the active tool (the same as the toolbar magnet).
++Whether it reads as a click or a pan is decided by how far the
++pointer travels while the button is down, so a deliberate
++middle-click won't pan, and a pan won't flip your snap setting on
++release.
++
++## Typing keeps the camera still
++
++Clicking into a text field -- an Inspector number, a filter --
++hands the keyboard to that field. While you type, the viewport
++camera ignores `W`/`A`/`S`/`D`, the wheel, and even the
++right-mouse look mode, so typos can't fly you off into the void.
++`Escape` leaves the field first; the next `Escape` is the one
++that cancels the active tool. One layer at a time.
++
+ ## Focus selection
+ 
+ Press `F` with one or more entities selected to recenter the

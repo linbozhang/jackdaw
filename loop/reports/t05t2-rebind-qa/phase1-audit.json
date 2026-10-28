@@ -1,0 +1,14 @@
+﻿{
+    "count":  1,
+    "findings":  [
+                     {
+                         "component":  "IsA",
+                         "document":  "scene.bsn",
+                         "entity":  "Probe",
+                         "field":  "source",
+                         "kind":  "MachinePath",
+                         "reference":  "C:/Users/linbo.zhang/Projects/my-game/assets/props/victim.bsn"
+                     }
+                 ],
+    "summary":  "1 broken references in 1 documents (1 MachinePath)"
+}

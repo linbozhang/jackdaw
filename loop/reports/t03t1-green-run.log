@@ -1,0 +1,665 @@
+warning: linker stderr: rust-lld: ignoring unknown argument '-fuse-ld=lld'
+  |
+  = note: `#[warn(linker_messages)]` on by default
+
+warning: `jackdaw_env` (build script) generated 1 warning
+warning: `jackdaw_api_macros` (lib) generated 1 warning (1 duplicate)
+warning: `jackdaw_project_build` (build script) generated 1 warning (1 duplicate)
+warning: `jackdaw_package` (build script) generated 1 warning (1 duplicate)
+   Compiling jackdaw v0.21.0-dev (E:\Project\rust\jackdaw)
+warning: `test_fixture_extension` (lib) generated 1 warning (1 duplicate)
+warning: `jackdaw` (bin "jackdaw-rustc-wrapper") generated 1 warning (1 duplicate)
+warning: `jackdaw` (bin "jackdaw") generated 1 warning (1 duplicate)
+warning: `jackdaw` (test "guards") generated 1 warning (1 duplicate)
+    Finished `test` profile [optimized + debuginfo] target(s) in 56.98s
+     Running tests\guards\main.rs (target\debug\deps\guards-e99d419b85ef3675.exe)
+
+running 23 tests
+[2m2026-10-25T01:01:55.110912Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-25T01:01:55.110909Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-25T01:01:55.110910Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-25T01:01:55.110910Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-25T01:01:55.110909Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-25T01:01:55.110909Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-25T01:01:55.110912Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-25T01:01:55.110910Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-25T01:01:55.110909Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-25T01:01:55.110909Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-25T01:01:55.110914Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-25T01:01:55.110910Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-25T01:01:55.110910Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-25T01:01:55.110909Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global tracing subscriber as it is already set. Consider disabling LogPlugin.
+[2m2026-10-25T01:01:55.110909Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-25T01:01:55.110909Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger as it is already set. Consider disabling LogPlugin.
+[2m2026-10-25T01:01:55.114460Z[0m [32m INFO[0m [2mbevy_diagnostic::system_information_diagnostics_plugin::internal[0m[2m:[0m SystemInfo { os: "Windows 11 Pro", kernel: "26100", cpu: "AMD Ryzen 7 9700X 8-Core Processor", core_count: "8", memory: "93.4 GiB" }
+[2m2026-10-25T01:01:55.114469Z[0m [32m INFO[0m [2mbevy_diagnostic::system_information_diagnostics_plugin::internal[0m[2m:[0m SystemInfo { os: "Windows 11 Pro", kernel: "26100", cpu: "AMD Ryzen 7 9700X 8-Core Processor", core_count: "8", memory: "93.4 GiB" }
+[2m2026-10-25T01:01:55.114474Z[0m [32m INFO[0m [2mbevy_diagnostic::system_information_diagnostics_plugin::internal[0m[2m:[0m SystemInfo { os: "Windows 11 Pro", kernel: "26100", cpu: "AMD Ryzen 7 9700X 8-Core Processor", core_count: "8", memory: "93.4 GiB" }
+[2m2026-10-25T01:01:55.114460Z[0m [32m INFO[0m [2mbevy_diagnostic::system_information_diagnostics_plugin::internal[0m[2m:[0m SystemInfo { os: "Windows 11 Pro", kernel: "26100", cpu: "AMD Ryzen 7 9700X 8-Core Processor", core_count: "8", memory: "93.4 GiB" }
+[2m2026-10-25T01:01:55.114460Z[0m [32m INFO[0m [2mbevy_diagnostic::system_information_diagnostics_plugin::internal[0m[2m:[0m SystemInfo { os: "Windows 11 Pro", kernel: "26100", cpu: "AMD Ryzen 7 9700X 8-Core Processor", core_count: "8", memory: "93.4 GiB" }
+[2m2026-10-25T01:01:55.114458Z[0m [32m INFO[0m [2mbevy_diagnostic::system_information_diagnostics_plugin::internal[0m[2m:[0m SystemInfo { os: "Windows 11 Pro", kernel: "26100", cpu: "AMD Ryzen 7 9700X 8-Core Processor", core_count: "8", memory: "93.4 GiB" }
+[2m2026-10-25T01:01:55.114488Z[0m [32m INFO[0m [2mbevy_diagnostic::system_information_diagnostics_plugin::internal[0m[2m:[0m SystemInfo { os: "Windows 11 Pro", kernel: "26100", cpu: "AMD Ryzen 7 9700X 8-Core Processor", core_count: "8", memory: "93.4 GiB" }
+[2m2026-10-25T01:01:55.114498Z[0m [32m INFO[0m [2mbevy_diagnostic::system_information_diagnostics_plugin::internal[0m[2m:[0m SystemInfo { os: "Windows 11 Pro", kernel: "26100", cpu: "AMD Ryzen 7 9700X 8-Core Processor", core_count: "8", memory: "93.4 GiB" }
+[2m2026-10-25T01:01:55.114497Z[0m [32m INFO[0m [2mbevy_diagnostic::system_information_diagnostics_plugin::internal[0m[2m:[0m SystemInfo { os: "Windows 11 Pro", kernel: "26100", cpu: "AMD Ryzen 7 9700X 8-Core Processor", core_count: "8", memory: "93.4 GiB" }
+[2m2026-10-25T01:01:55.114493Z[0m [32m INFO[0m [2mbevy_diagnostic::system_information_diagnostics_plugin::internal[0m[2m:[0m SystemInfo { os: "Windows 11 Pro", kernel: "26100", cpu: "AMD Ryzen 7 9700X 8-Core Processor", core_count: "8", memory: "93.4 GiB" }
+[2m2026-10-25T01:01:55.114503Z[0m [32m INFO[0m [2mbevy_diagnostic::system_information_diagnostics_plugin::internal[0m[2m:[0m SystemInfo { os: "Windows 11 Pro", kernel: "26100", cpu: "AMD Ryzen 7 9700X 8-Core Processor", core_count: "8", memory: "93.4 GiB" }
+[2m2026-10-25T01:01:55.114503Z[0m [32m INFO[0m [2mbevy_diagnostic::system_information_diagnostics_plugin::internal[0m[2m:[0m SystemInfo { os: "Windows 11 Pro", kernel: "26100", cpu: "AMD Ryzen 7 9700X 8-Core Processor", core_count: "8", memory: "93.4 GiB" }
+[2m2026-10-25T01:01:55.114505Z[0m [32m INFO[0m [2mbevy_diagnostic::system_information_diagnostics_plugin::internal[0m[2m:[0m SystemInfo { os: "Windows 11 Pro", kernel: "26100", cpu: "AMD Ryzen 7 9700X 8-Core Processor", core_count: "8", memory: "93.4 GiB" }
+[2m2026-10-25T01:01:55.114537Z[0m [32m INFO[0m [2mbevy_diagnostic::system_information_diagnostics_plugin::internal[0m[2m:[0m SystemInfo { os: "Windows 11 Pro", kernel: "26100", cpu: "AMD Ryzen 7 9700X 8-Core Processor", core_count: "8", memory: "93.4 GiB" }
+[2m2026-10-25T01:01:55.114576Z[0m [32m INFO[0m [2mbevy_diagnostic::system_information_diagnostics_plugin::internal[0m[2m:[0m SystemInfo { os: "Windows 11 Pro", kernel: "26100", cpu: "AMD Ryzen 7 9700X 8-Core Processor", core_count: "8", memory: "93.4 GiB" }
+[2m2026-10-25T01:01:55.114658Z[0m [32m INFO[0m [2mbevy_diagnostic::system_information_diagnostics_plugin::internal[0m[2m:[0m SystemInfo { os: "Windows 11 Pro", kernel: "26100", cpu: "AMD Ryzen 7 9700X 8-Core Processor", core_count: "8", memory: "93.4 GiB" }
+[2m2026-10-25T01:01:55.117036Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-25T01:01:55.117041Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-25T01:01:55.117043Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-25T01:01:55.117054Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-25T01:01:55.117059Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-25T01:01:55.117057Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-25T01:01:55.117067Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-25T01:01:55.117073Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-25T01:01:55.117077Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-25T01:01:55.117084Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-25T01:01:55.117090Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-25T01:01:55.117095Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-25T01:01:55.117099Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-25T01:01:55.117226Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-25T01:01:55.117225Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-25T01:01:55.129366Z[0m [31mERROR[0m [2mbevy_extract::extract_resource[0m[2m:[0m Sub app did not exist when trying to add `extract_resource` for <bevy_camera::clear_color::ClearColor>.
+[2m2026-10-25T01:01:55.196487Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+[2m2026-10-25T01:01:55.196487Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+[2m2026-10-25T01:01:55.196487Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+[2m2026-10-25T01:01:55.196490Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+[2m2026-10-25T01:01:55.196487Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+[2m2026-10-25T01:01:55.196487Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+[2m2026-10-25T01:01:55.196487Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+[2m2026-10-25T01:01:55.196507Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+[2m2026-10-25T01:01:55.196510Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+[2m2026-10-25T01:01:55.196531Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+[2m2026-10-25T01:01:55.196535Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+[2m2026-10-25T01:01:55.196543Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+[2m2026-10-25T01:01:55.196548Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+[2m2026-10-25T01:01:55.196565Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+[2m2026-10-25T01:01:55.196585Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+[2m2026-10-25T01:01:55.196587Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+[2m2026-10-25T01:01:55.616943Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw::test_input::plugin` of extension `jackdaw.test_input`
+[2m2026-10-25T01:01:55.617542Z[0m [33m WARN[0m [2mbevy_render::texture[0m[2m:[0m CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+[2m2026-10-25T01:01:55.618012Z[0m [33m WARN[0m [2mbevy_gltf[0m[2m:[0m CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+[2m2026-10-25T01:01:55.619348Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw::test_input::plugin` of extension `jackdaw.test_input`
+[2m2026-10-25T01:01:55.619775Z[0m [33m WARN[0m [2mbevy_render::texture[0m[2m:[0m CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+[2m2026-10-25T01:01:55.619963Z[0m [33m WARN[0m [2mbevy_gltf[0m[2m:[0m CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+[2m2026-10-25T01:01:55.623790Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.animation_graph
+[2m2026-10-25T01:01:55.624241Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.multiplayer
+[2m2026-10-25T01:01:55.624414Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.test_input
+[2m2026-10-25T01:01:55.624643Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.build_panel
+[2m2026-10-25T01:01:55.624711Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.build_panel
+[2m2026-10-25T01:01:55.624778Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.inspector
+[2m2026-10-25T01:01:55.625061Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core
+[2m2026-10-25T01:01:55.625081Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.ui_palette
+[2m2026-10-25T01:01:55.625463Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.project_window
+[2m2026-10-25T01:01:55.625629Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.game_panel
+[2m2026-10-25T01:01:55.625776Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.test_input
+[2m2026-10-25T01:01:55.625955Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core
+[2m2026-10-25T01:01:55.629455Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core_windows
+[2m2026-10-25T01:01:55.629463Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.viewport_panel
+[2m2026-10-25T01:01:55.629698Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.ui_palette
+[2m2026-10-25T01:01:55.629977Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.viewport_panel
+[2m2026-10-25T01:01:55.630046Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core_windows
+[2m2026-10-25T01:01:55.630286Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.timeline
+[2m2026-10-25T01:01:55.630311Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.game_panel
+[2m2026-10-25T01:01:55.630411Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.animation_graph
+[2m2026-10-25T01:01:55.630556Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.timeline
+[2m2026-10-25T01:01:55.630682Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.inspector
+[2m2026-10-25T01:01:55.630791Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.project_window
+[2m2026-10-25T01:01:55.630937Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.multiplayer
+[2m2026-10-25T01:01:55.635119Z[0m [33m WARN[0m [2mjackdaw_api_internal::keymap::apply[0m[2m:[0m preset 'classic' has 10 chords claimed by more than one action: ["Delete (Press, Operators): clip.delete_keyframes, entity.delete, brush.delete_element", "Backspace (Press, Operators): clip.delete_keyframes, viewport.draw_brush.remove_last_vertex, brush.delete_element", "Home (Press, Operators): clip.timeline.jump_start, view.frame_all, viewport2d.frame", "Ctrl+KeyC (Press, Operators): clip.copy_keyframes, entity.copy", "Ctrl+KeyV (Press, Operators): clip.paste_keyframes, entity.paste", "Tab (Press, Operators): viewport.draw_brush.toggle_mode, brush.clip.cycle_mode", "Enter (Press, Operators): viewport.draw_brush.commit_polygon, brush.clip.apply", "KeyE (Press, Operators): tool.rotate, brush.mesh.extrude", "Escape (Press, Operators): brush.exit_edit_mode, selection.clear, brush.clip.clear, terrain.tool.exit_to_select", "Ctrl+KeyB (Press, Operators): brush.mesh.edge_bevel, brush.mesh.vertex_bevel"]
+[2m2026-10-25T01:01:55.635210Z[0m [32m INFO[0m [2mjackdaw::extension_lifecycle[0m[2m:[0m applied keymap preset 'classic': 109 entries, 109 bindings, 0 user rows
+[2m2026-10-25T01:01:55.635315Z[0m [32m INFO[0m [2mjackdaw::extension_lifecycle[0m[2m:[0m applied keymap preset 'classic': 109 entries, 109 bindings, 0 user rows
+[2m2026-10-25T01:01:55.638405Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw::test_input::plugin` of extension `jackdaw.test_input`
+[2m2026-10-25T01:01:55.638980Z[0m [33m WARN[0m [2mbevy_render::texture[0m[2m:[0m CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+[2m2026-10-25T01:01:55.639195Z[0m [33m WARN[0m [2mbevy_gltf[0m[2m:[0m CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+[2m2026-10-25T01:01:55.644287Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core_windows
+[2m2026-10-25T01:01:55.644617Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.inspector
+[2m2026-10-25T01:01:55.644885Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.game_panel
+[2m2026-10-25T01:01:55.645025Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.animation_graph
+[2m2026-10-25T01:01:55.645143Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.project_window
+[2m2026-10-25T01:01:55.645256Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.build_panel
+[2m2026-10-25T01:01:55.645414Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.test_input
+[2m2026-10-25T01:01:55.645593Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.multiplayer
+[2m2026-10-25T01:01:55.645715Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.viewport_panel
+[2m2026-10-25T01:01:55.646112Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core
+[2m2026-10-25T01:01:55.649051Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.ui_palette
+[2m2026-10-25T01:01:55.649281Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.timeline
+[2m2026-10-25T01:01:55.653300Z[0m [33m WARN[0m [2mjackdaw_api_internal::keymap::apply[0m[2m:[0m preset 'classic' has 10 chords claimed by more than one action: ["Home (Press, Operators): viewport2d.frame, clip.timeline.jump_start, view.frame_all", "Delete (Press, Operators): clip.delete_keyframes, entity.delete, brush.delete_element", "Backspace (Press, Operators): clip.delete_keyframes, viewport.draw_brush.remove_last_vertex, brush.delete_element", "Ctrl+KeyC (Press, Operators): clip.copy_keyframes, entity.copy", "Ctrl+KeyV (Press, Operators): clip.paste_keyframes, entity.paste", "Tab (Press, Operators): viewport.draw_brush.toggle_mode, brush.clip.cycle_mode", "Enter (Press, Operators): viewport.draw_brush.commit_polygon, brush.clip.apply", "KeyE (Press, Operators): tool.rotate, brush.mesh.extrude", "Escape (Press, Operators): brush.exit_edit_mode, selection.clear, brush.clip.clear, terrain.tool.exit_to_select", "Ctrl+KeyB (Press, Operators): brush.mesh.edge_bevel, brush.mesh.vertex_bevel"]
+[2m2026-10-25T01:01:55.653310Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw::test_input::plugin` of extension `jackdaw.test_input`
+[2m2026-10-25T01:01:55.653520Z[0m [32m INFO[0m [2mjackdaw::extension_lifecycle[0m[2m:[0m applied keymap preset 'classic': 109 entries, 109 bindings, 0 user rows
+[2m2026-10-25T01:01:55.654011Z[0m [33m WARN[0m [2mbevy_render::texture[0m[2m:[0m CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+[2m2026-10-25T01:01:55.654217Z[0m [33m WARN[0m [2mbevy_gltf[0m[2m:[0m CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+[2m2026-10-25T01:01:55.659085Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.ui_palette
+[2m2026-10-25T01:01:55.659466Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.project_window
+[2m2026-10-25T01:01:55.659655Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.viewport_panel
+[2m2026-10-25T01:01:55.660066Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core
+[2m2026-10-25T01:01:55.663656Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.game_panel
+[2m2026-10-25T01:01:55.663918Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.timeline
+[2m2026-10-25T01:01:55.664056Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.test_input
+[2m2026-10-25T01:01:55.664202Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.multiplayer
+[2m2026-10-25T01:01:55.664340Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.animation_graph
+[2m2026-10-25T01:01:55.664459Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.build_panel
+[2m2026-10-25T01:01:55.664570Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.inspector
+[2m2026-10-25T01:01:55.664703Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core_windows
+[2m2026-10-25T01:01:55.671629Z[0m [32m INFO[0m [2mjackdaw::extension_lifecycle[0m[2m:[0m applied keymap preset 'classic': 109 entries, 109 bindings, 0 user rows
+[2m2026-10-25T01:01:55.672250Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw::test_input::plugin` of extension `jackdaw.test_input`
+[2m2026-10-25T01:01:55.672703Z[0m [33m WARN[0m [2mbevy_render::texture[0m[2m:[0m CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+[2m2026-10-25T01:01:55.672933Z[0m [33m WARN[0m [2mbevy_gltf[0m[2m:[0m CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+[2m2026-10-25T01:01:55.677713Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.viewport_panel
+[2m2026-10-25T01:01:55.678277Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.inspector
+[2m2026-10-25T01:01:55.678540Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.ui_palette
+[2m2026-10-25T01:01:55.678807Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.project_window
+[2m2026-10-25T01:01:55.678936Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.timeline
+[2m2026-10-25T01:01:55.679026Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.animation_graph
+[2m2026-10-25T01:01:55.679116Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.build_panel
+[2m2026-10-25T01:01:55.679197Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core_windows
+[2m2026-10-25T01:01:55.679307Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.test_input
+[2m2026-10-25T01:01:55.679412Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.multiplayer
+[2m2026-10-25T01:01:55.679521Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.game_panel
+[2m2026-10-25T01:01:55.679647Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core
+[2m2026-10-25T01:01:55.686870Z[0m [32m INFO[0m [2mjackdaw::extension_lifecycle[0m[2m:[0m applied keymap preset 'classic': 109 entries, 109 bindings, 0 user rows
+[2m2026-10-25T01:01:55.693646Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw::test_input::plugin` of extension `jackdaw.test_input`
+[2m2026-10-25T01:01:55.694323Z[0m [33m WARN[0m [2mbevy_render::texture[0m[2m:[0m CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+[2m2026-10-25T01:01:55.694572Z[0m [33m WARN[0m [2mbevy_gltf[0m[2m:[0m CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+[2m2026-10-25T01:01:55.698287Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.test_input
+[2m2026-10-25T01:01:55.698646Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.inspector
+[2m2026-10-25T01:01:55.698827Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.ui_palette
+[2m2026-10-25T01:01:55.699112Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.build_panel
+[2m2026-10-25T01:01:55.699223Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.multiplayer
+[2m2026-10-25T01:01:55.699469Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core
+[2m2026-10-25T01:01:55.702444Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.game_panel
+[2m2026-10-25T01:01:55.702659Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.animation_graph
+[2m2026-10-25T01:01:55.702796Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.project_window
+[2m2026-10-25T01:01:55.703094Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core_windows
+[2m2026-10-25T01:01:55.703254Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.timeline
+[2m2026-10-25T01:01:55.703379Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.viewport_panel
+[2m2026-10-25T01:01:55.706801Z[0m [33m WARN[0m [2mjackdaw_api_internal::keymap::apply[0m[2m:[0m preset 'classic' has 10 chords claimed by more than one action: ["Delete (Press, Operators): clip.delete_keyframes, entity.delete, brush.delete_element", "Backspace (Press, Operators): clip.delete_keyframes, viewport.draw_brush.remove_last_vertex, brush.delete_element", "Home (Press, Operators): clip.timeline.jump_start, view.frame_all, viewport2d.frame", "Ctrl+KeyC (Press, Operators): clip.copy_keyframes, entity.copy", "Ctrl+KeyV (Press, Operators): clip.paste_keyframes, entity.paste", "Tab (Press, Operators): viewport.draw_brush.toggle_mode, brush.clip.cycle_mode", "Enter (Press, Operators): viewport.draw_brush.commit_polygon, brush.clip.apply", "KeyE (Press, Operators): tool.rotate, brush.mesh.extrude", "Escape (Press, Operators): brush.exit_edit_mode, selection.clear, brush.clip.clear, terrain.tool.exit_to_select", "Ctrl+KeyB (Press, Operators): brush.mesh.edge_bevel, brush.mesh.vertex_bevel"]
+[2m2026-10-25T01:01:55.707087Z[0m [32m INFO[0m [2mjackdaw::extension_lifecycle[0m[2m:[0m applied keymap preset 'classic': 109 entries, 109 bindings, 0 user rows
+[2m2026-10-25T01:01:55.714717Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw::test_input::plugin` of extension `jackdaw.test_input`
+[2m2026-10-25T01:01:55.715412Z[0m [33m WARN[0m [2mbevy_render::texture[0m[2m:[0m CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+[2m2026-10-25T01:01:55.715660Z[0m [33m WARN[0m [2mbevy_gltf[0m[2m:[0m CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+[2m2026-10-25T01:01:55.721726Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.ui_palette
+[2m2026-10-25T01:01:55.722350Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.game_panel
+[2m2026-10-25T01:01:55.722536Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core_windows
+[2m2026-10-25T01:01:55.722745Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.timeline
+[2m2026-10-25T01:01:55.722905Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.multiplayer
+[2m2026-10-25T01:01:55.723128Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.viewport_panel
+[2m2026-10-25T01:01:55.723925Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core
+[2m2026-10-25T01:01:55.727263Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.build_panel
+[2m2026-10-25T01:01:55.727553Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.inspector
+[2m2026-10-25T01:01:55.727703Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.animation_graph
+[2m2026-10-25T01:01:55.727829Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.test_input
+[2m2026-10-25T01:01:55.727952Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.project_window
+[2m2026-10-25T01:01:55.731808Z[0m [33m WARN[0m [2mjackdaw_api_internal::keymap::apply[0m[2m:[0m preset 'classic' has 10 chords claimed by more than one action: ["Home (Press, Operators): viewport2d.frame, clip.timeline.jump_start, view.frame_all", "Delete (Press, Operators): clip.delete_keyframes, entity.delete, brush.delete_element", "Backspace (Press, Operators): clip.delete_keyframes, viewport.draw_brush.remove_last_vertex, brush.delete_element", "Ctrl+KeyC (Press, Operators): clip.copy_keyframes, entity.copy", "Ctrl+KeyV (Press, Operators): clip.paste_keyframes, entity.paste", "Tab (Press, Operators): viewport.draw_brush.toggle_mode, brush.clip.cycle_mode", "Enter (Press, Operators): viewport.draw_brush.commit_polygon, brush.clip.apply", "KeyE (Press, Operators): tool.rotate, brush.mesh.extrude", "Escape (Press, Operators): brush.exit_edit_mode, selection.clear, brush.clip.clear, terrain.tool.exit_to_select", "Ctrl+KeyB (Press, Operators): brush.mesh.edge_bevel, brush.mesh.vertex_bevel"]
+[2m2026-10-25T01:01:55.732102Z[0m [32m INFO[0m [2mjackdaw::extension_lifecycle[0m[2m:[0m applied keymap preset 'classic': 109 entries, 109 bindings, 0 user rows
+[2m2026-10-25T01:01:55.771029Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw::test_input::plugin` of extension `jackdaw.test_input`
+[2m2026-10-25T01:01:55.771571Z[0m [33m WARN[0m [2mbevy_render::texture[0m[2m:[0m CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+[2m2026-10-25T01:01:55.771797Z[0m [33m WARN[0m [2mbevy_gltf[0m[2m:[0m CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+[2m2026-10-25T01:01:55.776119Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw::test_input::plugin` of extension `jackdaw.test_input`
+[2m2026-10-25T01:01:55.776609Z[0m [33m WARN[0m [2mbevy_render::texture[0m[2m:[0m CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+[2m2026-10-25T01:01:55.776842Z[0m [33m WARN[0m [2mbevy_gltf[0m[2m:[0m CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+[2m2026-10-25T01:01:55.777394Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.game_panel
+[2m2026-10-25T01:01:55.777629Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.timeline
+[2m2026-10-25T01:01:55.777765Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.ui_palette
+[2m2026-10-25T01:01:55.777965Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.build_panel
+[2m2026-10-25T01:01:55.778184Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.animation_graph
+[2m2026-10-25T01:01:55.778307Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.inspector
+[2m2026-10-25T01:01:55.778418Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.viewport_panel
+[2m2026-10-25T01:01:55.778773Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.project_window
+[2m2026-10-25T01:01:55.778907Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.test_input
+[2m2026-10-25T01:01:55.779026Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core_windows
+[2m2026-10-25T01:01:55.779166Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.multiplayer
+[2m2026-10-25T01:01:55.779282Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core
+[2m2026-10-25T01:01:55.781826Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.project_window
+[2m2026-10-25T01:01:55.782181Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.viewport_panel
+[2m2026-10-25T01:01:55.782512Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.ui_palette
+[2m2026-10-25T01:01:55.782686Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core_windows
+[2m2026-10-25T01:01:55.782852Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.game_panel
+[2m2026-10-25T01:01:55.782961Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core
+[2m2026-10-25T01:01:55.785192Z[0m [32m INFO[0m [2mjackdaw::extension_lifecycle[0m[2m:[0m applied keymap preset 'classic': 109 entries, 109 bindings, 0 user rows
+[2m2026-10-25T01:01:55.786724Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.multiplayer
+[2m2026-10-25T01:01:55.786906Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.animation_graph
+[2m2026-10-25T01:01:55.787049Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.build_panel
+[2m2026-10-25T01:01:55.787171Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.inspector
+[2m2026-10-25T01:01:55.787310Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.test_input
+[2m2026-10-25T01:01:55.787430Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.timeline
+[2m2026-10-25T01:01:55.796438Z[0m [32m INFO[0m [2mjackdaw::extension_lifecycle[0m[2m:[0m applied keymap preset 'classic': 109 entries, 109 bindings, 0 user rows
+[2m2026-10-25T01:01:55.801201Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw::test_input::plugin` of extension `jackdaw.test_input`
+[2m2026-10-25T01:01:55.801674Z[0m [33m WARN[0m [2mbevy_render::texture[0m[2m:[0m CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+[2m2026-10-25T01:01:55.801884Z[0m [33m WARN[0m [2mbevy_gltf[0m[2m:[0m CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+[2m2026-10-25T01:01:55.805853Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.project_window
+[2m2026-10-25T01:01:55.806126Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.animation_graph
+[2m2026-10-25T01:01:55.806254Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.inspector
+[2m2026-10-25T01:01:55.806369Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.ui_palette
+[2m2026-10-25T01:01:55.806528Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.test_input
+[2m2026-10-25T01:01:55.806669Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.game_panel
+[2m2026-10-25T01:01:55.806771Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.build_panel
+[2m2026-10-25T01:01:55.806866Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.timeline
+[2m2026-10-25T01:01:55.806959Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.viewport_panel
+[2m2026-10-25T01:01:55.807247Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core_windows
+[2m2026-10-25T01:01:55.807429Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core
+[2m2026-10-25T01:01:55.810575Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.multiplayer
+[2m2026-10-25T01:01:55.813681Z[0m [32m INFO[0m [2mjackdaw::extension_lifecycle[0m[2m:[0m applied keymap preset 'classic': 109 entries, 109 bindings, 0 user rows
+[2m2026-10-25T01:01:55.824359Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw::test_input::plugin` of extension `jackdaw.test_input`
+[2m2026-10-25T01:01:55.824868Z[0m [33m WARN[0m [2mbevy_render::texture[0m[2m:[0m CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+[2m2026-10-25T01:01:55.825093Z[0m [33m WARN[0m [2mbevy_gltf[0m[2m:[0m CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+[2m2026-10-25T01:01:55.829143Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core
+[2m2026-10-25T01:01:55.833063Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.build_panel
+[2m2026-10-25T01:01:55.833457Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.inspector
+[2m2026-10-25T01:01:55.833616Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.multiplayer
+[2m2026-10-25T01:01:55.833831Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core_windows
+[2m2026-10-25T01:01:55.834038Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.viewport_panel
+[2m2026-10-25T01:01:55.834477Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.animation_graph
+[2m2026-10-25T01:01:55.835295Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.ui_palette
+[2m2026-10-25T01:01:55.835517Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.test_input
+[2m2026-10-25T01:01:55.835665Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.game_panel
+[2m2026-10-25T01:01:55.835784Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.project_window
+[2m2026-10-25T01:01:55.835903Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.timeline
+[2m2026-10-25T01:01:55.841414Z[0m [33m WARN[0m [2mjackdaw_api_internal::keymap::apply[0m[2m:[0m preset 'classic' has 10 chords claimed by more than one action: ["Delete (Press, Operators): clip.delete_keyframes, entity.delete, brush.delete_element", "Backspace (Press, Operators): clip.delete_keyframes, viewport.draw_brush.remove_last_vertex, brush.delete_element", "Home (Press, Operators): clip.timeline.jump_start, view.frame_all, viewport2d.frame", "Ctrl+KeyC (Press, Operators): clip.copy_keyframes, entity.copy", "Ctrl+KeyV (Press, Operators): clip.paste_keyframes, entity.paste", "Tab (Press, Operators): viewport.draw_brush.toggle_mode, brush.clip.cycle_mode", "Enter (Press, Operators): viewport.draw_brush.commit_polygon, brush.clip.apply", "KeyE (Press, Operators): tool.rotate, brush.mesh.extrude", "Escape (Press, Operators): brush.exit_edit_mode, selection.clear, brush.clip.clear, terrain.tool.exit_to_select", "Ctrl+KeyB (Press, Operators): brush.mesh.edge_bevel, brush.mesh.vertex_bevel"]
+[2m2026-10-25T01:01:55.841810Z[0m [32m INFO[0m [2mjackdaw::extension_lifecycle[0m[2m:[0m applied keymap preset 'classic': 109 entries, 109 bindings, 0 user rows
+[2m2026-10-25T01:01:55.852015Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw::test_input::plugin` of extension `jackdaw.test_input`
+[2m2026-10-25T01:01:55.852092Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw::test_input::plugin` of extension `jackdaw.test_input`
+[2m2026-10-25T01:01:55.852617Z[0m [33m WARN[0m [2mbevy_render::texture[0m[2m:[0m CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+[2m2026-10-25T01:01:55.852696Z[0m [33m WARN[0m [2mbevy_render::texture[0m[2m:[0m CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+[2m2026-10-25T01:01:55.852864Z[0m [33m WARN[0m [2mbevy_gltf[0m[2m:[0m CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+[2m2026-10-25T01:01:55.852916Z[0m [33m WARN[0m [2mbevy_gltf[0m[2m:[0m CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+[2m2026-10-25T01:01:55.857691Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.animation_graph
+[2m2026-10-25T01:01:55.857718Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.ui_palette
+[2m2026-10-25T01:01:55.858187Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.multiplayer
+[2m2026-10-25T01:01:55.858347Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.timeline
+[2m2026-10-25T01:01:55.858358Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.animation_graph
+[2m2026-10-25T01:01:55.858469Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.build_panel
+[2m2026-10-25T01:01:55.858641Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.game_panel
+[2m2026-10-25T01:01:55.858752Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.project_window
+[2m2026-10-25T01:01:55.858873Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.viewport_panel
+[2m2026-10-25T01:01:55.858994Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.viewport_panel
+[2m2026-10-25T01:01:55.859468Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core
+[2m2026-10-25T01:01:55.859483Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core_windows
+[2m2026-10-25T01:01:55.859772Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core
+[2m2026-10-25T01:01:55.862363Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.build_panel
+[2m2026-10-25T01:01:55.862484Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.game_panel
+[2m2026-10-25T01:01:55.862560Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.project_window
+[2m2026-10-25T01:01:55.862703Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.inspector
+[2m2026-10-25T01:01:55.862937Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.test_input
+[2m2026-10-25T01:01:55.863096Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.ui_palette
+[2m2026-10-25T01:01:55.862803Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.inspector
+[2m2026-10-25T01:01:55.863416Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.test_input
+[2m2026-10-25T01:01:55.863556Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.timeline
+[2m2026-10-25T01:01:55.863669Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.multiplayer
+[2m2026-10-25T01:01:55.863798Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core_windows
+[2m2026-10-25T01:01:55.867198Z[0m [33m WARN[0m [2mjackdaw_api_internal::keymap::apply[0m[2m:[0m preset 'classic' has 10 chords claimed by more than one action: ["Home (Press, Operators): viewport2d.frame, clip.timeline.jump_start, view.frame_all", "Delete (Press, Operators): clip.delete_keyframes, entity.delete, brush.delete_element", "Backspace (Press, Operators): clip.delete_keyframes, viewport.draw_brush.remove_last_vertex, brush.delete_element", "Ctrl+KeyC (Press, Operators): clip.copy_keyframes, entity.copy", "Ctrl+KeyV (Press, Operators): clip.paste_keyframes, entity.paste", "Tab (Press, Operators): viewport.draw_brush.toggle_mode, brush.clip.cycle_mode", "Enter (Press, Operators): viewport.draw_brush.commit_polygon, brush.clip.apply", "KeyE (Press, Operators): tool.rotate, brush.mesh.extrude", "Escape (Press, Operators): brush.exit_edit_mode, selection.clear, brush.clip.clear, terrain.tool.exit_to_select", "Ctrl+KeyB (Press, Operators): brush.mesh.edge_bevel, brush.mesh.vertex_bevel"]
+[2m2026-10-25T01:01:55.867214Z[0m [32m INFO[0m [2mjackdaw::extension_lifecycle[0m[2m:[0m applied keymap preset 'classic': 109 entries, 109 bindings, 0 user rows
+[2m2026-10-25T01:01:55.867533Z[0m [32m INFO[0m [2mjackdaw::extension_lifecycle[0m[2m:[0m applied keymap preset 'classic': 109 entries, 109 bindings, 0 user rows
+[2m2026-10-25T01:01:55.909700Z[0m [32m INFO[0m [2mjackdaw::asset_catalog[0m[2m:[0m No asset catalog found, starting with empty catalog
+[2m2026-10-25T01:01:55.930996Z[0m [32m INFO[0m [2mjackdaw::asset_catalog[0m[2m:[0m No asset catalog found, starting with empty catalog
+[2m2026-10-25T01:01:55.932840Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw::test_input::plugin` of extension `jackdaw.test_input`
+[2m2026-10-25T01:01:55.934541Z[0m [33m WARN[0m [2mbevy_render::texture[0m[2m:[0m CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+[2m2026-10-25T01:01:55.934587Z[0m [32m INFO[0m [2mjackdaw::asset_catalog[0m[2m:[0m No asset catalog found, starting with empty catalog
+[2m2026-10-25T01:01:55.934778Z[0m [33m WARN[0m [2mbevy_gltf[0m[2m:[0m CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+[2m2026-10-25T01:01:55.939141Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.inspector
+[2m2026-10-25T01:01:55.940757Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.project_window
+[2m2026-10-25T01:01:55.941033Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.test_input
+[2m2026-10-25T01:01:55.941226Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.viewport_panel
+[2m2026-10-25T01:01:55.941720Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.timeline
+[2m2026-10-25T01:01:55.941867Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.multiplayer
+[2m2026-10-25T01:01:55.941996Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core
+[2m2026-10-25T01:01:55.944861Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.build_panel
+[2m2026-10-25T01:01:55.945136Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.ui_palette
+[2m2026-10-25T01:01:55.945327Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.game_panel
+[2m2026-10-25T01:01:55.945470Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core_windows
+[2m2026-10-25T01:01:55.945639Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.animation_graph
+[2m2026-10-25T01:01:55.947451Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw::test_input::plugin` of extension `jackdaw.test_input`
+[2m2026-10-25T01:01:55.948188Z[0m [32m INFO[0m [2mjackdaw::extension_lifecycle[0m[2m:[0m applied keymap preset 'classic': 109 entries, 109 bindings, 0 user rows
+[2m2026-10-25T01:01:55.948220Z[0m [33m WARN[0m [2mbevy_render::texture[0m[2m:[0m CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+[2m2026-10-25T01:01:55.948303Z[0m [32m INFO[0m [2mjackdaw::asset_catalog[0m[2m:[0m No asset catalog found, starting with empty catalog
+[2m2026-10-25T01:01:55.948545Z[0m [33m WARN[0m [2mbevy_gltf[0m[2m:[0m CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+[2m2026-10-25T01:01:55.949385Z[0m [32m INFO[0m [2mjackdaw::asset_catalog[0m[2m:[0m No asset catalog found, starting with empty catalog
+[2m2026-10-25T01:01:55.954647Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.test_input
+[2m2026-10-25T01:01:55.955427Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.viewport_panel
+[2m2026-10-25T01:01:55.956269Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.animation_graph
+[2m2026-10-25T01:01:55.956437Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.build_panel
+[2m2026-10-25T01:01:55.956549Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.project_window
+[2m2026-10-25T01:01:55.956647Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.timeline
+[2m2026-10-25T01:01:55.956743Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.game_panel
+[2m2026-10-25T01:01:55.956841Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core
+[2m2026-10-25T01:01:55.961527Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core_windows
+[2m2026-10-25T01:01:55.963299Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.inspector
+[2m2026-10-25T01:01:55.963472Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.ui_palette
+[2m2026-10-25T01:01:55.963752Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.multiplayer
+[2m2026-10-25T01:01:55.969974Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw::test_input::plugin` of extension `jackdaw.test_input`
+[2m2026-10-25T01:01:55.971767Z[0m [33m WARN[0m [2mbevy_render::texture[0m[2m:[0m CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+[2m2026-10-25T01:01:55.972011Z[0m [33m WARN[0m [2mbevy_gltf[0m[2m:[0m CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+[2m2026-10-25T01:01:55.976562Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.test_input
+[2m2026-10-25T01:01:55.977021Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.animation_graph
+[2m2026-10-25T01:01:55.977182Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.inspector
+[2m2026-10-25T01:01:55.977315Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.timeline
+[2m2026-10-25T01:01:55.977426Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.build_panel
+[2m2026-10-25T01:01:55.977546Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.game_panel
+[2m2026-10-25T01:01:55.977655Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.project_window
+[2m2026-10-25T01:01:55.977759Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.viewport_panel
+[2m2026-10-25T01:01:55.978109Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core
+[2m2026-10-25T01:01:55.972069Z[0m [32m INFO[0m [2mjackdaw::asset_catalog[0m[2m:[0m No asset catalog found, starting with empty catalog
+[2m2026-10-25T01:01:55.970362Z[0m [32m INFO[0m [2mjackdaw::extension_lifecycle[0m[2m:[0m applied keymap preset 'classic': 109 entries, 109 bindings, 0 user rows
+[2m2026-10-25T01:01:55.981128Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.ui_palette
+[2m2026-10-25T01:01:55.981373Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.multiplayer
+[2m2026-10-25T01:01:55.981527Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core_windows
+[2m2026-10-25T01:01:55.988265Z[0m [32m INFO[0m [2mjackdaw::extension_lifecycle[0m[2m:[0m applied keymap preset 'classic': 109 entries, 109 bindings, 0 user rows
+[2m2026-10-25T01:01:56.038406Z[0m [32m INFO[0m [2mjackdaw::asset_catalog[0m[2m:[0m No asset catalog found, starting with empty catalog
+[2m2026-10-25T01:01:56.059267Z[0m [33m WARN[0m [2mjackdaw::project_window[0m[2m:[0m the project's files at C:\Users\linbo.zhang\AppData\Local\Temp\jackdaw-keyframe-undo-zO9LXS\assets cannot be watched
+[2m2026-10-25T01:01:56.066325Z[0m [32m INFO[0m [2mjackdaw::asset_catalog[0m[2m:[0m No asset catalog found, starting with empty catalog
+[2m2026-10-25T01:01:56.066471Z[0m [32m INFO[0m [2mjackdaw::asset_catalog[0m[2m:[0m No asset catalog found, starting with empty catalog
+[2m2026-10-25T01:01:56.091952Z[0m [32m INFO[0m [2mjackdaw::asset_catalog[0m[2m:[0m No asset catalog found, starting with empty catalog
+[2m2026-10-25T01:01:56.108830Z[0m [32m INFO[0m [2mjackdaw::asset_catalog[0m[2m:[0m No asset catalog found, starting with empty catalog
+[2m2026-10-25T01:01:56.112836Z[0m [32m INFO[0m [2mjackdaw::asset_catalog[0m[2m:[0m No asset catalog found, starting with empty catalog
+[2m2026-10-25T01:01:56.147381Z[0m [32m INFO[0m [2mjackdaw::asset_catalog[0m[2m:[0m No project root, skipping catalog load
+[2m2026-10-25T01:01:56.233997Z[0m [32m INFO[0m [2mjackdaw::material_browser[0m[2m:[0m update_material_browser_ui: rebuilding with 1 entries
+[2m2026-10-25T01:01:56.240359Z[0m [32m INFO[0m [2mjackdaw::asset_catalog[0m[2m:[0m No asset catalog found, starting with empty catalog
+[2m2026-10-25T01:01:56.259196Z[0m [32m INFO[0m [2mjackdaw::asset_catalog[0m[2m:[0m No asset catalog found, starting with empty catalog
+[2m2026-10-25T01:01:56.264037Z[0m [33m WARN[0m [2mbevy_ui::ui_node[0m[2m:[0m Two or more Entities with IsDefaultUiCamera found when only one Camera with this marker is allowed.
+[2m2026-10-25T01:01:56.266319Z[0m [32m INFO[0m [2mjackdaw::asset_catalog[0m[2m:[0m No asset catalog found, starting with empty catalog
+[2m2026-10-25T01:01:56.372021Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: scene.new
+[2m2026-10-25T01:01:56.550758Z[0m [33m WARN[0m [2mjackdaw::pie[0m[2m:[0m PIE: cannot build C:\Users\linbo.zhang\AppData\Local\Temp\jackdaw-dirty-matrix-BHsY4B: cargo could not read C:\Users\linbo.zhang\AppData\Local\Temp\jackdaw-dirty-matrix-BHsY4B: error: could not find `Cargo.toml` in `C:\Users\linbo.zhang\AppData\Local\Temp\jackdaw-dirty-matrix-BHsY4B` or any parent directory
+[2m2026-10-25T01:01:56.552895Z[0m [32m INFO[0m [2mjackdaw::material_browser[0m[2m:[0m update_material_browser_ui: rebuilding with 1 entries
+[2m2026-10-25T01:01:56.580400Z[0m [33m WARN[0m [2mjackdaw::pie[0m[2m:[0m PIE: cannot build C:\Users\linbo.zhang\AppData\Local\Temp\jackdaw-dirty-matrix-sfElWh: cargo could not read C:\Users\linbo.zhang\AppData\Local\Temp\jackdaw-dirty-matrix-sfElWh: error: could not find `Cargo.toml` in `C:\Users\linbo.zhang\AppData\Local\Temp\jackdaw-dirty-matrix-sfElWh` or any parent directory
+[2m2026-10-25T01:01:56.582057Z[0m [32m INFO[0m [2mjackdaw::material_browser[0m[2m:[0m update_material_browser_ui: rebuilding with 1 entries
+test dirty_matrix::a_fresh_untitled_tab_starts_clean ... ok
+[2m2026-10-25T01:01:56.618704Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-25T01:01:56.619567Z[0m [32m INFO[0m [2mbevy_diagnostic::system_information_diagnostics_plugin::internal[0m[2m:[0m SystemInfo { os: "Windows 11 Pro", kernel: "26100", cpu: "AMD Ryzen 7 9700X 8-Core Processor", core_count: "8", memory: "93.4 GiB" }
+[2m2026-10-25T01:01:56.620428Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-25T01:01:56.644551Z[0m [33m WARN[0m [2mjackdaw::pie[0m[2m:[0m PIE: cannot build C:\Users\linbo.zhang\AppData\Local\Temp\jackdaw-dirty-matrix-lR4iyA: cargo could not read C:\Users\linbo.zhang\AppData\Local\Temp\jackdaw-dirty-matrix-lR4iyA: error: could not find `Cargo.toml` in `C:\Users\linbo.zhang\AppData\Local\Temp\jackdaw-dirty-matrix-lR4iyA` or any parent directory
+[2m2026-10-25T01:01:56.646206Z[0m [32m INFO[0m [2mjackdaw::material_browser[0m[2m:[0m update_material_browser_ui: rebuilding with 1 entries
+[2m2026-10-25T01:01:56.653877Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+[2m2026-10-25T01:01:56.671235Z[0m [33m WARN[0m [2mjackdaw::pie[0m[2m:[0m PIE: cannot build C:\Users\linbo.zhang\AppData\Local\Temp\jackdaw-dirty-matrix-HO2naU: cargo could not read C:\Users\linbo.zhang\AppData\Local\Temp\jackdaw-dirty-matrix-HO2naU: error: could not find `Cargo.toml` in `C:\Users\linbo.zhang\AppData\Local\Temp\jackdaw-dirty-matrix-HO2naU` or any parent directory
+[2m2026-10-25T01:01:56.672738Z[0m [32m INFO[0m [2mjackdaw::material_browser[0m[2m:[0m update_material_browser_ui: rebuilding with 1 entries
+[2m2026-10-25T01:01:56.678075Z[0m [33m WARN[0m [2mjackdaw::pie[0m[2m:[0m PIE: cannot build C:\Users\linbo.zhang\AppData\Local\Temp\jackdaw-dirty-matrix-QQ3yzS: cargo could not read C:\Users\linbo.zhang\AppData\Local\Temp\jackdaw-dirty-matrix-QQ3yzS: error: could not find `Cargo.toml` in `C:\Users\linbo.zhang\AppData\Local\Temp\jackdaw-dirty-matrix-QQ3yzS` or any parent directory
+[2m2026-10-25T01:01:56.679520Z[0m [32m INFO[0m [2mjackdaw::material_browser[0m[2m:[0m update_material_browser_ui: rebuilding with 1 entries
+[2m2026-10-25T01:01:56.688789Z[0m [33m WARN[0m [2mjackdaw::pie[0m[2m:[0m PIE: cannot build C:\Users\linbo.zhang\AppData\Local\Temp\jackdaw-dirty-matrix-DK6dyt: cargo could not read C:\Users\linbo.zhang\AppData\Local\Temp\jackdaw-dirty-matrix-DK6dyt: error: could not find `Cargo.toml` in `C:\Users\linbo.zhang\AppData\Local\Temp\jackdaw-dirty-matrix-DK6dyt` or any parent directory
+[2m2026-10-25T01:01:56.690636Z[0m [32m INFO[0m [2mjackdaw::material_browser[0m[2m:[0m update_material_browser_ui: rebuilding with 1 entries
+[2m2026-10-25T01:01:56.696289Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: scene.open
+[2m2026-10-25T01:01:56.706607Z[0m [33m WARN[0m [2mjackdaw::pie[0m[2m:[0m PIE: cannot build C:\Users\linbo.zhang\AppData\Local\Temp\jackdaw-dirty-matrix-dSmJV0: cargo could not read C:\Users\linbo.zhang\AppData\Local\Temp\jackdaw-dirty-matrix-dSmJV0: error: could not find `Cargo.toml` in `C:\Users\linbo.zhang\AppData\Local\Temp\jackdaw-dirty-matrix-dSmJV0` or any parent directory
+[2m2026-10-25T01:01:56.708065Z[0m [32m INFO[0m [2mjackdaw::material_browser[0m[2m:[0m update_material_browser_ui: rebuilding with 1 entries
+[2m2026-10-25T01:01:56.720401Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: scene.open
+[2m2026-10-25T01:01:56.768094Z[0m [33m WARN[0m [2mjackdaw::pie[0m[2m:[0m PIE: cannot build C:\Users\linbo.zhang\AppData\Local\Temp\jackdaw-dirty-matrix-ZxbAgM: cargo could not read C:\Users\linbo.zhang\AppData\Local\Temp\jackdaw-dirty-matrix-ZxbAgM: error: could not find `Cargo.toml` in `C:\Users\linbo.zhang\AppData\Local\Temp\jackdaw-dirty-matrix-ZxbAgM` or any parent directory
+[2m2026-10-25T01:01:56.769531Z[0m [32m INFO[0m [2mjackdaw::material_browser[0m[2m:[0m update_material_browser_ui: rebuilding with 1 entries
+[2m2026-10-25T01:01:56.783466Z[0m [33m WARN[0m [2mjackdaw::pie[0m[2m:[0m PIE: cannot build C:\Users\linbo.zhang\AppData\Local\Temp\jackdaw-dirty-matrix-YGrsES: cargo could not read C:\Users\linbo.zhang\AppData\Local\Temp\jackdaw-dirty-matrix-YGrsES: error: could not find `Cargo.toml` in `C:\Users\linbo.zhang\AppData\Local\Temp\jackdaw-dirty-matrix-YGrsES` or any parent directory
+[2m2026-10-25T01:01:56.784983Z[0m [32m INFO[0m [2mjackdaw::material_browser[0m[2m:[0m update_material_browser_ui: rebuilding with 1 entries
+[2m2026-10-25T01:01:56.808202Z[0m [33m WARN[0m [2mjackdaw::pie[0m[2m:[0m PIE: cannot build C:\Users\linbo.zhang\AppData\Local\Temp\jackdaw-keyframe-undo-zO9LXS: cargo could not read C:\Users\linbo.zhang\AppData\Local\Temp\jackdaw-keyframe-undo-zO9LXS: error: could not find `Cargo.toml` in `C:\Users\linbo.zhang\AppData\Local\Temp\jackdaw-keyframe-undo-zO9LXS` or any parent directory
+[2m2026-10-25T01:01:56.810026Z[0m [32m INFO[0m [2mjackdaw::material_browser[0m[2m:[0m update_material_browser_ui: rebuilding with 1 entries
+[2m2026-10-25T01:01:56.820132Z[0m [33m WARN[0m [2mjackdaw::pie[0m[2m:[0m PIE: cannot build C:\Users\linbo.zhang\AppData\Local\Temp\jackdaw-dirty-matrix-6ZcZSt: cargo could not read C:\Users\linbo.zhang\AppData\Local\Temp\jackdaw-dirty-matrix-6ZcZSt: error: could not find `Cargo.toml` in `C:\Users\linbo.zhang\AppData\Local\Temp\jackdaw-dirty-matrix-6ZcZSt` or any parent directory
+[2m2026-10-25T01:01:56.822047Z[0m [32m INFO[0m [2mjackdaw::material_browser[0m[2m:[0m update_material_browser_ui: rebuilding with 1 entries
+[2m2026-10-25T01:01:56.828761Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: scene.open
+[2m2026-10-25T01:01:56.836624Z[0m [33m WARN[0m [2mjackdaw::pie[0m[2m:[0m PIE: cannot build C:\Users\linbo.zhang\AppData\Local\Temp\jackdaw-dirty-matrix-YlZa5q: cargo could not read C:\Users\linbo.zhang\AppData\Local\Temp\jackdaw-dirty-matrix-YlZa5q: error: could not find `Cargo.toml` in `C:\Users\linbo.zhang\AppData\Local\Temp\jackdaw-dirty-matrix-YlZa5q` or any parent directory
+[2m2026-10-25T01:01:56.838105Z[0m [32m INFO[0m [2mjackdaw::material_browser[0m[2m:[0m update_material_browser_ui: rebuilding with 1 entries
+[2m2026-10-25T01:01:56.841505Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: scene.open
+[2m2026-10-25T01:01:56.842463Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: scene.open
+[2m2026-10-25T01:01:56.852458Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: resource.set_field
+[2m2026-10-25T01:01:56.854481Z[0m [33m WARN[0m [2mjackdaw::pie[0m[2m:[0m PIE: cannot build C:\Users\linbo.zhang\AppData\Local\Temp\jackdaw-dirty-matrix-jejwRV: cargo could not read C:\Users\linbo.zhang\AppData\Local\Temp\jackdaw-dirty-matrix-jejwRV: error: could not find `Cargo.toml` in `C:\Users\linbo.zhang\AppData\Local\Temp\jackdaw-dirty-matrix-jejwRV` or any parent directory
+[2m2026-10-25T01:01:56.856878Z[0m [32m INFO[0m [2mjackdaw::material_browser[0m[2m:[0m update_material_browser_ui: rebuilding with 1 entries
+[2m2026-10-25T01:01:56.879742Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: scene.open
+[2m2026-10-25T01:01:56.880350Z[0m [33m WARN[0m [2mjackdaw::pie[0m[2m:[0m PIE: cannot build C:\Users\linbo.zhang\AppData\Local\Temp\jackdaw-dirty-matrix-2Y0Qav: cargo could not read C:\Users\linbo.zhang\AppData\Local\Temp\jackdaw-dirty-matrix-2Y0Qav: error: could not find `Cargo.toml` in `C:\Users\linbo.zhang\AppData\Local\Temp\jackdaw-dirty-matrix-2Y0Qav` or any parent directory
+[2m2026-10-25T01:01:56.882407Z[0m [32m INFO[0m [2mjackdaw::material_browser[0m[2m:[0m update_material_browser_ui: rebuilding with 1 entries
+[2m2026-10-25T01:01:56.889820Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: history.undo
+[2m2026-10-25T01:01:56.899891Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: scene.open
+test dirty_matrix::open_then_nothing_is_clean ... ok
+[2m2026-10-25T01:01:56.916456Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-25T01:01:56.917361Z[0m [32m INFO[0m [2mbevy_diagnostic::system_information_diagnostics_plugin::internal[0m[2m:[0m SystemInfo { os: "Windows 11 Pro", kernel: "26100", cpu: "AMD Ryzen 7 9700X 8-Core Processor", core_count: "8", memory: "93.4 GiB" }
+[2m2026-10-25T01:01:56.918310Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: prefab.spawn_instance
+[2m2026-10-25T01:01:56.918338Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-25T01:01:56.929406Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: prefab.spawn_instance
+[2m2026-10-25T01:01:56.929780Z[0m [33m WARN[0m [2mjackdaw::pie[0m[2m:[0m PIE: cannot build C:\Users\linbo.zhang\AppData\Local\Temp\jackdaw-dirty-matrix-6UlabW: cargo could not read C:\Users\linbo.zhang\AppData\Local\Temp\jackdaw-dirty-matrix-6UlabW: error: could not find `Cargo.toml` in `C:\Users\linbo.zhang\AppData\Local\Temp\jackdaw-dirty-matrix-6UlabW` or any parent directory
+[2m2026-10-25T01:01:56.930397Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: scene.open
+[2m2026-10-25T01:01:56.931325Z[0m [32m INFO[0m [2mjackdaw::material_browser[0m[2m:[0m update_material_browser_ui: rebuilding with 1 entries
+[2m2026-10-25T01:01:56.932605Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: prefab.spawn_instance
+[2m2026-10-25T01:01:56.962793Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+[2m2026-10-25T01:01:56.974364Z[0m [33m WARN[0m [2mbevy_render::texture[0m[2m:[0m CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+[2m2026-10-25T01:01:56.974542Z[0m [33m WARN[0m [2mbevy_asset::server::loaders[0m[2m:[0m Duplicate AssetLoader registered for Asset type `bevy_image::image::Image` with extensions `["basis", "ktx2", "png"]`. Loader must be specified in a .meta file in order to load assets of this type with these extensions.
+[2m2026-10-25T01:01:56.974779Z[0m [33m WARN[0m [2mbevy_gltf[0m[2m:[0m CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+[2m2026-10-25T01:01:56.974950Z[0m [33m WARN[0m [2mbevy_asset::server::loaders[0m[2m:[0m Duplicate AssetLoader registered for Asset type `bevy_gltf::assets::Gltf` with extensions `["gltf", "glb"]`. Loader must be specified in a .meta file in order to load assets of this type with these extensions.
+[2m2026-10-25T01:01:56.975676Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: history.undo
+[2m2026-10-25T01:01:56.979092Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: history.undo
+[2m2026-10-25T01:01:56.986070Z[0m [32m INFO[0m [2mjackdaw::scene_io::save[0m[2m:[0m Scene saved to C:\Users\linbo.zhang\AppData\Local\Temp\jackdaw-dirty-matrix-HO2naU\assets\zone.bsn
+[2m2026-10-25T01:01:56.986368Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: scene.open
+[2m2026-10-25T01:01:56.986968Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: prefab.spawn_instance
+[2m2026-10-25T01:01:57.000662Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: scene.new
+[2m2026-10-25T01:01:57.005316Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: scene.open
+[2m2026-10-25T01:01:57.008119Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: test.dirty_cancel
+[2m2026-10-25T01:01:57.020170Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: scene.open
+[2m2026-10-25T01:01:57.021849Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: history.undo
+test dirty_matrix::resource_field_edit_undone_rolls_back_and_settles_clean ... ok
+[2m2026-10-25T01:01:57.032748Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: scene.open
+[2m2026-10-25T01:01:57.033361Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: history.redo
+[2m2026-10-25T01:01:57.036862Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-25T01:01:57.037698Z[0m [32m INFO[0m [2mbevy_diagnostic::system_information_diagnostics_plugin::internal[0m[2m:[0m SystemInfo { os: "Windows 11 Pro", kernel: "26100", cpu: "AMD Ryzen 7 9700X 8-Core Processor", core_count: "8", memory: "93.4 GiB" }
+[2m2026-10-25T01:01:57.038470Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-25T01:01:57.076755Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: scene.open
+[2m2026-10-25T01:01:57.077959Z[0m [32m INFO[0m [2mjackdaw::scene_io::save[0m[2m:[0m Scene saved to C:\Users\linbo.zhang\AppData\Local\Temp\jackdaw-dirty-matrix-DK6dyt\assets\zone.bsn
+[2m2026-10-25T01:01:57.081851Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+[2m2026-10-25T01:01:57.082632Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: prefab.spawn_instance
+[2m2026-10-25T01:01:57.083531Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: prefab.spawn_instance
+[2m2026-10-25T01:01:57.116969Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: prefab.spawn_instance
+[2m2026-10-25T01:01:57.129287Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw::test_input::plugin` of extension `jackdaw.test_input`
+[2m2026-10-25T01:01:57.129993Z[0m [33m WARN[0m [2mbevy_render::texture[0m[2m:[0m CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+[2m2026-10-25T01:01:57.130269Z[0m [33m WARN[0m [2mbevy_gltf[0m[2m:[0m CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+[2m2026-10-25T01:01:57.138953Z[0m [32m INFO[0m [2mjackdaw::scene_io::save[0m[2m:[0m Scene saved to C:\Users\linbo.zhang\AppData\Local\Temp\jackdaw-dirty-matrix-YGrsES\assets\zone.bsn
+[2m2026-10-25T01:01:57.140139Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.viewport_panel
+[2m2026-10-25T01:01:57.143088Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core_windows
+[2m2026-10-25T01:01:57.144003Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.ui_palette
+[2m2026-10-25T01:01:57.144284Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.project_window
+[2m2026-10-25T01:01:57.144451Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.timeline
+[2m2026-10-25T01:01:57.144594Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.build_panel
+[2m2026-10-25T01:01:57.144720Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.inspector
+[2m2026-10-25T01:01:57.144842Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.test_input
+[2m2026-10-25T01:01:57.144986Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core
+[2m2026-10-25T01:01:57.152477Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: scene.open
+[2m2026-10-25T01:01:57.160281Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.game_panel
+[2m2026-10-25T01:01:57.160551Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.animation_graph
+[2m2026-10-25T01:01:57.160750Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.multiplayer
+[2m2026-10-25T01:01:57.166011Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: prefab.spawn_instance
+[2m2026-10-25T01:01:57.170062Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: history.undo
+[2m2026-10-25T01:01:57.173705Z[0m [32m INFO[0m [2mjackdaw::scene_io::save[0m[2m:[0m Scene saved to C:\Users\linbo.zhang\AppData\Local\Temp\jackdaw-dirty-matrix-6ZcZSt\assets\zone.bsn
+[2m2026-10-25T01:01:57.179479Z[0m [32m INFO[0m [2mjackdaw::extension_lifecycle[0m[2m:[0m applied keymap preset 'classic': 109 entries, 109 bindings, 0 user rows
+[2m2026-10-25T01:01:57.180344Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: prefab.spawn_instance
+[2m2026-10-25T01:01:57.186776Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: test.dirty_drag
+[2m2026-10-25T01:01:57.197199Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: history.redo
+[2m2026-10-25T01:01:57.206225Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: prefab.spawn_instance
+[2m2026-10-25T01:01:57.211961Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: history.undo
+[2m2026-10-25T01:01:57.237755Z[0m [32m INFO[0m [2mjackdaw::scene_io::save[0m[2m:[0m Scene saved to C:\Users\linbo.zhang\AppData\Local\Temp\jackdaw-dirty-matrix-2Y0Qav\assets\zone.bsn
+test dirty_matrix::edit_then_undo_back_to_saved_is_clean ... ok
+[2m2026-10-25T01:01:57.251552Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-25T01:01:57.252857Z[0m [32m INFO[0m [2mbevy_diagnostic::system_information_diagnostics_plugin::internal[0m[2m:[0m SystemInfo { os: "Windows 11 Pro", kernel: "26100", cpu: "AMD Ryzen 7 9700X 8-Core Processor", core_count: "8", memory: "93.4 GiB" }
+[2m2026-10-25T01:01:57.255507Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-25T01:01:57.278864Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: history.undo
+[2m2026-10-25T01:01:57.288388Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: prefab.spawn_instance
+[2m2026-10-25T01:01:57.327976Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+[2m2026-10-25T01:01:57.340673Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: entity.duplicate
+[2m2026-10-25T01:01:57.346822Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: animation.toggle_keyframe
+[2m2026-10-25T01:01:57.356985Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw::test_input::plugin` of extension `jackdaw.test_input`
+[2m2026-10-25T01:01:57.357497Z[0m [33m WARN[0m [2mbevy_render::texture[0m[2m:[0m CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+[2m2026-10-25T01:01:57.357715Z[0m [33m WARN[0m [2mbevy_gltf[0m[2m:[0m CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+[2m2026-10-25T01:01:57.390484Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.multiplayer
+[2m2026-10-25T01:01:57.392967Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: scene.new
+[2m2026-10-25T01:01:57.394868Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core
+[2m2026-10-25T01:01:57.413874Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: history.undo
+[2m2026-10-25T01:01:57.434584Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core_windows
+[2m2026-10-25T01:01:57.439007Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.timeline
+[2m2026-10-25T01:01:57.439397Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.viewport_panel
+[2m2026-10-25T01:01:57.478302Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.project_window
+[2m2026-10-25T01:01:57.478584Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.animation_graph
+[2m2026-10-25T01:01:57.478709Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.test_input
+[2m2026-10-25T01:01:57.478832Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.ui_palette
+[2m2026-10-25T01:01:57.478993Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.game_panel
+[2m2026-10-25T01:01:57.479094Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.build_panel
+[2m2026-10-25T01:01:57.479195Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.inspector
+[2m2026-10-25T01:01:57.481471Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw::test_input::plugin` of extension `jackdaw.test_input`
+[2m2026-10-25T01:01:57.481798Z[0m [33m WARN[0m [2mbevy_render::texture[0m[2m:[0m CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+[2m2026-10-25T01:01:57.481968Z[0m [33m WARN[0m [2mbevy_gltf[0m[2m:[0m CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+[2m2026-10-25T01:01:57.527394Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.timeline
+[2m2026-10-25T01:01:57.535683Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.multiplayer
+[2m2026-10-25T01:01:57.540274Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.project_window
+[2m2026-10-25T01:01:57.540538Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.viewport_panel
+[2m2026-10-25T01:01:57.558621Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.inspector
+[2m2026-10-25T01:01:57.558979Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core
+[2m2026-10-25T01:01:57.580049Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: clip.delete_keyframes
+[2m2026-10-25T01:01:57.602599Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.ui_palette
+[2m2026-10-25T01:01:57.603051Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.game_panel
+[2m2026-10-25T01:01:57.603170Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core_windows
+[2m2026-10-25T01:01:57.603305Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.animation_graph
+[2m2026-10-25T01:01:57.603419Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.build_panel
+[2m2026-10-25T01:01:57.603510Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.test_input
+[2m2026-10-25T01:01:57.604390Z[0m [33m WARN[0m [2mjackdaw_api_internal::keymap::apply[0m[2m:[0m preset 'classic' has 10 chords claimed by more than one action: ["Delete (Press, Operators): clip.delete_keyframes, entity.delete, brush.delete_element", "Backspace (Press, Operators): clip.delete_keyframes, viewport.draw_brush.remove_last_vertex, brush.delete_element", "Home (Press, Operators): clip.timeline.jump_start, view.frame_all, viewport2d.frame", "Ctrl+KeyC (Press, Operators): clip.copy_keyframes, entity.copy", "Ctrl+KeyV (Press, Operators): clip.paste_keyframes, entity.paste", "Tab (Press, Operators): viewport.draw_brush.toggle_mode, brush.clip.cycle_mode", "Enter (Press, Operators): viewport.draw_brush.commit_polygon, brush.clip.apply", "KeyE (Press, Operators): tool.rotate, brush.mesh.extrude", "Escape (Press, Operators): brush.exit_edit_mode, selection.clear, brush.clip.clear, terrain.tool.exit_to_select", "Ctrl+KeyB (Press, Operators): brush.mesh.edge_bevel, brush.mesh.vertex_bevel"]
+[2m2026-10-25T01:01:57.604514Z[0m [32m INFO[0m [2mjackdaw::extension_lifecycle[0m[2m:[0m applied keymap preset 'classic': 109 entries, 109 bindings, 0 user rows
+[2m2026-10-25T01:01:57.636142Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw::test_input::plugin` of extension `jackdaw.test_input`
+[2m2026-10-25T01:01:57.636676Z[0m [33m WARN[0m [2mbevy_render::texture[0m[2m:[0m CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+[2m2026-10-25T01:01:57.636885Z[0m [33m WARN[0m [2mbevy_gltf[0m[2m:[0m CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+[2m2026-10-25T01:01:57.645160Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: entity.add.cube
+[2m2026-10-25T01:01:57.727550Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.inspector
+[2m2026-10-25T01:01:57.737448Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.test_input
+[2m2026-10-25T01:01:57.740082Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core_windows
+[2m2026-10-25T01:01:57.740247Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.game_panel
+[2m2026-10-25T01:01:57.740355Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.build_panel
+[2m2026-10-25T01:01:57.740465Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.project_window
+[2m2026-10-25T01:01:57.740549Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.viewport_panel
+[2m2026-10-25T01:01:57.761061Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.multiplayer
+[2m2026-10-25T01:01:57.763602Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.timeline
+[2m2026-10-25T01:01:57.763830Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.ui_palette
+[2m2026-10-25T01:01:57.764010Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core
+[2m2026-10-25T01:01:57.815344Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.animation_graph
+[2m2026-10-25T01:01:57.826392Z[0m [33m WARN[0m [2mjackdaw_api_internal::keymap::apply[0m[2m:[0m preset 'classic' has 10 chords claimed by more than one action: ["Home (Press, Operators): viewport2d.frame, clip.timeline.jump_start, view.frame_all", "Delete (Press, Operators): clip.delete_keyframes, entity.delete, brush.delete_element", "Backspace (Press, Operators): clip.delete_keyframes, viewport.draw_brush.remove_last_vertex, brush.delete_element", "Ctrl+KeyC (Press, Operators): clip.copy_keyframes, entity.copy", "Ctrl+KeyV (Press, Operators): clip.paste_keyframes, entity.paste", "Tab (Press, Operators): viewport.draw_brush.toggle_mode, brush.clip.cycle_mode", "Enter (Press, Operators): viewport.draw_brush.commit_polygon, brush.clip.apply", "KeyE (Press, Operators): tool.rotate, brush.mesh.extrude", "Escape (Press, Operators): brush.exit_edit_mode, selection.clear, brush.clip.clear, terrain.tool.exit_to_select", "Ctrl+KeyB (Press, Operators): brush.mesh.edge_bevel, brush.mesh.vertex_bevel"]
+[2m2026-10-25T01:01:57.826687Z[0m [32m INFO[0m [2mjackdaw::extension_lifecycle[0m[2m:[0m applied keymap preset 'classic': 109 entries, 109 bindings, 0 user rows
+[2m2026-10-25T01:01:57.850506Z[0m [33m WARN[0m [2mjackdaw::project_window[0m[2m:[0m the project's files at C:\Users\linbo.zhang\AppData\Local\Temp\jackdaw-keyframe-undo-mMtf7K\assets cannot be watched
+[2m2026-10-25T01:01:57.945589Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: history.undo
+[2m2026-10-25T01:01:58.116986Z[0m [32m INFO[0m [2mjackdaw::extension_lifecycle[0m[2m:[0m applied keymap preset 'classic': 109 entries, 109 bindings, 0 user rows
+test dirty_matrix::edit_then_save_is_clean ... ok
+[2m2026-10-25T01:01:58.539280Z[0m [32m INFO[0m [2mjackdaw::asset_catalog[0m[2m:[0m No asset catalog found, starting with empty catalog
+[2m2026-10-25T01:01:58.578012Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-25T01:01:58.584300Z[0m [32m INFO[0m [2mbevy_diagnostic::system_information_diagnostics_plugin::internal[0m[2m:[0m SystemInfo { os: "Windows 11 Pro", kernel: "26100", cpu: "AMD Ryzen 7 9700X 8-Core Processor", core_count: "8", memory: "93.4 GiB" }
+[2m2026-10-25T01:01:58.594998Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-25T01:01:58.984079Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+[2m2026-10-25T01:01:59.198121Z[0m [33m WARN[0m [2mjackdaw::pie[0m[2m:[0m PIE: cannot build C:\Users\linbo.zhang\AppData\Local\Temp\jackdaw-keyframe-undo-mMtf7K: cargo could not read C:\Users\linbo.zhang\AppData\Local\Temp\jackdaw-keyframe-undo-mMtf7K: error: could not find `Cargo.toml` in `C:\Users\linbo.zhang\AppData\Local\Temp\jackdaw-keyframe-undo-mMtf7K` or any parent directory
+[2m2026-10-25T01:01:59.234507Z[0m [32m INFO[0m [2mjackdaw::material_browser[0m[2m:[0m update_material_browser_ui: rebuilding with 1 entries
+[2m2026-10-25T01:01:59.289561Z[0m [33m WARN[0m [2mjackdaw::project_window[0m[2m:[0m the project's files at C:\Users\linbo.zhang\AppData\Local\Temp\jackdaw-keyframe-undo-giAOEV\assets cannot be watched
+[2m2026-10-25T01:01:59.494660Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw::test_input::plugin` of extension `jackdaw.test_input`
+[2m2026-10-25T01:01:59.495082Z[0m [33m WARN[0m [2mbevy_render::texture[0m[2m:[0m CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+[2m2026-10-25T01:01:59.495309Z[0m [33m WARN[0m [2mbevy_gltf[0m[2m:[0m CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+[2m2026-10-25T01:01:59.657137Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.test_input
+[2m2026-10-25T01:01:59.694299Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.project_window
+[2m2026-10-25T01:01:59.694680Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.game_panel
+[2m2026-10-25T01:01:59.694797Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.multiplayer
+[2m2026-10-25T01:01:59.701976Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.ui_palette
+[2m2026-10-25T01:01:59.702135Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core
+[2m2026-10-25T01:01:59.752621Z[0m [33m WARN[0m [2mjackdaw::project_window[0m[2m:[0m the project's files at C:\Users\linbo.zhang\AppData\Local\Temp\jackdaw-keyframe-undo-7gqfTb\assets cannot be watched
+[2m2026-10-25T01:01:59.879879Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.viewport_panel
+[2m2026-10-25T01:01:59.918792Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.timeline
+[2m2026-10-25T01:01:59.919051Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.animation_graph
+[2m2026-10-25T01:01:59.919143Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.build_panel
+[2m2026-10-25T01:01:59.919216Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.inspector
+[2m2026-10-25T01:01:59.919293Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core_windows
+test dirty_matrix::edit_undo_redo_is_dirty ... ok
+[2m2026-10-25T01:01:59.983713Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-25T01:01:59.986862Z[0m [32m INFO[0m [2mbevy_diagnostic::system_information_diagnostics_plugin::internal[0m[2m:[0m SystemInfo { os: "Windows 11 Pro", kernel: "26100", cpu: "AMD Ryzen 7 9700X 8-Core Processor", core_count: "8", memory: "93.4 GiB" }
+[2m2026-10-25T01:01:59.995922Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-25T01:02:00.197067Z[0m [32m INFO[0m [2mjackdaw::asset_catalog[0m[2m:[0m No asset catalog found, starting with empty catalog
+[2m2026-10-25T01:02:00.338907Z[0m [33m WARN[0m [2mjackdaw_api_internal::keymap::apply[0m[2m:[0m preset 'classic' has 10 chords claimed by more than one action: ["Delete (Press, Operators): clip.delete_keyframes, entity.delete, brush.delete_element", "Backspace (Press, Operators): clip.delete_keyframes, viewport.draw_brush.remove_last_vertex, brush.delete_element", "Home (Press, Operators): clip.timeline.jump_start, view.frame_all, viewport2d.frame", "Ctrl+KeyC (Press, Operators): clip.copy_keyframes, entity.copy", "Ctrl+KeyV (Press, Operators): clip.paste_keyframes, entity.paste", "Tab (Press, Operators): viewport.draw_brush.toggle_mode, brush.clip.cycle_mode", "Enter (Press, Operators): viewport.draw_brush.commit_polygon, brush.clip.apply", "KeyE (Press, Operators): tool.rotate, brush.mesh.extrude", "Escape (Press, Operators): brush.exit_edit_mode, selection.clear, brush.clip.clear, terrain.tool.exit_to_select", "Ctrl+KeyB (Press, Operators): brush.mesh.edge_bevel, brush.mesh.vertex_bevel"]
+[2m2026-10-25T01:02:00.339228Z[0m [32m INFO[0m [2mjackdaw::extension_lifecycle[0m[2m:[0m applied keymap preset 'classic': 109 entries, 109 bindings, 0 user rows
+[2m2026-10-25T01:02:00.352155Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+[2m2026-10-25T01:02:00.620938Z[0m [32m INFO[0m [2mjackdaw::asset_catalog[0m[2m:[0m No asset catalog found, starting with empty catalog
+[2m2026-10-25T01:02:00.836823Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw::test_input::plugin` of extension `jackdaw.test_input`
+[2m2026-10-25T01:02:00.837412Z[0m [33m WARN[0m [2mbevy_render::texture[0m[2m:[0m CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+[2m2026-10-25T01:02:00.837649Z[0m [33m WARN[0m [2mbevy_gltf[0m[2m:[0m CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+[2m2026-10-25T01:02:00.882900Z[0m [33m WARN[0m [2mjackdaw::pie[0m[2m:[0m PIE: cannot build C:\Users\linbo.zhang\AppData\Local\Temp\jackdaw-keyframe-undo-giAOEV: cargo could not read C:\Users\linbo.zhang\AppData\Local\Temp\jackdaw-keyframe-undo-giAOEV: error: could not find `Cargo.toml` in `C:\Users\linbo.zhang\AppData\Local\Temp\jackdaw-keyframe-undo-giAOEV` or any parent directory
+[2m2026-10-25T01:02:00.908768Z[0m [32m INFO[0m [2mjackdaw::material_browser[0m[2m:[0m update_material_browser_ui: rebuilding with 1 entries
+[2m2026-10-25T01:02:00.961400Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.game_panel
+[2m2026-10-25T01:02:00.990977Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.project_window
+[2m2026-10-25T01:02:00.991280Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core
+[2m2026-10-25T01:02:00.991349Z[0m [32m INFO[0m [2mjackdaw::asset_catalog[0m[2m:[0m No asset catalog found, starting with empty catalog
+test dirty_matrix::zz_debug_fingerprint_divergence ... ok
+[2m2026-10-25T01:02:01.076497Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-25T01:02:01.081688Z[0m [32m INFO[0m [2mbevy_diagnostic::system_information_diagnostics_plugin::internal[0m[2m:[0m SystemInfo { os: "Windows 11 Pro", kernel: "26100", cpu: "AMD Ryzen 7 9700X 8-Core Processor", core_count: "8", memory: "93.4 GiB" }
+[2m2026-10-25T01:02:01.107248Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-25T01:02:01.128118Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.timeline
+[2m2026-10-25T01:02:01.128404Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.inspector
+[2m2026-10-25T01:02:01.128532Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.animation_graph
+[2m2026-10-25T01:02:01.128633Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.test_input
+[2m2026-10-25T01:02:01.128721Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core_windows
+[2m2026-10-25T01:02:01.128870Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.multiplayer
+[2m2026-10-25T01:02:01.138143Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.ui_palette
+[2m2026-10-25T01:02:01.138400Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.viewport_panel
+test dirty_matrix::save_undo_then_a_different_edit_is_dirty ... ok
+[2m2026-10-25T01:02:01.170931Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.build_panel
+test dirty_matrix::one_edit_is_dirty ... ok
+[2m2026-10-25T01:02:01.252224Z[0m [33m WARN[0m [2mjackdaw::pie[0m[2m:[0m PIE: cannot build C:\Users\linbo.zhang\AppData\Local\Temp\jackdaw-keyframe-undo-7gqfTb: cargo could not read C:\Users\linbo.zhang\AppData\Local\Temp\jackdaw-keyframe-undo-7gqfTb: error: could not find `Cargo.toml` in `C:\Users\linbo.zhang\AppData\Local\Temp\jackdaw-keyframe-undo-7gqfTb` or any parent directory
+[2m2026-10-25T01:02:01.274721Z[0m [32m INFO[0m [2mjackdaw::material_browser[0m[2m:[0m update_material_browser_ui: rebuilding with 1 entries
+test dirty_matrix::save_then_undo_is_dirty_and_would_prompt ... ok
+[2m2026-10-25T01:02:01.356346Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+[2m2026-10-25T01:02:01.433542Z[0m [32m INFO[0m [2mjackdaw::extension_lifecycle[0m[2m:[0m applied keymap preset 'classic': 109 entries, 109 bindings, 0 user rows
+test dirty_matrix::numeric_entry_cancelled_with_escape_leaves_nothing ... ok
+[2m2026-10-25T01:02:01.563484Z[0m [33m WARN[0m [2mjackdaw::pie[0m[2m:[0m PIE: cannot build C:\Users\linbo.zhang\AppData\Local\Temp\jackdaw-numeric-undo-NoKgmi: cargo could not read C:\Users\linbo.zhang\AppData\Local\Temp\jackdaw-numeric-undo-NoKgmi: error: could not find `Cargo.toml` in `C:\Users\linbo.zhang\AppData\Local\Temp\jackdaw-numeric-undo-NoKgmi` or any parent directory
+[2m2026-10-25T01:02:01.580357Z[0m [32m INFO[0m [2mjackdaw::material_browser[0m[2m:[0m update_material_browser_ui: rebuilding with 1 entries
+test dirty_matrix::modal_cancel::an_escaped_modal_gesture_leaves_no_entry_no_dirty_no_change ... ok
+[2m2026-10-25T01:02:01.678203Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw::test_input::plugin` of extension `jackdaw.test_input`
+[2m2026-10-25T01:02:01.678913Z[0m [33m WARN[0m [2mbevy_render::texture[0m[2m:[0m CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+[2m2026-10-25T01:02:01.679091Z[0m [33m WARN[0m [2mbevy_gltf[0m[2m:[0m CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+[2m2026-10-25T01:02:01.709377Z[0m [33m WARN[0m [2mjackdaw::project_window[0m[2m:[0m the project's files at C:\Users\linbo.zhang\AppData\Local\Temp\jackdaw-numeric-brush-CWSL77\assets cannot be watched
+[2m2026-10-25T01:02:01.720300Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.project_window
+[2m2026-10-25T01:02:01.729042Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core_windows
+[2m2026-10-25T01:02:01.729263Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.ui_palette
+[2m2026-10-25T01:02:01.729479Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.game_panel
+[2m2026-10-25T01:02:01.729609Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.build_panel
+[2m2026-10-25T01:02:01.729746Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.timeline
+[2m2026-10-25T01:02:01.729857Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.inspector
+[2m2026-10-25T01:02:01.729977Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.viewport_panel
+[2m2026-10-25T01:02:01.738559Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.multiplayer
+[2m2026-10-25T01:02:01.741656Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.test_input
+[2m2026-10-25T01:02:01.741832Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core
+[2m2026-10-25T01:02:01.780271Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.animation_graph
+test dirty_matrix::duplicate_undone_takes_the_copy_and_the_dirty_flag ... ok
+[2m2026-10-25T01:02:01.873237Z[0m [33m WARN[0m [2mjackdaw_api_internal::keymap::apply[0m[2m:[0m preset 'classic' has 10 chords claimed by more than one action: ["Home (Press, Operators): viewport2d.frame, clip.timeline.jump_start, view.frame_all", "Delete (Press, Operators): clip.delete_keyframes, entity.delete, brush.delete_element", "Backspace (Press, Operators): clip.delete_keyframes, viewport.draw_brush.remove_last_vertex, brush.delete_element", "Ctrl+KeyC (Press, Operators): clip.copy_keyframes, entity.copy", "Ctrl+KeyV (Press, Operators): clip.paste_keyframes, entity.paste", "Tab (Press, Operators): viewport.draw_brush.toggle_mode, brush.clip.cycle_mode", "Enter (Press, Operators): viewport.draw_brush.commit_polygon, brush.clip.apply", "KeyE (Press, Operators): tool.rotate, brush.mesh.extrude", "Escape (Press, Operators): brush.exit_edit_mode, selection.clear, brush.clip.clear, terrain.tool.exit_to_select", "Ctrl+KeyB (Press, Operators): brush.mesh.edge_bevel, brush.mesh.vertex_bevel"]
+[2m2026-10-25T01:02:01.873551Z[0m [32m INFO[0m [2mjackdaw::extension_lifecycle[0m[2m:[0m applied keymap preset 'classic': 109 entries, 109 bindings, 0 user rows
+[2m2026-10-25T01:02:01.950203Z[0m [32m INFO[0m [2mjackdaw::asset_catalog[0m[2m:[0m No asset catalog found, starting with empty catalog
+test dirty_matrix::save_undo_redo_is_clean ... ok
+[2m2026-10-25T01:02:02.304578Z[0m [32m INFO[0m [2mjackdaw::asset_catalog[0m[2m:[0m No asset catalog found, starting with empty catalog
+[2m2026-10-25T01:02:02.327713Z[0m [33m WARN[0m [2mjackdaw::pie[0m[2m:[0m PIE: cannot build C:\Users\linbo.zhang\AppData\Local\Temp\jackdaw-numeric-brush-CWSL77: cargo could not read C:\Users\linbo.zhang\AppData\Local\Temp\jackdaw-numeric-brush-CWSL77: error: could not find `Cargo.toml` in `C:\Users\linbo.zhang\AppData\Local\Temp\jackdaw-numeric-brush-CWSL77` or any parent directory
+[2m2026-10-25T01:02:02.335526Z[0m [32m INFO[0m [2mjackdaw::material_browser[0m[2m:[0m update_material_browser_ui: rebuilding with 1 entries
+[2m2026-10-25T01:02:02.409698Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: scene.new
+[2m2026-10-25T01:02:02.606153Z[0m [32m INFO[0m [2mjackdaw::asset_catalog[0m[2m:[0m No asset catalog found, starting with empty catalog
+[2m2026-10-25T01:02:02.666702Z[0m [33m WARN[0m [2mjackdaw::pie[0m[2m:[0m PIE: cannot build C:\Users\linbo.zhang\AppData\Local\Temp\jackdaw-numeric-undo-H8ClWZ: cargo could not read C:\Users\linbo.zhang\AppData\Local\Temp\jackdaw-numeric-undo-H8ClWZ: error: could not find `Cargo.toml` in `C:\Users\linbo.zhang\AppData\Local\Temp\jackdaw-numeric-undo-H8ClWZ` or any parent directory
+[2m2026-10-25T01:02:02.672791Z[0m [32m INFO[0m [2mjackdaw::material_browser[0m[2m:[0m update_material_browser_ui: rebuilding with 1 entries
+test keyframe_undo::a_deleted_keyframe_stays_dead_through_a_document_undo ... ok
+[2m2026-10-25T01:02:02.708468Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: scene.new
+test dirty_matrix::dirty_state_survives_tab_switches_per_tab ... ok
+[2m2026-10-25T01:02:02.732302Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: scene.new
+[2m2026-10-25T01:02:02.803417Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: scene.open
+[2m2026-10-25T01:02:02.958953Z[0m [33m WARN[0m [2mjackdaw::pie[0m[2m:[0m PIE: cannot build C:\Users\linbo.zhang\AppData\Local\Temp\jackdaw-numeric-undo-Y1NPbE: cargo could not read C:\Users\linbo.zhang\AppData\Local\Temp\jackdaw-numeric-undo-Y1NPbE: error: could not find `Cargo.toml` in `C:\Users\linbo.zhang\AppData\Local\Temp\jackdaw-numeric-undo-Y1NPbE` or any parent directory
+[2m2026-10-25T01:02:02.963617Z[0m [32m INFO[0m [2mjackdaw::material_browser[0m[2m:[0m update_material_browser_ui: rebuilding with 1 entries
+[2m2026-10-25T01:02:03.024951Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: animation.toggle_keyframe
+[2m2026-10-25T01:02:03.126021Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: scene.new
+[2m2026-10-25T01:02:03.132236Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.numeric_apply
+[2m2026-10-25T01:02:03.159971Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: history.undo
+[2m2026-10-25T01:02:03.165430Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: clip.delete_keyframes
+[2m2026-10-25T01:02:03.196337Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: animation.toggle_keyframe
+[2m2026-10-25T01:02:03.206533Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: history.undo
+[2m2026-10-25T01:02:03.254329Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: animation.toggle_keyframe
+[2m2026-10-25T01:02:03.283850Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: scene.open
+[2m2026-10-25T01:02:03.326187Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: history.undo
+[2m2026-10-25T01:02:03.711029Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: scene.open
+[2m2026-10-25T01:02:03.732037Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: entity.add.cube
+[2m2026-10-25T01:02:04.048464Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.numeric_apply
+[2m2026-10-25T01:02:04.060557Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.numeric_apply
+[2m2026-10-25T01:02:04.092498Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: history.undo
+test numeric_transform_undo::a_numeric_move_is_one_entry_undoes_and_reaches_the_document ... ok
+[2m2026-10-25T01:02:04.377057Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.numeric_apply
+[2m2026-10-25T01:02:04.518577Z[0m [32m INFO[0m [2mjackdaw::scene_io::save[0m[2m:[0m Scene saved to C:\Users\linbo.zhang\AppData\Local\Temp\jackdaw-numeric-undo-Y1NPbE\assets\zone.bsn
+[2m2026-10-25T01:02:04.519932Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: scene.open
+[2m2026-10-25T01:02:04.533062Z[0m [32m INFO[0m [2mjackdaw::scene_io::load[0m[2m:[0m Scene loaded from C:\Users\linbo.zhang\AppData\Local\Temp\jackdaw-numeric-undo-Y1NPbE\assets\zone.bsn (1 entities, 0 embedded assets)
+test keyframe_undo::delete_then_undo_restores_exactly_one_keyframe ... ok
+test keyframe_undo::the_delete_gate_accepts_a_focused_timeline ... ok
+test keyframe_undo::toggle_keyframe_is_one_entry_and_undoes ... ok
+test numeric_transform_undo::a_numeric_move_over_a_multi_selection_is_one_entry ... ok
+test numeric_transform_undo::a_numeric_move_survives_save_and_reload ... ok
+test numeric_transform_undo::a_numeric_move_of_brush_sub_elements_is_one_entry ... ok
+
+test result: ok. 23 passed; 0 failed; 0 ignored; 0 measured; 101 filtered out; finished in 11.61s
+

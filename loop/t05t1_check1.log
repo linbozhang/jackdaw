@@ -1,0 +1,57 @@
+warning: linker stderr: rust-lld: ignoring unknown argument '-fuse-ld=lld'
+  |
+  = note: `#[warn(linker_messages)]` on by default
+
+warning: `jackdaw_env` (build script) generated 1 warning
+warning: `jackdaw_api_macros` (lib) generated 1 warning (1 duplicate)
+warning: `jackdaw_project_build` (build script) generated 1 warning (1 duplicate)
+warning: `jackdaw_package` (build script) generated 1 warning (1 duplicate)
+    Checking jackdaw v0.21.0-dev (E:\Project\rust\jackdaw)
+warning: unused imports: `BsnPatch`, `BsnValue`, and `SceneBsnAst`
+  --> src\asset_migration.rs:14:19
+   |
+14 | use jackdaw_bsn::{BsnPatch, BsnValue, SceneBsnAst};
+   |                   ^^^^^^^^  ^^^^^^^^  ^^^^^^^^^^^
+   |
+   = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+error[E0615]: attempted to take value of method `get_resource_mut` on type `&mut bevy::bevy_ecs::world::World`
+   --> src\file_ops.rs:781:36
+    |
+781 |     if let Some(mut state) = world.get_resource_mut::<crate::project_window::ProjectWindowState> {
+    |                                    ^^^^^^^^^^^^^^^^ method, not a field
+    |
+help: use parentheses to call the method
+    |
+781 |     if let Some(mut state) = world.get_resource_mut::<crate::project_window::ProjectWindowState>() {
+    |                                                                                                 ++
+
+error[E0308]: mismatched types
+    --> src\reference_rewrite.rs:82:53
+     |
+  82 |         let Some(patch) = ast.world.get::<BsnPatch>(patch_entity) else {
+     |                                     --------------- ^^^^^^^^^^^^ expected `Entity`, found `EntityRef<'_>`
+     |                                     |
+     |                                     arguments to this method are incorrect
+     |
+note: method defined here
+    --> C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_ecs\src\world\mod.rs:1342:12
+     |
+1342 |     pub fn get<T: Component>(&self, entity: Entity) -> Option<&T> {
+     |            ^^^
+
+error[E0596]: cannot borrow `patch` as mutable, as it is not declared as mutable
+   --> src\reference_rewrite.rs:260:21
+    |
+260 |         match &mut *patch {
+    |                     ^^^^^ cannot borrow as mutable
+    |
+help: consider changing this to be mutable
+    |
+259 |     for mut patch in patches.iter_mut(&mut ast.world) {
+    |         +++
+
+Some errors have detailed explanations: E0308, E0596, E0615.
+For more information about an error, try `rustc --explain E0308`.
+warning: `jackdaw` (lib) generated 1 warning
+error: could not compile `jackdaw` (lib) due to 3 previous errors; 1 warning emitted

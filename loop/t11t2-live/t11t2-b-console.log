@@ -1,0 +1,24 @@
+True
+True
+True
+B1 PlayerController block: PlayerController { |         move_speed: 2.0, |     } |     bevy_ecs::hierarchy::Children [ |         #"Camera Rig" |         jackdaw_camera_rig::CameraRig { |             distance: 5.0, |         } |         bevy_transform::components:
+B1 CameraRig block: CameraRig { |             distance: 5.0, |         } |         bevy_transform::components::transform::Transform { |             translation: glam::Vec3 { |                 x: -2.0, |                 y: -1.0, |                 z: -2.0, |             }, |         } |         jackdaw_scene_types::node_id::SceneNodeId(5929
+B1_REOPEN reopen->save: move_speed=2 jump_speed= distance=5 (authored 2.0 / 4.5 / 5.0); player=4294962807 rig=4294962806
+B1_REOPEN_PASS
+True
+B3 set response: []
+True
+True
+True
+True
+B3_T02 undo 0->1->0 move_speed 2.0 -> 3.5 -> 2 (one record, field returns)
+B3_T02_PASS
+B4_T03 targets: rig=4294962806 floor=4294962805 player=4294962807
+True
+B4 rig ChildOf after reparent: ["4490v0"]
+True
+B4 rig ChildOf after undo: ["4488v0"]
+B4_T03 reparent undo 1->2->0 rigChildOfAfter=[] rigChildOfUndone=["4488v0"]
+B4_T03_PASS
+VERDICT_B: B1_REOPEN=True B3_T02=True B4_T03=True
+T11T2_B_DONE

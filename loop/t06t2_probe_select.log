@@ -1,0 +1,13 @@
+True
+
+entities id               result   warnings
+-------- --               ------   --------
+{}       scene.open       finished {}      
+{}       pie.play_current finished {}      
+BRP error: {"code":-32601,"message":"Method `input.pointer` not found"}
+ËùÔÚÎ»ÖÃ E:\Project\rust\jackdaw\loop\qa\brp.ps1:34 ×Ö·û: 9
++         throw "BRP error: $($Response.error | ConvertTo-Json -Depth 6 ...
++         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : OperationStopped: (BRP error: {"co...er` not found"}:String) [], RuntimeException
+    + FullyQualifiedErrorId : BRP error: {"code":-32601,"message":"Method `input.pointer` not found"}
+ 

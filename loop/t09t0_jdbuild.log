@@ -1,0 +1,15 @@
+warning: linker stderr: rust-lld: ignoring unknown argument '-fuse-ld=lld'
+  |
+  = note: `#[warn(linker_messages)]` on by default
+
+warning: `jackdaw_env` (build script) generated 1 warning
+warning: `jackdaw_project_build` (build script) generated 1 warning (1 duplicate)
+   Compiling jackdaw_project_build v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_project_build)
+warning: `jackdaw_package` (build script) generated 1 warning (1 duplicate)
+   Compiling rustls v0.23.43
+   Compiling ureq v2.12.1
+   Compiling jackdaw_cli_internal v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_cli)
+   Compiling jackdaw_scaffold v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_scaffold)
+   Compiling jd v0.21.0-dev (E:\Project\rust\jackdaw\crates\jd)
+warning: `jd` (bin "jd") generated 1 warning (1 duplicate)
+    Finished `dev` profile [optimized + debuginfo] target(s) in 11.01s

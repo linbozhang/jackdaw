@@ -1,0 +1,7 @@
+﻿case,iter,result,detail
+setup,window,INFO,"hwnd=696517546 fg=False phys=2,576x1,408 center=(858,469) dpi=1.5"
+coldstart,rmb-orbit,FAIL,"zero-click: enabled=False fly(press)=False fly(release)=False dyaw=0.000"
+pan,mmb-drag,FAIL,"os=False pan=False fly=False moved=0.00 dyaw=0.0000 dpitch=0.0000"
+esc-tool,clip,FAIL,"d4="Object" esc="Object""
+esc-tool,knife,FAIL,"k="Object" esc1="Object" esc2="Object""
+magnet,toolbar,INFO,"toolbarBand rows=77 maxX=2,539 windowW=2,576 clippedRows=0 shot=toolbar-maximized.png"

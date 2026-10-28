@@ -1,0 +1,111 @@
+True
+schema.json re-stamped 08:10:09; watcher should refresh project types
+extractor concurrent probe: exited=True code=
+editor ready
+True
+A1 capsule set: []
+True
+True
+A1_CHAIN ops=True save=True docHas=True defaults=False
+A1_CHAIN_PASS
+A2 sample channel: editor-projection
+A2 netstat 15702: not listening
+A2 projection: 22 entities, 22 with transforms
+  [4294963374] (-0.3,3.6,7.6): Gizmo,GlobalTransform,Transform
+  [4294963513] (4.0,6.0,4.0): CascadeShadowConfig,DirectionalLight,GlobalTransform,Transform
+  [4294963535] (0.0,0.0,0.0): Projection,GlobalTransform,Transform,IsDefaultUiCamera
+  [4294963376] (0.0,0.0,0.0): InfiniteGrid,InfiniteGridSettings,GlobalTransform,Transform
+  [4294963304] (0.0,0.0,999.0): Projection,GlobalTransform,Transform
+  [4294963522] (0.0,0.0,3.0): Projection,EnvironmentMapLight,ScreenSpaceTransmission,GlobalTransform,Transform
+  [4294963521] (0.0,0.0,0.0): Projection,GlobalTransform,Transform
+  [4294963514] (3.0,3.0,3.0): Projection,EnvironmentMapLight,GlobalTransform,Transform
+  [4294963375] (0.0,4.0,8.0): Projection,EnvironmentMapLight,ScreenSpaceTransmission,GlobalTransform,Transform,JackdawCameraSettings
+  [4294963520] (0.0,0.0,0.0): Mesh3d,EdgeOffsetExtension>>,GlobalTransform,Transform
+  [4294963518] (0.0,0.0,0.0): Mesh3d,EdgeOffsetExtension>>,GlobalTransform,Transform
+  [4294963516] (0.0,0.0,0.0): Mesh3d,EdgeOffsetExtension>>,GlobalTransform,Transform
+A2 entities: tplPlayer=False placedPlayer=True tplRig=False placedRig=True
+A2_DEAD: anyActiveRig=False captureRefused=True (two rigs, lone-rig stands down)
+A2_DEAD_FAIL
+True
+True
+True
+A3_DOCADD: add=True savedDocContainsActiveCameraRig=True (scene_io strips the marker from saves)
+A3_FROMDOC: activeMarker=True materializedCamera=False
+A3_LIVEADD: add=True activeMarkerVisible=False materializedCamera=False
+A3_ACTIVATE_FAIL
+A4 capture: {"jsonrpc":"2.0","id":287253792,"result":{"entities":[],"id":"pie.play_input_toggle","result":"cancelled","warnings":[]}}
+A4 placed player settled y=1.000
+A4a_WALK z: 2.000 2.000 2.000 2.000 2.000 2.000 2.000 2.000 2.000 2.000 2.000 2.000 2.000 2.000 2.000 2.000 2.000 2.000 2.000 2.000 2.000 2.000 2.000 2.000 2.000 2.000 -> end 2.000 (north wall face -2.8 + capsule ~-2.44)
+A4a_WALK_FAIL
+方法调用失败，因为 [System.Object[]] 不包含名为“op_Subtraction”的方法。
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-live-a.ps1:438 字符: 12
++     return @([double]$rt.translation[0] - [double]$pt.translation[0], ...
++            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (op_Subtraction:String) []，RuntimeException
+    + FullyQualifiedErrorId : MethodNotFound
+ 
+方法调用失败，因为 [System.Object[]] 不包含名为“op_Subtraction”的方法。
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-live-a.ps1:438 字符: 12
++     return @([double]$rt.translation[0] - [double]$pt.translation[0], ...
++            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (op_Subtraction:String) []，RuntimeException
+    + FullyQualifiedErrorId : MethodNotFound
+ 
+A4d_FOLLOW: player or rig missing
+A4d_FOLLOW_FAIL
+A4b_JUMP y: 1.000 1.000 1.000 1.000 1.000 1.000 1.000 1.000 1.000 1.000 1.000 1.000 1.000 1.000 1.000 1.000 1.000 1.000 1.000 1.000 1.000 1.000 1.000 1.000 1.000 1.000 1.000 1.000 1.000 1.000 apex=1.000 expected~1.892
+A4b_JUMP_FAIL
+A4c_SLIDE x 2.00 -> 2.00 (along-wall travel 0.00 m), zEnd=2.000
+A4c_SLIDE_FAIL
+方法调用失败，因为 [System.Object[]] 不包含名为“op_Subtraction”的方法。
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-live-a.ps1:438 字符: 12
++     return @([double]$rt.translation[0] - [double]$pt.translation[0], ...
++            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (op_Subtraction:String) []，RuntimeException
+    + FullyQualifiedErrorId : MethodNotFound
+ 
+方法调用失败，因为 [System.Object[]] 不包含名为“op_Subtraction”的方法。
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-live-a.ps1:438 字符: 12
++     return @([double]$rt.translation[0] - [double]$pt.translation[0], ...
++            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (op_Subtraction:String) []，RuntimeException
+    + FullyQualifiedErrorId : MethodNotFound
+ 
+A5_BRIDGE yaw  ->  delta=9.900 (expected -1.2 +- 0.15)
+A5_BRIDGE_FAIL
+方法调用失败，因为 [System.Object[]] 不包含名为“op_Subtraction”的方法。
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-live-a.ps1:438 字符: 12
++     return @([double]$rt.translation[0] - [double]$pt.translation[0], ...
++            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (op_Subtraction:String) []，RuntimeException
+    + FullyQualifiedErrorId : MethodNotFound
+ 
+方法调用失败，因为 [System.Object[]] 不包含名为“op_Subtraction”的方法。
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-live-a.ps1:438 字符: 12
++     return @([double]$rt.translation[0] - [double]$pt.translation[0], ...
++            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (op_Subtraction:String) []，RuntimeException
+    + FullyQualifiedErrorId : MethodNotFound
+ 
+A5_RMB yaw  ->  delta=9.900 (single -1.2 = crate channel took it; ~0 = motion never reaches the accumulator; -2.4 = double-write bug)
+A5_NO_DOUBLE_PASS
+True
+True
+A6 move_speed 4.0->2.0: []
+A6 distance 10.0->5.0: []
+True
+A6_SAVE disk move_speed=2.0: True; distance=5.0: True
+A6_SPEED placed=0.00 m/s (move_speed 2.0) template= m/s (4.0)
+A6_HALFSPEED_FAIL
+方法调用失败，因为 [System.Object[]] 不包含名为“op_Subtraction”的方法。
+所在位置 E:\Project\rust\jackdaw\loop\qa\t11t2-live-a.ps1:438 字符: 12
++     return @([double]$rt.translation[0] - [double]$pt.translation[0], ...
++            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (op_Subtraction:String) []，RuntimeException
+    + FullyQualifiedErrorId : MethodNotFound
+ 
+A6_DISTANCE_FAIL
+True
+True
+VERDICT_A: A1_CHAIN=True A2_DEAD=False A3_ACTIVATE=False A4a_WALK=False A4b_JUMP=False A4c_SLIDE=False A4d_FOLLOW=False A5_BRIDGE=False A5_NO_DOUBLE=True A6_DISTANCE=False A6_HALFSPEED=False
+T11T2_A_DONE

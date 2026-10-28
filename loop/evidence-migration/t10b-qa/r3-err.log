@@ -1,0 +1,9 @@
+[2m2026-10-27T21:47:51.910739Z[0m [32m INFO[0m [2mbevy_diagnostic::system_information_diagnostics_plugin::internal[0m[2m:[0m SystemInfo { os: "Windows 11 Pro", kernel: "26100", cpu: "AMD Ryzen 7 9700X 8-Core Processor", core_count: "8", memory: "93.4 GiB" }
+[2m2026-10-27T21:47:51.940455Z[0m [33m WARN[0m [2mbevy_asset::io::source[0m[2m:[0m Skip creating file watcher because path "H:\\workspace_AI\\t10-phys\\phys-game\\target\\debug\\assets" does not exist.
+[2m2026-10-27T21:47:51.941943Z[0m [33m WARN[0m [2mbevy_asset::io::source[0m[2m:[0m AssetSourceId::Default does not have an AssetWatcher configured. Consider adding an "assets" directory.
+[2m2026-10-27T21:47:52.584723Z[0m [32m INFO[0m [2mbevy_render::renderer[0m[2m:[0m AdapterInfo { name: "NVIDIA GeForce RTX 5070", vendor: 4318, device: 12036, device_type: DiscreteGpu, device_pci_bus_id: "0000:01:00.0", driver: "32.0.15.9186", driver_info: "", backend: Dx12, subgroup_min_size: 32, subgroup_max_size: 32, transient_saves_memory: Some(false), limit_bucket: None }
+[2m2026-10-27T21:47:52.587047Z[0m [31mERROR[0m [2mwgpu_hal::auxil::dxgi::result[0m[2m:[0m Queue creation failed: 内存资源不足，无法完成此操作。 (0x8007000E)
+
+thread 'main' (79888) panicked at E:\Project\rust\bevy-fork-pinned\crates\bevy_render\src\renderer\mod.rs:364:76:
+called `Result::unwrap()` on an `Err` value: RequestDeviceError { inner: Core(Device(OutOfMemory)) }
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace

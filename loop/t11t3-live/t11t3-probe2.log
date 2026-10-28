@@ -1,0 +1,17 @@
+body: {
+    "method":  "jackdaw/scene_snapshot",
+    "id":  1412941105,
+    "jsonrpc":  "2.0"
+}
+[2m2026-10-28T02:50:35.381037Z[0m [32m INFO[0m [2mbevy_diagnostic::system_information_diagnostics_plugin::internal[0m[2m:[0m SystemInfo { os: "Windows 11 Pro", kernel: "26100", cpu: "AMD Ryzen 7 9700X 8-Core Processor", core_count: "8", memory: "93.4 GiB" }
+[2m2026-10-28T02:50:36.068435Z[0m [32m INFO[0m [2mbevy_render::renderer[0m[2m:[0m AdapterInfo { name: "NVIDIA GeForce RTX 5070", vendor: 4318, device: 12036, device_type: DiscreteGpu, device_pci_bus_id: "0000:01:00.0", driver: "NVIDIA", driver_info: "591.86", backend: Vulkan, subgroup_min_size: 32, subgroup_max_size: 32, transient_saves_memory: Some(false), limit_bucket: None }
+[2m2026-10-28T02:50:36.418141Z[0m [32m INFO[0m [2mbevy_pbr::cluster[0m[2m:[0m GPU clustering is supported on this device.
+[2m2026-10-28T02:50:36.418595Z[0m [32m INFO[0m [2mbevy_render::batching::gpu_preprocessing[0m[2m:[0m GPU preprocessing is fully supported on this device.
+[2m2026-10-28T02:50:36.423699Z[0m [32m INFO[0m [2mbevy_winit::system[0m[2m:[0m Creating new window t11t1-game (69v0)
+[2m2026-10-28T02:50:36.644905Z[0m [32m INFO[0m [2mjackdaw_runtime[0m[2m:[0m No catalog at H:\workspace_AI\t11-live\t11t1-game\target\debug\assets\catalog.bsn, skipping catalog load
+[2m2026-10-28T02:50:36.673207Z[0m [33m WARN[0m [2mjackdaw_runtime::config[0m[2m:[0m no config asset at 'input-actions.bsn'; jackdaw_runtime::game_input::GameInputConfig starts at its default
+[2m2026-10-28T02:50:36.673391Z[0m [33m WARN[0m [2mjackdaw_runtime::config[0m[2m:[0m no config asset at 'game-config.bsn'; t11t1_game::GameConfig starts at its default
+CONNECTED at iter 0
+{"jsonrpc":"2.0","id":1412941105,"result":[{"components":{"bevy_ecs::hierarchy::ChildOf":"703v0","bevy_ecs::name::Name":"Directional Light","bevy_light::cascade::CascadeShadowConfig":{"bounds":"10.0 24.662120819091797 60.822021484375 149.99998474121094","minimum_distance":0.10000000149011612,"overla
+proc: True
+[2m2026-10-28T02:50:37.451126Z[0m [33m WARN[0m [2mbevy_render::camera[0m[2m:[0m Camera order ambiguities detected for active cameras with the following priorities: {(0, Some(Window(NormalizedWindowRef(69v0))))}. To fix this, ensure there is exactly one Camera entity spawned with a given order for a given RenderTarget. Ambiguities should be resolved because either (1) multiple active cameras were spawned accidentally, which will result in rendering multiple instances of the scene or (2) for cases where multiple active cameras is intentional, ambiguities could result in unpredictable render results.

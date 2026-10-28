@@ -1,0 +1,39 @@
+    Blocking waiting for file lock on build directory
+   Compiling jackdaw_env v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_env)
+    Checking jackdaw_fuzzy v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_fuzzy)
+warning: linker stderr: rust-lld: ignoring unknown argument '-fuse-ld=lld'
+  |
+  = note: `#[warn(linker_messages)]` on by default
+  = note: the `linker_messages` lint ignores `-D warnings`
+
+warning: `jackdaw_api_macros` (lib) generated 1 warning
+   Compiling jackdaw_package v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_package)
+warning: `jackdaw_project_build` (build script) generated 1 warning (1 duplicate)
+   Compiling jackdaw_project_build v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_project_build)
+    Checking jackdaw_material v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_material)
+    Checking jackdaw_feathers v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_feathers)
+warning: `jackdaw_env` (build script) generated 1 warning (1 duplicate)
+warning: `jackdaw_package` (build script) generated 1 warning (1 duplicate)
+    Checking jackdaw_releases v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_releases)
+    Checking jackdaw_scaffold v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_scaffold)
+    Checking jackdaw_panels v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_panels)
+    Checking jackdaw_node_graph v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_node_graph)
+    Checking jackdaw_api_internal v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_api_internal)
+    Checking jackdaw_animation v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_animation)
+    Checking jackdaw_api v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_api)
+    Checking jackdaw_loader v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_loader)
+    Checking jackdaw_extension v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_extension)
+    Checking jackdaw_multiplayer_editor v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_multiplayer_editor)
+    Checking test_fixture_extension v0.0.0 (E:\Project\rust\jackdaw\tests\fixtures\test_fixture_extension)
+    Checking jackdaw v0.21.0-dev (E:\Project\rust\jackdaw)
+error: this lint expectation is unfulfilled
+ --> tests\component_shape_refresh.rs:1:11
+  |
+1 | #![expect(clippy::print_stdout, reason = "test prints progress diagnostics")]
+  |           ^^^^^^^^^^^^^^^^^^^^
+  |
+  = note: test prints progress diagnostics
+  = note: `-D unfulfilled-lint-expectations` implied by `-D warnings`
+  = help: to override `-D warnings` add `#[allow(unfulfilled_lint_expectations)]`
+
+error: could not compile `jackdaw` (test "component_shape_refresh") due to 1 previous error

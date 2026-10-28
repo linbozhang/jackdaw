@@ -1,0 +1,19 @@
+warning: linker stderr: rust-lld: ignoring unknown argument '-fuse-ld=lld'
+  |
+  = note: `#[warn(linker_messages)]` on by default
+
+warning: `jackdaw_env` (build script) generated 1 warning
+warning: `jackdaw_api_macros` (lib) generated 1 warning (1 duplicate)
+warning: `jackdaw_project_build` (build script) generated 1 warning (1 duplicate)
+warning: `jackdaw_package` (build script) generated 1 warning (1 duplicate)
+warning: `test_fixture_extension` (lib) generated 1 warning (1 duplicate)
+warning: `jackdaw` (lib test) generated 1 warning (1 duplicate)
+    Finished `test` profile [optimized + debuginfo] target(s) in 1.49s
+     Running unittests src\lib.rs (target\debug\deps\jackdaw-b8bb05f875dbf70a.exe)
+
+running 2 tests
+test reference_rewrite::tests::a_folder_prefix_ends_on_a_component_boundary ... ok
+test reference_rewrite::tests::a_twin_spelling_is_the_binary_form_of_the_same_path ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 1133 filtered out; finished in 0.00s
+

@@ -1,0 +1,153 @@
+editor ready
+idle
+== cell 1: named scene runs by path with projection parity ==
+
+entities id         result   warnings
+-------- --         ------   --------
+{}       scene.open finished {}      
+{}       scene.save finished {}      
+  ok: the scene is open
+{}       pie.pla... finished {}      
+pie running (13:23:30)
+  ok: jackdaw/pie names the override: t06-final.bsn
+  ok: the source is named
+switched to Live view
+  ok: projection parity: live entities == authored entities (Spinner,Still)
+switched to Scene view
+{}       pie.stop   finished {}      
+pie stopped (status face)
+idle
+== cell 1 done ==
+== cell 2: untitled runs from a temp copy ==
+{}       scene.new  finished {}      
+  ok: the untitled tab is dirty
+{}       pie.pla... finished {}      
+pie running (13:23:39)
+  ok: the source is unsaved-copy
+  ok: the temp copy exists
+  ok: the copy carries the cube document
+switched to Live view
+  ok: the game loaded the copy (Cube in the live tree)
+switched to Scene view
+{}       pie.stop   finished {}      
+pie stopped (status face)
+idle
+  ok: stop removed the copy
+  ok: the tab is still dirty after the run
+{}       scene.open finished {}      
+== cell 2 done ==
+== cell 3: save policy saves; copy policy leaves disk alone ==
+{}       scene.save finished {}      
+  ok: the save wrote the edit to disk
+  ok: the tab is clean after the save
+{}       pie.pla... finished {}      
+pie running (13:23:50)
+  ok: the save-policy play runs the saved file
+{}       pie.stop   cance... {}      
+{}       pie.stop   finished {}      
+pie stopped (status face)
+idle
+{}       project... finished {}      
+{}       pie.pla... finished {}      
+pie running (13:24:12)
+  ok: copy policy runs a copy of the dirty scene
+{}       pie.stop   cance... {}      
+{}       pie.stop   finished {}      
+pie stopped (status face)
+idle
+  ok: copy policy left disk alone
+{}       project... finished {}      
+{}       scene.save finished {}      
+== cell 3 done ==
+== cell 4: prefab in front falls back; all-prefab refuses ==
+{}       scene.open finished {}      
+{}       pie.pla... finished {}      
+pie running (13:24:35)
+  ok: fell back to the nearest scene tab: t06-final.bsn
+{}       pie.stop   cance... {}      
+{}       pie.stop   finished {}      
+pie stopped (status face)
+idle
+== cell 4 done ==
+== cell 5: startup play carries no override ==
+{}       pie.play   finished {}      
+pie running (13:24:57)
+  ok: startup play has no override
+{}       pie.stop   cance... {}      
+{}       pie.stop   finished {}      
+pie stopped (status face)
+idle
+== cell 5 done ==
+== cell 6: stop restores the edit state ==
+{}       pie.pla... finished {}      
+pie running (13:25:17)
+switched to Live view
+  ok: the live tree holds the Spinner
+switched to Scene view
+{}       pie.stop   finished {}      
+pie stopped (status face)
+idle
+  ok: the document is byte-identical
+  ok: the disk file is byte-identical
+  ok: the undo depth is unchanged
+  ok: the entity names are restored
+  ok: jackdaw/pie sees a clean stop (no instances, no ephemerals)
+== cell 6 done ==
+== cell 7: explicit gate â€?selection.set + tooling-gap record ==
+{}       pie.pla... finished {}      
+pie running (13:25:24)
+switched to Live view
+                                     
+  ok: selection.set picked the projected Spinner: {"entity":73014439223,"name":"Spinner"}
+  ok: no pending live edits before any edit (the face reads clean)
+  (Inspector synthetic-input -> live edit: tooling gap N11; prompt button chain deferred with it)
+{}       pie.stop   finished {}      
+pie stopped (status face)
+idle
+  ok: a stop without pending edits leaves the document unchanged
+  ok: and the undo depth is untouched
+== cell 7 done (selection face verified; prompt chain = N11) ==
+== cell 8: reload recomputes the current-scene override ==
+{}       pie.pla... finished {}      
+pie running (13:25:29)
+  ok: the instance reached the live stage
+  ok: running the file
+{}       pie.reload finished {}      
+pie running (13:25:35)
+  ok: reload re-resolved to a fresh copy: .jackdaw-pie/current-t06-final-99268.bsn
+  ok: the reload copy exists
+{}       pie.stop   cance... {}      
+{}       pie.stop   finished {}      
+pie stopped (status face)
+idle
+{}       history... finished {}      
+{}       scene.save finished {}      
+== cell 8 done ==
+== cell 9: killed editor takes the game down; orphans swept ==
+{}       pie.pla... finished {}      
+pie running (13:25:57)
+  ok: the game process is found
+  ok: the game died with the editor
+editor ready
+idle
+  ok: the relaunch swept the orphan copy
+== cell 9 done ==
+== cell 10: an instances=2 config under play_current ==
+editor ready
+idle
+{}       scene.open finished {}      
+{}       pie.pla... finished {}      
+pie running (13:26:13)
+  ok: play_current launches one instance even under instances=2 (1)
+  ok: the instance carries the override
+  ok: the instance is up (connecting)
+{}       pie.stop   cance... {}      
+{}       pie.stop   finished {}      
+pie stopped (status face)
+idle
+  ok: stop cleared the instance
+== cell 10 done (multi-instance current-play drive surface: recorded in the report) ==
+T06_FINAL_MATRIX_10_OF_10_PASS
+editor killed
+
+

@@ -1,0 +1,12 @@
+True
+
+entities id               result   warnings
+-------- --               ------   --------
+{}       scene.open       finished {}      
+{}       pie.play_current finished {}      
+settling 3s before stop (child connects in that window)
+{}       pie.stop         finished {}      
+stop dispatched; waiting for pie_stopped
+NO FREEZE with 3s settle
+
+

@@ -1,0 +1,31 @@
+True
+editor ready pid=115644
+== B2 isolated run 1/2 ==
+    scene.open -> finished (38 ms)
+    entity.add.cube -> finished (26 ms)
+    project.set_save_before_play -> finished (9 ms)
+    pie.play_current -> finished (153 ms)
+    status.pie=running (19 ms)
+    pie.stop -> finished (13 ms)
+    status.pie=running (10 ms)
+    status.pie=stopped (5 ms)
+  run 1: stop=dispatched stopped=True
+== B2 isolated run 2/2 ==
+    scene.open -> finished (9 ms)
+    entity.add.cube -> finished (6 ms)
+    project.set_save_before_play -> finished (29 ms)
+    pie.play_current -> finished (151 ms)
+    status.pie=running (18 ms)
+    pie.stop -> cancelled (10 ms)
+    pie.stop -> cancelled (12 ms)
+    pie.stop -> cancelled (8 ms)
+    pie.stop -> cancelled (11 ms)
+    pie.stop -> cancelled (10 ms)
+    pie.stop -> finished (27 ms)
+    status.pie=running (9 ms)
+    status.pie=running (12 ms)
+    status.pie=running (9 ms)
+    status.pie=stopped (13 ms)
+  run 2: stop=dispatched stopped=True
+    project.set_save_before_play -> finished (12 ms)
+N10_B2_ISOLATED_DONE

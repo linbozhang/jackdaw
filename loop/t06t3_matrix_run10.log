@@ -1,0 +1,123 @@
+editor ready
+idle
+== cell 1: named scene runs by path with projection parity ==
+
+entities id         result   warnings
+-------- --         ------   --------
+{}       scene.open finished {}      
+{}       scene.save finished {}      
+  ok: the scene is open
+{}       pie.pla... finished {}      
+pie running (13:11:57)
+  ok: jackdaw/pie names the override: t06-final.bsn
+  ok: the source is named
+switched to Live view
+  ok: projection parity: live entities == authored entities (Spinner,Still)
+switched to Scene view
+{}       pie.stop   finished {}      
+pie stopped (status face)
+idle
+== cell 1 done ==
+== cell 2: untitled runs from a temp copy ==
+{}       scene.new  finished {}      
+  ok: the untitled tab is dirty
+{}       pie.pla... finished {}      
+pie running (13:12:05)
+  ok: the source is unsaved-copy
+  ok: the temp copy exists
+  ok: the copy carries the cube document
+switched to Live view
+  ok: the game loaded the copy (Cube in the live tree)
+switched to Scene view
+{}       pie.stop   finished {}      
+pie stopped (status face)
+idle
+  ok: stop removed the copy
+  ok: the tab is still dirty after the run
+{}       scene.open finished {}      
+== cell 2 done ==
+== cell 3: save policy saves; copy policy leaves disk alone ==
+{}       scene.save finished {}      
+  ok: the save wrote the edit to disk
+  ok: the tab is clean after the save
+{}       pie.pla... finished {}      
+pie running (13:12:17)
+  ok: the save-policy play runs the saved file
+{}       pie.stop   cance... {}      
+{}       pie.stop   finished {}      
+pie stopped (status face)
+idle
+{}       project... finished {}      
+{}       pie.pla... finished {}      
+pie running (13:12:38)
+  ok: copy policy runs a copy of the dirty scene
+{}       pie.stop   cance... {}      
+{}       pie.stop   finished {}      
+pie stopped (status face)
+idle
+  ok: copy policy left disk alone
+{}       project... finished {}      
+{}       scene.save finished {}      
+== cell 3 done ==
+== cell 4: prefab in front falls back; all-prefab refuses ==
+{}       scene.open finished {}      
+{}       pie.pla... finished {}      
+pie running (13:13:01)
+  ok: fell back to the nearest scene tab: t06-final.bsn
+{}       pie.stop   cance... {}      
+{}       pie.stop   finished {}      
+pie stopped (status face)
+idle
+== cell 4 done ==
+== cell 5: startup play carries no override ==
+{}       pie.play   finished {}      
+pie running (13:13:22)
+  ok: startup play has no override
+{}       pie.stop   cance... {}      
+{}       pie.stop   finished {}      
+pie stopped (status face)
+idle
+== cell 5 done ==
+== cell 6: stop restores the edit state ==
+{}       pie.pla... finished {}      
+pie running (13:13:42)
+switched to Live view
+  ok: the live tree holds the Spinner
+switched to Scene view
+{}       pie.stop   finished {}      
+pie stopped (status face)
+idle
+  ok: the document is byte-identical
+  ok: the disk file is byte-identical
+  ok: the undo depth is unchanged
+  ok: the entity names are restored
+  ok: jackdaw/pie sees a clean stop (no instances, no ephemerals)
+== cell 6 done ==
+== cell 7: explicit gate â€?selection.set + tooling-gap record ==
+{}       pie.pla... finished {}      
+pie running (13:13:49)
+switched to Live view
+                                     
+  ok: selection.set picked the projected Spinner: {"entity":94489275581,"name":"Spinner"}
+  ok: no pending live edits before any edit (the face reads clean)
+  (Inspector synthetic-input -> live edit: tooling gap N11; prompt button chain deferred with it)
+{}       pie.stop   finished {}      
+pie stopped (status face)
+idle
+  ok: a stop without pending edits leaves the document unchanged
+  ok: and the undo depth is untouched
+== cell 7 done (selection face verified; prompt chain = N11) ==
+== cell 8: reload recomputes the current-scene override ==
+{}       pie.pla... finished {}      
+pie running (13:13:54)
+  ok: running the file
+{}       pie.reload cance... {}      
+pie running (13:13:55)
+editor killed
+ASSERT FAILED: reload re-resolved to a fresh copy: t06-final.bsn
+ËùÔÚÎ»ÖÃ E:\Project\rust\jackdaw\loop\qa\t06-final-live.ps1:48 ×Ö·û: 23
++     if (-not $Cond) { throw "ASSERT FAILED: $What" }
++                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : OperationStopped: (ASSERT FAILED: ...: t06-final.bsn:String) [], RuntimeException
+    + FullyQualifiedErrorId : ASSERT FAILED: reload re-resolved to a fresh copy: t06-final.bsn
+ 

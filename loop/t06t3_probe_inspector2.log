@@ -1,0 +1,22 @@
+True
+
+entities id               result   warnings
+-------- --               ------   --------
+{}       scene.open       finished {}      
+{}       pie.play_current finished {}      
+transform-card hits: 1
+  card kind=node rect=1805.0,188.0,39.0,16.0
+inspector-column rows: 18
+row[0]: x=1764.0 y=35.0 value=''
+row[1]: x=1764.0 y=35.0 value=''
+row[2]: x=1807.0 y=122.0 value=''
+row[3]: x=1794.0 y=173.0 value=''
+row[4]: x=1794.0 y=173.0 value=''
+row[5]: x=1794.0 y=173.0 value=''
+row[6]: x=1798.0 y=177.0 value=''
+row[7]: x=1798.0 y=177.0 value=''
+row[8]: x=1798.0 y=177.0 value=''
+row[9]: x=1798.0 y=177.0 value=''
+after drag inspector sorted[1]: live_edits=0
+
+

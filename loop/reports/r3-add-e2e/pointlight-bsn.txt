@@ -1,0 +1,14 @@
+﻿#"Point Light"
+bevy_transform::components::global_transform::GlobalTransform(glam::Affine3A { matrix3: glam::Mat3A { x_axis: glam::Vec3A { x: 1.0, y: 0.0, z: 0.0 }, y_axis: glam::Vec3A { x: 0.0, y: 1.0, z: 0.0 }, z_axis: glam::Vec3A { x: 0.0, y: 0.0, z: 1.0 } }, translation: glam::Vec3A { x: 0.0, y: 3.0, z: 0.0 } })
+bevy_transform::components::transform::Transform {
+    translation: glam::Vec3 {
+        x: 0.0,
+        y: 3.0,
+        z: 0.0,
+    },
+}
+bevy_transform::components::transform::TransformTreeChanged
+bevy_camera::visibility::Visibility::Inherited
+bevy_camera::visibility::InheritedVisibility(true)
+bevy_camera::visibility::ViewVisibility(3)
+bevy_camera::visibility::VisibilityClass(["

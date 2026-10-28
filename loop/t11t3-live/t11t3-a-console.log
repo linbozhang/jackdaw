@@ -1,0 +1,27 @@
+True
+EDITOR_READY
+PIE_PROBE scene.open: {"jsonrpc":"2.0","id":1311680597,"result":{"entities":[],"id":"scene.open","result":"finished","warnings":[]}}
+PIE_PROBE #1: procAlive=False exitedMark=True
+PIE_PROBE #2: procAlive=False exitedMark=True
+PIE_PROBE #3: procAlive=False exitedMark=True
+PIE_PROBE: DEAD (3/3 attempts exited 0xc0000005 before connecting) -- PIE cells degrade per T10 precedent
+PIE_PROBE_RECOVERED_FAIL
+True
+  add state: {"jsonrpc":"2.0","id":459714922,"result":{"entities":[],"id":"component.add","result":"finished","warnings":[]}}
+  add state: {"jsonrpc":"2.0","id":1963842627,"result":{"entities":[],"id":"component.add","result":"finished","warnings":[]}}
+  add state: {"jsonrpc":"2.0","id":530619771,"result":{"entities":[],"id":"component.add","result":"finished","warnings":[]}}
+  add state: {"jsonrpc":"2.0","id":779662510,"result":{"entities":[],"id":"component.add","result":"finished","warnings":[]}}
+  add state: {"jsonrpc":"2.0","id":1628215981,"result":{"entities":[],"id":"component.add","result":"finished","warnings":[]}}
+M2_ADD five components via operators: True
+True
+N14_LIVE first-set-after-add: move_speed 2.0 on disk=True; sibling jump_speed 4.5 on disk=True (the N14 fix's whole point)
+N14_LIVE_SIBLING_ON_DISK_PASS
+M2_BUILD_PASS
+True
+M8_SECOND_SET_PASS
+True
+M7PRE_FP mode=FirstPerson saved: True
+True
+M6PRE_FAST move_speed=8 saved: True
+VERDICT_A: M2_BUILD=True M8_SECOND_SET=True N14_LIVE_SIBLING_ON_DISK=True PIE_PROBE_RECOVERED=False
+T11T3_A_DONE

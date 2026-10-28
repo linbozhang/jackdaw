@@ -1,0 +1,89 @@
+[2m2026-10-23T16:01:37.895562Z[0m [32m INFO[0m [2mbevy_diagnostic::system_information_diagnostics_plugin::internal[0m[2m:[0m SystemInfo { os: "Windows 11 Pro", kernel: "26100", cpu: "AMD Ryzen 7 9700X 8-Core Processor", core_count: "8", memory: "93.4 GiB" }
+[2m2026-10-23T16:01:38.830167Z[0m [32m INFO[0m [2mbevy_render::renderer[0m[2m:[0m AdapterInfo { name: "NVIDIA GeForce RTX 5070", vendor: 4318, device: 12036, device_type: DiscreteGpu, device_pci_bus_id: "0000:01:00.0", driver: "NVIDIA", driver_info: "591.86", backend: Vulkan, subgroup_min_size: 32, subgroup_max_size: 32, transient_saves_memory: Some(false), limit_bucket: None }
+[2m2026-10-23T16:01:41.734213Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw::test_input::plugin` of extension `jackdaw.test_input`
+[2m2026-10-23T16:01:41.740868Z[0m [32m INFO[0m [2mbevy_pbr::cluster[0m[2m:[0m GPU clustering is supported on this device.
+[2m2026-10-23T16:01:41.741544Z[0m [32m INFO[0m [2mbevy_render::batching::gpu_preprocessing[0m[2m:[0m GPU preprocessing is fully supported on this device.
+[2m2026-10-23T16:01:41.743497Z[0m [32m INFO[0m [2mbevy_winit::system[0m[2m:[0m Creating new window jackdaw (71v0)
+[2m2026-10-23T16:01:42.046602Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.multiplayer
+[2m2026-10-23T16:01:42.056296Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.viewport_panel
+[2m2026-10-23T16:01:42.057568Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core_windows
+[2m2026-10-23T16:01:42.058218Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.animation_graph
+[2m2026-10-23T16:01:42.058653Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.inspector
+[2m2026-10-23T16:01:42.059033Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.build_panel
+[2m2026-10-23T16:01:42.059441Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.timeline
+[2m2026-10-23T16:01:42.059781Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.game_panel
+[2m2026-10-23T16:01:42.060065Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core
+[2m2026-10-23T16:01:42.063194Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.ui_palette
+[2m2026-10-23T16:01:42.063714Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.test_input
+[2m2026-10-23T16:01:42.064088Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.project_window
+[2m2026-10-23T16:01:42.067550Z[0m [33m WARN[0m [2mjackdaw_api_internal::keymap::apply[0m[2m:[0m preset 'classic' has 10 chords claimed by more than one action: ["Home (Press, Operators): viewport2d.frame, clip.timeline.jump_start, view.frame_all", "Delete (Press, Operators): clip.delete_keyframes, entity.delete, brush.delete_element", "Backspace (Press, Operators): clip.delete_keyframes, viewport.draw_brush.remove_last_vertex, brush.delete_element", "Ctrl+KeyC (Press, Operators): clip.copy_keyframes, entity.copy", "Ctrl+KeyV (Press, Operators): clip.paste_keyframes, entity.paste", "Tab (Press, Operators): viewport.draw_brush.toggle_mode, brush.clip.cycle_mode", "Enter (Press, Operators): viewport.draw_brush.commit_polygon, brush.clip.apply", "KeyE (Press, Operators): tool.rotate, brush.mesh.extrude", "Escape (Press, Operators): brush.exit_edit_mode, selection.clear, brush.clip.clear, terrain.tool.exit_to_select", "Ctrl+KeyB (Press, Operators): brush.mesh.edge_bevel, brush.mesh.vertex_bevel"]
+[2m2026-10-23T16:01:42.067985Z[0m [32m INFO[0m [2mjackdaw::extension_lifecycle[0m[2m:[0m applied keymap preset 'classic': 109 entries, 109 bindings, 0 user rows
+[2m2026-10-23T16:01:42.276737Z[0m [32m INFO[0m [2mjackdaw::asset_catalog[0m[2m:[0m No asset catalog found, starting with empty catalog
+[2m2026-10-23T16:01:43.972586Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: pre-building the game in the background for a fast first Play
+[2m2026-10-23T16:01:43.976571Z[0m [32m INFO[0m [2mjackdaw::material_browser[0m[2m:[0m update_material_browser_ui: rebuilding with 1 entries
+[2m2026-10-23T16:01:48.719293Z[0m [32m INFO[0m [2mjackdaw::screenshot[0m[2m:[0m screenshot: wrote C:\Users\linbo.zhang\Projects\my-game\screenshots/r3-99-restarted.png
+[2m2026-10-23T16:01:48.793627Z[0m [32m INFO[0m [2mjackdaw::screenshot[0m[2m:[0m screenshot: wrote C:\Users\linbo.zhang\Projects\my-game\screenshots/r3-99-restarted-v.png
+[2m2026-10-23T16:01:48.833196Z[0m [32m INFO[0m [2mjackdaw::screenshot[0m[2m:[0m screenshot: wrote C:\Users\linbo.zhang\Projects\my-game\screenshots/r3-99-restarted.png
+[2m2026-10-23T16:01:48.867068Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: refreshed project types from schema (1 project components)
+[2m2026-10-23T16:01:48.921525Z[0m [32m INFO[0m [2mjackdaw::screenshot[0m[2m:[0m screenshot: wrote C:\Users\linbo.zhang\Projects\my-game\screenshots/r3-99-restarted-v.png
+[2m2026-10-23T16:02:44.350299Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: input.pointer
+[2m2026-10-23T16:02:45.696941Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: input.pointer
+[2m2026-10-23T16:02:46.131439Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: input.text
+[2m2026-10-23T16:02:46.773087Z[0m [32m INFO[0m [2mjackdaw::screenshot[0m[2m:[0m screenshot: wrote C:\Users\linbo.zhang\Projects\my-game\screenshots/r3-07-picker-filtered-window.png
+[2m2026-10-23T16:02:46.880882Z[0m [32m INFO[0m [2mjackdaw::screenshot[0m[2m:[0m screenshot: wrote C:\Users\linbo.zhang\Projects\my-game\screenshots/r3-07-picker-filtered-window.png
+[2m2026-10-23T16:03:38.584228Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: input.pointer
+[2m2026-10-23T16:03:39.741136Z[0m [32m INFO[0m [2mjackdaw::screenshot[0m[2m:[0m screenshot: wrote C:\Users\linbo.zhang\Projects\my-game\screenshots/r3-07b-picker-open-window.png
+[2m2026-10-23T16:03:39.843965Z[0m [32m INFO[0m [2mjackdaw::screenshot[0m[2m:[0m screenshot: wrote C:\Users\linbo.zhang\Projects\my-game\screenshots/r3-07b-picker-open-window.png
+[2m2026-10-23T16:03:39.851887Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: input.text
+[2m2026-10-23T16:03:39.860677Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: viewport.draw_brush_modal
+[2m2026-10-23T16:03:40.731943Z[0m [32m INFO[0m [2mjackdaw::screenshot[0m[2m:[0m screenshot: wrote C:\Users\linbo.zhang\Projects\my-game\screenshots/r3-07c-picker-filtered-window.png
+[2m2026-10-23T16:03:40.819504Z[0m [32m INFO[0m [2mjackdaw::screenshot[0m[2m:[0m screenshot: wrote C:\Users\linbo.zhang\Projects\my-game\screenshots/r3-07c-picker-filtered-window.png
+[2m2026-10-23T16:04:12.281811Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: input.pointer
+[2m2026-10-23T16:04:12.326376Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: draw_brush.confirm
+[2m2026-10-23T16:04:12.359747Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: entity.add.cube
+[2m2026-10-23T16:04:12.906345Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: input.text
+[2m2026-10-23T16:06:17.954260Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: input.pointer
+[2m2026-10-23T16:06:17.995628Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: draw_brush.confirm
+[2m2026-10-23T16:06:17.997940Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: draw_brush.confirm
+[2m2026-10-23T16:06:19.554272Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: input.pointer
+[2m2026-10-23T16:06:19.595380Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: draw_brush.confirm
+[2m2026-10-23T16:06:19.598924Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: draw_brush.confirm
+[2m2026-10-23T16:06:21.072464Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: input.pointer
+[2m2026-10-23T16:06:21.113018Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: draw_brush.confirm
+[2m2026-10-23T16:06:21.115411Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: draw_brush.confirm
+[2m2026-10-23T16:06:22.369587Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: input.pointer
+[2m2026-10-23T16:06:22.410817Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: draw_brush.confirm
+[2m2026-10-23T16:06:22.413447Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: draw_brush.confirm
+[2m2026-10-23T16:06:45.536449Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: input.pointer
+[2m2026-10-23T16:06:45.578034Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: draw_brush.confirm
+[2m2026-10-23T16:06:45.580153Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: draw_brush.confirm
+[2m2026-10-23T16:07:18.388183Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: input.key
+[2m2026-10-23T16:07:18.401118Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: modal.cancel
+[2m2026-10-23T16:07:18.858010Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: input.key
+[2m2026-10-23T16:07:18.864394Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: selection.clear
+[2m2026-10-23T16:07:19.219808Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: entity.delete
+[2m2026-10-23T16:07:36.186630Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: input.key
+[2m2026-10-23T16:07:37.002016Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: input.pointer
+[2m2026-10-23T16:07:37.539286Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: entity.delete
+[2m2026-10-23T16:07:38.202876Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: input.key
+[2m2026-10-23T16:07:38.838680Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: input.pointer
+[2m2026-10-23T16:07:39.275607Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: entity.delete
+[2m2026-10-23T16:07:39.818918Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: input.key
+[2m2026-10-23T16:07:40.402690Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: input.pointer
+[2m2026-10-23T16:07:40.841447Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: entity.delete
+[2m2026-10-23T16:07:41.385359Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: input.key
+[2m2026-10-23T16:07:42.165841Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: scene.save
+[2m2026-10-23T16:07:42.179611Z[0m [32m INFO[0m [2mjackdaw::scene_io::save[0m[2m:[0m Scene saved to C:\Users\linbo.zhang\Projects\my-game\assets\scene.bsn
+[2m2026-10-23T16:07:42.265173Z[0m [33m WARN[0m [2mbevy_ecs::relationship[0m[2m:[0m The bevy_ecs::hierarchy::ChildOf(4365v9) relationship on entity 4999v4 relates to an entity that does not exist. The invalid bevy_ecs::hierarchy::ChildOf relationship has been removed.
+[2m2026-10-23T16:08:58.685880Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: input.pointer
+[2m2026-10-23T16:08:58.764181Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: pie.play
+[2m2026-10-23T16:08:58.787767Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 launched, awaiting connection
+[2m2026-10-23T16:09:00.362186Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 connected
+[2m2026-10-23T16:09:15.432697Z[0m [32m INFO[0m [2mjackdaw::screenshot[0m[2m:[0m screenshot: wrote C:\Users\linbo.zhang\Projects\my-game\screenshots/r3-01-pie-running.png
+[2m2026-10-23T16:09:15.536622Z[0m [32m INFO[0m [2mjackdaw::screenshot[0m[2m:[0m screenshot: wrote C:\Users\linbo.zhang\Projects\my-game\screenshots/r3-01-pie-running.png
+[2m2026-10-23T16:09:15.599806Z[0m [32m INFO[0m [2mjackdaw::screenshot[0m[2m:[0m screenshot: wrote C:\Users\linbo.zhang\Projects\my-game\screenshots/r3-01-pie-running-v.png
+[2m2026-10-23T16:09:15.672160Z[0m [32m INFO[0m [2mjackdaw::screenshot[0m[2m:[0m screenshot: wrote C:\Users\linbo.zhang\Projects\my-game\screenshots/r3-01-pie-running-v.png
+[2m2026-10-23T16:09:30.322204Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: input.pointer
+[2m2026-10-23T16:09:30.397540Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: pie.stop
+[2m2026-10-23T16:09:30.535483Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Stop
+[2m2026-10-23T16:09:38.270448Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: input.pointer

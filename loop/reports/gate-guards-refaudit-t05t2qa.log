@@ -1,0 +1,134 @@
+warning: linker stderr: rust-lld: ignoring unknown argument '-fuse-ld=lld'
+  |
+  = note: `#[warn(linker_messages)]` on by default
+
+warning: `jackdaw_env` (build script) generated 1 warning
+warning: `jackdaw_api_macros` (lib) generated 1 warning (1 duplicate)
+   Compiling jackdaw_bsn v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_bsn)
+warning: `jackdaw_project_build` (build script) generated 1 warning (1 duplicate)
+   Compiling jackdaw_project_build v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_project_build)
+warning: `jackdaw_package` (build script) generated 1 warning (1 duplicate)
+warning: `test_fixture_extension` (lib) generated 1 warning (1 duplicate)
+   Compiling jackdaw_animation_runtime v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_animation_runtime)
+   Compiling jackdaw_prefab v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_prefab)
+   Compiling jackdaw_remote v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_remote)
+   Compiling jackdaw_jsn v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_jsn)
+   Compiling jackdaw_runtime v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_runtime)
+   Compiling jackdaw_scaffold v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_scaffold)
+   Compiling jackdaw_animation v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_animation)
+   Compiling jackdaw v0.21.0-dev (E:\Project\rust\jackdaw)
+warning: `jackdaw` (bin "jackdaw-rustc-wrapper") generated 1 warning (1 duplicate)
+warning: variable does not need to be mutable
+   --> tests\guards\reference_audit.rs:160:10
+    |
+160 |     let (mut app, _tmp) = editor();
+    |          ----^^^
+    |          |
+    |          help: remove this `mut`
+    |
+    = note: `#[warn(unused_mut)]` (part of `#[warn(unused)]`) on by default
+
+warning: `jackdaw` (bin "jackdaw") generated 1 warning (1 duplicate)
+warning: `jackdaw` (test "guards") generated 2 warnings (1 duplicate) (run `cargo fix --test "guards" -p jackdaw` to apply 1 suggestion)
+    Finished `test` profile [optimized + debuginfo] target(s) in 41.38s
+     Running tests\guards\main.rs (target\debug\deps\guards-e99d419b85ef3675.exe)
+
+running 3 tests
+[2m2026-10-25T17:17:55.926698Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-25T17:17:55.926697Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-25T17:17:55.928839Z[0m [32m INFO[0m [2mbevy_diagnostic::system_information_diagnostics_plugin::internal[0m[2m:[0m SystemInfo { os: "Windows 11 Pro", kernel: "26100", cpu: "AMD Ryzen 7 9700X 8-Core Processor", core_count: "8", memory: "93.4 GiB" }
+[2m2026-10-25T17:17:55.928862Z[0m [32m INFO[0m [2mbevy_diagnostic::system_information_diagnostics_plugin::internal[0m[2m:[0m SystemInfo { os: "Windows 11 Pro", kernel: "26100", cpu: "AMD Ryzen 7 9700X 8-Core Processor", core_count: "8", memory: "93.4 GiB" }
+[2m2026-10-25T17:17:55.928870Z[0m [32m INFO[0m [2mbevy_diagnostic::system_information_diagnostics_plugin::internal[0m[2m:[0m SystemInfo { os: "Windows 11 Pro", kernel: "26100", cpu: "AMD Ryzen 7 9700X 8-Core Processor", core_count: "8", memory: "93.4 GiB" }
+[2m2026-10-25T17:17:55.930540Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-25T17:17:55.930544Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-25T17:17:55.938992Z[0m [31mERROR[0m [2mbevy_extract::extract_resource[0m[2m:[0m Sub app did not exist when trying to add `extract_resource` for <bevy_camera::clear_color::ClearColor>.
+[2m2026-10-25T17:17:55.988753Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+[2m2026-10-25T17:17:55.988753Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+[2m2026-10-25T17:17:55.988753Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+[2m2026-10-25T17:17:56.258173Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw::test_input::plugin` of extension `jackdaw.test_input`
+[2m2026-10-25T17:17:56.258750Z[0m [33m WARN[0m [2mbevy_render::texture[0m[2m:[0m CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+[2m2026-10-25T17:17:56.259012Z[0m [33m WARN[0m [2mbevy_gltf[0m[2m:[0m CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+[2m2026-10-25T17:17:56.261935Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw::test_input::plugin` of extension `jackdaw.test_input`
+[2m2026-10-25T17:17:56.262370Z[0m [33m WARN[0m [2mbevy_render::texture[0m[2m:[0m CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+[2m2026-10-25T17:17:56.262523Z[0m [33m WARN[0m [2mbevy_gltf[0m[2m:[0m CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+[2m2026-10-25T17:17:56.264205Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.viewport_panel
+[2m2026-10-25T17:17:56.264845Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.game_panel
+[2m2026-10-25T17:17:56.264996Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.test_input
+[2m2026-10-25T17:17:56.265096Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.inspector
+[2m2026-10-25T17:17:56.265184Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.multiplayer
+[2m2026-10-25T17:17:56.265360Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core
+[2m2026-10-25T17:17:56.265672Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.inspector
+[2m2026-10-25T17:17:56.265837Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.viewport_panel
+[2m2026-10-25T17:17:56.266203Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.project_window
+[2m2026-10-25T17:17:56.266323Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.multiplayer
+[2m2026-10-25T17:17:56.266439Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core
+[2m2026-10-25T17:17:56.268470Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.project_window
+[2m2026-10-25T17:17:56.268484Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.test_input
+[2m2026-10-25T17:17:56.268587Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core_windows
+[2m2026-10-25T17:17:56.268682Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.timeline
+[2m2026-10-25T17:17:56.268829Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.ui_palette
+[2m2026-10-25T17:17:56.268987Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.ui_palette
+[2m2026-10-25T17:17:56.269139Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.timeline
+[2m2026-10-25T17:17:56.269208Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.game_panel
+[2m2026-10-25T17:17:56.269229Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.animation_graph
+[2m2026-10-25T17:17:56.269314Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.animation_graph
+[2m2026-10-25T17:17:56.269400Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.build_panel
+[2m2026-10-25T17:17:56.269477Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core_windows
+[2m2026-10-25T17:17:56.269687Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.build_panel
+[2m2026-10-25T17:17:56.272895Z[0m [33m WARN[0m [2mjackdaw_api_internal::keymap::apply[0m[2m:[0m preset 'classic' has 10 chords claimed by more than one action: ["Home (Press, Operators): viewport2d.frame, clip.timeline.jump_start, view.frame_all", "Delete (Press, Operators): clip.delete_keyframes, entity.delete, brush.delete_element", "Backspace (Press, Operators): clip.delete_keyframes, viewport.draw_brush.remove_last_vertex, brush.delete_element", "Ctrl+KeyC (Press, Operators): clip.copy_keyframes, entity.copy", "Ctrl+KeyV (Press, Operators): clip.paste_keyframes, entity.paste", "Tab (Press, Operators): viewport.draw_brush.toggle_mode, brush.clip.cycle_mode", "Enter (Press, Operators): viewport.draw_brush.commit_polygon, brush.clip.apply", "KeyE (Press, Operators): tool.rotate, brush.mesh.extrude", "Escape (Press, Operators): brush.exit_edit_mode, selection.clear, brush.clip.clear, terrain.tool.exit_to_select", "Ctrl+KeyB (Press, Operators): brush.mesh.edge_bevel, brush.mesh.vertex_bevel"]
+[2m2026-10-25T17:17:56.272949Z[0m [32m INFO[0m [2mjackdaw::extension_lifecycle[0m[2m:[0m applied keymap preset 'classic': 109 entries, 109 bindings, 0 user rows
+[2m2026-10-25T17:17:56.273019Z[0m [32m INFO[0m [2mjackdaw::extension_lifecycle[0m[2m:[0m applied keymap preset 'classic': 109 entries, 109 bindings, 0 user rows
+[2m2026-10-25T17:17:56.273907Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw::test_input::plugin` of extension `jackdaw.test_input`
+[2m2026-10-25T17:17:56.274279Z[0m [33m WARN[0m [2mbevy_render::texture[0m[2m:[0m CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+[2m2026-10-25T17:17:56.274447Z[0m [33m WARN[0m [2mbevy_gltf[0m[2m:[0m CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+[2m2026-10-25T17:17:56.277800Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.game_panel
+[2m2026-10-25T17:17:56.277982Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.build_panel
+[2m2026-10-25T17:17:56.278056Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.inspector
+[2m2026-10-25T17:17:56.278123Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.ui_palette
+[2m2026-10-25T17:17:56.278219Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.animation_graph
+[2m2026-10-25T17:17:56.278283Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core_windows
+[2m2026-10-25T17:17:56.278366Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.viewport_panel
+[2m2026-10-25T17:17:56.278550Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.multiplayer
+[2m2026-10-25T17:17:56.278623Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.test_input
+[2m2026-10-25T17:17:56.278691Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.project_window
+[2m2026-10-25T17:17:56.278750Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core
+[2m2026-10-25T17:17:56.280697Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.timeline
+[2m2026-10-25T17:17:56.282751Z[0m [32m INFO[0m [2mjackdaw::extension_lifecycle[0m[2m:[0m applied keymap preset 'classic': 109 entries, 109 bindings, 0 user rows
+[2m2026-10-25T17:17:56.439290Z[0m [32m INFO[0m [2mjackdaw::asset_catalog[0m[2m:[0m No asset catalog found, starting with empty catalog
+[2m2026-10-25T17:17:56.439292Z[0m [32m INFO[0m [2mjackdaw::asset_catalog[0m[2m:[0m No asset catalog found, starting with empty catalog
+[2m2026-10-25T17:17:56.439303Z[0m [32m INFO[0m [2mjackdaw::asset_catalog[0m[2m:[0m No asset catalog found, starting with empty catalog
+[2m2026-10-25T17:17:56.491435Z[0m [32m INFO[0m [2mjackdaw::material_browser[0m[2m:[0m update_material_browser_ui: rebuilding with 1 entries
+[2m2026-10-25T17:17:56.491435Z[0m [32m INFO[0m [2mjackdaw::material_browser[0m[2m:[0m update_material_browser_ui: rebuilding with 1 entries
+[2m2026-10-25T17:17:56.491659Z[0m [32m INFO[0m [2mjackdaw::material_browser[0m[2m:[0m update_material_browser_ui: rebuilding with 1 entries
+[2m2026-10-25T17:17:56.748143Z[0m [33m WARN[0m [2mjackdaw::pie[0m[2m:[0m PIE: cannot build C:\Users\linbo.zhang\AppData\Local\Temp\jackdaw-reference-audit-a0KHbS: cargo could not read C:\Users\linbo.zhang\AppData\Local\Temp\jackdaw-reference-audit-a0KHbS: error: could not find `Cargo.toml` in `C:\Users\linbo.zhang\AppData\Local\Temp\jackdaw-reference-audit-a0KHbS` or any parent directory
+[2m2026-10-25T17:17:56.752308Z[0m [33m WARN[0m [2mbevy_ui::ui_node[0m[2m:[0m Two or more Entities with IsDefaultUiCamera found when only one Camera with this marker is allowed.
+[2m2026-10-25T17:17:56.760216Z[0m [33m WARN[0m [2mjackdaw::pie[0m[2m:[0m PIE: cannot build C:\Users\linbo.zhang\AppData\Local\Temp\jackdaw-reference-audit-tdZMeh: cargo could not read C:\Users\linbo.zhang\AppData\Local\Temp\jackdaw-reference-audit-tdZMeh: error: could not find `Cargo.toml` in `C:\Users\linbo.zhang\AppData\Local\Temp\jackdaw-reference-audit-tdZMeh` or any parent directory
+[2m2026-10-25T17:17:56.773086Z[0m [33m WARN[0m [2mjackdaw::pie[0m[2m:[0m PIE: cannot build C:\Users\linbo.zhang\AppData\Local\Temp\jackdaw-reference-audit-2yGtp9: cargo could not read C:\Users\linbo.zhang\AppData\Local\Temp\jackdaw-reference-audit-2yGtp9: error: could not find `Cargo.toml` in `C:\Users\linbo.zhang\AppData\Local\Temp\jackdaw-reference-audit-2yGtp9` or any parent directory
+[2m2026-10-25T17:17:56.833353Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: scene.open
+[2m2026-10-25T17:17:56.835392Z[0m [33m WARN[0m [2mjackdaw_bsn::apply[0m[2m:[0m BSN entity has 2 #names; a missing comma between sibling entities merges them into one. Check the scene file for a patch group holding more than one #name.
+[2m2026-10-25T17:17:56.836364Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Could not find an asset loader matching: Asset Type: Some(TypeId(0x726dca196ef7ee1e712f3078f9ccfa8c)); Path: "materials/gone.material.bsn";
+[2m2026-10-25T17:17:56.836408Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Could not find an asset loader matching: Asset Type: Some(TypeId(0x726dca196ef7ee1e712f3078f9ccfa8c)); Path: "materials/also-gone.material.bsn";
+[2m2026-10-25T17:17:56.837672Z[0m [33m WARN[0m [2mjackdaw_api_internal::operator[0m[2m:[0m scene 'zones/hedgerow.bsn': 2 references name files the project does not hold (2 missing) — run asset.audit for the list
+[2m2026-10-25T17:17:56.848327Z[0m [32m INFO[0m [2mjackdaw::material_browser[0m[2m:[0m update_material_browser_ui: rebuilding with 2 entries
+[2m2026-10-25T17:17:56.849534Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: scene.open
+[2m2026-10-25T17:17:56.851242Z[0m [33m WARN[0m [2mjackdaw_bsn::apply[0m[2m:[0m BSN entity has 2 #names; a missing comma between sibling entities merges them into one. Check the scene file for a patch group holding more than one #name.
+[2m2026-10-25T17:17:56.851752Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Could not find an asset loader matching: Asset Type: Some(TypeId(0x726dca196ef7ee1e712f3078f9ccfa8c)); Path: "materials/gone.material.bsn";
+[2m2026-10-25T17:17:56.851772Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Could not find an asset loader matching: Asset Type: Some(TypeId(0x726dca196ef7ee1e712f3078f9ccfa8c)); Path: "materials/also-gone.material.bsn";
+[2m2026-10-25T17:17:56.853121Z[0m [33m WARN[0m [2mjackdaw_api_internal::operator[0m[2m:[0m scene 'zones/hedgerow.bsn': 2 references name files the project does not hold (2 missing) — run asset.audit for the list
+[2m2026-10-25T17:17:56.853267Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: scene.open
+[2m2026-10-25T17:17:56.854911Z[0m [33m WARN[0m [2mjackdaw_bsn::apply[0m[2m:[0m BSN entity has 2 #names; a missing comma between sibling entities merges them into one. Check the scene file for a patch group holding more than one #name.
+[2m2026-10-25T17:17:56.855527Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Could not find an asset loader matching: Asset Type: Some(TypeId(0x726dca196ef7ee1e712f3078f9ccfa8c)); Path: "materials/gone.material.bsn";
+[2m2026-10-25T17:17:56.855578Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Could not find an asset loader matching: Asset Type: Some(TypeId(0x726dca196ef7ee1e712f3078f9ccfa8c)); Path: "materials/also-gone.material.bsn";
+[2m2026-10-25T17:17:56.856975Z[0m [33m WARN[0m [2mjackdaw_api_internal::operator[0m[2m:[0m scene 'zones/hedgerow.bsn': 2 references name files the project does not hold (2 missing) — run asset.audit for the list
+[2m2026-10-25T17:17:56.864814Z[0m [32m INFO[0m [2mjackdaw::material_browser[0m[2m:[0m update_material_browser_ui: rebuilding with 2 entries
+[2m2026-10-25T17:17:56.868432Z[0m [32m INFO[0m [2mjackdaw::material_browser[0m[2m:[0m update_material_browser_ui: rebuilding with 2 entries
+[2m2026-10-25T17:17:56.900832Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: asset.audit
+[2m2026-10-25T17:17:56.901915Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: asset.missing_list
+[2m2026-10-25T17:17:56.902472Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m 2 broken references in 1 documents (2 Missing)
+test reference_audit::a_loaded_scene_leaves_one_summary_warning ... ok
+test reference_audit::asset_audit_reports_and_fills_the_findings ... ok
+test reference_audit::asset_missing_list_gathers_the_findings_headless ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 175 filtered out; finished in 1.34s
+
+EXIT:0 

@@ -1,0 +1,100 @@
+warning: linker stderr: rust-lld: ignoring unknown argument '-fuse-ld=lld'
+  |
+  = note: `#[warn(linker_messages)]` on by default
+
+warning: `jackdaw_env` (build script) generated 1 warning
+   Compiling jackdaw_env v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_env)
+    Checking jackdaw_bsn v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_bsn)
+warning: `jackdaw_api_macros` (lib) generated 1 warning (1 duplicate)
+warning: `jackdaw_project_build` (build script) generated 1 warning (1 duplicate)
+warning: `jackdaw_package` (build script) generated 1 warning (1 duplicate)
+    Checking jackdaw_api_internal v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_api_internal)
+    Checking jackdaw_project_build v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_project_build)
+    Checking jackdaw_package v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_package)
+    Checking jackdaw_releases v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_releases)
+    Checking jackdaw_animation_runtime v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_animation_runtime)
+    Checking jackdaw_prefab v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_prefab)
+    Checking jackdaw_jsn v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_jsn)
+    Checking jackdaw_remote v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_remote)
+    Checking jackdaw_scaffold v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_scaffold)
+    Checking jackdaw_api v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_api)
+    Checking jackdaw_loader v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_loader)
+    Checking jackdaw_runtime v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_runtime)
+    Checking jackdaw_multiplayer_editor v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_multiplayer_editor)
+    Checking jackdaw_animation v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_animation)
+    Checking jackdaw v0.21.0-dev (E:\Project\rust\jackdaw)
+error[E0425]: cannot find type `Clipboard` in crate `bevy::window`
+   --> src\inspector\missing_list.rs:558:73
+    |
+558 |     if let Some(mut clipboard) = world.get_resource_mut::<bevy::window::Clipboard>() {
+    |                                                                         ^^^^^^^^^ not found in `bevy::window`
+
+error[E0599]: no method named `to_slash_lossy` found for struct `PathBuf` in the current scope
+   --> src\inspector\missing_list.rs:307:33
+    |
+307 |         .map(|entry| entry.path.to_slash_lossy().into_owned())
+    |                                 ^^^^^^^^^^^^^^
+    |
+   ::: C:\Users\linbo.zhang\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\path-slash-0.2.1\src\lib.rs:342:8
+    |
+342 |     fn to_slash_lossy(&self) -> Cow<'_, str>;
+    |        -------------- the method is available for `PathBuf` here
+    |
+    = help: items from traits can only be used if the trait is in scope
+help: trait `PathBufExt` which provides `to_slash_lossy` is implemented but not in scope; perhaps you want to import it
+    |
+ 14 + use path_slash::PathBufExt;
+    |
+help: there is a method `to_slash` with a similar name
+    |
+307 -         .map(|entry| entry.path.to_slash_lossy().into_owned())
+307 +         .map(|entry| entry.path.to_slash().into_owned())
+    |
+
+error[E0308]: mismatched types
+   --> src\reference_audit.rs:211:27
+    |
+211 |                 document: indexed.clone(),
+    |                           ^^^^^^^^^^^^^^^ expected `PathBuf`, found `&Path`
+    |
+help: try using a conversion method
+    |
+211 |                 document: indexed.clone().to_path_buf(),
+    |                                          ++++++++++++++
+
+warning: unused import: `jackdaw_api::prelude`
+  --> src\inspector\missing_list.rs:18:5
+   |
+18 | use jackdaw_api::prelude::*;
+   |     ^^^^^^^^^^^^^^^^^^^^
+   |
+   = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+error[E0716]: temporary value dropped while borrowed
+   --> src\reference_audit.rs:409:28
+    |
+408 |                 *documents
+    |                  --------- borrow later used here
+409 |                     .entry(finding.document.to_slash_lossy().as_ref())
+    |                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ creates a temporary value which is freed while still in use
+410 |                     .or_default() += 1;
+    |                                       - temporary value is freed at the end of this statement
+    |
+    = note: consider using a `let` binding to create a longer lived value
+
+error[E0597]: `kind` does not live long enough
+   --> src\reference_audit.rs:418:32
+    |
+417 |             for kind in kinds {
+    |                 ---- binding `kind` declared here
+418 |                 *counted.entry(kind.as_str()).or_default() += 1;
+    |                  -------       ^^^^ borrowed value does not live long enough
+    |                  |
+    |                  borrow later used here
+419 |             }
+    |             - `kind` dropped here while still borrowed
+
+Some errors have detailed explanations: E0308, E0425, E0597, E0599, E0716.
+For more information about an error, try `rustc --explain E0308`.
+warning: `jackdaw` (lib) generated 1 warning
+error: could not compile `jackdaw` (lib) due to 5 previous errors; 1 warning emitted

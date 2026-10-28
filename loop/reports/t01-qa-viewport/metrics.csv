@@ -1,0 +1,10 @@
+﻿case,iter,result,detail
+V1,1,PASS,"act=True dyaw=0.0000 dpitch=0.0000 pos_hold=0.0000 pos_rel=0.0000"
+V1n,1,PASS,"fly=False moved=0.0000"
+V2,1,PASS,"dyaw=-0.900 (exp -0.900) dpitch=0.0000"
+V2g,1,PASS,"giant_dyaw=0.0000 (exp 0) small_dyaw=-0.225 (exp -0.225)"
+V2s,1,PASS,"total={0:N2} (exp ~-5.4) perFrame=[-1.8,-1.8,-1.8]"
+probe-P2,recheck5,False,cursor=
+V3,1,PASS,"panX dot=-6.00/6.00 panY dot=6.00/6.00 rotSame=True"
+V4,1,FAIL,"dolly=5.00 along fwd dot=-5.00"
+V5,1,FAIL,"W len=4.16 fwdOk=False Ey=4.00 Qy=-4.17 exz=0.000"

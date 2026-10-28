@@ -1,0 +1,12 @@
+True
+setup,window,INFO,"hwnd=685515348 fg=True phys=2,576x1,408 center=(858,469)"
+T9,mid,INFO,"modal='' mutatingMidDrag=False"
+T9,mid,INFO,"after +600: mutating=False"
+T9,face-esc,BLOCKED,"drag never mutated geometry"
+V8,target,INFO,"Filter field physical=(37,86) logical=(24,57)"
+V8,focus,BLOCKED,"focus=null enabledAfterHover=True"
+T10,baseline,INFO,"sub-quantum drag changed=False (changed => snap OFF)"
+T10,mm-click,FAIL,"readout False -> False (stationary MMB click must toggle)"
+T10,mm-drag,PASS,"pan=True fly=False moved=6.00 readout False -> False (drag must not flip)"
+T10,mm-click2,PASS,"readout False -> False (expect back to baseline False)"
+SUPPLEMENT5 DONE -> E:\Project\rust\jackdaw\loop\reports\t01-t2-supplement\s5\metrics.csv

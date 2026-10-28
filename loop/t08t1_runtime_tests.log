@@ -1,0 +1,9 @@
+
+running 4 tests
+test config::tests::a_missing_config_falls_back_to_default_once ... ok
+test config::tests::a_later_edit_of_the_asset_does_not_re_inject ... ok
+test config::tests::a_pie_temp_directory_does_not_shadow_the_config ... ok
+test config::tests::a_config_asset_becomes_the_resource_initial_value ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 26 filtered out; finished in 0.03s
+

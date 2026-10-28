@@ -1,0 +1,25 @@
+   Compiling proc-macro2 v1.0.107
+   Compiling serde_json v1.0.154
+warning: linker stderr: rust-lld: ignoring unknown argument '-fuse-ld=lld'
+  |
+  = note: `#[warn(linker_messages)]` on by default
+
+warning: `jackdaw_env` (build script) generated 1 warning
+    Checking indexmap v2.14.2
+   Compiling toml v1.1.8+spec-1.1.0
+   Compiling quote v1.0.47
+    Checking toml_edit v0.25.17+spec-1.1.0
+   Compiling syn v3.0.9
+   Compiling syn v2.0.119
+   Compiling include_dir_macros v0.7.4
+    Checking include_dir v0.7.4
+   Compiling jackdaw_project_build v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_project_build)
+warning: `jackdaw_project_build` (build script) generated 1 warning (1 duplicate)
+   Compiling serde_derive v1.0.229
+    Checking serde v1.0.229
+   Compiling tracing-attributes v0.1.31
+    Checking jackdaw_env v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_env)
+    Checking jackdaw_schema v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_schema)
+    Checking tracing v0.1.44
+    Checking jackdaw_scaffold v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_scaffold)
+    Finished `dev` profile [optimized + debuginfo] target(s) in 21.81s

@@ -1,0 +1,21 @@
+R1C1 placed y=0.860 tplPlayer=True placedRig materialized=True active=True
+R1_C1_SETTLE_PASS
+R1C2 walk zEnd=-2.440 (samples 14)
+R1_C2_WALLSTOP_PASS
+R1C5 local=(0.00,3.15,4.61) |.|=5.578 -> (4.61,3.15,0.03) |.|=5.578 drift=0.000 (distance-5 expectation (0,3.15,4.61), |.|~5.578)
+R1_C5_FOLLOW_PASS
+R1C3 jump apex=2.458 expected~2.695 (jump_speed 6.0 authored)
+R1_C3_JUMP_PASS
+R1C4 slide x 2.44 -> 4.30, z=-2.440
+R1_C4_SLIDE_PASS
+R1C6 placed=1.67 m/s (authored 2.0) template=3.34 m/s (4.0)
+R1_C6_HALFSPEED_PASS
+R2 tpl visible=True walk dz=2.44 jumpApex=1.956 followDrift=0.000 cubePushed=False (dx=0.00)
+R2_CELL1_OUTOFBOX_PASS
+R2_CELL6_PUSHCUBE_FAIL
+R3 high-speed wall stop z=-2.440 (no-penetration bound: >= -2.45)
+R3_CELL6_NO Penetration_PASS
+R4 FP rig local=(0.00,1.60,0.00) |.|=1.600 (eye-height form; measured 1.60 this window, TP form is 5.578)
+R4_CELL7_FIRSTPERSON_PASS
+VERDICT_C: R1_C1_SETTLE=True R1_C2_WALLSTOP=True R1_C3_JUMP=True R1_C4_SLIDE=True R1_C5_FOLLOW=True R1_C6_HALFSPEED=True R2_CELL1_OUTOFBOX=True R2_CELL6_PUSHCUBE=False R3_CELL6_NO Penetration=True R4_CELL7_FIRSTPERSON=True
+T11T3_C_DONE

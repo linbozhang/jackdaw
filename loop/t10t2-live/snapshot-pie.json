@@ -1,0 +1,1018 @@
+﻿[
+    {
+        "components":  {
+                           "bevy_gizmos::retained::Gizmo":  {
+                                                                "depth_bias":  -0.5,
+                                                                "handle":  null,
+                                                                "line_config":  {
+                                                                                    "animation_offset":  0.0,
+                                                                                    "joints":  "None",
+                                                                                    "perspective":  false,
+                                                                                    "style":  "Solid",
+                                                                                    "width":  2.0
+                                                                                }
+                                                            },
+                           "bevy_transform::components::global_transform::GlobalTransform":  [
+                                                                                                 0.014497474767267704,
+                                                                                                 0.0,
+                                                                                                 0.0,
+                                                                                                 0.0,
+                                                                                                 0.014497474767267704,
+                                                                                                 0.0,
+                                                                                                 0.0,
+                                                                                                 0.0,
+                                                                                                 0.014497474767267704,
+                                                                                                 -0.34603723883628845,
+                                                                                                 3.628199577331543,
+                                                                                                 7.626883029937744
+                                                                                             ],
+                           "bevy_transform::components::transform::Transform":  {
+                                                                                    "rotation":  [
+                                                                                                     0.0,
+                                                                                                     0.0,
+                                                                                                     0.0,
+                                                                                                     1.0
+                                                                                                 ],
+                                                                                    "scale":  [
+                                                                                                  0.014497474767267704,
+                                                                                                  0.014497474767267704,
+                                                                                                  0.014497474767267704
+                                                                                              ],
+                                                                                    "translation":  [
+                                                                                                        -0.34603723883628845,
+                                                                                                        3.628199577331543,
+                                                                                                        7.626883029937744
+                                                                                                    ]
+                                                                                }
+                       },
+        "entity":  4294963374,
+        "scene_node_id":  null
+    },
+    {
+        "components":  {
+                           "bevy_light::cascade::CascadeShadowConfig":  {
+                                                                            "bounds":  [
+                                                                                           10.0,
+                                                                                           24.662120819091797,
+                                                                                           60.822021484375,
+                                                                                           149.99998474121094
+                                                                                       ],
+                                                                            "minimum_distance":  0.10000000149011612,
+                                                                            "overlap_proportion":  0.20000000298023224
+                                                                        },
+                           "bevy_light::directional_light::DirectionalLight":  {
+                                                                                   "affects_lightmapped_mesh_diffuse":  true,
+                                                                                   "color":  {
+                                                                                                 "LinearRgba":  {
+                                                                                                                    "alpha":  1.0,
+                                                                                                                    "blue":  1.0,
+                                                                                                                    "green":  1.0,
+                                                                                                                    "red":  1.0
+                                                                                                                }
+                                                                                             },
+                                                                                   "contact_shadows_enabled":  false,
+                                                                                   "illuminance":  4000.0,
+                                                                                   "shadow_depth_bias":  0.019999999552965164,
+                                                                                   "shadow_maps_enabled":  false,
+                                                                                   "shadow_normal_bias":  1.7999999523162842,
+                                                                                   "soft_shadow_size":  null
+                                                                               },
+                           "bevy_transform::components::global_transform::GlobalTransform":  [
+                                                                                                 0.7071068286895752,
+                                                                                                 2.9802322387695313E-08,
+                                                                                                 -0.7071068286895752,
+                                                                                                 -0.5144957304000854,
+                                                                                                 0.6859943270683289,
+                                                                                                 -0.5144957900047302,
+                                                                                                 0.4850713014602661,
+                                                                                                 0.7276069521903992,
+                                                                                                 0.48507124185562134,
+                                                                                                 4.0,
+                                                                                                 6.0,
+                                                                                                 4.0
+                                                                                             ],
+                           "bevy_transform::components::transform::Transform":  {
+                                                                                    "rotation":  [
+                                                                                                     -0.36607417464256287,
+                                                                                                     0.3513603210449219,
+                                                                                                     0.1516328901052475,
+                                                                                                     0.848258912563324
+                                                                                                 ],
+                                                                                    "scale":  [
+                                                                                                  1.0,
+                                                                                                  1.0,
+                                                                                                  1.0
+                                                                                              ],
+                                                                                    "translation":  [
+                                                                                                        4.0,
+                                                                                                        6.0,
+                                                                                                        4.0
+                                                                                                    ]
+                                                                                }
+                       },
+        "entity":  4294963513,
+        "scene_node_id":  null
+    },
+    {
+        "components":  {
+                           "bevy_camera::projection::Projection":  {
+                                                                       "Orthographic":  {
+                                                                                            "area":  {
+                                                                                                         "max":  [
+                                                                                                                     640.0,
+                                                                                                                     360.0
+                                                                                                                 ],
+                                                                                                         "min":  [
+                                                                                                                     -640.0,
+                                                                                                                     -360.0
+                                                                                                                 ]
+                                                                                                     },
+                                                                                            "far":  1000.0,
+                                                                                            "near":  -1000.0,
+                                                                                            "scale":  1.0,
+                                                                                            "scaling_mode":  "WindowSize",
+                                                                                            "viewport_origin":  [
+                                                                                                                    0.5,
+                                                                                                                    0.5
+                                                                                                                ]
+                                                                                        }
+                                                                   },
+                           "bevy_transform::components::global_transform::GlobalTransform":  [
+                                                                                                 1.0,
+                                                                                                 0.0,
+                                                                                                 0.0,
+                                                                                                 0.0,
+                                                                                                 1.0,
+                                                                                                 0.0,
+                                                                                                 0.0,
+                                                                                                 0.0,
+                                                                                                 1.0,
+                                                                                                 0.0,
+                                                                                                 0.0,
+                                                                                                 0.0
+                                                                                             ],
+                           "bevy_transform::components::transform::Transform":  {
+                                                                                    "rotation":  [
+                                                                                                     0.0,
+                                                                                                     0.0,
+                                                                                                     0.0,
+                                                                                                     1.0
+                                                                                                 ],
+                                                                                    "scale":  [
+                                                                                                  1.0,
+                                                                                                  1.0,
+                                                                                                  1.0
+                                                                                              ],
+                                                                                    "translation":  [
+                                                                                                        0.0,
+                                                                                                        0.0,
+                                                                                                        0.0
+                                                                                                    ]
+                                                                                },
+                           "bevy_ui::ui_node::IsDefaultUiCamera":  {
+
+                                                                   }
+                       },
+        "entity":  4294963535,
+        "scene_node_id":  null
+    },
+    {
+        "components":  {
+                           "bevy_dev_tools::infinite_grid::InfiniteGrid":  {
+
+                                                                           },
+                           "bevy_dev_tools::infinite_grid::InfiniteGridSettings":  {
+                                                                                       "dot_fadeout_strength":  0.25,
+                                                                                       "fadeout_distance":  100.0,
+                                                                                       "major_line_color":  {
+                                                                                                                "Srgba":  {
+                                                                                                                              "alpha":  1.0,
+                                                                                                                              "blue":  0.30000001192092896,
+                                                                                                                              "green":  0.30000001192092896,
+                                                                                                                              "red":  0.30000001192092896
+                                                                                                                          }
+                                                                                                            },
+                                                                                       "major_line_interval":  10,
+                                                                                       "minor_line_color":  {
+                                                                                                                "Srgba":  {
+                                                                                                                              "alpha":  1.0,
+                                                                                                                              "blue":  0.25,
+                                                                                                                              "green":  0.25,
+                                                                                                                              "red":  0.25
+                                                                                                                          }
+                                                                                                            },
+                                                                                       "scale":  4.0,
+                                                                                       "x_axis_color":  {
+                                                                                                            "Srgba":  {
+                                                                                                                          "alpha":  0.6000000238418579,
+                                                                                                                          "blue":  0.3199999928474426,
+                                                                                                                          "green":  0.20000000298023224,
+                                                                                                                          "red":  1.0
+                                                                                                                      }
+                                                                                                        },
+                                                                                       "z_axis_color":  {
+                                                                                                            "Srgba":  {
+                                                                                                                          "alpha":  0.6000000238418579,
+                                                                                                                          "blue":  1.0,
+                                                                                                                          "green":  0.5649999976158142,
+                                                                                                                          "red":  0.15700000524520874
+                                                                                                                      }
+                                                                                                        }
+                                                                                   },
+                           "bevy_transform::components::global_transform::GlobalTransform":  [
+                                                                                                 1.0,
+                                                                                                 0.0,
+                                                                                                 0.0,
+                                                                                                 0.0,
+                                                                                                 1.0,
+                                                                                                 0.0,
+                                                                                                 0.0,
+                                                                                                 0.0,
+                                                                                                 1.0,
+                                                                                                 0.0,
+                                                                                                 0.0,
+                                                                                                 0.0
+                                                                                             ],
+                           "bevy_transform::components::transform::Transform":  {
+                                                                                    "rotation":  [
+                                                                                                     0.0,
+                                                                                                     0.0,
+                                                                                                     0.0,
+                                                                                                     1.0
+                                                                                                 ],
+                                                                                    "scale":  [
+                                                                                                  1.0,
+                                                                                                  1.0,
+                                                                                                  1.0
+                                                                                              ],
+                                                                                    "translation":  [
+                                                                                                        0.0,
+                                                                                                        0.0,
+                                                                                                        0.0
+                                                                                                    ]
+                                                                                }
+                       },
+        "entity":  4294963376,
+        "scene_node_id":  null
+    },
+    {
+        "components":  {
+                           "bevy_camera::projection::Projection":  {
+                                                                       "Orthographic":  {
+                                                                                            "area":  {
+                                                                                                         "max":  [
+                                                                                                                     640.0,
+                                                                                                                     360.0
+                                                                                                                 ],
+                                                                                                         "min":  [
+                                                                                                                     -640.0,
+                                                                                                                     -360.0
+                                                                                                                 ]
+                                                                                                     },
+                                                                                            "far":  1000.0,
+                                                                                            "near":  -1000.0,
+                                                                                            "scale":  1.0,
+                                                                                            "scaling_mode":  "WindowSize",
+                                                                                            "viewport_origin":  [
+                                                                                                                    0.5,
+                                                                                                                    0.5
+                                                                                                                ]
+                                                                                        }
+                                                                   },
+                           "bevy_transform::components::global_transform::GlobalTransform":  [
+                                                                                                 1.0,
+                                                                                                 0.0,
+                                                                                                 0.0,
+                                                                                                 0.0,
+                                                                                                 1.0,
+                                                                                                 0.0,
+                                                                                                 0.0,
+                                                                                                 0.0,
+                                                                                                 1.0,
+                                                                                                 0.0,
+                                                                                                 0.0,
+                                                                                                 999.0
+                                                                                             ],
+                           "bevy_transform::components::transform::Transform":  {
+                                                                                    "rotation":  [
+                                                                                                     0.0,
+                                                                                                     0.0,
+                                                                                                     0.0,
+                                                                                                     1.0
+                                                                                                 ],
+                                                                                    "scale":  [
+                                                                                                  1.0,
+                                                                                                  1.0,
+                                                                                                  1.0
+                                                                                              ],
+                                                                                    "translation":  [
+                                                                                                        0.0,
+                                                                                                        0.0,
+                                                                                                        999.0
+                                                                                                    ]
+                                                                                }
+                       },
+        "entity":  4294963304,
+        "scene_node_id":  null
+    },
+    {
+        "components":  {
+                           "bevy_camera::projection::Projection":  {
+                                                                       "Perspective":  {
+                                                                                           "aspect_ratio":  1.0,
+                                                                                           "far":  1000.0,
+                                                                                           "fov":  0.7853981852531433,
+                                                                                           "near":  0.10000000149011612,
+                                                                                           "near_clip_plane":  [
+                                                                                                                   0.0,
+                                                                                                                   0.0,
+                                                                                                                   -1.0,
+                                                                                                                   -0.10000000149011612
+                                                                                                               ]
+                                                                                       }
+                                                                   },
+                           "bevy_light::probe::EnvironmentMapLight":  {
+                                                                          "affects_lightmapped_mesh_diffuse":  true,
+                                                                          "diffuse_map":  null,
+                                                                          "intensity":  1500.0,
+                                                                          "rotation":  [
+                                                                                           0.0,
+                                                                                           0.0,
+                                                                                           0.0,
+                                                                                           1.0
+                                                                                       ],
+                                                                          "specular_map":  null
+                                                                      },
+                           "bevy_transform::components::global_transform::GlobalTransform":  [
+                                                                                                 0.7071067690849304,
+                                                                                                 1.4901161193847656E-08,
+                                                                                                 -0.70710688829422,
+                                                                                                 -0.40824830532073975,
+                                                                                                 0.8164965510368347,
+                                                                                                 -0.4082483649253845,
+                                                                                                 0.5773503184318542,
+                                                                                                 0.5773503184318542,
+                                                                                                 0.5773502588272095,
+                                                                                                 3.0,
+                                                                                                 3.0,
+                                                                                                 3.0
+                                                                                             ],
+                           "bevy_transform::components::transform::Transform":  {
+                                                                                    "rotation":  [
+                                                                                                     -0.2798481583595276,
+                                                                                                     0.3647052049636841,
+                                                                                                     0.1159169003367424,
+                                                                                                     0.8804762959480286
+                                                                                                 ],
+                                                                                    "scale":  [
+                                                                                                  1.0,
+                                                                                                  1.0,
+                                                                                                  1.0
+                                                                                              ],
+                                                                                    "translation":  [
+                                                                                                        3.0,
+                                                                                                        3.0,
+                                                                                                        3.0
+                                                                                                    ]
+                                                                                }
+                       },
+        "entity":  4294963514,
+        "scene_node_id":  null
+    },
+    {
+        "components":  {
+                           "bevy_camera::projection::Projection":  {
+                                                                       "Perspective":  {
+                                                                                           "aspect_ratio":  1.9656652212142944,
+                                                                                           "far":  1000.0,
+                                                                                           "fov":  0.7853981852531433,
+                                                                                           "near":  0.10000000149011612,
+                                                                                           "near_clip_plane":  [
+                                                                                                                   0.0,
+                                                                                                                   0.0,
+                                                                                                                   -1.0,
+                                                                                                                   -0.10000000149011612
+                                                                                                               ]
+                                                                                       }
+                                                                   },
+                           "bevy_light::probe::EnvironmentMapLight":  {
+                                                                          "affects_lightmapped_mesh_diffuse":  true,
+                                                                          "diffuse_map":  null,
+                                                                          "intensity":  500.0,
+                                                                          "rotation":  [
+                                                                                           0.0,
+                                                                                           0.0,
+                                                                                           0.0,
+                                                                                           1.0
+                                                                                       ],
+                                                                          "specular_map":  null
+                                                                      },
+                           "bevy_pbr::transmission::ScreenSpaceTransmission":  {
+                                                                                   "quality":  "Medium",
+                                                                                   "steps":  1
+                                                                               },
+                           "bevy_transform::components::global_transform::GlobalTransform":  [
+                                                                                                 1.0,
+                                                                                                 0.0,
+                                                                                                 0.0,
+                                                                                                 0.0,
+                                                                                                 0.8944271802902222,
+                                                                                                 -0.44721361994743347,
+                                                                                                 0.0,
+                                                                                                 0.44721361994743347,
+                                                                                                 0.8944271802902222,
+                                                                                                 0.0,
+                                                                                                 4.0,
+                                                                                                 8.0
+                                                                                             ],
+                           "bevy_transform::components::transform::Transform":  {
+                                                                                    "rotation":  [
+                                                                                                     -0.22975292801856995,
+                                                                                                     0.0,
+                                                                                                     0.0,
+                                                                                                     0.9732490181922913
+                                                                                                 ],
+                                                                                    "scale":  [
+                                                                                                  1.0,
+                                                                                                  1.0,
+                                                                                                  1.0
+                                                                                              ],
+                                                                                    "translation":  [
+                                                                                                        0.0,
+                                                                                                        4.0,
+                                                                                                        8.0
+                                                                                                    ]
+                                                                                },
+                           "jackdaw_camera::JackdawCameraSettings":  {
+                                                                         "enabled":  false,
+                                                                         "invert_y":  false,
+                                                                         "run_multiplier":  2.0,
+                                                                         "scroll_speed":  1.0,
+                                                                         "sensitivity":  0.003000000026077032,
+                                                                         "speed":  10.0
+                                                                     }
+                       },
+        "entity":  4294963375,
+        "scene_node_id":  null
+    },
+    {
+        "components":  {
+                           "bevy_camera::projection::Projection":  {
+                                                                       "Perspective":  {
+                                                                                           "aspect_ratio":  1.7777777910232544,
+                                                                                           "far":  1000.0,
+                                                                                           "fov":  0.7853981852531433,
+                                                                                           "near":  0.10000000149011612,
+                                                                                           "near_clip_plane":  [
+                                                                                                                   0.0,
+                                                                                                                   0.0,
+                                                                                                                   -1.0,
+                                                                                                                   -0.10000000149011612
+                                                                                                               ]
+                                                                                       }
+                                                                   },
+                           "bevy_transform::components::global_transform::GlobalTransform":  [
+                                                                                                 1.0,
+                                                                                                 0.0,
+                                                                                                 0.0,
+                                                                                                 0.0,
+                                                                                                 1.0,
+                                                                                                 0.0,
+                                                                                                 0.0,
+                                                                                                 0.0,
+                                                                                                 1.0,
+                                                                                                 0.0,
+                                                                                                 0.0,
+                                                                                                 0.0
+                                                                                             ],
+                           "bevy_transform::components::transform::Transform":  {
+                                                                                    "rotation":  [
+                                                                                                     0.0,
+                                                                                                     0.0,
+                                                                                                     0.0,
+                                                                                                     1.0
+                                                                                                 ],
+                                                                                    "scale":  [
+                                                                                                  1.0,
+                                                                                                  1.0,
+                                                                                                  1.0
+                                                                                              ],
+                                                                                    "translation":  [
+                                                                                                        0.0,
+                                                                                                        0.0,
+                                                                                                        0.0
+                                                                                                    ]
+                                                                                }
+                       },
+        "entity":  4294963521,
+        "scene_node_id":  null
+    },
+    {
+        "components":  {
+                           "bevy_camera::projection::Projection":  {
+                                                                       "Perspective":  {
+                                                                                           "aspect_ratio":  1.0,
+                                                                                           "far":  1000.0,
+                                                                                           "fov":  0.7853981852531433,
+                                                                                           "near":  0.10000000149011612,
+                                                                                           "near_clip_plane":  [
+                                                                                                                   0.0,
+                                                                                                                   0.0,
+                                                                                                                   -1.0,
+                                                                                                                   -0.10000000149011612
+                                                                                                               ]
+                                                                                       }
+                                                                   },
+                           "bevy_light::probe::EnvironmentMapLight":  {
+                                                                          "affects_lightmapped_mesh_diffuse":  true,
+                                                                          "diffuse_map":  null,
+                                                                          "intensity":  2000.0,
+                                                                          "rotation":  [
+                                                                                           0.0,
+                                                                                           0.0,
+                                                                                           0.0,
+                                                                                           1.0
+                                                                                       ],
+                                                                          "specular_map":  null
+                                                                      },
+                           "bevy_pbr::transmission::ScreenSpaceTransmission":  {
+                                                                                   "quality":  "Medium",
+                                                                                   "steps":  1
+                                                                               },
+                           "bevy_transform::components::global_transform::GlobalTransform":  [
+                                                                                                 1.0,
+                                                                                                 0.0,
+                                                                                                 0.0,
+                                                                                                 0.0,
+                                                                                                 1.0,
+                                                                                                 0.0,
+                                                                                                 0.0,
+                                                                                                 0.0,
+                                                                                                 1.0,
+                                                                                                 0.0,
+                                                                                                 0.0,
+                                                                                                 3.0
+                                                                                             ],
+                           "bevy_transform::components::transform::Transform":  {
+                                                                                    "rotation":  [
+                                                                                                     0.0,
+                                                                                                     0.0,
+                                                                                                     0.0,
+                                                                                                     1.0
+                                                                                                 ],
+                                                                                    "scale":  [
+                                                                                                  1.0,
+                                                                                                  1.0,
+                                                                                                  1.0
+                                                                                              ],
+                                                                                    "translation":  [
+                                                                                                        0.0,
+                                                                                                        0.0,
+                                                                                                        3.0
+                                                                                                    ]
+                                                                                }
+                       },
+        "entity":  4294963522,
+        "scene_node_id":  null
+    },
+    {
+        "components":  {
+                           "bevy_mesh::components::Mesh3d":  null,
+                           "bevy_pbr::mesh_material::MeshMaterial3d\u003cbevy_pbr::extended_material::ExtendedMaterial\u003cbevy_pbr::pbr_material::StandardMaterial, jackdaw::brush::gizmo_overlay::OccludedExtension\u003e\u003e":  null,
+                           "bevy_transform::components::global_transform::GlobalTransform":  [
+                                                                                                 1.0,
+                                                                                                 0.0,
+                                                                                                 0.0,
+                                                                                                 0.0,
+                                                                                                 1.0,
+                                                                                                 0.0,
+                                                                                                 0.0,
+                                                                                                 0.0,
+                                                                                                 1.0,
+                                                                                                 0.0,
+                                                                                                 0.0,
+                                                                                                 0.0
+                                                                                             ],
+                           "bevy_transform::components::transform::Transform":  {
+                                                                                    "rotation":  [
+                                                                                                     0.0,
+                                                                                                     0.0,
+                                                                                                     0.0,
+                                                                                                     1.0
+                                                                                                 ],
+                                                                                    "scale":  [
+                                                                                                  1.0,
+                                                                                                  1.0,
+                                                                                                  1.0
+                                                                                              ],
+                                                                                    "translation":  [
+                                                                                                        0.0,
+                                                                                                        0.0,
+                                                                                                        0.0
+                                                                                                    ]
+                                                                                }
+                       },
+        "entity":  4294963519,
+        "scene_node_id":  null
+    },
+    {
+        "components":  {
+                           "bevy_mesh::components::Mesh3d":  null,
+                           "bevy_pbr::mesh_material::MeshMaterial3d\u003cbevy_pbr::extended_material::ExtendedMaterial\u003cbevy_pbr::pbr_material::StandardMaterial, jackdaw::brush::gizmo_overlay::OccludedExtension\u003e\u003e":  null,
+                           "bevy_transform::components::global_transform::GlobalTransform":  [
+                                                                                                 1.0,
+                                                                                                 0.0,
+                                                                                                 0.0,
+                                                                                                 0.0,
+                                                                                                 1.0,
+                                                                                                 0.0,
+                                                                                                 0.0,
+                                                                                                 0.0,
+                                                                                                 1.0,
+                                                                                                 0.0,
+                                                                                                 0.0,
+                                                                                                 0.0
+                                                                                             ],
+                           "bevy_transform::components::transform::Transform":  {
+                                                                                    "rotation":  [
+                                                                                                     0.0,
+                                                                                                     0.0,
+                                                                                                     0.0,
+                                                                                                     1.0
+                                                                                                 ],
+                                                                                    "scale":  [
+                                                                                                  1.0,
+                                                                                                  1.0,
+                                                                                                  1.0
+                                                                                              ],
+                                                                                    "translation":  [
+                                                                                                        0.0,
+                                                                                                        0.0,
+                                                                                                        0.0
+                                                                                                    ]
+                                                                                }
+                       },
+        "entity":  4294963517,
+        "scene_node_id":  null
+    },
+    {
+        "components":  {
+                           "bevy_mesh::components::Mesh3d":  null,
+                           "bevy_pbr::mesh_material::MeshMaterial3d\u003cbevy_pbr::extended_material::ExtendedMaterial\u003cbevy_pbr::pbr_material::StandardMaterial, jackdaw::brush::gizmo_overlay::OccludedExtension\u003e\u003e":  null,
+                           "bevy_transform::components::global_transform::GlobalTransform":  [
+                                                                                                 1.0,
+                                                                                                 0.0,
+                                                                                                 0.0,
+                                                                                                 0.0,
+                                                                                                 1.0,
+                                                                                                 0.0,
+                                                                                                 0.0,
+                                                                                                 0.0,
+                                                                                                 1.0,
+                                                                                                 0.0,
+                                                                                                 0.0,
+                                                                                                 0.0
+                                                                                             ],
+                           "bevy_transform::components::transform::Transform":  {
+                                                                                    "rotation":  [
+                                                                                                     0.0,
+                                                                                                     0.0,
+                                                                                                     0.0,
+                                                                                                     1.0
+                                                                                                 ],
+                                                                                    "scale":  [
+                                                                                                  1.0,
+                                                                                                  1.0,
+                                                                                                  1.0
+                                                                                              ],
+                                                                                    "translation":  [
+                                                                                                        0.0,
+                                                                                                        0.0,
+                                                                                                        0.0
+                                                                                                    ]
+                                                                                }
+                       },
+        "entity":  4294963515,
+        "scene_node_id":  null
+    },
+    {
+        "components":  {
+                           "bevy_mesh::components::Mesh3d":  null,
+                           "bevy_pbr::mesh_material::MeshMaterial3d\u003cbevy_pbr::pbr_material::StandardMaterial\u003e":  null,
+                           "bevy_transform::components::global_transform::GlobalTransform":  [
+                                                                                                 1.0,
+                                                                                                 0.0,
+                                                                                                 0.0,
+                                                                                                 0.0,
+                                                                                                 1.0,
+                                                                                                 0.0,
+                                                                                                 0.0,
+                                                                                                 0.0,
+                                                                                                 1.0,
+                                                                                                 0.0,
+                                                                                                 0.0,
+                                                                                                 0.0
+                                                                                             ],
+                           "bevy_transform::components::transform::Transform":  {
+                                                                                    "rotation":  [
+                                                                                                     0.0,
+                                                                                                     0.0,
+                                                                                                     0.0,
+                                                                                                     1.0
+                                                                                                 ],
+                                                                                    "scale":  [
+                                                                                                  1.0,
+                                                                                                  1.0,
+                                                                                                  1.0
+                                                                                              ],
+                                                                                    "translation":  [
+                                                                                                        0.0,
+                                                                                                        0.0,
+                                                                                                        0.0
+                                                                                                    ]
+                                                                                }
+                       },
+        "entity":  4294963523,
+        "scene_node_id":  null
+    },
+    {
+        "components":  {
+                           "bevy_mesh::components::Mesh3d":  null,
+                           "bevy_pbr::mesh_material::MeshMaterial3d\u003cbevy_pbr::extended_material::ExtendedMaterial\u003cbevy_pbr::pbr_material::StandardMaterial, jackdaw::brush::gizmo_overlay::EdgeOffsetExtension\u003e\u003e":  null,
+                           "bevy_transform::components::global_transform::GlobalTransform":  [
+                                                                                                 1.0,
+                                                                                                 0.0,
+                                                                                                 0.0,
+                                                                                                 0.0,
+                                                                                                 1.0,
+                                                                                                 0.0,
+                                                                                                 0.0,
+                                                                                                 0.0,
+                                                                                                 1.0,
+                                                                                                 0.0,
+                                                                                                 0.0,
+                                                                                                 0.0
+                                                                                             ],
+                           "bevy_transform::components::transform::Transform":  {
+                                                                                    "rotation":  [
+                                                                                                     0.0,
+                                                                                                     0.0,
+                                                                                                     0.0,
+                                                                                                     1.0
+                                                                                                 ],
+                                                                                    "scale":  [
+                                                                                                  1.0,
+                                                                                                  1.0,
+                                                                                                  1.0
+                                                                                              ],
+                                                                                    "translation":  [
+                                                                                                        0.0,
+                                                                                                        0.0,
+                                                                                                        0.0
+                                                                                                    ]
+                                                                                }
+                       },
+        "entity":  4294963520,
+        "scene_node_id":  null
+    },
+    {
+        "components":  {
+                           "bevy_mesh::components::Mesh3d":  null,
+                           "bevy_pbr::mesh_material::MeshMaterial3d\u003cbevy_pbr::extended_material::ExtendedMaterial\u003cbevy_pbr::pbr_material::StandardMaterial, jackdaw::brush::gizmo_overlay::EdgeOffsetExtension\u003e\u003e":  null,
+                           "bevy_transform::components::global_transform::GlobalTransform":  [
+                                                                                                 1.0,
+                                                                                                 0.0,
+                                                                                                 0.0,
+                                                                                                 0.0,
+                                                                                                 1.0,
+                                                                                                 0.0,
+                                                                                                 0.0,
+                                                                                                 0.0,
+                                                                                                 1.0,
+                                                                                                 0.0,
+                                                                                                 0.0,
+                                                                                                 0.0
+                                                                                             ],
+                           "bevy_transform::components::transform::Transform":  {
+                                                                                    "rotation":  [
+                                                                                                     0.0,
+                                                                                                     0.0,
+                                                                                                     0.0,
+                                                                                                     1.0
+                                                                                                 ],
+                                                                                    "scale":  [
+                                                                                                  1.0,
+                                                                                                  1.0,
+                                                                                                  1.0
+                                                                                              ],
+                                                                                    "translation":  [
+                                                                                                        0.0,
+                                                                                                        0.0,
+                                                                                                        0.0
+                                                                                                    ]
+                                                                                }
+                       },
+        "entity":  4294963518,
+        "scene_node_id":  null
+    },
+    {
+        "components":  {
+                           "bevy_mesh::components::Mesh3d":  null,
+                           "bevy_pbr::mesh_material::MeshMaterial3d\u003cbevy_pbr::extended_material::ExtendedMaterial\u003cbevy_pbr::pbr_material::StandardMaterial, jackdaw::brush::gizmo_overlay::EdgeOffsetExtension\u003e\u003e":  null,
+                           "bevy_transform::components::global_transform::GlobalTransform":  [
+                                                                                                 1.0,
+                                                                                                 0.0,
+                                                                                                 0.0,
+                                                                                                 0.0,
+                                                                                                 1.0,
+                                                                                                 0.0,
+                                                                                                 0.0,
+                                                                                                 0.0,
+                                                                                                 1.0,
+                                                                                                 0.0,
+                                                                                                 0.0,
+                                                                                                 0.0
+                                                                                             ],
+                           "bevy_transform::components::transform::Transform":  {
+                                                                                    "rotation":  [
+                                                                                                     0.0,
+                                                                                                     0.0,
+                                                                                                     0.0,
+                                                                                                     1.0
+                                                                                                 ],
+                                                                                    "scale":  [
+                                                                                                  1.0,
+                                                                                                  1.0,
+                                                                                                  1.0
+                                                                                              ],
+                                                                                    "translation":  [
+                                                                                                        0.0,
+                                                                                                        0.0,
+                                                                                                        0.0
+                                                                                                    ]
+                                                                                }
+                       },
+        "entity":  4294963516,
+        "scene_node_id":  null
+    },
+    {
+        "components":  {
+                           "bevy_ecs::name::Name":  "Root",
+                           "bevy_transform::components::global_transform::GlobalTransform":  [
+                                                                                                 1.0,
+                                                                                                 0.0,
+                                                                                                 0.0,
+                                                                                                 0.0,
+                                                                                                 1.0,
+                                                                                                 0.0,
+                                                                                                 0.0,
+                                                                                                 0.0,
+                                                                                                 1.0,
+                                                                                                 0.0,
+                                                                                                 0.0,
+                                                                                                 0.0
+                                                                                             ],
+                           "bevy_transform::components::transform::Transform":  {
+                                                                                    "rotation":  [
+                                                                                                     0.0,
+                                                                                                     0.0,
+                                                                                                     0.0,
+                                                                                                     1.0
+                                                                                                 ],
+                                                                                    "scale":  [
+                                                                                                  1.0,
+                                                                                                  1.0,
+                                                                                                  1.0
+                                                                                              ],
+                                                                                    "translation":  [
+                                                                                                        0.0,
+                                                                                                        0.0,
+                                                                                                        0.0
+                                                                                                    ]
+                                                                                }
+                       },
+        "entity":  4294962808,
+        "scene_node_id":  null
+    },
+    {
+        "components":  {
+                           "bevy_ecs::hierarchy::ChildOf":  "4487v0",
+                           "bevy_ecs::name::Name":  "Sun",
+                           "bevy_light::cascade::CascadeShadowConfig":  {
+                                                                            "bounds":  [
+                                                                                           10.0,
+                                                                                           24.662120819091797,
+                                                                                           60.822021484375,
+                                                                                           149.99998474121094
+                                                                                       ],
+                                                                            "minimum_distance":  0.10000000149011612,
+                                                                            "overlap_proportion":  0.20000000298023224
+                                                                        },
+                           "bevy_light::directional_light::DirectionalLight":  {
+                                                                                   "affects_lightmapped_mesh_diffuse":  true,
+                                                                                   "color":  {
+                                                                                                 "LinearRgba":  {
+                                                                                                                    "alpha":  1.0,
+                                                                                                                    "blue":  1.0,
+                                                                                                                    "green":  1.0,
+                                                                                                                    "red":  1.0
+                                                                                                                }
+                                                                                             },
+                                                                                   "contact_shadows_enabled":  false,
+                                                                                   "illuminance":  10000.0,
+                                                                                   "shadow_depth_bias":  0.019999999552965164,
+                                                                                   "shadow_maps_enabled":  false,
+                                                                                   "shadow_normal_bias":  1.7999999523162842,
+                                                                                   "soft_shadow_size":  null
+                                                                               },
+                           "bevy_transform::components::global_transform::GlobalTransform":  [
+                                                                                                 1.0,
+                                                                                                 0.0,
+                                                                                                 0.0,
+                                                                                                 0.0,
+                                                                                                 0.6427875757217407,
+                                                                                                 -0.766044557094574,
+                                                                                                 0.0,
+                                                                                                 0.766044557094574,
+                                                                                                 0.6427875757217407,
+                                                                                                 0.0,
+                                                                                                 8.0,
+                                                                                                 0.0
+                                                                                             ],
+                           "bevy_transform::components::transform::Transform":  {
+                                                                                    "rotation":  [
+                                                                                                     -0.4226182997226715,
+                                                                                                     0.0,
+                                                                                                     0.0,
+                                                                                                     0.9063078165054321
+                                                                                                 ],
+                                                                                    "scale":  [
+                                                                                                  1.0,
+                                                                                                  1.0,
+                                                                                                  1.0
+                                                                                              ],
+                                                                                    "translation":  [
+                                                                                                        0.0,
+                                                                                                        8.0,
+                                                                                                        0.0
+                                                                                                    ]
+                                                                                }
+                       },
+        "entity":  4294962806,
+        "scene_node_id":  null
+    },
+    {
+        "components":  {
+                           "bevy_camera::projection::Projection":  {
+                                                                       "Perspective":  {
+                                                                                           "aspect_ratio":  1.7777777910232544,
+                                                                                           "far":  1000.0,
+                                                                                           "fov":  0.7853981852531433,
+                                                                                           "near":  0.10000000149011612,
+                                                                                           "near_clip_plane":  [
+                                                                                                                   0.0,
+                                                                                                                   0.0,
+                                                                                                                   -1.0,
+                                                                                                                   -0.10000000149011612
+                                                                                                               ]
+                                                                                       }
+                                                                   },
+                           "bevy_ecs::hierarchy::ChildOf":  "4487v0",
+                           "bevy_ecs::name::Name":  "Main Camera",
+                           "bevy_transform::components::global_transform::GlobalTransform":  [
+                                                                                                 1.0,
+                                                                                                 0.0,
+                                                                                                 0.0,
+                                                                                                 0.0,
+                                                                                                 0.9063078165054321,
+                                                                                                 -0.42261824011802673,
+                                                                                                 0.0,
+                                                                                                 0.42261824011802673,
+                                                                                                 0.9063078165054321,
+                                                                                                 0.0,
+                                                                                                 6.0,
+                                                                                                 12.0
+                                                                                             ],
+                           "bevy_transform::components::transform::Transform":  {
+                                                                                    "rotation":  [
+                                                                                                     -0.2164396047592163,
+                                                                                                     0.0,
+                                                                                                     0.0,
+                                                                                                     0.9762960076332092
+                                                                                                 ],
+                                                                                    "scale":  [
+                                                                                                  1.0,
+                                                                                                  1.0,
+                                                                                                  1.0
+                                                                                              ],
+                                                                                    "translation":  [
+                                                                                                        0.0,
+                                                                                                        6.0,
+                                                                                                        12.0
+                                                                                                    ]
+                                                                                }
+                       },
+        "entity":  4294962807,
+        "scene_node_id":  null
+    }
+]

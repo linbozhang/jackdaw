@@ -1,0 +1,7 @@
+editor died booting
+ËùÔÚÎ»ÖÃ E:\Project\rust\jackdaw\loop\qa\t08-t3-qa.ps1:56 ×Ö·û: 74
++ ... oc.Id -ErrorAction SilentlyContinue)) { throw 'editor died booting' }
++                                             ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : OperationStopped: (editor died booting:String) [], RuntimeException
+    + FullyQualifiedErrorId : editor died booting
+ 

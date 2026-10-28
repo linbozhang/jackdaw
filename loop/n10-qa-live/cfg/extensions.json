@@ -1,0 +1,38 @@
+{
+  "jackdaw.animation_graph": {
+    "enabled": true
+  },
+  "jackdaw.build_panel": {
+    "enabled": true
+  },
+  "jackdaw.core": {
+    "enabled": true
+  },
+  "jackdaw.core_windows": {
+    "enabled": true
+  },
+  "jackdaw.game_panel": {
+    "enabled": true
+  },
+  "jackdaw.inspector": {
+    "enabled": true
+  },
+  "jackdaw.multiplayer": {
+    "enabled": true
+  },
+  "jackdaw.project_window": {
+    "enabled": true
+  },
+  "jackdaw.test_input": {
+    "enabled": true
+  },
+  "jackdaw.timeline": {
+    "enabled": true
+  },
+  "jackdaw.ui_palette": {
+    "enabled": true
+  },
+  "jackdaw.viewport_panel": {
+    "enabled": true
+  }
+}

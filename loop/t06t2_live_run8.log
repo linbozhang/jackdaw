@@ -1,0 +1,38 @@
+editor ready
+editor idle
+== case 1: iron chain (acceptance 2) ==
+
+entities id         result   warnings
+-------- --         ------   --------
+{}       scene.open finished {}      
+{}       scene.save finished {}      
+  ok: the scene is open (Spinner present)
+{}       pie.pla... finished {}      
+pie running (10:11:21)
+switched to Live view
+  ok: the game is running the spinner (its live document moved)
+  spinner rotation sample1:     rotation: glam::Quat {
+  spinner rotation sample2:     rotation: glam::Quat {
+switched to Scene view
+pie stopped (graceful window held; status face answered after 0.3s)
+  ok: disk file is byte-identical across the play session
+  ok: the document emitter output is byte-identical
+  ok: history depth unchanged (0)
+  ok: dirty flag unchanged (False)
+  ok: scene entity names are exactly restored
+  ok: no temp run copy lingers
+  selection after stop: 
+  (observed ChildOf dangling WARNs this session: 1 â€?recorded for the report)
+== case 1 done ==
+== case 2: stop prompt Discard ==
+{}       pie.pla... finished {}      
+pie running (10:11:33)
+switched to Live view
+editor killed
+ASSERT FAILED: the outliner shows the Spinner row
+ËùÔÚÎ»ÖÃ E:\Project\rust\jackdaw\loop\qa\t06-stop-restore.ps1:66 ×Ö·û: 23
++     if (-not $Cond) { throw "ASSERT FAILED: $What" }
++                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : OperationStopped: (ASSERT FAILED: ...the Spinner row:String) [], RuntimeException
+    + FullyQualifiedErrorId : ASSERT FAILED: the outliner shows the Spinner row
+ 

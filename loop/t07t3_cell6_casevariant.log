@@ -1,0 +1,5 @@
+jackdaw export: building C:\Users\linbo.zhang\Projects\my-game with profile dev
+jackdaw build: building C:\Users\linbo.zhang\Projects\my-game
+building my-game as a cargo binary in C:\Users\linbo.zhang\Projects\my-game, into C:\Users\linbo.zhang\Projects\my-game\.jackdaw\target/game
+jackdaw build: ok (492 components); binary at C:\Users\linbo.zhang\Projects\my-game\.jackdaw\target/game\debug\my-game.exe, schema at C:\Users\linbo.zhang\Projects\my-game\.jackdaw\schema.json
+jd export: refusing to stage into C:\Users\linbo.zhang\Projects\MY-GAME: it holds the build's own sources — or is a filesystem root — and staging replaces the directory wholesale

@@ -22,3 +22,5 @@ web/explorer/node_modules
 /.jsn
 # each integration is a separate workspace
 integrations/*/target
++.mimosa/  
+.mimosa

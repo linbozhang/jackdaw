@@ -1,0 +1,23 @@
+killing stale jackdaw pid=128832
+starting editor: E:\Project\rust\jackdaw\target\debug\jackdaw.exe  port=15703
+editor pid=119020
+True
+editor ready on port 15703
+  ok: iter 1: no stale modal before activating ruler (was '')
+ruler-Esc,1,tools.measure_distance,tools.measure_distance,,Select,False
+  ok: iter 2: no stale modal before activating ruler (was '')
+ruler-Esc,2,tools.measure_distance,tools.measure_distance,,Select,False
+ruler-RMB,1,tools.measure_distance,,,Select,True
+ruler-RMB,2,tools.measure_distance,,,Select,True
+drawAdd-Esc,1,viewport.draw_brush_modal,,,,True
+drawCut-RMB,1,viewport.draw_brush_modal,,,,True
+toolState,1,null,,Rotate,Select,True
+FAILURES: ruler-Esc iter 1; ruler-Esc iter 2
+stopping editor pid=119020
+r2-cancel verification failed
+ËùÔÚÎ»ÖÃ E:\Project\rust\jackdaw\loop\qa\r2-cancel.ps1:203 ×Ö·û: 9
++         throw "r2-cancel verification failed"
++         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : OperationStopped: (r2-cancel verification failed:String) [], RuntimeException
+    + FullyQualifiedErrorId : r2-cancel verification failed
+ 

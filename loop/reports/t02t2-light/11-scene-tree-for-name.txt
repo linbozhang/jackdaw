@@ -1,0 +1,66 @@
+﻿{
+    "tree":  [
+                 {
+                     "children":  [
+
+                                  ],
+                     "components":  [
+                                        "bevy_camera::primitives::CascadesFrusta",
+                                        "bevy_camera::visibility::CascadesVisibleEntities",
+                                        "bevy_camera::visibility::InheritedVisibility",
+                                        "bevy_camera::visibility::ViewVisibility",
+                                        "bevy_camera::visibility::Visibility",
+                                        "bevy_camera::visibility::VisibilityClass",
+                                        "bevy_ecs::name::Name",
+                                        "bevy_extract::sync_world::SubEntity\u003cbevy_render::RenderApp\u003e",
+                                        "bevy_extract::sync_world::SyncToSubWorld\u003cbevy_render::RenderApp\u003e",
+                                        "bevy_light::cascade::CascadeShadowConfig",
+                                        "bevy_light::cascade::Cascades",
+                                        "bevy_light::directional_light::DirectionalLight",
+                                        "bevy_transform::components::global_transform::GlobalTransform",
+                                        "bevy_transform::components::transform::Transform",
+                                        "bevy_transform::components::transform::TransformTreeChanged",
+                                        "jackdaw::entity_ops::SceneLight",
+                                        "jackdaw_api_internal::selection::Selected",
+                                        "jackdaw_bsn::document::AstNodeRef",
+                                        "jackdaw_scene_types::node_id::SceneNodeId",
+                                        "jackdaw_widgets::monitors::MonitoredBy",
+                                        "jackdaw_widgets::tree_view::TreeNodeSource",
+                                        "jackdaw_widgets_runtime::AuthoredWidget"
+                                    ],
+                     "entity":  4294963148,
+                     "missing_source":  null,
+                     "name":  "Directional Light"
+                 },
+                 {
+                     "children":  [
+
+                                  ],
+                     "components":  [
+                                        "bevy_camera::primitives::CascadesFrusta",
+                                        "bevy_camera::visibility::CascadesVisibleEntities",
+                                        "bevy_camera::visibility::InheritedVisibility",
+                                        "bevy_camera::visibility::ViewVisibility",
+                                        "bevy_camera::visibility::Visibility",
+                                        "bevy_camera::visibility::VisibilityClass",
+                                        "bevy_ecs::name::Name",
+                                        "bevy_extract::sync_world::SubEntity\u003cbevy_render::RenderApp\u003e",
+                                        "bevy_extract::sync_world::SyncToSubWorld\u003cbevy_render::RenderApp\u003e",
+                                        "bevy_light::cascade::CascadeShadowConfig",
+                                        "bevy_light::cascade::Cascades",
+                                        "bevy_light::directional_light::DirectionalLight",
+                                        "bevy_transform::components::global_transform::GlobalTransform",
+                                        "bevy_transform::components::transform::Transform",
+                                        "bevy_transform::components::transform::TransformTreeChanged",
+                                        "jackdaw::entity_ops::SceneLight",
+                                        "jackdaw_bsn::document::AstNodeRef",
+                                        "jackdaw_scene_types::node_id::SceneNodeId",
+                                        "jackdaw_widgets::tree_view::TreeNodeSource",
+                                        "jackdaw_widgets_runtime::AuthoredWidget"
+                                    ],
+                     "entity":  4294962212,
+                     "missing_source":  null,
+                     "name":  "Directional Light"
+                 }
+             ]
+}

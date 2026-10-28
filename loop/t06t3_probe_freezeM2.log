@@ -1,0 +1,9 @@
+True
+
+BRP error: {"code":-32601,"message":"Method `jackdaw/selection.set` not found"}
+ËùÔÚÎ»ÖÃ E:\Project\rust\jackdaw\loop\qa\brp.ps1:34 ×Ö·û: 9
++         throw "BRP error: $($Response.error | ConvertTo-Json -Depth 6 ...
++         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : OperationStopped: (BRP error: {"co...et` not found"}:String) [], RuntimeException
+    + FullyQualifiedErrorId : BRP error: {"code":-32601,"message":"Method `jackdaw/selection.set` not found"}
+ 

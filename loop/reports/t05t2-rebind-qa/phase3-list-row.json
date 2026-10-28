@@ -1,0 +1,20 @@
+﻿{
+    "checked":  false,
+    "children":  [
+
+                 ],
+    "disabled":  false,
+    "entity":  4294962748,
+    "index":  691,
+    "kind":  "text",
+    "operator":  null,
+    "rect":  [
+                 951.25,
+                 776.0,
+                 598.5,
+                 90.0
+             ],
+    "scene":  false,
+    "text":  "scene.bsn Â· Probe Â· IsA.source â C:/Users/linbo.zhang/Projects/my-game/assets/props/victim.bsn (MachinePath)",
+    "visible":  true
+}

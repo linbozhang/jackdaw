@@ -1,0 +1,761 @@
+﻿{
+    "nodes":  [
+                  {
+                      "checked":  false,
+                      "children":  [
+                                       {
+                                           "checked":  false,
+                                           "children":  [
+
+                                                        ],
+                                           "disabled":  false,
+                                           "entity":  4294965918,
+                                           "index":  1,
+                                           "kind":  "text",
+                                           "operator":  null,
+                                           "rect":  [
+                                                        0.0,
+                                                        0.0,
+                                                        0.0,
+                                                        0.0
+                                                    ],
+                                           "scene":  false,
+                                           "text":  "FPS: ",
+                                           "visible":  true
+                                       },
+                                       {
+                                           "checked":  false,
+                                           "children":  [
+
+                                                        ],
+                                           "disabled":  false,
+                                           "entity":  4294965916,
+                                           "index":  2,
+                                           "kind":  "node",
+                                           "operator":  null,
+                                           "rect":  [
+                                                        0.0,
+                                                        0.0,
+                                                        0.0,
+                                                        0.0
+                                                    ],
+                                           "scene":  false,
+                                           "text":  null,
+                                           "visible":  true
+                                       },
+                                       {
+                                           "checked":  false,
+                                           "children":  [
+
+                                                        ],
+                                           "disabled":  false,
+                                           "entity":  4294963755,
+                                           "index":  3,
+                                           "kind":  "text",
+                                           "operator":  null,
+                                           "rect":  [
+                                                        0.0,
+                                                        0.0,
+                                                        0.0,
+                                                        0.0
+                                                    ],
+                                           "scene":  false,
+                                           "text":  "",
+                                           "visible":  true
+                                       }
+                                   ],
+                      "disabled":  false,
+                      "entity":  4294965919,
+                      "index":  0,
+                      "kind":  "node",
+                      "operator":  null,
+                      "rect":  [
+                                   0.0,
+                                   0.0,
+                                   0.0,
+                                   0.0
+                               ],
+                      "scene":  false,
+                      "text":  null,
+                      "visible":  true
+                  },
+                  {
+                      "checked":  false,
+                      "children":  [
+                                       {
+                                           "checked":  false,
+                                           "children":  [
+                                                            {
+                                                                "checked":  false,
+                                                                "children":  [
+                                                                                 {
+                                                                                     "checked":  false,
+                                                                                     "children":  [
+
+                                                                                                  ],
+                                                                                     "disabled":  false,
+                                                                                     "entity":  4294963733,
+                                                                                     "index":  7,
+                                                                                     "kind":  "text",
+                                                                                     "operator":  null,
+                                                                                     "rect":  [
+                                                                                                  643.0,
+                                                                                                  378.0,
+                                                                                                  107.0,
+                                                                                                  18.0
+                                                                                              ],
+                                                                                     "scene":  false,
+                                                                                     "text":  "Open t02t2-proj",
+                                                                                     "visible":  true
+                                                                                 }
+                                                                             ],
+                                                                "disabled":  false,
+                                                                "entity":  4294963734,
+                                                                "index":  6,
+                                                                "kind":  "node",
+                                                                "operator":  null,
+                                                                "rect":  [
+                                                                             631.0,
+                                                                             369.0,
+                                                                             658.0,
+                                                                             36.0
+                                                                         ],
+                                                                "scene":  false,
+                                                                "text":  null,
+                                                                "visible":  true
+                                                            },
+                                                            {
+                                                                "checked":  false,
+                                                                "children":  [
+                                                                                 {
+                                                                                     "checked":  false,
+                                                                                     "children":  [
+
+                                                                                                  ],
+                                                                                     "disabled":  false,
+                                                                                     "entity":  4294963731,
+                                                                                     "index":  9,
+                                                                                     "kind":  "text",
+                                                                                     "operator":  null,
+                                                                                     "rect":  [
+                                                                                                  643.0,
+                                                                                                  417.0,
+                                                                                                  634.0,
+                                                                                                  14.0
+                                                                                              ],
+                                                                                     "scene":  false,
+                                                                                     "text":  "Choose how to open this project.",
+                                                                                     "visible":  true
+                                                                                 },
+                                                                                 {
+                                                                                     "checked":  false,
+                                                                                     "children":  [
+                                                                                                      {
+                                                                                                          "checked":  true,
+                                                                                                          "children":  [
+                                                                                                                           {
+                                                                                                                               "checked":  false,
+                                                                                                                               "children":  [
+                                                                                                                                                {
+                                                                                                                                                    "checked":  false,
+                                                                                                                                                    "children":  [
+
+                                                                                                                                                                 ],
+                                                                                                                                                    "disabled":  false,
+                                                                                                                                                    "entity":  4294963727,
+                                                                                                                                                    "index":  13,
+                                                                                                                                                    "kind":  "node",
+                                                                                                                                                    "operator":  null,
+                                                                                                                                                    "rect":  [
+                                                                                                                                                                 658.0,
+                                                                                                                                                                 458.0,
+                                                                                                                                                                 12.0,
+                                                                                                                                                                 12.0
+                                                                                                                                                             ],
+                                                                                                                                                    "scene":  false,
+                                                                                                                                                    "text":  null,
+                                                                                                                                                    "visible":  true
+                                                                                                                                                }
+                                                                                                                                            ],
+                                                                                                                               "disabled":  false,
+                                                                                                                               "entity":  4294963728,
+                                                                                                                               "index":  12,
+                                                                                                                               "kind":  "node",
+                                                                                                                               "operator":  null,
+                                                                                                                               "rect":  [
+                                                                                                                                            655.0,
+                                                                                                                                            455.0,
+                                                                                                                                            18.0,
+                                                                                                                                            18.0
+                                                                                                                                        ],
+                                                                                                                               "scene":  false,
+                                                                                                                               "text":  null,
+                                                                                                                               "visible":  true
+                                                                                                                           }
+                                                                                                                       ],
+                                                                                                          "disabled":  false,
+                                                                                                          "entity":  4294963729,
+                                                                                                          "index":  11,
+                                                                                                          "kind":  "node",
+                                                                                                          "operator":  null,
+                                                                                                          "rect":  [
+                                                                                                                       655.0,
+                                                                                                                       455.0,
+                                                                                                                       18.0,
+                                                                                                                       18.0
+                                                                                                                   ],
+                                                                                                          "scene":  false,
+                                                                                                          "text":  null,
+                                                                                                          "visible":  true
+                                                                                                      },
+                                                                                                      {
+                                                                                                          "checked":  false,
+                                                                                                          "children":  [
+                                                                                                                           {
+                                                                                                                               "checked":  false,
+                                                                                                                               "children":  [
+                                                                                                                                                {
+                                                                                                                                                    "checked":  false,
+                                                                                                                                                    "children":  [
+
+                                                                                                                                                                 ],
+                                                                                                                                                    "disabled":  false,
+                                                                                                                                                    "entity":  4294963724,
+                                                                                                                                                    "index":  16,
+                                                                                                                                                    "kind":  "text",
+                                                                                                                                                    "operator":  null,
+                                                                                                                                                    "rect":  [
+                                                                                                                                                                 681.0,
+                                                                                                                                                                 455.0,
+                                                                                                                                                                 287.0,
+                                                                                                                                                                 16.0
+                                                                                                                                                             ],
+                                                                                                                                                    "scene":  false,
+                                                                                                                                                    "text":  "Open a copy with jackdaw 0.21.0-dev - Bevy main",
+                                                                                                                                                    "visible":  true
+                                                                                                                                                }
+                                                                                                                                            ],
+                                                                                                                               "disabled":  false,
+                                                                                                                               "entity":  4294963725,
+                                                                                                                               "index":  15,
+                                                                                                                               "kind":  "node",
+                                                                                                                               "operator":  null,
+                                                                                                                               "rect":  [
+                                                                                                                                            681.0,
+                                                                                                                                            455.0,
+                                                                                                                                            584.0,
+                                                                                                                                            16.0
+                                                                                                                                        ],
+                                                                                                                               "scene":  false,
+                                                                                                                               "text":  null,
+                                                                                                                               "visible":  true
+                                                                                                                           },
+                                                                                                                           {
+                                                                                                                               "checked":  false,
+                                                                                                                               "children":  [
+
+                                                                                                                                            ],
+                                                                                                                               "disabled":  false,
+                                                                                                                               "entity":  4294963723,
+                                                                                                                               "index":  17,
+                                                                                                                               "kind":  "text",
+                                                                                                                               "operator":  null,
+                                                                                                                               "rect":  [
+                                                                                                                                            681.0,
+                                                                                                                                            475.0,
+                                                                                                                                            584.0,
+                                                                                                                                            27.0
+                                                                                                                                        ],
+                                                                                                                               "scene":  false,
+                                                                                                                               "text":  "Copies the project to t02t2-proj-main, then opens the copy. Scenes migrate on load; project code builds once its Cargo.toml moves to Bevy main.",
+                                                                                                                               "visible":  true
+                                                                                                                           }
+                                                                                                                       ],
+                                                                                                          "disabled":  false,
+                                                                                                          "entity":  4294963726,
+                                                                                                          "index":  14,
+                                                                                                          "kind":  "node",
+                                                                                                          "operator":  null,
+                                                                                                          "rect":  [
+                                                                                                                       681.0,
+                                                                                                                       455.0,
+                                                                                                                       584.0,
+                                                                                                                       47.0
+                                                                                                                   ],
+                                                                                                          "scene":  false,
+                                                                                                          "text":  null,
+                                                                                                          "visible":  true
+                                                                                                      }
+                                                                                                  ],
+                                                                                     "disabled":  false,
+                                                                                     "entity":  4294963730,
+                                                                                     "index":  10,
+                                                                                     "kind":  "node",
+                                                                                     "operator":  null,
+                                                                                     "rect":  [
+                                                                                                  643.0,
+                                                                                                  443.0,
+                                                                                                  634.0,
+                                                                                                  71.0
+                                                                                              ],
+                                                                                     "scene":  false,
+                                                                                     "text":  null,
+                                                                                     "visible":  true
+                                                                                 },
+                                                                                 {
+                                                                                     "checked":  false,
+                                                                                     "children":  [
+                                                                                                      {
+                                                                                                          "checked":  false,
+                                                                                                          "children":  [
+                                                                                                                           {
+                                                                                                                               "checked":  false,
+                                                                                                                               "children":  [
+                                                                                                                                                {
+                                                                                                                                                    "checked":  false,
+                                                                                                                                                    "children":  [
+
+                                                                                                                                                                 ],
+                                                                                                                                                    "disabled":  false,
+                                                                                                                                                    "entity":  4294963719,
+                                                                                                                                                    "index":  21,
+                                                                                                                                                    "kind":  "node",
+                                                                                                                                                    "operator":  null,
+                                                                                                                                                    "rect":  [
+                                                                                                                                                                 658.0,
+                                                                                                                                                                 541.0,
+                                                                                                                                                                 12.0,
+                                                                                                                                                                 12.0
+                                                                                                                                                             ],
+                                                                                                                                                    "scene":  false,
+                                                                                                                                                    "text":  null,
+                                                                                                                                                    "visible":  false
+                                                                                                                                                }
+                                                                                                                                            ],
+                                                                                                                               "disabled":  false,
+                                                                                                                               "entity":  4294963720,
+                                                                                                                               "index":  20,
+                                                                                                                               "kind":  "node",
+                                                                                                                               "operator":  null,
+                                                                                                                               "rect":  [
+                                                                                                                                            655.0,
+                                                                                                                                            538.0,
+                                                                                                                                            18.0,
+                                                                                                                                            18.0
+                                                                                                                                        ],
+                                                                                                                               "scene":  false,
+                                                                                                                               "text":  null,
+                                                                                                                               "visible":  true
+                                                                                                                           }
+                                                                                                                       ],
+                                                                                                          "disabled":  false,
+                                                                                                          "entity":  4294963721,
+                                                                                                          "index":  19,
+                                                                                                          "kind":  "node",
+                                                                                                          "operator":  null,
+                                                                                                          "rect":  [
+                                                                                                                       655.0,
+                                                                                                                       538.0,
+                                                                                                                       18.0,
+                                                                                                                       18.0
+                                                                                                                   ],
+                                                                                                          "scene":  false,
+                                                                                                          "text":  null,
+                                                                                                          "visible":  true
+                                                                                                      },
+                                                                                                      {
+                                                                                                          "checked":  false,
+                                                                                                          "children":  [
+                                                                                                                           {
+                                                                                                                               "checked":  false,
+                                                                                                                               "children":  [
+                                                                                                                                                {
+                                                                                                                                                    "checked":  false,
+                                                                                                                                                    "children":  [
+
+                                                                                                                                                                 ],
+                                                                                                                                                    "disabled":  false,
+                                                                                                                                                    "entity":  4294963716,
+                                                                                                                                                    "index":  24,
+                                                                                                                                                    "kind":  "text",
+                                                                                                                                                    "operator":  null,
+                                                                                                                                                    "rect":  [
+                                                                                                                                                                 681.0,
+                                                                                                                                                                 538.0,
+                                                                                                                                                                 193.0,
+                                                                                                                                                                 16.0
+                                                                                                                                                             ],
+                                                                                                                                                    "scene":  false,
+                                                                                                                                                    "text":  "Convert this project to 0.21.0-dev",
+                                                                                                                                                    "visible":  true
+                                                                                                                                                }
+                                                                                                                                            ],
+                                                                                                                               "disabled":  false,
+                                                                                                                               "entity":  4294963717,
+                                                                                                                               "index":  23,
+                                                                                                                               "kind":  "node",
+                                                                                                                               "operator":  null,
+                                                                                                                               "rect":  [
+                                                                                                                                            681.0,
+                                                                                                                                            538.0,
+                                                                                                                                            584.0,
+                                                                                                                                            16.0
+                                                                                                                                        ],
+                                                                                                                               "scene":  false,
+                                                                                                                               "text":  null,
+                                                                                                                               "visible":  true
+                                                                                                                           },
+                                                                                                                           {
+                                                                                                                               "checked":  false,
+                                                                                                                               "children":  [
+
+                                                                                                                                            ],
+                                                                                                                               "disabled":  false,
+                                                                                                                               "entity":  4294963715,
+                                                                                                                               "index":  25,
+                                                                                                                               "kind":  "text",
+                                                                                                                               "operator":  null,
+                                                                                                                               "rect":  [
+                                                                                                                                            681.0,
+                                                                                                                                            558.0,
+                                                                                                                                            584.0,
+                                                                                                                                            14.0
+                                                                                                                                        ],
+                                                                                                                               "scene":  false,
+                                                                                                                               "text":  "Backs up to t02t2-proj.backup-2026-10-24 first, then converts in place.",
+                                                                                                                               "visible":  true
+                                                                                                                           }
+                                                                                                                       ],
+                                                                                                          "disabled":  false,
+                                                                                                          "entity":  4294963718,
+                                                                                                          "index":  22,
+                                                                                                          "kind":  "node",
+                                                                                                          "operator":  null,
+                                                                                                          "rect":  [
+                                                                                                                       681.0,
+                                                                                                                       538.0,
+                                                                                                                       584.0,
+                                                                                                                       34.0
+                                                                                                                   ],
+                                                                                                          "scene":  false,
+                                                                                                          "text":  null,
+                                                                                                          "visible":  true
+                                                                                                      }
+                                                                                                  ],
+                                                                                     "disabled":  false,
+                                                                                     "entity":  4294963722,
+                                                                                     "index":  18,
+                                                                                     "kind":  "node",
+                                                                                     "operator":  null,
+                                                                                     "rect":  [
+                                                                                                  643.0,
+                                                                                                  526.0,
+                                                                                                  634.0,
+                                                                                                  58.0
+                                                                                              ],
+                                                                                     "scene":  false,
+                                                                                     "text":  null,
+                                                                                     "visible":  true
+                                                                                 },
+                                                                                 {
+                                                                                     "checked":  false,
+                                                                                     "children":  [
+                                                                                                      {
+                                                                                                          "checked":  false,
+                                                                                                          "children":  [
+                                                                                                                           {
+                                                                                                                               "checked":  false,
+                                                                                                                               "children":  [
+                                                                                                                                                {
+                                                                                                                                                    "checked":  false,
+                                                                                                                                                    "children":  [
+
+                                                                                                                                                                 ],
+                                                                                                                                                    "disabled":  false,
+                                                                                                                                                    "entity":  4294963711,
+                                                                                                                                                    "index":  29,
+                                                                                                                                                    "kind":  "node",
+                                                                                                                                                    "operator":  null,
+                                                                                                                                                    "rect":  [
+                                                                                                                                                                 658.0,
+                                                                                                                                                                 611.0,
+                                                                                                                                                                 12.0,
+                                                                                                                                                                 12.0
+                                                                                                                                                             ],
+                                                                                                                                                    "scene":  false,
+                                                                                                                                                    "text":  null,
+                                                                                                                                                    "visible":  false
+                                                                                                                                                }
+                                                                                                                                            ],
+                                                                                                                               "disabled":  false,
+                                                                                                                               "entity":  4294963712,
+                                                                                                                               "index":  28,
+                                                                                                                               "kind":  "node",
+                                                                                                                               "operator":  null,
+                                                                                                                               "rect":  [
+                                                                                                                                            655.0,
+                                                                                                                                            608.0,
+                                                                                                                                            18.0,
+                                                                                                                                            18.0
+                                                                                                                                        ],
+                                                                                                                               "scene":  false,
+                                                                                                                               "text":  null,
+                                                                                                                               "visible":  true
+                                                                                                                           }
+                                                                                                                       ],
+                                                                                                          "disabled":  false,
+                                                                                                          "entity":  4294963713,
+                                                                                                          "index":  27,
+                                                                                                          "kind":  "node",
+                                                                                                          "operator":  null,
+                                                                                                          "rect":  [
+                                                                                                                       655.0,
+                                                                                                                       608.0,
+                                                                                                                       18.0,
+                                                                                                                       18.0
+                                                                                                                   ],
+                                                                                                          "scene":  false,
+                                                                                                          "text":  null,
+                                                                                                          "visible":  true
+                                                                                                      },
+                                                                                                      {
+                                                                                                          "checked":  false,
+                                                                                                          "children":  [
+                                                                                                                           {
+                                                                                                                               "checked":  false,
+                                                                                                                               "children":  [
+                                                                                                                                                {
+                                                                                                                                                    "checked":  false,
+                                                                                                                                                    "children":  [
+
+                                                                                                                                                                 ],
+                                                                                                                                                    "disabled":  false,
+                                                                                                                                                    "entity":  4294963708,
+                                                                                                                                                    "index":  32,
+                                                                                                                                                    "kind":  "text",
+                                                                                                                                                    "operator":  null,
+                                                                                                                                                    "rect":  [
+                                                                                                                                                                 681.0,
+                                                                                                                                                                 608.0,
+                                                                                                                                                                 116.0,
+                                                                                                                                                                 16.0
+                                                                                                                                                             ],
+                                                                                                                                                    "scene":  false,
+                                                                                                                                                    "text":  "Look at scenes only",
+                                                                                                                                                    "visible":  true
+                                                                                                                                                }
+                                                                                                                                            ],
+                                                                                                                               "disabled":  false,
+                                                                                                                               "entity":  4294963709,
+                                                                                                                               "index":  31,
+                                                                                                                               "kind":  "node",
+                                                                                                                               "operator":  null,
+                                                                                                                               "rect":  [
+                                                                                                                                            681.0,
+                                                                                                                                            608.0,
+                                                                                                                                            584.0,
+                                                                                                                                            16.0
+                                                                                                                                        ],
+                                                                                                                               "scene":  false,
+                                                                                                                               "text":  null,
+                                                                                                                               "visible":  true
+                                                                                                                           },
+                                                                                                                           {
+                                                                                                                               "checked":  false,
+                                                                                                                               "children":  [
+
+                                                                                                                                            ],
+                                                                                                                               "disabled":  false,
+                                                                                                                               "entity":  4294963707,
+                                                                                                                               "index":  33,
+                                                                                                                               "kind":  "text",
+                                                                                                                               "operator":  null,
+                                                                                                                               "rect":  [
+                                                                                                                                            681.0,
+                                                                                                                                            628.0,
+                                                                                                                                            584.0,
+                                                                                                                                            14.0
+                                                                                                                                        ],
+                                                                                                                               "scene":  false,
+                                                                                                                               "text":  "Opens here without changing the project. Its code will not build in this editor.",
+                                                                                                                               "visible":  true
+                                                                                                                           }
+                                                                                                                       ],
+                                                                                                          "disabled":  false,
+                                                                                                          "entity":  4294963710,
+                                                                                                          "index":  30,
+                                                                                                          "kind":  "node",
+                                                                                                          "operator":  null,
+                                                                                                          "rect":  [
+                                                                                                                       681.0,
+                                                                                                                       608.0,
+                                                                                                                       584.0,
+                                                                                                                       34.0
+                                                                                                                   ],
+                                                                                                          "scene":  false,
+                                                                                                          "text":  null,
+                                                                                                          "visible":  true
+                                                                                                      }
+                                                                                                  ],
+                                                                                     "disabled":  false,
+                                                                                     "entity":  4294963714,
+                                                                                     "index":  26,
+                                                                                     "kind":  "node",
+                                                                                     "operator":  null,
+                                                                                     "rect":  [
+                                                                                                  643.0,
+                                                                                                  596.0,
+                                                                                                  634.0,
+                                                                                                  58.0
+                                                                                              ],
+                                                                                     "scene":  false,
+                                                                                     "text":  null,
+                                                                                     "visible":  true
+                                                                                 }
+                                                                             ],
+                                                                "disabled":  false,
+                                                                "entity":  4294963732,
+                                                                "index":  8,
+                                                                "kind":  "node",
+                                                                "operator":  null,
+                                                                "rect":  [
+                                                                             631.0,
+                                                                             405.0,
+                                                                             658.0,
+                                                                             261.0
+                                                                         ],
+                                                                "scene":  false,
+                                                                "text":  null,
+                                                                "visible":  true
+                                                            },
+                                                            {
+                                                                "checked":  false,
+                                                                "children":  [
+                                                                                 {
+                                                                                     "checked":  false,
+                                                                                     "children":  [
+                                                                                                      {
+                                                                                                          "checked":  false,
+                                                                                                          "children":  [
+
+                                                                                                                       ],
+                                                                                                          "disabled":  false,
+                                                                                                          "entity":  4294963702,
+                                                                                                          "index":  36,
+                                                                                                          "kind":  "text",
+                                                                                                          "operator":  null,
+                                                                                                          "rect":  [
+                                                                                                                       1120.0,
+                                                                                                                       681.0,
+                                                                                                                       30.0,
+                                                                                                                       17.0
+                                                                                                                   ],
+                                                                                                          "scene":  false,
+                                                                                                          "text":  "Back",
+                                                                                                          "visible":  true
+                                                                                                      }
+                                                                                                  ],
+                                                                                     "disabled":  false,
+                                                                                     "entity":  4294963705,
+                                                                                     "index":  35,
+                                                                                     "kind":  "button",
+                                                                                     "operator":  "launcher.close_dialog",
+                                                                                     "rect":  [
+                                                                                                  1112.0,
+                                                                                                  677.0,
+                                                                                                  46.0,
+                                                                                                  24.0
+                                                                                              ],
+                                                                                     "scene":  false,
+                                                                                     "text":  null,
+                                                                                     "visible":  true
+                                                                                 },
+                                                                                 {
+                                                                                     "checked":  false,
+                                                                                     "children":  [
+                                                                                                      {
+                                                                                                          "checked":  false,
+                                                                                                          "children":  [
+
+                                                                                                                       ],
+                                                                                                          "disabled":  false,
+                                                                                                          "entity":  4294963700,
+                                                                                                          "index":  38,
+                                                                                                          "kind":  "text",
+                                                                                                          "operator":  null,
+                                                                                                          "rect":  [
+                                                                                                                       1174.0,
+                                                                                                                       681.0,
+                                                                                                                       95.0,
+                                                                                                                       17.0
+                                                                                                                   ],
+                                                                                                          "scene":  false,
+                                                                                                          "text":  "Copy and open",
+                                                                                                          "visible":  true
+                                                                                                      }
+                                                                                                  ],
+                                                                                     "disabled":  false,
+                                                                                     "entity":  4294963701,
+                                                                                     "index":  37,
+                                                                                     "kind":  "button",
+                                                                                     "operator":  "launcher.open_with_confirm",
+                                                                                     "rect":  [
+                                                                                                  1166.0,
+                                                                                                  677.0,
+                                                                                                  111.0,
+                                                                                                  24.0
+                                                                                              ],
+                                                                                     "scene":  false,
+                                                                                     "text":  null,
+                                                                                     "visible":  true
+                                                                                 }
+                                                                             ],
+                                                                "disabled":  false,
+                                                                "entity":  4294963706,
+                                                                "index":  34,
+                                                                "kind":  "node",
+                                                                "operator":  null,
+                                                                "rect":  [
+                                                                             631.0,
+                                                                             666.0,
+                                                                             658.0,
+                                                                             45.0
+                                                                         ],
+                                                                "scene":  false,
+                                                                "text":  null,
+                                                                "visible":  true
+                                                            }
+                                                        ],
+                                           "disabled":  false,
+                                           "entity":  4294963735,
+                                           "index":  5,
+                                           "kind":  "node",
+                                           "operator":  null,
+                                           "rect":  [
+                                                        630.0,
+                                                        368.0,
+                                                        660.0,
+                                                        344.0
+                                                    ],
+                                           "scene":  false,
+                                           "text":  null,
+                                           "visible":  true
+                                       }
+                                   ],
+                      "disabled":  false,
+                      "entity":  4294963736,
+                      "index":  4,
+                      "kind":  "node",
+                      "operator":  null,
+                      "rect":  [
+                                   0.0,
+                                   0.0,
+                                   1920.0,
+                                   1080.0
+                               ],
+                      "scene":  false,
+                      "text":  null,
+                      "visible":  true
+                  }
+              ]
+}

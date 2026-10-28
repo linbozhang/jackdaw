@@ -1,0 +1,3 @@
+PASS: startup walk logged "Indexed 1 asset files"
+PASS: audit names the gone prefab Missing (relative spelling)
+FAIL: the Rebind click never opened the picker

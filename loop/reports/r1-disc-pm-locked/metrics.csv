@@ -1,0 +1,6 @@
+﻿log,iter,phase,yaw0,pitch0,x0,y0,z0,yaw1,pitch1,dyaw_press,dpitch_press,press_ok,dyaw_look,dpitch_look,look_ok,dist_move,move_ok
+disc-pm-locked,1,pressmoving,-0.463648,0.000000,,,,-0.463648,-0.135000,0.000000,0.135000,True,,,,,
+disc-pm-locked,2,pressmoving,-0.463648,-0.135000,,,,-0.463648,-0.315000,0.000000,0.180000,True,,,,,
+disc-pm-locked,3,pressmoving,-0.463648,-0.315000,,,,-0.463648,-0.495000,0.000000,0.180000,True,,,,,
+disc-pm-locked,4,pressmoving,-0.463648,-0.495000,,,,-0.463648,-0.675000,0.000000,0.180000,True,,,,,
+disc-pm-locked,5,pressmoving,-0.463648,-0.675000,,,,-0.463648,-0.855000,0.000000,0.180000,True,,,,,

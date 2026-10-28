@@ -1,0 +1,22 @@
+warning: linker stderr: rust-lld: ignoring unknown argument '-fuse-ld=lld'
+  |
+  = note: `#[warn(linker_messages)]` on by default
+
+warning: `jackdaw_env` (build script) generated 1 warning
+warning: `jackdaw_api_macros` (lib) generated 1 warning (1 duplicate)
+warning: `jackdaw_project_build` (build script) generated 1 warning (1 duplicate)
+warning: `jackdaw_package` (build script) generated 1 warning (1 duplicate)
+warning: `test_fixture_extension` (lib) generated 1 warning (1 duplicate)
+   Compiling jackdaw v0.21.0-dev (E:\Project\rust\jackdaw)
+error[E0499]: cannot borrow `world` as mutable more than once at a time
+   --> src\inspector\val_field.rs:772:26
+    |
+771 |             let mut history = world.resource_mut::<CommandHistory>();
+    |                               ----- first mutable borrow occurs here
+772 |             history.undo(&mut world);
+    |                     ---- ^^^^^^^^^^ second mutable borrow occurs here
+    |                     |
+    |                     first borrow later used by call
+
+For more information about this error, try `rustc --explain E0499`.
+error: could not compile `jackdaw` (lib test) due to 1 previous error

@@ -1,0 +1,81 @@
+warning: linker stderr: rust-lld: ignoring unknown argument '-fuse-ld=lld'
+  |
+  = note: `#[warn(linker_messages)]` on by default
+
+warning: `jackdaw_env` (build script) generated 1 warning
+warning: `jackdaw_api_macros` (lib) generated 1 warning (1 duplicate)
+warning: `jackdaw_project_build` (build script) generated 1 warning (1 duplicate)
+warning: `jackdaw_package` (build script) generated 1 warning (1 duplicate)
+warning: `test_fixture_extension` (lib) generated 1 warning (1 duplicate)
+   Compiling jackdaw v0.21.0-dev (E:\Project\rust\jackdaw)
+warning: unused import: `jackdaw_api::prelude`
+  --> src\inspector\missing_list.rs:18:5
+   |
+18 | use jackdaw_api::prelude::*;
+   |     ^^^^^^^^^^^^^^^^^^^^
+   |
+   = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: variable does not need to be mutable
+   --> src\reference_audit.rs:825:21
+    |
+825 |                 let mut value = value;
+    |                     ----^^^^^
+    |                     |
+    |                     help: remove this `mut`
+    |
+    = note: `#[warn(unused_mut)]` (part of `#[warn(unused)]`) on by default
+
+warning: type `CloseListButton` is more private than the item `on_close_list_click`
+   --> src\inspector\missing_list.rs:268:1
+    |
+268 | / pub fn on_close_list_click(
+269 | |     trigger: On<PointerClick>,
+270 | |     closers: Query<&CloseListButton>,
+271 | |     mut commands: Commands,
+272 | | ) {
+    | |_^ function `on_close_list_click` is reachable at visibility `pub(crate)`
+    |
+note: but type `CloseListButton` is only usable at visibility `pub(self)`
+   --> src\inspector\missing_list.rs:55:1
+    |
+ 55 | struct CloseListButton;
+    | ^^^^^^^^^^^^^^^^^^^^^^
+    = note: `#[warn(private_interfaces)]` on by default
+
+warning: `jackdaw` (lib test) generated 4 warnings (1 duplicate) (run `cargo fix --lib -p jackdaw --tests` to apply 1 suggestion)
+    Finished `test` profile [optimized + debuginfo] target(s) in 19.76s
+     Running unittests src\lib.rs (target\debug\deps\jackdaw-b8bb05f875dbf70a.exe)
+
+running 1 test
+DIAG y31 serialized: bevy_ecs::hierarchy::Children [
+    #inner
+    bevy_pbr::pbr_material::StandardMaterial {
+        metallic: 0.5,
+    }
+    --
+    #outer
+    jackdaw::reference_audit::tests::Wrap {
+        inner: "",
+    }
+]
+
+DIAG y31 serialized-roots: 2
+DIAG y31 roots: 1 children of first: Some(0)
+DIAG y31 entries: ["outer"]
+
+thread 'reference_audit::tests::an_embedded_reference_survives_the_two_phase_load' (30440) panicked at src\reference_audit.rs:749:9:
+assertion `left == right` failed: both entries stand up: ["outer"]
+  left: 1
+ right: 2
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test reference_audit::tests::an_embedded_reference_survives_the_two_phase_load ... FAILED
+
+failures:
+
+failures:
+    reference_audit::tests::an_embedded_reference_survives_the_two_phase_load
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1141 filtered out; finished in 0.03s
+
+error: test failed, to rerun pass `--lib`

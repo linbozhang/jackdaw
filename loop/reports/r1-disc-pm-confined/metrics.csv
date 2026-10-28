@@ -1,0 +1,4 @@
+﻿log,iter,phase,yaw0,pitch0,x0,y0,z0,yaw1,pitch1,dyaw_press,dpitch_press,press_ok,dyaw_look,dpitch_look,look_ok,dist_move,move_ok
+disc-pm-confined,1,pressmoving,-0.463648,0.000000,,,,-0.463648,0.000000,0.000000,0.000000,True,,,,,
+disc-pm-confined,2,pressmoving,-0.463648,0.000000,,,,-0.463648,0.000000,0.000000,0.000000,True,,,,,
+disc-pm-confined,3,pressmoving,-0.463648,0.000000,,,,-0.463648,0.000000,0.000000,0.000000,True,,,,,

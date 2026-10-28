@@ -1,0 +1,121 @@
+warning: linker stderr: rust-lld: ignoring unknown argument '-fuse-ld=lld'
+  |
+  = note: `#[warn(linker_messages)]` on by default
+
+warning: `jackdaw_env` (build script) generated 1 warning
+   Compiling jackdaw_env v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_env)
+warning: `jackdaw_api_macros` (lib) generated 1 warning (1 duplicate)
+warning: `jackdaw_package` (build script) generated 1 warning (1 duplicate)
+warning: `jackdaw_project_build` (build script) generated 1 warning (1 duplicate)
+    Checking jackdaw_runtime v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_runtime)
+    Checking jackdaw_api_internal v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_api_internal)
+    Checking jackdaw_package v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_package)
+    Checking jackdaw_project_build v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_project_build)
+    Checking jackdaw_releases v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_releases)
+    Checking jackdaw_scaffold v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_scaffold)
+    Checking jackdaw_api v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_api)
+    Checking jackdaw_loader v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_loader)
+    Checking jackdaw_multiplayer_editor v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_multiplayer_editor)
+    Checking jackdaw v0.21.0-dev (E:\Project\rust\jackdaw)
+error[E0603]: function import `swap_active_tab` is private
+   --> src\pie_current.rs:411:35
+    |
+411 |         crate::scenes::operators::swap_active_tab(world, tab_index);
+    |                                   ^^^^^^^^^^^^^^^ private function import
+    |
+note: the function import `swap_active_tab` is defined here...
+   --> src\scenes\operators.rs:10:39
+    |
+ 10 | use crate::scenes::{SceneTab, Scenes, swap::swap_active_tab};
+    |                                       ^^^^^^^^^^^^^^^^^^^^^
+note: ...and refers to the function `swap_active_tab` which is defined here
+   --> src\scenes\swap.rs:15:1
+    |
+ 15 | pub fn swap_active_tab(world: &mut World, target: usize) {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ you could import this directly
+help: consider importing this function instead
+    |
+411 -         crate::scenes::operators::swap_active_tab(world, tab_index);
+411 +         crate::scenes::swap::swap_active_tab(world, tab_index);
+    |
+
+error[E0603]: function import `swap_active_tab` is private
+   --> src\pie_current.rs:415:35
+    |
+415 |         crate::scenes::operators::swap_active_tab(world, original_active);
+    |                                   ^^^^^^^^^^^^^^^ private function import
+    |
+note: the function import `swap_active_tab` is defined here...
+   --> src\scenes\operators.rs:10:39
+    |
+ 10 | use crate::scenes::{SceneTab, Scenes, swap::swap_active_tab};
+    |                                       ^^^^^^^^^^^^^^^^^^^^^
+note: ...and refers to the function `swap_active_tab` which is defined here
+   --> src\scenes\swap.rs:15:1
+    |
+ 15 | pub fn swap_active_tab(world: &mut World, target: usize) {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ you could import this directly
+help: consider importing this function instead
+    |
+415 -         crate::scenes::operators::swap_active_tab(world, original_active);
+415 +         crate::scenes::swap::swap_active_tab(world, original_active);
+    |
+
+error[E0603]: function `persist_project_build_settings` is private
+    --> src\pie_current.rs:769:21
+     |
+ 769 |         crate::pie::persist_project_build_settings(world);
+     |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ private function
+     |
+note: the function `persist_project_build_settings` is defined here
+    --> src\pie.rs:1637:1
+     |
+1637 | fn persist_project_build_settings(world: &World) {
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error[E0616]: field `save_before_play` of struct `EditorBuildSettings` is private
+   --> src\pie_current.rs:162:42
+    |
+162 |                 .map(|settings| settings.save_before_play)
+    |                                          ^^^^^^^^^^^^^^^^ private field
+
+error[E0616]: field `save_before_play` of struct `EditorBuildSettings` is private
+   --> src\pie_current.rs:768:53
+    |
+768 |         world.resource_mut::<EditorBuildSettings>().save_before_play = mode;
+    |                                                     ^^^^^^^^^^^^^^^^ private field
+
+error[E0382]: borrow of moved value: `key`
+   --> src\pie.rs:779:46
+    |
+727 |     key: InstanceKey,
+    |     --- move occurs because `key` has type `InstanceKey`, which does not implement the `Copy` trait
+...
+778 |                     .insert(key, stage);
+    |                             --- value moved here
+779 |                 record_scene_override(world, &key, scene_override.as_ref());
+    |                                              ^^^^ value borrowed here after move
+    |
+help: consider cloning the value if the performance cost is acceptable
+    |
+778 |                     .insert(key.clone(), stage);
+    |                                ++++++++
+
+error[E0382]: use of moved value
+   --> src\pie_menu.rs:189:14
+    |
+170 |     if let Some(handle) = editor_font {
+    |                 ------ value moved here
+...
+189 |         Some(handle) => TextFont {
+    |              ^^^^^^ value used here after move
+    |
+    = note: move occurs because value has type `bevy::bevy_asset::Handle<bevy::bevy_text::Font>`, which does not implement the `Copy` trait
+help: borrow this binding in the pattern to avoid moving the value
+    |
+170 |     if let Some(ref handle) = editor_font {
+    |                 +++
+
+Some errors have detailed explanations: E0382, E0603, E0616.
+For more information about an error, try `rustc --explain E0382`.
+error: could not compile `jackdaw` (lib) due to 7 previous errors

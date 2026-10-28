@@ -1,0 +1,35 @@
+warning: linker stderr: rust-lld: ignoring unknown argument '-fuse-ld=lld'
+  |
+  = note: `#[warn(linker_messages)]` on by default
+  = note: the `linker_messages` lint ignores `-D warnings`
+
+warning: `jackdaw_env` (build script) generated 1 warning
+warning: `jackdaw_api_macros` (lib) generated 1 warning (1 duplicate)
+warning: `jackdaw_project_build` (build script) generated 1 warning (1 duplicate)
+warning: `jackdaw_package` (build script) generated 1 warning (1 duplicate)
+    Checking jackdaw_bsn v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_bsn)
+   Compiling jackdaw_project_build v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_project_build)
+error: this `if` statement can be collapsed
+   --> crates\jackdaw_bsn\src\catalog.rs:112:13
+    |
+112 | /             if let (Some(registration), Some(value)) = (
+113 | |                 reg.get_with_type_path(&type_id_to_path(&reg, type_id)),
+114 | |                 bsn_value_to_reflect(&asset_value, type_id, &reg, Some(&assets_ctx)),
+115 | |             ) {
+...   |
+119 | |             }
+    | |_____________^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#collapsible_if
+    = note: `-D clippy::collapsible-if` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::collapsible_if)]`
+help: collapse nested if block
+    |
+115 ~             )
+116 ~                 && let Some(reflect_asset) = registration.data::<ReflectAsset>() {
+117 |                     let _ = reflect_asset.insert(world, handle.id(), &*value);
+118 ~                 }
+    |
+
+error: could not compile `jackdaw_bsn` (lib) due to 1 previous error
+warning: build failed, waiting for other jobs to finish...

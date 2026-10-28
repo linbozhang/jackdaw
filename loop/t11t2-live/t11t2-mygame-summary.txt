@@ -1,0 +1,1 @@
+directDep=False exit= CameraRig=True CameraLook=False ActiveCameraRig=True PlayerMarker=False

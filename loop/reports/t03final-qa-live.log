@@ -1,0 +1,26 @@
+READY pid=31516
+PASS  stage: zone.bsn loaded, Zone reachable
+[h1] clean: {"dirty":false,"has_save_baseline":true,"redo":[],"redo_len":0,"saved_len":0,"top":null,"undo":[],"undo_len":0}
+PASS  h1: history reads empty stacks on a clean scene
+PASS  h1: freshly loaded scene reads clean
+PASS  h1: save baseline present at depth 0
+[h1] after add.cube: {"dirty":true,"has_save_baseline":true,"redo":[],"redo_len":0,"saved_len":0,"top":"Add Cube","undo":[{"label":"Add Cube"}],"undo_len":1}
+PASS  h1: one operation leaves exactly ONE undo entry (undo_len=1)
+PASS  h1: top agrees with the newest undo label
+PASS  h1: top names the add (top=Add Cube)
+PASS  h1: the operation lights the dirty flag
+[h1] after undo: {"dirty":false,"has_save_baseline":true,"redo":[{"label":"Add Cube"}],"redo_len":1,"saved_len":0,"top":null,"undo":[],"undo_len":0}
+PASS  h1: undo swaps the stacks (undo=0 redo=1)
+PASS  h1: the redo stack carries the same label
+PASS  h1: undo back to the saved document reads clean
+FAIL  h1: redo+delete leaves one entry (undo_len=2)
+FAIL  h1: back to clean before the scrub chain
+[h2] Transform card clicked: True
+[h2] x: 0 -> 0.25; undo_len: 0 -> 1 (top: Set component field)
+PASS  h2: the scrub moved Zone.x (0 -> 0.25)
+PASS  h2: one drag gesture is exactly ONE entry (0 -> 1)
+PASS  h2: the gesture dirties the tab
+PASS  h2: ONE undo returns x to 0 (got 0)
+PASS  h2: stack back at 0 after the single undo
+PASS  h2: undo back to the saved content reads clean
+RESULT failures=2

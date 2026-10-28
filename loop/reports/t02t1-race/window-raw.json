@@ -1,0 +1,69 @@
+﻿{
+    "borderless_game":  true,
+    "canvas":  null,
+    "clip_children":  true,
+    "composite_alpha_mode":  "Auto",
+    "decorations":  false,
+    "desired_maximum_frame_latency":  null,
+    "enabled_buttons":  {
+                            "close":  true,
+                            "maximize":  true,
+                            "minimize":  true
+                        },
+    "fit_canvas_to_parent":  false,
+    "focused":  true,
+    "fullsize_content_view":  false,
+    "has_shadow":  true,
+    "ime_enabled":  false,
+    "ime_position":  [
+                         0.0,
+                         0.0
+                     ],
+    "internal":  {
+                     "cursor_position_request":  null,
+                     "drag_move_request":  false,
+                     "drag_resize_request":  null,
+                     "maximize_request":  null,
+                     "minimize_request":  null,
+                     "physical_cursor_position":  [
+                                                      1277.0,
+                                                      296.0
+                                                  ]
+                 },
+    "mode":  "Windowed",
+    "movable_by_window_background":  false,
+    "name":  "jackdaw",
+    "position":  "Automatic",
+    "preferred_screen_edges_deferring_system_gestures":  "None",
+    "prefers_home_indicator_hidden":  false,
+    "prefers_status_bar_hidden":  false,
+    "present_mode":  "Fifo",
+    "prevent_default_event_handling":  true,
+    "recognize_doubletap_gesture":  false,
+    "recognize_pan_gesture":  null,
+    "recognize_pinch_gesture":  false,
+    "recognize_rotation_gesture":  false,
+    "resizable":  true,
+    "resize_constraints":  {
+                               "max_height":  null,
+                               "max_width":  null,
+                               "min_height":  120.0,
+                               "min_width":  180.0
+                           },
+    "resolution":  {
+                       "physical_height":  720,
+                       "physical_width":  1283,
+                       "scale_factor":  1.0,
+                       "scale_factor_override":  null
+                   },
+    "skip_taskbar":  false,
+    "title":  "jackdaw",
+    "titlebar_show_buttons":  true,
+    "titlebar_show_title":  true,
+    "titlebar_shown":  true,
+    "titlebar_transparent":  false,
+    "transparent":  false,
+    "visible":  true,
+    "window_level":  "Normal",
+    "window_theme":  "Dark"
+}

@@ -1,0 +1,22 @@
+editor ready
+idle
+== cell 1: named scene runs by path with projection parity ==
+
+entities id         result   warnings
+-------- --         ------   --------
+{}       scene.open finished {}      
+{}       scene.save finished {}      
+  ok: the scene is open
+{}       pie.pla... finished {}      
+pie running (11:44:25)
+  ok: jackdaw/pie names the override: t06-final.bsn
+  ok: the source is named
+switched to Live view
+editor killed
+ASSERT FAILED: projection parity: live names == authored names (Spinner,Still,t06-final)
+ËùÔÚÎ»ÖÃ E:\Project\rust\jackdaw\loop\qa\t06-final-live.ps1:25 ×Ö·û: 23
++     if (-not $Cond) { throw "ASSERT FAILED: $What" }
++                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : OperationStopped: (ASSERT FAILED: ...till,t06-final):String) [], RuntimeException
+    + FullyQualifiedErrorId : ASSERT FAILED: projection parity: live names == authored names (Spinner,Still,t06-final)
+ 

@@ -1,0 +1,34 @@
+
+running 29 tests
+test binary::tests::a_background_build_takes_half_the_cores ... ok
+test binary::tests::a_bin_target_passes_through_bin_features_and_profile ... ok
+test binary::tests::a_build_that_says_nothing_at_all_still_says_so ... ok
+test binary::tests::a_broken_timeout_override_cannot_reintroduce_a_hang ... ok
+test binary::tests::a_failure_leaves_out_cargos_progress_notes ... ok
+test binary::tests::a_locked_failure_is_translated_into_a_remedy ... ok
+test binary::tests::a_missing_executable_names_what_was_missing ... ok
+test binary::tests::a_package_override_replaces_the_specs_package ... ok
+test binary::tests::both_accounts_are_kept_when_both_have_something_to_say ... ok
+test binary::tests::an_example_target_passes_example_through ... ok
+test binary::tests::cargo_targets_key_a_build_cache_by_value ... ok
+test binary::tests::cargos_own_failure_is_carried_when_no_diagnostic_is ... ok
+test binary::tests::a_targeted_build_adopts_only_its_own_artifact ... ok
+test binary::tests::a_wanted_bin_matches_only_its_own_artifact ... ok
+test binary::tests::contradictory_or_empty_targets_add_no_flags ... ok
+test binary::tests::named_resolves_one_target_with_bin_first_and_blank_absent ... ok
+test binary::tests::no_target_adds_nothing_to_the_cargo_command ... ok
+test binary::tests::only_binary_artifacts_of_the_game_package_are_taken ... ok
+test binary::tests::a_project_without_a_toolchain_file_is_told_so_in_the_build_log ... ok
+test binary::tests::only_dylib_kind_artifacts_signal_dynamic_linking ... ok
+test binary::tests::registry_and_path_package_ids_are_recognised ... ok
+test binary::tests::the_build_command_locks_the_dependency_resolution ... ok
+test binary::tests::the_editor_builds_the_game_away_from_the_one_a_developer_builds ... ok
+test binary::tests::the_editors_toolchain_and_crate_vars_do_not_reach_the_project ... ok
+test binary::tests::the_shared_toolchain_and_cache_locations_are_kept ... ok
+test binary::tests::the_deps_dir_is_prepended_to_the_library_search_path ... ok
+test binary::tests::the_deps_dir_is_found_for_bins_and_examples ... ok
+test binary::tests::a_missing_lockfile_is_generated_and_an_existing_one_is_left_alone ... ok
+test binary::tests::a_project_that_does_not_compile_reports_the_compilers_own_errors ... ok
+
+test result: ok. 29 passed; 0 failed; 0 ignored; 0 measured; 193 filtered out; finished in 0.91s
+

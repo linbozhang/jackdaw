@@ -1,0 +1,10 @@
+﻿case,iter,modal_before,modal_after,active_tool_before,active_tool_after,ok
+ruler-Esc,1,tools.measure_distance,,,Select,True
+ruler-Esc,2,tools.measure_distance,,,Select,True
+ruler-Esc,3,tools.measure_distance,,,Select,True
+ruler-RMB,1,tools.measure_distance,,,Select,True
+ruler-RMB,2,tools.measure_distance,,,Select,True
+ruler-RMB,3,tools.measure_distance,,,Select,True
+drawAdd-Esc,1,viewport.draw_brush_modal,,,,True
+drawCut-RMB,1,viewport.draw_brush_modal,,,,True
+toolState,1,null,,Rotate,Select,True

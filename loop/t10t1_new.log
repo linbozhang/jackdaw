@@ -1,0 +1,10 @@
+jd new: created H:\workspace_AI\t10-phys\phys-game
+  modules: Physics
+  scaffolded 8 files
+  checking dependencies resolve...
+
+note: this jackdaw runs from the checkout at E:\Project\rust\jackdaw, so the new project depends on its crates by path. That Cargo.toml is local to this machine; switch those back to versions before sharing it.
+
+Next:
+  jd open H:\workspace_AI\t10-phys\phys-game
+or `cargo run` in that directory to play standalone.

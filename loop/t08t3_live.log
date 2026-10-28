@@ -1,0 +1,8 @@
+S1 ready
+C1 new: game-config.bsn
+C1 create+edit+save on disk: True
+C4a dy/t=0 spin/t=0
+C5 play-window disk value: True post-stop save: False
+C4b dy/t=0 spin/t=0
+C9 session edit wrote no file: True
+C3 covered by C4 spin leg (component x config on same entity) + T02 prior art

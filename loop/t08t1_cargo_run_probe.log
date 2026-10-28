@@ -1,0 +1,26 @@
+warning: linker stderr: rust-lld: ignoring unknown argument '-fuse-ld=lld'
+  |
+  = note: `#[warn(linker_messages)]` on by default
+
+warning: `hworkspace-ait08t1-projmy-game` (bin "hworkspace-ait08t1-projmy-game") generated 1 warning
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.56s
+     Running `target\debug\hworkspace-ait08t1-projmy-game.exe`
+[2m2026-10-26T15:46:26.422086Z[0m [32m INFO[0m [2mbevy_diagnostic::system_information_diagnostics_plugin::internal[0m[2m:[0m SystemInfo { os: "Windows 11 Pro", kernel: "26100", cpu: "AMD Ryzen 7 9700X 8-Core Processor", core_count: "8", memory: "93.4 GiB" }
+[2m2026-10-26T15:46:27.241850Z[0m [32m INFO[0m [2mbevy_render::renderer[0m[2m:[0m AdapterInfo { name: "NVIDIA GeForce RTX 5070", vendor: 4318, device: 12036, device_type: DiscreteGpu, device_pci_bus_id: "0000:01:00.0", driver: "NVIDIA", driver_info: "591.86", backend: Vulkan, subgroup_min_size: 32, subgroup_max_size: 32, transient_saves_memory: Some(false), limit_bucket: None }
+[2m2026-10-26T15:46:27.739178Z[0m [32m INFO[0m [2mbevy_pbr::cluster[0m[2m:[0m GPU clustering is supported on this device.
+[2m2026-10-26T15:46:27.739579Z[0m [32m INFO[0m [2mbevy_render::batching::gpu_preprocessing[0m[2m:[0m GPU preprocessing is fully supported on this device.
+[2m2026-10-26T15:46:27.743056Z[0m [32m INFO[0m [2mbevy_winit::system[0m[2m:[0m Creating new window hworkspace-ait08t1-projmy-game (69v0)
+[2m2026-10-26T15:46:27.847894Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Encountered an I/O error while loading asset: 拒绝访问。 (os error 5)
+[2m2026-10-26T15:46:27.859869Z[0m [32m INFO[0m [2mjackdaw_runtime[0m[2m:[0m Loaded 1 asset files from E:\Project\rust\jackdaw\hworkspace-ait08t1-projmy-game\assets
+[2m2026-10-26T15:46:27.860614Z[0m [32m INFO[0m [2mjackdaw_runtime[0m[2m:[0m No catalog at E:\Project\rust\jackdaw\hworkspace-ait08t1-projmy-game\assets\catalog.bsn, skipping catalog load
+[2m2026-10-26T15:46:27.879292Z[0m [32m INFO[0m [2mjackdaw_runtime::config[0m[2m:[0m config 'game-config.bsn' loaded; applying it as hworkspace_ait08t1_projmy_game::GameConfig's initial value
+
+thread 'Compute Task Pool (6)' (65152) panicked at C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_ecs\src\error\handler.rs:128:1:
+Encountered an error in system `<Enable the debug feature to see the name>`: Parameter `<Enable the debug feature to see the name>` failed validation: Resource does not exist
+If this is an expected state, wrap the parameter in `Option<T>` and handle `None` when it happens, or wrap the parameter in `If<T>` to skip the system when it happens.
+
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+[2m2026-10-26T15:46:27.880198Z[0m [32m INFO[0m [2mjackdaw_runtime[0m[2m:[0m PIE: playing the editor's scene ' ' in place of ' '
+[2m2026-10-26T15:46:27.880504Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Encountered an I/O error while loading asset: 拒绝访问。 (os error 5)
+[2m2026-10-26T15:46:27.880830Z[0m [33m WARN[0m [2mjackdaw_runtime::terrain[0m[2m:[0m no active Camera3d, so terrain has no viewer to lay its levels around and will not draw
+error: process didn't exit successfully: `target\debug\hworkspace-ait08t1-projmy-game.exe` (exit code: 101)

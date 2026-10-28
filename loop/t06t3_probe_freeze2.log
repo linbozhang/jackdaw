@@ -1,0 +1,15 @@
+True
+
+entities id               result   warnings
+-------- --               ------   --------
+{}       scene.open       finished {}      
+{}       pie.play_current finished {}      
+switching to Live
+stopping while in Live view
+{}       pie.stop         finished {}      
+editor alive: CPU delta over 4s = 5.0s (spin if high, block if ~0)
+threads: 54, running/waiting mix sampled
+threads in Running state: 1
+observation done (editor left running)
+
+

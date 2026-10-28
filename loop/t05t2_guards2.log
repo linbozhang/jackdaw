@@ -1,0 +1,89 @@
+warning: linker stderr: rust-lld: ignoring unknown argument '-fuse-ld=lld'
+  |
+  = note: `#[warn(linker_messages)]` on by default
+
+warning: `jackdaw_env` (build script) generated 1 warning
+warning: `jackdaw_api_macros` (lib) generated 1 warning (1 duplicate)
+warning: `jackdaw_project_build` (build script) generated 1 warning (1 duplicate)
+warning: `jackdaw_package` (build script) generated 1 warning (1 duplicate)
+warning: unused import: `jackdaw_bsn::BsnPatch as JackdawPatch`
+    --> src\reference_audit.rs:1021:5
+     |
+1021 | use jackdaw_bsn::BsnPatch as JackdawPatch;
+     |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+     = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused import: `jackdaw_api::prelude`
+  --> src\inspector\missing_list.rs:18:5
+   |
+18 | use jackdaw_api::prelude::*;
+   |     ^^^^^^^^^^^^^^^^^^^^
+
+warning: type `CloseListButton` is more private than the item `on_close_list_click`
+   --> src\inspector\missing_list.rs:268:1
+    |
+268 | / pub fn on_close_list_click(
+269 | |     trigger: On<PointerClick>,
+270 | |     closers: Query<&CloseListButton>,
+271 | |     mut commands: Commands,
+272 | | ) {
+    | |_^ function `on_close_list_click` is reachable at visibility `pub(crate)`
+    |
+note: but type `CloseListButton` is only usable at visibility `pub(self)`
+   --> src\inspector\missing_list.rs:55:1
+    |
+ 55 | struct CloseListButton;
+    | ^^^^^^^^^^^^^^^^^^^^^^
+    = note: `#[warn(private_interfaces)]` on by default
+
+warning: `jackdaw` (lib) generated 3 warnings (run `cargo fix --lib -p jackdaw` to apply 1 suggestion)
+warning: `test_fixture_extension` (lib) generated 1 warning (1 duplicate)
+   Compiling jackdaw v0.21.0-dev (E:\Project\rust\jackdaw)
+warning: `jackdaw` (bin "jackdaw") generated 1 warning (1 duplicate)
+warning: `jackdaw` (bin "jackdaw-rustc-wrapper") generated 1 warning (1 duplicate)
+error[E0308]: mismatched types
+  --> tests\guards\reference_audit.rs:38:9
+   |
+37 |     write(
+   |     ----- arguments to this function are incorrect
+38 |         &tmp,
+   |         ^^^^ expected `&Path`, found `&TempDir`
+   |
+   = note: expected reference `&std::path::Path`
+              found reference `&TempDir`
+note: function defined here
+  --> tests\guards\reference_audit.rs:24:4
+   |
+24 | fn write(root: &std::path::Path, relative: &str, text: &str) {
+   |    ^^^^^ ----------------------
+
+error[E0308]: mismatched types
+  --> tests\guards\reference_audit.rs:43:9
+   |
+42 |     write(
+   |     ----- arguments to this function are incorrect
+43 |         &tmp,
+   |         ^^^^ expected `&Path`, found `&TempDir`
+   |
+   = note: expected reference `&std::path::Path`
+              found reference `&TempDir`
+note: function defined here
+  --> tests\guards\reference_audit.rs:24:4
+   |
+24 | fn write(root: &std::path::Path, relative: &str, text: &str) {
+   |    ^^^^^ ----------------------
+
+warning: variable does not need to be mutable
+   --> tests\guards\reference_audit.rs:147:10
+    |
+147 |     let (mut app, _tmp) = editor();
+    |          ----^^^
+    |          |
+    |          help: remove this `mut`
+    |
+    = note: `#[warn(unused_mut)]` (part of `#[warn(unused)]`) on by default
+
+For more information about this error, try `rustc --explain E0308`.
+warning: `jackdaw` (test "guards") generated 1 warning
+error: could not compile `jackdaw` (test "guards") due to 2 previous errors; 1 warning emitted

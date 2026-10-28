@@ -1,0 +1,62 @@
+warning: linker stderr: rust-lld: ignoring unknown argument '-fuse-ld=lld'
+  |
+  = note: `#[warn(linker_messages)]` on by default
+  = note: the `linker_messages` lint ignores `-D warnings`
+
+warning: `jackdaw_env` (build script) generated 1 warning
+warning: `jackdaw_api_macros` (lib) generated 1 warning (1 duplicate)
+warning: `jackdaw_package` (build script) generated 1 warning (1 duplicate)
+warning: `jackdaw_project_build` (build script) generated 1 warning (1 duplicate)
+    Checking jackdaw_loader v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_loader)
+    Checking jackdaw_dylib v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_dylib)
+    Checking jackdaw_api_internal v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_api_internal)
+    Checking jackdaw_api v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_api)
+    Checking jackdaw_api_macros v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_api_macros)
+    Checking jackdaw_node_graph v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_node_graph)
+    Checking jackdaw_animation v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_animation)
+    Checking jackdaw_hull v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_hull)
+    Checking jackdaw_panels v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_panels)
+    Checking jackdaw_feathers v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_feathers)
+    Checking jackdaw_extension v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_extension)
+    Checking jackdaw v0.21.0-dev (E:\Project\rust\jackdaw)
+    Checking jackdaw_editor v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_editor)
+error: this lint expectation is unfulfilled
+ --> tests\reflect_auto_register.rs:1:11
+  |
+1 | #![expect(clippy::print_stdout, reason = "test prints progress diagnostics")]
+  |           ^^^^^^^^^^^^^^^^^^^^
+  |
+  = note: test prints progress diagnostics
+  = note: `-D unfulfilled-lint-expectations` implied by `-D warnings`
+  = help: to override `-D warnings` add `#[allow(unfulfilled_lint_expectations)]`
+
+error: could not compile `jackdaw` (test "reflect_auto_register") due to 1 previous error
+warning: build failed, waiting for other jobs to finish...
+error: unused `jackdaw_api_internal::OperatorResult` that must be used
+   --> tests\guards\reference_rewrite.rs:188:5
+    |
+188 |     run_op_clause(app.world_mut(), "scene.close").expect("the tab closes");
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: Operators may not be `Finished`, which should usually be handled
+    = note: `-D unused-must-use` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(unused_must_use)]`
+help: use `let _ = ...` to ignore the resulting value
+    |
+188 |     let _ = run_op_clause(app.world_mut(), "scene.close").expect("the tab closes");
+    |     +++++++
+
+error: unused `jackdaw_api_internal::OperatorResult` that must be used
+   --> tests\guards\reference_rewrite.rs:578:5
+    |
+578 |     run_op_clause(app.world_mut(), "asset.save").expect("the card saves");
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: Operators may not be `Finished`, which should usually be handled
+help: use `let _ = ...` to ignore the resulting value
+    |
+578 |     let _ = run_op_clause(app.world_mut(), "asset.save").expect("the card saves");
+    |     +++++++
+
+error: could not compile `jackdaw` (test "guards") due to 2 previous errors
+EXIT:101 

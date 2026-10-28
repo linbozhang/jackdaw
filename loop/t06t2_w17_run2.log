@@ -1,0 +1,32 @@
+warning: linker stderr: rust-lld: ignoring unknown argument '-fuse-ld=lld'
+  |
+  = note: `#[warn(linker_messages)]` on by default
+
+warning: `jackdaw_env` (build script) generated 1 warning
+warning: `jackdaw_api_macros` (lib) generated 1 warning (1 duplicate)
+warning: `jackdaw_project_build` (build script) generated 1 warning (1 duplicate)
+warning: `jackdaw_package` (build script) generated 1 warning (1 duplicate)
+warning: `test_fixture_extension` (lib) generated 1 warning (1 duplicate)
+   Compiling jackdaw v0.21.0-dev (E:\Project\rust\jackdaw)
+error[E0308]: mismatched types
+   --> src\inspector\val_field.rs:770:48
+    |
+770 |         jackdaw_commands::CommandHistory::undo(world.resource_mut::<CommandHistory>(), &mut world);
+    |         -------------------------------------- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `&mut CommandHistory`, found `Mut<'_, CommandHistory>`
+    |         |
+    |         arguments to this function are incorrect
+    |
+    = note: expected mutable reference `&mut CommandHistory`
+                          found struct `bevy::bevy_ecs::change_detection::Mut<'_, CommandHistory>`
+note: method defined here
+   --> crates\jackdaw_commands\src\lib.rs:171:12
+    |
+171 |     pub fn undo(&mut self, world: &mut World) {
+    |            ^^^^
+help: consider mutably borrowing here
+    |
+770 |         jackdaw_commands::CommandHistory::undo(&mut world.resource_mut::<CommandHistory>(), &mut world);
+    |                                                ++++
+
+For more information about this error, try `rustc --explain E0308`.
+error: could not compile `jackdaw` (lib test) due to 1 previous error

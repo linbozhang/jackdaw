@@ -1,0 +1,23 @@
+warning: linker stderr: rust-lld: ignoring unknown argument '-fuse-ld=lld'
+  |
+  = note: `#[warn(linker_messages)]` on by default
+
+warning: `jackdaw_env` (build script) generated 1 warning
+warning: `jackdaw_api_macros` (lib) generated 1 warning (1 duplicate)
+warning: `jackdaw_project_build` (build script) generated 1 warning (1 duplicate)
+warning: `jackdaw_package` (build script) generated 1 warning (1 duplicate)
+   Compiling test_fixture_extension v0.0.0 (E:\Project\rust\jackdaw\tests\fixtures\test_fixture_extension)
+warning: `test_fixture_extension` (lib) generated 1 warning (1 duplicate)
+   Compiling jackdaw v0.21.0-dev (E:\Project\rust\jackdaw)
+warning: `jackdaw` (lib test) generated 1 warning (1 duplicate)
+    Finished `test` profile [optimized + debuginfo] target(s) in 18.51s
+     Running unittests src\lib.rs (target\debug\deps\jackdaw-065bbaf80d9bc6c2.exe)
+
+running 4 tests
+test render_backend::tests::a_valid_variable_is_honored_not_overridden ... ok
+test render_backend::tests::a_value_of_only_unknown_names_falls_back_like_an_unset_one ... ok
+test render_backend::tests::an_unset_variable_takes_the_platform_default ... ok
+test render_backend::tests::wgpu_env_parsing_matches_the_shapes_we_dispatch_on ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 1119 filtered out; finished in 0.00s
+

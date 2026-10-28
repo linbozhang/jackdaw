@@ -1,0 +1,4 @@
+PASS: grid 8: audit names the gone prefab
+PASS: grid 8: rebind saved the held source
+PASS: grid 8: audit clean after rebind
+GRID8 DONE

@@ -1,0 +1,43 @@
+warning: linker stderr: rust-lld: ignoring unknown argument '-fuse-ld=lld'
+  |
+  = note: `#[warn(linker_messages)]` on by default
+
+warning: `bevy_reflect_derive` (lib) generated 1 warning
+warning: `bevy_ecs_macros` (lib) generated 1 warning (1 duplicate)
+warning: `bevy_derive` (lib) generated 1 warning (1 duplicate)
+warning: `bevy_asset_macros` (lib) generated 1 warning (1 duplicate)
+warning: `bevy_extract_macros` (lib) generated 1 warning (1 duplicate)
+warning: `bevy_material_macros` (lib) generated 1 warning (1 duplicate)
+warning: `bevy_gizmos_macros` (lib) generated 1 warning (1 duplicate)
+warning: `bevy_render_macros` (lib) generated 1 warning (1 duplicate)
+warning: `bevy_encase_derive` (lib) generated 1 warning (1 duplicate)
+warning: `bevy_animation_macros` (lib) generated 1 warning (1 duplicate)
+warning: `bevy_state_macros` (lib) generated 1 warning (1 duplicate)
+warning: `bevy_scene_macros` (lib) generated 1 warning (1 duplicate)
+warning: linker stderr: rust-lld: ignoring unknown argument '-fuse-ld=lld'
+  |
+  = note: `#[warn(linker_messages)]` on by default
+  = note: the `linker_messages` lint ignores `-D warnings`
+
+warning: `jackdaw_env` (build script) generated 1 warning
+    Checking jackdaw_env v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_env)
+warning: `jackdaw_api_macros` (lib) generated 1 warning (1 duplicate)
+    Checking jackdaw_runtime v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_runtime)
+warning: `jackdaw_package` (build script) generated 1 warning (1 duplicate)
+warning: `jackdaw_project_build` (build script) generated 1 warning (1 duplicate)
+    Checking jackdaw_feathers v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_feathers)
+   Compiling jackdaw_project_build v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_project_build)
+    Checking jackdaw_package v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_package)
+    Checking jackdaw_releases v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_releases)
+    Checking jackdaw_avian_integration v0.21.0-dev (E:\Project\rust\jackdaw\integrations\physics\jackdaw_avian_integration)
+    Checking jackdaw_scaffold v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_scaffold)
+    Checking jackdaw_panels v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_panels)
+    Checking jackdaw_node_graph v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_node_graph)
+    Checking jackdaw_api_internal v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_api_internal)
+    Checking jackdaw_animation v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_animation)
+    Checking jackdaw_api v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_api)
+    Checking jackdaw_loader v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_loader)
+    Checking jackdaw_multiplayer_editor v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_multiplayer_editor)
+    Checking jackdaw_physics v0.21.0-dev (E:\Project\rust\jackdaw\integrations\physics\jackdaw_physics)
+    Checking jackdaw v0.21.0-dev (E:\Project\rust\jackdaw)
+    Finished `dev` profile [optimized + debuginfo] target(s) in 49.76s

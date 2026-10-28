@@ -1,0 +1,4 @@
+﻿log,iter,phase,yaw0,pitch0,x0,y0,z0,yaw1,pitch1,dyaw_press,dpitch_press,press_ok,dyaw_look,dpitch_look,look_ok,dist_move,move_ok
+r1b-crosscheck,1,full,0.000000,-0.463648,0.000,4.000,8.000,0.000000,-0.463648,0.000000,0.000000,True,0.000000,0.000000,False,0.000,False
+r1b-crosscheck,2,full,0.000000,-0.463648,0.000,4.000,8.000,0.000000,-0.463648,0.000000,0.000000,True,0.000000,0.000000,False,0.000,False
+r1b-crosscheck,3,full,0.000000,-0.463648,0.000,4.000,8.000,0.000000,-0.463648,0.000000,0.000000,True,0.000000,0.000000,False,0.000,False

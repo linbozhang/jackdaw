@@ -1,0 +1,584 @@
+   Compiling derive_more-impl v2.1.1
+   Compiling serde v1.0.229
+   Compiling bitflags v2.13.1
+   Compiling unsynn v0.3.0
+   Compiling glam v0.33.12
+   Compiling windows-core v0.62.2
+   Compiling tinystr v0.8.4
+   Compiling logos-codegen v0.16.1
+warning: linker stderr: rust-lld: ignoring unknown argument '-fuse-ld=lld'
+  |
+  = note: `#[warn(linker_messages)]` on by default
+
+warning: `jackdaw_env` (build script) generated 1 warning
+   Compiling dirs-sys v0.5.0
+   Compiling toml_edit v0.25.13+spec-1.1.0
+   Compiling jackdaw_project_build v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_project_build)
+   Compiling dirs v6.0.0
+   Compiling png v0.18.1
+   Compiling spirv v0.4.0+sdk-1.4.341.0
+   Compiling meshopt v0.6.2
+   Compiling icu_locale_core v2.3.0
+   Compiling windows-numerics v0.3.1
+   Compiling windows-future v0.3.2
+   Compiling windows-collections v0.3.2
+   Compiling smallvec v1.15.2
+   Compiling naga-types v30.0.1
+warning: `jackdaw_project_build` (build script) generated 1 warning (1 duplicate)
+   Compiling bevy_platform v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+   Compiling smol_str v0.2.2
+   Compiling petgraph v0.8.3
+   Compiling half v2.7.1
+   Compiling ron v0.12.2
+   Compiling wgpu-types v30.0.1
+   Compiling bevy_utils v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+   Compiling image v0.25.10
+   Compiling tracing-subscriber v0.3.23
+   Compiling windows v0.62.2
+   Compiling naga v30.0.1
+   Compiling wgsl-types v0.6.0
+   Compiling variadics_please v2.0.0
+   Compiling icu_provider v2.3.0
+   Compiling parking_lot_core v0.9.12
+   Compiling parking_lot v0.12.5
+   Compiling icu_locale_fallback v2.3.0
+   Compiling icu_properties v2.3.0
+   Compiling icu_segmenter v2.3.0
+   Compiling icu_normalizer v2.3.0
+   Compiling fontique v0.11.1
+   Compiling harfrust v0.12.0
+   Compiling accesskit v0.25.1
+   Compiling parley_data v0.11.1
+   Compiling taffy v0.14.0
+   Compiling gltf-json v1.4.1
+   Compiling jackdaw_env v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_env)
+   Compiling hexasphere v19.0.0
+   Compiling parley v0.11.1
+   Compiling gltf v1.4.1
+   Compiling wgpu-naga-bridge v30.0.1
+   Compiling logos-derive v0.16.1
+   Compiling logos v0.16.1
+   Compiling derive_more v2.1.1
+   Compiling bevy_reflect v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+   Compiling bevy_tasks v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+   Compiling wgsl-parse v0.6.0
+   Compiling gpu-allocator v0.28.0
+   Compiling gilrs-core v0.6.8
+   Compiling gilrs v0.11.2
+   Compiling wgpu-hal v30.0.1
+   Compiling wesl v0.6.0
+   Compiling wgpu-core-deps-windows-linux-android v30.0.1
+   Compiling wgpu-core v30.0.1
+   Compiling bevy_ecs v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+   Compiling bevy_math v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+   Compiling bevy_annotations v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+   Compiling bevy_curve v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+   Compiling bevy_shape v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+   Compiling bevy_color v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+   Compiling wgpu v30.0.1
+   Compiling bevy_app v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+   Compiling bevy_time v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+   Compiling bevy_transform v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+   Compiling bevy_input v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+   Compiling bevy_diagnostic v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+   Compiling bevy_asset v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+   Compiling bevy_log v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+   Compiling bevy_clipboard v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+   Compiling bevy_a11y v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+   Compiling bevy_gilrs v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+   Compiling bevy_mesh v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+   Compiling bevy_image v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+   Compiling bevy_shader v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+   Compiling bevy_scene v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+   Compiling bevy_window v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+   Compiling bevy_text v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+   Compiling bevy_material v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+   Compiling bevy_animation v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+   Compiling bevy_camera v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+   Compiling bevy_extract v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+   Compiling bevy_light v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+   Compiling bevy_render v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+   Compiling bevy_sprite v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+   Compiling bevy_picking v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+   Compiling bevy_world_serialization v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+   Compiling bevy_gltf v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+   Compiling bevy_input_focus v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+   Compiling bevy_ui v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+   Compiling bevy_core_pipeline v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+   Compiling bevy_sprite_render v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+   Compiling bevy_ui_widgets v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+   Compiling bevy_anti_alias v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+   Compiling bevy_post_process v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+   Compiling bevy_pbr v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+   Compiling bevy_ui_render v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+   Compiling bevy_feathers v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+   Compiling bevy_internal v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+   Compiling bevy v0.20.0-dev (https://github.com/bevyengine/bevy?branch=main#c9c397ba)
+   Compiling jackdaw_geometry v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_geometry)
+   Compiling jackdaw_scene_types v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_scene_types)
+   Compiling jackdaw_bsn v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_bsn)
+   Compiling jackdaw_bind v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_bind)
+   Compiling jackdaw_prefab v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_prefab)
+   Compiling jackdaw_schema v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_schema)
+   Compiling jackdaw_surface v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_surface)
+   Compiling jackdaw_widgets_runtime v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_widgets_runtime)
+   Compiling jackdaw_terrain v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_terrain)
+   Compiling jackdaw_animation_runtime v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_animation_runtime)
+   Compiling jackdaw_runtime v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_runtime)
+   Compiling jackdaw_scaffold v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_scaffold)
+warning: `jackdaw_runtime` (test "navmesh_scene_load") generated 1 warning (1 duplicate)
+warning: `jackdaw_runtime` (test "headless_brush_load") generated 1 warning (1 duplicate)
+warning: `jackdaw_runtime` (test "animation_scene_load") generated 1 warning (1 duplicate)
+warning: `jackdaw_runtime` (test "scene_root_name") generated 1 warning (1 duplicate)
+warning: `jackdaw_runtime` (test "document_twins") generated 1 warning (1 duplicate)
+warning: `jackdaw_runtime` (test "pie_scene_override") generated 1 warning (1 duplicate)
+warning: `jackdaw_runtime` (test "prefab_resolution") generated 1 warning (1 duplicate)
+warning: `jackdaw_runtime` (test "headless_bsn_load") generated 1 warning (1 duplicate)
+warning: `jackdaw_runtime` (test "insert_observer_global_transform") generated 1 warning (1 duplicate)
+warning: `jackdaw_runtime` (test "text_value_bindings") generated 1 warning (1 duplicate)
+warning: `jackdaw_runtime` (test "runtime_bindings") generated 1 warning (1 duplicate)
+warning: `jackdaw_runtime` (test "texture_import") generated 1 warning (1 duplicate)
+warning: `jackdaw_runtime` (test "terrain_scene_load") generated 1 warning (1 duplicate)
+warning: `jackdaw_runtime` (test "model_parts") generated 1 warning (1 duplicate)
+warning: `jackdaw_runtime` (test "model_lod") generated 1 warning (1 duplicate)
+warning: `jackdaw_runtime` (test "lod_group") generated 1 warning (1 duplicate)
+warning: `jackdaw_runtime` (test "binary_assets") generated 1 warning (1 duplicate)
+warning: `jackdaw_runtime` (test "authored_widgets") generated 1 warning (1 duplicate)
+warning: `jackdaw_runtime` (test "retired_ui_components") generated 1 warning (1 duplicate)
+warning: `jackdaw_runtime` (test "gltf_source_paths") generated 1 warning (1 duplicate)
+warning: `jackdaw_runtime` (test "headless_render_brush_load") generated 1 warning (1 duplicate)
+warning: `jackdaw_runtime` (test "progress_bindings") generated 1 warning (1 duplicate)
+warning: `jackdaw_runtime` (test "replaced_children_transforms") generated 1 warning (1 duplicate)
+warning: `jackdaw_runtime` (test "catalog_loading") generated 1 warning (1 duplicate)
+warning: `jackdaw_runtime` (test "ui_scene_ownership") generated 1 warning (1 duplicate)
+warning: `jackdaw_scaffold` (lib test) generated 1 warning (1 duplicate)
+warning: `jackdaw_schema` (lib test) generated 1 warning (1 duplicate)
+warning: `jackdaw_runtime` (lib test) generated 1 warning (1 duplicate)
+    Finished `test` profile [optimized + debuginfo] target(s) in 4m 14s
+     Running unittests src\lib.rs (target\debug\deps\jackdaw_runtime-9bd8cc4db5ae05da.exe)
+
+running 38 tests
+test frame_work::tests::a_batch_that_ran_long_is_smaller_the_next_time_round ... ok
+test frame_work::tests::a_batch_that_left_room_to_spare_grows_up_to_the_ceiling ... ok
+test frame_work::tests::a_pace_still_takes_an_item_when_every_batch_runs_long ... ok
+test frame_work::tests::a_paced_job_settles_on_frames_that_fit_the_budget ... ok
+test game_input::tests::a_file_merges_over_the_defaults_as_a_union ... ok
+test game_input::tests::a_pressed_key_drives_the_action_it_is_bound_to ... ok
+test game_input::tests::a_partial_config_still_evaluates_the_full_action_set ... ok
+test config::tests::a_missing_config_falls_back_to_default_once ... ok
+test asset_file_tests::a_missing_assets_directory_is_not_an_error ... ok
+test config::tests::a_later_edit_of_the_asset_does_not_re_inject ... ok
+test config::tests::the_plugin_has_the_resource_ready_before_the_first_update ... ok
+test game_input::tests::axis_deadzones_apply_through_the_engine_settings ... ok
+test game_input::tests::gamepad_events_reach_the_actions_through_the_component ... ok
+test config::tests::a_pie_temp_directory_does_not_shadow_the_config ... ok
+test game_input::tests::mouse_motion_and_buttons_feed_actions ... ok
+test hidden_in_game::tests::hidden_in_game_hides_visibility_when_added_later ... ok
+test asset_file_tests::an_asset_file_answers_to_the_name_its_stem_gives_it ... ok
+test asset_file_tests::a_scene_file_is_not_taken_for_an_asset ... ok
+test game_input::tests::rebinding_moves_the_action_with_the_binding ... ok
+test asset_file_tests::an_asset_file_outranks_an_inline_catalog_entry_of_the_same_name ... ok
+test config::tests::a_config_asset_becomes_the_resource_initial_value ... ok
+test material_overrides::tests::an_override_dresses_only_the_parts_its_material_name_matches ... ok
+test material_overrides::tests::a_reference_that_resolves_later_dresses_the_part_when_it_does ... ok
+test material_overrides::tests::parts_that_arrive_after_the_overrides_are_dressed_too ... ok
+test asset_file_tests::a_file_naming_a_type_the_game_did_not_register_is_skipped ... ok
+test asset_file_tests::an_asset_type_the_game_registered_is_loaded_into_its_store ... ok
+test material_overrides::tests::an_instances_overrides_lay_over_its_models_and_leave_the_rest_to_it ... ok
+test material_overrides::tests::removing_the_overrides_gives_each_part_its_own_material_back ... ok
+test asset_file_tests::an_asset_type_registered_without_its_reflection_is_skipped ... ok
+test material_texture_format_tests::a_material_added_after_its_image_still_gets_it_promoted ... ok
+test material_texture_format_tests::an_image_no_material_binds_keeps_its_uint_format ... ok
+test material_texture_format_tests::promotion_leaves_the_texels_alone ... ok
+test material_texture_format_tests::a_sixteen_bit_uint_image_a_material_binds_is_retagged_as_its_unorm_twin ... ok
+test asset_file_tests::an_asset_file_in_any_folder_answers_to_its_path ... ok
+test asset_file_tests::two_files_of_one_stem_answer_by_path_and_neither_by_name ... ok
+test schema_cli::tests::a_built_app_reports_its_registered_functions ... ok
+test schema_cli::tests::a_built_app_reports_its_events ... ok
+test schema_cli::tests::the_panic_fallback_prints_a_populated_schema_line ... ok
+
+test result: ok. 38 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.05s
+
+     Running tests\animation_scene_load.rs (target\debug\deps\animation_scene_load-a8b47ae4e3c02ab3.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\authored_widgets.rs (target\debug\deps\authored_widgets-4efb4bc416c805ac.exe)
+
+running 1 test
+test a_checkbox_loaded_by_the_game_runtime_keeps_its_widget_and_toggles ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+
+     Running tests\binary_assets.rs (target\debug\deps\binary_assets-f138c5131625c7d4.exe)
+
+running 2 tests
+test the_runtime_loads_a_material_held_in_the_binary_form ... ok
+test a_document_held_in_both_forms_is_loaded_once_from_its_text ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+
+     Running tests\catalog_loading.rs (target\debug\deps\catalog_loading-3045587c3755e918.exe)
+
+running 6 tests
+test missing_catalog_leaves_resource_empty ... ok
+test project_catalog_populates_resource ... ok
+test a_file_whose_header_names_a_type_this_app_does_not_load_is_never_parsed ... ok
+test a_name_a_scene_and_an_asset_share_stands_for_neither ... ok
+test a_material_file_loads_its_textures_for_drawing_only ... ok
+test a_scene_reaches_a_material_in_any_folder_by_the_path_of_its_file ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s
+
+     Running tests\document_twins.rs (target\debug\deps\document_twins-c22a0708bbfa38dc.exe)
+
+running 6 tests
+test a_processed_game_keeps_its_processed_half ... ok
+test an_unprocessed_game_gets_no_processed_half ... ok
+test a_graph_asked_for_as_text_loads_from_its_binary_twin ... ok
+test a_document_in_neither_form_fails_as_not_found ... ok
+test a_scene_asked_for_as_text_spawns_from_its_binary_twin ... ok
+test a_document_on_disk_in_both_forms_loads_the_text_one ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s
+
+     Running tests\gltf_source_paths.rs (target\debug\deps\gltf_source_paths-b0df950e6bf09715.exe)
+
+running 2 tests
+test a_gltf_source_inserted_at_runtime_spawns_its_model ... ok
+test a_prefab_in_a_subdirectory_loads_its_gltf_from_the_assets_root ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+
+     Running tests\headless_brush_load.rs (target\debug\deps\headless_brush_load-3bc3af245fa27eb1.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\headless_bsn_load.rs (target\debug\deps\headless_bsn_load-614509eabded8fa2.exe)
+
+running 1 test
+test headless_bsn_scene_load ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+
+     Running tests\headless_render_brush_load.rs (target\debug\deps\headless_render_brush_load-ded0ee4bf7e85132.exe)
+
+running 2 tests
+test existing_material_storage_is_left_intact ... ok
+test null_material_brush_loads_headless_under_render_feature ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+
+     Running tests\insert_observer_global_transform.rs (target\debug\deps\insert_observer_global_transform-1fba8957edcb5163.exe)
+
+running 1 test
+test on_insert_observer_sees_propagated_global_transform ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+
+     Running tests\lod_group.rs (target\debug\deps\lod_group-35707fec8a3a6cfc.exe)
+
+running 23 tests
+test a_fading_switch_keeps_both_levels_inside_its_margin ... ok
+test a_group_with_no_size_is_measured_from_its_first_levels_model_before_anything_spawns ... ok
+test each_level_shows_between_the_distances_its_screen_heights_stand_for ... ok
+test a_narrower_field_of_view_pushes_every_switch_further_out ... ok
+test a_second_camera_keeps_the_levels_it_needs_live ... ok
+test a_group_with_no_size_measures_its_first_level ... ok
+test a_mesh_that_arrives_after_its_group_gets_its_level_range ... ok
+test a_level_as_high_as_the_one_before_it_never_shows_and_the_next_takes_over_where_that_one_ends ... ok
+test a_group_that_names_its_model_itself_keeps_the_same_levels_live ... ok
+test crossing_a_switch_places_the_next_level_before_the_last_one_goes ... ok
+test a_despawned_group_leaves_no_parts_behind ... ok
+test a_group_that_draws_nothing_gets_its_coarsest_level_first ... ok
+test a_level_whose_model_is_still_loading_leaves_the_level_standing_in_drawn ... ok
+test a_level_part_wears_its_override_from_the_frame_it_appears ... ok
+test a_level_whose_model_moves_falls_back_to_a_spawned_instance ... ok
+test fading_widens_each_switch_into_a_shared_margin ... ok
+test forcing_a_level_shows_it_at_every_distance ... ok
+test only_the_level_whose_range_holds_the_camera_has_parts ... ok
+test without_stand_ins_the_wanted_level_comes_first ... ok
+test wobbling_the_camera_around_a_switch_places_nothing_new ... ok
+test the_levels_of_a_group_that_goes_are_given_their_models ... ok
+test many_groups_switching_at_once_come_in_over_several_frames ... ok
+test a_lod_level_is_kept_live_rather_than_spawned_as_a_model_and_a_child_past_the_levels_is_not ... ok
+
+test result: ok. 23 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.05s
+
+     Running tests\model_lod.rs (target\debug\deps\model_lod-4755d4980229996c.exe)
+
+running 12 tests
+test a_meta_naming_another_loader_has_no_model_settings ... ok
+test a_meta_written_by_an_import_script_reads_as_its_levels ... ok
+test model_settings_round_trip_through_their_meta ... ok
+test switches_come_from_the_settings_size_before_any_level_loads ... ok
+test a_model_with_lod_settings_draws_live_levels_without_a_lod_group ... ok
+test an_override_moves_the_switches_of_its_placement_only ... ok
+test a_model_whose_settings_go_loses_its_live_levels ... ok
+test a_model_without_a_meta_is_placed_as_one_instance ... ok
+test a_model_with_a_lod_meta_is_never_placed_as_an_instance ... ok
+test a_model_with_a_meta_loads_the_same_scene_as_one_without ... ok
+test an_edited_meta_updates_the_models_placed_from_it ... ok
+test a_nodes_level_flattens_only_its_nodes ... ok
+
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.05s
+
+     Running tests\model_parts.rs (target\debug\deps\model_parts-91362294e0998b37.exe)
+
+running 1 test
+test a_flattened_model_places_each_part_where_a_spawned_one_does ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+
+     Running tests\navmesh_scene_load.rs (target\debug\deps\navmesh_scene_load-fd7a6e355a750d6e.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\pie_scene_override.rs (target\debug\deps\pie_scene_override-7221b6ad35d9856f.exe)
+
+running 5 tests
+test a_root_added_while_running_keeps_its_own_scene ... ok
+test only_the_first_scene_root_is_overridden ... ok
+test pie_scene_or_picks_the_override_or_the_default ... ok
+test the_override_scene_loads_in_place_of_the_named_one ... ok
+test without_the_env_the_named_scene_loads ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.09s
+
+     Running tests\prefab_resolution.rs (target\debug\deps\prefab_resolution-48c4920fc99beb17.exe)
+
+running 8 tests
+test a_cyclic_reference_is_refused_rather_than_followed ... ok
+test an_authored_override_wins_over_the_inherited_value ... ok
+test a_variant_resolves_through_the_base_it_was_cut_from ... ok
+test a_world_scene_resolves_the_prefab_it_references ... ok
+test a_prefab_held_only_in_the_binary_form_still_resolves ... ok
+test a_source_outside_the_asset_root_is_refused ... ok
+test a_source_reached_through_another_prefab_is_refused_outside_the_asset_root ... ok
+test a_reference_deeper_than_the_cap_is_refused ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.05s
+
+     Running tests\progress_bindings.rs (target\debug\deps\progress_bindings-713cbbd5f5e92323.exe)
+
+running 1 test
+test a_loaded_progress_bar_fills_from_the_state_it_is_bound_to ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+
+     Running tests\replaced_children_transforms.rs (target\debug\deps\replaced_children_transforms-fffc0db709f7317f.exe)
+
+running 1 test
+test children_spawned_into_reused_indices_follow_their_parents ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+
+     Running tests\retired_ui_components.rs (target\debug\deps\retired_ui_components-aade3bb3917d1f82.exe)
+
+running 9 tests
+test a_refused_scene_is_marked_so_a_game_can_tell ... ok
+test the_game_loader_refuses_a_scene_holding_retired_ui_components ... ok
+test a_scene_that_spawns_nothing_is_not_marked_refused ... ok
+test a_scene_with_no_retired_components_still_spawns ... ok
+test a_refusal_does_not_outlive_the_document_that_earned_it ... ok
+test a_scene_whose_asset_has_not_arrived_is_not_marked_refused ... ok
+test a_scene_inheriting_retired_ui_components_is_refused ... ok
+test the_asset_loader_fails_a_scene_file_holding_retired_ui_components ... ok
+test a_scene_file_the_asset_loader_refuses_marks_its_root ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.05s
+
+     Running tests\runtime_bindings.rs (target\debug\deps\runtime_bindings-cba2075debeb5fb7.exe)
+
+running 1 test
+test a_scene_loaded_by_the_game_runtime_evaluates_its_bindings ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+
+     Running tests\scene_root_name.rs (target\debug\deps\scene_root_name-b7bcedffff1de5d1.exe)
+
+running 2 tests
+test scene_root_gains_a_name_from_the_scene_path ... ok
+test scene_root_keeps_an_author_supplied_name ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+
+     Running tests\terrain_scene_load.rs (target\debug\deps\terrain_scene_load-7b78562d4b5d0621.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\text_value_bindings.rs (target\debug\deps\text_value_bindings-26d2e4e259f68314.exe)
+
+running 2 tests
+test a_keystroke_survives_whichever_order_the_two_are_composed_in ... ok
+test a_loaded_text_input_follows_its_source_and_is_followed_by_it ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+
+     Running tests\texture_import.rs (target\debug\deps\texture_import-69eb3d29a962dd37.exe)
+
+running 3 tests
+test a_texture_with_no_import_meta_reads_byte_identically ... ok
+test a_game_with_the_jackdaw_asset_source_loads_imported_textures ... ok
+test an_imported_texture_loads_block_compressed_with_every_mip ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.05s
+
+     Running tests\ui_scene_ownership.rs (target\debug\deps\ui_scene_ownership-cd5a941ed4fe7a3b.exe)
+
+running 2 tests
+test destroying_one_scene_does_not_destroy_another_scenes_ui_root ... ok
+test ui_root_is_an_ecs_root_but_is_destroyed_with_its_scene ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+
+     Running unittests src\lib.rs (target\debug\deps\jackdaw_scaffold-d5603f6927921d9e.exe)
+
+running 82 tests
+test dev_checkout::tests::rewrite_dep_lines_handles_windows_backslashes ... ok
+test dev_checkout::tests::rewrite_dep_lines_ignores_default_features_key ... ok
+test dev_checkout::tests::rewrite_dep_lines_is_idempotent ... ok
+test dev_checkout::tests::rewrite_dep_lines_returns_none_when_no_dep ... ok
+test dev_checkout::tests::rewrite_dep_lines_leaves_other_lines_intact ... ok
+test dev_checkout::tests::rewrite_dep_lines_preserves_features_and_optional ... ok
+test dev_checkout::tests::rewrite_dep_lines_rewrites_plain_version_strings ... ok
+test dev_checkout::tests::a_binary_running_outside_the_checkout_is_not_a_dev_build ... ok
+test migrate::tests::declines_when_no_main ... ok
+test tests::a_jackdaw_crate_a_module_adds_comes_from_where_the_runtime_does ... ok
+test dev_checkout::tests::dev_checkout_rewrites_runtime_and_extension_deps ... ok
+test migrate::tests::declines_unsupported_shape ... ok
+test tests::a_malformed_settings_file_is_reported_not_ignored ... ok
+test tests::a_broken_manifest_reports_what_cargo_said ... ok
+test tests::a_project_in_a_clean_location_has_no_warnings ... ok
+test tests::a_project_inside_a_workspace_that_stops_resolving_is_warned_about ... ok
+test tests::a_project_name_that_is_really_a_path_is_refused_with_guidance ... ok
+test tests::a_project_whose_dependencies_do_not_resolve_is_warned_about ... ok
+test tests::a_member_inherits_the_runtime_its_workspace_declares ... ok
+test migrate::tests::an_empty_plugin_body_has_no_unused_parameter ... ok
+test migrate::tests::apply_writes_files_and_backup ... ok
+test tests::a_renamed_runtime_is_not_declared_twice ... ok
+test migrate::tests::a_gated_add_systems_keeps_its_turbofish ... ok
+test migrate::tests::generic_builder_calls_keep_their_turbofish ... ok
+test migrate::tests::migration_uses_the_runtime_when_it_is_a_dependency ... ok
+test tests::crlf_templates_still_get_their_module_lines ... ok
+test migrate::tests::the_windowless_binding_follows_locals_the_plugins_use ... ok
+test tests::a_new_game_carries_the_workspace_lock_snapshot ... ok
+test migrate::tests::migrates_a_single_line_main ... ok
+test migrate::tests::migrates_let_form_builder ... ok
+test migrate::tests::migrates_chained_builder ... ok
+test migrate::tests::migration_names_no_undeclared_crates ... ok
+test migrate::tests::an_existing_game_plugin_is_not_redefined ... ok
+test tests::a_target_specific_runtime_is_not_declared_again ... ok
+test tests::an_optional_runtime_gets_notes_not_edits ... ok
+test tests::an_undetectable_plugin_is_flagged_not_asserted ... ok
+test tests::an_uneditable_plugin_keeps_the_manual_note ... ok
+test tests::a_created_game_plugin_is_recorded ... ok
+test tests::enabling_pie_keeps_a_trailing_comment ... ok
+test tests::import_adds_the_runtime_alongside_its_own_files ... ok
+test tests::import_checks_a_workspace_inherited_bevy_version ... ok
+test tests::import_drops_a_removed_runtime_feature ... ok
+test tests::a_second_import_has_nothing_to_do ... ok
+test tests::import_offers_a_stub_for_bin_only_projects ... ok
+test tests::import_records_package_when_the_game_is_the_workspace_root ... ok
+test tests::import_rejects_a_bevy_minor_mismatch ... ok
+test tests::import_wires_the_runtime_into_a_plain_bevy_game ... ok
+test tests::project_names_that_cannot_be_crate_names_are_rejected ... ok
+test tests::refreshing_pins_keeps_the_table_in_place ... ok
+test tests::import_resolves_the_game_member_of_a_workspace ... ok
+test tests::import_adds_pie_to_a_workspace_inherited_runtime ... ok
+test tests::import_asks_which_member_when_several_use_bevy ... ok
+test tests::the_modules_flags_choose_the_modules_and_refuse_nonsense ... ok
+test tests::import_enables_pie_on_an_existing_runtime_dependency ... ok
+test tests::no_plugin_means_no_plugin_key ... ok
+test tests::the_templates_state_the_requirement_this_build_can_resolve ... ok
+test tests::pie_from_a_package_feature_is_not_forced_on ... ok
+test tests::setting_up_past_a_mismatch_records_the_projects_bevy ... ok
+test tests::new_extension_project_uses_the_api ... ok
+test tests::setup_records_the_versions_it_was_created_with ... ok
+test tests::upgrade_leaves_path_dependencies_alone ... ok
+test tests::upgrade_pins_a_prerelease_editor_to_its_exact_version ... ok
+test tests::upgrade_reaches_target_specific_dependencies ... ok
+test tests::upgrade_reaches_workspace_dependencies ... ok
+test tests::new_game_project_has_the_contract_files ... ok
+test tests::upgrade_refuses_a_project_that_was_never_set_up ... ok
+test tests::version_requirements_are_compared_not_prefix_matched ... ok
+test tests::new_game_project_teaches_the_config_pattern ... ok
+test tests::import_detects_the_modules_a_game_already_uses_and_adds_the_chosen_ones_once ... ok
+test tests::the_plan_states_which_plugin_it_recorded ... ok
+test tests::new_game_project_teaches_the_input_action_pattern ... ok
+test tests::the_runtime_edit_keeps_manifest_comments_and_order ... ok
+test tests::import_plan_is_side_effect_free_until_applied ... ok
+test tests::scaffolded_projects_record_their_versions ... ok
+test tests::a_new_game_writes_its_modules_into_cargo_toml_main_and_jackdaw_toml ... ok
+test tests::changing_modules_later_edits_both_manifests_and_keeps_the_games_crates ... ok
+test tests::upgrade_does_not_launder_away_a_bevy_mismatch ... ok
+test tests::upgrade_drops_a_removed_runtime_feature_from_the_workspace_entry ... ok
+test tests::upgrade_is_a_no_op_on_a_current_project ... ok
+test tests::upgrade_refreshes_the_pins_and_the_crate_requirements ... ok
+test tests::upgrade_drops_a_removed_runtime_feature_and_records_its_module ... ok
+test tests::import_wraps_default_plugins_in_the_common_main_shapes ... ok
+
+test result: ok. 82 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.00s
+
+     Running unittests src\lib.rs (target\debug\deps\jackdaw_schema-748be38072e3470b.exe)
+
+running 26 tests
+test extract_tests::a_borrowing_function_is_reported_as_borrowing ... ok
+test extract_tests::an_enum_reports_its_variants_and_their_fields ... ok
+test extract_tests::a_game_crate_whose_name_reads_like_the_engine_s_keeps_its_asset_types ... ok
+test extract_tests::a_plain_component_is_not_reported_as_a_resource ... ok
+test extract_tests::a_resource_reaches_the_resources_bucket ... ok
+test extract_tests::a_component_enum_field_reports_the_enum_it_holds ... ok
+test extract_tests::a_type_holding_more_of_itself_is_described_once ... ok
+test extract_tests::a_resource_is_reported_as_a_component_too ... ok
+test extract_tests::a_variant_carrying_fields_reports_them ... ok
+test extract_tests::a_field_marked_as_a_reference_reports_the_type_it_names ... ok
+test extract_tests::an_event_reports_its_fields_and_dispatch_traits ... ok
+test extract_tests::a_type_reached_only_through_a_field_carries_no_asset_mark ... ok
+test extract_tests::a_game_s_asset_types_are_reported_and_the_engine_s_are_not ... ok
+test extract_tests::a_registered_asset_type_reports_its_fields ... ok
+test extract_tests::a_registry_with_no_assets_reports_none ... ok
+test extract_tests::an_event_that_cannot_fill_gaps_says_so ... ok
+test extract_tests::a_type_the_roots_never_reach_is_left_out ... ok
+test extract_tests::registered_functions_report_their_signature ... ok
+test extract_tests::the_asset_closure_reaches_project_types_but_not_engine_types ... ok
+test tests::a_function_that_borrows_is_not_callable_by_value ... ok
+test tests::a_leading_log_line_does_not_defeat_parsing ... ok
+test tests::a_schema_without_the_new_keys_still_parses ... ok
+test tests::clean_stdout_parses ... ok
+test tests::functions_survive_a_json_round_trip ... ok
+test tests::output_without_a_schema_is_an_error ... ok
+test tests::the_last_schema_line_on_stdout_wins ... ok
+
+test result: ok. 26 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+   Doc-tests jackdaw_runtime
+
+running 3 tests
+test crates\jackdaw_runtime\src\config.rs - config (line 27) ... ignored
+test crates\jackdaw_runtime\src\config.rs - config (line 8) ... ignored
+test crates\jackdaw_runtime\src\lib.rs - (line 9) ... ignored
+
+test result: ok. 0 passed; 0 failed; 3 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+all doctests ran in 0.63s; merged doctests compilation took 0.37s
+   Doc-tests jackdaw_scaffold
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests jackdaw_schema
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

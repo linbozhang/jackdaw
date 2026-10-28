@@ -1,0 +1,261 @@
+warning: linker stderr: rust-lld: ignoring unknown argument '-fuse-ld=lld'
+  |
+  = note: `#[warn(linker_messages)]` on by default
+
+warning: `jackdaw_env` (build script) generated 1 warning
+warning: `jackdaw_project_build` (build script) generated 1 warning (1 duplicate)
+   Compiling jackdaw_project_build v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_project_build)
+warning: `jackdaw_package` (build script) generated 1 warning (1 duplicate)
+   Compiling jackdaw_cli_internal v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_cli)
+   Compiling jackdaw_scaffold v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_scaffold)
+   Compiling jd v0.21.0-dev (E:\Project\rust\jackdaw\crates\jd)
+warning: `jackdaw_cli_internal` (lib test) generated 1 warning (1 duplicate)
+warning: `jackdaw_project_build` (lib test) generated 1 warning (1 duplicate)
+warning: `jd` (lib test) generated 1 warning (1 duplicate)
+    Finished `test` profile [optimized + debuginfo] target(s) in 8.97s
+────────────
+ Nextest run ID db8bd3f5-8d05-42d8-b2cb-671053be8031 with nextest profile: default
+    Starting 241 tests across 3 binaries
+        PASS [   0.032s] (  1/241) jackdaw_cli_internal tests::a_missing_manifest_names_the_file
+        PASS [   0.045s] (  2/241) jackdaw_cli_internal tests::a_usable_sdk_passes_for_every_project
+        PASS [   0.060s] (  3/241) jackdaw_cli_internal tests::the_config_flag_reads_its_label
+        PASS [   0.078s] (  4/241) jackdaw_cli_internal tests::current_runtime_features_are_no_problem
+        PASS [   0.092s] (  5/241) jackdaw_cli_internal tests::a_removed_runtime_feature_fails_with_the_upgrade_that_drops_it
+        PASS [   0.105s] (  6/241) jackdaw_cli_internal tests::a_run_that_sets_its_own_asset_root_wins
+        PASS [   0.118s] (  7/241) jackdaw_cli_internal tests::export_flag_values_are_not_read_as_project_paths
+        PASS [   0.132s] (  8/241) jackdaw_cli_internal tests::the_bare_run_path_runs_plain_cargo_run_in_the_project_root
+        PASS [   0.147s] (  9/241) jackdaw_cli_internal tests::a_config_label_is_not_read_as_a_project_path
+        PASS [   0.165s] ( 10/241) jackdaw_cli_internal tests::an_invalid_target_reports_its_shape_before_resolving_anything
+        PASS [   0.177s] ( 11/241) jackdaw_cli_internal tests::a_build_outcome_carries_what_an_export_checks
+        PASS [   0.191s] ( 12/241) jackdaw_cli_internal tests::a_missing_sdk_is_information_for_a_game_and_a_failure_for_an_extension
+        PASS [   0.206s] ( 13/241) jackdaw_cli_internal tests::a_configured_run_points_its_asset_root_at_the_run_cwd
+        PASS [   0.222s] ( 14/241) jackdaw_cli_internal tests::an_unknown_export_profile_lists_what_is_available
+        PASS [   0.237s] ( 15/241) jackdaw_cli_internal tests::an_unknown_label_lists_the_runs_the_manifest_has
+        PASS [   0.252s] ( 16/241) jackdaw_cli_internal tests::a_removed_runtime_feature_in_a_project_not_set_up_is_fixed_by_import
+        PASS [   0.231s] ( 17/241) jackdaw_cli_internal tests::the_export_profile_flag_beats_the_target_then_defaults_to_release
+        PASS [   0.244s] ( 18/241) jackdaw_project_build bevy_source::tests::a_project_asks_for_bevy_where_this_build_got_it
+        PASS [   0.244s] ( 19/241) jackdaw_project_build bevy_source::tests::a_registry_bevy_has_no_locked_commit
+        PASS [   0.242s] ( 20/241) jackdaw_project_build bevy_source::tests::the_locked_commit_is_read_from_the_bevy_package
+        PASS [   0.243s] ( 21/241) jackdaw_project_build binary::tests::a_background_build_takes_half_the_cores
+        PASS [   0.247s] ( 22/241) jackdaw_project_build binary::tests::a_bin_target_passes_through_bin_features_and_profile
+        PASS [   0.251s] ( 23/241) jackdaw_project_build binary::tests::a_broken_timeout_override_cannot_reintroduce_a_hang
+        PASS [   0.251s] ( 24/241) jackdaw_project_build binary::tests::a_build_that_says_nothing_at_all_still_says_so
+        PASS [   0.255s] ( 25/241) jackdaw_project_build binary::tests::a_failure_leaves_out_cargos_progress_notes
+        PASS [   0.251s] ( 26/241) jackdaw_project_build binary::tests::a_missing_executable_names_what_was_missing
+        PASS [   0.256s] ( 27/241) jackdaw_project_build binary::tests::a_package_override_replaces_the_specs_package
+        PASS [   0.257s] ( 28/241) jackdaw_project_build binary::tests::a_targeted_build_adopts_only_its_own_artifact
+        PASS [   0.255s] ( 29/241) jackdaw_project_build binary::tests::a_wanted_bin_matches_only_its_own_artifact
+        PASS [   0.253s] ( 30/241) jackdaw_project_build binary::tests::an_example_target_passes_example_through
+        PASS [   0.253s] ( 31/241) jackdaw_project_build binary::tests::both_accounts_are_kept_when_both_have_something_to_say
+        PASS [   0.256s] ( 32/241) jackdaw_project_build binary::tests::cargo_targets_key_a_build_cache_by_value
+        PASS [   0.246s] ( 33/241) jackdaw_project_build binary::tests::cargos_own_failure_is_carried_when_no_diagnostic_is
+        PASS [   0.244s] ( 34/241) jackdaw_project_build binary::tests::contradictory_or_empty_targets_add_no_flags
+        PASS [   0.242s] ( 35/241) jackdaw_project_build binary::tests::no_target_adds_nothing_to_the_cargo_command
+        PASS [   0.257s] ( 36/241) jackdaw_project_build binary::tests::named_resolves_one_target_with_bin_first_and_blank_absent
+        PASS [   0.242s] ( 37/241) jackdaw_project_build binary::tests::only_binary_artifacts_of_the_game_package_are_taken
+        PASS [   0.240s] ( 38/241) jackdaw_project_build binary::tests::only_dylib_kind_artifacts_signal_dynamic_linking
+        PASS [   0.242s] ( 39/241) jackdaw_project_build binary::tests::registry_and_path_package_ids_are_recognised
+        PASS [   0.238s] ( 40/241) jackdaw_project_build binary::tests::the_build_command_is_the_historical_one_without_a_target
+        PASS [   0.246s] ( 41/241) jackdaw_project_build binary::tests::the_deps_dir_is_found_for_bins_and_examples
+        PASS [   0.241s] ( 42/241) jackdaw_project_build binary::tests::the_deps_dir_is_prepended_to_the_library_search_path
+        PASS [   0.222s] ( 43/241) jackdaw_project_build binary::tests::the_editor_builds_the_game_away_from_the_one_a_developer_builds
+        PASS [   0.222s] ( 44/241) jackdaw_project_build binary::tests::the_editors_toolchain_and_crate_vars_do_not_reach_the_project
+        PASS [   0.225s] ( 45/241) jackdaw_project_build binary::tests::the_shared_toolchain_and_cache_locations_are_kept
+        PASS [   0.231s] ( 46/241) jackdaw_project_build bootstrap::tests::a_game_project_needs_no_sdk
+        PASS [   0.231s] ( 47/241) jackdaw_project_build bootstrap::tests::a_game_that_also_declares_an_extension_builds_as_a_game
+        PASS [   0.225s] ( 48/241) jackdaw_project_build bootstrap::tests::an_extension_opens_at_once_when_the_sdk_is_built_or_cannot_be
+        PASS [   0.219s] ( 49/241) jackdaw_project_build bootstrap::tests::an_extension_project_needs_the_sdk
+        PASS [   0.233s] ( 50/241) jackdaw_project_build bootstrap::tests::an_extension_with_a_binary_target_builds_as_a_game
+        PASS [   0.228s] ( 51/241) jackdaw_project_build bootstrap::tests::an_owed_build_reports_not_built_and_a_resolvable_sdk_reports_ready
+        PASS [   0.228s] ( 52/241) jackdaw_project_build bootstrap::tests::cache_key_is_version_and_channel
+        PASS [   0.235s] ( 53/241) jackdaw_project_build bootstrap::tests::data_dir_ends_in_a_jackdaw_component
+        PASS [   0.230s] ( 54/241) jackdaw_project_build bootstrap::tests::skipping_after_the_flag_was_read_still_takes
+        PASS [   0.226s] ( 55/241) jackdaw_project_build bootstrap::tests::stamp_round_trips_and_matches
+        PASS [   0.354s] ( 56/241) jackdaw_project_build bootstrap::tests::a_stale_recipe_hash_owes_no_setup_once_the_check_is_skipped
+        PASS [   0.237s] ( 57/241) jackdaw_project_build bootstrap::tests::the_sdk_cache_lives_in_the_local_data_dir
+        PASS [   0.238s] ( 58/241) jackdaw_project_build build::tests::build_key_depends_on_wrapper_contents_not_file_identity
+        PASS [   0.417s] ( 59/241) jackdaw_project_build build::tests::a_crate_without_a_plugin_gets_no_extension_ctor
+        PASS [   0.410s] ( 60/241) jackdaw_project_build build::tests::a_manifest_older_than_its_sdk_is_stale
+        PASS [   0.277s] ( 61/241) jackdaw_project_build build::tests::the_last_build_is_the_one_recorded_not_the_newest_on_disk
+        PASS [   0.405s] ( 62/241) jackdaw_project_build build::tests::a_missing_manifest_or_sdk_is_not_reported_as_stale
+        PASS [   0.259s] ( 63/241) jackdaw_project_build build_source::tests::a_checkout_build_points_at_the_crate_in_that_workspace
+        PASS [   0.260s] ( 64/241) jackdaw_project_build build_source::tests::a_git_build_pins_the_revision_it_was_built_at
+        PASS [   0.408s] ( 65/241) jackdaw_project_build build::tests::a_replaced_transitive_sdk_crate_is_explained
+        PASS [   0.302s] ( 66/241) jackdaw_project_build build::tests::the_previous_target_dir_survives_a_configuration_flip
+        PASS [   0.254s] ( 67/241) jackdaw_project_build build_source::tests::a_release_build_asks_the_registry_for_the_anchored_line
+        PASS [   0.415s] ( 68/241) jackdaw_project_build build::tests::a_users_own_missing_crate_gets_no_sdk_hint
+        PASS [   0.126s] ( 69/241) jackdaw_project_build build_source::tests::a_requirement_is_a_table_body_and_not_a_table
+        PASS [   0.410s] ( 70/241) jackdaw_project_build build::tests::an_sdk_built_with_the_editor_does_not_warn
+        PASS [   0.099s] ( 71/241) jackdaw_project_build build_source::tests::an_unreadable_record_reads_as_a_release
+        PASS [   0.110s] ( 72/241) jackdaw_project_build build_source::tests::cargo_add_names_the_same_source_as_the_requirement
+        PASS [   0.422s] ( 73/241) jackdaw_project_build build::tests::an_unresolvable_sdk_crate_is_explained
+        PASS [   1.055s] ( 74/241) jackdaw_project_build binary::tests::a_project_that_does_not_compile_reports_the_compilers_own_errors
+        PASS [   0.109s] ( 75/241) jackdaw_project_build build_source::tests::each_source_is_described_by_where_it_fetches_from
+        PASS [   0.438s] ( 76/241) jackdaw_project_build build::tests::an_sdk_older_than_a_separately_built_editor_warns
+        PASS [   0.129s] ( 77/241) jackdaw_project_build build_tools::tests::a_missing_cpp_compiler_fails_on_unix
+        PASS [   0.138s] ( 78/241) jackdaw_project_build build_tools::tests::clang_alone_satisfies_the_unix_compiler_check
+        PASS [   0.153s] ( 79/241) jackdaw_project_build build_tools::tests::cxx_from_the_environment_is_tried_first
+        PASS [   0.159s] ( 80/241) jackdaw_project_build build_tools::tests::healthy_linux_passes_every_check
+        PASS [   0.162s] ( 81/241) jackdaw_project_build build_tools::tests::macos_requires_the_command_line_tools
+        PASS [   0.176s] ( 82/241) jackdaw_project_build build_tools::tests::missing_linux_dev_packages_only_warn
+        PASS [   0.185s] ( 83/241) jackdaw_project_build build_tools::tests::missing_pkg_config_warns_and_skips_library_probes
+        PASS [   0.187s] ( 84/241) jackdaw_project_build build_tools::tests::windows_developer_prompt_counts_as_msvc
+        PASS [   0.201s] ( 85/241) jackdaw_project_build build_tools::tests::windows_finds_msvc_through_vswhere
+        PASS [   0.208s] ( 86/241) jackdaw_project_build build_tools::tests::windows_without_msvc_fails_with_the_build_tools_link
+        PASS [   0.208s] ( 87/241) jackdaw_project_build cargo_meta::tests::a_lone_non_game_package_is_not_accepted_as_the_game
+        PASS [   0.779s] ( 88/241) jackdaw_project_build bootstrap::tests::the_prerequisite_report_names_the_editor_toolchain
+        PASS [   0.222s] ( 89/241) jackdaw_project_build cargo_meta::tests::a_member_with_the_plugin_wins_over_one_that_only_names_bevy
+        PASS [   0.229s] ( 90/241) jackdaw_project_build cargo_meta::tests::a_member_without_examples_says_so_rather_than_listing_nothing
+        PASS [   0.260s] ( 91/241) jackdaw_project_build cargo_meta::tests::a_target_naming_no_single_target_needs_no_check
+        PASS [   0.256s] ( 92/241) jackdaw_project_build cargo_meta::tests::a_target_the_package_declares_passes_the_preflight
+        PASS [   0.258s] ( 93/241) jackdaw_project_build cargo_meta::tests::a_workspace_without_bevy_reports_its_members
+        PASS [   0.259s] ( 94/241) jackdaw_project_build cargo_meta::tests::an_unknown_bin_lists_the_available_ones
+        PASS [   0.259s] ( 95/241) jackdaw_project_build cargo_meta::tests::an_unknown_package_lists_the_members
+        PASS [   0.257s] ( 96/241) jackdaw_project_build cargo_meta::tests::an_unknown_request_lists_what_is_available
+        PASS [   0.255s] ( 97/241) jackdaw_project_build cargo_meta::tests::bin_only_packages_are_still_candidates
+        PASS [   0.276s] ( 98/241) jackdaw_project_build cargo_meta::tests::bin_and_example_names_list_per_package_in_either_spelling
+        PASS [   0.403s] ( 99/241) jackdaw_project_build cargo_meta::tests::a_missing_manifest_reports_cargo_rather_than_a_bare_failure
+        PASS [   0.266s] (100/241) jackdaw_project_build cargo_meta::tests::both_signals_agreeing_resolves_an_otherwise_ambiguous_workspace
+        PASS [   0.256s] (101/241) jackdaw_project_build cargo_meta::tests::cargo_diagnostics_survive_into_the_error
+        PASS [   0.254s] (102/241) jackdaw_project_build cargo_meta::tests::lib_package_keeps_working_for_single_package_projects
+        PASS [   0.250s] (103/241) jackdaw_project_build cargo_meta::tests::several_bevy_members_are_ambiguous_until_requested
+        PASS [   0.256s] (104/241) jackdaw_project_build cargo_meta::tests::single_package_resolves_to_itself
+        PASS [   0.259s] (105/241) jackdaw_project_build cargo_meta::tests::workspace_picks_the_only_bevy_member
+        PASS [   0.271s] (106/241) jackdaw_project_build detect::tests::a_chained_reexport_is_followed
+        PASS [   0.261s] (107/241) jackdaw_project_build detect::tests::a_conditionally_compiled_impl_is_not_offered
+        PASS [   0.247s] (108/241) jackdaw_project_build detect::tests::a_conditionally_compiled_module_is_not_walked
+        PASS [   0.245s] (109/241) jackdaw_project_build detect::tests::a_crate_with_no_plugin_reports_none
+        PASS [   0.243s] (110/241) jackdaw_project_build detect::tests::a_doc_comment_containing_a_glob_does_not_hide_the_plugin
+        PASS [   0.243s] (111/241) jackdaw_project_build detect::tests::a_foreign_glob_import_is_not_a_reexport
+        PASS [   0.243s] (112/241) jackdaw_project_build detect::tests::a_generic_plugin_impl_is_found
+        PASS [   0.222s] (113/241) jackdaw_project_build detect::tests::a_named_reexport_of_another_type_does_not_rescue_the_module
+        PASS [   0.239s] (114/241) jackdaw_project_build detect::tests::a_grouped_reexport_is_understood
+        PASS [   0.236s] (115/241) jackdaw_project_build detect::tests::a_nested_module_path_is_fully_qualified
+        PASS [   0.243s] (116/241) jackdaw_project_build detect::tests::a_path_attribute_module_is_followed
+        PASS [   0.250s] (117/241) jackdaw_project_build detect::tests::a_plugin_impl_beats_a_type_that_is_merely_named_plugin
+        PASS [   0.250s] (118/241) jackdaw_project_build detect::tests::a_plugin_in_a_private_module_is_not_recorded
+        PASS [   0.249s] (119/241) jackdaw_project_build detect::tests::a_pub_crate_module_is_not_reachable_from_the_shim
+        PASS [   0.249s] (120/241) jackdaw_project_build detect::tests::a_qualified_impl_target_keeps_its_last_segment
+        PASS [   0.252s] (121/241) jackdaw_project_build detect::tests::a_reexport_rescues_a_private_module
+        PASS [   0.247s] (122/241) jackdaw_project_build detect::tests::a_reexported_submodule_plugin_uses_the_short_path
+        PASS [   0.239s] (123/241) jackdaw_project_build detect::tests::a_renamed_reexport_records_the_exported_name
+        PASS [   0.251s] (124/241) jackdaw_project_build detect::tests::a_submodule_plugin_keeps_its_module_path
+        PASS [   0.252s] (125/241) jackdaw_project_build detect::tests::an_extension_impl_is_found_in_a_submodule
+        PASS [   0.255s] (126/241) jackdaw_project_build detect::tests::an_extension_with_an_app_plugin_is_told_apart_from_one_without
+        PASS [   0.251s] (127/241) jackdaw_project_build detect::tests::an_inline_private_module_is_not_reachable
+        PASS [   0.249s] (128/241) jackdaw_project_build detect::tests::an_inline_public_module_is_reachable
+        PASS [   0.251s] (129/241) jackdaw_project_build detect::tests::an_unconditional_impl_beside_a_gated_one_still_wins
+        PASS [   0.253s] (130/241) jackdaw_project_build detect::tests::an_undeclared_file_is_not_scanned
+        PASS [   0.252s] (131/241) jackdaw_project_build detect::tests::binary_sources_are_not_scanned
+        PASS [   0.252s] (132/241) jackdaw_project_build detect::tests::braces_in_literals_do_not_confuse_the_walk
+        PASS [   0.252s] (133/241) jackdaw_project_build detect::tests::commented_out_impls_are_not_candidates
+        PASS [   0.251s] (134/241) jackdaw_project_build detect::tests::plugin_groups_are_not_plugins
+        PASS [   0.251s] (135/241) jackdaw_project_build detect::tests::several_plugins_resolve_to_the_conventional_one
+        PASS [   0.251s] (136/241) jackdaw_project_build detect::tests::several_plugins_with_no_convention_is_not_guessed
+        PASS [   0.250s] (137/241) jackdaw_project_build detect::tests::unparseable_source_yields_no_candidates
+        PASS [   0.245s] (138/241) jackdaw_project_build export::tests::a_dynamic_linking_build_is_refused_with_guidance
+        PASS [   0.242s] (139/241) jackdaw_project_build export::tests::a_filesystem_root_is_always_an_unsafe_staging_directory
+        PASS [   0.255s] (140/241) jackdaw_project_build export::tests::a_missing_executable_is_refused
+        PASS [   0.255s] (141/241) jackdaw_project_build export::tests::a_project_without_assets_is_refused_not_exported_broken
+        PASS [   0.262s] (142/241) jackdaw_project_build export::tests::a_staging_directory_that_contains_the_sources_is_refused
+        PASS [   0.283s] (143/241) jackdaw_project_build export::tests::a_re_export_clears_the_staging_directory_first
+        PASS [   0.252s] (144/241) jackdaw_project_build export::tests::the_default_staging_directory_is_jackdaw_dist_under_the_profile
+        PASS [   0.281s] (145/241) jackdaw_project_build export::tests::staging_copies_the_executable_and_the_whole_assets_tree
+        PASS [   0.251s] (146/241) jackdaw_project_build modules::tests::a_catalog_requiring_a_module_it_lacks_is_refused
+        PASS [   0.250s] (147/241) jackdaw_project_build modules::tests::a_component_is_traced_to_the_module_whose_crate_adds_it
+        PASS [   0.252s] (148/241) jackdaw_project_build modules::tests::a_crate_is_traced_to_the_module_that_handles_it
+        PASS [   0.255s] (149/241) jackdaw_project_build modules::tests::a_new_game_starts_with_no_module_this_line_cannot_build
+        PASS [   0.276s] (150/241) jackdaw_project_build modules::tests::a_listed_module_must_be_known_and_available
+        PASS [   0.259s] (151/241) jackdaw_project_build modules::tests::a_removed_runtime_feature_names_the_module_that_replaced_it
+        PASS [   0.265s] (152/241) jackdaw_project_build modules::tests::a_workspace_entry_adds_its_runtime_features
+        PASS [   0.262s] (153/241) jackdaw_project_build modules::tests::hidden_components_belong_to_their_module
+        PASS [   0.282s] (154/241) jackdaw_project_build modules::tests::modules_are_detected_from_runtime_features_and_crates
+        PASS [   0.268s] (155/241) jackdaw_project_build modules::tests::navmesh_needs_no_other_module
+        PASS [   0.257s] (156/241) jackdaw_project_build modules::tests::the_modules_table_is_set_in_place_and_added_when_absent
+        PASS [   0.255s] (157/241) jackdaw_project_build modules::tests::the_physics_module_adds_the_avian_its_integration_uses
+        PASS [   0.244s] (158/241) jackdaw_project_build plan::link_path_tests::link_paths_round_trip_and_tolerate_absence
+        PASS [   0.247s] (159/241) jackdaw_project_build plan::link_path_tests::only_directories_this_build_created_are_recorded
+        PASS [   0.250s] (160/241) jackdaw_project_build plan::link_path_tests::the_link_path_file_sits_beside_the_manifest
+        PASS [   0.260s] (161/241) jackdaw_project_build plan::tests::a_bevy_crate_always_comes_from_the_sdk
+        PASS [   0.259s] (162/241) jackdaw_project_build plan::tests::a_crate_an_sdk_crate_hands_to_the_same_consumer_stays_redirected
+        PASS [   0.261s] (163/241) jackdaw_project_build plan::tests::a_crate_both_worlds_link_is_left_to_the_shadow_side
+        PASS [   0.252s] (164/241) jackdaw_project_build plan::tests::a_crate_wanting_features_the_sdk_lacks_is_built_locally
+        PASS [   0.257s] (165/241) jackdaw_project_build plan::tests::a_relative_deps_dir_still_resolves_to_an_absolute_artifact
+        PASS [   0.370s] (166/241) jackdaw_project_build plan::link_path_tests::a_relative_root_still_matches_the_absolute_path_cargo_reports
+        PASS [   0.257s] (167/241) jackdaw_project_build plan::tests::a_shadow_crates_uncovered_dependencies_are_shadows_too
+        PASS [   0.251s] (168/241) jackdaw_project_build plan::tests::a_version_the_sdk_does_not_hold_still_brings_its_dependencies_in
+        PASS [   0.253s] (169/241) jackdaw_project_build plan::tests::an_sdk_without_recorded_features_redirects_as_before
+        PASS [   0.238s] (170/241) jackdaw_project_build plan::tests::host_side_edges_are_not_followed
+        PASS [   0.256s] (171/241) jackdaw_project_build plan::tests::manifest_round_trips
+        PASS [   0.251s] (172/241) jackdaw_project_build plan::tests::package_ids_parse
+        PASS [   0.254s] (173/241) jackdaw_project_build plan::tests::resolve_artifact_absolute_passthrough_basename_rebases
+        PASS [   0.235s] (174/241) jackdaw_project_build plan::tests::the_plan_pairs_covered_edges_with_the_shadow_set
+        PASS [   0.235s] (175/241) jackdaw_project_build plan::triple_dir_tests::the_triple_dir_matches_either_separator
+        PASS [   0.251s] (176/241) jackdaw_project_build plan::tests::the_sdks_own_closure_stays_shadowed
+        PASS [   0.231s] (177/241) jackdaw_project_build project_manifest::tests::a_bevy_minor_change_blocks_and_a_jackdaw_patch_change_does_not
+        PASS [   0.233s] (178/241) jackdaw_project_build project_manifest::tests::a_manifest_without_pins_is_unpinned
+        PASS [   0.231s] (179/241) jackdaw_project_build project_manifest::tests::a_project_on_another_bevy_is_pinned_to_the_stable_channel
+        PASS [   0.246s] (180/241) jackdaw_project_build project_manifest::tests::build_keys_parse_alongside_run_configs
+        PASS [   0.249s] (181/241) jackdaw_project_build project_manifest::tests::current_pins_match
+        PASS [   0.253s] (182/241) jackdaw_project_build project_manifest::tests::extension_overrides_are_written_to_their_own_table_and_read_back
+        PASS [   0.248s] (183/241) jackdaw_project_build project_manifest::tests::generated_pins_round_trip_to_a_match
+        PASS [   0.254s] (184/241) jackdaw_project_build project_manifest::tests::missing_manifest_reads_as_default
+        PASS [   0.255s] (185/241) jackdaw_project_build project_manifest::tests::the_asset_folder_is_assets_unless_the_manifest_names_one_inside_the_project
+        PASS [   0.384s] (186/241) jackdaw_project_build project_manifest::tests::a_project_on_bevy_main_targets_main
+        PASS [   0.254s] (187/241) jackdaw_project_build project_manifest::tests::the_editor_channel_and_build_are_read_from_the_jackdaw_table
+        PASS [   0.390s] (188/241) jackdaw_project_build project_manifest::tests::an_unpinned_project_falls_back_to_its_own_bevy_requirement
+        PASS [   0.246s] (189/241) jackdaw_project_build project_manifest::tests::the_modules_table_reads_back_as_written
+        PASS [   0.402s] (190/241) jackdaw_project_build project_manifest::tests::an_unpinned_project_on_the_supported_bevy_is_only_unpinned
+        PASS [   0.267s] (191/241) jackdaw_project_build project_manifest::tests::without_a_modules_table_the_runtime_features_decide
+        PASS [   0.415s] (192/241) jackdaw_project_build project_manifest::tests::an_unpinned_project_with_no_stated_bevy_version_is_not_blocked
+        PASS [   0.269s] (193/241) jackdaw_project_build registry_recipe::tests::the_registry_recipe_pins_the_sdk_crates_to_this_version
+        PASS [   0.267s] (194/241) jackdaw_project_build run_manifest::tests::a_manifest_without_runs_is_empty_not_an_error
+        PASS [   0.267s] (195/241) jackdaw_project_build run_manifest::tests::a_profile_is_available_when_builtin_or_declared
+        PASS [   0.204s] (196/241) jackdaw_project_build run_manifest::tests::a_run_without_a_target_converts_to_no_cargo_target
+        PASS [   0.206s] (197/241) jackdaw_project_build run_manifest::tests::a_spec_converts_field_for_field_to_a_cargo_target
+        PASS [   0.203s] (198/241) jackdaw_project_build run_manifest::tests::broken_toml_is_an_error
+        PASS [   0.203s] (199/241) jackdaw_project_build run_manifest::tests::declared_profiles_read_from_the_manifests_profile_tables
+        PASS [   0.199s] (200/241) jackdaw_project_build run_manifest::tests::entries_are_found_by_label_with_the_default_play
+        PASS [   0.195s] (201/241) jackdaw_project_build run_manifest::tests::lockstep_names_and_targets_match_the_editor_reader
+        PASS [   0.202s] (202/241) jackdaw_project_build run_manifest::tests::validation_rejects_the_same_shapes_as_the_editor_reader
+        PASS [   0.215s] (203/241) jackdaw_project_build runtime_wiring::tests::a_dependency_without_pie_is_reported
+        PASS [   0.221s] (204/241) jackdaw_project_build runtime_wiring::tests::a_package_without_main_is_not_held_to_the_windowless_check
+        PASS [   0.229s] (205/241) jackdaw_project_build runtime_wiring::tests::a_wired_package_is_complete
+        PASS [   0.233s] (206/241) jackdaw_project_build runtime_wiring::tests::comments_and_strings_do_not_count_as_wiring
+        PASS [   0.243s] (207/241) jackdaw_project_build runtime_wiring::tests::optional_renamed_and_target_specific_runtimes_are_unsupported
+        PASS [   0.253s] (208/241) jackdaw_project_build runtime_wiring::tests::pie_enabled_through_a_package_feature_counts
+        PASS [   0.268s] (209/241) jackdaw_project_build runtime_wiring::tests::pie_inherited_from_the_workspace_counts
+        PASS [   0.269s] (210/241) jackdaw_project_build sdk_paths::tests::every_origin_describes_an_install_path
+        PASS [   0.272s] (211/241) jackdaw_project_build shim::tests::a_game_only_spec_emits_an_empty_shim_lib
+        PASS [   0.276s] (212/241) jackdaw_project_build shim::tests::a_windows_project_path_produces_parseable_toml
+        PASS [   0.277s] (213/241) jackdaw_project_build shim::tests::extension_shim_exports_the_ctor
+        PASS [   0.278s] (214/241) jackdaw_project_build tests::a_prerelease_requests_its_exact_version
+        PASS [   0.277s] (215/241) jackdaw_project_build tests::a_stable_release_requests_its_minor_line
+        PASS [   0.426s] (216/241) jackdaw_project_build sdk_paths::tests::a_staged_bundle_layout_resolves_cleanly
+        PASS [   0.423s] (217/241) jackdaw_project_build sdk_paths::tests::an_empty_root_reports_what_is_missing
+        PASS [   0.282s] (218/241) jd archive::tests::a_gzipped_tarball_unpacks_under_its_single_folder
+        PASS [   0.413s] (219/241) jackdaw_project_build sdk_paths::tests::the_dev_layout_follows_the_profile_the_editor_was_built_at
+        PASS [   0.286s] (220/241) jd archive::tests::a_zip_unpacks_its_files
+        PASS [   0.282s] (221/241) jd archive::tests::formats_follow_the_published_extension
+        PASS [   0.273s] (222/241) jd editor_cli::tests::installs_are_grouped_by_bevy_line_with_main_first
+        PASS [   0.438s] (223/241) jackdaw_project_build sdk_paths::tests::the_override_accepts_every_sdk_shape
+        PASS [   0.274s] (224/241) jd editor_cli::tests::newer_patches_and_nightlies_are_reported_for_installed_lines_only
+        PASS [   0.269s] (225/241) jd editors::tests::a_missing_line_names_the_install_command_unless_jd_ships_that_line
+        PASS [   0.235s] (226/241) jd editors::tests::a_pinned_project_prefers_its_install_over_the_editor_beside_jd
+        PASS [   0.196s] (227/241) jd editors::tests::an_unpinned_project_opens_with_the_default_editor
+        PASS [   0.193s] (228/241) jd editors::tests::names_that_could_leave_their_directory_are_refused
+        PASS [   0.194s] (229/241) jd editors::tests::the_exact_editor_beside_jd_wins_over_an_older_install_of_its_line
+        PASS [   0.192s] (230/241) jd editors::tests::version_lines_are_read_from_editor_output
+        PASS [   0.195s] (231/241) jd fetch::tests::file_urls_read_and_hash_local_files
+        PASS [   0.198s] (232/241) jd fetch::tests::plain_http_is_refused_before_connecting
+        PASS [   0.200s] (233/241) jd fetch::tests::windows_file_urls_drop_the_slash_before_the_drive
+        PASS [   0.213s] (234/241) jd self_update::tests::a_cargo_installed_jd_is_left_to_cargo
+        PASS [   0.211s] (235/241) jd self_update::tests::a_jd_beside_its_editor_or_sdk_stays_with_that_bundle
+        PASS [   0.222s] (236/241) jd self_update::tests::a_jd_inside_a_managed_install_names_that_install
+        PASS [   0.228s] (237/241) jd self_update::tests::a_standalone_release_jd_may_update_itself
+        PASS [   0.228s] (238/241) jd self_update::tests::development_and_prerelease_builds_are_not_replaced
+        PASS [   0.226s] (239/241) jd sign::tests::existing_publisher_key_reproduces_its_signature
+        PASS [   0.238s] (240/241) jd sign::tests::generated_keys_round_trip_through_pkcs8
+        PASS [   0.236s] (241/241) jd sign::tests::packed_bundles_verify_and_detect_tampering
+────────────
+     Summary [   3.909s] 241 tests run: 241 passed, 0 skipped

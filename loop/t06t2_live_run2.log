@@ -1,0 +1,22 @@
+editor ready
+editor idle
+== case 1: iron chain (acceptance 2) ==
+
+entities id         result   warnings
+-------- --         ------   --------
+{}       scene.open finished {}      
+{}       scene.save finished {}      
+  ok: the scene is open (Spinner present)
+{}       pie.pla... finished {}      
+pie running (09:47:15)
+switched to Live view
+  ok: the projection holds the Spinner
+editor killed
+Entity-BevyFormat : 无法处理对参数“Bits”的参数转换。无法将值“[uint64]8589929912”转换为类型“System.UInt64”。错误:
+“输入字符串的格式不正确。”
+所在位置 E:\Project\rust\jackdaw\loop\qa\t06-stop-restore.ps1:138 字符: 37
++         entity = (Entity-BevyFormat [uint64]$EntityBits)
++                                     ~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidData: (:) [Entity-BevyFormat]，ParentContainsErrorRecordException
+    + FullyQualifiedErrorId : ParameterArgumentTransformationError,Entity-BevyFormat
+ 

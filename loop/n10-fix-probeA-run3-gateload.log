@@ -1,0 +1,8 @@
+True
+editor ready pid=130448 (cfg=E:\Project\rust\jackdaw\loop\t06t3-live\cfg, prebuild in flight)
+premise: dirty=True; firing play_current
+observing 9s...
+BRP alive: t5=True t9=True
+editor CPU: t0=11.4 t5=20.8 t9=28.5 (delta 17.2s over 9s wall)
+not frozen; pie=running
+N10_PROBE_DONE case=A

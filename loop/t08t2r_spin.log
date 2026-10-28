@@ -1,0 +1,9 @@
+True
+editor ready (schema settled)
+asset.new ok: True
+config: move_speed 2.5 on disk
+True
+play running; warming 8s past the cold-start window
+snaps saved (window 2.1s)
+True
+SPIN_LEG_DONE

@@ -1,0 +1,219 @@
+﻿{
+    "nodes":  [
+                  {
+                      "checked":  false,
+                      "children":  [
+                                       {
+                                           "checked":  false,
+                                           "children":  [
+
+                                                        ],
+                                           "disabled":  false,
+                                           "entity":  4294965918,
+                                           "index":  1,
+                                           "kind":  "text",
+                                           "operator":  null,
+                                           "rect":  [
+                                                        0.0,
+                                                        0.0,
+                                                        0.0,
+                                                        0.0
+                                                    ],
+                                           "scene":  false,
+                                           "text":  "FPS: ",
+                                           "visible":  true
+                                       },
+                                       {
+                                           "checked":  false,
+                                           "children":  [
+
+                                                        ],
+                                           "disabled":  false,
+                                           "entity":  4294965916,
+                                           "index":  2,
+                                           "kind":  "node",
+                                           "operator":  null,
+                                           "rect":  [
+                                                        0.0,
+                                                        0.0,
+                                                        0.0,
+                                                        0.0
+                                                    ],
+                                           "scene":  false,
+                                           "text":  null,
+                                           "visible":  true
+                                       },
+                                       {
+                                           "checked":  false,
+                                           "children":  [
+
+                                                        ],
+                                           "disabled":  false,
+                                           "entity":  4294963755,
+                                           "index":  3,
+                                           "kind":  "text",
+                                           "operator":  null,
+                                           "rect":  [
+                                                        0.0,
+                                                        0.0,
+                                                        0.0,
+                                                        0.0
+                                                    ],
+                                           "scene":  false,
+                                           "text":  "",
+                                           "visible":  true
+                                       }
+                                   ],
+                      "disabled":  false,
+                      "entity":  4294965919,
+                      "index":  0,
+                      "kind":  "node",
+                      "operator":  null,
+                      "rect":  [
+                                   0.0,
+                                   0.0,
+                                   0.0,
+                                   0.0
+                               ],
+                      "scene":  false,
+                      "text":  null,
+                      "visible":  true
+                  },
+                  {
+                      "checked":  false,
+                      "children":  [
+                                       {
+                                           "checked":  false,
+                                           "children":  [
+                                                            {
+                                                                "checked":  false,
+                                                                "children":  [
+
+                                                                             ],
+                                                                "disabled":  false,
+                                                                "entity":  4294963751,
+                                                                "index":  6,
+                                                                "kind":  "text",
+                                                                "operator":  null,
+                                                                "rect":  [
+                                                                             672.0,
+                                                                             483.0,
+                                                                             577.0,
+                                                                             18.0
+                                                                         ],
+                                                                "scene":  false,
+                                                                "text":  "That folder is not a Rust project",
+                                                                "visible":  true
+                                                            },
+                                                            {
+                                                                "checked":  false,
+                                                                "children":  [
+
+                                                                             ],
+                                                                "disabled":  false,
+                                                                "entity":  4294963750,
+                                                                "index":  7,
+                                                                "kind":  "text",
+                                                                "operator":  null,
+                                                                "rect":  [
+                                                                             672.0,
+                                                                             513.0,
+                                                                             577.0,
+                                                                             40.0
+                                                                         ],
+                                                                "scene":  false,
+                                                                "text":  "`C:\\Users\\linbo.zhang\\AppData\\Local\\Temp\\t02t2-proj ` has no Cargo.toml, so there is no Bevy project here to open.\n\nPick the folder that holds your project\u0027s Cargo.toml, or create a new project with New Game.",
+                                                                "visible":  true
+                                                            },
+                                                            {
+                                                                "checked":  false,
+                                                                "children":  [
+                                                                                 {
+                                                                                     "checked":  false,
+                                                                                     "children":  [
+                                                                                                      {
+                                                                                                          "checked":  false,
+                                                                                                          "children":  [
+
+                                                                                                                       ],
+                                                                                                          "disabled":  false,
+                                                                                                          "entity":  4294963747,
+                                                                                                          "index":  10,
+                                                                                                          "kind":  "text",
+                                                                                                          "operator":  null,
+                                                                                                          "rect":  [
+                                                                                                                       1206.0,
+                                                                                                                       573.0,
+                                                                                                                       28.0,
+                                                                                                                       16.0
+                                                                                                                   ],
+                                                                                                          "scene":  false,
+                                                                                                          "text":  "Back",
+                                                                                                          "visible":  true
+                                                                                                      }
+                                                                                                  ],
+                                                                                     "disabled":  false,
+                                                                                     "entity":  4294963748,
+                                                                                     "index":  9,
+                                                                                     "kind":  "node",
+                                                                                     "operator":  null,
+                                                                                     "rect":  [
+                                                                                                  1191.0,
+                                                                                                  565.0,
+                                                                                                  58.0,
+                                                                                                  32.0
+                                                                                              ],
+                                                                                     "scene":  false,
+                                                                                     "text":  null,
+                                                                                     "visible":  true
+                                                                                 }
+                                                                             ],
+                                                                "disabled":  false,
+                                                                "entity":  4294963749,
+                                                                "index":  8,
+                                                                "kind":  "node",
+                                                                "operator":  null,
+                                                                "rect":  [
+                                                                             672.0,
+                                                                             565.0,
+                                                                             577.0,
+                                                                             32.0
+                                                                         ],
+                                                                "scene":  false,
+                                                                "text":  null,
+                                                                "visible":  true
+                                                            }
+                                                        ],
+                                           "disabled":  false,
+                                           "entity":  4294963752,
+                                           "index":  5,
+                                           "kind":  "node",
+                                           "operator":  null,
+                                           "rect":  [
+                                                        647.0,
+                                                        458.0,
+                                                        627.0,
+                                                        164.0
+                                                    ],
+                                           "scene":  false,
+                                           "text":  null,
+                                           "visible":  true
+                                       }
+                                   ],
+                      "disabled":  false,
+                      "entity":  4294963753,
+                      "index":  4,
+                      "kind":  "node",
+                      "operator":  null,
+                      "rect":  [
+                                   0.0,
+                                   0.0,
+                                   1920.0,
+                                   1080.0
+                               ],
+                      "scene":  false,
+                      "text":  null,
+                      "visible":  true
+                  }
+              ]
+}

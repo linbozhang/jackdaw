@@ -1,0 +1,12 @@
+editor pid=111772
+True
+editor ready
+editor idle
+viewport camera entity=3707v0
+fxaa OK: only Fxaa present
+smaa OK: Smaa preset=High, fxaa/taa/jitter/mipbias all gone
+taa OK: TAA+TemporalJitter+MipBias present, Smaa gone
+ssao OK: SSAO quality=Ultra + NormalPrepass present
+ssao off OK: SSAO + NormalPrepass both gone
+F8_T1_BRP_SPOT_CHECK_PASS
+editor killed pid=111772

@@ -1,0 +1,14 @@
+PASS  registry: brush.extend_face_to_brush answers allows_undo=false
+PASS  registry: pie.live_edit_save answers allows_undo=false
+PASS  registry: clip.delete_keyframes answers allows_undo=false
+PASS  registry: clip.paste_keyframes answers allows_undo=false
+PASS  registry: brush.join answers allows_undo=false
+PASS  registry: pie.live_edits_apply_all answers allows_undo=false
+PASS  registry: terrain.generate answers allows_undo=false
+PASS  registry: terrain.erode answers allows_undo=false
+PASS  registry: resource.insert answers allows_undo=false
+PASS  registry: resource.remove answers allows_undo=false
+PASS  registry: resource.set_field answers allows_undo=false
+PASS  anchor: entity.duplicate still allows_undo=true
+PASS  anchor: entity.toggle_visibility still allows_undo=true
+RESULT failures=0

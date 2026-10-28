@@ -1,0 +1,125 @@
+warning: linker stderr: rust-lld: ignoring unknown argument '-fuse-ld=lld'
+  |
+  = note: `#[warn(linker_messages)]` on by default
+  = note: the `linker_messages` lint ignores `-D warnings`
+
+warning: `jackdaw_env` (build script) generated 1 warning
+warning: `jackdaw_api_macros` (lib) generated 1 warning (1 duplicate)
+warning: `jackdaw_project_build` (build script) generated 1 warning (1 duplicate)
+warning: `jackdaw_package` (build script) generated 1 warning (1 duplicate)
+    Checking jackdaw_bsn v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_bsn)
+   Compiling jackdaw_project_build v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_project_build)
+    Checking jackdaw_animation_runtime v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_animation_runtime)
+    Checking jackdaw_prefab v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_prefab)
+    Checking jackdaw_remote v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_remote)
+    Checking jackdaw_jsn v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_jsn)
+    Checking jackdaw_scaffold v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_scaffold)
+    Checking jackdaw_cli_internal v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_cli)
+    Checking jackdaw_runtime v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_runtime)
+    Checking jackdaw_animation v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_animation)
+    Checking jd v0.21.0-dev (E:\Project\rust\jackdaw\crates\jd)
+    Checking jackdaw v0.21.0-dev (E:\Project\rust\jackdaw)
+    Checking jackdaw_sdk v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_sdk)
+error: unused import: `jackdaw_bsn::BsnPatch as JackdawPatch`
+    --> src\reference_audit.rs:1024:5
+     |
+1024 | use jackdaw_bsn::BsnPatch as JackdawPatch;
+     |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+     = note: `-D unused-imports` implied by `-D warnings`
+     = help: to override `-D warnings` add `#[allow(unused_imports)]`
+
+error: unused import: `jackdaw_api::prelude`
+  --> src\inspector\missing_list.rs:18:5
+   |
+18 | use jackdaw_api::prelude::*;
+   |     ^^^^^^^^^^^^^^^^^^^^
+
+error: type `inspector::missing_list::CloseListButton` is more private than the item `inspector::missing_list::on_close_list_click`
+   --> src\inspector\missing_list.rs:268:1
+    |
+268 | / pub fn on_close_list_click(
+269 | |     trigger: On<PointerClick>,
+270 | |     closers: Query<&CloseListButton>,
+271 | |     mut commands: Commands,
+272 | | ) {
+    | |_^ function `inspector::missing_list::on_close_list_click` is reachable at visibility `pub(crate)`
+    |
+note: but type `inspector::missing_list::CloseListButton` is only usable at visibility `pub(self)`
+   --> src\inspector\missing_list.rs:55:1
+    |
+ 55 | struct CloseListButton;
+    | ^^^^^^^^^^^^^^^^^^^^^^
+    = note: `-D private-interfaces` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(private_interfaces)]`
+
+error: this `if` can be collapsed into the outer `match`
+   --> src\inspector\missing_list.rs:529:21
+    |
+529 | /                     if base == &finding.reference {
+530 | |                         *base = chosen.to_string();
+531 | |                         replaced = true;
+532 | |                     }
+    | |_____________________^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#collapsible_match
+    = note: `-D clippy::collapsible-match` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::collapsible_match)]`
+help: collapse nested if block
+    |
+528 ~                 BsnPatch::Base(base)
+529 ~                     if base == &finding.reference => {
+530 |                         *base = chosen.to_string();
+531 |                         replaced = true;
+532 ~                     }
+    |
+
+error: called `.iter().copied().collect()` on a slice to create a `Vec`
+   --> src\reference_audit.rs:205:19
+    |
+205 |         &ast.roots.iter().copied().collect::<Vec<_>>(),
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#iter_cloned_collect
+    = note: `-D clippy::iter-cloned-collect` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::iter_cloned_collect)]`
+help: calling `.to_vec()` is both faster and more readable
+    |
+205 -         &ast.roots.iter().copied().collect::<Vec<_>>(),
+205 +         &ast.roots.to_vec(),
+    |
+
+error: this `if` can be collapsed into the outer `match`
+   --> src\reference_audit.rs:289:21
+    |
+289 | /                     if !base.is_empty() {
+290 | |                         candidates.push(Candidate {
+291 | |                             entity_name: name.clone(),
+292 | |                             type_path: "Base".to_string(),
+...   |
+295 | |                         });
+296 | |                     }
+    | |_____________________^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#collapsible_match
+help: collapse nested if block
+    |
+288 ~                 BsnPatch::Base(base)
+289 ~                     if !base.is_empty() => {
+290 |                         candidates.push(Candidate {
+...
+295 |                         });
+296 ~                     }
+    |
+
+error: this expression creates a reference which is immediately dereferenced by the compiler
+   --> src\reference_audit.rs:371:23
+    |
+371 |     !index.stem_paths(&stem).is_empty()
+    |                       ^^^^^ help: change this to: `stem`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#needless_borrow
+    = note: `-D clippy::needless-borrow` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::needless_borrow)]`
+
+error: could not compile `jackdaw` (lib) due to 7 previous errors

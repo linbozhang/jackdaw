@@ -1,0 +1,16 @@
+jd new: created E:\Project\rust\jackdaw\loop\qa-fixture\t08lf-qa
+  modules: none
+  scaffolded 8 files
+  checking dependencies resolve...
+
+note: this jackdaw runs from the checkout at E:\Project\rust\jackdaw, so the new project depends on its crates by path. That Cargo.toml is local to this machine; switch those back to versions before sharing it.
+
+Next:
+  jd open E:\Project\rust\jackdaw\loop\qa-fixture\t08lf-qa
+or `cargo run` in that directory to play standalone.
+LOCK: own-entry=True bevy-at-workspace-rev=True drifted-rev-present=False
+BRP up; waiting idle (first prebuild)...
+IDLE reached: True
+PREBUILD-SCHEMA(GameConfig): True  EDITOR-ALIVE: True  STDERR-ERROR-LINES: 0
+assets-face has GameConfig: False
+T08_LF_QA_DONE

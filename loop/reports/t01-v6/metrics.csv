@@ -1,0 +1,9 @@
+﻿case,iter,result,detail
+V6,1,PASS,"focus d=3.75 (exp>0.01) no-selection d=0.0000 (exp~0)"
+V7,a,PASS,"session reuse covered by V1 x10 then V2 in same run"
+V7,b-alttab,FAIL,"before=False away=False backIdle=False reengage=False"
+V7,c-minrestore,FAIL,"before=False minimized=False afterRestore=False"
+V8,1,INVALID,"text focus not achieved (scan missed): before=null after=null"
+V9,1,FAIL,"moved=0.0000 during: fly=False enabled=False afterClose: fly=False"
+V10,1,FAIL,"modal: tools.measure_distance→ fly=False (R-3 expects顺势 fly)"
+probe-P2,recheck5,False,cursor=

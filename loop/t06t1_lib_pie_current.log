@@ -1,0 +1,26 @@
+warning: linker stderr: rust-lld: ignoring unknown argument '-fuse-ld=lld'
+  |
+  = note: `#[warn(linker_messages)]` on by default
+
+warning: `jackdaw_env` (build script) generated 1 warning
+warning: `jackdaw_api_macros` (lib) generated 1 warning (1 duplicate)
+warning: `jackdaw_project_build` (build script) generated 1 warning (1 duplicate)
+warning: `jackdaw_package` (build script) generated 1 warning (1 duplicate)
+warning: `test_fixture_extension` (lib) generated 1 warning (1 duplicate)
+   Compiling jackdaw v0.21.0-dev (E:\Project\rust\jackdaw)
+warning: `jackdaw` (lib test) generated 1 warning (1 duplicate)
+    Finished `test` profile [optimized + debuginfo] target(s) in 15.80s
+     Running unittests src\lib.rs (target\debug\deps\jackdaw-b8bb05f875dbf70a.exe)
+
+running 8 tests
+test pie_current::tests::legacy_bool_settings_read_as_enum_modes ... ok
+test pie_current::tests::an_unknown_mode_is_rejected ... ok
+test pie_current::tests::enum_settings_round_trip_snake_case ... ok
+test pie_current::tests::tab_display_names_sanitize_to_single_components ... ok
+test pie_current::tests::scene_paths_spell_assets_relative_or_refuse ... ok
+test pie_current::tests::the_nearest_scene_tab_wins_over_prefab_tabs ... ok
+test pie_current::tests::the_settings_section_migrates_a_legacy_bool ... ok
+test pie_current::tests::the_sweep_removes_only_stale_run_copies ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 1144 filtered out; finished in 0.01s
+

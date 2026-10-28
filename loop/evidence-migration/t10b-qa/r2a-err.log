@@ -1,0 +1,13 @@
+[2m2026-10-27T21:45:50.133112Z[0m [32m INFO[0m [2mbevy_diagnostic::system_information_diagnostics_plugin::internal[0m[2m:[0m SystemInfo { os: "Windows 11 Pro", kernel: "26100", cpu: "AMD Ryzen 7 9700X 8-Core Processor", core_count: "8", memory: "93.4 GiB" }
+[2m2026-10-27T21:45:50.138313Z[0m [33m WARN[0m [2mbevy_asset::io::source[0m[2m:[0m Skip creating file watcher because path "H:\\workspace_AI\\t10-phys\\phys-game\\target\\debug\\assets" does not exist.
+[2m2026-10-27T21:45:50.139740Z[0m [33m WARN[0m [2mbevy_asset::io::source[0m[2m:[0m AssetSourceId::Default does not have an AssetWatcher configured. Consider adding an "assets" directory.
+[2m2026-10-27T21:45:50.977853Z[0m [32m INFO[0m [2mbevy_render::renderer[0m[2m:[0m AdapterInfo { name: "NVIDIA GeForce RTX 5070", vendor: 4318, device: 12036, device_type: DiscreteGpu, device_pci_bus_id: "0000:01:00.0", driver: "NVIDIA", driver_info: "591.86", backend: Vulkan, subgroup_min_size: 32, subgroup_max_size: 32, transient_saves_memory: Some(false), limit_bucket: None }
+[2m2026-10-27T21:45:51.524679Z[0m [32m INFO[0m [2mbevy_pbr::cluster[0m[2m:[0m GPU clustering is supported on this device.
+[2m2026-10-27T21:45:51.525250Z[0m [32m INFO[0m [2mbevy_render::batching::gpu_preprocessing[0m[2m:[0m GPU preprocessing is fully supported on this device.
+[2m2026-10-27T21:45:51.531209Z[0m [32m INFO[0m [2mbevy_winit::system[0m[2m:[0m Creating new window phys-game (69v0)
+[2m2026-10-27T21:45:51.695316Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Path not found: H:\workspace_AI\t10-phys\phys-game\target\debug\assets\scene.bsn
+[2m2026-10-27T21:45:51.702501Z[0m [32m INFO[0m [2mjackdaw_runtime[0m[2m:[0m No catalog at H:\workspace_AI\t10-phys\phys-game\target\debug\assets\catalog.bsn, skipping catalog load
+[2m2026-10-27T21:45:51.736936Z[0m [33m WARN[0m [2mjackdaw_runtime::config[0m[2m:[0m no config asset at 'input-actions.bsn'; jackdaw_runtime::game_input::GameInputConfig starts at its default
+[2m2026-10-27T21:45:51.736921Z[0m [33m WARN[0m [2mjackdaw_runtime::config[0m[2m:[0m no config asset at 'game-config.bsn'; phys_game::GameConfig starts at its default
+[2m2026-10-27T21:45:51.738098Z[0m [33m WARN[0m [2mjackdaw_runtime[0m[2m:[0m Cannot spawn scene: Path not found: H:\workspace_AI\t10-phys\phys-game\target\debug\assets\scene.bsn
+[2m2026-10-27T21:45:51.738955Z[0m [33m WARN[0m [2mjackdaw_runtime::terrain[0m[2m:[0m no active Camera3d, so terrain has no viewer to lay its levels around and will not draw

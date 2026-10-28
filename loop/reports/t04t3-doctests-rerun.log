@@ -1,0 +1,80 @@
+warning: doc tests are not supported for crate type(s) `dylib` in package `jackdaw_dylib`
+warning: linker stderr: rust-lld: ignoring unknown argument '-fuse-ld=lld'
+  |
+  = note: `#[warn(linker_messages)]` on by default
+
+warning: `jackdaw_env` (build script) generated 1 warning
+warning: `jackdaw_api_macros` (lib) generated 1 warning (1 duplicate)
+warning: `jackdaw_package` (build script) generated 1 warning (1 duplicate)
+warning: `jackdaw_project_build` (build script) generated 1 warning (1 duplicate)
+warning: `jackdaw_dylib` (lib) generated 1 warning (1 duplicate)
+warning: `jackdaw_sdk` (lib) generated 1 warning (1 duplicate)
+   Compiling jackdaw v0.21.0-dev (E:\Project\rust\jackdaw)
+warning: `test_fixture_extension` (lib) generated 1 warning (1 duplicate)
+warning: `dynamic_extension` (lib) generated 1 warning (1 duplicate)
+   Compiling jackdaw_editor v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_editor)
+    Finished `test` profile [optimized + debuginfo] target(s) in 34.72s
+   Doc-tests bevy_window_chrome
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests dynamic_extension
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests jackdaw
+
+running 3 tests
+test src\lib.rs - JackdawEditorPlugins (line 293) ... ignored
+test src\lib.rs - JackdawEditorPlugins (line 304) ... ignored
+test src\lib.rs - JackdawEditorPlugins (line 316) ... ignored
+
+test result: ok. 0 passed; 0 failed; 3 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+all doctests ran in 0.55s; merged doctests compilation took 0.30s
+   Doc-tests jackdaw_animation
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests jackdaw_animation_runtime
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests jackdaw_api
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests jackdaw_api_internal
+
+running 5 tests
+test crates\jackdaw_api_internal\src\lib.rs - (line 11) ... ignored
+test crates\jackdaw_api_internal\src\operator.rs - operator::Operator (line 22) ... ignored
+test crates\jackdaw_api_internal\src\operator.rs - operator::Operator (line 49) ... ignored
+test crates\jackdaw_api_internal\src\operator.rs - operator::OperatorWorldExt (line 304) ... ignored
+test crates\jackdaw_api_internal\src\pie.rs - pie (line 6) ... ignored
+
+test result: ok. 0 passed; 0 failed; 5 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+all doctests ran in 0.54s; merged doctests compilation took 0.30s
+   Doc-tests jackdaw_api_macros
+
+running 1 test
+test crates\jackdaw_api_macros\src\lib.rs - operator (line 34) ... ignored
+
+test result: ok. 0 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+all doctests ran in 0.52s; merged doctests compilation took 0.28s
+   Doc-tests jackdaw_bind
+all doctests ran in 1.54s; merged doctests compilation took 1.30s
+error: doctest failed, to rerun pass `-p jackdaw_bind --doc`
+EXIT=0 

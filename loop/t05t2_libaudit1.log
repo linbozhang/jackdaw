@@ -1,0 +1,107 @@
+warning: linker stderr: rust-lld: ignoring unknown argument '-fuse-ld=lld'
+  |
+  = note: `#[warn(linker_messages)]` on by default
+
+warning: `jackdaw_env` (build script) generated 1 warning
+   Compiling jackdaw_env v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_env)
+warning: `jackdaw_api_macros` (lib) generated 1 warning (1 duplicate)
+   Compiling jackdaw_bsn v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_bsn)
+warning: `jackdaw_project_build` (build script) generated 1 warning (1 duplicate)
+   Compiling jackdaw_project_build v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_project_build)
+warning: `jackdaw_package` (build script) generated 1 warning (1 duplicate)
+   Compiling jackdaw_api_internal v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_api_internal)
+   Compiling jackdaw_package v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_package)
+   Compiling jackdaw_releases v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_releases)
+   Compiling jackdaw_animation_runtime v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_animation_runtime)
+   Compiling jackdaw_prefab v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_prefab)
+   Compiling jackdaw_jsn v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_jsn)
+   Compiling jackdaw_remote v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_remote)
+   Compiling jackdaw_api v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_api)
+   Compiling jackdaw_scaffold v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_scaffold)
+   Compiling jackdaw_extension v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_extension)
+   Compiling jackdaw_multiplayer_editor v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_multiplayer_editor)
+   Compiling jackdaw_loader v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_loader)
+   Compiling jackdaw_runtime v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_runtime)
+   Compiling jackdaw_animation v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_animation)
+   Compiling test_fixture_extension v0.0.0 (E:\Project\rust\jackdaw\tests\fixtures\test_fixture_extension)
+warning: `test_fixture_extension` (lib) generated 1 warning (1 duplicate)
+   Compiling jackdaw v0.21.0-dev (E:\Project\rust\jackdaw)
+error[E0277]: the trait bound `bevy::bevy_ecs::entity::Entity: std::default::Default` is not satisfied
+   --> src\reference_audit.rs:499:25
+    |
+499 |     #[derive(Component, Reflect, Default)]
+    |                         ^^^^^^^ the trait `std::default::Default` is not implemented for `bevy::bevy_ecs::entity::Entity`
+    |
+    = note: this error originates in the derive macro `Reflect` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0277]: the trait bound `bevy::bevy_ecs::entity::Entity: std::default::Default` is not satisfied
+   --> src\reference_audit.rs:503:9
+    |
+499 |     #[derive(Component, Reflect, Default)]
+    |                                  ------- in this derive macro expansion
+...
+503 |         target: Entity,
+    |         ^^^^^^^^^^^^^^ the trait `std::default::Default` is not implemented for `bevy::bevy_ecs::entity::Entity`
+
+error[E0277]: the trait bound `Handle<Wrap>: Into<AssetId<Wrap>>` is not satisfied
+   --> src\reference_audit.rs:694:18
+    |
+694 |             .get(outer.handle.clone().typed::<Wrap>())
+    |              --- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ the trait `Into<bevy::bevy_asset::AssetId<reference_audit::tests::Wrap>>` is not implemented for `bevy::bevy_asset::Handle<reference_audit::tests::Wrap>`
+    |              |
+    |              required by a bound introduced by this call
+    |
+    = note: required for `bevy::bevy_asset::Handle<reference_audit::tests::Wrap>` to implement `Into<bevy::bevy_asset::AssetId<reference_audit::tests::Wrap>>`
+note: required by a bound in `bevy::bevy_asset::Assets::<A>::get`
+   --> C:\Users\linbo.zhang\.cargo\git\checkouts\bevy-50d7e162b728c6c6\c9c397b\crates\bevy_asset\src\assets.rs:430:32
+    |
+430 |     pub fn get(&self, id: impl Into<AssetId<A>>) -> Option<&A> {
+    |                                ^^^^^^^^^^^^^^^^ required by this bound in `Assets::<A>::get`
+    = note: the full name for the type has been written to 'E:\Project\rust\jackdaw\target\debug\deps\jackdaw-b8bb05f875dbf70a.long-type-4330218395755252974.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+help: consider borrowing here
+    |
+694 |             .get(&outer.handle.clone().typed::<Wrap>())
+    |                  +
+694 |             .get(&mut outer.handle.clone().typed::<Wrap>())
+    |                  ++++
+help: consider removing this method call, as the receiver has type `bevy::bevy_asset::UntypedHandle` and `bevy::bevy_asset::UntypedHandle: std::convert::From<bevy::bevy_asset::Handle<reference_audit::tests::Wrap>>` trivially holds
+    |
+694 -             .get(outer.handle.clone().typed::<Wrap>())
+694 +             .get(outer.handle.clone())
+    |
+
+error[E0277]: `&Wire` does not implement `PartialReflect` so cannot be introspected
+   --> src\reference_audit.rs:723:57
+    |
+723 |         let patch = jackdaw_bsn::component_to_bsn_patch(&wire, &registry);
+    |                                                         ^^^^^ the trait `bevy::bevy_reflect::PartialReflect` is not implemented for `&Wire`
+    |
+    = note: consider annotating `&Wire` with `#[derive(Reflect)]`
+    = note: required for the cast from `&&Wire` to `&(dyn bevy::bevy_reflect::PartialReflect + 'static)`
+help: consider removing the leading `&`-reference
+    |
+723 -         let patch = jackdaw_bsn::component_to_bsn_patch(&wire, &registry);
+723 +         let patch = jackdaw_bsn::component_to_bsn_patch(wire, &registry);
+    |
+
+warning: unused import: `jackdaw_api::prelude`
+  --> src\inspector\missing_list.rs:18:5
+   |
+18 | use jackdaw_api::prelude::*;
+   |     ^^^^^^^^^^^^^^^^^^^^
+   |
+   = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+error[E0596]: cannot borrow data in a `&` reference as mutable
+   --> src\reference_audit.rs:810:24
+    |
+810 |           let warnings = app
+    |  ________________________^
+811 | |             .world()
+    | |____________________^ cannot borrow as mutable
+
+Some errors have detailed explanations: E0277, E0596.
+For more information about an error, try `rustc --explain E0277`.
+warning: `jackdaw` (lib test) generated 1 warning
+error: could not compile `jackdaw` (lib test) due to 5 previous errors; 1 warning emitted

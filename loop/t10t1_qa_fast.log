@@ -1,0 +1,61 @@
+warning: linker stderr: rust-lld: ignoring unknown argument '-fuse-ld=lld'
+  |
+  = note: `#[warn(linker_messages)]` on by default
+
++ cargo fmt --all --check
+the core crates depend on no third-party Bevy crate
+66 manifests and the module catalog take nothing from git but bevy main at c9c397ba1a73e6cfffe957318e0359330b701865
++ cargo clippy --workspace --all-targets --features dylib -- --deny warnings
+warning: linker stderr: rust-lld: ignoring unknown argument '-fuse-ld=lld'
+  |
+  = note: `#[warn(linker_messages)]` on by default
+
+warning: `bevy_reflect_derive` (lib) generated 1 warning
+warning: `bevy_ecs_macros` (lib) generated 1 warning (1 duplicate)
+warning: `bevy_derive` (lib) generated 1 warning (1 duplicate)
+warning: `bevy_asset_macros` (lib) generated 1 warning (1 duplicate)
+warning: `bevy_gizmos_macros` (lib) generated 1 warning (1 duplicate)
+warning: `bevy_material_macros` (lib) generated 1 warning (1 duplicate)
+warning: `bevy_extract_macros` (lib) generated 1 warning (1 duplicate)
+warning: `bevy_render_macros` (lib) generated 1 warning (1 duplicate)
+warning: `bevy_encase_derive` (lib) generated 1 warning (1 duplicate)
+warning: `bevy_animation_macros` (lib) generated 1 warning (1 duplicate)
+warning: `bevy_state_macros` (lib) generated 1 warning (1 duplicate)
+warning: `bevy_scene_macros` (lib) generated 1 warning (1 duplicate)
+warning: linker stderr: rust-lld: ignoring unknown argument '-fuse-ld=lld'
+  |
+  = note: `#[warn(linker_messages)]` on by default
+  = note: the `linker_messages` lint ignores `-D warnings`
+
+warning: `jackdaw_env` (build script) generated 1 warning
+warning: `jackdaw_api_macros` (lib) generated 1 warning (1 duplicate)
+warning: `jackdaw_project_build` (build script) generated 1 warning (1 duplicate)
+   Compiling jackdaw_project_build v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_project_build)
+warning: `jackdaw_package` (build script) generated 1 warning (1 duplicate)
+   Compiling ring v0.17.14
+   Compiling rustls v0.23.46
+    Checking jackdaw_scaffold v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_scaffold)
+    Checking jackdaw_cli_internal v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_cli)
+    Checking rustls-webpki v0.103.16
+    Checking jackdaw v0.21.0-dev (E:\Project\rust\jackdaw)
+    Checking ureq v2.12.1
+    Checking jd v0.21.0-dev (E:\Project\rust\jackdaw\crates\jd)
+    Checking jackdaw_physics v0.21.0-dev (E:\Project\rust\jackdaw\integrations\physics\jackdaw_physics)
+    Checking jackdaw_editor v0.21.0-dev (E:\Project\rust\jackdaw\crates\jackdaw_editor)
+error: unused import: `ExtensionAppExt as _`
+  --> integrations\physics\jackdaw_physics\tests\editor\util.rs:13:39
+   |
+13 | use jackdaw_api_internal::lifecycle::{ExtensionAppExt as _, enable_extension};
+   |                                       ^^^^^^^^^^^^^^^^^^^^
+   |
+   = note: `-D unused-imports` implied by `-D warnings`
+   = help: to override `-D warnings` add `#[allow(unused_imports)]`
+
+error: unused import: `PhysicsExtension`
+  --> integrations\physics\jackdaw_physics\tests\editor\util.rs:14:37
+   |
+14 | use jackdaw_physics::{EXTENSION_ID, PhysicsExtension};
+   |                                     ^^^^^^^^^^^^^^^^
+
+error: could not compile `jackdaw_physics` (test "editor") due to 2 previous errors
+warning: build failed, waiting for other jobs to finish...

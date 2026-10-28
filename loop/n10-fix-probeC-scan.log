@@ -1,0 +1,18 @@
+True
+editor ready pid=113272; waiting for prebuild idle
+idle; playing
+play dispatched; stopping after 500ms (connecting window)
+stop dispatched; observing 8s...
+BRP alive: t4=True t8=True
+editor CPU: t0=12.7 t4=18.5 t8=24.0 (delta 11.4s over 8s wall)
+not frozen; pie=stopped
+N10_PROBE_DONE case=C delay=500ms
+True
+editor ready pid=68072; waiting for prebuild idle
+idle; playing
+play dispatched; stopping after 900ms (connecting window)
+stop dispatched; observing 8s...
+BRP alive: t4=True t8=True
+editor CPU: t0=13.4 t4=19.5 t8=25.2 (delta 11.8s over 8s wall)
+not frozen; pie=stopped
+N10_PROBE_DONE case=C delay=900ms

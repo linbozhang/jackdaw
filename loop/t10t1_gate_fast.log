@@ -1,0 +1,73 @@
+warning: linker stderr: rust-lld: ignoring unknown argument '-fuse-ld=lld'
+  |
+  = note: `#[warn(linker_messages)]` on by default
+
++ cargo fmt --all --check
+Diff in \\?\E:\Project\rust\jackdaw\crates\jackdaw_project_build\src\build_source.rs:126:
+ 
+ /// Where a jackdaw crate's sources sit inside a workspace.
+ fn crate_path(root: &Path, crate_name: &str) -> PathBuf {
+[31m-    if let Some((_, relative)) = CRATES_ELSEWHERE.iter().find(|(name, _)| *name == crate_name) {
+[0m[32m+    if let Some((_, relative)) = CRATES_ELSEWHERE
+[0m[32m+        .iter()
+[0m[32m+        .find(|(name, _)| *name == crate_name)
+[0m[32m+    {
+[0m         return root.join(relative);
+     }
+     root.join("crates").join(crate_name)
+Diff in \\?\E:\Project\rust\jackdaw\crates\jackdaw_project_build\src\modules.rs:557:
+     #[test]
+     fn the_physics_module_adds_the_avian_its_integration_uses() {
+         let workspace: toml::Table = toml::from_str(
+[31m-            &std::fs::read_to_string(concat!(
+[0m[31m-                env!("CARGO_MANIFEST_DIR"),
+[0m[31m-                "/../../Cargo.toml"
+[0m[31m-            ))
+[0m[31m-            .unwrap(),
+[0m[32m+            &std::fs::read_to_string(concat!(env!("CARGO_MANIFEST_DIR"), "/../../Cargo.toml"))
+[0m[32m+                .unwrap(),
+[0m         )
+         .unwrap();
+         let avian = &workspace["workspace"]["dependencies"]["avian3d"];
+Diff in \\?\E:\Project\rust\jackdaw\crates\jackdaw_scaffold\src\lib.rs:2118:
+ /// bevy type in the game is the type this editor was built with.
+ fn add_bevy_fork_patch(doc: &mut DocumentMut, fork: &str) {
+     let fork = fork.replace('\\', "/");
+[31m-    for name in ["bevy", "bevy_curve", "bevy_math", "bevy_reflect", "bevy_shape"] {
+[0m[32m+    for name in [
+[0m[32m+        "bevy",
+[0m[32m+        "bevy_curve",
+[0m[32m+        "bevy_math",
+[0m[32m+        "bevy_reflect",
+[0m[32m+        "bevy_shape",
+[0m[32m+    ] {
+[0m         let path = if name == "bevy" {
+             fork.clone()
+         } else {
+Diff in \\?\E:\Project\rust\jackdaw\crates\jackdaw_scaffold\src\lib.rs:2652:
+          # both. Remade by this jackdaw's scripts/make-bevy-fork.ps1.\n",
+     );
+     out.push_str("[patch.crates-io]\n");
+[31m-    for name in ["bevy", "bevy_curve", "bevy_math", "bevy_reflect", "bevy_shape"] {
+[0m[32m+    for name in [
+[0m[32m+        "bevy",
+[0m[32m+        "bevy_curve",
+[0m[32m+        "bevy_math",
+[0m[32m+        "bevy_reflect",
+[0m[32m+        "bevy_shape",
+[0m[32m+    ] {
+[0m         let path = if name == "bevy" {
+             fork.clone()
+         } else {
+Diff in \\?\E:\Project\rust\jackdaw\tests\sdk_layout\template_versions.rs:122:
+ /// kind of mismatch onboarding is supposed to prevent.
+ #[test]
+ fn the_physics_module_tracks_the_integrations_avian() {
+[31m-    let workspace = std::fs::read_to_string(concat!(env!("CARGO_MANIFEST_DIR"), "/../../Cargo.toml"))
+[0m[31m-        .expect("workspace manifest");
+[0m[32m+    let workspace =
+[0m[32m+        std::fs::read_to_string(concat!(env!("CARGO_MANIFEST_DIR"), "/../../Cargo.toml"))
+[0m[32m+            .expect("workspace manifest");
+[0m     let entry = workspace
+         .split_once("[workspace.dependencies]")
+         .expect("[workspace.dependencies]")

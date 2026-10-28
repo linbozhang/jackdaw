@@ -1,0 +1,23 @@
+== case F: dirty named scene + save policy play_current (expect freeze) ==
+editor ready pid=77144
+  premise: dirty=True (save policy is the default)
+  play_current dispatched; polling BRP for 12s...
+  BRP alive: t0=True t6=True t9=True
+  editor CPU seconds: t0=14.8 t6=29.4 t9=35.7 (delta over 9s wall: 20.9)
+  NOT FROZEN: BRP alive or CPU idle
+killing jackdaw pid=77144
+== case F done ==
+== case B1: clean named scene + save policy play_current (expect normal) ==
+editor ready pid=45492
+  BRP alive=True pie=running
+  B1 result: alive=True stopped=True
+== case B1 done ==
+== case B2: dirty named scene + copy policy play_current (expect normal) ==
+  BRP alive=True pie=running
+  B2 result: alive=True stopped=False
+== case B2 done ==
+== case B3: untitled dirty scene + save policy play_current (expect normal) ==
+  BRP alive=True pie=running
+  B3 result: alive=True stopped=True
+killing jackdaw pid=45492
+N10_QA_PROBE_DONE

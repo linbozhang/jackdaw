@@ -1,0 +1,12 @@
+editor BRP is up
+editor ready (prebuild done; GameConfig registered)
+asset.new: {"jsonrpc":"2.0","id":690002004,"result":{"entities":[],"id":"asset.new","result":"finished","warnings":["asset.new: nothing registers \u0027game_config\u0027; name its id, its type path, or the label the New Asset list shows","asset.new: nothing was created, and no asset is open now"]}}
+Get-Content : 找不到路径“E:\Project\rust\jackdaw\loop\qa-fixture\t08t2qa-fixture\assets\game-config.bsn”，因为该路径
+不存在。
+所在位置 E:\Project\rust\jackdaw\loop\qa\t08-config-play.ps1:119 字符: 11
++ $onDisk = Get-Content $configPath -Raw -Encoding UTF8
++           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (E:\Project\rust...game-config.bsn:String) [Get-Content], ItemNotFoundEx 
+   ception
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 

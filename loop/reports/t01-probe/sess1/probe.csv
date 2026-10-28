@@ -1,0 +1,6 @@
+﻿probe,item,value,expected,ok
+P3n,cold-start RMB fly,foreground failed, inconclusive: fly=True,,False
+P1,foreground+esc+status,True/True,true/true,True
+P2,cursor_reads,c1=False c2=False,both non-null,False
+P3,fly_active,before=False down=True up=False,false/true/false,True
+VERDICT,grading,HOVER-BLOCKED,,True

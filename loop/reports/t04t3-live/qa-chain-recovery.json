@@ -1,0 +1,23 @@
+﻿{
+    "available":  true,
+    "sessions":  [
+                     {
+                         "damaged":  false,
+                         "session":  "36796-1792934047",
+                         "started":  "2026-10-25T13:14:31.5022816Z",
+                         "tabs":  [
+                                      {
+                                          "captured_at":  "2026-10-25T13:14:31.5022816Z",
+                                          "diff":  "+452 lines vs the file on disk",
+                                          "display_name":  "scene",
+                                          "entity_count":  16,
+                                          "index":  0,
+                                          "kind":  "scene",
+                                          "path":  "C:\\Users\\linbo.zhang\\Projects\\my-game\\assets\\scene.bsn",
+                                          "saved_at":  null
+                                      }
+                                  ],
+                         "updated":  1792934071
+                     }
+                 ]
+}

@@ -1,0 +1,289 @@
+[2m2026-10-26T05:11:49.098369Z[0m [32m INFO[0m [2mbevy_diagnostic::system_information_diagnostics_plugin::internal[0m[2m:[0m SystemInfo { os: "Windows 11 Pro", kernel: "26100", cpu: "AMD Ryzen 7 9700X 8-Core Processor", core_count: "8", memory: "93.4 GiB" }
+[2m2026-10-26T05:11:49.547156Z[0m [32m INFO[0m [2mbevy_render::renderer[0m[2m:[0m AdapterInfo { name: "NVIDIA GeForce RTX 5070", vendor: 4318, device: 12036, device_type: DiscreteGpu, device_pci_bus_id: "0000:01:00.0", driver: "32.0.15.9186", driver_info: "", backend: Dx12, subgroup_min_size: 32, subgroup_max_size: 32, transient_saves_memory: Some(false), limit_bucket: None }
+[2m2026-10-26T05:11:50.710682Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw::test_input::plugin` of extension `jackdaw.test_input`
+[2m2026-10-26T05:11:50.725681Z[0m [32m INFO[0m [2mbevy_pbr::cluster[0m[2m:[0m GPU clustering is supported on this device.
+[2m2026-10-26T05:11:50.726336Z[0m [32m INFO[0m [2mbevy_render::batching::gpu_preprocessing[0m[2m:[0m GPU preprocessing is fully supported on this device.
+[2m2026-10-26T05:11:50.728147Z[0m [32m INFO[0m [2mbevy_winit::system[0m[2m:[0m Creating new window jackdaw (71v0)
+[2m2026-10-26T05:11:50.986343Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.game_panel
+[2m2026-10-26T05:11:50.995925Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.timeline
+[2m2026-10-26T05:11:50.996360Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.test_input
+[2m2026-10-26T05:11:50.996662Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.build_panel
+[2m2026-10-26T05:11:50.996904Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core_windows
+[2m2026-10-26T05:11:50.997196Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.multiplayer
+[2m2026-10-26T05:11:50.997424Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core
+[2m2026-10-26T05:11:50.999877Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.project_window
+[2m2026-10-26T05:11:51.000116Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.inspector
+[2m2026-10-26T05:11:51.000336Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.ui_palette
+[2m2026-10-26T05:11:51.000577Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.viewport_panel
+[2m2026-10-26T05:11:51.000856Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.animation_graph
+[2m2026-10-26T05:11:51.003310Z[0m [33m WARN[0m [2mjackdaw_api_internal::keymap::apply[0m[2m:[0m preset 'classic' has 10 chords claimed by more than one action: ["Delete (Press, Operators): clip.delete_keyframes, entity.delete, brush.delete_element", "Backspace (Press, Operators): clip.delete_keyframes, viewport.draw_brush.remove_last_vertex, brush.delete_element", "Home (Press, Operators): clip.timeline.jump_start, view.frame_all, viewport2d.frame", "Ctrl+KeyC (Press, Operators): clip.copy_keyframes, entity.copy", "Ctrl+KeyV (Press, Operators): clip.paste_keyframes, entity.paste", "Tab (Press, Operators): viewport.draw_brush.toggle_mode, brush.clip.cycle_mode", "Enter (Press, Operators): viewport.draw_brush.commit_polygon, brush.clip.apply", "KeyE (Press, Operators): tool.rotate, brush.mesh.extrude", "Escape (Press, Operators): brush.exit_edit_mode, selection.clear, brush.clip.clear, terrain.tool.exit_to_select", "Ctrl+KeyB (Press, Operators): brush.mesh.edge_bevel, brush.mesh.vertex_bevel"]
+[2m2026-10-26T05:11:51.003750Z[0m [32m INFO[0m [2mjackdaw::extension_lifecycle[0m[2m:[0m applied keymap preset 'classic': 110 entries, 110 bindings, 0 user rows
+[2m2026-10-26T05:11:51.058291Z[0m [32m INFO[0m [2mjackdaw::project_select[0m[2m:[0m recovery: 2 leftover session(s) from a crash; the recovery dialog will offer them
+[2m2026-10-26T05:11:51.160507Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking C:\Users\linbo.zhang\Projects\my-game\assets recursively
+[2m2026-10-26T05:11:51.161256Z[0m [32m INFO[0m [2mjackdaw::asset_catalog[0m[2m:[0m No asset catalog found, starting with empty catalog
+[2m2026-10-26T05:11:52.467336Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: pre-building the game in the background for a fast first Play
+[2m2026-10-26T05:11:52.477777Z[0m [32m INFO[0m [2mjackdaw::material_browser[0m[2m:[0m update_material_browser_ui: rebuilding with 1 entries
+[2m2026-10-26T05:11:52.678676Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 2, typed 2, referencing 0)
+[2m2026-10-26T05:11:52.679293Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 0)
+[2m2026-10-26T05:11:55.069073Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: scene.open
+[2m2026-10-26T05:11:55.518653Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: refreshed project types from schema (1 project components)
+[2m2026-10-26T05:11:57.108759Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: scene.save
+[2m2026-10-26T05:11:57.122102Z[0m [32m INFO[0m [2mjackdaw::scene_io::save[0m[2m:[0m Scene saved to C:\Users\linbo.zhang\Projects\my-game\assets\t06-final.bsn
+[2m2026-10-26T05:11:57.122600Z[0m [32m INFO[0m [2mjackdaw::scene_io::session_journal[0m[2m:[0m session journal: C:\Users\linbo.zhang\Projects\my-game\assets\t06-final.bsn reached disk; dropping its entry
+[2m2026-10-26T05:11:57.130836Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking C:\Users\linbo.zhang\Projects\my-game\assets recursively
+[2m2026-10-26T05:11:57.140568Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 2, typed 2, referencing 0)
+[2m2026-10-26T05:11:57.141039Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 0)
+[2m2026-10-26T05:11:57.191542Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: pie.play_current
+[2m2026-10-26T05:11:57.205984Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 launched, awaiting connection
+[2m2026-10-26T05:11:57.206466Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 launched with scene override 't06-final.bsn' (the editor's scene)
+[2m2026-10-26T05:11:57.225081Z[0m [33m WARN[0m [2mbevy_ecs::relationship[0m[2m:[0m The bevy_ecs::hierarchy::ChildOf(4500v0) relationship on entity 4529v0 relates to an entity that does not exist. The invalid bevy_ecs::hierarchy::ChildOf relationship has been removed.
+[2m2026-10-26T05:11:58.369469Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 connected
+[2m2026-10-26T05:12:01.344313Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: pie.stop
+[2m2026-10-26T05:12:01.353762Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 asked to stop; exiting on its own for 2s
+[2m2026-10-26T05:12:01.552741Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 exited
+[2m2026-10-26T05:12:01.623975Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: scene.new
+[2m2026-10-26T05:12:02.143954Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: entity.add.cube
+[2m2026-10-26T05:12:03.179558Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: pie.play_current
+[2m2026-10-26T05:12:03.193042Z[0m [32m INFO[0m [2mjackdaw::pie_current[0m[2m:[0m PIE: wrote the temporary run copy C:\Users\linbo.zhang\Projects\my-game\assets\.jackdaw-pie\current-untitled-1-97384.bsn
+[2m2026-10-26T05:12:03.297702Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: building the game for Play #1
+[2m2026-10-26T05:12:03.305388Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking C:\Users\linbo.zhang\Projects\my-game\assets recursively
+[2m2026-10-26T05:12:03.318685Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 2, typed 2, referencing 0)
+[2m2026-10-26T05:12:03.319253Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 0)
+[2m2026-10-26T05:12:05.902721Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 launched, awaiting connection
+[2m2026-10-26T05:12:05.912163Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 launched with scene override '.jackdaw-pie/current-untitled-1-97384.bsn' (an unsaved copy)
+[2m2026-10-26T05:12:06.039319Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: refreshed project types from schema (1 project components)
+[2m2026-10-26T05:12:06.991577Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 connected
+[2m2026-10-26T05:12:10.052808Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: pie.stop
+[2m2026-10-26T05:12:10.062376Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 asked to stop; exiting on its own for 2s
+[2m2026-10-26T05:12:10.276715Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 exited
+[2m2026-10-26T05:12:10.295622Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: removed the temporary run copy C:\Users\linbo.zhang\Projects\my-game\assets\.jackdaw-pie\current-untitled-1-97384.bsn
+[2m2026-10-26T05:12:10.302113Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking C:\Users\linbo.zhang\Projects\my-game\assets recursively
+[2m2026-10-26T05:12:10.328377Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 2, typed 2, referencing 0)
+[2m2026-10-26T05:12:10.328907Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 0)
+[2m2026-10-26T05:12:10.342073Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking C:\Users\linbo.zhang\Projects\my-game\assets recursively
+[2m2026-10-26T05:12:10.352977Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 2, typed 2, referencing 0)
+[2m2026-10-26T05:12:10.353474Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 0)
+[2m2026-10-26T05:12:10.550369Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: scene.close
+[2m2026-10-26T05:12:10.569129Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: scene.open
+[2m2026-10-26T05:12:12.601441Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: entity.add.cube
+[2m2026-10-26T05:12:13.669604Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: scene.save
+[2m2026-10-26T05:12:13.683125Z[0m [32m INFO[0m [2mjackdaw::scene_io::save[0m[2m:[0m Scene saved to C:\Users\linbo.zhang\Projects\my-game\assets\t06-final.bsn
+[2m2026-10-26T05:12:13.683500Z[0m [32m INFO[0m [2mjackdaw::scene_io::session_journal[0m[2m:[0m session journal: C:\Users\linbo.zhang\Projects\my-game\assets\t06-final.bsn reached disk; dropping its entry
+[2m2026-10-26T05:12:13.693132Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking C:\Users\linbo.zhang\Projects\my-game\assets recursively
+[2m2026-10-26T05:12:13.705792Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 2, typed 2, referencing 0)
+[2m2026-10-26T05:12:13.706322Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 0)
+[2m2026-10-26T05:12:13.770114Z[0m [33m WARN[0m [2mbevy_ecs::relationship[0m[2m:[0m The bevy_ecs::hierarchy::ChildOf(4803v6) relationship on entity 5119v3 relates to an entity that does not exist. The invalid bevy_ecs::hierarchy::ChildOf relationship has been removed.
+[2m2026-10-26T05:12:14.722060Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: pie.play_current
+[2m2026-10-26T05:12:14.731980Z[0m [33m WARN[0m [2mjackdaw::pie_current[0m[2m:[0m PIE: unsaved scene(s) not included in play: untitled-1
+[2m2026-10-26T05:12:14.833255Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: building the game for Play #1
+[2m2026-10-26T05:12:17.329008Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 launched, awaiting connection
+[2m2026-10-26T05:12:17.338596Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 launched with scene override 't06-final.bsn' (the editor's scene)
+[2m2026-10-26T05:12:17.530451Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: refreshed project types from schema (1 project components)
+[2m2026-10-26T05:12:18.400993Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 connected
+[2m2026-10-26T05:12:34.506547Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: pie.stop
+[2m2026-10-26T05:12:34.516005Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 asked to stop; exiting on its own for 2s
+[2m2026-10-26T05:12:34.747452Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 exited
+[2m2026-10-26T05:12:35.020420Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: project.set_save_before_play
+[2m2026-10-26T05:12:35.032996Z[0m [32m INFO[0m [2mjackdaw::pie_current[0m[2m:[0m PIE: save before play set to play_unsaved_copy
+[2m2026-10-26T05:12:35.043237Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: entity.add.cube
+[2m2026-10-26T05:12:36.072074Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: pie.play_current
+[2m2026-10-26T05:12:36.075907Z[0m [32m INFO[0m [2mjackdaw::pie_current[0m[2m:[0m PIE: wrote the temporary run copy C:\Users\linbo.zhang\Projects\my-game\assets\.jackdaw-pie\current-t06-final-97384.bsn
+[2m2026-10-26T05:12:36.076211Z[0m [33m WARN[0m [2mjackdaw::pie_current[0m[2m:[0m PIE: unsaved scene(s) not included in play: untitled-1
+[2m2026-10-26T05:12:36.196364Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: building the game for Play #1
+[2m2026-10-26T05:12:36.202542Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking C:\Users\linbo.zhang\Projects\my-game\assets recursively
+[2m2026-10-26T05:12:36.215615Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 2, typed 2, referencing 0)
+[2m2026-10-26T05:12:36.216258Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 0)
+[2m2026-10-26T05:12:38.663888Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 launched, awaiting connection
+[2m2026-10-26T05:12:38.673359Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 launched with scene override '.jackdaw-pie/current-t06-final-97384.bsn' (an unsaved copy)
+[2m2026-10-26T05:12:39.030483Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: refreshed project types from schema (1 project components)
+[2m2026-10-26T05:12:39.752225Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 connected
+[2m2026-10-26T05:12:55.757331Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: pie.stop
+[2m2026-10-26T05:12:55.766754Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 asked to stop; exiting on its own for 2s
+[2m2026-10-26T05:12:55.997375Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 exited
+[2m2026-10-26T05:12:56.016812Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: removed the temporary run copy C:\Users\linbo.zhang\Projects\my-game\assets\.jackdaw-pie\current-t06-final-97384.bsn
+[2m2026-10-26T05:12:56.027331Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking C:\Users\linbo.zhang\Projects\my-game\assets recursively
+[2m2026-10-26T05:12:56.055441Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 2, typed 2, referencing 0)
+[2m2026-10-26T05:12:56.055958Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 0)
+[2m2026-10-26T05:12:56.068792Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking C:\Users\linbo.zhang\Projects\my-game\assets recursively
+[2m2026-10-26T05:12:56.080560Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 2, typed 2, referencing 0)
+[2m2026-10-26T05:12:56.081128Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 0)
+[2m2026-10-26T05:12:56.255308Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: project.set_save_before_play
+[2m2026-10-26T05:12:56.259123Z[0m [32m INFO[0m [2mjackdaw::pie_current[0m[2m:[0m PIE: save before play set to save
+[2m2026-10-26T05:12:56.271800Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: scene.save
+[2m2026-10-26T05:12:56.277260Z[0m [32m INFO[0m [2mjackdaw::scene_io::save[0m[2m:[0m Scene saved to C:\Users\linbo.zhang\Projects\my-game\assets\t06-final.bsn
+[2m2026-10-26T05:12:56.277907Z[0m [32m INFO[0m [2mjackdaw::scene_io::session_journal[0m[2m:[0m session journal: C:\Users\linbo.zhang\Projects\my-game\assets\t06-final.bsn reached disk; dropping its entry
+[2m2026-10-26T05:12:56.290936Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking C:\Users\linbo.zhang\Projects\my-game\assets recursively
+[2m2026-10-26T05:12:56.304131Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 2, typed 2, referencing 0)
+[2m2026-10-26T05:12:56.304687Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 0)
+[2m2026-10-26T05:12:56.371337Z[0m [33m WARN[0m [2mbevy_ecs::relationship[0m[2m:[0m The bevy_ecs::hierarchy::ChildOf(4611v9) relationship on entity 5317v6 relates to an entity that does not exist. The invalid bevy_ecs::hierarchy::ChildOf relationship has been removed.
+[2m2026-10-26T05:12:57.305252Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: scene.open
+[2m2026-10-26T05:12:57.315254Z[0m [33m WARN[0m [2mjackdaw::scenes::operators[0m[2m:[0m scene.open: failed to read C:\Users\linbo.zhang\Projects\my-game\assets/prefabs/rock.bsn: failed to read C:\Users\linbo.zhang\Projects\my-game\assets/prefabs/rock.bsn: 系统找不到指定的路径。 (os error 3)
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+ICU4X data error: No segmentation model for complex script: Chinese/Japanese
+[2m2026-10-26T05:12:59.358847Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: pie.play_current
+[2m2026-10-26T05:12:59.359520Z[0m [33m WARN[0m [2mjackdaw::pie_current[0m[2m:[0m PIE: unsaved scene(s) not included in play: untitled-1
+[2m2026-10-26T05:12:59.463649Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: building the game for Play #1
+[2m2026-10-26T05:13:01.948004Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 launched, awaiting connection
+[2m2026-10-26T05:13:01.957429Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 launched with scene override 't06-final.bsn' (the editor's scene)
+[2m2026-10-26T05:13:02.033635Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: refreshed project types from schema (1 project components)
+[2m2026-10-26T05:13:03.020579Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 connected
+[2m2026-10-26T05:13:19.089159Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: pie.stop
+[2m2026-10-26T05:13:19.098726Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 asked to stop; exiting on its own for 2s
+[2m2026-10-26T05:13:19.316836Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 exited
+[2m2026-10-26T05:13:19.591088Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: pie.play
+[2m2026-10-26T05:13:19.703855Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: building the game for Play #1
+[2m2026-10-26T05:13:22.198419Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 launched, awaiting connection
+[2m2026-10-26T05:13:22.532940Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: refreshed project types from schema (1 project components)
+[2m2026-10-26T05:13:23.303603Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 connected
+[2m2026-10-26T05:13:39.261188Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: pie.stop
+[2m2026-10-26T05:13:39.270784Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 asked to stop; exiting on its own for 2s
+[2m2026-10-26T05:13:39.561541Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 exited
+[2m2026-10-26T05:13:39.824585Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: pie.play_current
+[2m2026-10-26T05:13:39.825256Z[0m [33m WARN[0m [2mjackdaw::pie_current[0m[2m:[0m PIE: unsaved scene(s) not included in play: untitled-1
+[2m2026-10-26T05:13:39.928212Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: building the game for Play #1
+[2m2026-10-26T05:13:42.381144Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 launched, awaiting connection
+[2m2026-10-26T05:13:42.390586Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 launched with scene override 't06-final.bsn' (the editor's scene)
+[2m2026-10-26T05:13:42.532197Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: refreshed project types from schema (1 project components)
+[2m2026-10-26T05:13:43.470688Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 connected
+[2m2026-10-26T05:13:46.480980Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: pie.stop
+[2m2026-10-26T05:13:46.490334Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 asked to stop; exiting on its own for 2s
+[2m2026-10-26T05:13:46.705843Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 exited
+[2m2026-10-26T05:13:46.847127Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: pie.play_current
+[2m2026-10-26T05:13:46.847754Z[0m [33m WARN[0m [2mjackdaw::pie_current[0m[2m:[0m PIE: unsaved scene(s) not included in play: untitled-1
+[2m2026-10-26T05:13:46.948918Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: building the game for Play #1
+[2m2026-10-26T05:13:49.438056Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 launched, awaiting connection
+[2m2026-10-26T05:13:49.447377Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 launched with scene override 't06-final.bsn' (the editor's scene)
+[2m2026-10-26T05:13:49.540748Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: refreshed project types from schema (1 project components)
+[2m2026-10-26T05:13:50.509107Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 connected
+[2m2026-10-26T05:13:51.609350Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: pie.stop
+[2m2026-10-26T05:13:51.618817Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 asked to stop; exiting on its own for 2s
+[2m2026-10-26T05:13:51.825930Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 exited
+[2m2026-10-26T05:13:52.050155Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: pie.play_current
+[2m2026-10-26T05:13:52.059908Z[0m [33m WARN[0m [2mjackdaw::pie_current[0m[2m:[0m PIE: unsaved scene(s) not included in play: untitled-1
+[2m2026-10-26T05:13:52.165497Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: building the game for Play #1
+[2m2026-10-26T05:13:54.626602Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 launched, awaiting connection
+[2m2026-10-26T05:13:54.636073Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 launched with scene override 't06-final.bsn' (the editor's scene)
+[2m2026-10-26T05:13:54.666156Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: entity.add.cube
+[2m2026-10-26T05:13:55.027403Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: refreshed project types from schema (1 project components)
+[2m2026-10-26T05:13:55.714115Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 connected

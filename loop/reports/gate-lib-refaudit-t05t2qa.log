@@ -1,0 +1,35 @@
+warning: linker stderr: rust-lld: ignoring unknown argument '-fuse-ld=lld'
+  |
+  = note: `#[warn(linker_messages)]` on by default
+
+warning: `jackdaw_env` (build script) generated 1 warning
+warning: `jackdaw_api_macros` (lib) generated 1 warning (1 duplicate)
+warning: `jackdaw_project_build` (build script) generated 1 warning (1 duplicate)
+warning: `jackdaw_package` (build script) generated 1 warning (1 duplicate)
+warning: `test_fixture_extension` (lib) generated 1 warning (1 duplicate)
+   Compiling jackdaw v0.21.0-dev (E:\Project\rust\jackdaw)
+warning: variable does not need to be mutable
+   --> src\reference_audit.rs:888:21
+    |
+888 |                 let mut value = value;
+    |                     ----^^^^^
+    |                     |
+    |                     help: remove this `mut`
+    |
+    = note: `#[warn(unused_mut)]` (part of `#[warn(unused)]`) on by default
+
+warning: `jackdaw` (lib test) generated 2 warnings (1 duplicate) (run `cargo fix --lib -p jackdaw --tests` to apply 1 suggestion)
+    Finished `test` profile [optimized + debuginfo] target(s) in 1m 05s
+     Running unittests src\lib.rs (target\debug\deps\jackdaw-b8bb05f875dbf70a.exe)
+
+running 6 tests
+test reference_audit::tests::an_entity_field_is_emitted_as_its_id_and_points_where_the_reader_spawned ... ok
+test reference_audit::tests::a_dangling_entity_field_warns_once_at_the_save_boundary ... ok
+test reference_audit::tests::an_embedded_reference_survives_the_two_phase_load ... ok
+test reference_audit::tests::a_loaded_scene_warns_once_about_its_missing_references ... ok
+test reference_audit::tests::an_embedded_name_the_document_defines_is_no_finding ... ok
+test reference_audit::tests::the_audit_names_every_break_with_its_four_locations ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 1137 filtered out; finished in 0.05s
+
+EXIT:0 
