@@ -2267,7 +2267,7 @@ fn authored_project_field_json(
 /// deeper names the same top-level field, whose whole new value
 /// [`project_field_edit_to_bsn_value`] has already merged.
 /// Whether the document node carries a patch for this component that
-/// spells no field at all �?the bare type a scene may author, or the
+/// spells no field at all — the bare type a scene may author, or the
 /// field-less block `AddProjectComponent` writes (both mean "every
 /// field is the type's default"). A single-field edit into such a
 /// block would author only that field and a save would drop every
