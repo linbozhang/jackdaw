@@ -1,0 +1,13 @@
+   Compiling jackdaw v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw)
+    Finished `test` profile [optimized + debuginfo] target(s) in 4.16s
+     Running tests/prefabs/main.rs (target/debug/deps/prefabs-c0f7f6eaa1f203a3)
+
+running 1 test
+[2m2026-10-29T16:48:01.980662Z[0m [31mERROR[0m [2mbevy_extract::extract_resource[0m[2m:[0m Sub app did not exist when trying to add `extract_resource` for <bevy_camera::clear_color::ClearColor>.
+[2m2026-10-29T16:48:03.200314Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+[2m2026-10-29T16:48:03.245960Z[0m [32m INFO[0m [2mjackdaw::scene_io::load[0m[2m:[0m Converted legacy scene to /var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/.tmp9L3Emy/s.bsn; original kept as .jsn.bak
+[2m2026-10-29T16:48:03.247760Z[0m [32m INFO[0m [2mjackdaw::scene_io::load[0m[2m:[0m Scene loaded from /var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/.tmp9L3Emy/s.bsn (1 entities, 0 embedded assets)
+test prefab_lifecycle::prefab_file_change_triggers_reload ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 100 filtered out; finished in 2.36s
+

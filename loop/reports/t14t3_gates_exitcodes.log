@@ -1,0 +1,12 @@
+t14t3_fmt EXIT=0
+t14t3_clippy_ws EXIT=0
+t14t3_clippy_phy EXIT=0
+t14t3_libtests EXIT=0
+t14t3_fast EXIT=0
+t14t3_integration EXIT=1
+t14t3_doctests EXIT=101
+t14t3_docs EXIT=0
+t14t3_scaffold_e2e EXIT=0
+A6_ISO_EXIT=0
+DOCTESTS_BIND_RERUN_EXIT=0
+FOLLOWUPS_DONE

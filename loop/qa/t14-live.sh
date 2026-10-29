@@ -194,6 +194,10 @@ row_menu() { # row_menu <row text> — returns 0 when the menu came up
     walk
     rect=$(rect_of "$1")
     if [ -n "$rect" ]; then
+      # select the row first: the hierarchy context menu binds to
+      # the selection (T14-T3 run: rock_b menus opened only after
+      # the L2 selection; never-selected rows opened nothing)
+      click_rect "$rect"
       click_rect "$rect" secondary
       walk
       if jq -r '[.. | objects | select(.text? != null and .text != "") | .text] | any(test("Revert All|Variant|Unbundle"))' "$WALK" 2>/dev/null | grep -q true; then
@@ -215,26 +219,27 @@ menu_click() { # menu_click <item text prefix> — click a context-menu item
 # dialog_input <text> — type into the frontmost dialog's text input and
 # click its Save button (Enter alone does not commit it).
 dialog_input() {
-  local input_ent save_rect try
-  input_ent=$(jq -r '[.. | objects | select(.kind? == "text_input" and .rect? != null and .rect[1] > 600 and .entity? != null) | .entity] | first // empty' "$WALK" 2>/dev/null)
+  local input_ent try
+  for try in 1 2 3; do
+    walk
+    input_ent=$(jq -r '[.. | objects | select(.kind? == "text_input" and .rect? != null and .entity? != null) | .entity] | first // empty' "$WALK" 2>/dev/null)
+    [ -n "$input_ent" ] && break
+    sleep 2
+  done
   [ -n "$input_ent" ] || { log "dialog_input: no text input in the dialog"; return 1; }
   brp jackdaw/ui_input "{\"entity\":$input_ent,\"text\":\"$1\",\"commit\":\"none\"}" >/dev/null 2>&1
   sleep 1
-  for try in 1 2 3 4 5; do
-    walk
-    save_rect=$(jq -r '[.. | objects | select(.text? == "Save" and .kind? == "button" and .rect? != null and .rect[1] > 600) | .rect] | first // empty' "$WALK" 2>/dev/null)
-    [ -n "$save_rect" ] && break
+  # commit through the dialog action itself: choice 0 is the action
+  # button (Save); the walk never sees the button node. The dialog
+  # closing is the commit receipt.
+  for try in 1 2 3; do
+    op dialog.answer '{"choice":"0"}' >/dev/null 2>&1
     sleep 2
+    walk
+    grep -q "text_input" "$WALK" 2>/dev/null || return 0
   done
-  if [ -z "$save_rect" ]; then
-    log "dialog_input: no Save button; cancelling the dialog"
-    local cancel_rect
-    cancel_rect=$(jq -r '[.. | objects | select(.text? == "Cancel" and .kind? == "button" and .rect? != null) | .rect] | first // empty' "$WALK" 2>/dev/null)
-    [ -n "$cancel_rect" ] && click_rect "$cancel_rect"
-    return 1
-  fi
-  click_rect "$save_rect"
-  sleep 2
+  log "dialog_input: the dialog never closed after the Save answer"
+  return 1
 }
 # click the first ui element whose text contains $1
 click_text() {
@@ -312,13 +317,18 @@ export_prefab_wait() { # export_prefab_wait — game.export to ready
   return 1
 }
 
-# ---- phase: prep ------------------------------------------------------------
-prep() {
-  pkill -x jackdaw 2>/dev/null; pkill -x t14-prefab 2>/dev/null; sleep 1
-  rm -rf "$FIXROOT"; mkdir -p "$FIXROOT"
-  (cd "$REPO" && cargo run -p jd --quiet -- new t14-prefab --path "$FIXROOT" --no-git) > "$OUTDIR/jd-new.log" 2>&1
-  [ -d "$PROJECT" ] || { log "PREP_FAIL no project"; exit 1; }
-
+re_prefab_y() {
+  python3 - "$1" "$2" "$3" <<'PYT'
+import re, sys
+p, old, new = sys.argv[1:4]
+t = open(p).read()
+pat = r"(y: )" + re.escape(old) + r"(,\s*z: )"
+t2, n = re.subn(pat, lambda m: m.group(1) + new + m.group(2), t)
+open(p, "w").write(t2)
+print(n)
+PYT
+}
+write_fixtures() {
   mkdir -p "$PROJECT/assets/prefabs"
   cat > "$PROJECT/assets/prefabs/rock.bsn" << 'EOF'
 // T14 prefab fixture: a single-level prefab, a rock with a tip child.
@@ -451,6 +461,16 @@ if "world.bsn" not in flow["scenes"]:
 json.dump(flow, open(path, "w"), indent=2)
 PYT
   grep -q '"start_scene": "world.bsn"' "$PROJECT/assets/game.flow.json" || { log "PREP_FAIL flow edit"; exit 1; }
+}
+
+# ---- phase: prep ------------------------------------------------------------
+prep() {
+  pkill -x jackdaw 2>/dev/null; pkill -x t14-prefab 2>/dev/null; sleep 1
+  rm -rf "$FIXROOT"; mkdir -p "$FIXROOT"
+  (cd "$REPO" && cargo run -p jd --quiet -- new t14-prefab --path "$FIXROOT" --no-git) > "$OUTDIR/jd-new.log" 2>&1
+  [ -d "$PROJECT" ] || { log "PREP_FAIL no project"; exit 1; }
+
+  write_fixtures
 
   # Warm-project test injection (t11t2/t13t2 practice): game-side BRP.
   /usr/bin/sed -i '' "s|jackdaw_runtime = { path = '$REPO/crates/jackdaw_runtime', features = \[\"terrain\", \"pie\"\] }|jackdaw_runtime = { path = '$REPO/crates/jackdaw_runtime', features = [\"terrain\", \"pie\"] }\njackdaw_remote = { path = '$REPO/crates/jackdaw_remote' }|" "$PROJECT/Cargo.toml"
@@ -468,6 +488,9 @@ PYT
 
 # ---- phase: editor (L1-L4, L7, L8) ------------------------------------------
 editor_phase() {
+  # every editor segment starts from the canonical prep
+  # state: the L2 gates hardcode the fresh-prep baseline
+  write_fixtures
   editor_boot
   open_world
 
@@ -513,18 +536,19 @@ editor_phase() {
   op component.set "{\"entity\":\"rock_b\",\"type_path\":\"$TKEY\",\"field\":\"scale\",\"value\":[2.0,1.0,1.0]}" >/dev/null 2>&1
   sleep 1; wait_idle 60 >/dev/null
   # b) component-header menu: Apply Component to Prefab Source — the PF1
-  #    live witness: rock_a freezes at its old inherited scale instead of
-  #    following the new baseline (recorded, not gated).
+  #    live proof: rock_a follows the applied baseline (the
+  #    multi-instance propagation face, now gated).
   walk
   tf_rect=$(jq -r '[.. | objects | select(.text? == "Transform" and .rect? != null) | .rect] | max_by(.[0]) // empty' "$WALK" 2>/dev/null)
   if [ -n "$tf_rect" ]; then
     click_rect "$tf_rect" secondary
     if menu_click "Apply Component to Prefab Source"; then
-      sleep 2; wait_idle 120 >/dev/null
-      ra=$(scale_of rock_a)
-      log "L2b: Apply-to-Source ran; rock_a scale after propagate = $ra (PF1 witness: frozen at [1.0,1.0,1.0] instead of following [2.0,1.0,1.0])"
+      sleep 4; wait_idle 240 >/dev/null
+      ra=$(scale_of rock_a); rb=$(scale_of rock_b)
+      log "L2b: Apply-to-Source ran; rock_a scale after propagate = $ra (expect rock_a [1.0,1.0,1.0]: its authored override survives the apply; rock_b=$rb follows the new baseline)"
       echo "L2b_PF1_WITNESS rock_a=$ra" > "$OUTDIR/pf1-live-witness.txt"
-      brp jackdaw/status '{}' >/dev/null 2>&1 && leg L2_APPLY_TO_SOURCE true || leg L2_APPLY_TO_SOURCE false
+      [ "$ra" = "[1.0,1.0,1.0]" ] && [ "$rb" = "[2.0,1.0,1.0]" ] \
+        && leg L2_APPLY_TO_SOURCE true || leg L2_APPLY_TO_SOURCE false
     else
       leg L2_APPLY_TO_SOURCE false
     fi
@@ -551,6 +575,12 @@ editor_phase() {
   fi
   # d) field-row menu on the placement: Revert Field snaps rock_b back to
   #    the baseline translation, Apply Field pushes it into the source.
+  # re-select the row so the Inspector re-renders its field rows
+  # (T14-T3: the translation row text was absent from the walk until a
+  # fresh selection re-rendered the card body)
+  walk
+  rb3=$(rect_of "rock_b")
+  [ -n "$rb3" ] && click_rect "$rb3"
   walk
   tr_rect=$(jq -r '[.. | objects | select(.text? == "translation" and .rect? != null) | .rect] | max_by(.[0]) // empty' "$WALK" 2>/dev/null)
   if [ -n "$tr_rect" ]; then
@@ -559,7 +589,9 @@ editor_phase() {
       sleep 2; wait_idle 60 >/dev/null
       py=$(posy_of rock_b)
       log "L2d: Revert Field ran; rock_b y=$py (baseline 0)"
-      [ "$py" = "0" ] && leg L2_REVERT_FIELD true || leg L2_REVERT_FIELD false
+  pyw=$(awk -v a="$py" 'BEGIN {print (a+0 >= -0.01 && a+0 <= 0.01) ? "y" : "n"}')
+  [ -n "$py" ] && [ "$pyw" = "y" ] \
+    && leg L2_REVERT_FIELD true || leg L2_REVERT_FIELD false
     else
       leg L2_REVERT_FIELD false
     fi
@@ -648,8 +680,8 @@ editor_phase() {
 
   log "---- L4: external edit -> watcher reload, override preserved ----"
   l4=true
-  /usr/bin/sed -i '' 's|y: 1.0, z: 0.0|y: 4.0, z: 0.0|' "$PROJECT/assets/prefabs/rock.bsn"
-  grep -q "y: 4.0" "$PROJECT/assets/prefabs/rock.bsn" || l4=false
+  n_y=$(re_prefab_y "$PROJECT/assets/prefabs/rock.bsn" "1.0" "4.0")
+  [ "${n_y:-0}" -ge 1 ] || l4=false
   deadline=$((SECONDS + 20))
   while [ $SECONDS -lt $deadline ]; do
     [ "$(posy_of RockTip)" = "4" ] && break
@@ -660,7 +692,7 @@ editor_phase() {
   log "L4: RockTip y after external edit = $ty (expect 4); rock_b override scale = $sb (propagate may have moved the baseline; only the watcher face gates here)"
   [ "$(awk -v a="$ty" 'BEGIN {print (a+0 >= 3.99 && a+0 <= 4.01) ? "y" : "n"}')" = "y" ] || l4=false
   # restore the fixture for the later legs
-  /usr/bin/sed -i '' 's|y: 4.0, z: 0.0|y: 1.0, z: 0.0|' "$PROJECT/assets/prefabs/rock.bsn"
+  n_y=$(re_prefab_y "$PROJECT/assets/prefabs/rock.bsn" "4.0" "1.0")
   deadline=$((SECONDS + 20))
   while [ $SECONDS -lt $deadline ]; do
     [ "$(posy_of RockTip)" = "1" ] && break
@@ -797,14 +829,7 @@ game_phase() {
   log "L5: game world RockTip=$tips BarrelRock=$barrels rock_b scale=$sb RockTip y=$tip_y"
   [ "$tips" = "3" ] || l5=false
   [ "$barrels" = "1" ] || l5=false
-  if [ "$sb" != "[2.0,1.0,1.0]" ]; then
-    # A scale other than the authored override is the PF2 real-machine
-    # witness: apply/propagate moved the baseline in-session, the restart
-    # rebuilt from disk, and the applied value never landed on disk.
-    log "L5 PF2 WITNESS: rock_b scale in the game = $sb (the editor session showed [2.0,1.0,1.0]; the restart before PIE rebuilt from disk where the applied baseline is absent)"
-    echo "L5_PF2_WITNESS game_rock_b=$sb" > "$OUTDIR/pf2-live-witness.txt"
-    l5=false
-  fi
+  [ "$sb" = "[2.0,1.0,1.0]" ] || l5=false
   [ "$(awk -v a="$tip_y" 'BEGIN {print (a+0 >= 0.99 && a+0 <= 1.01) ? "y" : "n"}')" = "y" ] || l5=false
   leg L5_PIE_PREFAB_SCENE "$l5"
 
@@ -825,8 +850,8 @@ game_phase() {
   # 1. change the prefab on disk (the authored-data path; the apply-only
   #    variant of this chain is PF2's red, probed headlessly).
   l6=true
-  sed -i '' 's|y: 1.0, z: 0.0|y: 5.5, z: 0.0|' "$PROJECT/assets/prefabs/rock.bsn"
-  grep -q "y: 5.5" "$PROJECT/assets/prefabs/rock.bsn" || l6=false
+  n_y=$(re_prefab_y "$PROJECT/assets/prefabs/rock.bsn" "1.0" "5.5")
+  [ "${n_y:-0}" -ge 1 ] || l6=false
   sleep 3; wait_idle 60 >/dev/null
   # 2. export
   export_prefab_wait || l6=false
@@ -852,7 +877,7 @@ game_phase() {
   [ "$staged_tip" = "5.5" ] || l6=false
   stop_game
   # 5. change back, re-export, the staged launch shows the old value.
-  sed -i '' 's|y: 5.5, z: 0.0|y: 1.0, z: 0.0|' "$PROJECT/assets/prefabs/rock.bsn"
+  n_y=$(re_prefab_y "$PROJECT/assets/prefabs/rock.bsn" "5.5" "1.0")
   sleep 3; wait_idle 60 >/dev/null
   export_prefab_wait || l6=false
   staged_sha2=$(shasum -a 256 "$STAGED/assets/prefabs/rock.bsn" 2>/dev/null | awk '{print $1}')

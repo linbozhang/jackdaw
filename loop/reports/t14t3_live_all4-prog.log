@@ -1,0 +1,67 @@
+PREP_OK fixture=/Users/zhanglinbo/workspace/loop-mac/t14-prefab/t14-prefab
+EDITOR_READY
+---- L0 sanity: the fixture resolves in the editor ----
+expand_outliner: toggled at x=30
+L0: names RockTip=3 BarrelRock=1 rock_b scale=[2.0,1.0,1.0]
+L0_FIXTURE_RESOLVES_PASS
+---- L2: Inspector prefab menu faces on rock_b ----
+L2a: Revert Component ran; rock_b scale now [1.0,1.0,1.0] (baseline [1.0,1.0,1.0])
+L2_REVERT_COMPONENT_PASS
+L2b: Apply-to-Source ran; rock_a scale after propagate = [1.0,1.0,1.0] (expect rock_a [1.0,1.0,1.0]: its authored override survives the apply; rock_b=[2.0,1.0,1.0] follows the new baseline)
+L2_APPLY_TO_SOURCE_PASS
+L2c: bulk_apply ran; rock_a=[2.0,1.0,1.0] rock_b=[2.0,1.0,1.0] (expect both [2.0,1.0,1.0])
+L2_BULK_APPLY_PASS
+L2d: no translation field row in the Inspector walk
+L2_REVERT_FIELD_FAIL
+L2_APPLY_FIELD_PASS
+---- L3: hierarchy prefab actions + the Save as Prefab dialog ----
+expand_outliner: rows already rendered
+dialog_input: the dialog never closed after the Save answer
+L3a: Save-as-Variant dialog driven; file=false
+L3_SAVE_AS_VARIANT_FAIL
+L3_APPLY_ALL_PASS
+L3c: Revert All ran; rock_b scale now [2.0,1.0,1.0] (baseline [2.0,1.0,1.0])
+L3_REVERT_ALL_PASS
+row_menu: no row 'barrel_a' or its menu never came up
+L3_UNBUNDLE_FAIL
+row_menu: no row 'barrel_a' or its menu never came up
+L3_SAVE_AS_PREFAB_FAIL
+---- L4: external edit -> watcher reload, override preserved ----
+L4: RockTip y after external edit = 4.0 (expect 4); rock_b override scale = [2.0,4.0,1.0] (propagate may have moved the baseline; only the watcher face gates here)
+L4_EXTERNAL_EDIT_PROPAGATES_PASS
+---- L8: undo chains over spawn and pack ----
+L8a: spawn-undo chain base refs 0->1->0
+L8_SPAWN_UNDO_PASS
+row_menu: no row 'barrel_a' or its menu never came up
+L8b: no barrel_a row to pack
+L8_PACK_UNDO_FILE_STAYS_FAIL
+---- L7: the editor restart reopens the prefab scene ----
+loop/qa/t14-live.sh: line 490:   611 Terminated: 15          nohup env DYLD_LIBRARY_PATH="$TOOLCHAIN_LIB" ./target/debug/jackdaw > "$OUTDIR/editor-$PHASE.log" 2>&1
+EDITOR_READY
+L7: after restart rock_a=1 RockTip=3
+L7_EDITOR_RESTART_PASS
+---- L1: the native prefab picker dialog ----
+L1: osascript rc=0 base refs 0->1
+L1_NATIVE_PICKER_PASS
+WARN_SCAN editor phase: defect_forms=0 game_flow_lines=0 refused_lines=0
+WARN_SCAN_EDITOR_PASS
+VERDICT_EDITOR_PHASE: L0_FIXTURE_RESOLVES=PASS L1_NATIVE_PICKER=PASS L2_APPLY_FIELD=PASS L2_APPLY_TO_SOURCE=PASS L2_BULK_APPLY=PASS L2_REVERT_COMPONENT=PASS L2_REVERT_FIELD=FAIL L3_APPLY_ALL=PASS L3_REVERT_ALL=PASS L3_SAVE_AS_PREFAB=FAIL L3_SAVE_AS_VARIANT=FAIL L3_UNBUNDLE=FAIL L4_EXTERNAL_EDIT_PROPAGATES=PASS L7_EDITOR_RESTART=PASS L8_PACK_UNDO_FILE_STAYS=FAIL L8_SPAWN_UNDO=PASS WARN_SCAN_EDITOR=PASS 
+loop/qa/t14-live.sh: line 114:  5005 Terminated: 15          nohup env DYLD_LIBRARY_PATH="$TOOLCHAIN_LIB" ./target/debug/jackdaw > "$OUTDIR/editor-$PHASE.log" 2>&1
+EDITOR_READY
+---- L5: PIE over the prefab scene, Stop restores ----
+L5: game world RockTip=3 BarrelRock=1 rock_b scale=[2.0,1.0,1.0] RockTip y=1.0
+L5_PIE_PREFAB_SCENE_PASS
+L5-stop: editor counts back, world.bsn sha stable=y
+L5_STOP_RESTORES_PASS
+---- L6: the export five-point chain ----
+L6: staged RockTip y = 5.5 (expect 5.5)
+loop/qa/t14-live.sh: line 812: 11781 Terminated: 15          nohup env DYLD_LIBRARY_PATH="$TOOLCHAIN_LIB" ./"$(basename "$STAGED_EXE")" > "$OUTDIR/staged-tall.log" 2>&1
+L6: staged RockTip y after restore+re-export = 1.0 (expect 1)
+loop/qa/t14-live.sh: line 812: 11986 Terminated: 15          nohup env DYLD_LIBRARY_PATH="$TOOLCHAIN_LIB" ./"$(basename "$STAGED_EXE")" > "$OUTDIR/staged-restored.log" 2>&1
+L6_EXPORT_FIVE_POINT_PASS
+WARN_SCAN game phase: defect_forms=0 game_flow_lines=0 refused_lines=0 (N13 PIE panics counted: 0)
+WARN_SCAN_GAME_PASS
+VERDICT_GAME_PHASE: L0_FIXTURE_RESOLVES=PASS L1_NATIVE_PICKER=PASS L2_APPLY_FIELD=PASS L2_APPLY_TO_SOURCE=PASS L2_BULK_APPLY=PASS L2_REVERT_COMPONENT=PASS L2_REVERT_FIELD=FAIL L3_APPLY_ALL=PASS L3_REVERT_ALL=PASS L3_SAVE_AS_PREFAB=FAIL L3_SAVE_AS_VARIANT=FAIL L3_UNBUNDLE=FAIL L4_EXTERNAL_EDIT_PROPAGATES=PASS L5_PIE_PREFAB_SCENE=PASS L5_STOP_RESTORES=PASS L6_EXPORT_FIVE_POINT=PASS L7_EDITOR_RESTART=PASS L8_PACK_UNDO_FILE_STAYS=FAIL L8_SPAWN_UNDO=PASS WARN_SCAN_EDITOR=PASS WARN_SCAN_GAME=PASS 
+VERDICT_ALL: L0_FIXTURE_RESOLVES=PASS L1_NATIVE_PICKER=PASS L2_APPLY_FIELD=PASS L2_APPLY_TO_SOURCE=PASS L2_BULK_APPLY=PASS L2_REVERT_COMPONENT=PASS L2_REVERT_FIELD=FAIL L3_APPLY_ALL=PASS L3_REVERT_ALL=PASS L3_SAVE_AS_PREFAB=FAIL L3_SAVE_AS_VARIANT=FAIL L3_UNBUNDLE=FAIL L4_EXTERNAL_EDIT_PROPAGATES=PASS L5_PIE_PREFAB_SCENE=PASS L5_STOP_RESTORES=PASS L6_EXPORT_FIVE_POINT=PASS L7_EDITOR_RESTART=PASS L8_PACK_UNDO_FILE_STAYS=FAIL L8_SPAWN_UNDO=PASS WARN_SCAN_EDITOR=PASS WARN_SCAN_GAME=PASS  L0_FIXTURE_RESOLVES=PASS L1_NATIVE_PICKER=PASS L2_APPLY_FIELD=PASS L2_APPLY_TO_SOURCE=PASS L2_BULK_APPLY=PASS L2_REVERT_COMPONENT=PASS L2_REVERT_FIELD=FAIL L3_APPLY_ALL=PASS L3_REVERT_ALL=PASS L3_SAVE_AS_PREFAB=FAIL L3_SAVE_AS_VARIANT=FAIL L3_UNBUNDLE=FAIL L4_EXTERNAL_EDIT_PROPAGATES=PASS L7_EDITOR_RESTART=PASS L8_PACK_UNDO_FILE_STAYS=FAIL L8_SPAWN_UNDO=PASS WARN_SCAN_EDITOR=PASS  
+T14_LIVE_DONE
+loop/qa/t14-live.sh: line 51:  5401 Terminated: 15          nohup env DYLD_LIBRARY_PATH="$TOOLCHAIN_LIB" ./target/debug/jackdaw > "$OUTDIR/editor-$PHASE.log" 2>&1

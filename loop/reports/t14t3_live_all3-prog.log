@@ -1,0 +1,83 @@
+PREP_OK fixture=/Users/zhanglinbo/workspace/loop-mac/t14-prefab/t14-prefab
+EDITOR_READY
+---- L0 sanity: the fixture resolves in the editor ----
+expand_outliner: toggled at x=30
+L0: names RockTip=3 BarrelRock=1 rock_b scale=[2.0,1.0,1.0]
+L0_FIXTURE_RESOLVES_PASS
+---- L2: Inspector prefab menu faces on rock_b ----
+menu_click: no clickable item 'Revert Component'
+L2a: the component context menu did not offer Revert Component
+L2_REVERT_COMPONENT_FAIL
+menu_click: no clickable item 'Apply Component to Prefab Source'
+L2_APPLY_TO_SOURCE_FAIL
+menu_click: no clickable item 'Apply to All Instances in Scene'
+L2_BULK_APPLY_FAIL
+rclick_text: no ui element 'translation'
+L2d: no translation field row in the Inspector walk
+L2_REVERT_FIELD_FAIL
+rclick_text: no ui element 'translation'
+L2_APPLY_FIELD_FAIL
+---- L3: hierarchy prefab actions + the Save as Prefab dialog ----
+expand_outliner: rows already rendered
+rclick_text: no ui element 'rock_b'
+rclick_text: no ui element 'rock_b'
+rclick_text: no ui element 'rock_b'
+rclick_text: no ui element 'rock_b'
+row_menu: no context menu came up for 'rock_b'
+L3_SAVE_AS_VARIANT_FAIL
+rclick_text: no ui element 'rock_b'
+rclick_text: no ui element 'rock_b'
+rclick_text: no ui element 'rock_b'
+rclick_text: no ui element 'rock_b'
+row_menu: no context menu came up for 'rock_b'
+L3_APPLY_ALL_FAIL
+rclick_text: no ui element 'rock_b'
+rclick_text: no ui element 'rock_b'
+rclick_text: no ui element 'rock_b'
+rclick_text: no ui element 'rock_b'
+row_menu: no context menu came up for 'rock_b'
+L3_REVERT_ALL_FAIL
+rclick_text: no ui element 'barrel_a'
+rclick_text: no ui element 'barrel_a'
+rclick_text: no ui element 'barrel_a'
+rclick_text: no ui element 'barrel_a'
+row_menu: no context menu came up for 'barrel_a'
+L3_UNBUNDLE_FAIL
+rclick_text: no ui element 'barrel_a'
+rclick_text: no ui element 'barrel_a'
+rclick_text: no ui element 'barrel_a'
+rclick_text: no ui element 'barrel_a'
+row_menu: no context menu came up for 'barrel_a'
+L3_SAVE_AS_PREFAB_FAIL
+---- L4: external edit -> watcher reload, override preserved ----
+L4: RockTip y after external edit = 4.0 (expect 4); rock_b override scale = [3.0,4.0,1.0] (propagate may have moved the baseline; only the watcher face gates here)
+L4_EXTERNAL_EDIT_PROPAGATES_PASS
+---- L8: undo chains over spawn and pack ----
+L8a: spawn-undo chain base refs 0->1->0
+L8_SPAWN_UNDO_PASS
+rclick_text: no ui element 'barrel_a'
+rclick_text: no ui element 'barrel_a'
+rclick_text: no ui element 'barrel_a'
+rclick_text: no ui element 'barrel_a'
+row_menu: no context menu came up for 'barrel_a'
+L8b: no barrel_a row to pack
+L8_PACK_UNDO_FILE_STAYS_FAIL
+---- L7: the editor restart reopens the prefab scene ----
+loop/qa/t14-live.sh: line 484: 89900 Terminated: 15          nohup env DYLD_LIBRARY_PATH="$TOOLCHAIN_LIB" ./target/debug/jackdaw > "$OUTDIR/editor-$PHASE.log" 2>&1
+EDITOR_READY
+L7: after restart rock_a=1 RockTip=3
+L7_EDITOR_RESTART_PASS
+---- L1: the native prefab picker dialog ----
+L1: osascript rc=0 base refs 0->1
+L1_NATIVE_PICKER_PASS
+WARN_SCAN editor phase: defect_forms=0 game_flow_lines=0 refused_lines=0
+WARN_SCAN_EDITOR_PASS
+VERDICT_EDITOR_PHASE: L0_FIXTURE_RESOLVES=PASS L1_NATIVE_PICKER=PASS L2_APPLY_FIELD=FAIL L2_APPLY_TO_SOURCE=FAIL L2_BULK_APPLY=FAIL L2_REVERT_COMPONENT=FAIL L2_REVERT_FIELD=FAIL L3_APPLY_ALL=FAIL L3_REVERT_ALL=FAIL L3_SAVE_AS_PREFAB=FAIL L3_SAVE_AS_VARIANT=FAIL L3_UNBUNDLE=FAIL L4_EXTERNAL_EDIT_PROPAGATES=PASS L7_EDITOR_RESTART=PASS L8_PACK_UNDO_FILE_STAYS=FAIL L8_SPAWN_UNDO=PASS WARN_SCAN_EDITOR=PASS 
+loop/qa/t14-live.sh: line 114: 94316 Terminated: 15          nohup env DYLD_LIBRARY_PATH="$TOOLCHAIN_LIB" ./target/debug/jackdaw > "$OUTDIR/editor-$PHASE.log" 2>&1
+EDITOR_READY
+---- L5: PIE over the prefab scene, Stop restores ----
+L5: game world RockTip=3 BarrelRock=1 rock_b scale=[3.0,1.0,1.0] RockTip y=1.0
+L5_PIE_PREFAB_SCENE_FAIL
+L5-stop: editor counts back, world.bsn sha stable=y
+L5_STOP_RESTORES_PASS
+---- L6: the export five-point chain ----
