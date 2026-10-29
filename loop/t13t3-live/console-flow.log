@@ -1,0 +1,26 @@
+EDITOR_READY
+---- CELL10a: Play = the menu, the full flow ----
+---- CELL10b: Play-Current on the level tab = the level, flow=Level ----
+CELL10: play menu_up=0; play_current Sun=1 HudRoot=1 MenuRoot=0 player=1
+CELL10_PIE_DUAL_PASS
+---- CELL7: the start scene config drives all three launch forms ----
+CELL7: face={  "path": "/Users/zhanglinbo/workspace/loop-mac/t13t3/t13t3-game/assets/game.flow.json",  "present": true,  "scenes": [    {      "on_disk": true,      "path":; play+direct boot the end screen
+CELL7_SET_START_THREE_FORMS_PASS
+---- CELL8: the export starts from the named scene (five-point chain) ----
+CELL8 leg1: face_zero_warn=y manifest=y staged_flow=y staged_boot_go=y
+CELL8: staged gameover boot done; now change -> re-export -> changed launch
+CELL8: staged flow now menu.bsn, staged launch boots the menu
+CELL8_EXPORT_FROM_NAMED_PASS
+---- CELL9: a ghost start scene warns on three faces, then clears ----
+CELL9 editor face warnings: the start scene 'ghost.bsn' is not in the scene list the start scene 'ghost.bsn' is not on disk; the game will start from the scene its code names 
+CELL9 game fallback log line: [2m2026-10-29T01:48:38.064555Z[0m [33m WARN[0m [2mjackdaw_runtime::flow[0m[2m:[0m game flow: the start scene 'ghost.bsn' is not on disk; starting from 'menu.bsn'
+CELL9 export face: the start scene 'ghost.bsn' is not in the scene list | the start scene 'ghost.bsn' is not on disk; the game will start from the scene its code names
+CELL9_BAD_DATA_THREE_FACES_PASS
+---- CELL11: retitle the menu in the editor, Save, Play, export ----
+CELL11: doc edit saved (1 hit(s) on disk)
+CELL11: live title hits after Play = 1
+CELL11: staged title hits = 1
+CELL11_EDITOR_REEDIT_PASS
+WARN_SCAN flow phase editor log: defect_forms=0 (game flow lines expected in CELL9 and asserted there)
+WARN_SCAN_FLOW_PASS
+VERDICT_FLOW_PHASE: CELL10_PIE_DUAL=PASS CELL11_EDITOR_REEDIT=PASS CELL7_SET_START_THREE_FORMS=PASS CELL8_EXPORT_FROM_NAMED=PASS CELL9_BAD_DATA_THREE_FACES=PASS WARN_SCAN_FLOW=PASS 

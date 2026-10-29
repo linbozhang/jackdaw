@@ -45,10 +45,12 @@ controller consumes indirectly: it writes the camera rig's look state
 body itself never turns on look.
 
 The template's Pause consumer is the [game
-UI](game-ui.md): `handle_pause_action` flips `GameState.paused`, the
-movement system stands down while it holds, and the pause screen's
-`Visibility` is bound to the same bool — one press pauses the game and
-raises the screen, and the Resume button lands on the same state.
+UI](game-ui.md): `handle_pause_action` flips `GameState.paused` — and
+only answers while the flow is in the level ([Game
+Flow](game-flow.md)) — the movement system stands down while it holds,
+and the pause veil's `Visibility` is bound to the same bool — one
+press pauses the game and raises the veil, and the Resume button lands
+on the same state.
 
 ## Rebinding is editing one file
 
