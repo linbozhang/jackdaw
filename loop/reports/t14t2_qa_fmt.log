@@ -1,1 +1,5 @@
-FMT_EXIT=0
+# CMD: cargo fmt --all -- --check
+# HOST: zhanglinbomac.local  START: 2026-10-29 20:26:10
+# df: /dev/disk3s5   460Gi   269Gi   167Gi    62%    1.9M  1.8G    0%   /System/Volumes/Data
+# END: 2026-10-29 20:26:13
+# EXIT=0

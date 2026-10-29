@@ -1,0 +1,9 @@
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on build directory
+    Checking jackdaw v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw)
+    Checking jackdaw_physics v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/integrations/physics/jackdaw_physics)
+    Checking jackdaw_editor v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_editor)
+    Finished `dev` profile [optimized + debuginfo] target(s) in 3m 05s
+CLIPPY_WS_EXIT=0

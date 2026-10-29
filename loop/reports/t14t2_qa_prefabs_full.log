@@ -1,0 +1,741 @@
+# CMD: cargo test -p jackdaw --test prefabs
+# START: 2026-10-29 20:34:19
+   Compiling bevy_dylib v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_dylib)
+   Compiling bevy v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned)
+   Compiling jackdaw_geometry v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_geometry)
+   Compiling jackdaw_input v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_input)
+   Compiling jackdaw_commands v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_commands)
+   Compiling jackdaw_localization v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_localization)
+   Compiling jackdaw_bsn v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_bsn)
+   Compiling jackdaw_bind v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_bind)
+   Compiling jackdaw_widgets_runtime v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_widgets_runtime)
+   Compiling bevy_transform_interpolation v0.6.0
+   Compiling jackdaw_widgets v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_widgets)
+   Compiling jackdaw_scene_types v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_scene_types)
+   Compiling jackdaw_prefab v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_prefab)
+   Compiling avian3d v0.8.0
+   Compiling jackdaw_feathers v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_feathers)
+   Compiling jackdaw_terrain v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_terrain)
+   Compiling jackdaw_schema v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_schema)
+   Compiling jackdaw_camera_rig v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_camera_rig)
+   Compiling jackdaw_surface v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_surface)
+   Compiling jackdaw_project_build v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_project_build)
+   Compiling jackdaw_multiplayer v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_multiplayer)
+   Compiling jackdaw_panels v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_panels)
+   Compiling jackdaw_node_graph v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_node_graph)
+   Compiling jackdaw_api_internal v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_api_internal)
+   Compiling jackdaw_runtime v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_runtime)
+   Compiling jackdaw_avian_integration v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/integrations/physics/jackdaw_avian_integration)
+   Compiling jackdaw_animation_runtime v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_animation_runtime)
+   Compiling jackdaw_pie_protocol v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_pie_protocol)
+   Compiling jackdaw_animation v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_animation)
+   Compiling jackdaw_remote v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_remote)
+   Compiling jackdaw_loader v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_loader)
+   Compiling jackdaw_scaffold v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_scaffold)
+   Compiling jackdaw_jsn v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_jsn)
+   Compiling jackdaw_uv v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_uv)
+   Compiling jackdaw_select v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_select)
+   Compiling jackdaw_csg v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_csg)
+   Compiling jackdaw_pick v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_pick)
+   Compiling jackdaw_hull v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_hull)
+   Compiling jackdaw_camera v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_camera)
+   Compiling bevy_window_chrome v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/bevy_window_chrome)
+   Compiling jackdaw_dylib v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_dylib)
+   Compiling jackdaw_api v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_api)
+   Compiling jackdaw_physics v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/integrations/physics/jackdaw_physics)
+   Compiling jackdaw_multiplayer_editor v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_multiplayer_editor)
+   Compiling jackdaw v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw)
+   Compiling jackdaw_extension v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_extension)
+   Compiling test_fixture_extension v0.0.0 (/Users/zhanglinbo/workspace/jackdaw/tests/fixtures/test_fixture_extension)
+    Finished `test` profile [optimized + debuginfo] target(s) in 1m 22s
+     Running tests/prefabs/main.rs (target/debug/deps/prefabs-c0f7f6eaa1f203a3)
+
+running 101 tests
+[2m2026-10-29T12:35:53.818539Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger as it is already set. Consider disabling LogPlugin.
+[2m2026-10-29T12:35:53.818540Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-29T12:35:53.818548Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-29T12:35:53.818564Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-29T12:35:53.818570Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-29T12:35:53.818576Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-29T12:35:53.818581Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-29T12:35:53.818588Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global tracing subscriber as it is already set. Consider disabling LogPlugin.
+[2m2026-10-29T12:35:53.821080Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-29T12:35:53.821121Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-29T12:35:53.821142Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-29T12:35:53.821127Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-29T12:35:53.821133Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-29T12:35:53.821147Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-29T12:35:53.821088Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-29T12:35:54.012958Z[0m [31mERROR[0m [2mbevy_extract::extract_resource[0m[2m:[0m Sub app did not exist when trying to add `extract_resource` for <bevy_camera::clear_color::ClearColor>.
+[2m2026-10-29T12:35:55.736604Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+[2m2026-10-29T12:35:55.736604Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+[2m2026-10-29T12:35:55.737407Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+[2m2026-10-29T12:35:55.738850Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+[2m2026-10-29T12:35:55.742308Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+[2m2026-10-29T12:35:55.764987Z[0m [32m INFO[0m [2mjackdaw::scene_io::load[0m[2m:[0m Converted legacy scene to /var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/.tmpUemK5N/s.bsn; original kept as .jsn.bak
+[2m2026-10-29T12:35:55.765366Z[0m [32m INFO[0m [2mjackdaw::scene_io::load[0m[2m:[0m Scene loaded from /var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/.tmpUemK5N/s.bsn (1 entities, 0 embedded assets)
+[2m2026-10-29T12:35:55.769171Z[0m [32m INFO[0m [2mjackdaw::scene_io::load[0m[2m:[0m Converted legacy scene to /var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/.tmpXy9gtO/s.bsn; original kept as .jsn.bak
+[2m2026-10-29T12:35:55.769354Z[0m [32m INFO[0m [2mjackdaw::scene_io::load[0m[2m:[0m Scene loaded from /var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/.tmpXy9gtO/s.bsn (1 entities, 0 embedded assets)
+[2m2026-10-29T12:35:55.774601Z[0m [32m INFO[0m [2mjackdaw::scene_io::load[0m[2m:[0m Converted legacy scene to /var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/.tmpsbbFUj/level.bsn; original kept as .jsn.bak
+[2m2026-10-29T12:35:55.774836Z[0m [32m INFO[0m [2mjackdaw::scene_io::load[0m[2m:[0m Scene loaded from /var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/.tmpsbbFUj/level.bsn (2 entities, 0 embedded assets)
+test prefab_lifecycle::apply_ast_with_override_entries_resolves_inherited_components ... ok
+test prefab_lifecycle::apply_to_source_lands_the_new_baseline_on_disk ... ok
+test prefab_lifecycle::a_legacy_scene_resolves_a_legacy_prefab_it_inherits_from ... ok
+test prefab_lifecycle::cache_bumps_epoch_on_every_mutation ... ok
+test prefab_lifecycle::cycle_detector_accepts_simple_chain ... ok
+test prefab_lifecycle::cache_canonicalizes_path_inputs ... ok
+test prefab_lifecycle::cycle_detector_rejects_revisit ... ok
+[2m2026-10-29T12:35:55.784731Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-29T12:35:55.785166Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-29T12:35:55.785288Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-29T12:35:55.785613Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-29T12:35:55.788332Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+[2m2026-10-29T12:35:55.796200Z[0m [32m INFO[0m [2mjackdaw::scene_io::load[0m[2m:[0m Converted legacy scene to /var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/.tmp5VPm0h/s.bsn; original kept as .jsn.bak
+[2m2026-10-29T12:35:55.796441Z[0m [32m INFO[0m [2mjackdaw::scene_io::load[0m[2m:[0m Scene loaded from /var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/.tmp5VPm0h/s.bsn (1 entities, 0 embedded assets)
+test prefab_lifecycle::external_edit_changes_fingerprint ... ok
+test prefab_lifecycle::field_is_overridden_detects_changed_field ... ok
+test prefab_lifecycle::field_is_overridden_returns_false_outside_isa_subtree ... ok
+[2m2026-10-29T12:35:55.843778Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-29T12:35:55.844177Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-29T12:35:56.151274Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+[2m2026-10-29T12:35:56.159410Z[0m [32m INFO[0m [2mjackdaw::scene_io::load[0m[2m:[0m Converted legacy scene to /var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/.tmp7Jvh4m/s.bsn; original kept as .jsn.bak
+[2m2026-10-29T12:35:56.159621Z[0m [32m INFO[0m [2mjackdaw::scene_io::load[0m[2m:[0m Scene loaded from /var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/.tmp7Jvh4m/s.bsn (1 entities, 0 embedded assets)
+[2m2026-10-29T12:35:56.340017Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+test prefab_lifecycle::apply_to_prefab_source_writes_value_into_prefab_ast ... ok
+[2m2026-10-29T12:35:56.375746Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-29T12:35:56.376176Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-29T12:35:56.895191Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+test prefab_lifecycle::bulk_apply_in_scene_copies_delta_to_all_matching_instances ... ok
+[2m2026-10-29T12:35:56.925636Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-29T12:35:56.926074Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-29T12:35:57.087146Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+test prefab_lifecycle::editor_save_records_fingerprint ... ok
+[2m2026-10-29T12:35:57.107919Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-29T12:35:57.108332Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-29T12:35:57.450387Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+[2m2026-10-29T12:35:57.458326Z[0m [32m INFO[0m [2mjackdaw::scene_io::load[0m[2m:[0m Converted legacy scene to /var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/.tmpghO2vP/level.bsn; original kept as .jsn.bak
+[2m2026-10-29T12:35:57.458511Z[0m [32m INFO[0m [2mjackdaw::scene_io::load[0m[2m:[0m Scene loaded from /var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/.tmpghO2vP/level.bsn (1 entities, 0 embedded assets)
+test prefab_lifecycle::load_resolves_isa_and_caches_prefab ... ok
+test prefab_lifecycle::prefab_cache_stores_and_retrieves ... ok
+test prefab_lifecycle::prefab_components_register ... ok
+[2m2026-10-29T12:35:57.493198Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-29T12:35:57.493566Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-29T12:35:57.819097Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+[2m2026-10-29T12:35:57.828446Z[0m [32m INFO[0m [2mjackdaw::scene_io::load[0m[2m:[0m Converted legacy scene to /var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/.tmp5JsjX4/level.bsn; original kept as .jsn.bak
+[2m2026-10-29T12:35:57.828709Z[0m [32m INFO[0m [2mjackdaw::scene_io::load[0m[2m:[0m Scene loaded from /var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/.tmp5JsjX4/level.bsn (2 entities, 0 embedded assets)
+test prefab_lifecycle::load_resolves_isa_spawns_inherited_entities ... ok
+[2m2026-10-29T12:35:57.856831Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-29T12:35:57.857246Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-29T12:35:58.008653Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+test prefab_lifecycle::load_scene_from_jsn_backfills_transform_require_chain ... ok
+[2m2026-10-29T12:35:58.037350Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-29T12:35:58.037786Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-29T12:35:58.193232Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+test prefab_lifecycle::load_scene_from_jsn_backfills_visibility_require_chain ... ok
+[2m2026-10-29T12:35:58.217596Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-29T12:35:58.218053Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-29T12:35:58.376424Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+test prefab_lifecycle::prefab_edit_propagates_to_instance_in_other_tab_on_swap ... ok
+test prefab_lifecycle::resolver_materializes_inherited_subtree ... ok
+test prefab_lifecycle::resolver_rejects_isa_cycle ... ok
+[2m2026-10-29T12:35:58.408460Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-29T12:35:58.408881Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-29T12:35:58.564470Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+[2m2026-10-29T12:35:58.573574Z[0m [32m INFO[0m [2mjackdaw::scene_io::load[0m[2m:[0m Converted legacy scene to /var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/.tmpm8EX27/s.bsn; original kept as .jsn.bak
+[2m2026-10-29T12:35:58.573783Z[0m [32m INFO[0m [2mjackdaw::scene_io::load[0m[2m:[0m Scene loaded from /var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/.tmpm8EX27/s.bsn (1 entities, 0 embedded assets)
+[2m2026-10-29T12:35:58.743464Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+[2m2026-10-29T12:35:58.744566Z[0m [33m WARN[0m [2mjackdaw_api_internal::operator[0m[2m:[0m prefab.spawn_instance: the prefab '/var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/.tmp48f9ue/p.jsn' could not be read, so nothing was placed
+test prefab_lifecycle::reload_all_instances_preserves_command_history ... ok
+[2m2026-10-29T12:35:58.772673Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-29T12:35:58.773130Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-29T12:35:58.935139Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+[2m2026-10-29T12:35:58.941985Z[0m [32m INFO[0m [2mjackdaw::prefab::operators[0m[2m:[0m prefab.repair_self_cycles: stripped self-IsA from /private/var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/.tmpgh5oMX/poisoned.jsn
+test prefab_lifecycle::repair_self_cycles_strips_self_isa_from_cached_prefab ... ok
+[2m2026-10-29T12:35:58.970376Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-29T12:35:58.970786Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-29T12:35:59.484291Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+[2m2026-10-29T12:35:59.485725Z[0m [33m WARN[0m [2mjackdaw::prefab::operators[0m[2m:[0m revert_all: 1 of 2 entities have no baseline in /var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/.tmp1P0Y04/p.bsn (PrefabEntityId [42]) and were left as authored
+test prefab_lifecycle::revert_all_reports_targets_with_no_baseline ... ok
+[2m2026-10-29T12:35:59.497579Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-29T12:35:59.498006Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-29T12:35:59.854129Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+test prefab_lifecycle::revert_all_reverts_field_inherited_through_a_nested_prefab ... ok
+[2m2026-10-29T12:35:59.881758Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-29T12:35:59.882163Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-29T12:36:00.221424Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+[2m2026-10-29T12:36:00.283928Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw::test_input::plugin` of extension `jackdaw.test_input`
+[2m2026-10-29T12:36:00.284260Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw_physics::PhysicsEditorPlugin` of extension `jackdaw.physics`
+[2m2026-10-29T12:36:00.287397Z[0m [33m WARN[0m [2mbevy_render::texture[0m[2m:[0m CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+[2m2026-10-29T12:36:00.287533Z[0m [33m WARN[0m [2mbevy_gltf[0m[2m:[0m CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+[2m2026-10-29T12:36:00.291088Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.project_window
+[2m2026-10-29T12:36:00.291190Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.viewport_panel
+[2m2026-10-29T12:36:00.291500Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.timeline
+[2m2026-10-29T12:36:00.291515Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.animation_graph
+[2m2026-10-29T12:36:00.291528Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.inspector
+[2m2026-10-29T12:36:00.291547Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.ui_palette
+[2m2026-10-29T12:36:00.291610Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.build_panel
+[2m2026-10-29T12:36:00.291621Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core_windows
+[2m2026-10-29T12:36:00.291650Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core
+[2m2026-10-29T12:36:00.293885Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.multiplayer
+[2m2026-10-29T12:36:00.293915Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.physics
+[2m2026-10-29T12:36:00.294019Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.test_input
+[2m2026-10-29T12:36:00.294035Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.game_panel
+[2m2026-10-29T12:36:00.295912Z[0m [33m WARN[0m [2mjackdaw_api_internal::keymap::apply[0m[2m:[0m preset 'classic' has 10 chords claimed by more than one action: ["Home (Press, Operators): viewport2d.frame, clip.timeline.jump_start, view.frame_all", "Delete (Press, Operators): clip.delete_keyframes, entity.delete, brush.delete_element", "Backspace (Press, Operators): clip.delete_keyframes, viewport.draw_brush.remove_last_vertex, brush.delete_element", "Super+KeyC (Press, Operators): clip.copy_keyframes, entity.copy", "Super+KeyV (Press, Operators): clip.paste_keyframes, entity.paste", "Tab (Press, Operators): viewport.draw_brush.toggle_mode, brush.clip.cycle_mode", "Enter (Press, Operators): viewport.draw_brush.commit_polygon, brush.clip.apply", "KeyE (Press, Operators): tool.rotate, brush.mesh.extrude", "Escape (Press, Operators): brush.exit_edit_mode, selection.clear, brush.clip.clear, terrain.tool.exit_to_select", "Super+KeyB (Press, Operators): brush.mesh.edge_bevel, brush.mesh.vertex_bevel"]
+[2m2026-10-29T12:36:00.295952Z[0m [32m INFO[0m [2mjackdaw::extension_lifecycle[0m[2m:[0m applied keymap preset 'classic': 112 entries, 112 bindings, 0 user rows
+[2m2026-10-29T12:36:00.389629Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: prefab.revert_component
+[2m2026-10-29T12:36:00.604317Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+[2m2026-10-29T12:36:00.605738Z[0m [33m WARN[0m [2mjackdaw::prefab::operators[0m[2m:[0m revert_component: no prefab inheritance for node=5v0 type_path=bevy_ecs::name::Name; refusing to remove the component
+test prefab_lifecycle::revert_component_preserves_instance_only_addition ... ok
+[2m2026-10-29T12:36:00.633448Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-29T12:36:00.633836Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+test prefab_lifecycle::a_prefab_that_fails_to_parse_stays_watched_and_recovers ... ok
+[2m2026-10-29T12:36:00.741565Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-29T12:36:00.742070Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-29T12:36:00.796244Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+test prefab_lifecycle::revert_field_snaps_value_back_to_prefab ... ok
+[2m2026-10-29T12:36:00.818630Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-29T12:36:00.819052Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+test prefab_lifecycle::a_prefab_restored_to_its_first_contents_reloads_them ... ok
+[2m2026-10-29T12:36:00.927053Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-29T12:36:00.927483Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-29T12:36:01.167549Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+test prefab_lifecycle::save_3_brushes_as_prefab_produces_3_inherited_children ... ok
+[2m2026-10-29T12:36:01.201531Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-29T12:36:01.201928Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-29T12:36:01.352361Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+test prefab_lifecycle::save_3_brushes_survives_snapshot_capture_and_install ... ok
+[2m2026-10-29T12:36:01.374378Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-29T12:36:01.374777Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+test prefab_lifecycle::a_prefab_saved_by_rename_stays_watched ... ok
+test prefab_lifecycle::a_prefab_is_not_reloaded_when_its_watch_starts ... ok
+[2m2026-10-29T12:36:01.483955Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-29T12:36:01.483961Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-29T12:36:01.484449Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-29T12:36:01.484461Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-29T12:36:01.542832Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+test prefab_lifecycle::save_as_prefab_does_not_bake_self_isa_into_file ... ok
+[2m2026-10-29T12:36:01.574026Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-29T12:36:01.574439Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-29T12:36:01.723595Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+test prefab_lifecycle::save_as_prefab_from_selection_always_wraps_in_prefab_root ... ok
+[2m2026-10-29T12:36:01.757623Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-29T12:36:01.758062Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-29T12:36:01.912141Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+test prefab_lifecycle::save_as_prefab_from_selection_filters_descendants_of_selected_ancestors ... ok
+[2m2026-10-29T12:36:01.927913Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-29T12:36:01.928362Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-29T12:36:02.100465Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+test prefab_lifecycle::save_as_prefab_from_selection_one_root_inserts_instance ... ok
+[2m2026-10-29T12:36:02.131107Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-29T12:36:02.131490Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-29T12:36:02.476740Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+test prefab_lifecycle::save_as_prefab_from_selection_packages_siblings_under_synthetic_root ... ok
+[2m2026-10-29T12:36:02.544355Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-29T12:36:02.544752Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-29T12:36:02.666957Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+test prefab_lifecycle::save_as_prefab_from_selection_replaces_source_with_instance ... ok
+[2m2026-10-29T12:36:02.734473Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-29T12:36:02.734857Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-29T12:36:02.857729Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+test prefab_lifecycle::save_as_prefab_preserves_world_positions_of_selection ... ok
+[2m2026-10-29T12:36:02.934997Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-29T12:36:02.935378Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-29T12:36:03.050094Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+test prefab_lifecycle::save_as_prefab_skips_ecs_only_descendants ... ok
+[2m2026-10-29T12:36:03.119088Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-29T12:36:03.119470Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-29T12:36:03.240976Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+test prefab_lifecycle::save_as_prefab_strips_inherited_prefab_markers ... ok
+[2m2026-10-29T12:36:03.312037Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-29T12:36:03.312458Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-29T12:36:03.429621Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+test prefab_lifecycle::save_as_prefab_synthetic_root_has_visibility ... ok
+[2m2026-10-29T12:36:03.498914Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-29T12:36:03.499284Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-29T12:36:03.620278Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+test prefab_lifecycle::save_as_prefab_writes_file_and_converts_in_place ... ok
+[2m2026-10-29T12:36:03.689791Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-29T12:36:03.690167Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-29T12:36:03.811883Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+test prefab_lifecycle::save_as_variant_writes_prefab_with_isa_and_overrides ... ok
+[2m2026-10-29T12:36:03.878061Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-29T12:36:03.878466Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-29T12:36:04.191197Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+test prefab_lifecycle::save_round_trip_preserves_prefab_markers ... ok
+[2m2026-10-29T12:36:04.258947Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-29T12:36:04.259385Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-29T12:36:04.395576Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+test prefab_lifecycle::save_scene_as_prefab_converts_tab_to_prefab ... ok
+[2m2026-10-29T12:36:04.468481Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-29T12:36:04.468904Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+test prefab_lifecycle::prefab_file_change_triggers_reload ... FAILED
+[2m2026-10-29T12:36:04.530921Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-29T12:36:04.531338Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-29T12:36:04.592227Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+test prefab_lifecycle::save_scene_as_prefab_with_multiple_roots_uses_synthetic_root ... ok
+[2m2026-10-29T12:36:04.666044Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-29T12:36:04.666468Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-29T12:36:04.780421Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+test prefab_lifecycle::save_then_drag_spawn_twice_keeps_distinct_positions ... ok
+[2m2026-10-29T12:36:04.859782Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-29T12:36:04.860189Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-29T12:36:04.970928Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+test prefab_lifecycle::save_then_respawn_keeps_isa_on_instance_entity ... ok
+[2m2026-10-29T12:36:05.048028Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-29T12:36:05.048442Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-29T12:36:05.157971Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+[2m2026-10-29T12:36:05.168681Z[0m [32m INFO[0m [2mjackdaw::scene_io::load[0m[2m:[0m Converted legacy scene to /var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/.tmpRRbFGd/s.bsn; original kept as .jsn.bak
+[2m2026-10-29T12:36:05.168936Z[0m [32m INFO[0m [2mjackdaw::scene_io::load[0m[2m:[0m Scene loaded from /var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/.tmpRRbFGd/s.bsn (1 entities, 0 embedded assets)
+test prefab_lifecycle::save_writes_sparse_deltas_only ... ok
+[2m2026-10-29T12:36:05.446708Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-29T12:36:05.447106Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-29T12:36:05.461317Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+test prefab_lifecycle::scene_save_on_prefab_tab_clears_dirty_state ... ok
+[2m2026-10-29T12:36:05.533517Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-29T12:36:05.533881Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-29T12:36:05.858022Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+[2m2026-10-29T12:36:05.861464Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-29T12:36:05.861850Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-29T12:36:06.137530Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+test prefab_lifecycle::set_transform_sync_after_external_execute_writes_to_ast ... ok
+[2m2026-10-29T12:36:06.162765Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-29T12:36:06.163161Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-29T12:36:06.322569Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+test prefab_lifecycle::snapshot_captures_inherited_descendant_edit_as_override ... ok
+[2m2026-10-29T12:36:06.353546Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-29T12:36:06.353987Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-29T12:36:06.520060Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+test prefab_lifecycle::snapshot_install_plus_reload_keeps_inherited_child_visible ... ok
+[2m2026-10-29T12:36:06.546835Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-29T12:36:06.547197Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-29T12:36:06.704930Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+test prefab_lifecycle::snapshot_round_trip_redo_brings_back_instance ... ok
+[2m2026-10-29T12:36:06.717121Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-29T12:36:06.717544Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-29T12:36:06.889073Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+test prefab_lifecycle::snapshot_round_trip_undoes_spawn_instance ... ok
+[2m2026-10-29T12:36:06.919690Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-29T12:36:06.920061Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-29T12:36:07.075731Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+test prefab_lifecycle::spawn_instance_caches_and_spawns_inherited_entity ... ok
+[2m2026-10-29T12:36:07.101265Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-29T12:36:07.101654Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-29T12:36:07.265409Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+test prefab_lifecycle::scene_save_reopen_round_trip_preserves_instance_and_override ... ok
+[2m2026-10-29T12:36:07.351332Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-29T12:36:07.351735Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-29T12:36:07.462785Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+test prefab_lifecycle::spawn_instance_reuses_cached_prefab ... ok
+[2m2026-10-29T12:36:07.533326Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-29T12:36:07.533703Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-29T12:36:07.655535Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+test prefab_lifecycle::spawn_instance_undo_via_framework_snapshot_round_trip_removes_instance ... ok
+[2m2026-10-29T12:36:07.723350Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-29T12:36:07.723727Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-29T12:36:07.846196Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+test prefab_lifecycle::three_instances_each_carry_isa_on_ecs ... ok
+[2m2026-10-29T12:36:07.913707Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-29T12:36:07.914135Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-29T12:36:08.035845Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+test prefab_lifecycle::three_instances_keep_independent_positions ... ok
+[2m2026-10-29T12:36:08.105028Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-29T12:36:08.105421Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-29T12:36:08.225477Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+test prefab_lifecycle::typed_command_and_snapshot_diff_interleave_cleanly_on_undo ... ok
+[2m2026-10-29T12:36:08.295065Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-29T12:36:08.295446Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-29T12:36:08.415577Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+test prefab_lifecycle::unbundle_instance_promotes_inherited_children_to_authored ... ok
+[2m2026-10-29T12:36:08.486881Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-29T12:36:08.487302Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-29T12:36:08.602604Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+test prefab_lifecycle::unbundle_resolves_key_from_entity_after_snapshot_install ... ok
+[2m2026-10-29T12:36:08.670819Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-29T12:36:08.671203Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-29T12:36:08.795427Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+[2m2026-10-29T12:36:08.804461Z[0m [32m INFO[0m [2mjackdaw::scene_io::load[0m[2m:[0m Converted legacy scene to /var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/.tmpP8duDN/s.bsn; original kept as .jsn.bak
+[2m2026-10-29T12:36:08.804905Z[0m [32m INFO[0m [2mjackdaw::scene_io::load[0m[2m:[0m Scene loaded from /var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/.tmpP8duDN/s.bsn (2 entities, 0 embedded assets)
+test prefab_lifecycle::unpack_child_adds_to_deleted_and_creates_standalone_node ... ok
+[2m2026-10-29T12:36:08.870795Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-29T12:36:08.871178Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-29T12:36:08.987701Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+[2m2026-10-29T12:36:08.995213Z[0m [33m WARN[0m [2mbevy_ecs::relationship[0m[2m:[0m The bevy_ecs::hierarchy::ChildOf(438v0) relationship on entity 440v0 relates to an entity that does not exist. The invalid bevy_ecs::hierarchy::ChildOf relationship has been removed.
+test prefab_material_save::an_unchanged_prefab_brush_with_a_material_file_saves_sparse ... ok
+[2m2026-10-29T12:36:09.069948Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-29T12:36:09.070332Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+test prefab_lifecycle::revert_component_operator_runs_through_dispatch ... ok
+[2m2026-10-29T12:36:09.120407Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-29T12:36:09.120779Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-29T12:36:09.179857Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+test prefab_reload::a_prefab_only_another_prefab_reads_falls_back_to_the_whole_scene ... ok
+[2m2026-10-29T12:36:09.259226Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-29T12:36:09.259611Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-29T12:36:09.373148Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+test prefab_reload::a_prefab_reload_leaves_the_rest_of_the_scene_alone ... ok
+[2m2026-10-29T12:36:09.452029Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-29T12:36:09.452411Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-29T12:36:09.558633Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+[2m2026-10-29T12:36:09.559769Z[0m [32m INFO[0m [2mjackdaw::scene_io::load[0m[2m:[0m Scene loaded from /var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/.tmphpns59/zones/level.bsn (1 entities, 0 embedded assets)
+[2m2026-10-29T12:36:09.566014Z[0m [32m INFO[0m [2mjackdaw::scene_io::save[0m[2m:[0m Scene saved to /var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/.tmphpns59/zones/level.bsn
+test prefab_source_paths::a_saved_scene_names_its_prefab_relative_to_itself ... ok
+[2m2026-10-29T12:36:09.633172Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-29T12:36:09.633565Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-29T12:36:09.750556Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+[2m2026-10-29T12:36:09.751707Z[0m [32m INFO[0m [2mjackdaw::scene_io::load[0m[2m:[0m Scene loaded from /var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/.tmpk0uWqH/zones/level.bsn (1 entities, 0 embedded assets)
+test prefab_source_paths::a_saved_variant_names_its_base_relative_to_itself ... ok
+[2m2026-10-29T12:36:09.818724Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-29T12:36:09.819171Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-29T12:36:09.942609Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+[2m2026-10-29T12:36:09.943825Z[0m [32m INFO[0m [2mjackdaw::scene_io::load[0m[2m:[0m Scene loaded from /var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/.tmpJ61h8z/zones/level.bsn (1 entities, 0 embedded assets)
+[2m2026-10-29T12:36:09.949877Z[0m [32m INFO[0m [2mjackdaw::scene_io::save[0m[2m:[0m Scene saved to /var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/.tmpJ61h8z/zones/level.bsn
+[2m2026-10-29T12:36:09.951404Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-29T12:36:09.951808Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-29T12:36:10.118929Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+[2m2026-10-29T12:36:10.120063Z[0m [32m INFO[0m [2mjackdaw::scene_io::load[0m[2m:[0m Scene loaded from /var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/.tmpRGC9eX/zones/level.bsn (1 entities, 0 embedded assets)
+[2m2026-10-29T12:36:10.125940Z[0m [32m INFO[0m [2mjackdaw::scene_io::save[0m[2m:[0m Scene saved to /var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/.tmpRGC9eX/zones/level.bsn
+[2m2026-10-29T12:36:10.127497Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-29T12:36:10.127952Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-29T12:36:10.306491Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+[2m2026-10-29T12:36:10.308239Z[0m [32m INFO[0m [2mjackdaw::scene_io::load[0m[2m:[0m Scene loaded from /var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/.tmpbTYX3y/zones/level.bsn (2 entities, 0 embedded assets)
+test prefab_source_paths::the_editor_still_follows_a_source_outside_the_project ... ok
+[2m2026-10-29T12:36:10.332065Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-29T12:36:10.332466Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-29T12:36:10.492875Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+[2m2026-10-29T12:36:10.533243Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw::test_input::plugin` of extension `jackdaw.test_input`
+[2m2026-10-29T12:36:10.533371Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw_physics::PhysicsEditorPlugin` of extension `jackdaw.physics`
+[2m2026-10-29T12:36:10.534491Z[0m [33m WARN[0m [2mbevy_render::texture[0m[2m:[0m CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+[2m2026-10-29T12:36:10.534579Z[0m [33m WARN[0m [2mbevy_gltf[0m[2m:[0m CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+[2m2026-10-29T12:36:10.536400Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.viewport_panel
+[2m2026-10-29T12:36:10.536614Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core_windows
+[2m2026-10-29T12:36:10.536661Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core
+[2m2026-10-29T12:36:10.538052Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.build_panel
+[2m2026-10-29T12:36:10.538071Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.inspector
+[2m2026-10-29T12:36:10.538092Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.physics
+[2m2026-10-29T12:36:10.538169Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.timeline
+[2m2026-10-29T12:36:10.538181Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.project_window
+[2m2026-10-29T12:36:10.538194Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.multiplayer
+[2m2026-10-29T12:36:10.538212Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.ui_palette
+[2m2026-10-29T12:36:10.538255Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.game_panel
+[2m2026-10-29T12:36:10.538267Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.test_input
+[2m2026-10-29T12:36:10.538283Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.animation_graph
+[2m2026-10-29T12:36:10.539435Z[0m [32m INFO[0m [2mjackdaw::extension_lifecycle[0m[2m:[0m applied keymap preset 'classic': 112 entries, 112 bindings, 0 user rows
+[2m2026-10-29T12:36:10.684677Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+[2m2026-10-29T12:36:10.725183Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw::test_input::plugin` of extension `jackdaw.test_input`
+[2m2026-10-29T12:36:10.725299Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw_physics::PhysicsEditorPlugin` of extension `jackdaw.physics`
+[2m2026-10-29T12:36:10.726479Z[0m [33m WARN[0m [2mbevy_render::texture[0m[2m:[0m CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+[2m2026-10-29T12:36:10.726562Z[0m [33m WARN[0m [2mbevy_gltf[0m[2m:[0m CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+[2m2026-10-29T12:36:10.728423Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.test_input
+[2m2026-10-29T12:36:10.728559Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core
+[2m2026-10-29T12:36:10.729995Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core_windows
+[2m2026-10-29T12:36:10.730042Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.ui_palette
+[2m2026-10-29T12:36:10.730089Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.multiplayer
+[2m2026-10-29T12:36:10.730116Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.physics
+[2m2026-10-29T12:36:10.730221Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.animation_graph
+[2m2026-10-29T12:36:10.730236Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.project_window
+[2m2026-10-29T12:36:10.730248Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.viewport_panel
+[2m2026-10-29T12:36:10.730289Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.build_panel
+[2m2026-10-29T12:36:10.730301Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.game_panel
+[2m2026-10-29T12:36:10.730311Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.timeline
+[2m2026-10-29T12:36:10.730324Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.inspector
+[2m2026-10-29T12:36:10.731679Z[0m [33m WARN[0m [2mjackdaw_api_internal::keymap::apply[0m[2m:[0m preset 'classic' has 10 chords claimed by more than one action: ["Delete (Press, Operators): clip.delete_keyframes, entity.delete, brush.delete_element", "Backspace (Press, Operators): clip.delete_keyframes, viewport.draw_brush.remove_last_vertex, brush.delete_element", "Home (Press, Operators): clip.timeline.jump_start, view.frame_all, viewport2d.frame", "Super+KeyC (Press, Operators): clip.copy_keyframes, entity.copy", "Super+KeyV (Press, Operators): clip.paste_keyframes, entity.paste", "Tab (Press, Operators): viewport.draw_brush.toggle_mode, brush.clip.cycle_mode", "Enter (Press, Operators): viewport.draw_brush.commit_polygon, brush.clip.apply", "KeyE (Press, Operators): tool.rotate, brush.mesh.extrude", "Escape (Press, Operators): brush.exit_edit_mode, selection.clear, brush.clip.clear, terrain.tool.exit_to_select", "Super+KeyB (Press, Operators): brush.mesh.edge_bevel, brush.mesh.vertex_bevel"]
+[2m2026-10-29T12:36:10.731707Z[0m [32m INFO[0m [2mjackdaw::extension_lifecycle[0m[2m:[0m applied keymap preset 'classic': 112 entries, 112 bindings, 0 user rows
+[2m2026-10-29T12:36:10.885984Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+test prefab_t14_acceptance::an_applied_baseline_reaches_every_sibling_instance ... ok
+[2m2026-10-29T12:36:10.930281Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-29T12:36:10.930722Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-29T12:36:11.066779Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+[2m2026-10-29T12:36:11.106388Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw::test_input::plugin` of extension `jackdaw.test_input`
+[2m2026-10-29T12:36:11.106512Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw_physics::PhysicsEditorPlugin` of extension `jackdaw.physics`
+[2m2026-10-29T12:36:11.107733Z[0m [33m WARN[0m [2mbevy_render::texture[0m[2m:[0m CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+[2m2026-10-29T12:36:11.107818Z[0m [33m WARN[0m [2mbevy_gltf[0m[2m:[0m CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+[2m2026-10-29T12:36:11.109719Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.timeline
+[2m2026-10-29T12:36:11.109804Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core_windows
+[2m2026-10-29T12:36:11.109841Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.animation_graph
+[2m2026-10-29T12:36:11.109853Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core
+[2m2026-10-29T12:36:11.111274Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.build_panel
+[2m2026-10-29T12:36:11.111294Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.project_window
+[2m2026-10-29T12:36:11.111311Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.viewport_panel
+[2m2026-10-29T12:36:11.111373Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.ui_palette
+[2m2026-10-29T12:36:11.111422Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.game_panel
+[2m2026-10-29T12:36:11.111436Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.multiplayer
+[2m2026-10-29T12:36:11.111451Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.inspector
+[2m2026-10-29T12:36:11.111471Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.test_input
+[2m2026-10-29T12:36:11.111488Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.physics
+[2m2026-10-29T12:36:11.113260Z[0m [32m INFO[0m [2mjackdaw::extension_lifecycle[0m[2m:[0m applied keymap preset 'classic': 112 entries, 112 bindings, 0 user rows
+[2m2026-10-29T12:36:11.256751Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+test prefab_t14_acceptance::an_applied_leaf_clears_its_own_delta_and_keeps_the_sibling_one ... ok
+[2m2026-10-29T12:36:11.303804Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-29T12:36:11.304233Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-29T12:36:11.448336Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+[2m2026-10-29T12:36:11.450269Z[0m [32m INFO[0m [2mjackdaw::scene_io::load[0m[2m:[0m Scene loaded from /var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/.tmpJ61h8z/zones/level.bsn (3 entities, 0 embedded assets)
+test prefab_source_paths::reopening_the_saved_scene_rebuilds_the_inherited_tree ... ok
+[2m2026-10-29T12:36:11.485325Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-29T12:36:11.485744Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-29T12:36:11.632701Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+[2m2026-10-29T12:36:11.634510Z[0m [32m INFO[0m [2mjackdaw::scene_io::load[0m[2m:[0m Scene loaded from /var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/.tmpRGC9eX/zones/level.bsn (3 entities, 0 embedded assets)
+[2m2026-10-29T12:36:11.640685Z[0m [32m INFO[0m [2mjackdaw::scene_io::save[0m[2m:[0m Scene saved to /var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/.tmpRGC9eX/zones/level.bsn
+test prefab_source_paths::saving_twice_writes_the_same_reference ... ok
+[2m2026-10-29T12:36:11.720099Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-29T12:36:11.720491Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-29T12:36:11.826118Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+[2m2026-10-29T12:36:12.382629Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+test prefab_t14_acceptance::an_external_edit_after_an_apply_still_reaches_every_instance ... ok
+[2m2026-10-29T12:36:12.428588Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-29T12:36:12.428964Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-29T12:36:12.749400Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+test prefab_t14_acceptance::apply_all_pushes_every_overridden_leaf_into_the_source ... ok
+[2m2026-10-29T12:36:12.797966Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-29T12:36:12.798377Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-29T12:36:12.934754Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+[2m2026-10-29T12:36:12.975060Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw::test_input::plugin` of extension `jackdaw.test_input`
+[2m2026-10-29T12:36:12.975179Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw_physics::PhysicsEditorPlugin` of extension `jackdaw.physics`
+[2m2026-10-29T12:36:12.976428Z[0m [33m WARN[0m [2mbevy_render::texture[0m[2m:[0m CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+[2m2026-10-29T12:36:12.976520Z[0m [33m WARN[0m [2mbevy_gltf[0m[2m:[0m CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+[2m2026-10-29T12:36:12.978412Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.build_panel
+[2m2026-10-29T12:36:12.978492Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core
+[2m2026-10-29T12:36:12.980147Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.timeline
+[2m2026-10-29T12:36:12.980166Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.viewport_panel
+[2m2026-10-29T12:36:12.980235Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.project_window
+[2m2026-10-29T12:36:12.980249Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.test_input
+[2m2026-10-29T12:36:12.980264Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.multiplayer
+[2m2026-10-29T12:36:12.980285Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.inspector
+[2m2026-10-29T12:36:12.980308Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.ui_palette
+[2m2026-10-29T12:36:12.980361Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.physics
+[2m2026-10-29T12:36:12.980477Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core_windows
+[2m2026-10-29T12:36:12.980507Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.animation_graph
+[2m2026-10-29T12:36:12.980518Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.game_panel
+[2m2026-10-29T12:36:12.982079Z[0m [32m INFO[0m [2mjackdaw::extension_lifecycle[0m[2m:[0m applied keymap preset 'classic': 112 entries, 112 bindings, 0 user rows
+[2m2026-10-29T12:36:13.059679Z[0m [32m INFO[0m [2mjackdaw::scene_io::load[0m[2m:[0m Scene loaded from /var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/.tmpKejEnK/assets/world.bsn (4 entities, 0 embedded assets)
+[2m2026-10-29T12:36:13.125808Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+[2m2026-10-29T12:36:13.164352Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw::test_input::plugin` of extension `jackdaw.test_input`
+[2m2026-10-29T12:36:13.164465Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw_physics::PhysicsEditorPlugin` of extension `jackdaw.physics`
+[2m2026-10-29T12:36:13.165662Z[0m [33m WARN[0m [2mbevy_render::texture[0m[2m:[0m CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+[2m2026-10-29T12:36:13.165749Z[0m [33m WARN[0m [2mbevy_gltf[0m[2m:[0m CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+[2m2026-10-29T12:36:13.469977Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking /private/var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/.tmpckdmMX/assets recursively
+[2m2026-10-29T12:36:13.707851Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+[2m2026-10-29T12:36:13.748544Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw::test_input::plugin` of extension `jackdaw.test_input`
+[2m2026-10-29T12:36:13.748658Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw_physics::PhysicsEditorPlugin` of extension `jackdaw.physics`
+[2m2026-10-29T12:36:13.749832Z[0m [33m WARN[0m [2mbevy_render::texture[0m[2m:[0m CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+[2m2026-10-29T12:36:13.749914Z[0m [33m WARN[0m [2mbevy_gltf[0m[2m:[0m CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+[2m2026-10-29T12:36:13.900734Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+[2m2026-10-29T12:36:13.941537Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw::test_input::plugin` of extension `jackdaw.test_input`
+[2m2026-10-29T12:36:13.941658Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw_physics::PhysicsEditorPlugin` of extension `jackdaw.physics`
+[2m2026-10-29T12:36:13.942871Z[0m [33m WARN[0m [2mbevy_render::texture[0m[2m:[0m CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+[2m2026-10-29T12:36:13.942957Z[0m [33m WARN[0m [2mbevy_gltf[0m[2m:[0m CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+[2m2026-10-29T12:36:14.043573Z[0m [32m INFO[0m [2mjackdaw::asset_catalog[0m[2m:[0m No asset catalog found, starting with empty catalog
+[2m2026-10-29T12:36:14.046144Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core
+[2m2026-10-29T12:36:14.046144Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core_windows
+[2m2026-10-29T12:36:14.046144Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.animation_graph
+[2m2026-10-29T12:36:14.046353Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.physics
+[2m2026-10-29T12:36:14.046369Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core
+[2m2026-10-29T12:36:14.046767Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.game_panel
+[2m2026-10-29T12:36:14.046793Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.test_input
+[2m2026-10-29T12:36:14.046816Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.multiplayer
+[2m2026-10-29T12:36:14.046848Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core
+[2m2026-10-29T12:36:14.048127Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.ui_palette
+[2m2026-10-29T12:36:14.048219Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core_windows
+[2m2026-10-29T12:36:14.048274Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.animation_graph
+[2m2026-10-29T12:36:14.048289Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.inspector
+[2m2026-10-29T12:36:14.048311Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.test_input
+[2m2026-10-29T12:36:14.048335Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.physics
+[2m2026-10-29T12:36:14.048351Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core_windows
+[2m2026-10-29T12:36:14.048412Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.game_panel
+[2m2026-10-29T12:36:14.048426Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.build_panel
+[2m2026-10-29T12:36:14.048438Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.inspector
+[2m2026-10-29T12:36:14.048466Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.physics
+[2m2026-10-29T12:36:14.048491Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.viewport_panel
+[2m2026-10-29T12:36:14.048518Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.timeline
+[2m2026-10-29T12:36:14.048534Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.multiplayer
+[2m2026-10-29T12:36:14.048545Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.project_window
+[2m2026-10-29T12:36:14.048560Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.animation_graph
+[2m2026-10-29T12:36:14.048568Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.build_panel
+[2m2026-10-29T12:36:14.048579Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.build_panel
+[2m2026-10-29T12:36:14.048583Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.game_panel
+[2m2026-10-29T12:36:14.048593Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.inspector
+[2m2026-10-29T12:36:14.048603Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.project_window
+[2m2026-10-29T12:36:14.048618Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.viewport_panel
+[2m2026-10-29T12:36:14.048620Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.ui_palette
+[2m2026-10-29T12:36:14.048659Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.project_window
+[2m2026-10-29T12:36:14.048679Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.test_input
+[2m2026-10-29T12:36:14.048686Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.timeline
+[2m2026-10-29T12:36:14.048697Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.viewport_panel
+[2m2026-10-29T12:36:14.048745Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.ui_palette
+[2m2026-10-29T12:36:14.048802Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.timeline
+[2m2026-10-29T12:36:14.048818Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.multiplayer
+[2m2026-10-29T12:36:14.050831Z[0m [32m INFO[0m [2mjackdaw::extension_lifecycle[0m[2m:[0m applied keymap preset 'classic': 112 entries, 112 bindings, 0 user rows
+[2m2026-10-29T12:36:14.050901Z[0m [32m INFO[0m [2mjackdaw::extension_lifecycle[0m[2m:[0m applied keymap preset 'classic': 112 entries, 112 bindings, 0 user rows
+[2m2026-10-29T12:36:14.050960Z[0m [32m INFO[0m [2mjackdaw::extension_lifecycle[0m[2m:[0m applied keymap preset 'classic': 112 entries, 112 bindings, 0 user rows
+[2m2026-10-29T12:36:14.057715Z[0m [33m WARN[0m [2mbevy_app::hierarchy[0m[2m:[0m warning[B0004]: The knob entity with the GlobalTransform component has a parent (the nested entity) without GlobalTransform.
+This will cause inconsistent behaviors! See: https://bevy.org/learn/errors/b0004
+[2m2026-10-29T12:36:14.080030Z[0m [32m INFO[0m [2mjackdaw::scene_io::save[0m[2m:[0m Scene saved to /var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/.tmpKejEnK/assets/world.bsn
+[2m2026-10-29T12:36:14.086572Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-29T12:36:14.087036Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-29T12:36:14.127781Z[0m [33m WARN[0m [2mjackdaw::pie[0m[2m:[0m PIE: cannot build /private/var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/.tmpckdmMX: cargo could not read /private/var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/.tmpckdmMX: error: could not find `Cargo.toml` in `/private/var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/.tmpckdmMX` or any parent directory
+[2m2026-10-29T12:36:14.128170Z[0m [32m INFO[0m [2mjackdaw::material_browser[0m[2m:[0m update_material_browser_ui: rebuilding with 1 entries
+[2m2026-10-29T12:36:14.181661Z[0m [33m WARN[0m [2mbevy_ui::ui_node[0m[2m:[0m Two or more Entities with IsDefaultUiCamera found when only one Camera with this marker is allowed.
+[2m2026-10-29T12:36:14.638707Z[0m [33m WARN[0m [2mbevy_app::hierarchy[0m[2m:[0m warning[B0004]: The knob entity with the GlobalTransform component has a parent (the nested entity) without GlobalTransform.
+This will cause inconsistent behaviors! See: https://bevy.org/learn/errors/b0004
+[2m2026-10-29T12:36:14.641791Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: scene.open
+[2m2026-10-29T12:36:14.644289Z[0m [33m WARN[0m [2mjackdaw_api_internal::operator[0m[2m:[0m scene 'world.bsn': 1 references name files the project does not hold (0 missing) — run asset.audit for the list
+[2m2026-10-29T12:36:14.847080Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+[2m2026-10-29T12:36:14.849531Z[0m [32m INFO[0m [2mjackdaw::scene_io::load[0m[2m:[0m Scene loaded from /var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/.tmpKejEnK/assets/world.bsn (5 entities, 0 embedded assets)
+[2m2026-10-29T12:36:15.905453Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking /private/var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/.tmpxa5Lq2/assets recursively
+[2m2026-10-29T12:36:16.089369Z[0m [32m INFO[0m [2mjackdaw::asset_catalog[0m[2m:[0m No asset catalog found, starting with empty catalog
+[2m2026-10-29T12:36:16.100512Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 2, typed 1, referencing 1)
+[2m2026-10-29T12:36:16.100562Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk out of date (writes 0 -> 1), walking again
+[2m2026-10-29T12:36:16.100572Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking /private/var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/.tmpckdmMX/assets recursively
+[2m2026-10-29T12:36:16.108875Z[0m [33m WARN[0m [2mbevy_app::hierarchy[0m[2m:[0m warning[B0004]: The knob entity with the GlobalTransform component has a parent (449v0 entity) without GlobalTransform.
+This will cause inconsistent behaviors! See: https://bevy.org/learn/errors/b0004
+[2m2026-10-29T12:36:16.128958Z[0m [33m WARN[0m [2mbevy_app::hierarchy[0m[2m:[0m warning[B0004]: The inst entity with the InheritedVisibility component has a parent (the world entity) without InheritedVisibility.
+This will cause inconsistent behaviors! See: https://bevy.org/learn/errors/b0004
+[2m2026-10-29T12:36:16.135936Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: file.rename
+[2m2026-10-29T12:36:16.143043Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m renamed; rewrote 1 references in 1 documents
+[2m2026-10-29T12:36:16.184571Z[0m [33m WARN[0m [2mjackdaw::pie[0m[2m:[0m PIE: cannot build /private/var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/.tmpxa5Lq2: cargo could not read /private/var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/.tmpxa5Lq2: error: could not find `Cargo.toml` in `/private/var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/.tmpxa5Lq2` or any parent directory
+[2m2026-10-29T12:36:16.462572Z[0m [32m INFO[0m [2mjackdaw::material_browser[0m[2m:[0m update_material_browser_ui: rebuilding with 1 entries
+[2m2026-10-29T12:36:16.672010Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: prefab.save_as_variant_entity
+[2m2026-10-29T12:36:16.685150Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: prefab.revert_field
+test prefab_t14_acceptance::an_external_edit_after_an_apply_lands_through_the_real_watcher ... ok
+[2m2026-10-29T12:36:17.197628Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-29T12:36:17.198064Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-29T12:36:17.204764Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-29T12:36:17.205481Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-29T12:36:17.223475Z[0m [32m INFO[0m [2mjackdaw::scene_io::save[0m[2m:[0m Scene saved to /var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/.tmpOJSpec/world.bsn
+[2m2026-10-29T12:36:17.228869Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: scene.open
+[2m2026-10-29T12:36:17.230531Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-29T12:36:17.231008Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-29T12:36:17.231787Z[0m [33m WARN[0m [2mjackdaw_api_internal::operator[0m[2m:[0m scene 'world.bsn': 1 references name files the project does not hold (0 missing) — run asset.audit for the list
+[2m2026-10-29T12:36:17.804085Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+[2m2026-10-29T12:36:17.843370Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw::test_input::plugin` of extension `jackdaw.test_input`
+[2m2026-10-29T12:36:17.843490Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw_physics::PhysicsEditorPlugin` of extension `jackdaw.physics`
+[2m2026-10-29T12:36:17.844666Z[0m [33m WARN[0m [2mbevy_render::texture[0m[2m:[0m CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+[2m2026-10-29T12:36:17.844748Z[0m [33m WARN[0m [2mbevy_gltf[0m[2m:[0m CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+[2m2026-10-29T12:36:17.983634Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+[2m2026-10-29T12:36:18.022419Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw::test_input::plugin` of extension `jackdaw.test_input`
+[2m2026-10-29T12:36:18.022541Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw_physics::PhysicsEditorPlugin` of extension `jackdaw.physics`
+[2m2026-10-29T12:36:18.023758Z[0m [33m WARN[0m [2mbevy_render::texture[0m[2m:[0m CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+[2m2026-10-29T12:36:18.023849Z[0m [33m WARN[0m [2mbevy_gltf[0m[2m:[0m CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+[2m2026-10-29T12:36:18.200297Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+[2m2026-10-29T12:36:18.201932Z[0m [32m INFO[0m [2mjackdaw::scene_io::load[0m[2m:[0m Scene loaded from /var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/.tmpOJSpec/world.bsn (1 entities, 0 embedded assets)
+[2m2026-10-29T12:36:18.316958Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.ui_palette
+[2m2026-10-29T12:36:18.317115Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.viewport_panel
+[2m2026-10-29T12:36:18.317283Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.physics
+[2m2026-10-29T12:36:18.317399Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core
+[2m2026-10-29T12:36:18.317422Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.ui_palette
+[2m2026-10-29T12:36:18.317529Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core
+[2m2026-10-29T12:36:18.318855Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.project_window
+[2m2026-10-29T12:36:18.318881Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.build_panel
+[2m2026-10-29T12:36:18.318894Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.inspector
+[2m2026-10-29T12:36:18.318914Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.game_panel
+[2m2026-10-29T12:36:18.318929Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.test_input
+[2m2026-10-29T12:36:18.318945Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.multiplayer
+[2m2026-10-29T12:36:18.318915Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core_windows
+[2m2026-10-29T12:36:18.318963Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.timeline
+[2m2026-10-29T12:36:18.318992Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core_windows
+[2m2026-10-29T12:36:18.319010Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.project_window
+[2m2026-10-29T12:36:18.319025Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.game_panel
+[2m2026-10-29T12:36:18.319043Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.animation_graph
+[2m2026-10-29T12:36:18.319056Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.viewport_panel
+[2m2026-10-29T12:36:18.319025Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.animation_graph
+[2m2026-10-29T12:36:18.319122Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.timeline
+[2m2026-10-29T12:36:18.319140Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.test_input
+[2m2026-10-29T12:36:18.319156Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.multiplayer
+[2m2026-10-29T12:36:18.319174Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.build_panel
+[2m2026-10-29T12:36:18.319191Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.inspector
+[2m2026-10-29T12:36:18.319212Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.physics
+[2m2026-10-29T12:36:18.320792Z[0m [33m WARN[0m [2mjackdaw_api_internal::keymap::apply[0m[2m:[0m preset 'classic' has 10 chords claimed by more than one action: ["Home (Press, Operators): viewport2d.frame, clip.timeline.jump_start, view.frame_all", "Delete (Press, Operators): clip.delete_keyframes, entity.delete, brush.delete_element", "Backspace (Press, Operators): clip.delete_keyframes, viewport.draw_brush.remove_last_vertex, brush.delete_element", "Super+KeyC (Press, Operators): clip.copy_keyframes, entity.copy", "Super+KeyV (Press, Operators): clip.paste_keyframes, entity.paste", "Tab (Press, Operators): viewport.draw_brush.toggle_mode, brush.clip.cycle_mode", "Enter (Press, Operators): viewport.draw_brush.commit_polygon, brush.clip.apply", "KeyE (Press, Operators): tool.rotate, brush.mesh.extrude", "Escape (Press, Operators): brush.exit_edit_mode, selection.clear, brush.clip.clear, terrain.tool.exit_to_select", "Super+KeyB (Press, Operators): brush.mesh.edge_bevel, brush.mesh.vertex_bevel"]
+[2m2026-10-29T12:36:18.320842Z[0m [32m INFO[0m [2mjackdaw::extension_lifecycle[0m[2m:[0m applied keymap preset 'classic': 112 entries, 112 bindings, 0 user rows
+[2m2026-10-29T12:36:18.320843Z[0m [33m WARN[0m [2mjackdaw_api_internal::keymap::apply[0m[2m:[0m preset 'classic' has 10 chords claimed by more than one action: ["Delete (Press, Operators): clip.delete_keyframes, entity.delete, brush.delete_element", "Backspace (Press, Operators): clip.delete_keyframes, viewport.draw_brush.remove_last_vertex, brush.delete_element", "Home (Press, Operators): clip.timeline.jump_start, view.frame_all, viewport2d.frame", "Super+KeyC (Press, Operators): clip.copy_keyframes, entity.copy", "Super+KeyV (Press, Operators): clip.paste_keyframes, entity.paste", "Tab (Press, Operators): viewport.draw_brush.toggle_mode, brush.clip.cycle_mode", "Enter (Press, Operators): viewport.draw_brush.commit_polygon, brush.clip.apply", "KeyE (Press, Operators): tool.rotate, brush.mesh.extrude", "Escape (Press, Operators): brush.exit_edit_mode, selection.clear, brush.clip.clear, terrain.tool.exit_to_select", "Super+KeyB (Press, Operators): brush.mesh.edge_bevel, brush.mesh.vertex_bevel"]
+[2m2026-10-29T12:36:18.320870Z[0m [32m INFO[0m [2mjackdaw::extension_lifecycle[0m[2m:[0m applied keymap preset 'classic': 112 entries, 112 bindings, 0 user rows
+[2m2026-10-29T12:36:18.684972Z[0m [33m WARN[0m [2mjackdaw::prefab::watcher[0m[2m:[0m prefab reload parse failed for /private/var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/.tmpckdmMX/assets/prefabs/p.bsn: failed to read /private/var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/.tmpckdmMX/assets/prefabs/p.bsn: No such file or directory (os error 2); keeping the last copy that parsed
+[2m2026-10-29T12:36:18.685965Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 2, typed 1, referencing 1)
+[2m2026-10-29T12:36:18.685994Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk out of date (writes 0 -> 1), walking again
+[2m2026-10-29T12:36:18.686001Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking /private/var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/.tmpxa5Lq2/assets recursively
+test prefab_t14_acceptance::probe_an_unpack_inside_a_nested_instance_persists_across_reopen ... ok
+[2m2026-10-29T12:36:18.688365Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-29T12:36:18.688842Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-29T12:36:18.699908Z[0m [33m WARN[0m [2mbevy_app::hierarchy[0m[2m:[0m warning[B0004]: The inst entity with the InheritedVisibility component has a parent (the world entity) without InheritedVisibility.
+This will cause inconsistent behaviors! See: https://bevy.org/learn/errors/b0004
+[2m2026-10-29T12:36:18.705921Z[0m [32m INFO[0m [2mjackdaw::scene_io::save[0m[2m:[0m Scene saved to /private/var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/.tmpckdmMX/assets/world.bsn
+[2m2026-10-29T12:36:18.712823Z[0m [33m WARN[0m [2mbevy_app::hierarchy[0m[2m:[0m warning[B0004]: The inst entity with the InheritedVisibility component has a parent (the world entity) without InheritedVisibility.
+This will cause inconsistent behaviors! See: https://bevy.org/learn/errors/b0004
+[2m2026-10-29T12:36:18.720659Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: file.rename
+[2m2026-10-29T12:36:18.727731Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m renamed; rewrote 1 references in 1 documents
+[2m2026-10-29T12:36:19.141857Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+test prefab_t14_acceptance::undo_of_a_field_revert_restores_the_override ... ok
+test prefab_t14_acceptance::an_applied_baseline_survives_a_scene_save_and_reopen ... ok
+[2m2026-10-29T12:36:19.615247Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-29T12:36:19.615774Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-29T12:36:19.619351Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-29T12:36:19.619356Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+test prefab_ui_import::a_ui_scene_variant_is_edited_on_the_stage_not_routed_to_the_world_view ... ok
+[2m2026-10-29T12:36:19.694595Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-29T12:36:19.694973Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-29T12:36:19.813281Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: prefab.open_source
+[2m2026-10-29T12:36:20.451505Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+test prefab_ui_import::an_imported_ui_root_is_not_given_a_placement_transform ... ok
+[2m2026-10-29T12:36:20.518947Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-29T12:36:20.519359Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-29T12:36:20.623141Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+test prefab_ui_import::an_imported_instance_parks_when_there_is_no_world_view ... ok
+[2m2026-10-29T12:36:20.699421Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-29T12:36:20.699837Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-29T12:36:20.803557Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+test prefab_ui_import::an_imported_ui_scene_root_is_a_member_of_the_world_document ... ok
+[2m2026-10-29T12:36:20.872569Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-29T12:36:20.873007Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-29T12:36:21.185981Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+[2m2026-10-29T12:36:21.187694Z[0m [32m INFO[0m [2mjackdaw::scene_io::load[0m[2m:[0m Scene loaded from /var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/.tmpbpDTki/level.bsn (1 entities, 0 embedded assets)
+[2m2026-10-29T12:36:21.193697Z[0m [32m INFO[0m [2mjackdaw::scene_io::save[0m[2m:[0m Scene saved to /var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/.tmpbpDTki/level.bsn
+test prefab_ui_import::editing_an_inherited_child_writes_an_override_and_leaves_the_source_alone ... ok
+[2m2026-10-29T12:36:21.258548Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-29T12:36:21.258982Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-29T12:36:21.379011Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+test prefab_ui_import::opening_an_instances_source_activates_that_scenes_tab ... ok
+[2m2026-10-29T12:36:21.446098Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-29T12:36:21.446500Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-29T12:36:21.506323Z[0m [33m WARN[0m [2mjackdaw::prefab::watcher[0m[2m:[0m prefab reload parse failed for /private/var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/.tmpxa5Lq2/assets/prefabs/p.bsn: failed to read /private/var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/.tmpxa5Lq2/assets/prefabs/p.bsn: No such file or directory (os error 2); keeping the last copy that parsed
+[2m2026-10-29T12:36:21.517470Z[0m [33m WARN[0m [2mbevy_app::hierarchy[0m[2m:[0m warning[B0004]: The inst entity with the InheritedVisibility component has a parent (the world entity) without InheritedVisibility.
+This will cause inconsistent behaviors! See: https://bevy.org/learn/errors/b0004
+[2m2026-10-29T12:36:21.577397Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+[2m2026-10-29T12:36:21.579283Z[0m [32m INFO[0m [2mjackdaw::scene_io::load[0m[2m:[0m Scene loaded from /var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/.tmpgycFRb/level.bsn (1 entities, 0 embedded assets)
+[2m2026-10-29T12:36:21.586027Z[0m [32m INFO[0m [2mjackdaw::scene_io::save[0m[2m:[0m Scene saved to /var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/.tmpgycFRb/level.bsn
+[2m2026-10-29T12:36:21.587578Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-29T12:36:21.587983Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-29T12:36:21.752489Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+[2m2026-10-29T12:36:21.754217Z[0m [32m INFO[0m [2mjackdaw::scene_io::load[0m[2m:[0m Scene loaded from /var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/.tmpPlfqRO/level.bsn (1 entities, 0 embedded assets)
+[2m2026-10-29T12:36:21.759215Z[0m [32m INFO[0m [2mjackdaw::scene_io::save[0m[2m:[0m Scene saved to /var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/.tmpPlfqRO/level.bsn
+test prefab_ui_import::saving_the_world_scene_emits_a_reference_not_the_widget_tree ... ok
+[2m2026-10-29T12:36:21.787522Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-29T12:36:21.787920Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-29T12:36:21.938902Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+test prefab_ui_import::the_2d_panel_router_leaves_an_imported_instance_to_the_world_view ... ok
+[2m2026-10-29T12:36:22.123592Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+[2m2026-10-29T12:36:22.125326Z[0m [32m INFO[0m [2mjackdaw::scene_io::load[0m[2m:[0m Scene loaded from /var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/.tmpgycFRb/level.bsn (3 entities, 0 embedded assets)
+test prefab_ui_import::reloading_the_world_scene_reconstructs_the_imported_tree ... ok
+[2m2026-10-29T12:36:22.325172Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+test prefab_ui_import::the_imported_widget_tree_is_inherited_not_authored ... ok
+test prefab_ui_import::a_double_click_on_an_instance_row_opens_its_source_and_keeps_the_row_selected ... ok
+test prefab_t14_acceptance::undo_of_save_as_variant_rewires_the_instance_back_and_keeps_the_file ... ok
+test prefab_t14_acceptance::a_scene_save_after_a_prefab_rename_keeps_the_new_spelling ... ok
+test prefab_t14_acceptance::renaming_a_prefab_retargets_its_tab_cache_and_references ... ok
+[2m2026-10-29T12:36:22.487933Z[0m [33m WARN[0m [2mbevy_app::hierarchy[0m[2m:[0m warning[B0004]: The knob entity with the GlobalTransform component has a parent (the nested entity) without GlobalTransform.
+This will cause inconsistent behaviors! See: https://bevy.org/learn/errors/b0004
+test prefab_t14_acceptance::a_variant_keeps_the_nested_levels_of_the_instance_it_was_cut_from ... ok
+
+failures:
+
+---- prefab_lifecycle::prefab_file_change_triggers_reload stdout ----
+
+thread 'prefab_lifecycle::prefab_file_change_triggers_reload' (18652343) panicked at tests/prefabs/prefab_lifecycle.rs:714:5:
+watcher reloaded prefab; v2 should be in world. Got ["v1"]
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    prefab_lifecycle::prefab_file_change_triggers_reload
+
+test result: FAILED. 100 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 28.74s
+
+error: test failed, to rerun pass `-p jackdaw --test prefabs`
+# END: 2026-10-29 20:36:22
+# EXIT=101

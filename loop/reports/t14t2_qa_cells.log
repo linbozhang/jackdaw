@@ -1,0 +1,183 @@
+    Finished `test` profile [optimized + debuginfo] target(s) in 0.32s
+     Running tests/prefabs/main.rs (target/debug/deps/prefabs-c0f7f6eaa1f203a3)
+
+running 9 tests
+[2m2026-10-29T12:39:45.847092Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-29T12:39:45.847095Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global tracing subscriber as it is already set. Consider disabling LogPlugin.
+[2m2026-10-29T12:39:45.847094Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-29T12:39:45.847091Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-29T12:39:45.847097Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-29T12:39:45.847097Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger as it is already set. Consider disabling LogPlugin.
+[2m2026-10-29T12:39:45.847108Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-29T12:39:45.847108Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-29T12:39:45.848210Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-29T12:39:45.848257Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-29T12:39:45.848260Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-29T12:39:45.848327Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-29T12:39:45.848260Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-29T12:39:45.848288Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-29T12:39:45.848431Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-29T12:39:46.044127Z[0m [31mERROR[0m [2mbevy_extract::extract_resource[0m[2m:[0m Sub app did not exist when trying to add `extract_resource` for <bevy_camera::clear_color::ClearColor>.
+[2m2026-10-29T12:39:47.192139Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+[2m2026-10-29T12:39:47.207512Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+[2m2026-10-29T12:39:47.248655Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw::test_input::plugin` of extension `jackdaw.test_input`
+[2m2026-10-29T12:39:47.249106Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw_physics::PhysicsEditorPlugin` of extension `jackdaw.physics`
+[2m2026-10-29T12:39:47.251057Z[0m [33m WARN[0m [2mbevy_render::texture[0m[2m:[0m CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+[2m2026-10-29T12:39:47.251155Z[0m [33m WARN[0m [2mbevy_gltf[0m[2m:[0m CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+[2m2026-10-29T12:39:47.253664Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw::test_input::plugin` of extension `jackdaw.test_input`
+[2m2026-10-29T12:39:47.253703Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core
+[2m2026-10-29T12:39:47.253778Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw_physics::PhysicsEditorPlugin` of extension `jackdaw.physics`
+[2m2026-10-29T12:39:47.255083Z[0m [33m WARN[0m [2mbevy_render::texture[0m[2m:[0m CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+[2m2026-10-29T12:39:47.255156Z[0m [33m WARN[0m [2mbevy_gltf[0m[2m:[0m CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+[2m2026-10-29T12:39:47.255514Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.project_window
+[2m2026-10-29T12:39:47.255572Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.game_panel
+[2m2026-10-29T12:39:47.255589Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core_windows
+[2m2026-10-29T12:39:47.255627Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.animation_graph
+[2m2026-10-29T12:39:47.255640Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.viewport_panel
+[2m2026-10-29T12:39:47.255719Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.multiplayer
+[2m2026-10-29T12:39:47.255740Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.build_panel
+[2m2026-10-29T12:39:47.255755Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.timeline
+[2m2026-10-29T12:39:47.255771Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.test_input
+[2m2026-10-29T12:39:47.255789Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.ui_palette
+[2m2026-10-29T12:39:47.255840Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.inspector
+[2m2026-10-29T12:39:47.255862Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.physics
+[2m2026-10-29T12:39:47.257290Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.timeline
+[2m2026-10-29T12:39:47.257402Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.game_panel
+[2m2026-10-29T12:39:47.257442Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.animation_graph
+[2m2026-10-29T12:39:47.257457Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.ui_palette
+[2m2026-10-29T12:39:47.257507Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.viewport_panel
+[2m2026-10-29T12:39:47.257655Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.project_window
+[2m2026-10-29T12:39:47.257673Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.build_panel
+[2m2026-10-29T12:39:47.257685Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.inspector
+[2m2026-10-29T12:39:47.257704Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.test_input
+[2m2026-10-29T12:39:47.257722Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core
+[2m2026-10-29T12:39:47.257714Z[0m [33m WARN[0m [2mjackdaw_api_internal::keymap::apply[0m[2m:[0m preset 'classic' has 10 chords claimed by more than one action: ["Delete (Press, Operators): clip.delete_keyframes, entity.delete, brush.delete_element", "Backspace (Press, Operators): clip.delete_keyframes, viewport.draw_brush.remove_last_vertex, brush.delete_element", "Home (Press, Operators): clip.timeline.jump_start, view.frame_all, viewport2d.frame", "Super+KeyC (Press, Operators): clip.copy_keyframes, entity.copy", "Super+KeyV (Press, Operators): clip.paste_keyframes, entity.paste", "Tab (Press, Operators): viewport.draw_brush.toggle_mode, brush.clip.cycle_mode", "Enter (Press, Operators): viewport.draw_brush.commit_polygon, brush.clip.apply", "KeyE (Press, Operators): tool.rotate, brush.mesh.extrude", "Escape (Press, Operators): brush.exit_edit_mode, selection.clear, brush.clip.clear, terrain.tool.exit_to_select", "Super+KeyB (Press, Operators): brush.mesh.edge_bevel, brush.mesh.vertex_bevel"]
+[2m2026-10-29T12:39:47.257757Z[0m [32m INFO[0m [2mjackdaw::extension_lifecycle[0m[2m:[0m applied keymap preset 'classic': 112 entries, 112 bindings, 0 user rows
+[2m2026-10-29T12:39:47.259285Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core_windows
+[2m2026-10-29T12:39:47.259331Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.multiplayer
+[2m2026-10-29T12:39:47.259351Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.physics
+[2m2026-10-29T12:39:47.260985Z[0m [33m WARN[0m [2mjackdaw_api_internal::keymap::apply[0m[2m:[0m preset 'classic' has 10 chords claimed by more than one action: ["Home (Press, Operators): viewport2d.frame, clip.timeline.jump_start, view.frame_all", "Delete (Press, Operators): clip.delete_keyframes, entity.delete, brush.delete_element", "Backspace (Press, Operators): clip.delete_keyframes, viewport.draw_brush.remove_last_vertex, brush.delete_element", "Super+KeyC (Press, Operators): clip.copy_keyframes, entity.copy", "Super+KeyV (Press, Operators): clip.paste_keyframes, entity.paste", "Tab (Press, Operators): viewport.draw_brush.toggle_mode, brush.clip.cycle_mode", "Enter (Press, Operators): viewport.draw_brush.commit_polygon, brush.clip.apply", "KeyE (Press, Operators): tool.rotate, brush.mesh.extrude", "Escape (Press, Operators): brush.exit_edit_mode, selection.clear, brush.clip.clear, terrain.tool.exit_to_select", "Super+KeyB (Press, Operators): brush.mesh.edge_bevel, brush.mesh.vertex_bevel"]
+[2m2026-10-29T12:39:47.261017Z[0m [32m INFO[0m [2mjackdaw::extension_lifecycle[0m[2m:[0m applied keymap preset 'classic': 112 entries, 112 bindings, 0 user rows
+[2m2026-10-29T12:39:47.342368Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+[2m2026-10-29T12:39:47.386600Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw::test_input::plugin` of extension `jackdaw.test_input`
+[2m2026-10-29T12:39:47.386720Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw_physics::PhysicsEditorPlugin` of extension `jackdaw.physics`
+[2m2026-10-29T12:39:47.387989Z[0m [33m WARN[0m [2mbevy_render::texture[0m[2m:[0m CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+[2m2026-10-29T12:39:47.388076Z[0m [33m WARN[0m [2mbevy_gltf[0m[2m:[0m CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+[2m2026-10-29T12:39:47.390147Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.ui_palette
+[2m2026-10-29T12:39:47.390273Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core_windows
+[2m2026-10-29T12:39:47.390317Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.timeline
+[2m2026-10-29T12:39:47.390330Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.physics
+[2m2026-10-29T12:39:47.390522Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.multiplayer
+[2m2026-10-29T12:39:47.390541Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.build_panel
+[2m2026-10-29T12:39:47.390554Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core
+[2m2026-10-29T12:39:47.391906Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.viewport_panel
+[2m2026-10-29T12:39:47.391947Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.animation_graph
+[2m2026-10-29T12:39:47.391961Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.inspector
+[2m2026-10-29T12:39:47.391978Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.test_input
+[2m2026-10-29T12:39:47.391993Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.project_window
+[2m2026-10-29T12:39:47.392004Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.game_panel
+[2m2026-10-29T12:39:47.393320Z[0m [33m WARN[0m [2mjackdaw_api_internal::keymap::apply[0m[2m:[0m preset 'classic' has 10 chords claimed by more than one action: ["Delete (Press, Operators): clip.delete_keyframes, entity.delete, brush.delete_element", "Backspace (Press, Operators): clip.delete_keyframes, viewport.draw_brush.remove_last_vertex, brush.delete_element", "Home (Press, Operators): clip.timeline.jump_start, view.frame_all, viewport2d.frame", "Super+KeyC (Press, Operators): clip.copy_keyframes, entity.copy", "Super+KeyV (Press, Operators): clip.paste_keyframes, entity.paste", "Tab (Press, Operators): viewport.draw_brush.toggle_mode, brush.clip.cycle_mode", "Enter (Press, Operators): viewport.draw_brush.commit_polygon, brush.clip.apply", "KeyE (Press, Operators): tool.rotate, brush.mesh.extrude", "Escape (Press, Operators): brush.exit_edit_mode, selection.clear, brush.clip.clear, terrain.tool.exit_to_select", "Super+KeyB (Press, Operators): brush.mesh.edge_bevel, brush.mesh.vertex_bevel"]
+[2m2026-10-29T12:39:47.393342Z[0m [32m INFO[0m [2mjackdaw::extension_lifecycle[0m[2m:[0m applied keymap preset 'classic': 112 entries, 112 bindings, 0 user rows
+[2m2026-10-29T12:39:47.716098Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+[2m2026-10-29T12:39:47.716922Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+[2m2026-10-29T12:39:47.759437Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+test prefab_t14_acceptance::an_external_edit_after_an_apply_still_reaches_every_instance ... ok
+test prefab_t14_acceptance::an_applied_leaf_clears_its_own_delta_and_keeps_the_sibling_one ... ok
+[2m2026-10-29T12:39:47.765245Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-29T12:39:47.765631Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+test prefab_t14_acceptance::an_applied_baseline_reaches_every_sibling_instance ... ok
+[2m2026-10-29T12:39:48.128597Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+test prefab_lifecycle::apply_to_source_lands_the_new_baseline_on_disk ... ok
+[2m2026-10-29T12:39:48.318945Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+[2m2026-10-29T12:39:49.036088Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+[2m2026-10-29T12:39:49.075564Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw::test_input::plugin` of extension `jackdaw.test_input`
+[2m2026-10-29T12:39:49.075686Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw_physics::PhysicsEditorPlugin` of extension `jackdaw.physics`
+[2m2026-10-29T12:39:49.076908Z[0m [33m WARN[0m [2mbevy_render::texture[0m[2m:[0m CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+[2m2026-10-29T12:39:49.076997Z[0m [33m WARN[0m [2mbevy_gltf[0m[2m:[0m CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+[2m2026-10-29T12:39:49.078826Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.timeline
+[2m2026-10-29T12:39:49.078901Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.multiplayer
+[2m2026-10-29T12:39:49.078921Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.ui_palette
+[2m2026-10-29T12:39:49.078968Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.inspector
+[2m2026-10-29T12:39:49.078988Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.viewport_panel
+[2m2026-10-29T12:39:49.079125Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.game_panel
+[2m2026-10-29T12:39:49.079139Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core_windows
+[2m2026-10-29T12:39:49.079170Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.animation_graph
+[2m2026-10-29T12:39:49.079180Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.project_window
+[2m2026-10-29T12:39:49.079190Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.test_input
+[2m2026-10-29T12:39:49.079214Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.physics
+[2m2026-10-29T12:39:49.079317Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core
+[2m2026-10-29T12:39:49.080697Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.build_panel
+[2m2026-10-29T12:39:49.082068Z[0m [33m WARN[0m [2mjackdaw_api_internal::keymap::apply[0m[2m:[0m preset 'classic' has 10 chords claimed by more than one action: ["Home (Press, Operators): viewport2d.frame, clip.timeline.jump_start, view.frame_all", "Delete (Press, Operators): clip.delete_keyframes, entity.delete, brush.delete_element", "Backspace (Press, Operators): clip.delete_keyframes, viewport.draw_brush.remove_last_vertex, brush.delete_element", "Super+KeyC (Press, Operators): clip.copy_keyframes, entity.copy", "Super+KeyV (Press, Operators): clip.paste_keyframes, entity.paste", "Tab (Press, Operators): viewport.draw_brush.toggle_mode, brush.clip.cycle_mode", "Enter (Press, Operators): viewport.draw_brush.commit_polygon, brush.clip.apply", "KeyE (Press, Operators): tool.rotate, brush.mesh.extrude", "Escape (Press, Operators): brush.exit_edit_mode, selection.clear, brush.clip.clear, terrain.tool.exit_to_select", "Super+KeyB (Press, Operators): brush.mesh.edge_bevel, brush.mesh.vertex_bevel"]
+[2m2026-10-29T12:39:49.082092Z[0m [32m INFO[0m [2mjackdaw::extension_lifecycle[0m[2m:[0m applied keymap preset 'classic': 112 entries, 112 bindings, 0 user rows
+[2m2026-10-29T12:39:49.371509Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking /private/var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/.tmprqw5IQ/assets recursively
+[2m2026-10-29T12:39:49.559230Z[0m [32m INFO[0m [2mjackdaw::asset_catalog[0m[2m:[0m No asset catalog found, starting with empty catalog
+[2m2026-10-29T12:39:49.632958Z[0m [33m WARN[0m [2mjackdaw::pie[0m[2m:[0m PIE: cannot build /private/var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/.tmprqw5IQ: cargo could not read /private/var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/.tmprqw5IQ: error: could not find `Cargo.toml` in `/private/var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/.tmprqw5IQ` or any parent directory
+[2m2026-10-29T12:39:49.633346Z[0m [32m INFO[0m [2mjackdaw::material_browser[0m[2m:[0m update_material_browser_ui: rebuilding with 1 entries
+[2m2026-10-29T12:39:49.644939Z[0m [33m WARN[0m [2mbevy_ui::ui_node[0m[2m:[0m Two or more Entities with IsDefaultUiCamera found when only one Camera with this marker is allowed.
+[2m2026-10-29T12:39:49.700082Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: scene.open
+[2m2026-10-29T12:39:49.702660Z[0m [33m WARN[0m [2mjackdaw_api_internal::operator[0m[2m:[0m scene 'world.bsn': 1 references name files the project does not hold (0 missing) — run asset.audit for the list
+[2m2026-10-29T12:39:49.953968Z[0m [33m WARN[0m [2mbevy_app::hierarchy[0m[2m:[0m warning[B0004]: The knob entity with the GlobalTransform component has a parent (the nested entity) without GlobalTransform.
+This will cause inconsistent behaviors! See: https://bevy.org/learn/errors/b0004
+[2m2026-10-29T12:39:50.135674Z[0m [32m INFO[0m [2mjackdaw::scene_io::save[0m[2m:[0m Scene saved to /var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/.tmpCUG0OW/world.bsn
+[2m2026-10-29T12:39:50.141266Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-29T12:39:50.141716Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-29T12:39:50.296729Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking /private/var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/.tmpXBA3MY/assets recursively
+[2m2026-10-29T12:39:50.296851Z[0m [32m INFO[0m [2mjackdaw::asset_catalog[0m[2m:[0m No asset catalog found, starting with empty catalog
+[2m2026-10-29T12:39:50.373590Z[0m [33m WARN[0m [2mjackdaw::pie[0m[2m:[0m PIE: cannot build /private/var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/.tmpXBA3MY: cargo could not read /private/var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/.tmpXBA3MY: error: could not find `Cargo.toml` in `/private/var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/.tmpXBA3MY` or any parent directory
+[2m2026-10-29T12:39:50.373952Z[0m [32m INFO[0m [2mjackdaw::material_browser[0m[2m:[0m update_material_browser_ui: rebuilding with 1 entries
+[2m2026-10-29T12:39:50.438604Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: scene.open
+[2m2026-10-29T12:39:50.441333Z[0m [33m WARN[0m [2mjackdaw_api_internal::operator[0m[2m:[0m scene 'world.bsn': 1 references name files the project does not hold (0 missing) — run asset.audit for the list
+[2m2026-10-29T12:39:50.674439Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 2, typed 1, referencing 1)
+[2m2026-10-29T12:39:50.674469Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk out of date (writes 0 -> 1), walking again
+[2m2026-10-29T12:39:50.674474Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking /private/var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/.tmprqw5IQ/assets recursively
+[2m2026-10-29T12:39:50.700552Z[0m [33m WARN[0m [2mbevy_app::hierarchy[0m[2m:[0m warning[B0004]: The inst entity with the InheritedVisibility component has a parent (the world entity) without InheritedVisibility.
+This will cause inconsistent behaviors! See: https://bevy.org/learn/errors/b0004
+[2m2026-10-29T12:39:50.708321Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: file.rename
+[2m2026-10-29T12:39:50.715833Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m renamed; rewrote 1 references in 1 documents
+[2m2026-10-29T12:39:51.111017Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+[2m2026-10-29T12:39:51.112680Z[0m [32m INFO[0m [2mjackdaw::scene_io::load[0m[2m:[0m Scene loaded from /var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/.tmpCUG0OW/world.bsn (1 entities, 0 embedded assets)
+[2m2026-10-29T12:39:51.411190Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 2, typed 1, referencing 1)
+[2m2026-10-29T12:39:51.411218Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk out of date (writes 0 -> 1), walking again
+[2m2026-10-29T12:39:51.411223Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking /private/var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/.tmpXBA3MY/assets recursively
+[2m2026-10-29T12:39:51.437744Z[0m [33m WARN[0m [2mbevy_app::hierarchy[0m[2m:[0m warning[B0004]: The inst entity with the InheritedVisibility component has a parent (the world entity) without InheritedVisibility.
+This will cause inconsistent behaviors! See: https://bevy.org/learn/errors/b0004
+[2m2026-10-29T12:39:51.445493Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: file.rename
+[2m2026-10-29T12:39:51.452645Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m renamed; rewrote 1 references in 1 documents
+test prefab_t14_acceptance::an_external_edit_after_an_apply_lands_through_the_real_watcher ... ok
+[2m2026-10-29T12:39:52.504683Z[0m [33m WARN[0m [2mjackdaw::prefab::watcher[0m[2m:[0m prefab reload parse failed for /private/var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/.tmprqw5IQ/assets/prefabs/p.bsn: failed to read /private/var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/.tmprqw5IQ/assets/prefabs/p.bsn: No such file or directory (os error 2); keeping the last copy that parsed
+[2m2026-10-29T12:39:52.510214Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-29T12:39:52.510681Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-29T12:39:52.514964Z[0m [33m WARN[0m [2mbevy_app::hierarchy[0m[2m:[0m warning[B0004]: The inst entity with the InheritedVisibility component has a parent (the world entity) without InheritedVisibility.
+This will cause inconsistent behaviors! See: https://bevy.org/learn/errors/b0004
+[2m2026-10-29T12:39:52.522759Z[0m [32m INFO[0m [2mjackdaw::scene_io::save[0m[2m:[0m Scene saved to /private/var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/.tmprqw5IQ/assets/world.bsn
+[2m2026-10-29T12:39:52.868606Z[0m [33m WARN[0m [2mjackdaw::prefab::watcher[0m[2m:[0m prefab reload parse failed for /private/var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/.tmpXBA3MY/assets/prefabs/p.bsn: failed to read /private/var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/.tmpXBA3MY/assets/prefabs/p.bsn: No such file or directory (os error 2); keeping the last copy that parsed
+test prefab_t14_acceptance::an_applied_baseline_survives_a_scene_save_and_reopen ... ok
+test prefab_t14_acceptance::a_scene_save_after_a_prefab_rename_keeps_the_new_spelling ... ok
+[2m2026-10-29T12:39:52.886044Z[0m [33m WARN[0m [2mbevy_app::hierarchy[0m[2m:[0m warning[B0004]: The inst entity with the InheritedVisibility component has a parent (the world entity) without InheritedVisibility.
+This will cause inconsistent behaviors! See: https://bevy.org/learn/errors/b0004
+test prefab_t14_acceptance::renaming_a_prefab_retargets_its_tab_cache_and_references ... ok
+[2m2026-10-29T12:39:52.935474Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+[2m2026-10-29T12:39:52.973870Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw::test_input::plugin` of extension `jackdaw.test_input`
+[2m2026-10-29T12:39:52.973989Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw_physics::PhysicsEditorPlugin` of extension `jackdaw.physics`
+[2m2026-10-29T12:39:52.975153Z[0m [33m WARN[0m [2mbevy_render::texture[0m[2m:[0m CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+[2m2026-10-29T12:39:52.975244Z[0m [33m WARN[0m [2mbevy_gltf[0m[2m:[0m CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+[2m2026-10-29T12:39:52.977074Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.ui_palette
+[2m2026-10-29T12:39:52.977212Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.game_panel
+[2m2026-10-29T12:39:52.977238Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.multiplayer
+[2m2026-10-29T12:39:52.977261Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.project_window
+[2m2026-10-29T12:39:52.977273Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.inspector
+[2m2026-10-29T12:39:52.977296Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core_windows
+[2m2026-10-29T12:39:52.977328Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.test_input
+[2m2026-10-29T12:39:52.977373Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.timeline
+[2m2026-10-29T12:39:52.977400Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.viewport_panel
+[2m2026-10-29T12:39:52.977541Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.animation_graph
+[2m2026-10-29T12:39:52.977554Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core
+[2m2026-10-29T12:39:52.979076Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.build_panel
+[2m2026-10-29T12:39:52.979092Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.physics
+[2m2026-10-29T12:39:52.980663Z[0m [32m INFO[0m [2mjackdaw::extension_lifecycle[0m[2m:[0m applied keymap preset 'classic': 112 entries, 112 bindings, 0 user rows
+[2m2026-10-29T12:39:53.431163Z[0m [33m WARN[0m [2mbevy_app::hierarchy[0m[2m:[0m warning[B0004]: The knob entity with the GlobalTransform component has a parent (the nested entity) without GlobalTransform.
+This will cause inconsistent behaviors! See: https://bevy.org/learn/errors/b0004
+test prefab_t14_acceptance::a_variant_keeps_the_nested_levels_of_the_instance_it_was_cut_from ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 92 filtered out; finished in 7.62s
+

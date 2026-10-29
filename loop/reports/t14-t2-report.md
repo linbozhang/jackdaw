@@ -121,3 +121,12 @@ awk 门因此从假 FAIL 转真 PASS；(3) `export_prefab_wait` 就绪谓词补 
    `t14t2-pf4-red.log`/`t14t2-t1-cells-red.log`/`t14t2-new-cells-red.log`（本轮）；
    绿证 `t14t2-six-green.log`；门禁 `t14t2_qa_*.log`/`t14t2_gate_fast.log`；
    真机 `loop/t14-live/`。
+
+---
+
+## 勘误（2026-10-29 主控落，QA t14-t2-qa.md 回流②）
+
+1. prefabs 套件实为 **101 件**（正文 100 笔误；QA 亲数 99 绿+A6 隔离×3 计 1 件=101）。
+2. editor 二轮 `L2_REVERT_COMPONENT` FAIL 重定性为**腿前提类**（未重跑 prep、硬编码基线失配；同二进制一轮 PASS+headless 锚背书）——非 UI 竞态、非产品缺陷。
+3. `L2_REVERT_FIELD` FAIL 实为**裸字符串门漏修一处**（"0.0"≠"0"，与已修 L6 门同族）——归 T3 腿修复清单。
+4. L2b 行「frozen」括号为 T1 残留文案——二轮实测 [2,1,1] 实为 **PF1 真机传播活证**（修后兄弟实例跟随），非冻结。
