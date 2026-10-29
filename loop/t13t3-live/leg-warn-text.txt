@@ -1,0 +1,2 @@
+the start scene 'ghost.bsn' is not in the scene list
+the start scene 'ghost.bsn' is not on disk; the game will start from the scene its code names

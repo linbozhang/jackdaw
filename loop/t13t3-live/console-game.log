@@ -1,0 +1,46 @@
+EDITOR_READY
+---- CELL1: fresh boot = the flow's start scene ----
+window entity: 701v0
+CELL1: MenuRoot=1 StartButton=1 MenuUiCamera=1 Sun=0 HudRoot=0 face={  "path": "/Users/zhanglinbo/workspace/loop-mac/t13t3/t13t3-game/assets/game.flow.json",  "present": true,  "scenes": [    {      "on_disk": true,      "path": "menu.bsn"    },    {      "on_disk": t
+CELL1_FRESH_BOOT_PASS
+---- CELL2: Start -> the level, zero menu residue ----
+sweep_click: hit at (787,787)
+flow-button anchor: (787,787)
+CELL2: sig_menu=[n=9 p=0 h=0 c=0 pl=0 r=0 cam=1] sig_level=[n=17 p=3 h=1 c=1 pl=1 r=0 cam=0]
+CELL2: Sun=1 HudRoot=1 MenuRoot=0 MenuUiCamera=0
+CELL2_START_TO_LEVEL_PASS
+---- CELL12a: the pickup chain 0->3 and the level-clear line ----
+pickup walk: ->3/3/3 count=3 (expect 3)
+level-clear line in the Game panel log strip: true
+---- CELL12b: the pause doors and the frozen player ----
+STAND_FLOW_PAUSE: tap1=true tap2=false frozen=true resumed=true pos_a=1.9187325239181519 0.8600000143051147 -0.09057626873254776 pos_e=1.9187325239181519 0.8600000143051147 -2.440000057220459
+STAND_FLOW_PAUSE_SINGLE_PASS
+---- CELL12c: the walk and the jump (the player chain) ----
+player chain: walked=true (1.9187325239181519 0.8600000143051147 -2.440000057220459 -> -1.5764027833938599 0.8599998354911804 -2.4399988651275635) jumped=true (y 0.8599998354911804 -> 1.359842300415039)
+---- CELL3: hazard to death -> the end screen, zero level residue ----
+CELL3: died=true GameOverRoot=1 Sun=0 HudRoot=0 pickups=0 hazards=0 player_still=1 sig=[n=11 p=0 h=0 c=0 pl=1 r=0 cam=1]
+CELL3_LEVEL_TO_GAMEOVER_PASS
+---- CELL4: Restart -> the run comes back whole ----
+click_restart: the level came back
+CELL4: after Restart health=100.0 PickupCount=0 pickups=3 pos=-2.0 0.8600000739097595 0.0 sig=[n=17 p=3 h=1 c=1 pl=1 r=0 cam=0]
+CELL4_RESTART_ROUNDTRIP_PASS
+---- CELL6: cross-scene ids ----
+CELL6: player 738v0 == 738v0 == 738v0; pickups '733v0,734v0,735v0' != '764v0,765v0,766v0'
+CELL6_CROSS_SCENE_IDS_PASS
+---- CELL5: three menu<->level<->gameover cycles, identical counts ----
+click_menu: the menu came back
+CELL5 cycle A: level=[n=17 p=3 h=1 c=1 pl=1 r=0 cam=0] over=[n=11 p=0 h=0 c=0 pl=1 r=0 cam=1] menu=[n=9 p=0 h=0 c=0 pl=1 r=0 cam=1] (all cycles identical so far=true)
+click_start: the level came up
+click_menu: the menu came back
+CELL5 cycle B: level=[n=17 p=3 h=1 c=1 pl=1 r=0 cam=0] over=[n=11 p=0 h=0 c=0 pl=1 r=0 cam=1] menu=[n=9 p=0 h=0 c=0 pl=1 r=0 cam=1] (all cycles identical so far=true)
+click_start: the level came up
+click_menu: the menu came back
+CELL5 cycle C: level=[n=17 p=3 h=1 c=1 pl=1 r=0 cam=0] over=[n=11 p=0 h=0 c=0 pl=1 r=0 cam=1] menu=[n=9 p=0 h=0 c=0 pl=1 r=0 cam=1] (all cycles identical so far=true)
+CELL5: base_level=[n=17 p=3 h=1 c=1 pl=1 r=0 cam=0] base_over=[n=11 p=0 h=0 c=0 pl=1 r=0 cam=1] base_menu=[n=9 p=0 h=0 c=0 pl=1 r=0 cam=1]
+CELL5_ROUNDTRIP_STABILITY_PASS
+---- CELL12d: the player id survived the whole walk; the warn face ----
+CELL12_REGRESSION_PASS
+WARN_SCAN game phase: defect_forms=0 game_flow_lines=0 refused_lines=0 (expected 0/0/0; the editor log carries PIE game streams)
+WARN_SCAN_GAME_PASS
+SEED_SHAS_AFTER_GAME_PHASE=04ebd663fa83148c0616243bbe30d5f076d5847746370fa0ce74b6c8631b7cb7 0687c3811d6ee7e428c3b9f201ccef2a17f6c4fcbe1ca4f28b6465bd76ad5e55 3cdb04f356e879f75777bf8932734b50d0938edefdf0f5f6def567d5278a2fb9 6af809207803b071b8504ca233eea112acda4c4e4495f122d085ed96604b2453 
+VERDICT_GAME_PHASE: CELL12_REGRESSION=PASS CELL1_FRESH_BOOT=PASS CELL2_START_TO_LEVEL=PASS CELL3_LEVEL_TO_GAMEOVER=PASS CELL4_RESTART_ROUNDTRIP=PASS CELL5_ROUNDTRIP_STABILITY=PASS CELL6_CROSS_SCENE_IDS=PASS STAND_FLOW_PAUSE_SINGLE=PASS WARN_SCAN_GAME=PASS 

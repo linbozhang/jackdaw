@@ -450,9 +450,9 @@
   `crates/jackdaw_runtime/src/pie_log.rs`（T12-T2 引入）：节流层每秒窗口上限（32 条/秒）溢出时静默丢弃，而每帧 512 条排空溢出有明报——同一转发层两种溢出语义不对称；唯一性错误恰逢窗口满时可能被丢（低概率、低危，但日志即 T12 的验收面）。
   修复方向：窗口溢出补一条自身计数 warn（或尾条替换+计数标注，形态与帧排空对齐）。小票，下轮触碰 pie_log 时顺手。
 
-- [ ] **A6. prefab watcher 满载 flaky（`prefab_file_change_triggers_reload`，上游 45e15e7b 血统）**（2026-10-28 T12 终验 QA 建票；主控批准立账）
-  integration 满载首跑 1 红、隔离复跑 1.33s PASS、复跑全绿 5348/5348——满载时序竞态形态；上游 45e15e7b 引入，与 T12 diff 零文件交集（t12-final-qa.md）。
-  修复方向：满载下文件事件与 reload 轮询的等待语义（轮询窗/事件面探针），或测试侧重试窗加数据断言。观察账：连续两轮全量零复发即可降级 ⚪ 销案。
+- [ ] **A6（🔴 升级立项，2026-10-28 T13 终验）. prefab watcher 满载 flaky + 门禁磁盘高压家族**（2026-10-28 T12 终验 QA 建票；T13-T3 三连红+stash 二分定案+QA 四腿闭合链后升级）
+  `prefab_file_change_triggers_reload`：T12 终验首红（隔离绿）→T13-T3 **三轮连续同红**（watcher 3s 预算 8-13s）→QA 四腿闭合：本树隔离单测 3/3 绿（~2s）/本树全 prefab 二进制 2 次红（88/1）/**git worktree 干净 main（3fe6aa7d）同红 88/1 同签名 prefab_lifecycle.rs:714**/diff 18 文件与 watcher 域零交集——**存量基建票非产品缺陷**（Windows T10a 全绿=无此负载形态）。触发器=二进制内 89 件并行对 3s FSEvents 预算的挤压；**磁盘高压为加重因子**（T13 终验 scaffold_e2e 首跑 ENOSPC 数据卷 100%，清 46GB 后 PASS——scaffold_e2e 临时目录泄漏 46GB/17GB 实测，并账同一「磁盘高压伤门禁」家族）。
+  修复方向（立项后定）：watcher 预算平台校准或测试域串行化；scaffold_e2e 临时目录清理钩子。处置前 integration 该件按「已定案环境票」口径放行。
 
 - [x] **N10. dirty 场景 + Save 态 play_current 真机冻结编辑器主线程（2026-10-26 T06-T3 矩阵 cell 3 发现）**
   触发：打开已保存场景 → 任意编辑（脏）→ `pie.play_current`（save 策略，默认态）→ play_current 调用正常返回，**下一帧起主线程满 CPU 自旋**（实测 CPU/4s≈5s），BRP 全部无响应，日志停在 `OPERATOR: pie.play_current` 后零输出（保存链最早期）。
@@ -477,6 +477,7 @@
   修复方向：先 PIE connected ×10 连跑定复发率+RUST_BACKTRACE=1 拿真栈（折入 T11-T2 真机腿）；嫌疑链排序①投影重入→②bevy_ecs 陈旧 location→③树索引上游竞态；🔴 严重度候选（数据结构级 panic）。
   > 2026-10-28 更新：N13 复发率测定因驱动态（PIE 全形态崩）不可执行，挂账维持（t11-t2-qa.md §四-3）。
   > 2026-10-28 更新（T11-T3 Mac 真机 ×10 完成）：**复发率=100%**——10/10 轮 connected 全复发，累计 **57 次 panic**（每 connect/stop 周期 ~5-6 次）；同签名第二个受害系统 **`jackdaw::pie::cleanup_session_on_stop`**（原刻画未含）；Mac 上全部被 bevy 系统错误处理器捕获（编辑器存活，`Encountered an error in system ...: Exclusive system panicked`），旧机形态直接杀死编辑器——严重度依机器形态不同；Mac 签名 `swap_remove index (is 0) should be < len (is 0)`（空 vec 退化形态，与旧机 is 1/len 1 同根）。RUST_BACKTRACE=1 在 Mac debug 构建不可用（wgpu LockTrace→libunwind SIGSEGV，见 t11-t3-report 环境节），真栈仍缺。证据 `loop/t11t3-live/t11t3-a2-mac-*`。
+  > 2026-10-28 更新（T13-T3 终验，**处置优先级上调**）：单轮 PIE 会话逐条原文记数 **22 条**（game 11+flow 11；比 T11-T3 的 5-6 次/周期翻倍以上）；受害面扩至**四类**（drain_game_events/cleanup_session_on_stop stop 形态 4 条新样本/第 3 种签名变体 `is 1 should be < len 0`/operator 管道挂起一次——该次无存活证据措辞降格为「一次绕行观察」）；2/2 相全中延续 100% 复发率。证据 `loop/t13t3-live/editor-*.log`（QA 逐条记数在 t13-final-qa.md）。建议：立项专项（真栈获取路径=release 构建 or macos crash 报告 or bevy 错误处理器 hook 重导出）。
 
 - [x] **N14（=T11 方案 C11）. 单字段 set 后存档丢同组件未编辑字段**（2026-10-28 T11-T2 程序发现+QA 定向复现实锤；主控批准立账）
   现象：entity add 组件后首次单字段 set（如 set move_speed）→save，同组件其他字段（jump_speed）从文档消失（QA 复现链 t11-t2-qa.md §四-2；程序发现 t11-t2-report.md）。

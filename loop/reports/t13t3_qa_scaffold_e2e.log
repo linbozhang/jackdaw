@@ -1,0 +1,69 @@
+   Compiling bevy_dylib v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_dylib)
+   Compiling bevy v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned)
+   Compiling jackdaw_geometry v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_geometry)
+   Compiling jackdaw_input v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_input)
+   Compiling jackdaw_commands v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_commands)
+   Compiling jackdaw_localization v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_localization)
+   Compiling jackdaw_bsn v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_bsn)
+   Compiling jackdaw_bind v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_bind)
+   Compiling bevy_transform_interpolation v0.6.0
+   Compiling jackdaw_widgets_runtime v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_widgets_runtime)
+   Compiling jackdaw_widgets v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_widgets)
+   Compiling jackdaw_scene_types v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_scene_types)
+   Compiling jackdaw_prefab v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_prefab)
+   Compiling avian3d v0.8.0
+   Compiling jackdaw_feathers v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_feathers)
+   Compiling jackdaw_terrain v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_terrain)
+   Compiling jackdaw_schema v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_schema)
+   Compiling jackdaw_surface v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_surface)
+   Compiling jackdaw_camera_rig v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_camera_rig)
+   Compiling jackdaw_project_build v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_project_build)
+   Compiling jackdaw_multiplayer v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_multiplayer)
+   Compiling jackdaw_panels v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_panels)
+   Compiling jackdaw_node_graph v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_node_graph)
+   Compiling jackdaw_api_internal v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_api_internal)
+   Compiling jackdaw_runtime v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_runtime)
+   Compiling jackdaw_avian_integration v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/integrations/physics/jackdaw_avian_integration)
+   Compiling jackdaw_animation_runtime v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_animation_runtime)
+   Compiling jackdaw_pie_protocol v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_pie_protocol)
+   Compiling jackdaw_animation v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_animation)
+   Compiling jackdaw_remote v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_remote)
+   Compiling jackdaw_loader v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_loader)
+   Compiling jackdaw_scaffold v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_scaffold)
+   Compiling jackdaw_jsn v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_jsn)
+   Compiling jackdaw_hull v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_hull)
+   Compiling jackdaw_uv v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_uv)
+   Compiling jackdaw_select v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_select)
+   Compiling jackdaw_csg v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_csg)
+   Compiling jackdaw_pick v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_pick)
+   Compiling jackdaw_camera v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_camera)
+   Compiling bevy_window_chrome v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/bevy_window_chrome)
+   Compiling jackdaw_dylib v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_dylib)
+   Compiling jackdaw_api v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_api)
+   Compiling jackdaw_physics v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/integrations/physics/jackdaw_physics)
+   Compiling jackdaw_multiplayer_editor v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_multiplayer_editor)
+   Compiling jackdaw v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw)
+   Compiling jackdaw_extension v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_extension)
+   Compiling test_fixture_extension v0.0.0 (/Users/zhanglinbo/workspace/jackdaw/tests/fixtures/test_fixture_extension)
+    Finished `test` profile [optimized + debuginfo] target(s) in 1m 38s
+     Running tests/scaffold_e2e.rs (target/debug/deps/scaffold_e2e-96d9d3617774d906)
+
+running 1 test
+test scaffold_game_builds_and_exposes_component has been running for over 60 seconds
+test scaffold_game_builds_and_exposes_component ... FAILED
+
+failures:
+
+---- scaffold_game_builds_and_exposes_component stdout ----
+
+thread 'scaffold_game_builds_and_exposes_component' (17431935) panicked at tests/scaffold_e2e.rs:41:10:
+build the scaffolded project binary: Compile { log: "error: could not write output to /var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/jackdaw_scaffold_e2e_d89d4755932ee697/0db8bbb1da43e23b/mygame/.jackdaw/target/game/debug/deps/jackdaw_surface-ad90505a6830df7f.dkmkizk7j9vl76x4c68hpnwrj.1alfbuu.rcgu.o: No space left on device\n\nerror: could not write output to /var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/jackdaw_scaffold_e2e_d89d4755932ee697/0db8bbb1da43e23b/mygame/.jackdaw/target/game/debug/deps/jackdaw_terrain-403681ca64769c8b.097heh7nyeb0ga9yem96qr0kn.19ow5pt.rcgu.o: No space left on device\n\nerror: failed to build archive at `/var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/jackdaw_scaffold_e2e_d89d4755932ee697/0db8bbb1da43e23b/mygame/.jackdaw/target/game/debug/deps/libbevy_feathers-7844cb4e073623fa.rlib`: No space left on device (os error 28)\n\nerror: failed to build archive at `/var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/jackdaw_scaffold_e2e_d89d4755932ee697/0db8bbb1da43e23b/mygame/.jackdaw/target/game/debug/deps/libbevy_pbr-0fe6a979142d57f5.rlib`: No space left on device (os error 28)\n\nerror: failed to write file /private/var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/jackdaw_scaffold_e2e_d89d4755932ee697/0db8bbb1da43e23b/mygame/.jackdaw/target/game/debug/incremental/jackdaw_runtime-1wg7ciwl767qo/s-hnniyp31h9-0fyauk8-working/dep-graph.part.bin: No space left on device (os error 28)\n\n\nerror: could not compile `jackdaw_surface` (lib) due to 1 previous error\nwarning: build failed, waiting for other jobs to finish...\nerror: could not compile `jackdaw_terrain` (lib) due to 1 previous error\nerror: could not compile `bevy_feathers` (lib) due to 1 previous error\nerror: could not compile `bevy_pbr` (lib) due to 1 previous error\nerror: could not compile `jackdaw_runtime` (lib) due to 1 previous error\nrustc-LLVM ERROR: IO failure on output stream: No space left on device\nerror: could not compile `avian3d` (lib)\n\nCaused by:\n  process didn't exit successfully: `/Users/zhanglinbo/.rustup/toolchains/1.99.0-aarch64-apple-darwin/bin/rustc --crate-name avian3d --edition=2024 /Users/zhanglinbo/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/avian3d-0.8.0/src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --crate-type lib --emit=dep-info,metadata,link -C embed-bitcode=no -C debuginfo=2 -C split-debuginfo=unpacked --cfg 'feature=\"3d\"' --cfg 'feature=\"bevy_picking\"' --cfg 'feature=\"bevy_scene\"' --cfg 'feature=\"collider-from-mesh\"' --cfg 'feature=\"debug-plugin\"' --cfg 'feature=\"default\"' --cfg 'feature=\"default-collider\"' --cfg 'feature=\"parallel\"' --cfg 'feature=\"parry-f32\"' --cfg 'feature=\"xpbd_joints\"' --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values(\"3d\", \"bevy_diagnostic\", \"bevy_picking\", \"bevy_scene\", \"collider-from-mesh\", \"debug-plugin\", \"default\", \"default-collider\", \"diagnostic_ui\", \"enhanced-determinism\", \"f64\", \"parallel\", \"parry-f32\", \"parry-f64\", \"serialize\", \"test\", \"validate\", \"xpbd_joints\"))' -C metadata=e4dcb5185b2bb1c1 -C extra-filename=-61ebb95270c06f1d --out-dir /var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/jackdaw_scaffold_e2e_d89d4755932ee697/0db8bbb1da43e23b/mygame/.jackdaw/target/game/debug/deps -L dependency=/var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/jackdaw_scaffold_e2e_d89d4755932ee697/0db8bbb1da43e23b/mygame/.jackdaw/target/game/debug/deps --extern approx=/var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/jackdaw_scaffold_e2e_d89d4755932ee697/0db8bbb1da43e23b/mygame/.jackdaw/target/game/debug/deps/libapprox-41c9a8df996fcb95.rmeta --extern avian_derive=/var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/jackdaw_scaffold_e2e_d89d4755932ee697/0db8bbb1da43e23b/mygame/.jackdaw/target/game/debug/deps/libavian_derive-8eb3898c3f147060.dylib --extern bevy=/var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/jackdaw_scaffold_e2e_d89d4755932ee697/0db8bbb1da43e23b/mygame/.jackdaw/target/game/debug/deps/libbevy-edb855ed50449051.rmeta --extern bevy_curve=/var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/jackdaw_scaffold_e2e_d89d4755932ee697/0db8bbb1da43e23b/mygame/.jackdaw/target/game/debug/deps/libbevy_curve-2add52550813d9b2.rmeta --extern bevy_heavy=/var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/jackdaw_scaffold_e2e_d89d4755932ee697/0db8bbb1da43e23b/mygame/.jackdaw/target/game/debug/deps/libbevy_heavy-cfdc17bd4dff1ace.rmeta --extern bevy_math=/var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/jackdaw_scaffold_e2e_d89d4755932ee697/0db8bbb1da43e23b/mygame/.jackdaw/target/game/debug/deps/libbevy_math-8dd9b43fa0a3205c.rmeta --extern bevy_shape=/var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/jackdaw_scaffold_e2e_d89d4755932ee697/0db8bbb1da43e23b/mygame/.jackdaw/target/game/debug/deps/libbevy_shape-9cd333d91cf147a6.rmeta --extern bevy_transform_interpolation=/var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/jackdaw_scaffold_e2e_d89d4755932ee697/0db8bbb1da43e23b/mygame/.jackdaw/target/game/debug/deps/libbevy_transform_interpolation-fc5b48dc1831146d.rmeta --extern bitflags=/var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/jackdaw_scaffold_e2e_d89d4755932ee697/0db8bbb1da43e23b/mygame/.jackdaw/target/game/debug/deps/libbitflags-b59ba48d0d31f427.rmeta --extern derive_more=/var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/jackdaw_scaffold_e2e_d89d4755932ee697/0db8bbb1da43e23b/mygame/.jackdaw/target/game/debug/deps/libderive_more-112aae6aff8612fe.rmeta --extern disqualified=/var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/jackdaw_scaffold_e2e_d89d4755932ee697/0db8bbb1da43e23b/mygame/.jackdaw/target/game/debug/deps/libdisqualified-2c417db94773530c.rmeta --extern glam_matrix_extras=/var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/jackdaw_scaffold_e2e_d89d4755932ee697/0db8bbb1da43e23b/mygame/.jackdaw/target/game/debug/deps/libglam_matrix_extras-d2e494c92145d59e.rmeta --extern itertools=/var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/jackdaw_scaffold_e2e_d89d4755932ee697/0db8bbb1da43e23b/mygame/.jackdaw/target/game/debug/deps/libitertools-f7abe84f7434f50e.rmeta --extern obvhs=/var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/jackdaw_scaffold_e2e_d89d4755932ee697/0db8bbb1da43e23b/mygame/.jackdaw/target/game/debug/deps/libobvhs-81569312a67b2c2b.rmeta --extern parry3d=/var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/jackdaw_scaffold_e2e_d89d4755932ee697/0db8bbb1da43e23b/mygame/.jackdaw/target/game/debug/deps/libparry3d-d1f6bcc8ac33f0a8.rmeta --extern smallvec=/var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/jackdaw_scaffold_e2e_d89d4755932ee697/0db8bbb1da43e23b/mygame/.jackdaw/target/game/debug/deps/libsmallvec-34204e5c99c56338.rmeta --extern thiserror=/var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/jackdaw_scaffold_e2e_d89d4755932ee697/0db8bbb1da43e23b/mygame/.jackdaw/target/game/debug/deps/libthiserror-7b10e89559c6a1c1.rmeta --extern thread_local=/var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/jackdaw_scaffold_e2e_d89d4755932ee697/0db8bbb1da43e23b/mygame/.jackdaw/target/game/debug/deps/libthread_local-a198100f12a9fc48.rmeta --cap-lints allow -L native=/var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/jackdaw_scaffold_e2e_d89d4755932ee697/0db8bbb1da43e23b/mygame/.jackdaw/target/game/debug/build/blake3-9e26e3020f72bd5a/out -L native=/var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/jackdaw_scaffold_e2e_d89d4755932ee697/0db8bbb1da43e23b/mygame/.jackdaw/target/game/debug/build/basis-universal-sys-ec6d4ed50f76b0c8/out` (exit status: 101)\n" }
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    scaffold_game_builds_and_exposes_component
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 148.23s
+
+error: test failed, to rerun pass `-p jackdaw --test scaffold_e2e`
