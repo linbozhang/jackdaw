@@ -485,6 +485,28 @@ mod tests {
         assert_eq!(modules, set(&["navmesh"]));
     }
 
+    /// The animation module's whole game side is the runtime feature: the
+    /// plugin and the authored types ride on it, so a game asks for no crate
+    /// and no other module to play what a scene authored.
+    #[test]
+    fn the_animation_module_carries_the_feature_that_plays_its_sets() {
+        let catalog = ModuleCatalog::builtin();
+        let animation = catalog
+            .get("animation")
+            .expect("the catalog lists animation");
+        assert_eq!(animation.runtime_features, vec!["animation".to_string()]);
+        assert!(animation.crates.is_empty());
+        assert!(animation.requires.is_empty());
+        assert_eq!(
+            catalog.providing_crate("jackdaw_animation_runtime"),
+            Some(animation)
+        );
+
+        let mut game = GameDependencies::default();
+        game.runtime_features.insert("animation".to_string());
+        assert_eq!(catalog.detect(&game), set(&["animation"]));
+    }
+
     #[test]
     fn a_listed_module_must_be_known_and_available() {
         let catalog = ModuleCatalog::builtin();

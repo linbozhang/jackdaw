@@ -52,5 +52,13 @@
     ],
     "provides": ["jackdaw_multiplayer"],
     "component_prefixes": ["jackdaw_multiplayer"]
+  },
+  {
+    "id": "animation",
+    "name": "Animation",
+    "description": "Play the animation sets and graphs a scene authored on its rigs, in the game as the editor previews them.",
+    "runtime_features": ["animation"],
+    "provides": ["jackdaw_animation_runtime"],
+    "component_prefixes": ["jackdaw_animation_runtime::"]
   }
 ]

@@ -140,27 +140,51 @@ fn integration(shard: Option<&str>, archive: Option<&str>) -> bool {
     if let Some(partition) = &partition {
         args.extend(["--partition", partition.as_str()]);
     }
-    if archive.is_none() {
-        return sh("cargo", &args);
-    }
-    let dylibs = std::env::current_dir()
-        .expect("the working directory")
-        .join(ARCHIVED_DYLIBS);
-    let mut search = std::ffi::OsString::from(dylibs);
-    if let Some(inherited) = std::env::var_os("LD_LIBRARY_PATH") {
-        search.push(":");
-        search.push(inherited);
-    }
-    eprintln!(
-        "+ LD_LIBRARY_PATH={} cargo {}",
-        search.display(),
-        args.join(" ")
-    );
-    Command::new("cargo")
-        .args(&args)
-        .env("LD_LIBRARY_PATH", search)
-        .status()
-        .is_ok_and(|status| status.success())
+    let ran = if archive.is_none() {
+        sh("cargo", &args)
+    } else {
+        let dylibs = std::env::current_dir()
+            .expect("the working directory")
+            .join(ARCHIVED_DYLIBS);
+        let mut search = std::ffi::OsString::from(dylibs);
+        if let Some(inherited) = std::env::var_os("LD_LIBRARY_PATH") {
+            search.push(":");
+            search.push(inherited);
+        }
+        eprintln!(
+            "+ LD_LIBRARY_PATH={} cargo {}",
+            search.display(),
+            args.join(" ")
+        );
+        Command::new("cargo")
+            .args(&args)
+            .env("LD_LIBRARY_PATH", search)
+            .status()
+            .is_ok_and(|status| status.success())
+    };
+    ran && animation_scene_load()
+}
+
+/// The game-side animation end-to-end test is `#![cfg(feature = "animation")]`,
+/// which no other tier enables — a game with no rigs links neither, so the
+/// whole-workspace runs compile the file empty. This one feature-on run is
+/// where "a game plays the set its scene authored" stays compile-checked.
+fn animation_scene_load() -> bool {
+    sh(
+        "cargo",
+        &[
+            "nextest",
+            "run",
+            "--profile",
+            "ci",
+            "-p",
+            "jackdaw_runtime",
+            "--features",
+            "animation",
+            "--test",
+            "animation_scene_load",
+        ],
+    )
 }
 
 fn heavy() -> bool {

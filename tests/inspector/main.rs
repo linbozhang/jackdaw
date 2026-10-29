@@ -7,6 +7,7 @@
 #[path = "../util/mod.rs"]
 mod util;
 
+mod animation_cards;
 mod asset_row;
 mod bindings_card;
 mod bindings_link;

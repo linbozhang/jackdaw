@@ -592,7 +592,10 @@ pub fn launcher_new_project_editor(
                    what it needs; turning one off turns off what needs it.",
     allows_undo = false,
     params(
-        id(String, doc = "The module: physics, navmesh or multiplayer."),
+        id(
+            String,
+            doc = "The module: physics, navmesh, multiplayer or animation."
+        ),
         enabled(bool, doc = "On or off.")
     )
 )]
@@ -838,7 +841,10 @@ pub fn launcher_install_show_older(
     description = "Turn a module on or off in the Install editor dialog.",
     allows_undo = false,
     params(
-        id(String, doc = "The module: physics, navmesh or multiplayer."),
+        id(
+            String,
+            doc = "The module: physics, navmesh, multiplayer or animation."
+        ),
         enabled(bool, doc = "On or off.")
     )
 )]

@@ -3748,6 +3748,39 @@ mod tests {
         );
     }
 
+    /// The animation module is the only road a game's manifest has to the
+    /// `animation` feature: with the module the feature rides along, so the
+    /// game links the runtime plugin and plays what a scene authored;
+    /// without it nothing animation reaches the manifest and the scene's
+    /// sets load as unresolved types.
+    #[test]
+    fn new_game_project_enables_animation_only_through_its_module() {
+        let dest = temp_dir("newgame-animation").join("my-game");
+        scaffold_new_project_with(
+            &dest,
+            "my-game",
+            TemplateKind::Game,
+            &modules(&["animation"]),
+        )
+        .unwrap();
+        let manifest = std::fs::read_to_string(dest.join("Cargo.toml")).unwrap();
+        assert!(
+            manifest.contains("features = [\"animation\","),
+            "the module's runtime feature must reach the game's manifest:\n{manifest}"
+        );
+        let toml = std::fs::read_to_string(dest.join("jackdaw.toml")).unwrap();
+        assert!(toml.contains("animation = true"), "got:\n{toml}");
+
+        let plain = temp_dir("newgame-animation-plain").join("my-game");
+        scaffold_new_project_with(&plain, "my-game", TemplateKind::Game, &ModuleSet::new())
+            .unwrap();
+        let manifest = std::fs::read_to_string(plain.join("Cargo.toml")).unwrap();
+        assert!(
+            !manifest.contains("animation"),
+            "without the module no animation may reach the manifest"
+        );
+    }
+
     /// The player controller pattern the template teaches: tuning on a
     /// component, camera-relative movement against the rig's look state,
     /// the rig parented under the player with the runtime plugin wired,
