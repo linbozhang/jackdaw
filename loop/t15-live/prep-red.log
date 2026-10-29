@@ -1,0 +1,23 @@
++ REPO=/Users/zhanglinbo/workspace/jackdaw
++ FIXROOT=/Users/zhanglinbo/workspace/loop-mac/t15-anim
++ PROJECT=/Users/zhanglinbo/workspace/loop-mac/t15-anim/t15-anim
++ TOOLCHAIN_LIB=/Users/zhanglinbo/.rustup/toolchains/1.99.0-aarch64-apple-darwin/lib/rustlib/aarch64-apple-darwin/lib
++ mkdir -p /Users/zhanglinbo/workspace/loop-mac/t15-anim
++ cd /Users/zhanglinbo/workspace/jackdaw
++ cargo run -p jd --quiet -- new t15-anim --path /Users/zhanglinbo/workspace/loop-mac/t15-anim --no-git
+jd new: created /Users/zhanglinbo/workspace/loop-mac/t15-anim/t15-anim
+  modules: Physics
+  scaffolded 12 files
+  checking dependencies resolve...
+
+note: this jackdaw runs from the checkout at /Users/zhanglinbo/workspace/jackdaw, so the new project depends on its crates by path. That Cargo.toml is local to this machine; switch those back to versions before sharing it.
+
+Next:
+  jd open /Users/zhanglinbo/workspace/loop-mac/t15-anim/t15-anim
+or `cargo run` in that directory to play standalone.
++ cat
++ python3 - /Users/zhanglinbo/workspace/loop-mac/t15-anim/t15-anim/assets/game.flow.json
++ mkdir -p /Users/zhanglinbo/workspace/loop-mac/t15-anim/t15-anim/assets/models
++ cp -R /Users/zhanglinbo/workspace/jackdaw/assets/jan /Users/zhanglinbo/workspace/loop-mac/t15-anim/t15-anim/assets/models/jan
++ echo PREP_DONE
+PREP_DONE

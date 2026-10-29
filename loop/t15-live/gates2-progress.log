@@ -1,0 +1,4 @@
+fmt exit=1
+clippy-ws exit=0
+clippy-physics exit=0
+== rerun done ==

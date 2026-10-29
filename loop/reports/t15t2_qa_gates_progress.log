@@ -1,0 +1,20 @@
+== env ==
+Fri Oct 30 06:03:45 CST 2026
+RUST_BACKTRACE=[UNSET]
+/dev/disk3s1s1   460Gi    12Gi    74Gi    14%    459k  771M    0%   /
+[06:03:45] fmt start
+[06:03:48] fmt exit=0
+[06:03:48] clippy ws start
+[06:04:10] clippy ws exit=0
+[06:04:10] clippy physics start
+[06:04:22] clippy physics exit=0
+[06:04:22] libtests start
+[06:08:23] libtests exit=0
+[06:08:23] fast start
+[06:09:37] fast exit=0
+[06:09:37] an2 leg start
+[06:09:38] an2 leg exit=0
+[06:09:38] stage animation filter start
+[06:12:06] stage animation filter exit=0
+[06:12:06] ALL GATES DONE
+/dev/disk3s1s1   460Gi    12Gi    73Gi    14%    459k  761M    0%   /

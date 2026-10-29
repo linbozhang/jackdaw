@@ -1,0 +1,167 @@
+jackdaw launcher
+
+
+
+Doctor
+
+
+Projects
+Editors
+Extensions
+jackdaw 0.21.0-dev
+Bevy main - Bleeding Edge
+jd ? - offline
+Source checkout
+Projects
+Filter
+Filter projects
+Add
+New project
+Show
+All
+Stable
+Bleeding Edge
+Needs an editor
+Sorted by last opened
+Name
+Opened
+Editor
+
+t15-anim
+~/workspace/loop-mac/t15-anim/t15-anim
+Bleeding Edge
+bevy@c9c397b
+Animation
+Physics
+24 minutes ago
+0.21.0-dev - Bevy main
+
+
+Open
+Open with...
+Extensions and plugins
+Show in files
+Remove from list
+
+t14-prefab
+~/workspace/loop-mac/t14-prefab/t14-prefab
+Bleeding Edge
+bevy@c9c397b
+Physics
+7 hours ago
+0.21.0-dev - Bevy main
+
+
+Open
+Open with...
+Extensions and plugins
+Show in files
+Remove from list
+
+t13t3-game
+~/workspace/loop-mac/t13t3/t13t3-game
+Bleeding Edge
+bevy@c9c397b
+Physics
+20 hours ago
+0.21.0-dev - Bevy main
+
+
+Open
+Open with...
+Extensions and plugins
+Show in files
+Remove from list
+
+t13t2-game
+~/workspace/loop-mac/t13t2/t13t2-game
+Bleeding Edge
+bevy@c9c397b
+Physics
+23 hours ago
+0.21.0-dev - Bevy main
+
+
+Open
+Open with...
+Extensions and plugins
+Show in files
+Remove from list
+
+t12t3-nophys
+~/workspace/loop-mac/t12t3/t12t3-nophys
+Bleeding Edge
+bevy@c9c397b
+1 day ago
+0.21.0-dev - Bevy main
+
+
+Open
+Open with...
+Extensions and plugins
+Show in files
+Remove from list
+
+t12t3-ui
+~/workspace/loop-mac/t12t3/t12t3-ui
+Bleeding Edge
+bevy@c9c397b
+Physics
+1 day ago
+0.21.0-dev - Bevy main
+
+
+Open
+Open with...
+Extensions and plugins
+Show in files
+Remove from list
+
+t12t1-game
+~/workspace/loop-mac/t12t1-game/t12t1-game
+Bleeding Edge
+bevy@c9c397b
+Physics
+1 day ago
+0.21.0-dev - Bevy main
+
+
+Open
+Open with...
+Extensions and plugins
+Show in files
+Remove from list
+
+t11t1-game
+~/workspace/loop-mac/t11t1-game
+Bleeding Edge
+bevy@c9c397b
+Physics
+1 day ago
+0.21.0-dev - Bevy main
+
+
+Open
+Open with...
+Extensions and plugins
+Show in files
+Remove from list
+Start
+New game
+New extension
+Import Bevy project
+Open folder...
+Environment
+Rust toolchain
+Xcode Command Line Tools
+Doctor
+
+Extension SDK not built
+Build SDK
+Build SDK
+Only extension projects need it, and opening one builds it. Building takes 20-30 minutes on a typical machine.
+FPS: 
+
+Show Launcher Page
+Show the launcher's Projects, Editors, Extensions or New project page.
+launcher.show_page(page: "projects")

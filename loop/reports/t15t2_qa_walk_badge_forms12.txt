@@ -1,0 +1,379 @@
+FPS: 
+
+File
+Edit
+Add
+View
+Tools
+Window
+
+anim
+
+
+graph
+
+
+bad
+
+
+Main scene
+
+
+
+
+
+
+
+Embedded
+Outliner
+
+Import
+
+
+
+
+Filter...
+Scene
+
+Live
+
+LIVE
+
+0 edits
+
+
+Add Entity
+
+BadSet
+
+
+
+BadGraph
+
+
+0 entities  0 meshes  0 lights  0 cameras
+Import
+Viewport
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+0.25
+
+
+
+Realtime off
+
+
+3D
+2D
+X
+Y
+Z
+
+
+
+
+
+
+
+
+Viewport
+
+8 px
+
+Snap
+
+Snap
+100%
+Fit
+Fit
+Edit
+Interact
+3D
+2D
+
+
+
+
+
+Assets
+Assets
+All
+All
+
+Search...
+
+Assets
+animation
+models
+
+animation
+
+models
+
+anim.bsn
+
+bad.bsn
+
+game.flow...
+
+gameover.bsn
+graph.bsn
+
+graph.bsn...
+
+hud.bsn
+
+menu.bsn
+scene.bsn
+
+scene.bsn...
+Library
+Library
+Timeline
+Timeline
+Graph
+Graph
+SELECTED
+models/hero.glb
+models/hero.glb
+3 clips
+PROJECT
+models/hero.glb
+models/hero.glb
+3 clips
+Filter clips...
+Add as state
+
+Add as state
+Choose a file to see the clips it holds.
+
+
+
+nothing is previewing
+Play
+Select
+no signal
+Playing, Shift+Esc to release
+Play Input
+Play Input
+Press Play to run the game here
+
+
+
+
+No graph open
+Select a state to edit it.
+No build running
+building the game
+building t15-anim as a cargo binary in /Users/zhanglinbo/workspace/loop-mac/t15-anim/t15-anim, into /Users/zhanglinbo/workspace/loop-mac/t15-anim/t15-anim/.jackdaw/target/game
+game ready (642 types)
+Components
+
+Terrain
+
+Preview
+
+Materials
+
+Resources
+
+Systems
+
+Graphics
+
+
+
+
+
+
+
+
+
+
+Components
+Add Component
+Add Component
+Filter...
+
+Save to Scene
+
+
+
+AnimationSet
+
+
+Preview
+
+
+Category
+Actor, Gameplay, ...
+Description
+animation state `ghost_clip` wants clip `No_Such_Clip`, and `models/hero.glb` holds `Idle_Loop`, `Walk_Loop`, `Jump`
+animation state `off_range` names source 2, and the set lists 2 sources
+Convert to graph
+Convert to graph
+sources: [2 items]
+
+
+
+
+
+
+Add
+
+Add
+states: [3 items]
+0
+name
+source
+clip
+looped:
+transition_secs
+speed
+None
+None
+Some
+
+
+
+1
+name
+source
+clip
+looped:
+transition_secs
+speed
+None
+None
+Some
+
+
+
+2
+name
+source
+clip
+looped:
+transition_secs
+speed
+None
+None
+Some
+
+
+
+Add
+
+Add
+default_state
+skeleton_root
+
+AnimationSources
+
+Preview
+
+
+Category
+Actor, Gameplay, ...
+Description
+(read-only)
+Preview
+Preview runs this scene's bindings against a stand-in subject.
+Materials
+
+No material selected
+
+
+
+
+
+Filter materials
+None
+base_mesh
+basemesh...
+Resource changes apply to this editor session only and are not saved with the scene.
+Filter...
+Add Resource
+
+Add Resource
+bevy_camera
+ClearColor
+ClearColor
+bevy_gizmos
+GizmoConfigStore
+GizmoConfigStore
+bevy_light
+GlobalAmbientLight
+GlobalAmbientLight
+bevy_time
+Time<Fixed>
+Time<Fixed>
+Time<Virtual>
+Time<Virtual>
+Select a resource to inspect its fields.
+Systems
+Viewport
+Editor-only preview. Kept per user, never in the scene.
+Quality Preset
+Low
+Medium
+High
+Full
+Render Scale
+100
+Anti-Aliasing
+Off
+FXAA
+TAA
+SMAA
+Ambient Occlusion
+SSAO Quality
+Low
+Medium
+High
+Ultra
+Sun Shadows
+Point Shadows
+Fog
+Sharpening
+Strength
+0.60
+Scene
+Saved with the scene as its environment; one undo entry each.
+Post Processing
+Tonemapper
+TonyMcMapface
+TonyMcMapface
+
+Exposure (EV100)
+9.70
+Bloom Intensity
+0.00
+Bloom Threshold
+0.00
+This scene has no environment, so these controls write nothing. Add an Environment component to the scene to start authoring its look.
+The viewport opts out of the scene's post-processing. Turn Viewport quality's Post-processing on to preview these.
+Realtime GI
+Realtime GI
+Ready
+Jackdaw v0.21.0-dev | /Users/zhanglinbo/workspace/loop-mac/t15-anim/t15-anim/assets/bad.bsn
+Entity: BadSet
+Select (World)
+Disconnected

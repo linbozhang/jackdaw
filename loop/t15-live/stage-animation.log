@@ -1,0 +1,89 @@
+   Compiling bevy_dylib v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_dylib)
+   Compiling bevy v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned)
+   Compiling jackdaw_geometry v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_geometry)
+   Compiling jackdaw_commands v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_commands)
+   Compiling jackdaw_input v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_input)
+   Compiling jackdaw_localization v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_localization)
+   Compiling jackdaw_bsn v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_bsn)
+   Compiling jackdaw_pie_protocol v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_pie_protocol)
+   Compiling jackdaw_widgets_runtime v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_widgets_runtime)
+   Compiling jackdaw_bind v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_bind)
+   Compiling jackdaw_widgets v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_widgets)
+   Compiling jackdaw_scene_types v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_scene_types)
+   Compiling jackdaw_animation_runtime v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_animation_runtime)
+   Compiling jackdaw_prefab v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_prefab)
+   Compiling jackdaw_feathers v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_feathers)
+   Compiling jackdaw_terrain v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_terrain)
+   Compiling jackdaw_schema v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_schema)
+   Compiling jackdaw_surface v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_surface)
+   Compiling jackdaw_camera_rig v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_camera_rig)
+   Compiling bevy_transform_interpolation v0.6.0
+   Compiling jackdaw_project_build v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_project_build)
+   Compiling jackdaw_panels v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_panels)
+   Compiling jackdaw_api_internal v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_api_internal)
+   Compiling jackdaw_runtime v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_runtime)
+   Compiling avian3d v0.8.0
+   Compiling jackdaw_node_graph v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_node_graph)
+   Compiling jackdaw_multiplayer v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_multiplayer)
+   Compiling jackdaw_animation v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_animation)
+   Compiling jackdaw_loader v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_loader)
+   Compiling jackdaw_scaffold v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_scaffold)
+   Compiling jackdaw_jsn v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_jsn)
+   Compiling jackdaw_select v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_select)
+   Compiling jackdaw_avian_integration v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/integrations/physics/jackdaw_avian_integration)
+   Compiling jackdaw_hull v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_hull)
+   Compiling jackdaw_pick v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_pick)
+   Compiling jackdaw_uv v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_uv)
+   Compiling jackdaw_csg v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_csg)
+   Compiling jackdaw_remote v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_remote)
+   Compiling jackdaw_camera v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_camera)
+   Compiling bevy_window_chrome v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/bevy_window_chrome)
+   Compiling jackdaw_dylib v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_dylib)
+   Compiling jackdaw_api v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_api)
+   Compiling jackdaw_sdk v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_sdk)
+   Compiling jackdaw_multiplayer_editor v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_multiplayer_editor)
+   Compiling jackdaw_physics v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/integrations/physics/jackdaw_physics)
+   Compiling jackdaw v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw)
+   Compiling jackdaw_extension v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_extension)
+   Compiling test_fixture_extension v0.0.0 (/Users/zhanglinbo/workspace/jackdaw/tests/fixtures/test_fixture_extension)
+    Finished `test` profile [optimized + debuginfo] target(s) in 2m 09s
+────────────
+ Nextest run ID 8ce4a200-7ca6-42c2-bb67-46bbbb2175fe with nextest profile: ci
+    Starting 35 tests across 1 binary (452 tests skipped)
+        PASS [   4.522s] ( 1/35) jackdaw::stage animation_graph::a_graph_held_in_the_binary_form_is_titled_without_its_extension
+        PASS [   4.522s] ( 2/35) jackdaw::stage animation_graph::a_graph_authored_through_the_operators_reads_back_off_the_disk
+        PASS [   4.555s] ( 3/35) jackdaw::stage animation_graph::a_node_taken_off_the_canvas_takes_its_state_and_wires_with_it
+        PASS [   5.839s] ( 4/35) jackdaw::stage animation_graph::a_graph_opened_from_its_binary_file_is_saved_back_as_binary
+        PASS [   4.554s] ( 5/35) jackdaw::stage animation_graph::a_parameter_written_in_the_window_reaches_the_rig_being_previewed
+        PASS [   4.555s] ( 6/35) jackdaw::stage animation_graph::a_saved_graph_opens_again_with_a_node_for_every_state
+        PASS [   4.573s] ( 7/35) jackdaw::stage animation_graph::a_state_renamed_in_the_window_carries_its_transitions_with_it
+        PASS [   4.548s] ( 8/35) jackdaw::stage animation_graph::undoing_an_added_state_takes_its_node_off_the_canvas
+        PASS [   5.872s] ( 9/35) jackdaw::stage animation_library::add_as_state_appends_to_the_selected_set_and_undoes
+        PASS [   6.163s] (10/35) jackdaw::stage animation_library::a_document_holding_old_clip_children_loads_clean_and_saves_without_them
+        PASS [   6.929s] (11/35) jackdaw::stage animation_library::discovery_no_longer_writes_clip_entities_into_the_document
+        PASS [   7.974s] (12/35) jackdaw::stage animation_library::indexing_settles_without_reloading_the_gltf
+        PASS [   5.161s] (13/35) jackdaw::stage animation_library::previewing_a_clip_on_a_bound_set_restores_the_set_state_on_stop
+        PASS [   5.358s] (14/35) jackdaw::stage animation_library::previewing_on_a_bare_skeleton_leaves_no_player_behind
+        PASS [   5.095s] (15/35) jackdaw::stage animation_library::the_assets_method_reports_clip_names_with_details
+        PASS [   4.790s] (16/35) jackdaw::stage animation_library::the_library_lists_every_clip_of_a_loaded_file
+        PASS [   5.185s] (17/35) jackdaw::stage animation_library::the_library_tab_lists_the_indexed_files
+        PASS [   5.208s] (18/35) jackdaw::stage animation_library::the_library_tab_refills_after_the_layout_is_rebuilt
+        PASS [   5.736s] (19/35) jackdaw::stage animation_markers::a_clip_previewed_on_a_mannequin_takes_no_events
+        PASS [   5.582s] (20/35) jackdaw::stage animation_markers::a_library_clip_row_comes_back_when_the_document_is_reopened
+        PASS [   5.658s] (21/35) jackdaw::stage animation_markers::a_removed_event_goes_out_of_the_document_too
+        PASS [   5.438s] (22/35) jackdaw::stage animation_markers::a_set_whose_skeleton_spawns_later_still_owns_its_markers
+        PASS [   5.512s] (23/35) jackdaw::stage animation_markers::an_event_on_a_library_clip_makes_a_row_under_the_entity
+        PASS [   5.448s] (24/35) jackdaw::stage animation_markers::an_undone_event_leaves_nothing_behind_for_a_save_to_write
+        PASS [   5.447s] (25/35) jackdaw::stage animation_markers::one_undo_takes_back_the_event_and_the_row_it_made
+        PASS [   5.573s] (26/35) jackdaw::stage animation_markers::playing_past_a_marker_sends_an_animation_event_naming_the_entity
+        PASS [   5.461s] (27/35) jackdaw::stage animation_markers::redoing_an_undone_event_puts_the_row_and_the_marker_back
+        PASS [   5.477s] (28/35) jackdaw::stage animation_markers::scrubbing_back_over_a_marker_sends_it_once_per_pass
+        PASS [   5.466s] (29/35) jackdaw::stage animation_timeline::an_event_lands_on_the_clip_and_undoes
+        PASS [   5.340s] (30/35) jackdaw::stage animation_timeline::an_imported_clip_shows_its_bone_tracks_read_only
+        PASS [   5.405s] (31/35) jackdaw::stage animation_timeline::every_timeline_action_has_an_operator
+        PASS [   5.403s] (32/35) jackdaw::stage animation_timeline::recording_switched_off_leaves_an_edit_alone
+        PASS [   5.355s] (33/35) jackdaw::stage animation_timeline::recording_writes_a_key_at_the_playhead_when_a_tracked_field_changes
+        PASS [   5.305s] (34/35) jackdaw::stage animation_timeline::stopping_the_preview_takes_the_imported_clip_off_the_timeline
+        PASS [   4.733s] (35/35) jackdaw::stage animation_timeline::switching_a_track_off_leaves_its_keys_where_they_are
+────────────
+     Summary [  48.000s] 35 tests run: 35 passed, 452 skipped

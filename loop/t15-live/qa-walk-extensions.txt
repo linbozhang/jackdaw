@@ -1,0 +1,55 @@
+jackdaw launcher
+
+
+
+Doctor
+
+
+Projects
+Editors
+Extensions
+jackdaw 0.21.0-dev
+Bevy main - Bleeding Edge
+jd ? - offline
+Source checkout
+Extensions and plugins
+Global defaults
+Global defaults
+t15-anim
+t14-prefab
+t13t3-game
+t13t2-game
+t12t3-nophys
+t12t3-ui
+t12t1-game
+t11t1-game
+jackdaw 0.21.0-dev - Bevy main
+Filter
+Filter
+Status
+All
+On
+Off
+Needs attention
+Global defaults apply to every project; a project can override them
+Modules
+chosen per project; shown for this editor
+Physics
+built into this editor
+Navmesh
+not in this editor
+Multiplayer
+built into this editor
+Animation
+built into this editor
+Extensions
+optional editor tools
+Install .jdext...
+Physics
+installed
+Select a module or extension to see what it does and what turning it on changes.
+FPS: 
+
+Show Launcher Page
+Show the launcher's Projects, Editors, Extensions or New project page.
+launcher.show_page(page: "extensions")

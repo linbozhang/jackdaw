@@ -1,0 +1,13 @@
+== clippy workspace ==
+clippy-ws exit=101
+== clippy physics dual package ==
+clippy-physics exit=101
+== workspace lib tests ==
+libtests exit=0
+== stage animation 4 files ==
+stage-animation exit=0
+== animation runtime crate lib tests ==
+animruntime-lib exit=0
+== inspector animation cards ==
+inspector-cards exit=0
+== gate chain done ==

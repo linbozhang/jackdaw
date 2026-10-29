@@ -1,0 +1,46 @@
+EDITOR_READY project=none
+shot an7-extensions-page FAILED (capture never landed)
+AN7 extensions page: Animation row present, phrase check -> true
+AN7_EXTENSIONS_PAGE_CLEAN_PASS
+shot an7-new-project-chip FAILED (capture never landed)
+AN7_NEW_PROJECT_CHIP_CLEAN_PASS
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t15-anim/t15-anim
+AN7_PROJECT_OPEN_QUIET_PASS
+shot modules-picker-green ok (window)
+AN7 picker: Animation row present, no warning at/after it -> true
+AN7_MODULES_PICKER_CLEAN_PASS
+L1 disk chain: jackdaw.toml animation=true + Cargo.toml features animation + lock ok=true
+L1_MODULE_CHAIN_PASS
+L2: authored set states = [Idle_Loop,Walk_Loop,Jump] (expect Idle_Loop,Walk_Loop,Jump)
+shot l2-viewport-idle ok (viewport)
+shot l2-viewport-jump ok (viewport)
+L2 M1 chain complete, ok=true
+L2_M1_CHAIN_PASS
+shot l4-preview-walking ok (viewport)
+shot l4-set-resumed ok (viewport)
+L4 borrow/return complete, ok=true
+L4_PREVIEW_BORROW_RETURN_PASS
+M9 preview bad refs: warn lines 4->8 (need both forms; see m9-preview-warns.log)
+M9_PREVIEW_BAD_REFS_PASS
+shot badge-graphref-red ok (window)
+shot badge-graphref-green ok (window)
+L3: graph assigned, badge cleared=true, ref={"path":"animation/hero_graph.animgraph.bsn","skeleton_root":"Armature"}
+L3_M2_GRAPH_CHAIN_PASS
+shot l3-graph-window ok (window)
+L3 param-driven preview sequence: {"label":"entry","state":"idle","since":5.313253402709961,"transition":null} {"label":"speed1","state":"walk","since":3.1374001502990723,"transition":null} {"label":"speed0","state":"idle","since":3.130718231201172,"transition":null} {"label":"jump","state":"jump","since":0.5369020700454712,"transition":null} {"label":"fallback","state":"idle","since":0.9774811863899231,"transition":null} 
+L3_PARAM_DRIVES_PREVIEW_PASS
+shot badge-set-ghost-clip ok (window)
+shot badge-set-source-bad ok (window)
+shot badge-graphref-form3 ok (window)
+shot badge-good-clean ok (window)
+L8 badge forms: three red forms=true, clean rig zero rows=true; bad.bsn tab closed
+L8_BADGE_THREE_FORMS_PASS
+L8_GOOD_CARD_CLEAN_PASS
+AN5 witness: the editor world's own set answered set_state mid-PIE (read back "idle")
+L9 stop invariant: sha stable=y, set resumes="walk"
+L9_STOP_INVARIANT_PASS
+M13 reopen: set states kept, graph ref kept ({"path":"animation/hero_graph.animgraph.bsn","skeleton_root":"Armature"}), ok=true
+M13_REOPEN_CONSISTENT_PASS
+WARN_SCAN editor phase: an7_lines=0 refused_lines=0 (N13 PIE panics counted: 6)
+WARN_SCAN_EDITOR_PASS
+VERDICT_EDITOR_PHASE: AN7_EXTENSIONS_PAGE_CLEAN=PASS AN7_MODULES_PICKER_CLEAN=PASS AN7_NEW_PROJECT_CHIP_CLEAN=PASS AN7_PROJECT_OPEN_QUIET=PASS L1_MODULE_CHAIN=PASS L2_M1_CHAIN=PASS L3_M2_GRAPH_CHAIN=PASS L3_PARAM_DRIVES_PREVIEW=PASS L4_PREVIEW_BORROW_RETURN=PASS L8_BADGE_THREE_FORMS=PASS L8_GOOD_CARD_CLEAN=PASS L9_STOP_INVARIANT=PASS M13_REOPEN_CONSISTENT=PASS M9_PREVIEW_BAD_REFS=PASS WARN_SCAN_EDITOR=PASS 

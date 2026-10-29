@@ -1,0 +1,63 @@
+jackdaw launcher
+
+
+
+Doctor
+
+
+Projects
+Editors
+Extensions
+jackdaw 0.21.0-dev
+Bevy main - Bleeding Edge
+jd ? - offline
+Source checkout
+
+
+New project
+Editor
+jackdaw 0.21.0-dev - Bevy main - Bleeding Edge
+jackdaw 0.21.0-dev - Bevy main (this editor)
+Template
+3D game
+Camera, sun and scene
+2D game
+Camera2d and a sprite
+Empty
+GamePlugin only
+Extension
+Editor tool dylib
+Modules
+written to Cargo.toml, main.rs and jackdaw.toml [modules]
+Physics
+Colliders, rigid bodies and joints with avian, edited in the editor and simulated in the game.
+tools built in
+Navmesh
+Bake a navigation mesh from the terrain and load it with the scene in the game.
+not in this editor
+Multiplayer
+Mark entities for replication and lay out network rooms; the game adds a networking backend.
+tools built in
+Animation
+Play the animation sets and graphs a scene authored on its rigs, in the game as the editor previews them.
+tools built in
+Extensions
+jackdaw.physics
+from your global defaults
+Global defaults...
+3D game
+A scene with a camera and a sun, and a GamePlugin that loads it. Plays in the editor right away.
+Name
+my_game
+Location
+Folder
+
+
+Create a git repository
+Will write
+~/Projects/my-game
+Cargo.toml - bevy main, jackdaw_runtime 0.21.0-dev, avian3d 0.8, jackdaw_avian_integration
+jackdaw.toml - editor 0.21.0-dev, modules physics
+Create project
+FPS: 
+

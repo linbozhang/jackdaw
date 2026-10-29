@@ -40,6 +40,12 @@ pub fn catalog_has_module(
     catalog: Option<&jackdaw_api_internal::ExtensionCatalog>,
     id: &str,
 ) -> bool {
+    if id == "animation" {
+        // The animation tools carry no extension and no cargo feature: they
+        // compile into every editor. Only the game-side runtime rides on the
+        // module, so there is nothing an editor can lack here.
+        return true;
+    }
     if let Some(extension) = ModuleCatalog::builtin()
         .get(id)
         .and_then(|module| module.extension.as_deref())
@@ -310,6 +316,21 @@ fn sync_module_pickers(
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    /// The animation module's authoring tools are built into every editor, so
+    /// it never reads as missing, whatever extensions are installed.
+    #[test]
+    fn the_animation_tools_are_built_into_every_editor() {
+        // An editor with no extension catalog at all (the path an opened
+        // animation project's warning walks).
+        let world = World::new();
+        assert!(editor_has_module(&world, "animation"));
+        assert!(catalog_has_module(None, "animation"));
+        // A module whose tooling rides on an extension still reads as missing
+        // when that extension is not installed.
+        assert!(!editor_has_module(&world, "physics"));
+        assert!(!catalog_has_module(None, "physics"));
+    }
 
     #[test]
     fn a_project_using_a_module_this_editor_lacks_is_told_so() {
