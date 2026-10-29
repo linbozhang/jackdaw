@@ -18,6 +18,7 @@
 - [Terrain](user-guide/terrain.md)
 - [Physics](user-guide/physics.md)
 - [Scene Management](user-guide/scene-management.md)
+- [Prefabs](user-guide/prefabs.md)
 - [Asset References](user-guide/asset-references.md)
 - [Resources](user-guide/resources.md)
 - [Game Parameters](user-guide/game-parameters.md)

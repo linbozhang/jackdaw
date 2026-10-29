@@ -1,0 +1,28 @@
+=== t14t3_fmt start 23:13:38: cargo fmt --all -- --check
+t14t3_fmt EXIT=0
+=== t14t3_clippy_ws start 23:13:41: cargo clippy --workspace --all-targets --features dylib -- -D warnings
+t14t3_clippy_ws EXIT=0
+=== t14t3_clippy_phy start 23:14:23: cargo clippy -p jackdaw_physics -p jackdaw_avian_integration --all-targets -- -D warnings
+t14t3_clippy_phy EXIT=0
+=== t14t3_libtests start 23:14:37: cargo test --workspace --lib
+t14t3_libtests EXIT=0
+=== t14t3_fast start 23:18:22: cargo xtask fast
+t14t3_fast EXIT=0
+=== t14t3_integration start 23:20:15: cargo xtask integration
+t14t3_integration EXIT=1
+=== t14t3_doctests start 23:48:39: cargo test --doc --workspace
+t14t3_doctests EXIT=101
+=== t14t3_docs start 23:48:57: cargo doc --no-deps --workspace
+t14t3_docs EXIT=0
+=== t14t3_scaffold_e2e start 23:49:56: cargo test -p jackdaw --test scaffold_e2e --features dylib -- --nocapture
+t14t3_scaffold_e2e EXIT=0
+GATES_DONE 23:58:20
+t14t3_fmt EXIT=0
+t14t3_clippy_ws EXIT=0
+t14t3_clippy_phy EXIT=0
+t14t3_libtests EXIT=0
+t14t3_fast EXIT=0
+t14t3_integration EXIT=1
+t14t3_doctests EXIT=101
+t14t3_docs EXIT=0
+t14t3_scaffold_e2e EXIT=0

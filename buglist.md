@@ -27,11 +27,12 @@
   修复方向：object 路径改走 `SetTransform` + `push_executed_synced`（与拖拽提交一致），或补 `Changed<Transform>` 的 AST watcher。
   > 已修复 b9a8842d（T03-T1）：两分支改统一框架快照单条（Object 分支执行 SetTransform 不 push，BrushEdit 分支内联 brush→AST 同步）。guards numeric_transform_undo 全绿复测（T03-T2，6df9ac89），真机链 X+1+Enter→恰一条→保存保移动亦复测通过。
 
-- [ ] **R3. Save as Variant 把任意深度的子树拍平成一层，变体层级与位置错乱**
+- [x] **R3. Save as Variant 把任意深度的子树拍平成一层，变体层级与位置错乱**
   `src/prefab/operators.rs:1715-1741`（`save_as_variant`）。
   问题：`descendant_data` 收集任意深度子孙，但每个节点都 `add_child_to_ast(variant_root, child)` 挂到 variant 根下；变体展开按 PrefabEntityId 匹配到已拍平节点，原 prefab 不再按原层级克隆。`copy_component_patches(.., drop_markers=true)` 还会丢弃嵌套子实例的 `IsA`（内嵌 prefab 被烤死）。
   后果：3 层 prefab 存变体后，所有实例孙级提升为一级子节点、世界位置可见错乱。
   修复方向：按 `ast_parent_of` 重建父子关系，每个子孙挂到其原父节点在变体中的对应节点下。
+  > 已修 8f8581f6（T14-T2，并账 PF3）：`save_as_variant` 按 `ast_parent_of` 重建变体内父子，内嵌 IsA 与 deleted 保留；红绿证 `tests/prefabs/prefab_t14_acceptance.rs::a_variant_keeps_the_nested_levels_of_the_instance_it_was_cut_from`。
 
 - [ ] **R4. 远程实体树父子解析与协议格式失配，远程层级面板整体失效**
   `src/remote/entity_browser.rs:92-97`（`extract_parent` 用 `as_u64()`）。
@@ -398,9 +399,10 @@
   `src/prefab/operators.rs:2593-2596`：`prefab.apply_to_source`/`bulk_apply_in_scene` 的 `value_json=null`（语义应为"清空/取默认"）被写成 `[]`，非列表字段被拒并 warn、列表字段被清空。
   修复方向：null 跳过写入或映射为"删除该 authored 字段"。
 
-- [ ] **W23. 清除场景侧覆盖按顶层字段名整名匹配，点路径清不掉**
+- [x] **W23. 清除场景侧覆盖按顶层字段名整名匹配，点路径清不掉**
   `src/prefab/operators.rs:1854-1871`：`retain(|f| f.name != field_path)`，`field_path="scale.x"` 时顶层字段名是 `scale` 永不命中，旧覆盖残留（resolve 结果一致，仅文档留脏、下次保存前 `sparsify` 才收掉）。
   修复方向：先按 `.` 取首段再 retain。
+  > 已修 8f8581f6（T14-T2，并账 PF5）：清除改叶移除（`remove_delta_leaf`，空父剪枝），兄弟覆盖保留；红绿证 `tests/prefabs/prefab_t14_acceptance.rs::an_applied_leaf_clears_its_own_delta_and_keeps_the_sibling_one`。
 
 - [ ] **W24. `show_file` 对同一路径连续两次 `read_asset_kind`**
   `src/inspector/file_card.rs:67,80`：每次都是完整读盘 + `asset_file_type` 全量 parse（header 解析整个文档只为嗅探类型）。
