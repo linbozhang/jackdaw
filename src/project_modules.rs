@@ -72,7 +72,10 @@ pub fn project_modules(_: In<OperatorParameters>, mut commands: Commands) -> Ope
                    and the game's Cargo.toml; the game rebuilds the next time it is built.",
     allows_undo = false,
     params(
-        id(String, doc = "The module: physics, navmesh or multiplayer."),
+        id(
+            String,
+            doc = "The module: physics, navmesh, multiplayer or animation."
+        ),
         enabled(bool, doc = "On or off.")
     )
 )]
