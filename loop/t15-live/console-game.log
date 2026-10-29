@@ -1,0 +1,41 @@
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t15-anim/t15-anim
+L5 set: game rig=Rig id=724v0 states=idle,walk,jump
+L5 set: bind-written default read = 
+L5 set: written walk read back 
+L5_SET_STATE_FOLLOWS_FAIL
+shot l7-game-panel-warn ok (window)
+L7 red: Game panel carries the wants-clip warn=true (jackdaw_animation_runtime: animation state `walk` wants clip `No_Such_Clip`, and its source holds ["Jump", "Idle_Loop", "Walk_Loop"])
+shot l7-game-panel-clean ok (window)
+L7: red panel warn seen=true, green panel lines=0
+L7_BAD_CLIP_PIE_LOG_PASS
+graph seq pie: entry  != idle
+graph seq pie: Speed=1 never reached walk ()
+graph seq pie: walk did not hold across the loop window (/)
+graph seq pie: Speed=0 never reached idle ()
+graph seq pie: no fall-back (never)
+graph seq pie: {"label":"entry","state":"","since":0,"transition":null} {"label":"speed1","state":"","since":0,"transition":null} {"label":"walk-loop-a","state":"","since":0,"transition":null} {"label":"walk-loop-b","state":"","since":0,"transition":null} {"label":"speed0","state":"","since":0,"transition":null} {"label":"jump-early","state":"","since":0,"transition":null} {"label":"jump-held","state":"","since":0,"transition":null} {"label":"fallback","state":"","since":0,"transition":null} 
+M7 transition witness: crossfade field caught = none
+L5_GRAPH_PARAMS_FAIL
+L6 editor sequence: idle,walk,idle,jump,idle,
+L6: PIE states , != editor idle,walk,idle,jump,idle,
+graph seq direct: entry  != idle
+graph seq direct: Speed=1 never reached walk ()
+graph seq direct: walk did not hold across the loop window (/)
+graph seq direct: Speed=0 never reached idle ()
+graph seq direct: no fall-back (never)
+graph seq direct: {"label":"entry","state":"","since":0,"transition":null} {"label":"speed1","state":"","since":0,"transition":null} {"label":"walk-loop-a","state":"","since":0,"transition":null} {"label":"walk-loop-b","state":"","since":0,"transition":null} {"label":"speed0","state":"","since":0,"transition":null} {"label":"jump-early","state":"","since":0,"transition":null} {"label":"jump-held","state":"","since":0,"transition":null} {"label":"fallback","state":"","since":0,"transition":null} 
+L6: direct states , != editor idle,walk,idle,jump,idle,
+graph seq staged: entry  != idle
+graph seq staged: Speed=1 never reached walk ()
+graph seq staged: walk did not hold across the loop window (/)
+graph seq staged: Speed=0 never reached idle ()
+graph seq staged: no fall-back (never)
+graph seq staged: {"label":"entry","state":"","since":0,"transition":null} {"label":"speed1","state":"","since":0,"transition":null} {"label":"walk-loop-a","state":"","since":0,"transition":null} {"label":"walk-loop-b","state":"","since":0,"transition":null} {"label":"speed0","state":"","since":0,"transition":null} {"label":"jump-early","state":"","since":0,"transition":null} {"label":"jump-held","state":"","since":0,"transition":null} {"label":"fallback","state":"","since":0,"transition":null} 
+L6: staged states , != editor idle,walk,idle,jump,idle,
+L6 parity: editor=idle,walk,idle,jump,idle, pie=, direct=, staged=,
+L6_PARITY_FOUR_CHANNELS_FAIL
+L10 export: graph+model staged, manifest lists them, sha equal=y
+L10_EXPORT_CONSISTENT_PASS
+WARN_SCAN game phase: an7_lines=0 refused_lines=0 (N13 PIE panics counted: 11)
+WARN_SCAN_GAME_PASS
+VERDICT_GAME_PHASE: L10_EXPORT_CONSISTENT=PASS L5_GRAPH_PARAMS=FAIL L5_SET_STATE_FOLLOWS=FAIL L6_PARITY_FOUR_CHANNELS=FAIL L7_BAD_CLIP_PIE_LOG=PASS WARN_SCAN_GAME=PASS 

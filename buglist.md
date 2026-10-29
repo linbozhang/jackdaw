@@ -459,6 +459,15 @@
 - [ ] **A7. t14 真机驱动脚本工具债（对话框提交+字段行定位族 5 腿+陈旧 grep）**（2026-10-29 T14 终验回流；主控批准立账——MCP 优先原则：修工具不硬耗）
   `loop/qa/t14-live.sh` 五腿（L2_REVERT_FIELD/L3_SAVE_AS_VARIANT·PREFAB/L3_UNBUNDLE/L8_PACK）收敛在「对话框提交+字段行定位」脚本驱动缺口（语义面 headless 锚全数在档零缺口，t14-final-qa.md §七）；另 all 模式 warn/N13 扫描 grep 引用陈旧分相文件名（:799-803/:898-903 应随 `$PHASE` 改 `editor-$PHASE.log`——T14 终轮 N13 实为 1 条被记 0）。
   修复方向：对话框提交通道（dialog.answer 已有 BRP 面可接）+Inspector 字段行定位强化（ui_tree 行渲染缺口 T13 已见同族）；grep 随相位修。T15 动画面板驱动同族将再踩，宜先修。
+  > 2026-10-30 并账（T15-T2 QA 回流）：`loop/qa/t15-live.sh` 编辑器通道误用 `sample_graph_game`（按提交版重跑 L6 编辑器序列必不匹配）+L9 首 set_state 未等绑定；`jackdaw/screenshot` 同帧 flake（60s 两帧 md5 同，badge 像素级证据待截图通道修复）。随本票同批修。
+
+- [ ] **A8. BSN apply 静默丢弃 crate 根 re-export 路径 + misleading remedy（AN8，T15-T2 真机首踩）**（2026-10-30 T15-T2 程序发现+QA 机制核实；主控批准立账）
+  场景文档的图族组件必须写定义模块全路径（`…::graph::AnimationGraphRef`），crate 根 re-export 拼写被 `jackdaw_bsn::apply` 静默丢弃（无 warn、组件不落——手写场景/导出迁移场景易踩，fixture 已绕行）；且 `jackdaw_bsn::catalog` 的 remedy 文案（"rebuild the project"）对此误导。
+  修复方向：未知路径丢弃补 warn（对照 AN1 运行态 warn 形态，列可用类型面）；remedy 文案按真实成因改写。小票。
+
+- [ ] **A9. 游戏 BRP 间歇空响应+方法瞬失（AN9，复现先行立票）**（2026-10-30 T15-T2 双轨记账转正；主控批准立账）
+  现象在档充分（脚本上下文游戏侧读空+方法瞬失 vs 数分钟后人工静默全绿双轨，t15-t2-report §五-3）；高发窗口=scene.open/开工程构建/坏引用 bind 重试。QA 补强相关性：复现全程无编辑器进程、零 flap——支持「编辑器后台构建挤核+大响应体优先被吃」假说，可作票内首个定向实验；服务侧指纹（空 body/method-not-found）尚未落盘。
+  修复方向：先补服务侧指纹落盘（BRP handler 入口/出口计时+body 存在性），再做定向实验；关联面 A7（工具层重试）/N13（PIE 通道稳定性）梳理在票内。
 
 - [x] **N10. dirty 场景 + Save 态 play_current 真机冻结编辑器主线程（2026-10-26 T06-T3 矩阵 cell 3 发现）**
   触发：打开已保存场景 → 任意编辑（脏）→ `pie.play_current`（save 策略，默认态）→ play_current 调用正常返回，**下一帧起主线程满 CPU 自旋**（实测 CPU/4s≈5s），BRP 全部无响应，日志停在 `OPERATOR: pie.play_current` 后零输出（保存链最早期）。

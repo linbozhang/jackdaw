@@ -1,0 +1,88 @@
+   Compiling syn v3.0.9
+   Compiling smallvec v1.16.4
+   Compiling rustix v1.1.6
+   Compiling logos-codegen v0.16.1
+   Compiling tracing-subscriber v0.3.23
+   Compiling polling v3.11.0
+   Compiling bevy_macro_utils v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_macro_utils)
+   Compiling encase_derive_impl v0.13.0
+   Compiling bevy_ecs_macro_logic v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_ecs/macro_logic)
+   Compiling async-io v2.6.0
+   Compiling tempfile v3.27.0
+   Compiling logos-derive v0.16.1
+   Compiling logos v0.16.1
+   Compiling serde_derive v1.0.229
+   Compiling bytemuck_derive v1.12.1
+   Compiling thiserror-impl v2.0.21
+   Compiling encase_derive v0.13.0
+   Compiling bevy_reflect_derive v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_reflect/derive)
+   Compiling bevy_ecs_macros v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_ecs/macros)
+   Compiling bevy_derive v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_derive)
+   Compiling futures-macro v0.3.34
+   Compiling bevy_asset_macros v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_asset/macros)
+   Compiling wesl-macros v0.6.0
+   Compiling bevy_animation_macros v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_animation/macros)
+   Compiling futures-util v0.3.34
+   Compiling bevy_material_macros v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_material/macros)
+   Compiling bevy_scene_macros v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_scene/macros)
+   Compiling bytemuck v1.25.2
+   Compiling image v0.25.10
+   Compiling thiserror v2.0.21
+   Compiling encase v0.13.0
+   Compiling serde v1.0.229
+   Compiling glam v0.33.12
+   Compiling bevy_platform v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_platform)
+   Compiling naga-types v30.0.1
+   Compiling wgpu-types v30.0.1
+   Compiling bevy_utils v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_utils)
+   Compiling petgraph v0.8.3
+   Compiling smol_str v0.2.2
+   Compiling bevy_tasks v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_tasks)
+   Compiling half v2.7.1
+   Compiling ron v0.12.2
+   Compiling gltf-json v1.4.1
+   Compiling wgsl-types v0.6.0
+   Compiling wgsl-parse v0.6.0
+   Compiling gltf v1.4.1
+   Compiling bevy_reflect v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_reflect)
+   Compiling hexasphere v19.0.0
+   Compiling wesl v0.6.0
+   Compiling bevy_ecs v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_ecs)
+   Compiling bevy_math v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_math)
+   Compiling bevy_annotations v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_annotations)
+   Compiling bevy_curve v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_curve)
+   Compiling bevy_shape v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_shape)
+   Compiling bevy_color v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_color)
+   Compiling bevy_app v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_app)
+   Compiling bevy_time v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_time)
+   Compiling bevy_transform v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_transform)
+   Compiling bevy_input v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_input)
+   Compiling bevy_diagnostic v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_diagnostic)
+   Compiling bevy_asset v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_asset)
+   Compiling bevy_log v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_log)
+   Compiling bevy_window v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_window)
+   Compiling bevy_mesh v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_mesh)
+   Compiling bevy_image v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_image)
+   Compiling bevy_shader v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_shader)
+   Compiling bevy_scene v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_scene)
+   Compiling bevy_camera v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_camera)
+   Compiling bevy_animation v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_animation)
+   Compiling bevy_material v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_material)
+   Compiling bevy_light v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_light)
+   Compiling bevy_world_serialization v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_world_serialization)
+   Compiling bevy_gltf v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_gltf)
+   Compiling bevy_internal v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_internal)
+   Compiling bevy v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned)
+   Compiling jackdaw_bsn v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_bsn)
+   Compiling jackdaw_animation_runtime v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_animation_runtime)
+    Finished `test` profile [optimized + debuginfo] target(s) in 1m 49s
+     Running unittests src/lib.rs (target/debug/deps/jackdaw_animation_runtime-73cf8fda508d07a0)
+
+running 4 tests
+test events::tests::a_wrap_that_lands_where_it_started_fires_the_whole_clip ... ok
+test events::tests::an_event_key_fires_once_when_playback_crosses_it ... ok
+test events::tests::a_key_on_the_first_frame_of_a_clip_fires_as_playback_leaves_it ... ok
+test events::tests::a_clip_that_wrapped_fires_the_keys_on_both_sides_of_the_wrap ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

@@ -1,0 +1,8 @@
+    Updating git repository `https://github.com/bevyengine/bevy`
+     Locking 1 package to highest Rust 1.99.0 compatible version
+      Adding jackdaw_animation_runtime v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_animation_runtime)
+   Compiling jackdaw_animation_runtime v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_animation_runtime)
+   Compiling jackdaw_runtime v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_runtime)
+   Compiling jackdaw_avian_integration v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/integrations/physics/jackdaw_avian_integration)
+   Compiling t15-anim v0.1.0 (/Users/zhanglinbo/workspace/loop-mac/t15-anim/t15-anim)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 19.80s

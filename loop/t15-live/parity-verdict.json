@@ -1,0 +1,41 @@
+{
+ "editor_collapsed": [
+  "idle",
+  "walk",
+  "idle",
+  "jump",
+  "idle"
+ ],
+ "pie": {
+  "collapsed_states": [
+   "idle",
+   "walk",
+   "idle",
+   "jump",
+   "idle"
+  ],
+  "matches_editor": true
+ },
+ "direct": {
+  "collapsed_states": [
+   "idle",
+   "walk",
+   "idle",
+   "jump",
+   "idle"
+  ],
+  "matches_editor": true
+ },
+ "staged": {
+  "collapsed_states": [
+   "idle",
+   "walk",
+   "idle",
+   "jump",
+   "idle"
+  ],
+  "matches_editor": true
+ },
+ "note": "consecutive duplicate states collapsed; each channel drives entry->Speed1->Speed0->Jump->fall-back",
+ "verdict": "PASS"
+}
