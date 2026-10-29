@@ -487,10 +487,11 @@ fn component_remove_is_one_user_entry() {
 
 // -------------------------------------------------------- Y1 anti-leak ---
 
-/// Every operator whose implementation pushes its own history entry declares
-/// `allows_undo = false`, so a user dispatch cannot wrap it in a second
-/// framework snapshot. Add to `SELF_PUSHING` when a new self-pushing op
-/// lands; the mode-B list below it is the "must not touch" counterpart.
+/// Every operator whose implementation pushes its own history entry — or
+/// whose action is a file-level write no snapshot can roll back — declares
+/// `allows_undo = false`, so a user dispatch cannot wrap it in a framework
+/// snapshot. Add to `SELF_PUSHING` when a new such op lands; the mode-B list
+/// below it is the "must not touch" counterpart.
 const SELF_PUSHING: &[&str] = &[
     // entity.add.* that spawn through create_entity_in_world / spawn_undoable.
     "entity.add.cube",
@@ -555,6 +556,11 @@ const SELF_PUSHING: &[&str] = &[
     "resource.insert",
     "resource.remove",
     "resource.set_field",
+    // File-level: pushes the applied baseline into the prefab source ON DISK
+    // (PF2), and a file-level write is not undoable (PF4) — the declaration
+    // keeps a user dispatch from wrapping it in a snapshot that could never
+    // roll the file back.
+    "prefab.apply_to_source",
 ];
 
 /// Operators that stay mode B — no push of their own, the framework's
@@ -567,7 +573,6 @@ const SNAPSHOT_BACKED: &[&str] = &[
     "prefab.spawn_instance",
     "prefab.unpack_child",
     "prefab.unbundle_instance",
-    "prefab.apply_to_source",
     "transform.numeric_apply",
     "animation.toggle_keyframe",
     "component.revert_baseline",

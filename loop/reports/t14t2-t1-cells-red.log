@@ -1,0 +1,126 @@
+    Finished `test` profile [optimized + debuginfo] target(s) in 0.33s
+     Running tests/prefabs/main.rs (target/debug/deps/prefabs-c0f7f6eaa1f203a3)
+
+running 2 tests
+[2m2026-10-29T09:35:19.320700Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-10-29T09:35:19.321507Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-29T09:35:19.490345Z[0m [31mERROR[0m [2mbevy_extract::extract_resource[0m[2m:[0m Sub app did not exist when trying to add `extract_resource` for <bevy_camera::clear_color::ClearColor>.
+[2m2026-10-29T09:35:20.319512Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+[2m2026-10-29T09:35:20.379459Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw::test_input::plugin` of extension `jackdaw.test_input`
+[2m2026-10-29T09:35:20.379843Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw_physics::PhysicsEditorPlugin` of extension `jackdaw.physics`
+[2m2026-10-29T09:35:20.383324Z[0m [33m WARN[0m [2mbevy_render::texture[0m[2m:[0m CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+[2m2026-10-29T09:35:20.383411Z[0m [33m WARN[0m [2mbevy_gltf[0m[2m:[0m CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+[2m2026-10-29T09:35:20.387404Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.project_window
+[2m2026-10-29T09:35:20.387523Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.timeline
+[2m2026-10-29T09:35:20.387537Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.game_panel
+[2m2026-10-29T09:35:20.387547Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.animation_graph
+[2m2026-10-29T09:35:20.387553Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core_windows
+[2m2026-10-29T09:35:20.387585Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.inspector
+[2m2026-10-29T09:35:20.387604Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.ui_palette
+[2m2026-10-29T09:35:20.387646Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.physics
+[2m2026-10-29T09:35:20.387833Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core
+[2m2026-10-29T09:35:20.390362Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.build_panel
+[2m2026-10-29T09:35:20.390377Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.test_input
+[2m2026-10-29T09:35:20.390390Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.viewport_panel
+[2m2026-10-29T09:35:20.390442Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.multiplayer
+[2m2026-10-29T09:35:20.392397Z[0m [33m WARN[0m [2mjackdaw_api_internal::keymap::apply[0m[2m:[0m preset 'classic' has 10 chords claimed by more than one action: ["Delete (Press, Operators): clip.delete_keyframes, entity.delete, brush.delete_element", "Backspace (Press, Operators): clip.delete_keyframes, viewport.draw_brush.remove_last_vertex, brush.delete_element", "Home (Press, Operators): clip.timeline.jump_start, view.frame_all, viewport2d.frame", "Super+KeyC (Press, Operators): clip.copy_keyframes, entity.copy", "Super+KeyV (Press, Operators): clip.paste_keyframes, entity.paste", "Tab (Press, Operators): viewport.draw_brush.toggle_mode, brush.clip.cycle_mode", "Enter (Press, Operators): viewport.draw_brush.commit_polygon, brush.clip.apply", "KeyE (Press, Operators): tool.rotate, brush.mesh.extrude", "Escape (Press, Operators): brush.exit_edit_mode, selection.clear, brush.clip.clear, terrain.tool.exit_to_select", "Super+KeyB (Press, Operators): brush.mesh.edge_bevel, brush.mesh.vertex_bevel"]
+[2m2026-10-29T09:35:20.392423Z[0m [32m INFO[0m [2mjackdaw::extension_lifecycle[0m[2m:[0m applied keymap preset 'classic': 112 entries, 112 bindings, 0 user rows
+[2m2026-10-29T09:35:20.659195Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+test prefab_t14_acceptance::an_applied_baseline_reaches_every_sibling_instance ... FAILED
+[2m2026-10-29T09:35:21.073928Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking /private/var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/.tmpwQdQZJ/assets recursively
+[2m2026-10-29T09:35:21.074074Z[0m [32m INFO[0m [2mjackdaw::asset_catalog[0m[2m:[0m No asset catalog found, starting with empty catalog
+[2m2026-10-29T09:35:21.144055Z[0m [33m WARN[0m [2mjackdaw::pie[0m[2m:[0m PIE: cannot build /private/var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/.tmpwQdQZJ: cargo could not read /private/var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/.tmpwQdQZJ: error: could not find `Cargo.toml` in `/private/var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/.tmpwQdQZJ` or any parent directory
+[2m2026-10-29T09:35:21.144567Z[0m [32m INFO[0m [2mjackdaw::material_browser[0m[2m:[0m update_material_browser_ui: rebuilding with 1 entries
+[2m2026-10-29T09:35:21.156050Z[0m [33m WARN[0m [2mbevy_ui::ui_node[0m[2m:[0m Two or more Entities with IsDefaultUiCamera found when only one Camera with this marker is allowed.
+[2m2026-10-29T09:35:21.209284Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: scene.open
+[2m2026-10-29T09:35:21.211939Z[0m [33m WARN[0m [2mjackdaw_api_internal::operator[0m[2m:[0m scene 'world.bsn': 1 references name files the project does not hold (0 missing) — run asset.audit for the list
+[2m2026-10-29T09:35:21.566963Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 2, typed 1, referencing 1)
+[2m2026-10-29T09:35:21.566979Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk out of date (writes 0 -> 1), walking again
+[2m2026-10-29T09:35:21.566985Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking /private/var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/.tmpwQdQZJ/assets recursively
+[2m2026-10-29T09:35:21.589286Z[0m [33m WARN[0m [2mbevy_app::hierarchy[0m[2m:[0m warning[B0004]: The inst entity with the InheritedVisibility component has a parent (the world entity) without InheritedVisibility.
+This will cause inconsistent behaviors! See: https://bevy.org/learn/errors/b0004
+[2m2026-10-29T09:35:21.595764Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: file.rename
+[2m2026-10-29T09:35:21.603214Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m renamed; rewrote 1 references in 1 documents
+[2m2026-10-29T09:35:22.113796Z[0m [33m WARN[0m [2mjackdaw::prefab::watcher[0m[2m:[0m prefab reload parse failed for /private/var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/.tmpwQdQZJ/assets/prefabs/p.bsn: failed to read /private/var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/.tmpwQdQZJ/assets/prefabs/p.bsn: No such file or directory (os error 2); keeping the last copy that parsed
+[2m2026-10-29T09:35:22.123221Z[0m [33m WARN[0m [2mbevy_app::hierarchy[0m[2m:[0m warning[B0004]: The inst entity with the InheritedVisibility component has a parent (the world entity) without InheritedVisibility.
+This will cause inconsistent behaviors! See: https://bevy.org/learn/errors/b0004
+[2m2026-10-29T09:35:22.130903Z[0m [32m INFO[0m [2mjackdaw::scene_io::save[0m[2m:[0m Scene saved to /private/var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/.tmpwQdQZJ/assets/world.bsn
+test prefab_t14_acceptance::a_scene_save_after_a_prefab_rename_keeps_the_new_spelling ... FAILED
+
+failures:
+
+---- prefab_t14_acceptance::an_applied_baseline_reaches_every_sibling_instance stdout ----
+
+thread 'prefab_t14_acceptance::an_applied_baseline_reaches_every_sibling_instance' (18095790) panicked at tests/prefabs/prefab_t14_acceptance.rs:283:5:
+sibling instance b follows the applied baseline; got x=0
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- prefab_t14_acceptance::a_scene_save_after_a_prefab_rename_keeps_the_new_spelling stdout ----
+
+thread 'prefab_t14_acceptance::a_scene_save_after_a_prefab_rename_keeps_the_new_spelling' (18095789) panicked at tests/prefabs/prefab_t14_acceptance.rs:859:5:
+a save of the open scene keeps the new spelling; got:
+// jackdaw 0.21.0-dev | bevy main
+#world
+bevy_transform::components::transform::Transform
+bevy_ecs::hierarchy::Children [
+    #inst
+    jackdaw::prefab::components::PrefabEntityId(0)
+    jackdaw::prefab::components::IsA {
+        source: "prefabs/p.bsn",
+        deleted: [],
+    }
+    jackdaw_scene_types::node_id::SceneNodeId(7808337187433411150)
+    bevy_transform::components::transform::Transform {
+        translation: glam::Vec3 {
+            x: 0.0,
+            y: 0.0,
+            z: 0.0,
+        },
+        rotation: glam::Quat {
+            x: 0.0,
+            y: 0.0,
+            z: 0.0,
+            w: 1.0,
+        },
+        scale: glam::Vec3 {
+            x: 1.0,
+            y: 1.0,
+            z: 1.0,
+        },
+    }
+    bevy_camera::visibility::Visibility::Inherited
+    bevy_ecs::hierarchy::Children [
+        #child
+        jackdaw::prefab::components::PrefabEntityId(1)
+        bevy_transform::components::transform::Transform {
+            translation: glam::Vec3 {
+                x: 1.0,
+                y: 0.0,
+                z: 0.0,
+            },
+            rotation: glam::Quat {
+                x: 0.0,
+                y: 0.0,
+                z: 0.0,
+                w: 1.0,
+            },
+            scale: glam::Vec3 {
+                x: 1.0,
+                y: 1.0,
+                z: 1.0,
+            },
+        }
+        bevy_camera::visibility::Visibility::Inherited
+    ]
+]
+
+
+
+failures:
+    prefab_t14_acceptance::a_scene_save_after_a_prefab_rename_keeps_the_new_spelling
+    prefab_t14_acceptance::an_applied_baseline_reaches_every_sibling_instance
+
+test result: FAILED. 0 passed; 2 failed; 0 ignored; 0 measured; 98 filtered out; finished in 2.85s
+
+error: test failed, to rerun pass `-p jackdaw --test prefabs`
+EXIT=101

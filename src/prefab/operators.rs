@@ -842,6 +842,11 @@ pub(crate) fn pack_matching_groups(
 /// instance entity stays put; other instances pick up the new baseline on the
 /// next cache-driven respawn.
 fn propagate_instance_to_prefab(world: &mut World, instance_node: Entity, target_path: &Path) {
+    // Sparse text against the baseline the document was last resolved
+    // against, staged for the reload below (PF1): the cache insert that
+    // follows moves the baseline, and an emit after that would read every
+    // sibling's old inherited value as an authored override.
+    crate::prefab::watcher::stage_sparse_capture(world);
     let display_name = target_path
         .file_stem()
         .and_then(|s| s.to_str())
@@ -1699,7 +1704,18 @@ pub fn revert_all(world: &mut World, instance_root_node: Entity) -> RevertReport
 /// inherits from the original while carrying the instance's current overrides
 /// as its own base. The source scene's instance is rewired to the variant.
 pub fn save_as_variant(world: &mut World, instance_root: Entity, target_path: &Path) {
-    let (source, deleted, root_patches, descendant_data) = {
+    // A descendant of the cut subtree: its id in the original prefab's space,
+    // its live node (for the parentage rebuild), its live parent, the inner
+    // IsA when the descendant is itself an instance, and its component
+    // patches with the instance markers stripped (re-added below).
+    struct Descendant {
+        id: u32,
+        node: Entity,
+        parent: Option<Entity>,
+        isa: Option<(String, Vec<u32>)>,
+        patches: Vec<BsnPatch>,
+    }
+    let (source, deleted, root_patches, descendants) = {
         let live = world.resource::<SceneBsnAst>();
         let Some(instance_node) = live.ast_for(instance_root) else {
             warn!("save_as_variant: instance entity not in document");
@@ -1715,18 +1731,37 @@ pub fn save_as_variant(world: &mut World, instance_root: Entity, target_path: &P
         let source = read_isa_source(live, instance_node).unwrap_or_default();
         let deleted = read_isa_deleted(live, instance_node);
         let root_patches = copy_component_patches(live, instance_node, true);
-        let descendant_data: Vec<(u32, Vec<BsnPatch>)> = live
+        let descendants: Vec<Descendant> = live
             .descendants_of(instance_node)
             .into_iter()
             .filter_map(|child| {
                 let id = read_prefab_entity_id(live, child)?;
-                Some((id, copy_component_patches(live, child, true)))
+                // A descendant that is itself an instance keeps its own IsA
+                // (and its `deleted` list): without it the nested prefab is
+                // baked flat into the variant and the inner level is lost
+                // (PF3, buglist R3).
+                let isa = read_isa_source(live, child).map(|inner| {
+                    (
+                        inner.to_string_lossy().into_owned(),
+                        read_isa_deleted(live, child),
+                    )
+                });
+                Some(Descendant {
+                    id,
+                    node: child,
+                    parent: live.ast_parent_of(child),
+                    isa,
+                    patches: copy_component_patches(live, child, true),
+                })
             })
             .collect();
-        (source, deleted, root_patches, descendant_data)
+        (source, deleted, root_patches, descendants)
     };
 
-    // Build the variant document.
+    // Build the variant document. The variant inherits the original through
+    // IsA, so its descendants keep the original's ids -- and its shape: each
+    // one hangs under its own parent's counterpart in the variant, not
+    // flattened under the root (PF3, buglist R3).
     let mut variant = SceneBsnAst::default();
     let mut root_node_patches = vec![
         BsnPatch::Type(PREFAB_TYPE.to_string()),
@@ -1736,11 +1771,24 @@ pub fn save_as_variant(world: &mut World, instance_root: Entity, target_path: &P
     root_node_patches.extend(root_patches);
     let variant_root = variant.create_entity_node(root_node_patches);
     variant.add_to_roots(variant_root);
-    for (id, patches) in descendant_data {
-        let mut child_patches = vec![peid_patch(id)];
-        child_patches.extend(patches);
-        let child = variant.create_entity_node(child_patches);
-        variant.add_child_to_ast(variant_root, child);
+    let mut counterparts: std::collections::HashMap<Entity, Entity> =
+        std::iter::once((instance_root, variant_root)).collect();
+    for descendant in &descendants {
+        let mut child_patches = vec![peid_patch(descendant.id)];
+        if let Some((inner_source, inner_deleted)) = &descendant.isa {
+            child_patches.push(isa_patch(inner_source, inner_deleted));
+        }
+        child_patches.extend(descendant.patches.iter().cloned());
+        let built = variant.create_entity_node(child_patches);
+        counterparts.insert(descendant.node, built);
+    }
+    for descendant in &descendants {
+        let built = counterparts[&descendant.node];
+        let variant_parent = descendant
+            .parent
+            .and_then(|parent| counterparts.get(&parent).copied())
+            .unwrap_or(variant_root);
+        variant.add_child_to_ast(variant_parent, built);
     }
 
     let Some(target_path) = write_prefab_doc(world, target_path, &variant, "save_as_variant", true)
@@ -1812,7 +1860,9 @@ pub fn bulk_apply_in_scene(
 /// Apply a single-field value into a prefab's source document so the override
 /// becomes the new inherited base. Mutates the cache in place; the resolve-on-
 /// change driver picks up the epoch bump and respawns the active scene next
-/// frame. Also clears the matching delta from the source instance.
+/// frame. Also clears the matching delta from the source instance, and —
+/// apply means write — lands the new baseline on disk so a reopen (and an
+/// export behind it) reads it back.
 pub fn apply_to_prefab_source(
     world: &mut World,
     instance_root_node: Entity,
@@ -1820,6 +1870,28 @@ pub fn apply_to_prefab_source(
     type_path: &str,
     field_path: &str,
     value: BsnValue,
+) {
+    apply_to_prefab_source_inner(
+        world,
+        instance_root_node,
+        entity_id,
+        type_path,
+        field_path,
+        value,
+        true,
+    );
+}
+
+/// [`apply_to_prefab_source`] with the disk write under the caller's control:
+/// a multi-leaf apply (Apply All) stages every leaf first and writes once.
+fn apply_to_prefab_source_inner(
+    world: &mut World,
+    instance_root_node: Entity,
+    entity_id: u32,
+    type_path: &str,
+    field_path: &str,
+    value: BsnValue,
+    persist: bool,
 ) {
     let source_path: PathBuf = {
         let live = world.resource::<SceneBsnAst>();
@@ -1829,6 +1901,49 @@ pub fn apply_to_prefab_source(
         };
         source
     };
+
+    let cached = world
+        .resource::<PrefabAstCache>()
+        .get(&source_path)
+        .is_some();
+    if !cached {
+        warn!(
+            "apply_to_prefab_source: prefab not cached: {}",
+            source_path.display()
+        );
+        return;
+    }
+
+    // Clear the matching delta on the source-scene side. A dotted path
+    // removes its own leaf — pruning the structs left empty — so the delta's
+    // other overrides stay authored (PF5): matching the top-level name whole
+    // would drop them, and comparing leaf to top was what the old code did,
+    // which is why nothing was ever cleared.
+    {
+        let mut live = world.resource_mut::<SceneBsnAst>();
+        let mut candidates = live.descendants_of(instance_root_node);
+        candidates.push(instance_root_node);
+        let scene_node = candidates
+            .into_iter()
+            .find(|&n| read_prefab_entity_id(&live, n) == Some(entity_id));
+        if let Some(scene_node) = scene_node
+            && let Some(BsnValue::Struct(mut data)) =
+                get_bsn_field(&live, scene_node, type_path, "")
+            && remove_delta_leaf(&mut data.fields.0, field_path.split('.').collect())
+        {
+            if data.fields.0.is_empty() {
+                live.remove_component_patch(scene_node, type_path);
+            } else {
+                set_whole_component(&mut live, scene_node, type_path, BsnValue::Struct(data));
+            }
+        }
+    }
+
+    // The sparse text is captured against the baseline the scene was last
+    // resolved against, and staged for the reload the epoch bump drives
+    // (PF1): after the mutation the same emit would read every sibling's old
+    // inherited value as an authored override and freeze it there.
+    crate::prefab::watcher::stage_sparse_capture(world);
 
     let registry = world.resource::<AppTypeRegistry>().clone();
     let applied = {
@@ -1853,26 +1968,37 @@ pub fn apply_to_prefab_source(
         return;
     }
 
-    // Clear the matching top-level delta on the source-scene side.
-    {
-        let mut live = world.resource_mut::<SceneBsnAst>();
-        let mut candidates = live.descendants_of(instance_root_node);
-        candidates.push(instance_root_node);
-        let scene_node = candidates
-            .into_iter()
-            .find(|&n| read_prefab_entity_id(&live, n) == Some(entity_id));
-        if let Some(scene_node) = scene_node
-            && let Some(BsnValue::Struct(mut data)) =
-                get_bsn_field(&live, scene_node, type_path, "")
-        {
-            data.fields.0.retain(|f| f.name != field_path);
-            if data.fields.0.is_empty() {
-                live.remove_component_patch(scene_node, type_path);
-            } else {
-                set_whole_component(&mut live, scene_node, type_path, BsnValue::Struct(data));
-            }
-        }
+    if persist && let Err(err) = save_prefab_to_disk(world, &source_path) {
+        warn!("apply_to_prefab_source: writing the source failed: {err}");
     }
+}
+
+/// Remove the leaf `segments` names from a component delta's fields, pruning
+/// parent structs left empty, so a compound delta keeps its sibling
+/// overrides. Answers whether anything was removed.
+fn remove_delta_leaf(fields: &mut Vec<BsnField>, segments: Vec<&str>) -> bool {
+    let Some((head, tail)) = segments.split_first() else {
+        return false;
+    };
+    let Some(index) = fields.iter().position(|field| field.name == *head) else {
+        return false;
+    };
+    if tail.is_empty() {
+        fields.remove(index);
+        return true;
+    }
+    let BsnValue::Struct(mut nested) = fields[index].value.clone() else {
+        return false;
+    };
+    if !remove_delta_leaf(&mut nested.fields.0, tail.to_vec()) {
+        return false;
+    }
+    if nested.fields.0.is_empty() {
+        fields.remove(index);
+    } else {
+        fields[index].value = BsnValue::Struct(nested);
+    }
+    true
 }
 
 /// Remove an inherited child from its prefab instance and re-parent it under
@@ -1977,15 +2103,26 @@ pub fn apply_all_overrides_to_source(world: &mut World, instance_root_node: Enti
         }
     }
 
+    let mut applied_leaves = 0;
     for (peid, type_path, field_path, value) in work {
-        apply_to_prefab_source(
+        apply_to_prefab_source_inner(
             world,
             instance_root_node,
             peid,
             &type_path,
             &field_path,
             value,
+            false,
         );
+        applied_leaves += 1;
+    }
+    // One write for the whole batch, not one per leaf (decision 1): the
+    // staged leaves land on disk together, and the write registers the
+    // fingerprint that keeps the watcher from echoing it back.
+    if applied_leaves > 0
+        && let Err(err) = save_prefab_to_disk(world, &prefab_path)
+    {
+        warn!("apply_all_overrides_to_source: writing the source failed: {err}");
     }
 }
 
@@ -2328,12 +2465,14 @@ pub fn prefab_revert_all(params: In<OperatorParameters>, mut commands: Commands)
 
 /// Apply a single field's scene-side value into the prefab source document so
 /// the override becomes the new inherited base. The value is supplied as a
-/// JSON-encoded string via `value_json`.
+/// JSON-encoded string via `value_json`. Not undoable: the apply writes the
+/// prefab source file, and a file-level write has no snapshot to roll back
+/// to (PF2, PF4).
 #[operator(
     id = "prefab.apply_to_source",
     label = "Apply Field to Prefab Source",
     description = "Push one overridden field into the prefab source so every instance picks it up.",
-    allows_undo = true,
+    allows_undo = false,
     params(
         instance_entity(Entity, doc = "ECS entity of the prefab-instance root."),
         entity_id(i64, doc = "PrefabEntityId of the target entity inside the prefab."),

@@ -1,0 +1,24 @@
+# CMD: cargo clippy -p jackdaw_physics -p jackdaw_avian_integration --all-targets -- -D warnings
+# HOST: zhanglinbomac.local  START: 2026-10-29 20:26:50
+# df: /dev/disk3s5   460Gi   269Gi   167Gi    62%    1.9M  1.8G    0%   /System/Volumes/Data
+    Checking jackdaw_env v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_env)
+    Checking jackdaw_feathers v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_feathers)
+   Compiling jackdaw_api_macros v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_api_macros)
+   Compiling jackdaw_project_build v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_project_build)
+    Checking jackdaw_rustc_wrapper v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_rustc_wrapper)
+    Checking jackdaw_snap v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_snap)
+    Checking jackdaw_package v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_package)
+    Checking jackdaw_releases v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_releases)
+    Checking jackdaw_scaffold v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_scaffold)
+    Checking jackdaw_panels v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_panels)
+    Checking jackdaw_node_graph v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_node_graph)
+    Checking jackdaw_api_internal v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_api_internal)
+    Checking jackdaw_animation v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_animation)
+    Checking jackdaw_api v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_api)
+    Checking jackdaw_loader v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_loader)
+    Checking jackdaw_physics v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/integrations/physics/jackdaw_physics)
+    Checking jackdaw_multiplayer_editor v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_multiplayer_editor)
+    Checking jackdaw v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw)
+    Finished `dev` profile [optimized + debuginfo] target(s) in 23.56s
+# END: 2026-10-29 20:27:14
+# EXIT=0

@@ -62,6 +62,7 @@ impl Plugin for PrefabPlugin {
         app.add_plugins(jackdaw_prefab::PrefabTypesPlugin)
             .init_resource::<PrefabAstCache>()
             .init_resource::<sync::LastResolvedEpoch>()
+            .init_resource::<watcher::StagedSparseCapture>()
             .add_systems(
                 Update,
                 (

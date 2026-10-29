@@ -1,0 +1,13 @@
+[2m2026-10-29T12:14:57.945645Z[0m [32m INFO[0m [2mbevy_diagnostic::system_information_diagnostics_plugin::internal[0m[2m:[0m SystemInfo { os: "macOS 26.6.2 Tahoe", kernel: "25.6.0", cpu: "Apple M1 Pro", core_count: "8", memory: "16.0 GiB" }
+[2m2026-10-29T12:14:57.946816Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-29T12:14:58.018886Z[0m [32m INFO[0m [2mbevy_render::renderer[0m[2m:[0m AdapterInfo { name: "Apple M1 Pro", vendor: 0, device: 0, device_type: IntegratedGpu, device_pci_bus_id: "", driver: "", driver_info: "", backend: Metal, subgroup_min_size: 4, subgroup_max_size: 64, transient_saves_memory: Some(true), limit_bucket: None }
+[2m2026-10-29T12:14:58.127417Z[0m [32m INFO[0m [2mbevy_pbr::cluster[0m[2m:[0m GPU clustering is supported on this device.
+[2m2026-10-29T12:14:58.127474Z[0m [32m INFO[0m [2mbevy_render::batching::gpu_preprocessing[0m[2m:[0m GPU preprocessing is fully supported on this device.
+[2m2026-10-29T12:14:58.176688Z[0m [32m INFO[0m [2mbevy_winit::system[0m[2m:[0m Creating new window t14-prefab (69v0)
+[2m2026-10-29T12:14:58.315740Z[0m [32m INFO[0m [2mjackdaw_remote::methods[0m[2m:[0m JackdawRemote: Generated 461 new component definitions in .jackdaw/components.json
+[2m2026-10-29T12:14:58.317249Z[0m [32m INFO[0m [2mjackdaw_runtime[0m[2m:[0m No catalog at /Users/zhanglinbo/workspace/loop-mac/t14-prefab/t14-prefab/.jackdaw/dist/release/assets/catalog.bsn, skipping catalog load
+[2m2026-10-29T12:14:58.322849Z[0m [33m WARN[0m [2mjackdaw_runtime::config[0m[2m:[0m no config asset at 'game-config.bsn'; t14_prefab::GameConfig starts at its default
+[2m2026-10-29T12:14:58.322875Z[0m [33m WARN[0m [2mjackdaw_runtime::config[0m[2m:[0m no config asset at 'input-actions.bsn'; jackdaw_runtime::game_input::GameInputConfig starts at its default
+[2m2026-10-29T12:14:58.361763Z[0m [33m WARN[0m [2mjackdaw_bind::evaluate[0m[2m:[0m binding 0 on 751v0: no context for 't14_prefab::PickupCount.0'
+[2m2026-10-29T12:14:58.361820Z[0m [33m WARN[0m [2mjackdaw_bind::evaluate[0m[2m:[0m binding 0 on 750v0: no context for 't14_prefab::PlayerHealth.current'
+[2m2026-10-29T12:14:58.361828Z[0m [33m WARN[0m [2mjackdaw_bind::evaluate[0m[2m:[0m binding 0 on 748v0: no context for 't14_prefab::PlayerHealth.current'

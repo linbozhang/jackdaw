@@ -1,0 +1,17 @@
+EDITOR_READY
+---- L5: PIE over the prefab scene, Stop restores ----
+L5: game world RockTip=3 BarrelRock=1 rock_b scale=[2.0,1.0,1.0] RockTip y=1.0
+L5_PIE_PREFAB_SCENE_PASS
+L5-stop: editor counts back, world.bsn sha stable=y
+L5_STOP_RESTORES_PASS
+---- L6: the export five-point chain ----
+L6: staged RockTip y = 5.5 (expect 5.5)
+loop/qa/t14-live.sh: line 780: 23906 Terminated: 15          nohup env DYLD_LIBRARY_PATH="$TOOLCHAIN_LIB" ./"$(basename "$STAGED_EXE")" > "$OUTDIR/staged-tall.log" 2>&1
+L6: staged RockTip y after restore+re-export = 1.0 (expect 1)
+loop/qa/t14-live.sh: line 780: 24095 Terminated: 15          nohup env DYLD_LIBRARY_PATH="$TOOLCHAIN_LIB" ./"$(basename "$STAGED_EXE")" > "$OUTDIR/staged-restored.log" 2>&1
+L6_EXPORT_FIVE_POINT_PASS
+WARN_SCAN game phase: defect_forms=0 game_flow_lines=0 refused_lines=0 (N13 PIE panics counted: 0)
+WARN_SCAN_GAME_PASS
+VERDICT_GAME_PHASE: L5_PIE_PREFAB_SCENE=PASS L5_STOP_RESTORES=PASS L6_EXPORT_FIVE_POINT=PASS WARN_SCAN_GAME=PASS 
+loop/qa/t14-live.sh: line 51: 15519 Terminated: 15          nohup env DYLD_LIBRARY_PATH="$TOOLCHAIN_LIB" ./target/debug/jackdaw > "$OUTDIR/editor-$PHASE.log" 2>&1
+GAME_PHASE_EXIT=0

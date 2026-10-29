@@ -1227,7 +1227,7 @@ fn apply_to_prefab_source_writes_value_into_prefab_ast() {
 }
 
 #[test]
-fn apply_to_source_updates_cache_without_disk_write() {
+fn apply_to_source_lands_the_new_baseline_on_disk() {
     let tmp = tempfile::tempdir().unwrap();
     let prefab_path = tmp.path().join("p.bsn");
     std::fs::write(
@@ -1249,7 +1249,6 @@ fn apply_to_source_updates_cache_without_disk_write() {
         bevy::math::Vec3::ZERO,
     );
 
-    let mtime_before = std::fs::metadata(&prefab_path).unwrap().modified().unwrap();
     let cache_epoch_before = app
         .world()
         .resource::<jackdaw::prefab::PrefabAstCache>()
@@ -1304,10 +1303,34 @@ fn apply_to_source_updates_cache_without_disk_write() {
         "cache reflects applied value"
     );
 
-    let mtime_after = std::fs::metadata(&prefab_path).unwrap().modified().unwrap();
+    // Apply means write (PF2): the applied baseline is on disk for the next
+    // open to read, and the write registered its fingerprint so the watcher
+    // skips its own echo.
+    let assets_root = jackdaw::prefab::save_load::source_root_of(app.world(), &prefab_path);
+    let reloaded = jackdaw::prefab::save_load::read_prefab_ast(&prefab_path, &assets_root)
+        .expect("the written prefab parses");
+    let root = reloaded
+        .entities_with_component("jackdaw::prefab::components::Prefab")
+        .first()
+        .copied()
+        .unwrap();
+    let disk_x = jackdaw_bsn::get_bsn_field(
+        &reloaded,
+        root,
+        "bevy_transform::components::transform::Transform",
+        "translation.x",
+    );
+    assert!(
+        matches!(disk_x, Some(jackdaw_bsn::BsnValue::Float(v)) if (v - 5.0).abs() < 1e-9),
+        "the applied baseline landed on disk; got {disk_x:?}"
+    );
+    let fingerprint = jackdaw::prefab::cache::compute_file_fingerprint(&prefab_path).unwrap();
     assert_eq!(
-        mtime_before, mtime_after,
-        "apply_to_source must not write disk; disk-write is deferred to an explicit save"
+        app.world()
+            .resource::<jackdaw::prefab::PrefabAstCache>()
+            .last_saved_fingerprint(&prefab_path),
+        Some(&fingerprint),
+        "the write registered its fingerprint against the watcher echo"
     );
 }
 
