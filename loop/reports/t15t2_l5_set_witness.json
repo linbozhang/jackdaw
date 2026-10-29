@@ -1,0 +1,14 @@
+[
+ {
+  "phase": "bind-default",
+  "state": "idle"
+ },
+ {
+  "phase": "written-walk",
+  "state": "walk"
+ },
+ {
+  "phase": "walk-holds-2s",
+  "state": "walk"
+ }
+]

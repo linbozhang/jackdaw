@@ -1,0 +1,8 @@
+{"label": "entry", "state": "idle", "since": 8.533282279968262, "transition": null}
+{"label": "speed1", "state": "walk", "since": 0.051173292100429535, "transition": {"from": "idle", "remaining_secs": 0.09882671386003494}}
+{"label": "walk-loop-a", "state": "walk", "since": 0.10549083352088928, "transition": {"from": "idle", "remaining_secs": 0.0445091687142849}}
+{"label": "walk-loop-b", "state": "walk", "since": 2.121176242828369, "transition": null}
+{"label": "speed0", "state": "idle", "since": 0.05186758562922478, "transition": {"from": "walk", "remaining_secs": 0.0981324166059494}}
+{"label": "jump-early", "state": "jump", "since": 0.36300763487815857, "transition": null}
+{"label": "jump-held", "state": "idle", "since": 0.049709707498550415, "transition": {"from": "jump", "remaining_secs": 0.10029029846191406}}
+{"label": "fallback", "state": "idle", "since": 0.15448521077632904, "transition": null}
