@@ -1,0 +1,36 @@
+Diff in /Users/zhanglinbo/workspace/jackdaw/src/launcher/ops.rs:592:
+                    what it needs; turning one off turns off what needs it.",
+     allows_undo = false,
+     params(
+-        id(String, doc = "The module: physics, navmesh, multiplayer or animation."),
++        id(
++            String,
++            doc = "The module: physics, navmesh, multiplayer or animation."
++        ),
+         enabled(bool, doc = "On or off.")
+     )
+ )]
+Diff in /Users/zhanglinbo/workspace/jackdaw/src/launcher/ops.rs:838:
+     description = "Turn a module on or off in the Install editor dialog.",
+     allows_undo = false,
+     params(
+-        id(String, doc = "The module: physics, navmesh, multiplayer or animation."),
++        id(
++            String,
++            doc = "The module: physics, navmesh, multiplayer or animation."
++        ),
+         enabled(bool, doc = "On or off.")
+     )
+ )]
+Diff in /Users/zhanglinbo/workspace/jackdaw/src/project_modules.rs:72:
+                    and the game's Cargo.toml; the game rebuilds the next time it is built.",
+     allows_undo = false,
+     params(
+-        id(String, doc = "The module: physics, navmesh, multiplayer or animation."),
++        id(
++            String,
++            doc = "The module: physics, navmesh, multiplayer or animation."
++        ),
+         enabled(bool, doc = "On or off.")
+     )
+ )]

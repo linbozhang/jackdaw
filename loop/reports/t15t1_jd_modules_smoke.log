@@ -1,0 +1,13 @@
+jd new: created /tmp/t15smoke/smoke-anim
+  modules: Animation
+  scaffolded 12 files
+  checking dependencies resolve...
+
+note: this jackdaw runs from the checkout at /Users/zhanglinbo/workspace/jackdaw, so the new project depends on its crates by path. That Cargo.toml is local to this machine; switch those back to versions before sharing it.
+
+Next:
+  jd open /tmp/t15smoke/smoke-anim
+or `cargo run` in that directory to play standalone.
+jd exit=0
+/tmp/t15smoke/smoke-anim/Cargo.toml:24:jackdaw_runtime = { path = '/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_runtime', features = ["animation", "terrain", "pie"] }
+/tmp/t15smoke/smoke-anim/jackdaw.toml:26:animation = true

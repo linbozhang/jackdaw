@@ -1,0 +1,18 @@
+QA personal verification 2026-10-30: jd new --modules animation both halves
+(qa note: first attempt used positional dir without --path -> jd refused by design;
+rerun with `jd new <name> --path <dir> --no-git --modules <list>`)
+
++ cargo run -q -p jd -- new smoke-anim --path /tmp/t15t1_qa_smoke --no-git --modules animation
+jd new: created /tmp/t15t1_qa_smoke/smoke-anim
+  modules: Animation
+  scaffolded 12 files
+  checking dependencies resolve...
+smoke-anim/Cargo.toml:24:jackdaw_runtime = { path = '.../crates/jackdaw_runtime', features = ["animation", "terrain", "pie"] }
+smoke-anim/jackdaw.toml:26:animation = true
+
++ cargo run -q -p jd -- new plain-anim --path /tmp/t15t1_qa_smoke --no-git --no-modules
+jd new: created /tmp/t15t1_qa_smoke/plain-anim
+  modules: none
+plain-anim/Cargo.toml: animation count = 0
+plain-anim/jackdaw.toml:26:animation = false  (explicit module key, off by default; Cargo.toml zero animation)
+RESULT: jd CLI surface verified both directions. temp dirs removed.
