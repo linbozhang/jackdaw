@@ -1,0 +1,11 @@
+PF2 T2 真机见证（绿）：editor 段 L2b「Apply Component to Prefab Source」之后，
+assets/prefabs/rock.bsn 盘上即带 apply 后的基线 scale [2.0,1.0,1.0]（根 Transform 的
+scale x: 2.0，多行展开形），并经 L7 编辑器重启仍自盘读回。T1 的见证链
+（apply 会话内 2 → 盘上 1 → 重启/游戏按 1）被反转：apply 即写盘（决策 1=A）。
+副作用注记：rock.bsn 被 PF2 落盘重写为多行展开形后，editor 段 L4 腿的单行
+sed（s|y: 1.0, z: 0.0|y: 4.0, z: 0.0|）不再命中——L4 两轮 FAIL 的根因是腿的
+盘改前提被修复打破（外部编辑根本没写进盘），非产品回归；无头侧
+an_external_edit_after_an_apply_lands_through_the_real_watcher（真实 notify 链）
+与 T1 的 L4（PF2 落盘前的单行夹具）均为绿。T3 修腿：sed 改为多行容忍
+（如 python 原位替换 translation 块内的 y 值）。
+观察时间 2026-10-29，fixture loop-mac/t14-prefab/t14-prefab，两轮 editor 段。

@@ -503,6 +503,15 @@ pub(crate) fn follow_a_move(world: &mut World, old: &Path, new: &Path, what: &st
     // Retarget before the index moves on: the stems the rewrite matches bare
     // names against still resolve the old spelling.
     let holding = retarget_tabs(world, old, new, &moves);
+    // The in-memory sweep also matches the spelling the LIVE document was
+    // resolved to: load absolutizes IsA sources, so the relative pair above
+    // finds nothing there — the absolute pair names the same files (PF9).
+    let mut sweep_moves = moves.clone();
+    sweep_moves.push(ReferenceMove::Spelled {
+        from: old.to_string_lossy().into_owned(),
+        to: new.to_string_lossy().into_owned(),
+    });
+    let referencing = rewrite_referencing_documents(world, &sweep_moves);
     retarget_cards(world, &old_indexed, &new_indexed, folder);
 
     // The entries move with their files, keeping every loaded handle: a
@@ -515,7 +524,9 @@ pub(crate) fn follow_a_move(world: &mut World, old: &Path, new: &Path, what: &st
     // files kept through the rename, so their handles and values are left
     // alone.
     rescan_asset_index(world);
-    recompute_clean_baselines(world, &holding);
+    let mut with_references = holding;
+    with_references.extend(referencing);
+    recompute_clean_baselines(world, &with_references);
 
     // A dirty tab's journal entry still names the old path; the crash
     // journal is the one place that outlives this frame.
@@ -672,6 +683,62 @@ fn recompute_clean_baselines(world: &mut World, holding: &[usize]) {
             }
         }
     }
+}
+
+/// The open scene documents that merely REFERENCE the moved file: the disk
+/// rewrites above reached the files, but a document still spelling the old
+/// path in memory would drag the stale reference back over the rewrite on
+/// its next save, and its instances would stop following the moved prefab
+/// in-session (PF9). Tabs standing on the moved file were handled by
+/// [`retarget_tabs`]; this sweeps the rest, the active tab's live document
+/// and the inactive tabs' stashed snapshots. Answers the tab indices whose
+/// document was rewritten, so their clean baselines recompute over the
+/// rewrite the way the standing tabs' do.
+fn rewrite_referencing_documents(world: &mut World, moves: &[ReferenceMove]) -> Vec<usize> {
+    let active = world.resource::<crate::scenes::Scenes>().active;
+    let tab_count = world.resource::<crate::scenes::Scenes>().tabs.len();
+    let active_holds_scene = world
+        .resource::<crate::scenes::Scenes>()
+        .tabs
+        .get(active)
+        .is_some_and(|tab| matches!(tab.content, crate::scenes::TabContent::Scene(_)));
+
+    let mut touched: Vec<usize> = Vec::new();
+    // The active scene tab's document is the live world resource. A prefab
+    // tab's live document belongs to its cache entry, which `retarget_tabs`
+    // already rewrote, so only scene tabs sweep here.
+    if active_holds_scene {
+        let live = world.remove_resource::<jackdaw_bsn::SceneBsnAst>();
+        if let Some(mut ast) = live {
+            if rewrite_ast(world, &mut ast, moves) > 0 {
+                touched.push(active);
+            }
+            world.insert_resource(ast);
+        }
+    }
+    for index in 0..tab_count {
+        if index == active {
+            continue;
+        }
+        let stash = {
+            let mut scenes = world.resource_mut::<crate::scenes::Scenes>();
+            match &mut scenes.tabs[index].content {
+                crate::scenes::TabContent::Scene(Some(ast)) => Some(ast.deep_clone()),
+                _ => None,
+            }
+        };
+        if let Some(mut ast) = stash
+            && rewrite_ast(world, &mut ast, moves) > 0
+        {
+            let mut scenes = world.resource_mut::<crate::scenes::Scenes>();
+            scenes.tabs[index].content = crate::scenes::TabContent::Scene(Some(Box::new(ast)));
+            touched.push(index);
+        }
+    }
+    if !touched.is_empty() {
+        world.resource_mut::<crate::scenes::Scenes>().set_changed();
+    }
+    touched
 }
 
 /// Whether a tab's file is `moved` itself or sits under it.

@@ -1,0 +1,6 @@
+test prefab_t14_acceptance::an_applied_baseline_reaches_every_sibling_instance ... ok
+test prefab_t14_acceptance::a_scene_save_after_a_prefab_rename_keeps_the_new_spelling ... ok
+test prefab_t14_acceptance::an_applied_baseline_survives_a_scene_save_and_reopen ... ok
+test prefab_t14_acceptance::a_variant_keeps_the_nested_levels_of_the_instance_it_was_cut_from ... ok
+test prefab_t14_acceptance::an_applied_leaf_clears_its_own_delta_and_keeps_the_sibling_one ... ok
+test prefab_t14_acceptance::an_external_edit_after_an_apply_still_reaches_every_instance ... ok

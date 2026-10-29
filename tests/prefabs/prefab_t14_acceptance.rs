@@ -2,12 +2,9 @@
 //! t14-prefab-acceptance.md §五-T1) found uncovered by the existing suites.
 //! Each test names its matrix cell in a leading comment.
 //!
-//! Task 1 is record-only: where the current behavior is a catalogued defect
-//! the test pins the *desired* behavior behind `#[ignore = "PF<n>: ..."]` so
-//! the red evidence stays reproducible (`cargo test --test prefabs -- --ignored`)
-//! and the T2 fix flips it green by deleting the attribute alone. The repo has
-//! no other `#[ignore]` use; the alternative — pinning broken behavior green —
-//! would enshrine the defect, so the red cell says so out loud instead.
+//! Task 1 recorded the two then-broken cells (PF1, PF9) behind `#[ignore]`
+//! red evidence; Task 2 landed the repairs and deleted the attributes, so the
+//! suite now asserts the desired behavior outright.
 
 #![allow(
     clippy::print_stdout,
@@ -34,6 +31,18 @@ const BASELINE_ZERO: &str = "#p\n\
      jackdaw::prefab::components::PrefabEntityId(0)\n\
      bevy_transform::components::transform::Transform {\n\
          translation: glam::Vec3 { x: 0.0, y: 0.0, z: 0.0 },\n\
+         rotation: glam::Quat { x: 0.0, y: 0.0, z: 0.0, w: 1.0 },\n\
+         scale: glam::Vec3 { x: 1.0, y: 1.0, z: 1.0 },\n\
+     }\n\
+     bevy_camera::visibility::Visibility::Inherited";
+
+/// The same prefab with the root parked at x=9: the external-edit leg rewrites
+/// the file to this, so a follow-up reload has something new to hand down.
+const BASELINE_NINE: &str = "#p\n\
+     jackdaw::prefab::components::Prefab\n\
+     jackdaw::prefab::components::PrefabEntityId(0)\n\
+     bevy_transform::components::transform::Transform {\n\
+         translation: glam::Vec3 { x: 9.0, y: 0.0, z: 0.0 },\n\
          rotation: glam::Quat { x: 0.0, y: 0.0, z: 0.0, w: 1.0 },\n\
          scale: glam::Vec3 { x: 1.0, y: 1.0, z: 1.0 },\n\
      }\n\
@@ -177,15 +186,11 @@ fn undo_once(app: &mut App) {
 }
 
 // ---------------------------------------------------------------------------
-// D-多实例更新 × apply — the PF1 red cell. Ignored on purpose: it asserts the
-// desired behavior, which today's propagate path breaks (PF1 in
-// loop/plans/t14-prefab-acceptance.md §三). Run it with
-// `cargo test --test prefabs an_applied_baseline -- --ignored` to reproduce
-// the red; T2's fix turns it green by deleting the attribute.
+// D-多实例更新 × apply — the PF1 red cell, turned green in T2: the reload that
+// follows the cache mutation compares against the baseline the scene was last
+// resolved against (the staged capture), so the sibling follows the applied
+// baseline and nothing freezes as an authored override.
 // ---------------------------------------------------------------------------
-#[ignore = "PF1 red evidence: apply's propagate reload compares against the NEW \
-           baseline, so the sibling's inherited value freezes as an authored \
-           override and never follows the prefab again. Turned green in T2."]
 #[test]
 fn an_applied_baseline_reaches_every_sibling_instance() {
     let tmp = tempfile::tempdir().unwrap();
@@ -759,20 +764,15 @@ fn renaming_a_prefab_retargets_its_tab_cache_and_references() {
             "the rewritten scene file spells the new prefab path; got:\n{on_disk}"
         );
     }
-    // Record-only note (PF9, second face): the OPEN scene still spells the
-    // old path — its instances stop following the renamed file in-session,
-    // and its next save drags the stale spelling back over the rewritten
-    // file (the ignored red cell below pins that face).
+    // The face the T2 PF9 fix covers: the OPEN scene's document follows the
+    // rewritten spelling too, so this session keeps following the prefab and
+    // a save keeps the new path — pinned by the test below.
 }
 
-/// PF9 red evidence (loop/plans/t14-prefab-acceptance.md, T1 finding): the
-/// rename rewrites the scene *file* on disk, but the OPEN scene's live
-/// document keeps spelling the old path, and its next save drags the stale
-/// reference back over the rewritten file — the instance breaks on the next
-/// open. Ignored on purpose; turned green in T2 alongside PF1/PF2.
-#[ignore = "PF9 red evidence: a rename retargets tabs standing on the file but \
-           not the open scenes referencing it; their next save writes the old \
-           prefab path back over the rewritten file."]
+/// PF9, turned green in T2 (loop/plans/t14-prefab-acceptance.md): a rename
+/// retargets not only the tabs standing on the moved file but the open scenes
+/// referencing it — their in-memory documents follow the rewritten spelling,
+/// so a save keeps the new path and the instances keep following the prefab.
 #[test]
 fn a_scene_save_after_a_prefab_rename_keeps_the_new_spelling() {
     use jackdaw::project::{ProjectConfig, ProjectRoot};
@@ -848,6 +848,512 @@ fn a_scene_save_after_a_prefab_rename_keeps_the_new_spelling() {
         on_disk.contains("prefabs/rock.bsn") && !on_disk.contains("prefabs/p.bsn"),
         "a save of the open scene keeps the new spelling; got:\n{on_disk}"
     );
+}
+
+// ---------------------------------------------------------------------------
+// T2 - PF2 — apply must survive its natural follow-up gestures. The applied
+// baseline lands on disk as it lands in the cache, so a scene save + reopen
+// (and an export behind it) reads the applied value back. Before the fix the
+// apply lived only in the cache: the scene delta was collected by the
+// save-time sparsify and the prefab file kept the old baseline, so the
+// reopened scene read x=0 again (probe P3, loop/reports/t14t1-probe3).
+// ---------------------------------------------------------------------------
+#[test]
+fn an_applied_baseline_survives_a_scene_save_and_reopen() {
+    use jackdaw::project::{ProjectConfig, ProjectRoot};
+
+    let tmp = tempfile::tempdir().unwrap();
+    let prefab_path = tmp.path().join("p.bsn");
+    std::fs::write(&prefab_path, BASELINE_ZERO).unwrap();
+    let scene_path = tmp.path().join("world.bsn");
+
+    let mut app = util::editor_test_app();
+    app.world_mut().insert_resource(ProjectRoot::new(
+        tmp.path().to_path_buf(),
+        ProjectConfig::default(),
+    ));
+    jackdaw::prefab::operators::spawn_instance(app.world_mut(), &prefab_path, Vec3::ZERO);
+    app.update();
+    let instance = entity_with_peid(&mut app, 0);
+    override_translation_x(&mut app, instance, 5.0);
+    let instance_node = app
+        .world()
+        .resource::<SceneBsnAst>()
+        .ast_for(instance)
+        .expect("the instance node is in the live document");
+    jackdaw::prefab::operators::apply_to_prefab_source(
+        app.world_mut(),
+        instance_node,
+        0,
+        TRANSFORM_TYPE,
+        "translation",
+        BsnValue::Struct(jackdaw_bsn::BsnStructData {
+            type_path: "glam::Vec3".to_string(),
+            fields: jackdaw_bsn::BsnStructFields(vec![
+                jackdaw_bsn::BsnField {
+                    name: "x".to_string(),
+                    value: BsnValue::Float(5.0),
+                },
+                jackdaw_bsn::BsnField {
+                    name: "y".to_string(),
+                    value: BsnValue::Float(0.0),
+                },
+                jackdaw_bsn::BsnField {
+                    name: "z".to_string(),
+                    value: BsnValue::Float(0.0),
+                },
+            ]),
+        }),
+    );
+    app.update();
+
+    // Save the scene the way the editor does and reopen it in a fresh app.
+    let scene_tab = {
+        let mut scenes = app.world_mut().resource_mut::<jackdaw::scenes::Scenes>();
+        let mut tab = jackdaw::scenes::SceneTab::new_untitled(scenes.tabs.len() as u32 + 1);
+        tab.path = Some(scene_path.clone());
+        scenes.push_tab(tab)
+    };
+    app.world_mut()
+        .resource_mut::<jackdaw::scenes::Scenes>()
+        .active = scene_tab;
+    assert!(
+        jackdaw::scene_io::save_scene(app.world_mut()),
+        "the scene saves"
+    );
+
+    let mut reopened = make_app();
+    reopened.world_mut().insert_resource(ProjectRoot::new(
+        tmp.path().to_path_buf(),
+        ProjectConfig::default(),
+    ));
+    jackdaw::scene_io::load_scene_from_file(reopened.world_mut(), &scene_path);
+    reopened.update();
+    reopened.update();
+
+    // The reopened app reads the prefab off disk; the applied baseline must
+    // be there, in the cache and in the world it materializes.
+    let cache = reopened
+        .world()
+        .resource::<jackdaw::prefab::PrefabAstCache>();
+    let prefab_ast = cache.get(&prefab_path).expect("the prefab is cached");
+    let root = prefab_ast
+        .entities_with_component("jackdaw::prefab::components::Prefab")
+        .first()
+        .copied()
+        .unwrap();
+    let baseline_x = jackdaw_bsn::get_bsn_field(prefab_ast, root, TRANSFORM_TYPE, "translation.x");
+    assert!(
+        matches!(baseline_x, Some(BsnValue::Float(v)) if (v - 5.0).abs() < 1e-9),
+        "the applied value is on disk, not only in the session cache; got {baseline_x:?}"
+    );
+    let reopened_instance = entity_with_peid(&mut reopened, 0);
+    assert!(
+        (ecs_x(&mut reopened, reopened_instance) - 5.0).abs() < 1e-4,
+        "the reopened world resolves the applied baseline; got x={}",
+        ecs_x(&mut reopened, reopened_instance)
+    );
+}
+
+// ---------------------------------------------------------------------------
+// T2 - PF3 (buglist R3) — a variant cut from a nested instance keeps the
+// instance's levels: each descendant hangs under its own parent's
+// counterpart in the variant document, and an instance-of-an-instance keeps
+// its inner IsA so the nested prefab is not baked flat into the variant.
+// ---------------------------------------------------------------------------
+#[test]
+fn a_variant_keeps_the_nested_levels_of_the_instance_it_was_cut_from() {
+    use jackdaw::project::{ProjectConfig, ProjectRoot};
+
+    let tmp = tempfile::tempdir().unwrap();
+    let prefabs = tmp.path().join("assets/prefabs");
+    std::fs::create_dir_all(&prefabs).unwrap();
+    let inner_path = prefabs.join("inner.bsn");
+    let outer_path = prefabs.join("outer.bsn");
+    let variant_path = prefabs.join("variant.bsn");
+
+    // inner: root + a child. outer: root + a nested instance of inner.
+    std::fs::write(
+        &inner_path,
+        "#inner\n\
+         jackdaw::prefab::components::Prefab\n\
+         jackdaw::prefab::components::PrefabEntityId(0)\n\
+         bevy_ecs::hierarchy::Children [\n\
+             #knob\n\
+             jackdaw::prefab::components::PrefabEntityId(7)\n\
+             bevy_transform::components::transform::Transform {\n\
+                 translation: glam::Vec3 { x: 3.0, y: 0.0, z: 0.0 },\n\
+                 rotation: glam::Quat { x: 0.0, y: 0.0, z: 0.0, w: 1.0 },\n\
+                 scale: glam::Vec3 { x: 1.0, y: 1.0, z: 1.0 },\n\
+             }\n\
+         ]",
+    )
+    .unwrap();
+    std::fs::write(
+        &outer_path,
+        "#outer\n\
+         jackdaw::prefab::components::Prefab\n\
+         jackdaw::prefab::components::PrefabEntityId(0)\n\
+         bevy_ecs::hierarchy::Children [\n\
+             #nested\n\
+             jackdaw::prefab::components::PrefabEntityId(5)\n\
+             jackdaw::prefab::components::IsA { source: \"prefabs/inner.bsn\", deleted: [] }\n\
+         ]",
+    )
+    .unwrap();
+
+    let mut app = util::editor_test_app();
+    app.world_mut().insert_resource(ProjectRoot::new(
+        tmp.path().to_path_buf(),
+        ProjectConfig::default(),
+    ));
+    jackdaw::prefab::operators::spawn_instance(app.world_mut(), &outer_path, Vec3::ZERO);
+    app.update();
+    let instance = entity_with_peid(&mut app, 0);
+    assert!(
+        app.world()
+            .resource::<SceneBsnAst>()
+            .find_node_by_component_int(PEID_TYPE, 7)
+            .is_some(),
+        "the nested descendant materialized before the cut"
+    );
+
+    jackdaw::prefab::operators::save_as_variant(app.world_mut(), instance, &variant_path);
+    app.update();
+
+    // The variant document keeps the shape: nested under the root, knob
+    // under nested, and the nested node still pointing at inner.
+    let cache = app.world().resource::<jackdaw::prefab::PrefabAstCache>();
+    let variant = cache.get(&variant_path).expect("the variant is cached");
+    let node = |ast: &SceneBsnAst, id: u64| {
+        ast.find_node_by_component_int(PEID_TYPE, id)
+            .unwrap_or_else(|| panic!("the variant holds PrefabEntityId({id})"))
+    };
+    let root = node(variant, 0);
+    let nested = node(variant, 5);
+    let knob = node(variant, 7);
+    assert_eq!(
+        variant.ast_parent_of(nested),
+        Some(root),
+        "the nested level stays one level down; the variant is not flattened"
+    );
+    assert_eq!(
+        variant.ast_parent_of(knob),
+        Some(nested),
+        "the grandchild stays under the nested instance"
+    );
+    let nested_source = jackdaw_bsn::get_bsn_field(variant, nested, ISA_TYPE, "source");
+    let nested_names_inner = matches!(
+        &nested_source,
+        Some(BsnValue::String(s)) if s.contains("inner.bsn")
+    );
+    assert!(
+        nested_names_inner,
+        "the nested instance keeps its own IsA; got {nested_source:?}"
+    );
+
+    // And the variant resolves: a fresh app spawning an instance of it
+    // materializes the nested descendant through the preserved inner IsA.
+    // (A fresh app keeps this face isolated from the rewire of the original
+    // instance, which strips its subtree's patches by design.)
+    let mut fresh = util::editor_test_app();
+    fresh.world_mut().insert_resource(ProjectRoot::new(
+        tmp.path().to_path_buf(),
+        ProjectConfig::default(),
+    ));
+    jackdaw::prefab::operators::spawn_instance(fresh.world_mut(), &variant_path, Vec3::ZERO);
+    fresh.update();
+    fresh.update();
+    let knobs = fresh
+        .world_mut()
+        .query::<(Entity, &Name)>()
+        .iter(fresh.world())
+        .filter(|(_, name)| name.as_str() == "knob")
+        .count();
+    assert_eq!(
+        knobs, 1,
+        "the variant instance materializes the nested descendant through its inner IsA"
+    );
+}
+
+// ---------------------------------------------------------------------------
+// T2 - PF5 — applying a dotted leaf clears that leaf from the scene-side
+// delta and keeps the delta's other leaves: the applied value falls back to
+// the (new) baseline, the sibling overrides stay authored.
+// ---------------------------------------------------------------------------
+#[test]
+fn an_applied_leaf_clears_its_own_delta_and_keeps_the_sibling_one() {
+    let tmp = tempfile::tempdir().unwrap();
+    let prefab_path = tmp.path().join("p.bsn");
+    std::fs::write(&prefab_path, BASELINE_ZERO).unwrap();
+
+    let mut app = make_app();
+    jackdaw::prefab::operators::spawn_instance(app.world_mut(), &prefab_path, Vec3::ZERO);
+    app.update();
+    let instance = entity_with_peid(&mut app, 0);
+
+    // Two overrides on one component: x is applied to the source, y stays
+    // the instance's own.
+    override_translation_x(&mut app, instance, 5.0);
+    if let Some(mut transform) = app.world_mut().get_mut::<Transform>(instance) {
+        transform.translation.y = 3.0;
+    }
+    jackdaw_bsn::sync_to_ast(
+        app.world_mut(),
+        instance,
+        std::any::TypeId::of::<Transform>(),
+    );
+    app.update();
+
+    let instance_node = app
+        .world()
+        .resource::<SceneBsnAst>()
+        .ast_for(instance)
+        .expect("the instance node is in the live document");
+    jackdaw::prefab::operators::apply_to_prefab_source(
+        app.world_mut(),
+        instance_node,
+        0,
+        TRANSFORM_TYPE,
+        "translation.x",
+        BsnValue::Float(5.0),
+    );
+    // Before any respawn the PF5 face is the observable one: the applied
+    // leaf is OUT of the scene-side delta (the translation struct no longer
+    // carries an x field) and the sibling y override is untouched.
+    {
+        let ast = app.world().resource::<SceneBsnAst>();
+        let key = ast
+            .ast_for(instance)
+            .expect("the instance node is in the live document");
+        let translation = jackdaw_bsn::get_bsn_field(ast, key, TRANSFORM_TYPE, "translation");
+        let Some(BsnValue::Struct(data)) = &translation else {
+            panic!("a translation delta was expected, got {translation:?}");
+        };
+        assert!(
+            data.fields.0.iter().all(|field| field.name != "x"),
+            "the applied leaf leaves the document delta; got {translation:?}"
+        );
+        let y = data
+            .fields
+            .0
+            .iter()
+            .find(|field| field.name == "y")
+            .map(|field| &field.value);
+        assert!(
+            matches!(y, Some(BsnValue::Float(v)) if (*v - 3.0).abs() < 1e-9),
+            "the sibling override survives the apply; got {translation:?}"
+        );
+    }
+    // The respawn hands the instance a fresh entity, so the node is looked
+    // up again by its marker instead of the stale handle; the reloaded
+    // document is the resolved form, where x reads the new baseline and y
+    // stays the authored override.
+    app.update();
+    app.update();
+    let survived = entity_with_peid(&mut app, 0);
+    let ast = app.world().resource::<SceneBsnAst>();
+    let key = ast
+        .ast_for(survived)
+        .expect("the instance node survives the respawn");
+    let doc_x = jackdaw_bsn::get_bsn_field(ast, key, TRANSFORM_TYPE, "translation.x");
+    assert!(
+        matches!(doc_x, Some(BsnValue::Float(v)) if (v - 5.0).abs() < 1e-9),
+        "the applied value resolves from the new baseline; got {doc_x:?}"
+    );
+    let doc_y = jackdaw_bsn::get_bsn_field(ast, key, TRANSFORM_TYPE, "translation.y");
+    assert!(
+        matches!(doc_y, Some(BsnValue::Float(v)) if (v - 3.0).abs() < 1e-9),
+        "the sibling override survives the reload; got {doc_y:?}"
+    );
+    assert!(
+        (ecs_x(&mut app, survived) - 5.0).abs() < 1e-4,
+        "the applied value resolves in the world"
+    );
+    let ecs_y = app
+        .world()
+        .get::<Transform>(survived)
+        .unwrap()
+        .translation
+        .y;
+    assert!(
+        (ecs_y - 3.0).abs() < 1e-4,
+        "the sibling override resolves as authored; got y={ecs_y}"
+    );
+}
+
+// ---------------------------------------------------------------------------
+// T2 - PF1 deepening — after an apply (and the respawn it drives), an
+// external edit still reaches every instance through the watcher's order:
+// the capture happens against the baseline the document was last resolved
+// against, so nothing the apply moved freezes as an authored override.
+// ---------------------------------------------------------------------------
+#[test]
+fn an_external_edit_after_an_apply_still_reaches_every_instance() {
+    let tmp = tempfile::tempdir().unwrap();
+    let prefab_path = tmp.path().join("p.bsn");
+    std::fs::write(&prefab_path, BASELINE_ZERO).unwrap();
+
+    let mut app = make_app();
+    jackdaw::prefab::operators::spawn_instance(app.world_mut(), &prefab_path, Vec3::ZERO);
+    jackdaw::prefab::operators::spawn_instance(
+        app.world_mut(),
+        &prefab_path,
+        Vec3::new(0.0, 2.0, 0.0),
+    );
+    app.update();
+    let instances = isa_entities(&mut app);
+    assert_eq!(instances.len(), 2, "expected two instances");
+
+    let instance_at = |app: &mut App, y: f32| -> Entity {
+        app.world_mut()
+            .query::<(Entity, &IsA, &Transform)>()
+            .iter(app.world())
+            .find(|(_, _, transform)| (transform.translation.y - y).abs() < 1e-4)
+            .map(|(entity, _, _)| entity)
+            .unwrap_or_else(|| panic!("no instance stands at y={y}"))
+    };
+    let a = instance_at(&mut app, 0.0);
+    override_translation_x(&mut app, a, 5.0);
+    let a_node = app
+        .world()
+        .resource::<SceneBsnAst>()
+        .ast_for(a)
+        .expect("a's node is in the live document");
+    jackdaw::prefab::operators::apply_to_prefab_source(
+        app.world_mut(),
+        a_node,
+        0,
+        TRANSFORM_TYPE,
+        "translation.x",
+        BsnValue::Float(5.0),
+    );
+    // The cache-epoch driver respawns the scene with the staged capture:
+    // both instances follow the applied baseline, neither freezes.
+    app.update();
+    app.update();
+    let b = instance_at(&mut app, 2.0);
+    assert!(
+        (ecs_x(&mut app, b) - 5.0).abs() < 1e-4,
+        "the sibling followed the applied baseline; got x={}",
+        ecs_x(&mut app, b)
+    );
+
+    // Then an external edit lands. The watcher's per-file order, driven by
+    // hand so the test stays free of filesystem-event latency: capture the
+    // sparse scene against the baseline the document was last resolved
+    // against, then swap the cache, then reload from that capture.
+    std::fs::write(&prefab_path, BASELINE_NINE).unwrap();
+    use jackdaw::prefab::watcher;
+    watcher::stage_sparse_capture(app.world_mut());
+    let assets_root = jackdaw::prefab::save_load::source_root_of(app.world(), &prefab_path);
+    let (read, fingerprint) = jackdaw::prefab::cache::read_fingerprinted(&prefab_path, || {
+        jackdaw::prefab::save_load::read_prefab_ast(&prefab_path, &assets_root)
+    });
+    let new_ast = read.expect("the rewritten prefab parses");
+    app.world_mut()
+        .resource_mut::<jackdaw::prefab::PrefabAstCache>()
+        .insert(&prefab_path, new_ast);
+    app.world_mut()
+        .resource_mut::<jackdaw::prefab::PrefabAstCache>()
+        .settle_fingerprint(&prefab_path, fingerprint);
+    let sparse_text = watcher::take_reload_basis(app.world_mut())
+        .expect("the capture staged before the cache swap");
+    assert!(
+        matches!(
+            watcher::reload_instances_of(app.world_mut(), &sparse_text, &prefab_path),
+            watcher::PrefabReload::Instances
+        ),
+        "both instances line up for the in-place reload"
+    );
+    app.update();
+
+    let b = instance_at(&mut app, 2.0);
+    let a = instance_at(&mut app, 0.0);
+    assert!(
+        (ecs_x(&mut app, a) - 9.0).abs() < 1e-4,
+        "the applied-then-externally-edited value reaches the first instance; got x={}",
+        ecs_x(&mut app, a)
+    );
+    assert!(
+        (ecs_x(&mut app, b) - 9.0).abs() < 1e-4,
+        "the applied-then-externally-edited value reaches the sibling; got x={}",
+        ecs_x(&mut app, b)
+    );
+    assert_eq!(
+        app.world().get::<Transform>(b).unwrap().translation.y,
+        2.0,
+        "b's own placement offset survives the external reload"
+    );
+}
+
+// ---------------------------------------------------------------------------
+// T2 - PF1/PF2 interplay over the REAL watcher — an apply (which now writes
+// the file and registers the echo fingerprint) followed by an external edit
+// must still land through notify + the debounced drain: the fingerprint must
+// not swallow the outside write and the staged capture must not freeze it.
+// ---------------------------------------------------------------------------
+#[test]
+fn an_external_edit_after_an_apply_lands_through_the_real_watcher() {
+    let tmp = tempfile::tempdir().unwrap();
+    let prefab_path = tmp.path().join("p.bsn");
+    std::fs::write(&prefab_path, BASELINE_ZERO).unwrap();
+
+    let mut app = make_app();
+    app.add_plugins(jackdaw::prefab::watcher::PrefabWatcherPlugin);
+    jackdaw::prefab::operators::spawn_instance(app.world_mut(), &prefab_path, Vec3::ZERO);
+    app.update();
+    let instance = entity_with_peid(&mut app, 0);
+    override_translation_x(&mut app, instance, 5.0);
+    let instance_node = app
+        .world()
+        .resource::<SceneBsnAst>()
+        .ast_for(instance)
+        .expect("the instance node is in the live document");
+    jackdaw::prefab::operators::apply_to_prefab_source(
+        app.world_mut(),
+        instance_node,
+        0,
+        TRANSFORM_TYPE,
+        "translation.x",
+        BsnValue::Float(5.0),
+    );
+    // The driver consumes the staged capture and the write settles its
+    // fingerprint; the world follows the applied baseline.
+    let deadline = std::time::Instant::now() + std::time::Duration::from_secs(3);
+    loop {
+        let x = {
+            let entity = entity_with_peid(&mut app, 0);
+            ecs_x(&mut app, entity)
+        };
+        if (x - 5.0).abs() < 1e-4 || std::time::Instant::now() >= deadline {
+            assert!(
+                (x - 5.0).abs() < 1e-4,
+                "the applied baseline reaches the world before the external edit; got {x}"
+            );
+            break;
+        }
+        app.update();
+    }
+
+    // Then an external edit lands on the SAME file the apply just wrote.
+    std::fs::write(&prefab_path, BASELINE_NINE).unwrap();
+    let deadline = std::time::Instant::now() + std::time::Duration::from_secs(5);
+    loop {
+        app.update();
+        let x = {
+            let entity = entity_with_peid(&mut app, 0);
+            ecs_x(&mut app, entity)
+        };
+        if (x - 9.0).abs() < 1e-4 {
+            break;
+        }
+        assert!(
+            std::time::Instant::now() < deadline,
+            "the external edit lands through the real watcher after the apply; got x={x}"
+        );
+        std::thread::sleep(std::time::Duration::from_millis(50));
+    }
 }
 
 fn entity_named(app: &mut App, name: &str) -> Option<Entity> {

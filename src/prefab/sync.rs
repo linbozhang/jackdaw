@@ -26,6 +26,10 @@ pub fn drive_respawn_on_prefab_cache_change(world: &mut World) {
     let current = world.resource::<PrefabAstCache>().epoch();
     let last = world.resource::<LastResolvedEpoch>().0;
     if current == last {
+        // No cache mutation landed since our last pass: a staged capture now
+        // would be one a mutation attempt left behind without landing, and it
+        // must not leak into an unrelated reload (PF1).
+        crate::prefab::watcher::drop_staged_capture(world);
         return;
     }
 
@@ -35,7 +39,10 @@ pub fn drive_respawn_on_prefab_cache_change(world: &mut World) {
             "prefab cache epoch {last} -> {current}: resolved + respawned active scene"
         );
     }
-
+    // The staged capture has served whether or not the scene redraws: the
+    // next reload must compare against the cache the document now resolves
+    // against, not the one the capture was taken against.
+    crate::prefab::watcher::drop_staged_capture(world);
     world.resource_mut::<PrefabAstCache>().answer_changes();
     world.resource_mut::<LastResolvedEpoch>().0 = current;
 }

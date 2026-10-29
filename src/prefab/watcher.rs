@@ -292,8 +292,10 @@ fn drain_changes(world: &mut World) {
         // the sparsify pass strips values still matching the baseline the
         // scene was last resolved against, so it must compare against the
         // old prefab. Comparing against the new one would misread every
-        // changed inherited value as an authored override.
-        let sparse_text = capture_sparse_scene_text(world);
+        // changed inherited value as an authored override. Staged, so a
+        // capture an in-frame cache mutation (an apply) already took is not
+        // thrown away.
+        stage_sparse_capture(world);
 
         let assets_root = crate::prefab::save_load::source_root_of(world, &path);
         let (read, fingerprint) = crate::prefab::cache::read_fingerprinted(&path, || {
@@ -317,11 +319,11 @@ fn drain_changes(world: &mut World) {
                 continue;
             }
         }
-        if let Some(sparse_text) = &sparse_text {
-            match reload_instances_of(world, sparse_text, &cache_key) {
+        if let Some(sparse_text) = take_reload_basis(world) {
+            match reload_instances_of(world, &sparse_text, &cache_key) {
                 PrefabReload::Instances => reloaded = true,
                 PrefabReload::Unhandled => {
-                    respawn_scene(world, sparse_text);
+                    respawn_scene(world, &sparse_text);
                     reloaded = true;
                 }
                 PrefabReload::Nothing => {}
@@ -519,10 +521,47 @@ pub fn capture_sparse_scene_text(world: &mut World) -> Option<String> {
     ))
 }
 
+/// The live document's sparse form, captured against the cache baseline the
+/// document was last resolved against and held for the reload a cache
+/// mutation triggers. Comparing a reload against the NEW baseline would read
+/// every changed inherited value as an authored override and freeze it there
+/// (PF1), so a path that mutates the cache stages this capture BEFORE the
+/// mutation and the reload that follows consumes it. A reload with nothing
+/// staged captures against the current cache, as before.
+#[derive(Resource, Default)]
+pub struct StagedSparseCapture(pub Option<String>);
+
+/// Capture the live document's sparse form against the current cache baseline
+/// and stage it for the reload that follows the cache mutation. A no-op while
+/// a capture is already staged: the staged one is the capture the document's
+/// last resolution agrees with, so a second mutation in the same frame must
+/// not re-capture against its own new baseline.
+pub fn stage_sparse_capture(world: &mut World) {
+    if world.resource::<StagedSparseCapture>().0.is_some() {
+        return;
+    }
+    let capture = capture_sparse_scene_text(world);
+    world.resource_mut::<StagedSparseCapture>().0 = capture;
+}
+
+/// Take the staged capture for a reload, or capture against the current cache
+/// when nothing is staged (the watcher's own external-file path).
+pub fn take_reload_basis(world: &mut World) -> Option<String> {
+    let staged = world.resource_mut::<StagedSparseCapture>().0.take();
+    staged.or_else(|| capture_sparse_scene_text(world))
+}
+
+/// Drop a staged capture without reloading: one left behind by a mutation
+/// attempt that did not land, or by a driver pass with nothing to do, would
+/// freeze values at the next unrelated reload.
+pub fn drop_staged_capture(world: &mut World) {
+    world.resource_mut::<StagedSparseCapture>().0 = None;
+}
+
 /// Re-resolve every `IsA` instance in the live BSN document against the prefab
 /// cache, then despawn and respawn the scene from the resolved document.
 pub fn reload_all_instances(world: &mut World) {
-    let Some(sparse_text) = capture_sparse_scene_text(world) else {
+    let Some(sparse_text) = take_reload_basis(world) else {
         return;
     };
     respawn_from_sparse_text(world, &sparse_text);

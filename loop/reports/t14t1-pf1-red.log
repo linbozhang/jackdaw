@@ -1,0 +1,20 @@
+    Finished `test` profile [optimized + debuginfo] target(s) in 0.35s
+     Running tests/prefabs/main.rs (target/debug/deps/prefabs-c0f7f6eaa1f203a3)
+
+running 1 test
+test prefab_t14_acceptance::an_applied_baseline_reaches_every_sibling_instance ... [2m2026-10-29T06:13:31.881052Z[0m [31mERROR[0m [2mbevy_extract::extract_resource[0m[2m:[0m Sub app did not exist when trying to add `extract_resource` for <bevy_camera::clear_color::ClearColor>.
+[2m2026-10-29T06:13:32.870040Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+
+thread 'prefab_t14_acceptance::an_applied_baseline_reaches_every_sibling_instance' (17602142) panicked at tests/prefabs/prefab_t14_acceptance.rs:263:5:
+sibling instance b follows the applied baseline; got x=0
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+FAILED
+
+failures:
+
+failures:
+    prefab_t14_acceptance::an_applied_baseline_reaches_every_sibling_instance
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 95 filtered out; finished in 1.25s
+
+error: test failed, to rerun pass `-p jackdaw --test prefabs`
