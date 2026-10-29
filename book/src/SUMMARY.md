@@ -23,6 +23,7 @@
 - [Game Parameters](user-guide/game-parameters.md)
 - [Game Input](user-guide/game-input.md)
 - [Game UI](user-guide/game-ui.md)
+- [Game Flow](user-guide/game-flow.md)
 - [The Player Controller](user-guide/player-controller.md)
 - [Graphics Panel](user-guide/graphics-panel.md)
 - [Play-in-editor](user-guide/play-in-editor.md)

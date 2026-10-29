@@ -42,7 +42,11 @@ After a Rebuild, the type appears in **Project window > New Asset...**
 template names its `game-config.bsn`) lands under `assets/`, and the
 next Play — or `cargo run`, or a double-clicked export — starts from
 what it holds. Until the file exists the game runs on the type's
-`Default`; a missing config is not an error.
+`Default`; a missing config is not an error. The template game hands
+the number over twice: on load (the config becomes the component) and
+on every entry into the level, where `reset_run` re-reads it for the
+fresh run — the config is the author's intent either way, the
+component is the live state ([Game Flow](game-flow.md)).
 
 That is the three-state consistency the export chain guarantees:
 **restart the editor, press Play, ship the export — the same file, the

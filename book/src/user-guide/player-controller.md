@@ -36,7 +36,11 @@ the player transform never stores a look direction.
 
 This is also the entity the HUD watches: the template's health bar and
 texts are bindings on this player's `PlayerHealth` and `PickupCount`
-([Game UI](game-ui.md) covers the binding side).
+([Game UI](game-ui.md) covers the binding side). And it is the
+template's one cross-scene citizen: code-spawned, part of no scene
+document, so the flow's world switches leave it alone — same entity,
+put back in shape by `reset_run` on every level entry ([Game
+Flow](game-flow.md) has the rules table).
 
 ## The follow camera is a child
 

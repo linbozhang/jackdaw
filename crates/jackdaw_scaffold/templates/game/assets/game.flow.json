@@ -1,6 +1,8 @@
 {
-  "start_scene": "scene.bsn",
+  "start_scene": "menu.bsn",
   "scenes": [
-    "scene.bsn"
+    "menu.bsn",
+    "scene.bsn",
+    "gameover.bsn"
   ]
 }

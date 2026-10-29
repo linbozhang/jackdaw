@@ -11,7 +11,8 @@
 //! 2. Outliner: click `Add Entity` and pick `Cube`.
 //! 3. Components panel: click `Add Component` and pick `SpinningCube`.
 //!    Set `speed` to `1.5`.
-//! 4. `File > Save`, then click Play. The cube spins.
+//! 4. `File > Save`, then click Play: the menu comes up first — click
+//!    **Start** and the cube spins in the level.
 //! 5. `cargo run` launches the same game without the editor.
 //!
 //! # Adding your own components
@@ -140,26 +141,66 @@
 //!   frame-rate-independent, but does not jump or collide.
 {{module_physics_player_doc}}
 //!
+//! # Game flow
+//!
+//! A game is more than one world: a menu to start from, the level to
+//! play, an end screen when the run is over. The template ships all
+//! three as real scene documents — `assets/menu.bsn`, `assets/scene.bsn`,
+//! `assets/gameover.bsn` — and only one of them is in the world at a
+//! time:
+//!
+//! * **States drive the worlds.** `GameFlow` below is a `States` enum
+//!   (`Menu` / `Level` / `GameOver`). Each state's `OnEnter` shows its
+//!   document by re-binding one scene root's handle — the runtime's
+//!   whole switch primitive is that one insert, and the old scene's
+//!   entities (its UI roots included) are gone before the new document
+//!   spawns. Nothing accumulates across a menu → level → game over →
+//!   menu loop.
+//! * **Where a run begins is data.** `assets/game.flow.json` names the
+//!   scene a standalone run starts from (`start_scene`) and lists the
+//!   scenes that make up the game. The game boots into whatever it
+//!   names: the menu document as the menu, the game-over document as
+//!   the end screen, any other scene as a world to play. A broken or
+//!   mis-pointed file warns and falls back — it never refuses to start.
+//!   The editor validates the file, the Project window's right-click
+//!   **Set as Startup Scene** writes it, and an export ships it.
+//! * **What survives a switch is decided on purpose.** The player and
+//!   everything your code spawns (health, counters, resources) belong
+//!   to no scene document, so a switch leaves them alone — the player's
+//!   entity id is one and the same from Start to Restart. Scene content
+//!   (pickups, hazards, the hud) belongs to its world and dies with it.
+//!   What crosses gets put back in shape instead: `reset_run` runs on
+//!   every entry into the level, so Restart is just a switch to `Level`.
+//! * **Each world brings its own camera.** The level's camera is the
+//!   rig under the player; the menu and game-over documents get a
+//!   state-scoped `Camera2d` (`DespawnOnExit` removes it with the
+//!   state) — a UI document shown alone has nothing to render it
+//!   otherwise, and the screen stays empty.
+//! * **The editor's two Play buttons stay distinct.** Play runs the
+//!   game from its flow-configured start scene; the scene-tab Play
+//!   swaps the editor's own scene in as the world the game boots into,
+//!   and the flow state follows it (that boot is the level).
+//!
 //! # Game UI
 //!
 //! `assets/hud.bsn` is a UI scene: the same kind of document as
 //! `scene.bsn`, authored on the editor's 2D canvas (`Add` menu, `UI`
 //! group — panels, labels, buttons, progress bars) with each widget's
-//! `Bindings` component wiring it to the game. The template spawns it
-//! as a second scene root (`spawn_hud` below), and the four screens
-//! inside — start, HUD, pause, game over — show and hide themselves:
+//! `Bindings` component wiring it to the game. It is the level's own
+//! overlay — the template spawns it when the level is current and takes
+//! it away when the level ends — and its two screens show and hide
+//! themselves:
 //!
-//! * **Screens follow state.** Each screen's `Visibility` is bound to
-//!   a `GameState` bool (`menu` / `paused` / `game_over`, the
-//!   resource below). Flipping the bool is the whole mechanism; the
-//!   hud's own screen is bound through the registered `not`, so it is
-//!   up whenever the menu is not.
+//! * **Screens follow state.** The pause screen's `Visibility` is bound
+//!   to `GameState.paused` (the resource below). Flipping the bool is
+//!   the whole mechanism — overlays inside one world are data, not
+//!   switches; the worlds themselves are the flow above.
 //! * **Buttons say which one was pressed.** Every button carries an
 //!   `Action` binding that sends `ScreenPressed` with `button` set to
-//!   `"start"`, `"resume"` or `"restart"`; the
-//!   `on_screen_pressed` observer turns those into real behavior —
-//!   leave the menu, unpause, put the run back the way it began.
-//!   The Pause *action* (Escape) lands on the same bool through
+//!   its literal (`"resume"` here; the menu and game-over documents
+//!   send `"start"`, `"restart"` and `"menu"`); the
+//!   `on_screen_pressed` observer turns those into flow moves. The
+//!   Pause *action* (Escape) lands on the same bool through
 //!   `handle_pause_action`, so the key and the button agree.
 //! * **The bar and the texts read the player.** The health bar's
 //!   `Progress.value` is bound to `PlayerHealth.current` and `.max`
@@ -173,9 +214,9 @@
 //!
 //! Edit `hud.bsn` in the editor, `Save`, and the running game picks
 //! it up like `scene.bsn`. Layout discipline for your own screens:
-//! percent and flex for anything position-like (the overlays stretch
-//! to 100% of the window, the HUD hugs the top-left corner), pixels
-//! only for sizes and padding — that is what keeps the four screens
+//! percent and flex for anything position-like (the pause overlay
+//! stretches to 100% of the window, the HUD hugs the top-left corner),
+//! pixels only for sizes and padding — that is what keeps the screens
 //! correct from 800x600 up to 2560x1440. One editor edge to know:
 //! Play with a UI scene tab focused swaps the 3D scene for that UI
 //! alone (it previews the canvas); play from the 3D scene tab to run
@@ -192,12 +233,28 @@ pub struct GamePlugin;
 
 impl Plugin for GamePlugin {
     fn build(&self, app: &mut App) {
-        // `spawn_hud` after `spawn_scene`, chained: the editor's Play
-        // swaps whichever scene root landed at the LOWEST entity index,
-        // and an unordered tuple is a coin flip on which root that is —
-        // a swapped hud root means Play runs with no UI at all (T12-T2
-        // caught this live). Chaining pins the main scene as first.
-        app.add_systems(Startup, (spawn_scene, spawn_hud).chain())
+        // The boot scene, read once: the editor's Play override, then
+        // the project's `game.flow.json`, then the template's menu. The
+        // same string maps to the initial `GameFlow` state below and is
+        // loaded by `spawn_scene`, so the state machine and the first
+        // document can never disagree.
+        let start = jackdaw_runtime::pie_scene_or(&jackdaw_runtime::flow::start_scene_or(
+            MENU_SCENE,
+        ));
+        app.insert_resource(BootScene(start.clone()))
+            .init_state::<GameFlow>()
+            // Inserting the boot state runs its `OnEnter` on the first
+            // frame — the game is born in the right world, not switched
+            // into it later.
+            .insert_state(boot_state(&start))
+            // `spawn_hud` in the Update watcher, never before the main
+            // root: the editor's Play swaps whichever scene root landed
+            // at the LOWEST entity index, and a hud root below the game
+            // root means Play swaps the hud document instead of the
+            // world (T12-T2 caught this live; the flow re-spawns the hud
+            // per level entry, so the ordering is pinned here every
+            // time, not just at startup).
+            .add_systems(Startup, spawn_scene)
             .add_systems(Update, spin_cubes)
             // One line per config type: register it as an asset (so the
             // editor offers it in New Asset) and load `game-config.bsn`
@@ -205,7 +262,7 @@ impl Plugin for GamePlugin {
             .init_asset::<GameConfig>()
             .register_asset_reflect::<GameConfig>()
             .add_plugins(ConfigPlugin::<GameConfig>::default())
-            .add_systems(Startup, spawn_falling_cube)
+            .add_systems(OnEnter(GameFlow::Level), spawn_falling_cube)
             .add_systems(Update, falling_cubes)
             // Input: the built-in five actions evaluate every frame; the
             // `input-actions.bsn` asset (same New Asset flow) overrides
@@ -216,24 +273,31 @@ impl Plugin for GamePlugin {
             .add_plugins(ConfigPlugin::<GameInputConfig>::new(
                 "input-actions.bsn",
             ))
-            .add_systems(Startup, spawn_player)
+            // The player spawns once — on the first entry into the level
+            // — and then crosses every switch untouched (see
+            // `spawn_player`; `reset_run` puts its numbers back).
+            .add_systems(OnEnter(GameFlow::Level), (spawn_player, reset_run).chain())
             .add_systems(Update, (move_player, look_into_camera))
             // The camera rig driver: activates the rig under the player
             // and follows it every frame (see "Player controller" above).
             .add_plugins(JackdawCameraRigPlugin)
-            // Game UI (see "Game UI" above): the state the four screens
-            // bind to, the functions their bindings call, the observer
-            // their buttons feed, and the systems that move the state.
-            // Types (`GameState`, `PlayerHealth`, `ScreenPressed`) need
-            // no registration — the `Reflect` derives announce them the
-            // same way they reach the editor's Add Component list; the
-            // via functions are the one binding piece a game registers
-            // by hand.
+            // Game flow (see "Game flow" above): the per-state document
+            // swaps and cameras, the level-scoped hud, the observer the
+            // flow documents' buttons feed, and the systems that move
+            // the state. Types (`GameFlow`, `GameState`, `PlayerHealth`,
+            // `ScreenPressed`) need no registration — the `Reflect`
+            // derives announce them the same way they reach the editor's
+            // Add Component list; the via functions are the one binding
+            // piece a game registers by hand.
             .init_resource::<GameState>()
             .register_function(ratio)
             .register_function(is_zero)
             .register_function(not)
             .add_observer(on_screen_pressed)
+            .add_systems(OnEnter(GameFlow::Menu), enter_menu)
+            .add_systems(OnEnter(GameFlow::Level), enter_level)
+            .add_systems(OnEnter(GameFlow::GameOver), enter_game_over)
+            .add_systems(Update, spawn_hud_while_level)
             .add_systems(
                 Update,
                 // Chained: the player spawns with a zeroed `PlayerHealth`,
@@ -252,18 +316,24 @@ impl Plugin for GamePlugin {
     }
 }
 
-/// Load the authored scene; `JackdawPlugin` spawns its entities as
-/// children of this root. The project's `assets/game.flow.json` names
-/// the scene a standalone run starts from (`start_scene`); launched by
-/// the editor's Play, the game plays the scene the editor has in front
-/// (any scene, saved or not) — the override composes around the flow
-/// read. A broken or missing flow file warns and falls back to
-/// `scene.bsn` here.
-fn spawn_scene(mut commands: Commands, asset_server: Res<AssetServer>) {
-    commands.spawn(JackdawSceneRoot(
-        asset_server.load(jackdaw_runtime::pie_scene_or(
-            &jackdaw_runtime::flow::start_scene_or("scene.bsn"),
-        )),
+/// Spawn the one scene root the flow re-binds: `JackdawSceneRoot` is
+/// the runtime's switch primitive, and re-inserting it with a new
+/// handle is a whole world swap (the old document's entities despawn,
+/// the new one spawns when it loads). The handle is the boot scene —
+/// `game.flow.json`'s `start_scene` unless the editor's Play put one of
+/// its own there — the same string `boot_state` mapped the initial
+/// state from. One root for all three worlds: the flow moves the
+/// document under it, and the root itself (and this marker) is the
+/// stable thing across every switch.
+fn spawn_scene(
+    mut commands: Commands,
+    boot: Res<BootScene>,
+    asset_server: Res<AssetServer>,
+) {
+    commands.spawn((
+        Name::new("GameRoot"),
+        GameRoot,
+        JackdawSceneRoot(asset_server.load(boot.0.clone())),
     ));
 }
 
@@ -341,6 +411,8 @@ fn spawn_falling_cube(
     // their rates, which reads as the config having no effect. The
     // falling cube's spin belongs to `move_speed` alone, so one value
     // changes one behavior.
+    // The cube is level scenery: spawned with the level, gone with it
+    // (`DespawnOnExit`), back fresh the next time the level starts.
     commands.spawn((
         FallingCube { speed: 1.0 },
         Mesh3d(meshes.add(Cuboid::new(0.6, 0.6, 0.6))),
@@ -349,6 +421,7 @@ fn spawn_falling_cube(
             ..default()
         })),
         Transform::from_xyz(0.0, 3.0, 0.0),
+        DespawnOnExit(GameFlow::Level),
 {{module_physics_falling_body}}
     ));
 }
@@ -396,11 +469,22 @@ impl Default for PlayerController {
     }
 }
 
+/// The player: spawned once, on the first entry into the level, and
+/// never again. It is code-spawned and part of no scene document, so
+/// every switch the flow makes leaves it alone — its entity id is one
+/// and the same from Start through game over to Restart (the run's
+/// container, not the run). What changes is its numbers, and
+/// `reset_run` (right after this on every level entry) is what puts
+/// them back.
 fn spawn_player(
     mut commands: Commands,
     mut meshes: ResMut<Assets<Mesh>>,
     mut materials: ResMut<Assets<StandardMaterial>>,
+    existing: Query<(), With<PlayerMarker>>,
 ) {
+    if !existing.is_empty() {
+        return;
+    }
     // The visible body. The capsule matches the collider below, so what
     // you see is what collides. `PlayerHealth` is what the hud reads:
     // it starts at the `Default` and `apply_health_from_config` (below)
@@ -498,37 +582,198 @@ fn look_into_camera(
     }
 }
 
-// ---- Game UI: the four screens in assets/hud.bsn --------------------
-// The state the screens bind to, the event their buttons send, and the
-// handful of systems that move both. The screens themselves are data —
-// open `hud.bsn` in the editor to move, restyle or rewire them.
+// ---- Game flow: three worlds, one state machine ----------------------
+// The states, the document each one shows, the cameras that render the
+// ones without a rig, and the systems that move between them. The
+// documents themselves are data — open `menu.bsn`, `scene.bsn` or
+// `gameover.bsn` in the editor to restyle or rewire them.
 
-/// Which screen is up. The hud's bindings read this resource: each
-/// screen's `Visibility` is bound to one of the bools, so flipping a
-/// bool here is the whole show/hide mechanism. A run starts on the
-/// menu.
-#[derive(Resource, Reflect)]
-#[reflect(Resource, Default)]
-pub struct GameState {
-    pub menu: bool,
-    pub paused: bool,
-    pub game_over: bool,
+/// The scene documents the flow moves between, spelled once: the boot
+/// fallback, the state mapping and the per-state swaps all name the
+/// same three files.
+const MENU_SCENE: &str = "menu.bsn";
+const LEVEL_SCENE: &str = "scene.bsn";
+const GAME_OVER_SCENE: &str = "gameover.bsn";
+/// The level's overlay (see "Game UI" below) — not a world of its own,
+/// so it is not in the flow file's rotation; it lives and dies with
+/// `LEVEL_SCENE`.
+const HUD_SCENE: &str = "hud.bsn";
+
+/// The scene the game boots into, read once in `GamePlugin::build`:
+/// the same string maps to the initial [`GameFlow`] state (through
+/// [`boot_state`]) and is loaded by [`spawn_scene`], so the state
+/// machine and the first document can never disagree (that mismatch is
+/// exactly what a Play-Current launch would otherwise produce).
+#[derive(Resource)]
+struct BootScene(String);
+
+/// Which world the game is in. The `States` derive makes it bevy's
+/// state machine: `OnEnter`/`OnExit` schedules run per state and
+/// `DespawnOnExit(GameFlow::Menu)` removes an entity when `Menu` ends.
+/// The worlds are mutually exclusive by construction — the flow re-binds
+/// one scene root per state — and the hud's bindings deliberately do
+/// not read this enum: bindings resolve resource and component paths,
+/// so the one bool they do read lives in [`GameState`] next door.
+/// States for worlds, bools for binding data.
+#[derive(States, Debug, Clone, Copy, PartialEq, Eq, Hash, Default)]
+pub enum GameFlow {
+    /// The start screen: the `menu.bsn` document and its own camera.
+    #[default]
+    Menu,
+    /// The playable world: `scene.bsn`, the player, the hud.
+    Level,
+    /// The end screen: the `gameover.bsn` document and its own camera.
+    GameOver,
 }
 
-impl Default for GameState {
-    fn default() -> Self {
-        Self {
-            menu: true,
-            paused: false,
-            game_over: false,
-        }
+/// The boot mapping: the menu document boots as the menu, the
+/// game-over document as the end screen, and any other start scene —
+/// including the editor's own scene on a Play-Current launch — as a
+/// world to play.
+fn boot_state(start: &str) -> GameFlow {
+    match start {
+        MENU_SCENE => GameFlow::Menu,
+        GAME_OVER_SCENE => GameFlow::GameOver,
+        _ => GameFlow::Level,
     }
 }
 
-/// What a hud button says. The button's `Action` binding in `hud.bsn`
-/// sends this with `button` filled from its literal (`"start"`,
-/// `"resume"`, `"restart"`) — one event for every screen's buttons:
-/// the payload, not the type, says what was pressed.
+/// Marks the scene root the flow moves the worlds under. Three
+/// documents pass through this root one at a time; the root entity and
+/// its `Name` are the one stable thing across a switch.
+#[derive(Component, Reflect, Default)]
+#[reflect(Component, Default)]
+pub struct GameRoot;
+
+/// The menu document's own marker, authored on its root in
+/// `menu.bsn` — the hook anything that wants to find the menu looks
+/// for (the editor's Play view, a BRP query, your own systems). The
+/// `Default` here is load-bearing: the document's bare marker line
+/// applies through `ReflectDefault`.
+#[derive(Component, Reflect, Default)]
+#[reflect(Component, Default)]
+pub struct MenuRoot;
+
+/// The game-over document's marker, same shape as [`MenuRoot`].
+#[derive(Component, Reflect, Default)]
+#[reflect(Component, Default)]
+pub struct GameOverRoot;
+
+/// Show the menu: re-bind the game root to the menu document, and
+/// raise the UI camera that renders it, scoped to this state.
+///
+/// A switch is one handle insert: the runtime despawns the old
+/// document's members and spawns the new one when it loads, so there is
+/// nothing here to clean up by hand. And the very first `OnEnter` —
+/// the boot state's — runs before `Startup` has spawned the root: there
+/// is nothing to re-bind, and the root already boots on the document
+/// the state was mapped from (they read the same `BootScene`).
+fn enter_menu(
+    mut commands: Commands,
+    roots: Query<Entity, With<GameRoot>>,
+    server: Res<AssetServer>,
+) {
+    if let Ok(root) = roots.single() {
+        commands
+            .entity(root)
+            .insert(JackdawSceneRoot(server.load(MENU_SCENE)));
+    }
+    // A UI document shown alone has no camera to render it (the level's
+    // camera is the rig under the player), so each UI world brings its
+    // own: 2D, marked as the UI camera, ordered above the rig's 3D one,
+    // and removed with the state — `DespawnOnExit` is the whole
+    // lifecycle.
+    commands.spawn((
+        Name::new("MenuUiCamera"),
+        Camera2d,
+        IsDefaultUiCamera,
+        Camera {
+            order: 1,
+            ..default()
+        },
+        DespawnOnExit(GameFlow::Menu),
+    ));
+}
+
+/// Show the level: re-bind the game root to the level document. The
+/// hud follows in the Update watcher below, the player and its rig
+/// spawn once beside the root, and the level's props arrive with their
+/// own `DespawnOnExit(GameFlow::Level)` — see the physics section.
+fn enter_level(
+    mut commands: Commands,
+    roots: Query<Entity, With<GameRoot>>,
+    server: Res<AssetServer>,
+) {
+    if let Ok(root) = roots.single() {
+        commands
+            .entity(root)
+            .insert(JackdawSceneRoot(server.load(LEVEL_SCENE)));
+    }
+}
+
+/// Show the end screen: the game-over document and its camera, the
+/// same shape as the menu.
+fn enter_game_over(
+    mut commands: Commands,
+    roots: Query<Entity, With<GameRoot>>,
+    server: Res<AssetServer>,
+) {
+    if let Ok(root) = roots.single() {
+        commands
+            .entity(root)
+            .insert(JackdawSceneRoot(server.load(GAME_OVER_SCENE)));
+    }
+    commands.spawn((
+        Name::new("GameOverUiCamera"),
+        Camera2d,
+        IsDefaultUiCamera,
+        Camera {
+            order: 1,
+            ..default()
+        },
+        DespawnOnExit(GameFlow::GameOver),
+    ));
+}
+
+/// The level's HUD: spawned when the level becomes current, scoped to
+/// it (`DespawnOnExit`), back fresh on the next entry. A watcher in
+/// `Update` rather than an `OnEnter` spawn on purpose: the hud root
+/// must land at a HIGHER entity index than the game root, or the
+/// editor's Play would swap the hud document instead of the world —
+/// and a boot into `Level` (Play-Current, or a flow file that names a
+/// level) enters the state before `Startup` spawns the main root. This
+/// way the ordering holds on every entry, not just the first.
+fn spawn_hud_while_level(
+    mut commands: Commands,
+    server: Res<AssetServer>,
+    flow: Res<State<GameFlow>>,
+    mut live: Local<bool>,
+) {
+    let live_now = flow.get() == &GameFlow::Level;
+    if live_now && !*live {
+        commands.spawn((
+            JackdawSceneRoot(server.load(HUD_SCENE)),
+            DespawnOnExit(GameFlow::Level),
+        ));
+    }
+    *live = live_now;
+}
+
+/// Which screen is up inside the level. The hud's bindings read this
+/// resource: the pause screen's `Visibility` is bound to the bool, so
+/// flipping it is the whole show/hide mechanism. The worlds are
+/// `GameFlow`'s to make; overlays inside one world are bools like this.
+#[derive(Resource, Reflect, Default)]
+#[reflect(Resource, Default)]
+pub struct GameState {
+    pub paused: bool,
+}
+
+/// What a flow or hud button says. The button's `Action` binding in
+/// `menu.bsn`, `hud.bsn` or `gameover.bsn` sends this with `button`
+/// filled from its literal (`"start"`, `"resume"`, `"restart"`,
+/// `"menu"`) — one event for every screen's buttons: the payload, not
+/// the type, says what was pressed.
 #[derive(Event, Reflect, Clone, Default)]
 #[reflect(Event, Default)]
 pub struct ScreenPressed {
@@ -551,8 +796,8 @@ pub struct PlayerHealth {
 /// sensors with the physics module, the Interact key without).
 const PLAYER_DAMAGE: f32 = 15.0;
 
-/// Where a run begins — spawn and restart both use it, so a restart
-/// lands exactly where the game started.
+/// Where a run begins — the first entry and every reset both use it,
+/// so a restart lands exactly where the game started.
 const PLAYER_SPAWN: Vec3 = Vec3::new(-2.0, 1.0, 0.0);
 
 /// current/max -> 0..1 for the health bar's fill. Registered in
@@ -563,27 +808,18 @@ fn ratio(current: f32, max: f32) -> f32 {
     (current / max).clamp(0.0, 1.0)
 }
 
-/// Boolean not, for bindings that show a thing while a flag is false
-/// (the hud hides itself while the menu is up). Registered like
-/// `ratio`.
+/// Boolean not, for bindings that show a thing while a flag is false.
+/// Registered like `ratio`.
 fn not(value: bool) -> bool {
     !value
 }
 
 /// Zero means the run is over — registered like `ratio` (the
 /// `is_zero`-bound veil in `hud_scenario` is the pattern; this game
-/// drives its game-over screen off `GameState` instead and keeps the
-/// function here as the other half of the pair your own bindings
-/// reach for).
+/// ends its runs through `GameFlow` instead and keeps the function
+/// here as the other half of the pair your own bindings reach for).
 fn is_zero(value: f32) -> bool {
     value == 0.0
-}
-
-/// The game UI, spawned after the main scene: the document carries a
-/// `HudRoot` marker (authored on its root entity in `hud.bsn`), and
-/// `wire_hud` finds it by that marker.
-fn spawn_hud(mut commands: Commands, asset_server: Res<AssetServer>) {
-    commands.spawn(JackdawSceneRoot(asset_server.load("hud.bsn")));
 }
 
 /// The marker the hud document itself carries, so the game can tell
@@ -598,7 +834,9 @@ pub struct HudRoot;
 /// gets a `BindContext(player)` and every binding inside resolves the
 /// player's components (the health below, the pickup counter the
 /// physics module adds) against that entity. This insert is the whole
-/// wiring — nothing else needs to know the UI exists.
+/// wiring — nothing else needs to know the UI exists. `Added` re-fires
+/// for every fresh hud the flow spawns, so each entry into the level
+/// re-wires itself.
 fn wire_hud(
     mut commands: Commands,
     hud_roots: Query<Entity, Added<HudRoot>>,
@@ -610,38 +848,61 @@ fn wire_hud(
     commands.entity(root).insert(BindContext(player));
 }
 
-/// What the hud's buttons do. The bindings send `ScreenPressed`; this
-/// observer is the whole behavior — Start leaves the menu, Resume
-/// unpauses, Restart puts the run back the way it began (full health,
-/// spawn point, screens cleared; the physics module adds its own
-/// restart half for pickups and velocity).
+/// What the flow documents' buttons do. The bindings send
+/// `ScreenPressed`; this observer is the whole behavior — Start and
+/// Restart both move the flow to the level (Restart's reset is
+/// `reset_run`, which runs on every entry into the level — switching
+/// IS the reset), Menu goes back to the start screen, Resume drops the
+/// pause veil.
 fn on_screen_pressed(
     press: On<ScreenPressed>,
+    mut flow: ResMut<NextState<GameFlow>>,
     mut state: ResMut<GameState>,
-    mut players: Query<(&mut PlayerHealth, &mut Transform), With<PlayerMarker>>,
 ) {
     match press.event().button.as_str() {
-        "start" => state.menu = false,
+        // Start and Restart both move the flow to the level: the run's
+        // numbers come back through `reset_run` on the entry, so
+        // Restart needs nothing of its own.
+        "start" | "restart" => flow.set(GameFlow::Level),
+        "menu" => flow.set(GameFlow::Menu),
         "resume" => state.paused = false,
-        "restart" => {
-            state.menu = false;
-            state.paused = false;
-            state.game_over = false;
-            for (mut health, mut transform) in &mut players {
-                health.current = health.max;
-                *transform = Transform::from_translation(PLAYER_SPAWN);
-            }
-        }
         _ => {}
     }
 }
 
+/// The run's numbers come back on every entry into the level — the
+/// first one and every Restart both land here, so the end screen's
+/// Restart button needs no reset logic of its own. Full health comes
+/// straight from the config (the author's number, the same one
+/// `apply_health_from_config` hands over on load), and the player goes
+/// back to the spawn point. The player itself is not respawned: it
+/// crossed the switch untouched (`spawn_player` runs once). Chained
+/// right after `spawn_player` on purpose: a freshly spawned player
+/// carries a zeroed health, and this is what fills it before any
+/// game-over check can read it.
+fn reset_run(
+    config: Res<GameConfig>,
+    mut players: Query<(&mut PlayerHealth, &mut Transform), With<PlayerMarker>>,
+) {
+    for (mut health, mut transform) in &mut players {
+        health.max = config.player_health;
+        health.current = config.player_health;
+        *transform = Transform::from_translation(PLAYER_SPAWN);
+    }
+}
+
 /// The Pause action stops being a log line: Escape (or Start) flips
-/// `paused` and the pause screen's visibility follows. The Resume
-/// button lands on the same bool through `on_screen_pressed` — one
-/// piece of state, two doors in.
-fn handle_pause_action(actions: Res<GameActions>, mut state: ResMut<GameState>) {
-    if actions.just_pressed("Pause") && !state.menu && !state.game_over {
+/// `paused` and the pause screen's visibility follows — and it belongs
+/// to the level: on the menu or the end screen a screen already owns
+/// the moment, so only a current `Level` answers. The Resume button
+/// lands on the same bool through `on_screen_pressed` — one piece of
+/// state, two doors in.
+fn handle_pause_action(
+    actions: Res<GameActions>,
+    flow: Res<State<GameFlow>>,
+    mut state: ResMut<GameState>,
+) {
+    if actions.just_pressed("Pause") && flow.get() == &GameFlow::Level {
         state.paused = !state.paused;
     }
 }
@@ -671,20 +932,24 @@ fn take_damage(health: &mut PlayerHealth, amount: f32) {
     health.current = (health.current - amount).max(0.0);
 }
 
-/// Blood out means game over: the screen's visibility follows
-/// `GameState.game_over`, `move_player` stands down, and Restart —
-/// button or key — brings the run back.
+/// Blood out ends the run: the flow moves to the game-over world, and
+/// its `OnEnter` swaps the document and raises the end screen's
+/// camera. Only a current `Level` can end — a player on the menu or
+/// the end screen is not in a run.
 fn update_game_over(
+    flow: Res<State<GameFlow>>,
+    mut next: ResMut<NextState<GameFlow>>,
     mut state: ResMut<GameState>,
-    mut players: Query<&mut PlayerHealth, With<PlayerMarker>>,
+    players: Query<&PlayerHealth, With<PlayerMarker>>,
 ) {
-    if state.game_over {
+    if flow.get() != &GameFlow::Level {
         return;
     }
-    for health in &mut players {
+    for health in &players {
         if health.current <= 0.0 {
-            state.game_over = true;
             state.paused = false;
+            next.set(GameFlow::GameOver);
+            break;
         }
     }
 }

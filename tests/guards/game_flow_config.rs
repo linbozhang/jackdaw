@@ -262,6 +262,19 @@ fn the_runtime_reader_reaches_the_same_verdicts() {
     assert!(warnings.is_empty(), "{warnings:?}");
     assert!(flow::validate_flow(dir.path()).is_empty());
 
+    // The `.bsb` twin: the project keeps the compiled form, every
+    // authoring surface spells the text path — both sides count it as
+    // on disk and stay quiet (T13-T2 QA ⚪-1: this shape used to live
+    // only on the validator side).
+    std::fs::remove_file(dir.path().join("menu.bsn")).expect("drop the text twin");
+    write(dir.path(), "menu.bsb", "binary");
+    let (scene, warnings) = runtime_flow::start_scene_in(Some(dir.path()), "scene.bsn");
+    assert_eq!(scene, "menu.bsn", "the runtime accepts the twin too");
+    assert!(warnings.is_empty(), "{warnings:?}");
+    assert!(flow::validate_flow(dir.path()).is_empty());
+    write(dir.path(), "menu.bsn", "#MenuRoot\n");
+    std::fs::remove_file(dir.path().join("menu.bsb")).expect("drop the binary twin");
+
     // Off-disk start scene: both fall back (the validator warns, the
     // runtime warns and hands back the caller's default).
     write(dir.path(), flow::FLOW_FILE, &flow_text("ghost.bsn", &[]));
@@ -283,6 +296,35 @@ fn the_runtime_reader_reaches_the_same_verdicts() {
         flow::validate_flow(dir.path())
             .iter()
             .any(|warning| warning.contains("JSON"))
+    );
+
+    // The `.jackdaw-pie/` temp-copy shape is the one deliberate split
+    // between the two readers, pinned here so it stays a decision
+    // instead of drifting into an accident. The validator lists the
+    // path and never holds it to disk (play_current's copies live
+    // exactly as long as the editor session, so a live session's flow
+    // must not warn about them); the runtime — which only ever runs
+    // when no editor session exists — holds every path to disk and
+    // falls back loudly when the named scene is not there.
+    write(
+        dir.path(),
+        flow::FLOW_FILE,
+        &flow_text(".jackdaw-pie/session/scene.bsn", &[]),
+    );
+    let (scene, warnings) = runtime_flow::start_scene_in(Some(dir.path()), "scene.bsn");
+    assert_eq!(
+        scene, "scene.bsn",
+        "the runtime's copy is never a live session"
+    );
+    assert!(
+        warnings
+            .iter()
+            .any(|warning| warning.contains("jackdaw-pie") && warning.contains("not on disk")),
+        "the runtime names the temp-copy path it fell back from: {warnings:?}"
+    );
+    assert!(
+        flow::validate_flow(dir.path()).is_empty(),
+        "the validator lists the same path without holding it to disk"
     );
 }
 

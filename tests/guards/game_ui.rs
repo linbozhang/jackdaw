@@ -1,35 +1,39 @@
-//! The game UI template pattern over the real engine (T12-T1).
+//! The game UI template pattern over the real engine (T12-T1, re-pinned
+//! for the T13 flow: the hud is the level's own overlay now, two
+//! screens).
 //!
 //! Six legs over `JackdawPlugin`, mirroring `templates/game/src/
 //! lib.rs.template`'s "Game UI" section and `assets/hud.bsn` (the
 //! seed is loaded from the scaffold's template directory rendered the
 //! way `jd new` renders it — the systems below are faithful local
-//! ports of the template's own code):
+//! ports of the template's own code; the worlds themselves and their
+//! buttons live in `game_flow_template.rs` next door):
 //!
 //! * **Load (U1 red→green)**: a game without the hud spawn has no UI
 //!   at all — the shape every pre-T12 project ran in; with it, the
-//!   document spawns its four screens as an unparented UI root and
-//!   every binding resolves with `BindFailures` empty.
-//! * **Screens follow state**: flipping the `GameState` bools is the
-//!   whole show/hide mechanism (the `Visibility` bindings move the
-//!   screens; nothing positions anything in code).
+//!   document spawns as an unparented UI root carrying the HUD and the
+//!   pause veil, and every binding resolves with `BindFailures` empty.
+//! * **The veil follows its bool**: flipping `GameState.paused` is the
+//!   whole show/hide mechanism, and the HUD stays up under the
+//!   translucent veil (the world keeps running behind it).
 //! * **The bar binds data (U3 red→green)**: without `PlayerHealth` on
 //!   the context entity the bindings fail into `BindFailures` — the
 //!   visible-failure shape U2's runtime half takes; with it,
 //!   `Progress.value` follows `current / max` exactly and the texts
 //!   format the same numbers.
-//! * **Buttons are real behavior (U7-adjacent)**: an `Activate` on
-//!   each authored button sends `ScreenPressed` with its literal and
-//!   the observer flips the matching state — and without the observer
-//!   a click changes nothing (the red state the template's log-line
-//!   buttons used to live in).
+//! * **Buttons are real behavior (U7-adjacent)**: an `Activate` on the
+//!   pause screen's button sends `ScreenPressed` with its literal and
+//!   the observer drops the veil — and without the observer a click
+//!   changes nothing (the red state the template's log-line buttons
+//!   used to live in).
 //! * **Four resolutions, one layout**: at 800x600, 1280x720, 1920x1080
-//!   and 2560x1440 the overlays fill the window, the bar sits in the
-//!   top-left padding and the buttons stay inside their screens —
+//!   and 2560x1440 the veil fills the window, the bar sits in the
+//!   top-left padding and the button stays inside its screen —
 //!   percent-and-flex discipline, asserted numerically per size.
-//! * **The pause gate**: with a screen up (menu, paused, game over)
-//!   the player stands still; running, the same input walks, and the
-//!   Interact key — the no-physics damage fallback — takes health.
+//! * **The pause gate**: outside the level (menu, game over) or under
+//!   the veil the player stands still; running, the same input walks,
+//!   and the Interact key — the no-physics damage fallback — takes
+//!   health.
 
 use bevy::camera::{Camera2d, ComputedCameraValues, RenderTargetInfo};
 use bevy::prelude::*;
@@ -43,23 +47,21 @@ use std::time::Duration;
 
 // ---- The game UI pattern, ported from the template ------------------
 
-/// Which screen is up (template `GameState`).
-#[derive(Resource, Reflect)]
-#[reflect(Resource, Default)]
-struct GameState {
-    menu: bool,
-    paused: bool,
-    game_over: bool,
+/// Which world the game is in (template `GameFlow`).
+#[derive(States, Debug, Clone, Copy, PartialEq, Eq, Hash, Default)]
+enum GameFlow {
+    #[default]
+    Menu,
+    Level,
+    GameOver,
 }
 
-impl Default for GameState {
-    fn default() -> Self {
-        Self {
-            menu: true,
-            paused: false,
-            game_over: false,
-        }
-    }
+/// The one bool the hud's bindings read (template `GameState`): the
+/// pause veil.
+#[derive(Resource, Reflect, Default)]
+#[reflect(Resource, Default)]
+struct GameState {
+    paused: bool,
 }
 
 /// What a hud button says (template `ScreenPressed`). No `Entity`
@@ -110,16 +112,17 @@ impl Default for PlayerController {
     }
 }
 
-/// Template constants and via functions, ported verbatim.
+// The author's starting number for the health lives in the template's
+// `GameConfig`; the injection chain it rides is the config guards' own
+// surface (`config_injection.rs`), so this file carries only the
+// component side.
+
+// Template constants and via functions, ported verbatim.
 const PLAYER_DAMAGE: f32 = 15.0;
 const PLAYER_SPAWN: Vec3 = Vec3::new(-2.0, 1.0, 0.0);
 
 fn ratio(current: f32, max: f32) -> f32 {
     (current / max).clamp(0.0, 1.0)
-}
-
-fn not(value: bool) -> bool {
-    !value
 }
 
 fn is_zero(value: f32) -> bool {
@@ -142,47 +145,29 @@ fn wire_hud(
     commands.entity(root).insert(BindContext(player));
 }
 
-/// Template `on_screen_pressed`: literals to state flips.
-fn on_screen_pressed(
-    press: On<ScreenPressed>,
-    mut state: ResMut<GameState>,
-    mut players: Query<(&mut PlayerHealth, &mut Transform), With<PlayerMarker>>,
-) {
-    match press.event().button.as_str() {
-        "start" => state.menu = false,
-        "resume" => state.paused = false,
-        "restart" => {
-            state.menu = false;
-            state.paused = false;
-            state.game_over = false;
-            for (mut health, mut transform) in &mut players {
-                health.current = health.max;
-                *transform = Transform::from_translation(PLAYER_SPAWN);
-            }
-        }
-        _ => {}
+/// Template `on_screen_pressed`, hud half: the veil's button.
+fn on_screen_pressed(press: On<ScreenPressed>, mut state: ResMut<GameState>) {
+    if press.event().button == "resume" {
+        state.paused = false;
     }
 }
 
-/// Template `handle_pause_action`.
-fn handle_pause_action(actions: Res<GameActions>, mut state: ResMut<GameState>) {
-    if actions.just_pressed("Pause") && !state.menu && !state.game_over {
-        state.paused = !state.paused;
-    }
-}
-
-/// Template `update_game_over`.
+/// Template `update_game_over`: blood out ends the run, and only a
+/// current `Level` can end. (The template chains it after
+/// `apply_health_from_config`; the injection leg is the config guards'
+/// surface.)
 fn update_game_over(
-    mut state: ResMut<GameState>,
-    mut players: Query<&mut PlayerHealth, With<PlayerMarker>>,
+    flow: Res<State<GameFlow>>,
+    mut next: ResMut<NextState<GameFlow>>,
+    players: Query<&PlayerHealth, With<PlayerMarker>>,
 ) {
-    if state.game_over {
+    if flow.get() != &GameFlow::Level {
         return;
     }
-    for health in &mut players {
+    for health in &players {
         if health.current <= 0.0 {
-            state.game_over = true;
-            state.paused = false;
+            next.set(GameFlow::GameOver);
+            break;
         }
     }
 }
@@ -216,13 +201,14 @@ fn face_movement_direction(direction: Vec3, dt: f32, transform: &mut Transform) 
 /// module set ships (the physics form adds avian below it).
 fn move_player(
     actions: Res<GameActions>,
+    flow: Res<State<GameFlow>>,
     state: Res<GameState>,
     time: Res<Time>,
     mut players: Query<(&PlayerController, &mut Transform), With<PlayerMarker>>,
     mut healths: Query<&mut PlayerHealth, With<PlayerMarker>>,
     look: Query<&CameraLook>,
 ) {
-    if state.menu || state.paused || state.game_over {
+    if flow.get() != &GameFlow::Level || state.paused {
         return;
     }
     let dt = time.delta_secs();
@@ -246,9 +232,11 @@ fn move_player(
 
 /// The engine under a game: the pieces `main.rs.template`'s
 /// `DefaultPlugins` provide headless, plus `JackdawPlugin` (the UI
-/// loader, the binding evaluator and the widget runtime ride in it).
-/// The input plugin is the piece a UI-plus-input test app cannot skip:
-/// widgets' interaction systems read `ButtonInput<MouseButton>`.
+/// loader, the binding evaluator and the widget runtime ride in it)
+/// and `StatesPlugin` (the flow state machine; `DefaultPlugins` has
+/// it, `MinimalPlugins` does not). The input plugin is the piece a
+/// UI-plus-input test app cannot skip: widgets' interaction systems
+/// read `ButtonInput<MouseButton>`.
 fn game_app() -> App {
     let mut app = App::new();
     app.add_plugins((
@@ -261,6 +249,7 @@ fn game_app() -> App {
         bevy::picking::InteractionPlugin,
         bevy::ui::UiPlugin,
         bevy::world_serialization::WorldSerializationPlugin,
+        bevy::state::app::StatesPlugin,
         JackdawPlugin,
     ));
     // The two asset stores bevy_ui's content-size systems read; the
@@ -274,10 +263,24 @@ fn game_app() -> App {
     app.register_type::<HudRoot>();
     app.register_type::<ScreenPressed>();
     app.register_function(ratio);
-    app.register_function(not);
     app.register_function(is_zero);
     app.init_resource::<GameState>();
+    app.init_state::<GameFlow>();
     app
+}
+
+/// The current flow state, for the gate legs.
+fn flow_of(app: &mut App) -> GameFlow {
+    *app.world().resource::<State<GameFlow>>().get()
+}
+
+/// Put the flow in `state` as a transition would (the next update runs
+/// the `OnEnter`/`OnExit` schedules around it).
+fn set_flow(app: &mut App, state: GameFlow) {
+    app.world_mut()
+        .resource_mut::<NextState<GameFlow>>()
+        .set(state);
+    app.update();
 }
 
 /// The rendered hud seed, exactly as `jd new` renders it for a project
@@ -327,9 +330,8 @@ fn named(world: &mut World, target: &str) -> Entity {
         .unwrap_or_else(|| panic!("expected entity named {target}"))
 }
 
-fn state_of(app: &mut App) -> (bool, bool, bool) {
-    let state = app.world().resource::<GameState>();
-    (state.menu, state.paused, state.game_over)
+fn paused(app: &mut App) -> bool {
+    app.world().resource::<GameState>().paused
 }
 
 fn failure_count(app: &mut App) -> usize {
@@ -371,8 +373,8 @@ fn the_hud_is_the_only_ui_and_it_loads_with_its_bindings_resolved() {
     }
 
     // Green: the template's spawn plus wire — the document loads as an
-    // unparented UI root carrying its marker, all four screens and
-    // every part arrive, and every binding resolved.
+    // unparented UI root carrying its marker, both overlays and every
+    // part arrive, and every binding resolved.
     let mut app = game_app();
     let player = spawn_player(
         &mut app,
@@ -413,7 +415,7 @@ fn the_hud_is_the_only_ui_and_it_loads_with_its_bindings_resolved() {
         Some(player),
         "wire_hud put the player's context on the root"
     );
-    for screen in ["Hud", "StartScreen", "PauseScreen", "GameOverScreen"] {
+    for screen in ["Hud", "PauseScreen"] {
         let e = named(world, screen);
         assert!(world.get::<Node>(e).is_some(), "{screen} is a UI node");
         assert!(
@@ -421,27 +423,23 @@ fn the_hud_is_the_only_ui_and_it_loads_with_its_bindings_resolved() {
             "{screen} carries visibility"
         );
     }
-    // The veils' authored colors land exactly: a wrong value TypePath
+    // The veil's authored color lands exactly: a wrong value TypePath
     // (the re-export spelling `bevy_color::Srgba` instead of the
     // canonical `bevy_color::srgba::Srgba`, QA t12-t1 §四) still inserts
     // the component but at the fallback default — fully transparent,
     // with no BindFailures and no UnresolvedTypes to catch it.
-    for (screen, alpha) in [("PauseScreen", 0.6), ("GameOverScreen", 0.92)] {
-        let e = named(world, screen);
-        assert_eq!(
-            world.get::<BackgroundColor>(e),
-            Some(&BackgroundColor(Color::srgba(0.0, 0.0, 0.0, alpha))),
-            "{screen}: the authored veil color must land exactly"
-        );
-    }
+    let pause = named(world, "PauseScreen");
+    assert_eq!(
+        world.get::<BackgroundColor>(pause),
+        Some(&BackgroundColor(Color::srgba(0.0, 0.0, 0.0, 0.6))),
+        "the pause veil's authored color must land exactly"
+    );
     for part in [
         "HealthBar",
         "HealthFill",
         "HealthText",
         "PickupsText",
-        "StartButton",
         "ResumeButton",
-        "RestartButton",
     ] {
         named(world, part);
     }
@@ -453,7 +451,7 @@ fn the_hud_is_the_only_ui_and_it_loads_with_its_bindings_resolved() {
     );
 }
 
-// ---- 2. Screens follow state ----------------------------------------
+// ---- 2. The veil follows its bool ------------------------------------
 
 #[test]
 fn flipping_game_state_moves_the_screens() {
@@ -473,31 +471,22 @@ fn flipping_game_state_moves_the_screens() {
         let e = named(app.world_mut(), name);
         *app.world().get::<Visibility>(e).unwrap()
     };
-    // The default state: menu up, everything else down.
-    assert_eq!(visibility(&mut app, "StartScreen"), Visibility::Inherited);
-    assert_eq!(visibility(&mut app, "Hud"), Visibility::Hidden);
-    assert_eq!(visibility(&mut app, "PauseScreen"), Visibility::Hidden);
-    assert_eq!(visibility(&mut app, "GameOverScreen"), Visibility::Hidden);
-
-    app.world_mut().resource_mut::<GameState>().menu = false;
-    app.update();
-    assert_eq!(visibility(&mut app, "StartScreen"), Visibility::Hidden);
+    // The hud is the level's own overlay: up the whole time its
+    // document is in the world (its old `not(menu)` binding retired
+    // with the menu screen — the menu is a world now, not a bool).
     assert_eq!(visibility(&mut app, "Hud"), Visibility::Inherited);
+    assert_eq!(visibility(&mut app, "PauseScreen"), Visibility::Hidden);
 
+    // Flipping the bool is the whole mechanism.
     app.world_mut().resource_mut::<GameState>().paused = true;
     app.update();
     assert_eq!(visibility(&mut app, "PauseScreen"), Visibility::Inherited);
-    // The hud stays up under the pause veil (its binding reads the
-    // menu, not the pause): the veil is translucent over a live game.
+    // The hud stays up under the pause veil: the veil is translucent
+    // over a live game.
     assert_eq!(visibility(&mut app, "Hud"), Visibility::Inherited);
 
     app.world_mut().resource_mut::<GameState>().paused = false;
-    app.world_mut().resource_mut::<GameState>().game_over = true;
     app.update();
-    assert_eq!(
-        visibility(&mut app, "GameOverScreen"),
-        Visibility::Inherited
-    );
     assert_eq!(visibility(&mut app, "PauseScreen"), Visibility::Hidden);
 }
 
@@ -534,8 +523,9 @@ fn the_bar_follows_player_health_and_misses_it_loudly() {
 
     // Green: with the component, the bar is `ratio` and the texts are
     // the same numbers — at two health values, and the same component
-    // drives game over when it bottoms out.
+    // ends the run when it bottoms out.
     let mut app = game_app();
+    set_flow(&mut app, GameFlow::Level);
     let player = spawn_player(
         &mut app,
         Some(PlayerHealth {
@@ -574,23 +564,29 @@ fn the_bar_follows_player_health_and_misses_it_loudly() {
     app.update();
     assert_eq!(value(&mut app), 0.3);
     assert_eq!(text(&mut app), "30 / 100");
-    assert!(!app.world().resource::<GameState>().game_over);
+    assert_eq!(flow_of(&mut app), GameFlow::Level);
 
     // Blood out: `take_damage` clamps at the component (the binding
     // mirrors whatever the component says, so the clamp lives at the
-    // source), and the next frame is game over.
+    // source), and the next frame ends the run.
     {
         let mut health = app.world_mut().get_mut::<PlayerHealth>(player).unwrap();
         take_damage(&mut health, 200.0);
     }
     app.update();
+    app.update();
     assert_eq!(value(&mut app), 0.0, "the ratio clamps at zero");
     assert_eq!(text(&mut app), "0 / 100");
-    assert!(
-        app.world().resource::<GameState>().game_over,
-        "bottomed health is game over"
+    assert_eq!(
+        flow_of(&mut app),
+        GameFlow::GameOver,
+        "bottomed health ends the run (a `NextState` set lands the frame after)"
     );
     assert_eq!(failure_count(&mut app), 0, "no failures on the green leg");
+    // The `is_zero` registered function is the other half of the pair
+    // bar-style bindings reach for; the run itself ends through the
+    // flow (asserted above).
+    assert!(is_zero(0.0) && !is_zero(0.5));
 }
 
 // ---- 4. Buttons: red (no observer) then green ------------------------
@@ -613,20 +609,18 @@ fn buttons_flip_state_only_through_the_observer() {
         for _ in 0..3 {
             app.update();
         }
-        let start = named(app.world_mut(), "StartButton");
-        app.world_mut().trigger(Activate { entity: start });
+        app.world_mut().resource_mut::<GameState>().paused = true;
+        let resume = named(app.world_mut(), "ResumeButton");
+        app.world_mut().trigger(Activate { entity: resume });
         app.update();
-        assert_eq!(
-            state_of(&mut app),
-            (true, false, false),
-            "a click with no observer changes nothing"
-        );
+        assert!(paused(&mut app), "a click with no observer changes nothing");
     }
 
-    // Green: each button's literal reaches the observer and flips its
-    // own piece of state; Restart also resets health and position.
+    // Green: the button's literal reaches the observer and drops the
+    // veil. (The flow documents' buttons — start, restart, menu — are
+    // the `game_flow_template.rs` file's legs.)
     let mut app = game_app();
-    let player = spawn_player(
+    spawn_player(
         &mut app,
         Some(PlayerHealth {
             current: 100.0,
@@ -645,42 +639,10 @@ fn buttons_flip_state_only_through_the_observer() {
         app.update();
     };
 
-    press(&mut app, "StartButton");
-    assert_eq!(
-        state_of(&mut app),
-        (false, false, false),
-        "Start leaves the menu"
-    );
-
     app.world_mut().resource_mut::<GameState>().paused = true;
+    app.update();
     press(&mut app, "ResumeButton");
-    assert_eq!(state_of(&mut app), (false, false, false), "Resume unpauses");
-
-    app.world_mut().resource_mut::<GameState>().game_over = true;
-    app.world_mut()
-        .get_mut::<PlayerHealth>(player)
-        .unwrap()
-        .current = 0.0;
-    {
-        let mut transform = app.world_mut().get_mut::<Transform>(player).unwrap();
-        transform.translation = Vec3::new(9.0, 9.0, 9.0);
-    }
-    press(&mut app, "RestartButton");
-    assert_eq!(
-        state_of(&mut app),
-        (false, false, false),
-        "Restart clears the screens"
-    );
-    assert_eq!(
-        app.world().get::<PlayerHealth>(player).unwrap().current,
-        100.0,
-        "Restart restores the health"
-    );
-    assert_eq!(
-        app.world().get::<Transform>(player).unwrap().translation,
-        PLAYER_SPAWN,
-        "Restart lands the player where the run began"
-    );
+    assert!(!paused(&mut app), "Resume drops the veil");
 }
 
 // ---- 5. Four resolutions, one layout ---------------------------------
@@ -719,6 +681,9 @@ fn one_layout_holds_across_the_four_common_resolutions() {
             }),
         );
         spawn_hud_seed(&mut app);
+        // Raise the veil so the overlay leg measures the pause screen
+        // the way the old start screen was measured — full-bleed.
+        app.world_mut().resource_mut::<GameState>().paused = true;
         for _ in 0..3 {
             app.update();
         }
@@ -738,18 +703,18 @@ fn one_layout_holds_across_the_four_common_resolutions() {
         };
         let close = |a: f32, b: f32| (a - b).abs() <= 1.0;
 
-        // The overlays stretch the full window from the corner,
-        // whatever the size. The transform reads at the node's center,
-        // so corner assertions subtract half the size.
-        let (start_at, start_size) = geometry(&mut app, "StartScreen");
-        let start_min = start_at - start_size / 2.0;
+        // The veil stretches the full window from the corner, whatever
+        // the size. The transform reads at the node's center, so corner
+        // assertions subtract half the size.
+        let (veil_at, veil_size) = geometry(&mut app, "PauseScreen");
+        let veil_min = veil_at - veil_size / 2.0;
         assert!(
-            close(start_min.x, 0.0) && close(start_min.y, 0.0),
-            "{width}x{height}: the start screen starts at the corner, at {start_min}"
+            close(veil_min.x, 0.0) && close(veil_min.y, 0.0),
+            "{width}x{height}: the veil starts at the corner, at {veil_min}"
         );
         assert!(
-            close(start_size.x, width as f32) && close(start_size.y, height as f32),
-            "{width}x{height}: the start screen fills the window, sized {start_size}"
+            close(veil_size.x, width as f32) && close(veil_size.y, height as f32),
+            "{width}x{height}: the veil fills the window, sized {veil_size}"
         );
         let (_, hud_size) = geometry(&mut app, "HudRoot");
         assert!(
@@ -772,7 +737,7 @@ fn one_layout_holds_across_the_four_common_resolutions() {
 
         // The button stays inside its screen and centered: anchored by
         // the flex column, not by pixels.
-        let (button_at, button_size) = geometry(&mut app, "StartButton");
+        let (button_at, button_size) = geometry(&mut app, "ResumeButton");
         let button_min = button_at - button_size / 2.0;
         assert!(
             button_min.x >= 0.0
@@ -797,7 +762,7 @@ fn the_player_only_moves_while_no_screen_owns_the_moment() {
     app.register_asset_reflect::<GameInputConfig>();
     app.add_plugins(InputActionsPlugin);
     // The pause flip owns the frame (the template wires the same edge).
-    app.add_systems(Update, (handle_pause_action, move_player).chain());
+    app.add_systems(Update, (handle_pause_action_port, move_player).chain());
     app.insert_resource(TimeUpdateStrategy::ManualDuration(Duration::from_millis(
         100,
     )));
@@ -834,16 +799,17 @@ fn the_player_only_moves_while_no_screen_owns_the_moment() {
         key_event(app, KeyCode::KeyW, bevy::input::ButtonState::Released);
     };
 
-    // On the menu (the default state) the walk input is dead.
+    // On the menu (the boot state) the walk input is dead: the flow
+    // gate is the world-level half of the pause.
     walk(&mut app, &key_event);
     assert_eq!(
         translation(&mut app).z,
         0.0,
-        "the menu gate holds the player"
+        "outside the level the gate holds the player"
     );
 
     // Running: W walks away from the camera (yaw 0: -Z), 4 m/s * 0.1 s.
-    app.world_mut().resource_mut::<GameState>().menu = false;
+    set_flow(&mut app, GameFlow::Level);
     walk(&mut app, &key_event);
     assert!(
         (translation(&mut app).z + 0.4).abs() < 1e-4,
@@ -883,13 +849,24 @@ fn the_player_only_moves_while_no_screen_owns_the_moment() {
         "Interact takes one hit of damage"
     );
 
-    // Game over: the gate comes down again.
-    app.world_mut().resource_mut::<GameState>().game_over = true;
+    // The end screen is the other world: the gate comes down again.
+    set_flow(&mut app, GameFlow::GameOver);
     walk(&mut app, &key_event);
     assert!(
         (translation(&mut app).z + 0.8).abs() < 1e-4,
-        "game over, the player stands still"
+        "on the end screen, the player stands still"
     );
+}
+
+/// Template `handle_pause_action`: the flip, level-only.
+fn handle_pause_action_port(
+    actions: Res<GameActions>,
+    flow: Res<State<GameFlow>>,
+    mut state: ResMut<GameState>,
+) {
+    if actions.just_pressed("Pause") && flow.get() == &GameFlow::Level {
+        state.paused = !state.paused;
+    }
 }
 
 // ---- 7. A typoed binding fails loudly, and fixing it lands (T12-T2) ---

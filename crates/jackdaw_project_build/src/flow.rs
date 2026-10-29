@@ -402,4 +402,21 @@ mod tests {
         assert_eq!(parsed, GameFlow::default());
         assert!(warnings.iter().any(|warning| warning.contains("list")));
     }
+
+    /// A `start_scene` that is not a string (the hand-edited-JSON
+    /// classic) warns and reads as absent, on the validator side — the
+    /// runtime side's mirror is `an_unusable_start_scene` (T13-T2 QA
+    /// ⚪-2: this branch existed on both sides but only the runtime's
+    /// was directly tested).
+    #[test]
+    fn a_non_string_start_scene_warns_instead_of_refusing() {
+        let (parsed, warnings) = parse_flow("{\"start_scene\": 42}");
+        assert_eq!(parsed, GameFlow::default());
+        assert!(
+            warnings
+                .iter()
+                .any(|warning| warning.contains("start_scene") && warning.contains("number")),
+            "{warnings:?}"
+        );
+    }
 }

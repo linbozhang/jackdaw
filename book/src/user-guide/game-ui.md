@@ -1,16 +1,19 @@
 # Game UI
 
-A new game project ships with a working game interface: four screens
-(start, HUD, pause, game over) that show and hide themselves, a health
-bar bound to live player data, and buttons that do real things. The
-screens live in `assets/hud.bsn`, a document like any other — open it
-in the editor, move and restyle and rewire it, and the running game
-picks your version up. This chapter covers both halves: authoring UI
-on the 2D canvas, and the wiring that makes it a game's UI.
+A new game project ships with a working game interface: the level's
+HUD and pause veil in `assets/hud.bsn`, a health bar bound to live
+player data, and buttons that do real things. The document is a scene
+like any other — open it in the editor, move and restyle and rewire
+it, and the running game picks your version up. This chapter covers
+both halves: authoring UI on the 2D canvas, and the wiring that makes
+it a game's UI.
 
 Where [Game Input](game-input.md) names the actions and
 [The Player Controller](player-controller.md) drives the body the HUD
-watches, this chapter covers the interface itself.
+watches, this chapter covers the interface itself. The worlds the HUD
+sits over — the menu, the level, the end screen, and the file that
+decides where the game starts — are [Game Flow](game-flow.md)'s
+subject.
 
 ## The 2D canvas
 
@@ -37,31 +40,35 @@ Nothing scales by it at runtime; see
 [Resolution discipline](#resolution-discipline) for what actually
 keeps a screen correct at other sizes.
 
-## The template's four screens
+## The template's two overlays
 
 Open `assets/hud.bsn` (double-click it in the Project window) and the
-structure is four overlays under one root:
+structure is two overlays under one root. The document exists only
+while the level does — [Game Flow](game-flow.md) spawns it on entering
+the level and takes it away when the level ends — so the overlays are
+pure level furniture:
 
-| Screen | Shows when | Contents |
+| Overlay | Shows when | Contents |
 |---|---|---|
-| `#StartScreen` | `GameState.menu` | Title + Start button |
-| `#Hud` | not `menu` | Health bar, health text, pickups text |
+| `#Hud` | always, while its document exists | Health bar, health text, pickups text |
 | `#PauseScreen` | `GameState.paused` | Title + Resume button |
-| `#GameOverScreen` | `GameState.game_over` | Title + Restart button |
 
-The game side is deliberately small. `GameState { menu, paused,
-game_over }` is a `Resource` of three bools, and **each screen's
-`Visibility` is bound to one of them** — flipping a bool is the whole
-show/hide mechanism, and the Hud screen is bound through the
-registered `not` function so it is up whenever the menu is not.
+The game side is deliberately small. `GameState { paused }` is a
+`Resource` of one bool, and **the veil's `Visibility` is bound to it**
+— flipping the bool is the whole show/hide mechanism. (The start and
+game-over screens used to be overlays here too, bound to two more
+bools; they are worlds now, with their own documents and cameras —
+see [Game Flow](game-flow.md).)
 
-Buttons say which one they are: each button's `Action` binding sends
-`ScreenPressed { button: "start" }` (or `"resume"`, `"restart"`) from
-its literal, and one observer turns those into behavior — leave the
-menu, unpause, restart the run. The Pause *action* (Escape, see
-[Game Input](game-input.md)) lands on the same `paused` bool through
-`handle_pause_action`, so the key and the button agree: both doors,
-one piece of state, and while `paused` the movement system stands down
+Buttons say which one they are: the pause screen's `Action` binding
+sends `ScreenPressed { button: "resume" }` from its literal, and one
+observer turns that into behavior — drop the veil. (The menu and
+end-screen buttons send `"start"`, `"restart"` and `"menu"` from their
+own documents; the same observer moves the flow for them.) The Pause
+*action* (Escape, see [Game Input](game-input.md)) lands on the same
+`paused` bool through `handle_pause_action` — and only while the flow
+is in the level — so the key and the button agree: both doors, one
+piece of state, and while `paused` the movement system stands down
 (freeze the game to see it).
 
 The health bar is the data-binding showcase. `#HealthBar` carries the
@@ -74,16 +81,18 @@ value every frame. The two texts are `Text` bindings —
 the template's hazard sensors burn 15 a touch
 ([Physics](physics.md) has the collision-layer row that makes hazards
 touch the player only), without it the Interact key does. Hit zero and
-`game_over` flips, the end screen rises, and Restart — button, after
-blood-out — puts the run back.
+the flow moves to the end screen; Restart — that screen's button,
+after blood-out — re-enters the level.
 
 One restart semantic worth knowing exactly: Restart resets the player
-(health to max, back to the spawn point, screens cleared) through the
-UI observer, and with the physics module **the level comes back with
-you** — surviving pickups despawn, a fresh line spawns, and the pickup
-counter and any leftover velocity zero out (`respawn_pickups_on_restart`).
-Without the physics module there are no pickups to reset. In both
-forms a restart lands exactly where the game began.
+(health to the config's number, back to the spawn point) through
+`reset_run`, which runs on **every** entry into the level — switching
+is the reset — and with the physics module **the level comes back with
+you**: the level's props are state-scoped, so a re-entered level
+starts from a fresh pickup line, and the counter and any leftover
+velocity zero out. ([Game Flow](game-flow.md) has the whole
+cross-scene rules table.) In both module forms a restart lands exactly
+where the game began.
 
 ## Wiring a binding: the five kinds
 
@@ -93,7 +102,7 @@ A `Bindings` component holds a list of bindings, one per behavior:
 |---|---|---|---|
 | `Field` | component fields (+ optional `via`) | a component field | bar: `PlayerHealth.{current,max}` → `ratio` → `Progress.value` |
 | `Text` | fields or resource paths | the node's text, `{}` placeholders | `"{} / {}"` health text |
-| `Visible` | a bool (path or `via`) | the entity's `Visibility` | each screen on a `GameState` bool |
+| `Visible` | a bool (path or `via`) | the entity's `Visibility` | the pause veil on `GameState.paused` |
 | `Value` | a value path | a widget value | (the bar's job, done with `Field`+`as_percent`) |
 | `Action` | — | fires an event on click | `ScreenPressed { button }` |
 
@@ -108,14 +117,14 @@ lets every binding inside resolve the player's components.
 `via` names a function **your game registers** — there is no built-in
 library of them, by design. The template registers three and they are
 the common shapes: `ratio` (current/max → 0..1 for a bar), `not`
-(bool → inverse, the Hud screen's hide-me-while-the-menu-is-up), and
+(bool → inverse, for showing a thing while a flag is false), and
 `is_zero` (the other half of the pair bar-style bindings reach for).
 A `via` you forgot to register fails the binding (loudly — see below),
 and the bindings card's dropdown only offers registered names.
 
 ## Resolution discipline
 
-The four screens are correct from 800×600 to 2560×1440 (a headless
+The overlays are correct from 800×600 to 2560×1440 (a headless
 guard plays the layout at all four and asserts the geometry), and the
 discipline that buys it is plain CSS-flavored restraint:
 
@@ -157,9 +166,9 @@ the Game panel naming the path; fix it, Play again, gone.
 Play runs **the scene tab in front**. With a UI scene focused, the
 editor's Play swaps that UI in for the 3D scene — a canvas preview
 (the world's meshes are not loaded, but your UI runs its bindings
-against the real game). To run the game, focus the 3D scene tab first;
-the template already spawns the hud as a second root, so the normal
-path needs nothing special.
+against the real game, and the flow state follows the boot scene —
+a menu document focused on Play boots as the menu). To run the game,
+focus the 3D scene tab first.
 
 ## Adding UI to an older project
 
@@ -172,7 +181,8 @@ plugin:
 .init_resource::<GameState>()
 .register_function(ratio)
 .add_observer(on_screen_pressed)
-// ... and at startup, after the main scene:
+// ... whenever the level is current ([Game Flow](game-flow.md) shows
+// the state-scoped spawn the template uses):
 commands.spawn(JackdawSceneRoot(asset_server.load("hud.bsn")));
 ```
 
@@ -182,13 +192,14 @@ in any game.
 
 ## The 30-second check
 
-1. New project, **Play**: the start screen; click **Start** — the HUD
-   slides in over the 3D world. Walk into the red hazard twice (or tap
-   **E** without the physics module): the bar drops, `70 / 100`,
-   `Pickups: 3` when you collect the line. Blood out → the end screen;
-   **Restart** → full health, spawn point, pickups back.
-2. **Escape** → the pause screen and a frozen player; **Resume** →
-   back. In the editor open hud.bsn, change the title and the fill's
-   color, **Save**, Play: both edits are on screen, and an exported
-   build ships them.
+1. New project, **Play**: the menu; click **Start** — the HUD appears
+   over the 3D world. Walk into the red hazard twice (or tap **E**
+   without the physics module): the bar drops, `70 / 100`, `Pickups: 3`
+   when you collect the line. Blood out → the end screen;
+   **Restart** → full health, spawn point, pickups back; **Menu** →
+   the start screen again ([Game Flow](game-flow.md) has the loop).
+2. **Escape** → the pause veil and a frozen player; **Resume** →
+   back. In the editor open hud.bsn, change the bar fill's color,
+   **Save**, Play: the edit is on screen, and an exported build ships
+   it.
 3. Break one binding path, Play: the Game panel names it in orange.

@@ -1,0 +1,64 @@
+// jackdaw 0.21.0-dev | bevy main
+#GameOverRoot
+jackdaw_scene_types::UiSceneRoot
+{{crate_name}}::GameOverRoot
+bevy_ui::ui_node::Node {
+    width: bevy_ui::geometry::Val::Percent(100.0),
+    height: bevy_ui::geometry::Val::Percent(100.0),
+    flex_direction: bevy_ui::ui_node::FlexDirection::Column,
+    align_items: bevy_ui::ui_node::AlignItems::Center,
+    justify_content: bevy_ui::ui_node::JustifyContent::Center,
+    row_gap: bevy_ui::geometry::Val::Px(16.0),
+}
+bevy_ui::ui_node::BackgroundColor(bevy_color::Color::Srgba(bevy_color::srgba::Srgba { red: 0.0, green: 0.0, blue: 0.0, alpha: 0.92 }))
+bevy_ecs::hierarchy::Children [
+    #GameOverTitle
+    bevy_ui::widget::text::Text("Game Over")
+    bevy_feathers::theme::ThemedText
+    --
+    #RestartButton
+    bevy_ui::ui_node::Node {
+        min_width: bevy_ui::geometry::Val::Px(96.0),
+        min_height: bevy_ui::geometry::Val::Px(32.0),
+        justify_content: bevy_ui::ui_node::JustifyContent::Center,
+        align_items: bevy_ui::ui_node::AlignItems::Center,
+        padding: bevy_ui::geometry::UiRect {
+            left: bevy_ui::geometry::Val::Px(12.0),
+            right: bevy_ui::geometry::Val::Px(12.0),
+            top: bevy_ui::geometry::Val::Px(6.0),
+            bottom: bevy_ui::geometry::Val::Px(6.0),
+        },
+    }
+    bevy_ui_widgets::button::Button
+    bevy_feathers::theme::ThemeBackgroundColor(bevy_feathers::theme::ThemeToken("feathers.button.bg"))
+    bevy_feathers::theme::InheritableThemeTextColor(bevy_feathers::theme::ThemeToken("feathers.button.txt"))
+    jackdaw_bind::types::Bindings([jackdaw_bind::types::Binding::Action { event: "{{crate_name}}::ScreenPressed", fields: [], literals: [["button", "restart"]] }])
+    bevy_ecs::hierarchy::Children [
+        #RestartCaption
+        bevy_ui::widget::text::Text("Restart")
+        bevy_feathers::theme::ThemedText
+    ]
+    --
+    #MenuButton
+    bevy_ui::ui_node::Node {
+        min_width: bevy_ui::geometry::Val::Px(96.0),
+        min_height: bevy_ui::geometry::Val::Px(32.0),
+        justify_content: bevy_ui::ui_node::JustifyContent::Center,
+        align_items: bevy_ui::ui_node::AlignItems::Center,
+        padding: bevy_ui::geometry::UiRect {
+            left: bevy_ui::geometry::Val::Px(12.0),
+            right: bevy_ui::geometry::Val::Px(12.0),
+            top: bevy_ui::geometry::Val::Px(6.0),
+            bottom: bevy_ui::geometry::Val::Px(6.0),
+        },
+    }
+    bevy_ui_widgets::button::Button
+    bevy_feathers::theme::ThemeBackgroundColor(bevy_feathers::theme::ThemeToken("feathers.button.bg"))
+    bevy_feathers::theme::InheritableThemeTextColor(bevy_feathers::theme::ThemeToken("feathers.button.txt"))
+    jackdaw_bind::types::Bindings([jackdaw_bind::types::Binding::Action { event: "{{crate_name}}::ScreenPressed", fields: [], literals: [["button", "menu"]] }])
+    bevy_ecs::hierarchy::Children [
+        #MenuCaption
+        bevy_ui::widget::text::Text("Menu")
+        bevy_feathers::theme::ThemedText
+    ]
+]

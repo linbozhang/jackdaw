@@ -2768,9 +2768,10 @@ fn module_plugin_lines(modules: &ModuleSet) -> String {
 
 /// The extra statements the template's `GamePlugin::build` gains with
 /// the physics module: the trigger bridge (sensors report into
-/// `TriggerEvents`), the stage/pickup spawns, and the two systems
-/// that consume them. Empty without the module — the template's
-/// manual-fall fallback stands in instead.
+/// `TriggerEvents`), the stage/pickup spawns — level scenery, spawned
+/// with the level and despawned with it — and the systems that consume
+/// the triggers and the run's counters. Empty without the module — the
+/// template's manual-fall fallback stands in instead.
 fn module_physics_statements(modules: &ModuleSet) -> String {
     if !modules.contains("physics") {
         return String::new();
@@ -2780,11 +2781,16 @@ fn module_physics_statements(modules: &ModuleSet) -> String {
         "        // the bridge turns sensor contacts into `TriggerEvents` —\n",
         "        // `collect_pickups` and `hazard_damage` read it — and\n",
         "        // `apply_gravity_from_config` hands the config's gravity\n",
-        "        // number to the engine.\n",
+        "        // number to the engine. The props are level scenery:\n",
+        "        // spawned on entry, gone on exit, back fresh on the next\n",
+        "        // one.\n",
         "        app.add_plugins(jackdaw_avian_integration::TriggerPlugin)\n",
-        "            .add_systems(Startup, (spawn_stage, spawn_pickups, spawn_walls, spawn_hazards))\n",
-        "            .add_systems(Update, (collect_pickups, hazard_damage, apply_gravity_from_config))\n",
-        "            .add_observer(respawn_pickups_on_restart);\n",
+        "            .add_systems(OnEnter(GameFlow::Level), reset_run_counters)\n",
+        "            .add_systems(\n",
+        "                OnEnter(GameFlow::Level),\n",
+        "                (spawn_stage, spawn_pickups, spawn_walls, spawn_hazards),\n",
+        "            )\n",
+        "            .add_systems(Update, (collect_pickups, hazard_damage, apply_gravity_from_config));\n",
     ]
     .concat()
 }
@@ -2893,15 +2899,16 @@ fn module_physics_player_move(modules: &ModuleSet) -> String {
 /// project.
 fn move_player(
     actions: Res<GameActions>,
+    flow: Res<State<GameFlow>>,
     state: Res<GameState>,
     time: Res<Time>,
     mut players: Query<(&PlayerController, &mut Transform), With<PlayerMarker>>,
     mut healths: Query<&mut PlayerHealth, With<PlayerMarker>>,
     look: Query<&CameraLook>,
 ) {
-    // While a screen owns the moment — menu, pause veil, game over —
-    // the player stands still: this gate is the whole pause.
-    if state.menu || state.paused || state.game_over {
+    // The player only exists inside a run: the flow's `Level` state is
+    // the world gate, `paused` the freeze inside it.
+    if flow.get() != &GameFlow::Level || state.paused {
         return;
     }
     let dt = time.delta_secs();
@@ -2946,11 +2953,12 @@ pub struct PlayerVelocity(pub Vec3);
 ///   sweep is the "collides with walls" half of a controller, and it
 ///   hands back the position and the leftover (slid) velocity.
 ///
-/// None of it runs while a screen owns the moment (menu, pause veil,
-/// game over): the early return is the whole pause, and the state
-/// behind it is the same `GameState` the hud's screens bind to.
+/// None of it runs outside a run: the flow's `Level` state is the
+/// world gate and `paused` the freeze inside it — the same two checks
+/// the no-physics form makes, against the same state the hud reads.
 fn move_player(
     actions: Res<GameActions>,
+    flow: Res<State<GameFlow>>,
     state: Res<GameState>,
     config: Res<GameConfig>,
     time: Res<Time>,
@@ -2967,7 +2975,7 @@ fn move_player(
     >,
     look: Query<&CameraLook>,
 ) {
-    if state.menu || state.paused || state.game_over {
+    if flow.get() != &GameFlow::Level || state.paused {
         return;
     }
     use avian3d::math::{ToF32Precision, ToRealPrecision};
@@ -3035,6 +3043,9 @@ fn module_physics_demo(modules: &ModuleSet) -> String {
     r#"// ---- Physics & triggers: the pickup demo -------------------------
 // The stage, the pickups and the systems above them. Everything a
 // game needs to copy: spawn a `Sensor` collider, read `TriggerEvents`.
+// Every prop below is level scenery — spawned on entering the level,
+// `DespawnOnExit` takes it when the level ends, and the next entry
+// starts from a fresh set.
 
 /// A thing to walk over and collect: a small glowing sensor cube.
 #[derive(Component, Reflect, Default)]
@@ -3061,6 +3072,7 @@ fn spawn_stage(
             ..default()
         })),
         Transform::from_xyz(0.0, -0.5, 0.0),
+        DespawnOnExit(GameFlow::Level),
         jackdaw_avian_integration::AvianCollider(
             avian3d::prelude::ColliderConstructor::Cuboid {
                 x_length: 20.0,
@@ -3072,8 +3084,9 @@ fn spawn_stage(
 }
 
 /// Three pickups in a line between the player and the falling cube.
-/// (`respawn_pickups_on_restart` respawns the same line when a run
-/// restarts.)
+/// (`reset_run_counters` puts the count back when the level starts
+/// over; the props themselves come back through `DespawnOnExit` and
+/// the level-entry spawns.)
 fn spawn_pickups(
     mut commands: Commands,
     mut meshes: ResMut<Assets<Mesh>>,
@@ -3083,7 +3096,7 @@ fn spawn_pickups(
 }
 
 /// The pickup cubes themselves, one line of three. Its own function so
-/// a restart can lay the line down again after the run despawned it.
+/// a restart lays the line down again after the run despawned it.
 fn spawn_pickup_line(
     commands: &mut Commands,
     meshes: &mut Assets<Mesh>,
@@ -3099,6 +3112,7 @@ fn spawn_pickup_line(
                 ..default()
             })),
             Transform::from_xyz(-1.0 + i as f32, 0.5, 0.0),
+            DespawnOnExit(GameFlow::Level),
             jackdaw_avian_integration::AvianCollider(
                 avian3d::prelude::ColliderConstructor::Sphere {
                     radius: 0.35,
@@ -3130,6 +3144,7 @@ fn spawn_walls(
             Mesh3d(meshes.add(Cuboid::new(x_length, 1.5, z_length))),
             MeshMaterial3d(wall.clone()),
             Transform::from_xyz(x, 0.75, z),
+            DespawnOnExit(GameFlow::Level),
             jackdaw_avian_integration::AvianCollider(
                 avian3d::prelude::ColliderConstructor::Cuboid {
                     x_length,
@@ -3209,6 +3224,7 @@ fn spawn_hazards(
             ..default()
         })),
         Transform::from_xyz(2.0, 0.5, 0.0),
+        DespawnOnExit(GameFlow::Level),
         jackdaw_avian_integration::AvianCollider(
             avian3d::prelude::ColliderConstructor::Sphere {
                 radius: 0.35,
@@ -3226,18 +3242,18 @@ fn spawn_hazards(
 
 /// The hazard pattern, the other half of `collect_pickups`: when the
 /// *player* starts touching a `Hazard`, health drops (`take_damage`,
-/// in the game-UI section above) and the hud's bar follows the
+/// in the game-flow section above) and the hud's bar follows the
 /// component. `enters()` fires when the overlap starts, not every
-/// frame — walk out and back in to take it again. Nothing fires while
-/// a screen owns the moment: the same `GameState` gate as the
-/// movement system.
+/// frame — walk out and back in to take it again. Nothing fires outside
+/// a run: the same `GameFlow`/`paused` gate as the movement system.
 fn hazard_damage(
     triggers: Res<TriggerEvents>,
+    flow: Res<State<GameFlow>>,
     state: Res<GameState>,
     hazards: Query<(), With<Hazard>>,
     mut players: Query<&mut PlayerHealth, With<PlayerMarker>>,
 ) {
-    if state.menu || state.paused || state.game_over {
+    if flow.get() != &GameFlow::Level || state.paused {
         return;
     }
     for contact in triggers.enters() {
@@ -3249,25 +3265,15 @@ fn hazard_damage(
     }
 }
 
-/// The physics half of a restart: whatever pickups survived despawn
-/// and a fresh line spawns, and the counter and any leftover velocity
-/// reset — the game-UI observer already put the health and the player
-/// back; this puts the level back with them.
-fn respawn_pickups_on_restart(
-    press: On<ScreenPressed>,
-    mut commands: Commands,
-    mut meshes: ResMut<Assets<Mesh>>,
-    mut materials: ResMut<Assets<StandardMaterial>>,
-    pickups: Query<Entity, With<Pickup>>,
+/// The counter half of a restart: the level entry despawned nothing of
+/// the player's — the player crossed the switch — so the run's numbers
+/// are put back here instead. (The health and the spawn point are the
+/// game-flow section's `reset_run`; this is the pickup-and-velocity
+/// half, which only exists with the physics module.) Runs on every
+/// entry into the level, so Restart is just a switch to `Level`.
+fn reset_run_counters(
     mut players: Query<(&mut PickupCount, &mut PlayerVelocity), With<PlayerMarker>>,
 ) {
-    if press.event().button != "restart" {
-        return;
-    }
-    for pickup in &pickups {
-        commands.entity(pickup).despawn();
-    }
-    spawn_pickup_line(&mut commands, &mut meshes, &mut materials);
     for (mut count, mut velocity) in &mut players {
         count.0 = 0;
         velocity.0 = Vec3::ZERO;
@@ -3514,6 +3520,10 @@ mod tests {
         assert!(dest.join("src/lib.rs").is_file());
         assert!(dest.join("src/main.rs").is_file());
         assert!(dest.join("assets/scene.bsn").is_file());
+        assert!(dest.join("assets/menu.bsn").is_file());
+        assert!(dest.join("assets/gameover.bsn").is_file());
+        assert!(dest.join("assets/hud.bsn").is_file());
+        assert!(dest.join("assets/game.flow.json").is_file());
         assert!(dest.join("jackdaw.toml").is_file());
         assert!(dest.join(".gitignore").is_file());
         let manifest = std::fs::read_to_string(dest.join("Cargo.toml")).unwrap();
@@ -3840,13 +3850,14 @@ mod tests {
         );
     }
 
-    /// The game UI pattern the template teaches: one hud document with
-    /// the four screens, a state resource the screens' `Visibility`
-    /// binds to, an event the buttons send with their own literal, the
-    /// via functions a binding may call registered by hand, and the
-    /// one-line `BindContext` wire from the document's root marker to
-    /// the player. The UI is not module-gated: the same document and
-    /// the same code ship with and without physics.
+    /// The game UI pattern the template teaches (T13 form): one hud
+    /// document scoped to the level with the two overlays (HUD, pause),
+    /// a state resource the pause veil's `Visibility` binds to, an
+    /// event the buttons send with their own literal, the via functions
+    /// a binding may call registered by hand, and the one-line
+    /// `BindContext` wire from the document's root marker to the
+    /// player. The UI is not module-gated: the same document and the
+    /// same code ship with and without physics.
     #[test]
     fn new_game_project_teaches_the_ui_pattern() {
         let dest = temp_dir("newgame-ui").join("my-game");
@@ -3854,22 +3865,19 @@ mod tests {
         let lib = std::fs::read_to_string(dest.join("src/lib.rs")).unwrap();
         for needle in [
             "struct GameState",
-            "menu: true",
+            "pub paused: bool",
             "struct ScreenPressed",
             "register_function(ratio)",
             "register_function(is_zero)",
             "register_function(not)",
-            "fn spawn_hud",
-            "(spawn_scene, spawn_hud).chain()",
-            "JackdawSceneRoot(asset_server.load(\"hud.bsn\"))",
+            "fn spawn_hud_while_level",
+            "fn spawn_scene",
             "fn wire_hud",
             "BindContext(player)",
             "struct HudRoot",
             "Added<HudRoot>",
             "fn on_screen_pressed",
-            "\"start\" => state.menu = false",
             "\"resume\" => state.paused = false",
-            "\"restart\" =>",
             "fn handle_pause_action",
             "just_pressed(\"Pause\")",
             "add_systems(Update, handle_pause_action.before(move_player))",
@@ -3880,30 +3888,39 @@ mod tests {
                 "the template must teach `{needle}`; the game UI pattern drifted"
             );
         }
-        // The hud document itself: the four screens, the state the
-        // screens' visibility follows, the bindings that carry the
+        // The hud document itself: the two overlays, the state the
+        // pause veil's visibility follows, the bindings that carry the
         // pattern, and the bar half that turns two fields into a fill.
+        // The start and game-over screens live in their own documents
+        // now (the flow's, see the scene flow test below).
         let hud = std::fs::read_to_string(dest.join("assets/hud.bsn")).unwrap();
         for needle in [
             "UiSceneRoot",
-            "#StartScreen",
             "#Hud",
             "#PauseScreen",
-            "#GameOverScreen",
             "my_game::GameState",
             "my_game::PlayerHealth",
             "Binding::Visible",
             "Binding::Action",
+            "[[\"button\", \"resume\"]]",
             "Binding::Field",
             "Binding::Text",
             "via: core::option::Option::Some(\"ratio\")",
-            "via: core::option::Option::Some(\"not\")",
-            "[[\"button\", \"start\"]]",
             "ProgressFill",
         ] {
             assert!(
                 hud.contains(needle),
                 "the hud seed must carry `{needle}`; the game UI document drifted"
+            );
+        }
+        for gone in [
+            "#StartScreen",
+            "#GameOverScreen",
+            "my_game::GameState).menu",
+        ] {
+            assert!(
+                !hud.contains(gone),
+                "the hud seed's `{gone}` moved to the flow documents"
             );
         }
         assert!(
@@ -3913,7 +3930,7 @@ mod tests {
         );
 
         // The UI is not module-gated: a no-physics project ships the
-        // same screens, the same state machine and the same wiring,
+        // same overlays, the same state machine and the same wiring,
         // with only the damage source traded for the Interact key.
         let plain = temp_dir("newgame-ui-plain").join("my-game");
         scaffold_new_project_with(
@@ -3926,8 +3943,7 @@ mod tests {
         let plain_lib = std::fs::read_to_string(plain.join("src/lib.rs")).unwrap();
         for stays in [
             "struct GameState",
-            "fn spawn_hud",
-            "(spawn_scene, spawn_hud).chain()",
+            "fn spawn_hud_while_level",
             "register_function(ratio)",
             "fn wire_hud",
             "BindContext(player)",
@@ -3940,17 +3956,18 @@ mod tests {
         }
         let plain_hud = std::fs::read_to_string(plain.join("assets/hud.bsn")).unwrap();
         assert!(
-            plain_hud.contains("UiSceneRoot") && plain_hud.contains("#StartScreen"),
+            plain_hud.contains("UiSceneRoot") && plain_hud.contains("#PauseScreen"),
             "the hud document ships without the physics module too"
         );
     }
 
     /// The health pattern the template teaches: a live component on the
     /// player, the config's number handed over on load, damage clamped
-    /// at zero, game over read off the same component. With physics the
-    /// damage source is a hazard sensor carrying the docs' collision-
-    /// layer row and the restart respawns the pickups; without it the
-    /// Interact key stands in — component, bar and gate are the same.
+    /// at zero, the flow state reading the same component for the end
+    /// of a run. With physics the damage source is a hazard sensor
+    /// carrying the docs' collision-layer row and the level's props are
+    /// state-scoped; without it the Interact key stands in — component,
+    /// bar and gate are the same.
     #[test]
     fn new_game_project_teaches_the_health_pattern() {
         let dest = temp_dir("newgame-health").join("my-game");
@@ -3966,7 +3983,7 @@ mod tests {
             "fn take_damage",
             "const PLAYER_DAMAGE: f32 = 15.0",
             "fn update_game_over",
-            "health.current = health.max",
+            "health.current = config.player_health",
             "const PLAYER_SPAWN: Vec3",
             "fn ratio(",
         ] {
@@ -3976,11 +3993,15 @@ mod tests {
             );
         }
         // The physics damage source: a hazard sensor on the docs' row.
+        // The restart's reset is the flow's (every level entry), split
+        // across `reset_run` (health, spawn point) and the physics
+        // module's counters.
         for needle in [
             "struct Hazard",
             "fn spawn_hazards",
             "fn hazard_damage",
-            "fn respawn_pickups_on_restart",
+            "fn reset_run_counters",
+            "DespawnOnExit(GameFlow::Level)",
             "CollisionLayers::new",
             "LayerMask(0b100)",
             "LayerMask(0b001)",
@@ -4025,9 +4046,11 @@ mod tests {
 
     /// The scene flow pattern the template teaches (T13): the project's
     /// `game.flow.json` names the scene a standalone run starts from,
-    /// the startup line composes the editor's Play override around that
-    /// read, and the seed file ships so a new project is flow-configured
-    /// from its first `cargo run`.
+    /// the boot line composes the editor's Play override around that
+    /// read, the initial `GameFlow` state maps from the same scene, and
+    /// the three flow documents ship as real scene files so a new
+    /// project plays menu → level → game over from its first `cargo
+    /// run`.
     #[test]
     fn new_game_project_teaches_the_scene_flow_pattern() {
         let dest = temp_dir("newgame-flow").join("my-game");
@@ -4039,20 +4062,55 @@ mod tests {
             // The flow read and the Play override composed around it.
             "flow::start_scene_or",
             "pie_scene_or(",
-            // The code's scene is the innermost fallback.
-            "\"scene.bsn\"",
+            // The state machine the flow moves, and the boot mapping
+            // from the start scene to the initial state.
+            "enum GameFlow",
+            "fn boot_state",
+            "insert_state(boot_state(&start))",
+            // The switch itself: one handle re-bind per state.
+            "fn enter_level",
+            "struct GameRoot",
         ] {
             assert!(
                 lib.contains(needle),
                 "the template must teach `{needle}`; the scene flow pattern drifted"
             );
         }
-        // The seed file ships, names a start scene and lists it.
+        // The seed file ships the whole game: the menu starts, and the
+        // list names every document the flow moves between.
         let flow_seed = std::fs::read_to_string(dest.join("assets/game.flow.json")).unwrap();
-        for needle in ["start_scene", "scene.bsn"] {
+        for needle in ["start_scene", "menu.bsn", "scene.bsn", "gameover.bsn"] {
             assert!(
                 flow_seed.contains(needle),
                 "the flow seed must carry `{needle}`; the scene flow seed drifted"
+            );
+        }
+        // The flow documents themselves ship as real scene files: the
+        // menu with its Start button, the end screen with Restart and
+        // Menu, each carrying its flow marker and the ScreenPressed
+        // action binding the observer reads.
+        let menu = std::fs::read_to_string(dest.join("assets/menu.bsn")).unwrap();
+        for needle in [
+            "UiSceneRoot",
+            "my_game::MenuRoot",
+            "my_game::ScreenPressed",
+            "[[\"button\", \"start\"]]",
+        ] {
+            assert!(
+                menu.contains(needle),
+                "the menu seed must carry `{needle}`; the menu document drifted"
+            );
+        }
+        let gameover = std::fs::read_to_string(dest.join("assets/gameover.bsn")).unwrap();
+        for needle in [
+            "UiSceneRoot",
+            "my_game::GameOverRoot",
+            "[[\"button\", \"restart\"]]",
+            "[[\"button\", \"menu\"]]",
+        ] {
+            assert!(
+                gameover.contains(needle),
+                "the game-over seed must carry `{needle}`; the game-over document drifted"
             );
         }
     }

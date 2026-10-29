@@ -132,9 +132,12 @@ edit as numbers in the Components panel and round-trip through
 save and reload unchanged.
 
 The template's hazards do real work through exactly that row:
-`hazard_damage` burns 15 health per touch, and the HUD's health
-bar and text are bound to the same `PlayerHealth` the sensor
-writes — [Game UI](game-ui.md) covers the screen side.
+`hazard_damage` burns 15 health per touch — only while the flow is in
+the level, and the hazards themselves are level props, state-scoped
+with the rest of the scene's scenery ([Game
+Flow](game-flow.md)) — and the HUD's health bar and text are bound to
+the same `PlayerHealth` the sensor writes ([Game UI](game-ui.md)
+covers the screen side).
 
 One engine boundary worth knowing: the broad phase pairs bodies
 when they enter the simulation. Re-layering a body that then
