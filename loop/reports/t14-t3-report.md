@@ -250,3 +250,12 @@ headless-only 升格为双证）。
 | `loop/t14-live/`（终轮覆盖） | console-all.log、editor-all.log、summary*.txt、pf1-live-witness.txt、n13-count.txt、shot-l2-inspector.* |
 | `loop/qa/t14t3-gates.sh` + `loop/reports/t14t3_*.log` | 门链脚本 + 各门日志 + exitcodes |
 | `loop/reports/t14t2_gate_fast-prog.log` | T2 程序侧 fast 门原日志（QA 归档注记的 *-prog 保留件，随本提交入库） |
+
+---
+
+## 勘误（2026-10-29 主控落，QA t14-final-qa.md 回流）
+
+1. **N13 记数**：终轮实为 **1 条** `drain_game_events` panic（正文记 0）——根因=脚本 all 模式扫描 grep 陈旧分相文件名（QA 对真实终轮日志独立复扫证实；缺陷形态 0 条、编辑器存活，绕行口径维持）；脚本 grep 修正入 buglist A7。
+2. **L4 措辞**：rock_b 实测 [2.0, 4.0, 1.0]=**未冻结活证**（applied 传播跟随面），「授权覆盖保 [2,1,1]」措辞有误；覆盖保留面由 L2b rock_a 承载。
+3. **趋势线**：第 2 轮实为 15 PASS（非 16）；第 3 轮 prog 截断不可复数。
+4. flake 台账：程序 integration 轮 1 件 `stage add_component` TRY1 红→TRY2 绿自愈（QA 轮零 flake，域与 T14 零交集）。

@@ -456,6 +456,10 @@
   `prefab_file_change_triggers_reload`：T12 终验首红（隔离绿）→T13-T3 **三轮连续同红**（watcher 3s 预算 8-13s）→QA 四腿闭合：本树隔离单测 3/3 绿（~2s）/本树全 prefab 二进制 2 次红（88/1）/**git worktree 干净 main（3fe6aa7d）同红 88/1 同签名 prefab_lifecycle.rs:714**/diff 18 文件与 watcher 域零交集——**存量基建票非产品缺陷**（Windows T10a 全绿=无此负载形态）。触发器=二进制内 89 件并行对 3s FSEvents 预算的挤压；**磁盘高压为加重因子**（T13 终验 scaffold_e2e 首跑 ENOSPC 数据卷 100%，清 46GB 后 PASS——scaffold_e2e 临时目录泄漏 46GB/17GB 实测，并账同一「磁盘高压伤门禁」家族）。
   修复方向（立项后定）：watcher 预算平台校准或测试域串行化；scaffold_e2e 临时目录清理钩子。处置前 integration 该件按「已定案环境票」口径放行。
 
+- [ ] **A7. t14 真机驱动脚本工具债（对话框提交+字段行定位族 5 腿+陈旧 grep）**（2026-10-29 T14 终验回流；主控批准立账——MCP 优先原则：修工具不硬耗）
+  `loop/qa/t14-live.sh` 五腿（L2_REVERT_FIELD/L3_SAVE_AS_VARIANT·PREFAB/L3_UNBUNDLE/L8_PACK）收敛在「对话框提交+字段行定位」脚本驱动缺口（语义面 headless 锚全数在档零缺口，t14-final-qa.md §七）；另 all 模式 warn/N13 扫描 grep 引用陈旧分相文件名（:799-803/:898-903 应随 `$PHASE` 改 `editor-$PHASE.log`——T14 终轮 N13 实为 1 条被记 0）。
+  修复方向：对话框提交通道（dialog.answer 已有 BRP 面可接）+Inspector 字段行定位强化（ui_tree 行渲染缺口 T13 已见同族）；grep 随相位修。T15 动画面板驱动同族将再踩，宜先修。
+
 - [x] **N10. dirty 场景 + Save 态 play_current 真机冻结编辑器主线程（2026-10-26 T06-T3 矩阵 cell 3 发现）**
   触发：打开已保存场景 → 任意编辑（脏）→ `pie.play_current`（save 策略，默认态）→ play_current 调用正常返回，**下一帧起主线程满 CPU 自旋**（实测 CPU/4s≈5s），BRP 全部无响应，日志停在 `OPERATOR: pie.play_current` 后零输出（保存链最早期）。
   实证（`loop/t06t3_probe_freeze*.log`）：① main 基线（66ef15e8，无 T3 改动）同样冻结=**既有 bug**（T1 的 Save 态 dirty play 真机路径从未跑过，headless guards 全绿）；② clean 场景 play、untitled/dirty + Copy 态 play、Ask→Copy 均不冻；③ connected 后 stop 不冻，但 connecting 窗口内 stop 也触发同款冻结（T3 曾放宽 avail 门后实测 100% 复现，已回退该放宽，connecting-stop 恢复 avail 拒绝+重试语义封路）；④ 保存链单独走（scene.save op）不冻——冻结需要「保存链 + PIE 启动」同帧组合。
