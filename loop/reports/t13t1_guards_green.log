@@ -1,0 +1,13 @@
+   Compiling jackdaw v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw)
+    Finished `test` profile [optimized + debuginfo] target(s) in 3.79s
+     Running tests/guards/main.rs (target/debug/deps/guards-f290a7d65ab86725)
+
+running 5 tests
+test game_flow::bindings_rewire_onto_the_freshly_spawned_scene ... ok
+test game_flow::one_click_is_one_event_across_scene_reloads ... ok
+test game_flow::five_round_trips_land_on_identical_counts ... ok
+test game_flow::a_broken_target_refuses_loudly_and_recovers ... ok
+test game_flow::a_switch_leaves_zero_residue_in_both_directions ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 229 filtered out; finished in 1.18s
+

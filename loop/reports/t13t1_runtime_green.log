@@ -1,0 +1,25 @@
+   Compiling jackdaw_runtime v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_runtime)
+    Finished `test` profile [optimized + debuginfo] target(s) in 6.71s
+     Running tests/scene_root_change.rs (target/debug/deps/scene_root_change-54b8192707b0e70e)
+
+running 4 tests
+test rewriting_the_live_handle_is_not_a_switch ... ok
+test rebinding_a_spawned_root_swaps_the_scene_under_it ... ok
+test switching_twice_in_one_frame_lands_on_the_last_target ... ok
+test rebinding_to_a_broken_scene_refuses_and_a_later_rebind_recovers ... FAILED
+
+failures:
+
+---- rebinding_to_a_broken_scene_refuses_and_a_later_rebind_recovers stdout ----
+
+thread 'rebinding_to_a_broken_scene_refuses_and_a_later_rebind_recovers' (15817252) panicked at crates/jackdaw_runtime/tests/scene_root_change.rs:271:5:
+the root says the load was refused
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    rebinding_to_a_broken_scene_refuses_and_a_later_rebind_recovers
+
+test result: FAILED. 3 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 4.20s
+
+error: test failed, to rerun pass `-p jackdaw_runtime --test scene_root_change`

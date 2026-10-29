@@ -1,0 +1,6 @@
+EDITOR_READY
+STAND_FLOW_PASS
+LEG_SET_PASS
+LEG_WARN_FAIL warnings did not clear
+loop/qa/t13t2-live.sh: line 50:  8614 Terminated: 15          JACKDAW_OPEN_PROJECT="$PROJECT" JACKDAW_REMOTE_PORT="$PORT" JACKDAW_WINDOW_SIZE=1600x900 nohup env DYLD_LIBRARY_PATH="$TOOLCHAIN_LIB" ./target/debug/jackdaw > "$OUTDIR/editor.log" 2>&1
+CHAIN_EXIT=1

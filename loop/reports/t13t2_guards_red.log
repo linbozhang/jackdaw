@@ -1,0 +1,30 @@
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on build directory
+   Compiling jackdaw_project_build v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_project_build)
+   Compiling jackdaw_runtime v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_runtime)
+   Compiling jackdaw_scaffold v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_scaffold)
+   Compiling jackdaw_avian_integration v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/integrations/physics/jackdaw_avian_integration)
+   Compiling jackdaw_physics v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/integrations/physics/jackdaw_physics)
+   Compiling jackdaw v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw)
+error[E0432]: unresolved import `jackdaw_project_build::flow`
+  --> tests/guards/game_flow_config.rs:21:5
+   |
+21 | use jackdaw_project_build::flow;
+   |     ^^^^^^^^^^^^^^^^^^^^^^^----
+   |                            |
+   |                            no `flow` in the root
+
+error[E0432]: unresolved import `jackdaw_runtime::flow`
+  --> tests/guards/game_flow_config.rs:22:5
+   |
+22 | use jackdaw_runtime::flow as runtime_flow;
+   |     ^^^^^^^^^^^^^^^^^----^^^^^^^^^^^^^^^^
+   |                      |
+   |                      no `flow` in the root
+
+For more information about this error, try `rustc --explain E0432`.
+error: could not compile `jackdaw` (test "guards") due to 2 previous errors
+warning: build failed, waiting for other jobs to finish...
+GUARDS_EXIT=101

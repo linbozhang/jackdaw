@@ -1,0 +1,31 @@
+jd new: /tmp/t13t3-plain is not a directory
+jd new: created /tmp/t13t3-plain/plaingame
+  modules: none
+  scaffolded 10 files
+  checking dependencies resolve...
+
+note: this jackdaw runs from the checkout at /Users/zhanglinbo/workspace/jackdaw, so the new project depends on its crates by path. That Cargo.toml is local to this machine; switch those back to versions before sharing it.
+
+Next:
+  jd open /tmp/t13t3-plain/plaingame
+or `cargo run` in that directory to play standalone.
+jd new: created /tmp/t13t3-plain/plaingame
+  modules: none
+  scaffolded 10 files
+  checking dependencies resolve...
+
+note: this jackdaw runs from the checkout at /Users/zhanglinbo/workspace/jackdaw, so the new project depends on its crates by path. That Cargo.toml is local to this machine; switch those back to versions before sharing it.
+
+Next:
+  jd open /tmp/t13t3-plain/plaingame
+or `cargo run` in that directory to play standalone.
+jd new: created /tmp/t13t3-plain/plaingame
+  modules: none
+  scaffolded 12 files
+  checking dependencies resolve...
+
+note: this jackdaw runs from the checkout at /Users/zhanglinbo/workspace/jackdaw, so the new project depends on its crates by path. That Cargo.toml is local to this machine; switch those back to versions before sharing it.
+
+Next:
+  jd open /tmp/t13t3-plain/plaingame
+or `cargo run` in that directory to play standalone.

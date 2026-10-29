@@ -1,0 +1,50 @@
+SEED_FLOW={  "start_scene": "scene.bsn",  "scenes": [    "scene.bsn"  ]}
+PREP_OK
+EDITOR_READY
+STAND_FLOW_PASS
+SEED_FLOW={  "start_scene": "scene.bsn",  "scenes": [    "scene.bsn"  ]}
+PREP_OK
+EDITOR_READY
+STAND_FLOW_PASS
+EXP1_FAIL no exe
+RESULTS: STAND_FLOW=PASS 
+SEED_FLOW={  "start_scene": "scene.bsn",  "scenes": [    "scene.bsn"  ]}
+PREP_OK
+EDITOR_READY
+STAND_FLOW_PASS
+EXP1_STAGED_TREE_PASS
+EXP1_FAIL no Root (scene.bsn root) in game
+RESULTS: EXP1_STAGED_TREE=PASS STAND_FLOW=PASS 
+EXP1_STAGED_TREE_PASS
+EXP1_FAIL no Root (scene.bsn root) in game
+EXP1_STAGED_TREE_PASS
+EXP1_FAIL no Root (scene.bsn root) in game
+EXP1_STAGED_TREE_PASS
+EXP1_PASS
+EDITOR_READY
+STAND_FLOW_PASS
+LEG_SET_FAIL disk json
+EDITOR_READY
+STAND_FLOW_PASS
+LEG_SET_FAIL warnings
+EDITOR_READY
+STAND_FLOW_PASS
+LEG_SET_PASS
+LEG_WARN_FAIL warnings did not clear
+EDITOR_READY
+STAND_FLOW_PASS
+LEG_SET_PASS
+LEG_WARN_PASS
+EXP2_STAGED_TREE_PASS
+EXP2_PASS
+LEG_MENU_FAIL item missing
+EDITOR_READY
+STAND_FLOW_FAIL wrong start scene
+EDITOR_READY
+STAND_FLOW_CONSISTENT (non-seed state)
+LEG_MENU_FAIL item missing
+EDITOR_READY
+STAND_FLOW_CONSISTENT (non-seed state)
+LEG_MENU_SKIP tile not found
+EDITOR_READY
+STAND_FLOW_CONSISTENT (non-seed state)

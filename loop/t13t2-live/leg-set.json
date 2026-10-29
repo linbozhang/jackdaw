@@ -1,0 +1,1 @@
+{"jsonrpc":"2.0","id":19316,"result":{"path":"/Users/zhanglinbo/workspace/loop-mac/t13t2/t13t2-game/assets/game.flow.json","present":true,"scenes":[{"on_disk":true,"path":"scene.bsn"},{"on_disk":true,"path":"level2.bsn"}],"start_scene":"level2.bsn","warnings":[]}}

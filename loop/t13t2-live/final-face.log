@@ -1,0 +1,3 @@
+EDITOR_READY
+STAND_FLOW_CONSISTENT (non-seed state)
+loop/qa/t13t2-live.sh: line 50: 15034 Terminated: 15          JACKDAW_OPEN_PROJECT="$PROJECT" JACKDAW_REMOTE_PORT="$PORT" JACKDAW_WINDOW_SIZE=1600x900 nohup env DYLD_LIBRARY_PATH="$TOOLCHAIN_LIB" ./target/debug/jackdaw > "$OUTDIR/editor.log" 2>&1

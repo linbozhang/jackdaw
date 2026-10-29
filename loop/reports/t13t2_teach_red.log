@@ -1,0 +1,28 @@
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+   Compiling jackdaw_project_build v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_project_build)
+   Compiling jackdaw_scaffold v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_scaffold)
+    Finished `test` profile [optimized + debuginfo] target(s) in 5.28s
+     Running unittests src/lib.rs (target/debug/deps/jackdaw_scaffold-7e9aed5f1ffff4b1)
+
+running 1 test
+test tests::new_game_project_teaches_the_scene_flow_pattern ... FAILED
+
+failures:
+
+---- tests::new_game_project_teaches_the_scene_flow_pattern stdout ----
+
+thread 'tests::new_game_project_teaches_the_scene_flow_pattern' (15952343) panicked at crates/jackdaw_scaffold/src/lib.rs:4045:13:
+the template must teach `game.flow.json`; the scene flow pattern drifted
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    tests::new_game_project_teaches_the_scene_flow_pattern
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 87 filtered out; finished in 0.03s
+
+error: test failed, to rerun pass `-p jackdaw_scaffold --lib`
+TEACH_EXIT=101

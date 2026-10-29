@@ -1,0 +1,27 @@
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on build directory
+   Compiling jackdaw_project_build v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_project_build)
+   Compiling jackdaw_scaffold v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_scaffold)
+   Compiling jackdaw v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw)
+    Finished `test` profile [optimized + debuginfo] target(s) in 2m 16s
+     Running tests/guards/main.rs (target/debug/deps/guards-f290a7d65ab86725)
+
+running 12 tests
+test game_flow_config::no_flow_file_is_the_quiet_default ... ok
+test game_flow_config::a_bsb_twin_counts_as_on_disk ... ok
+test game_flow_config::pie_temp_copy_paths_are_not_held_to_disk ... ok
+test game_flow_config::a_healthy_flow_inspects_clean ... ok
+test game_flow_config::the_write_helper_round_trips ... ok
+test game_flow_config::the_runtime_reader_reaches_the_same_verdicts ... ok
+test game_flow_config::the_matrix_of_broken_shapes_all_warn ... ok
+test game_flow::a_broken_target_refuses_loudly_and_recovers ... ok
+test game_flow::bindings_rewire_onto_the_freshly_spawned_scene ... ok
+test game_flow::one_click_is_one_event_across_scene_reloads ... ok
+test game_flow::five_round_trips_land_on_identical_counts ... ok
+test game_flow::a_switch_leaves_zero_residue_in_both_directions ... ok
+
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 229 filtered out; finished in 1.45s
+
+EXIT=0

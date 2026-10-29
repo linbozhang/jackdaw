@@ -1,0 +1,48 @@
+   Compiling jackdaw v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw)
+    Finished `test` profile [optimized + debuginfo] target(s) in 4.04s
+     Running tests/guards/main.rs (target/debug/deps/guards-f290a7d65ab86725)
+
+running 5 tests
+test game_flow::a_switch_leaves_zero_residue_in_both_directions ... FAILED
+test game_flow::a_broken_target_refuses_loudly_and_recovers ... FAILED
+test game_flow::five_round_trips_land_on_identical_counts ... FAILED
+test game_flow::bindings_rewire_onto_the_freshly_spawned_scene ... FAILED
+test game_flow::one_click_is_one_event_across_scene_reloads ... ok
+
+failures:
+
+---- game_flow::a_switch_leaves_zero_residue_in_both_directions stdout ----
+
+thread 'game_flow::a_switch_leaves_zero_residue_in_both_directions' (15814568) panicked at tests/guards/game_flow.rs:442:5:
+assertion `left == right` failed: the first load is the single-load baseline
+  left: Counts { entities: 234, members: 1, roots: 1, scenes: 3, catalog: 0 }
+ right: Counts { entities: 234, members: 1, roots: 1, scenes: 1, catalog: 0 }
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- game_flow::a_broken_target_refuses_loudly_and_recovers stdout ----
+
+thread 'game_flow::a_broken_target_refuses_loudly_and_recovers' (15814567) panicked at tests/guards/game_flow.rs:744:9:
+the refused switch says so on the root
+
+---- game_flow::five_round_trips_land_on_identical_counts stdout ----
+
+thread 'game_flow::five_round_trips_land_on_identical_counts' (15814570) panicked at tests/guards/game_flow.rs:542:21:
+assertion `left == right` failed: MenuRoot must not outlive its scene at LevelRoot
+  left: 1
+ right: 0
+
+---- game_flow::bindings_rewire_onto_the_freshly_spawned_scene stdout ----
+
+thread 'game_flow::bindings_rewire_onto_the_freshly_spawned_scene' (15814569) panicked at tests/guards/game_flow.rs:643:5:
+the first menu (and its context with it) is gone
+
+
+failures:
+    game_flow::a_broken_target_refuses_loudly_and_recovers
+    game_flow::a_switch_leaves_zero_residue_in_both_directions
+    game_flow::bindings_rewire_onto_the_freshly_spawned_scene
+    game_flow::five_round_trips_land_on_identical_counts
+
+test result: FAILED. 1 passed; 4 failed; 0 ignored; 0 measured; 229 filtered out; finished in 10.53s
+
+error: test failed, to rerun pass `-p jackdaw --test guards`

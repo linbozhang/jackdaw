@@ -1,0 +1,2 @@
+the start scene 'typo.bsn' is not in the scene list
+the start scene 'typo.bsn' is not on disk; the game will start from the scene its code names

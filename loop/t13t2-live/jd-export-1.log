@@ -1,0 +1,7 @@
+jackdaw export: building /Users/zhanglinbo/workspace/loop-mac/t13t2/t13t2-game with profile release
+jackdaw build: building /Users/zhanglinbo/workspace/loop-mac/t13t2/t13t2-game
+building t13t2-game as a cargo binary in /Users/zhanglinbo/workspace/loop-mac/t13t2/t13t2-game, into /Users/zhanglinbo/workspace/loop-mac/t13t2/t13t2-game/.jackdaw/target/game
+jackdaw build: ok (633 components); binary at /Users/zhanglinbo/workspace/loop-mac/t13t2/t13t2-game/.jackdaw/target/game/release/t13t2-game, schema at /Users/zhanglinbo/workspace/loop-mac/t13t2/t13t2-game/.jackdaw/schema.json
+jackdaw export: staged /Users/zhanglinbo/workspace/loop-mac/t13t2/t13t2-game/.jackdaw/dist/release/t13t2-game (5 files) in /Users/zhanglinbo/workspace/loop-mac/t13t2/t13t2-game/.jackdaw/dist/release
+jackdaw export: manifest written: /Users/zhanglinbo/workspace/loop-mac/t13t2/t13t2-game/.jackdaw/dist/release/export-manifest.json (5 files with sha256)
+EXP1_EXIT=0

@@ -1,0 +1,11 @@
+SEED_FLOW={  "start_scene": "scene.bsn",  "scenes": [    "scene.bsn"  ]}
+PREP_OK
+EDITOR_READY
+STAND_FLOW_PASS
+EXP1_EXIT=0
+EXP1_STAGED_TREE_PASS
+EXP1_FAIL no Root (scene.bsn root) in game
+loop/qa/t13t2-live.sh: line 102:  4826 Terminated: 15          nohup ./t13t2-game >> "$OUTDIR/staged-$1.log" 2>&1
+RESULTS: EXP1_STAGED_TREE=PASS STAND_FLOW=PASS 
+loop/qa/t13t2-live.sh: line 50: 98898 Terminated: 15          JACKDAW_OPEN_PROJECT="$PROJECT" JACKDAW_REMOTE_PORT="$PORT" JACKDAW_WINDOW_SIZE=1600x900 nohup env DYLD_LIBRARY_PATH="$TOOLCHAIN_LIB" ./target/debug/jackdaw > "$OUTDIR/editor.log" 2>&1
+ALL_EXIT=0
