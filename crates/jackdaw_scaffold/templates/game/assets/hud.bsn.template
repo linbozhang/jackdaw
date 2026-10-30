@@ -95,5 +95,56 @@ bevy_ui::ui_node::Node {
             bevy_ui::widget::text::Text("Resume")
             bevy_feathers::theme::ThemedText
         ]
+        --
+        #MasterVolumeRow
+        bevy_ui::ui_node::Node {
+            width: bevy_ui::geometry::Val::Px(280.0),
+            flex_direction: bevy_ui::ui_node::FlexDirection::Row,
+            align_items: bevy_ui::ui_node::AlignItems::Center,
+            column_gap: bevy_ui::geometry::Val::Px(12.0),
+        }
+        bevy_ecs::hierarchy::Children [
+            #MasterVolumeLabel
+            bevy_ui::widget::text::Text("Master")
+            bevy_feathers::theme::ThemedText
+            --
+            #MasterVolumeSlider
+            bevy_feathers::controls::slider::FeathersSlider
+            {{crate_name}}::MasterVolumeSlider
+        ]
+        --
+        #MusicVolumeRow
+        bevy_ui::ui_node::Node {
+            width: bevy_ui::geometry::Val::Px(280.0),
+            flex_direction: bevy_ui::ui_node::FlexDirection::Row,
+            align_items: bevy_ui::ui_node::AlignItems::Center,
+            column_gap: bevy_ui::geometry::Val::Px(12.0),
+        }
+        bevy_ecs::hierarchy::Children [
+            #MusicVolumeLabel
+            bevy_ui::widget::text::Text("Music")
+            bevy_feathers::theme::ThemedText
+            --
+            #MusicVolumeSlider
+            bevy_feathers::controls::slider::FeathersSlider
+            {{crate_name}}::MusicVolumeSlider
+        ]
+        --
+        #SfxVolumeRow
+        bevy_ui::ui_node::Node {
+            width: bevy_ui::geometry::Val::Px(280.0),
+            flex_direction: bevy_ui::ui_node::FlexDirection::Row,
+            align_items: bevy_ui::ui_node::AlignItems::Center,
+            column_gap: bevy_ui::geometry::Val::Px(12.0),
+        }
+        bevy_ecs::hierarchy::Children [
+            #SfxVolumeLabel
+            bevy_ui::widget::text::Text("Sfx")
+            bevy_feathers::theme::ThemedText
+            --
+            #SfxVolumeSlider
+            bevy_feathers::controls::slider::FeathersSlider
+            {{crate_name}}::SfxVolumeSlider
+        ]
     ]
 ]

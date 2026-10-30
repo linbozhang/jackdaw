@@ -16,6 +16,16 @@ bevy_ecs::hierarchy::Children [
     bevy_ui::widget::text::Text("{{project-name | title_case}}")
     bevy_feathers::theme::ThemedText
     --
+    #RunsText
+    bevy_ui::widget::text::Text("Runs: 0")
+    bevy_feathers::theme::ThemedText
+    jackdaw_bind::types::Bindings([jackdaw_bind::types::Binding::Text { format: "Runs: {}", args: [jackdaw_bind::types::BindPath { raw: "Res({{crate_name}}::GameState).runs_played" }] }])
+    --
+    #UnlockText
+    bevy_ui::widget::text::Text("")
+    bevy_feathers::theme::ThemedText
+    jackdaw_bind::types::Bindings([jackdaw_bind::types::Binding::Text { format: "{}", args: [jackdaw_bind::types::BindPath { raw: "Res({{crate_name}}::GameState).unlock_note" }] }])
+    --
     #StartButton
     bevy_ui::ui_node::Node {
         min_width: bevy_ui::geometry::Val::Px(96.0),

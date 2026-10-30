@@ -1,0 +1,29 @@
+L1: authored audio did not stand ({"master":0.41999998688697815,"music":1.0,"sfx":1.0})
+L1: mutate landed save.json with audio.master=0.7
+L1 first run complete, ok=false
+L1_FIRST_RUN_FAIL
+L2: saved input lost Move
+L2: saved rebind reads null
+L2 four classes complete, ok=false (file: {"save_version":1,"saved_at":"2026-10-30T15:45:40Z","profile":{"progress":{"runs_played":3},"unlocks":["endless"],"audio":{"master":0.7,"music":0.6,"sfx":0.5},"input":null}})
+L2_FOUR_CLASSES_FAIL
+L3: audio did not survive ({"dirty":false,"profile":{"audio":{"master":0.699999988079071,"music":0.6000000238418579,"sfx":0.5},"input":null,"progress":{"runs_played":3},"unlocks":["endless"]},"status":"Loaded"})
+L3: the rebind did not survive ({"dirty":false,"profile":{"audio":{"master":0.699999988079071,"music":0.6000000238418579,"sfx":0.5},"input":null,"progress":{"runs_played":3},"unlocks":["endless"]},"status":"Loaded"})
+L3: the bridge did not restore the mix ({"master":0.699999988079071,"music":0.6000000238418579,"sfx":0.5})
+L3: the merge did not restore the rebind ({"actions":[{"bindings":[{"Key":"KeyW"},{"Key":"KeyA"},{"Key":"KeyS"},{"Key":"KeyD"},{"GamepadAxis":{"axis":"LeftStickX","deadzone":0.15000000596046448}},{"GamepadAxis":{"axis":"LeftStickY","deadzone":0.15000000596046448}}],"kind":"Axis2D","name":"Move"},{"bindings":["MouseMotion",{"GamepadAxis":{"axis":"RightStickX","deadzone":0.15000000596046448}},{"GamepadAxis":{"axis":"RightStickY","deadzone":0.15000000596046448}}],"kind":"Delta2D","name":"Look"},{"bindings":[{"Key":"Space"},{"GamepadButton":"South"}],"kind":"Button","name":"Jump"},{"bindings":[{"Key":"KeyE"},{"GamepadButton":"East"}],"kind":"Button","name":"Interact"},{"bindings":[{"Key":"Escape"},{"GamepadButton":"Start"}],"kind":"Button","name":"Pause"}]})
+L3 kill -9 restart complete, ok=false
+L3_KILL9_RESTART_FAIL
+L7: ValueChange trigger did not land; documented fallback (config mutate)
+L7: slider position after restart =  (want 0.35)
+L7: the slider did not follow the restored mix ()
+L7 slider complete (mutate-fallback path), ok=false
+L7_SLIDER_FAIL
+M6: the authored edit washed the saved mix ({"master":0.3499999940395355,"music":0.6000000238418579,"sfx":0.5})
+M6: the authored values did not stand with no save ({"master":0.8999999761581421,"music":1.0,"sfx":1.0})
+M6 authored-vs-saved complete, ok=false
+M6_AUTHORED_VS_SAVED_FAIL
+L4 corrupt complete, ok=true (backups=1, warns=1)
+L4_M13_CORRUPT_PASS
+WARN_SCAN game phase: unattributed=15 (panics counted: 0)
+WARN_SCAN_GAME_FAIL
+unattributed warn lines (each must attribute):
+VERDICT_GAME_PHASE: L1_FIRST_RUN=FAIL L2_FOUR_CLASSES=FAIL L3_KILL9_RESTART=FAIL L4_M13_CORRUPT=PASS L7_SLIDER=FAIL M6_AUTHORED_VS_SAVED=FAIL WARN_SCAN_GAME=FAIL 

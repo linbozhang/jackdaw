@@ -12,17 +12,46 @@
 //! template's three-way mix around it. Once the entity's `SoundLive`
 //! mirror reports a playing sink, a second stderr line carries the mixed
 //! volume, so the real-pipeline proof covers audio too.
+//!
+//! T17: the game also wires the runtime's save layer (`SavePlugin`) the
+//! way the template does. When `JACKDAW_SAVE_DIR` names a scratch tree,
+//! the save demo runs: one run reports the load (`SAVE_FRESH` or
+//! `SAVE_LOADED runs=N`), then counts its run, writes, and reports the
+//! landed file (`SAVE_WRITTEN`). The saved audio stands over the
+//! hardcoded config (`SAVE_CONFIG`), the same order the template's
+//! bridges give the authored defaults. Without the seam nothing is
+//! written and no marker prints — a plain e2e run stays a fresh world.
 
 use bevy::audio::Volume;
 use bevy::prelude::*;
 use jackdaw_runtime::prelude::*;
 use jackdaw_scene_types::{SceneNodeId, types::ScatterGroup};
+use serde::{Deserialize, Serialize};
 
 /// The mix the probe reads back: master × music = 0.5 × 0.8, times the
-/// scene entity's authored base 0.4, lands at 0.16.
+/// scene entity's authored base 0.4, lands at 0.16. A save carrying
+/// audio preferences stands over these numbers (see `apply_saved_audio`).
 #[derive(Asset, Resource, Reflect, Clone, Default)]
 #[reflect(Resource, Default)]
 pub struct GameAudioConfig {
+    pub master: f32,
+    pub music: f32,
+    pub sfx: f32,
+}
+
+/// The player profile the fixture saves: the run counter and the audio
+/// mix, the template's shape reduced to what the double-run proof reads.
+#[derive(Reflect, Clone, Default, Serialize, Deserialize)]
+#[reflect(Default)]
+pub struct GameSave {
+    pub runs_played: u32,
+    pub audio: Option<AudioPrefs>,
+}
+
+/// The audio mix as the save holds it.
+#[derive(Reflect, Clone, Debug, Default, PartialEq, Serialize, Deserialize)]
+#[reflect(Default)]
+pub struct AudioPrefs {
     pub master: f32,
     pub music: f32,
     pub sfx: f32,
@@ -167,6 +196,11 @@ impl Plugin for GamePlugin {
                 music: 0.8,
                 sfx: 1.0,
             })
+            // The save layer, wired the way the template does it: the
+            // plugin owns the file, the bridge puts the saved mix over
+            // the hardcoded one, and the demo system (seam-gated, see
+            // its docs) reports and bumps the run counter.
+            .add_plugins(SavePlugin::<GameSave>::new(env!("CARGO_PKG_NAME")))
             .add_systems(Startup, spawn_scene)
             .add_systems(
                 Update,
@@ -182,6 +216,7 @@ impl Plugin for GamePlugin {
                         .chain(),
                     report_scene_loaded,
                     report_sound_live,
+                    (apply_saved_audio, run_save_demo).chain(),
                 ),
             );
     }
@@ -264,5 +299,80 @@ fn report_sound_live(mut done: Local<bool>, live: Query<&SoundLive>) {
         );
         *done = true;
         return;
+    }
+}
+
+/// Put the saved mix over the hardcoded one, once — the fixture has no
+/// config asset, so the hardcoded insert is the "authored layer" and the
+/// saved values stand over it. This is the M6 order (authored default <
+/// player saved) at engine level: a second run against the same slot
+/// plays and reports the saved master, not the hardcoded one.
+fn apply_saved_audio(
+    mut config: ResMut<GameAudioConfig>,
+    save: Res<SaveStore<GameSave>>,
+    mut done: Local<bool>,
+) {
+    if *done {
+        return;
+    }
+    if let Some(prefs) = save.profile.audio.as_ref() {
+        config.master = prefs.master;
+        config.music = prefs.music;
+        config.sfx = prefs.sfx;
+    }
+    *done = true;
+}
+
+/// The save demo, and the whole reason this fixture is a two-run proof.
+/// It only runs when `JACKDAW_SAVE_DIR` names a scratch tree — the seam
+/// discipline: a plain e2e run (no seam) stays a fresh world and writes
+/// nothing, so tests never touch the real player tree. With the seam:
+/// report the load (`SAVE_FRESH` / `SAVE_LOADED runs=N`, the config the
+/// bridge left in `SAVE_CONFIG`), count this run, let the plugin's flush
+/// land the file, then report it (`SAVE_WRITTEN runs=N`). Run one of the
+/// double-run writes a fresh save; run two loads it and bumps again —
+/// `a_save_survives_the_fixture_restart` reads exactly that off stderr.
+fn run_save_demo(
+    mut store: ResMut<SaveStore<GameSave>>,
+    config: Res<GameAudioConfig>,
+    mut phase: Local<u8>,
+) {
+    if std::env::var_os("JACKDAW_SAVE_DIR").is_none() {
+        return;
+    }
+    match *phase {
+        0 => {
+            match store.status {
+                SaveStatus::Loaded => {
+                    eprintln!("SAVE_LOADED runs={}", store.profile.runs_played);
+                }
+                _ => eprintln!("SAVE_FRESH"),
+            }
+            eprintln!("SAVE_CONFIG master={:.2}", config.master);
+            let profile = store.get_mut();
+            profile.runs_played += 1;
+            profile.audio = Some(AudioPrefs {
+                master: 0.9,
+                music: 0.8,
+                sfx: 1.0,
+            });
+            *phase = 1;
+        }
+        1 => {
+            if !store.dirty {
+                eprintln!(
+                    "SAVE_WRITTEN runs={} master={:.2}",
+                    store.profile.runs_played,
+                    store
+                        .profile
+                        .audio
+                        .as_ref()
+                        .map(|prefs| prefs.master)
+                        .unwrap_or_default(),
+                );
+                *phase = 2;
+            }
+        }
+        _ => {}
     }
 }

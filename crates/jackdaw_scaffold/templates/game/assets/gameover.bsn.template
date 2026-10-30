@@ -16,6 +16,11 @@ bevy_ecs::hierarchy::Children [
     bevy_ui::widget::text::Text("Game Over")
     bevy_feathers::theme::ThemedText
     --
+    #GameOverRunsText
+    bevy_ui::widget::text::Text("Runs: 0")
+    bevy_feathers::theme::ThemedText
+    jackdaw_bind::types::Bindings([jackdaw_bind::types::Binding::Text { format: "Runs: {}", args: [jackdaw_bind::types::BindPath { raw: "Res({{crate_name}}::GameState).runs_played" }] }])
+    --
     #RestartButton
     bevy_ui::ui_node::Node {
         min_width: bevy_ui::geometry::Val::Px(96.0),

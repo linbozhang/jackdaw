@@ -1,0 +1,17 @@
+L1: mutate landed save.json with audio.master=0.7
+L1 first run complete, ok=true
+L1_FIRST_RUN_PASS
+L2 four classes complete, ok=true (file: {"save_version":1,"saved_at":"2026-10-30T16:11:13Z","profile":{"progress":{"runs_played":3},"unlocks":["endless"],"audio":{"master":0.7,"music":0.6,"sfx":0.5},"input":[{"name":"Move","kind":"Axis2D","bindings":[{"Key":"KeyE"},{"Key":"KeyA"},{"Key":"KeyS"},{"Key":"KeyD"},{"GamepadAxis":{"axis":"LeftStickX","deadzone":0.15}},{"GamepadAxis":{"axis":"LeftStickY","deadzone":0.15}}]},{"name":"Look","kind":"Delta2D","bindings":["MouseMotion",{"GamepadAxis":{"axis":"RightStickX","deadzone":0.15}},{"GamepadAxis":{"axis":"RightStickY","deadzone":0.15}}]},{"name":"Jump","kind":"Button","bindings":[{"Key":"Space"},{"GamepadButton":"South"}]},{"name":"Interact","kind":"Button","bindings":[{"Key":"KeyE"},{"GamepadButton":"East"}]},{"name":"Pause","kind":"Button","bindings":[{"Key":"Escape"},{"GamepadButton":"Start"}]}]}})
+L2_FOUR_CLASSES_PASS
+L3 kill -9 restart complete, ok=true
+L3_KILL9_RESTART_PASS
+L7: slider position after restart = 0.3499999940395355 (want 0.35)
+L7 slider complete (trigger path), ok=true
+L7_SLIDER_PASS
+M6 authored-vs-saved complete, ok=true
+M6_AUTHORED_VS_SAVED_PASS
+L4 corrupt complete, ok=true (backups=1, warns=1)
+L4_M13_CORRUPT_PASS
+WARN_SCAN game phase: unattributed=0 (panics counted: 0)
+WARN_SCAN_GAME_PASS
+VERDICT_GAME_PHASE: L1_FIRST_RUN=PASS L2_FOUR_CLASSES=PASS L3_KILL9_RESTART=PASS L4_M13_CORRUPT=PASS L7_SLIDER=PASS M6_AUTHORED_VS_SAVED=PASS WARN_SCAN_GAME=PASS 
