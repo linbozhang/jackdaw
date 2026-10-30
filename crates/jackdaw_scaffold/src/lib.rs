@@ -3751,6 +3751,75 @@ mod tests {
         );
     }
 
+    /// The game template teaches the save pattern (T17): a player
+    /// profile (`GameSave`: progress, unlocks, audio, input) wired
+    /// through the runtime's `SavePlugin`, two bridges that restore
+    /// the saved settings over the authored config defaults, two
+    /// watchers that persist the player's changes, the run counter at
+    /// game over — and the settings face: the pause screen's three
+    /// volume sliders writing `GameAudioConfig` through a
+    /// `ValueChange` observer, and the menu reading the run counter.
+    #[test]
+    fn new_game_project_teaches_the_save_pattern() {
+        let dest = temp_dir("newgame-save").join("my-game");
+        scaffold_new_project(&dest, "my-game", TemplateKind::Game).unwrap();
+        let lib = std::fs::read_to_string(dest.join("src/lib.rs")).unwrap();
+        for needle in [
+            "struct GameSave",
+            "struct GameProgress",
+            "struct AudioPrefs",
+            "SavePlugin::<GameSave>::new(env!(\"CARGO_PKG_NAME\"))",
+            "register_type::<ValueChange<f32>>()",
+            "register_type::<FeathersSlider>()",
+            "fn apply_saved_audio",
+            "fn save_audio_changes",
+            "fn apply_saved_input",
+            "fn save_input_changes",
+            "fn count_run_over",
+            "fn mirror_save_display",
+            "fn attach_volume_sliders",
+            "fn on_volume_changed",
+            "fn sync_volume_sliders",
+            "spawn_scene(bsn! { @FeathersSlider })",
+            "struct MasterVolumeSlider",
+            "ConfigLoader<GameAudioConfig>",
+            "merge_actions(&config.actions, saved)",
+            "Saving progress and settings",
+        ] {
+            assert!(
+                lib.contains(needle),
+                "the template must teach `{needle}`; the save pattern drifted"
+            );
+        }
+        // The save profile carries serde derives, so the manifest must
+        // name serde itself (the runtime's copy does not leak through).
+        let cargo = std::fs::read_to_string(dest.join("Cargo.toml")).unwrap();
+        assert!(
+            cargo.contains("serde = { version = \"1\", features = [\"derive\"] }"),
+            "the game's manifest must carry serde's derive for the save profile:\n{cargo}"
+        );
+        // The settings face is authored: the pause screen carries the
+        // three themed sliders, and the menu and game-over documents
+        // read the run counter from the GameState mirror.
+        let hud = std::fs::read_to_string(dest.join("assets/hud.bsn")).unwrap();
+        for needle in ["MasterVolumeSlider", "MusicVolumeSlider", "SfxVolumeSlider"] {
+            assert!(
+                hud.contains(needle),
+                "the hud document must teach `{needle}`; the pause screen drifted"
+            );
+        }
+        let menu = std::fs::read_to_string(dest.join("assets/menu.bsn")).unwrap();
+        assert!(
+            menu.contains("Res(my_game::GameState).runs_played"),
+            "the menu must read the run counter from the mirror; the menu drifted:\n{menu}"
+        );
+        let gameover = std::fs::read_to_string(dest.join("assets/gameover.bsn")).unwrap();
+        assert!(
+            gameover.contains("Res(my_game::GameState).runs_played"),
+            "the game-over document must read the run counter; the document drifted"
+        );
+    }
+
     /// The physics module (on by default) shapes the template around
     /// its own teaching: the trigger bridge, the pickup demo, the
     /// collision-layer table, the gravity handoff, and a physical

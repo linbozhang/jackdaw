@@ -95,5 +95,73 @@ bevy_ui::ui_node::Node {
             bevy_ui::widget::text::Text("Resume")
             bevy_feathers::theme::ThemedText
         ]
+        --
+        // The three volume rows: an authored label and the marker the code
+        // hangs the slider on. A `FeathersSlider` is a scene component --
+        // as a bare component line in this document its scene never spawns
+        // and the widget sits dead -- so `attach_volume_sliders` in lib.rs
+        // attaches each slider's real scene to these rows after they spawn.
+        #MasterVolumeRow
+        bevy_ui::ui_node::Node {
+            width: bevy_ui::geometry::Val::Px(280.0),
+            flex_direction: bevy_ui::ui_node::FlexDirection::Row,
+            align_items: bevy_ui::ui_node::AlignItems::Center,
+            column_gap: bevy_ui::geometry::Val::Px(12.0),
+        }
+        bevy_ecs::hierarchy::Children [
+            #MasterVolumeLabel
+            bevy_ui::widget::text::Text("Master")
+            bevy_feathers::theme::ThemedText
+            --
+            #MasterVolumeSlider
+            {{crate_name}}::MasterVolumeSlider
+            bevy_ui::ui_node::Node {
+                width: bevy_ui::geometry::Val::Percent(62.0),
+                height: bevy_ui::geometry::Val::Px(24.0),
+                align_self: bevy_ui::style::AlignSelf::Center,
+            }
+        ]
+        --
+        #MusicVolumeRow
+        bevy_ui::ui_node::Node {
+            width: bevy_ui::geometry::Val::Px(280.0),
+            flex_direction: bevy_ui::ui_node::FlexDirection::Row,
+            align_items: bevy_ui::ui_node::AlignItems::Center,
+            column_gap: bevy_ui::geometry::Val::Px(12.0),
+        }
+        bevy_ecs::hierarchy::Children [
+            #MusicVolumeLabel
+            bevy_ui::widget::text::Text("Music")
+            bevy_feathers::theme::ThemedText
+            --
+            #MusicVolumeSlider
+            {{crate_name}}::MusicVolumeSlider
+            bevy_ui::ui_node::Node {
+                width: bevy_ui::geometry::Val::Percent(62.0),
+                height: bevy_ui::geometry::Val::Px(24.0),
+                align_self: bevy_ui::style::AlignSelf::Center,
+            }
+        ]
+        --
+        #SfxVolumeRow
+        bevy_ui::ui_node::Node {
+            width: bevy_ui::geometry::Val::Px(280.0),
+            flex_direction: bevy_ui::ui_node::FlexDirection::Row,
+            align_items: bevy_ui::ui_node::AlignItems::Center,
+            column_gap: bevy_ui::geometry::Val::Px(12.0),
+        }
+        bevy_ecs::hierarchy::Children [
+            #SfxVolumeLabel
+            bevy_ui::widget::text::Text("Sfx")
+            bevy_feathers::theme::ThemedText
+            --
+            #SfxVolumeSlider
+            {{crate_name}}::SfxVolumeSlider
+            bevy_ui::ui_node::Node {
+                width: bevy_ui::geometry::Val::Percent(62.0),
+                height: bevy_ui::geometry::Val::Px(24.0),
+                align_self: bevy_ui::style::AlignSelf::Center,
+            }
+        ]
     ]
 ]

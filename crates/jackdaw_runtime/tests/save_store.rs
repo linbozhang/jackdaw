@@ -486,6 +486,119 @@ fn a_registered_migration_upgrades_an_older_save() {
     assert_eq!(file_text(&dir), before);
 }
 
+/// The migration-boundary probes the T17-T1 QA ran as throwaways,
+/// absorbed here so they stay true (QA reflow F):
+///
+/// * a *degenerate* step (`from == to`) walks backwards — refused, the
+///   save is left untouched;
+/// * a step that *overshoots* the current version is still a legal
+///   walk: the loop stops at `SAVE_VERSION` and the profile's serde
+///   final check is the true gate, so the save loads;
+/// * a `save_version` too big for `u32` cannot be a version at all —
+///   it takes the damaged path (backed up, defaults in), never a
+///   `VersionSkipped` that would sit on the file forever.
+#[test]
+fn migration_chain_boundaries_stay_on_the_safe_side() {
+    let scratch = tempfile::tempdir().expect("tempdir");
+    let dir = scratch.path().join("boundary-game");
+
+    // Degenerate 0→0: refused as backwards, the file stands.
+    write_envelope(
+        &dir,
+        r#"{"save_version": 0, "saved_at": "2020-01-01T00:00:00Z", "profile": {"runs_played": 2}}"#,
+    );
+    let before = file_text(&dir);
+    let (store, warnings) = SaveStore::<TestProfile>::open_in(
+        Some(&dir),
+        &[jackdaw_runtime::SaveMigration::new(0, 0, Ok)],
+    );
+    assert_eq!(store.status, SaveStatus::VersionSkipped { found: 0 });
+    assert!(
+        warnings
+            .iter()
+            .any(|warning| warning.contains("walks backwards")),
+        "the degenerate step says why: {warnings:?}"
+    );
+    assert_eq!(file_text(&dir), before, "the file is untouched");
+
+    // Overshoot 0→5 (past SAVE_VERSION 1): the walk ends at 5, serde
+    // judges the profile, the save loads and the next write stamps the
+    // current version.
+    write_envelope(
+        &dir,
+        r#"{"save_version": 0, "saved_at": "2020-01-01T00:00:00Z", "profile": {"runs_played": 7}}"#,
+    );
+    let mut store = SaveStore::<TestProfile>::open_in(
+        Some(&dir),
+        &[jackdaw_runtime::SaveMigration::new(0, 5, |mut value| {
+            value["nickname"] = JsonValue::String("overshot".into());
+            value["unlocked"] = JsonValue::Bool(false);
+            value["master_volume"] = JsonValue::from(1.0);
+            Ok(value)
+        })],
+    )
+    .0;
+    assert_eq!(store.status, SaveStatus::Loaded, "serde is the true gate");
+    assert_eq!(store.profile.runs_played, 7);
+    store.get_mut().runs_played = 8;
+    store.write().expect("the loaded save writes");
+    let value: JsonValue = serde_json::from_str(&file_text(&dir)).expect("valid json");
+    assert_eq!(
+        value.get("save_version").and_then(JsonValue::as_u64),
+        Some(1)
+    );
+
+    // A version beyond u32 is not a version: damaged path, backup on
+    // disk, defaults in — and the file's bytes survive in the backup.
+    write_envelope(
+        &dir,
+        r#"{"save_version": 5000000000, "saved_at": "2020-01-01T00:00:00Z", "profile": {"runs_played": 9}}"#,
+    );
+    let bytes = std::fs::read(dir.join("save.json")).expect("the file");
+    let (store, _warnings) = SaveStore::<TestProfile>::open_in(Some(&dir), &[]);
+    assert!(
+        matches!(store.status, SaveStatus::Recovered { backup: Some(_) }),
+        "the unreadable envelope takes the damaged path, backed up: {:?}",
+        store.status
+    );
+    let names = backups(&dir);
+    assert_eq!(
+        names.len(),
+        1,
+        "the unreadable envelope is backed up like any damage: {names:?}"
+    );
+    assert_eq!(
+        std::fs::read(dir.join(&names[0])).expect("the backup"),
+        bytes,
+        "the backup carries the original bytes"
+    );
+    assert_eq!(store.profile, TestProfile::default());
+}
+
+/// The read-side API surface the store exposes beside load/write:
+/// `dir()`/`save_file()` name where the save lives, and `reload()`
+/// re-reads the file over in-memory mutations.
+#[test]
+fn the_store_reports_its_slot_and_reloads_it() {
+    let scratch = tempfile::tempdir().expect("tempdir");
+    let dir = scratch.path().join("slot-game");
+    write_envelope(
+        &dir,
+        r#"{"save_version": 1, "saved_at": "2020-01-01T00:00:00Z",
+            "profile": {"runs_played": 4, "unlocked": true, "master_volume": 1.0, "nickname": "lin"}}"#,
+    );
+    let mut store = SaveStore::<TestProfile>::open_in(Some(&dir), &[]).0;
+    assert_eq!(store.status, SaveStatus::Loaded);
+    assert_eq!(store.dir(), Some(dir.as_path()));
+    assert_eq!(store.save_file(), Some(dir.join("save.json")));
+
+    // In-memory mutations are dropped by a reload, not merged.
+    store.get_mut().runs_played = 99;
+    assert_eq!(store.reload(), SaveStatus::Loaded);
+    assert_eq!(store.profile.runs_played, 4, "reload re-reads the file");
+    assert!(!store.dirty, "reload leaves nothing pending");
+}
+
 // ---- M11: corrupt saves are backed up, never fatal ----------------------
 
 /// Every damaged shape — bad JSON, an empty file, binary garbage, a

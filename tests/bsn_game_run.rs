@@ -48,6 +48,13 @@ fn built_game_loads_and_spawns_a_bsn_scene() {
         binary.display()
     );
 
+    // The fixture now wires the save layer; its demo runs only under the
+    // `JACKDAW_SAVE_DIR` seam, and this test points it at a scratch of its
+    // own so the world is always fresh — the volume assertions below read
+    // the hardcoded config (0.4 × 0.8 × 0.5 = 0.16), never a saved mix,
+    // and nothing lands in the real player tree (T17 seam discipline).
+    let scratch = tempfile::tempdir().expect("scratch save dir");
+
     // Run from the game dir so `assets/scene.bsn` resolves. BEVY_ASSET_ROOT
     // overrides the inherited CARGO_MANIFEST_DIR that bevy would otherwise use.
     // The wait also covers the game's `AUDIO_SINK_LIVE` line, which the audio
@@ -55,7 +62,10 @@ fn built_game_loads_and_spawns_a_bsn_scene() {
     let (loaded, stderr) = util::run_windowless_game_until(
         &binary,
         &game_dir,
-        &[("BEVY_ASSET_ROOT", game_dir.as_os_str())],
+        &[
+            ("BEVY_ASSET_ROOT", game_dir.as_os_str()),
+            ("JACKDAW_SAVE_DIR", scratch.path().as_os_str()),
+        ],
         &["AUDIO_SINK_LIVE"],
     );
 
@@ -183,5 +193,109 @@ fn a_run_target_builds_and_runs_its_example() {
     assert!(
         text.contains("SCHEMA_ECHO_MARKER"),
         "the example's marker line never printed: {text}"
+    );
+}
+
+/// The restart-recovery proof at engine level (T17 M2/M8, the H2
+/// channel): the same built fixture binary run twice against one
+/// scratch save tree. Run one is a fresh world — it reports
+/// `SAVE_FRESH`, the hardcoded config stands (`SAVE_CONFIG master=0.50`),
+/// it counts its run and the plugin's flush lands `save.json`
+/// (`SAVE_WRITTEN runs=1`). Run two loads that file — `SAVE_LOADED
+/// runs=1` — the saved mix stands over the authored one
+/// (`SAVE_CONFIG master=0.90`, the bridge order), and the file on disk
+/// carries the bumped profile under the versioned envelope. kill -9 is
+/// unnecessary here: each run is its own process, the boundary is real.
+#[test]
+fn a_save_survives_the_fixture_restart() {
+    let game_dir = workspace_root().join("tests/fixtures/bsn_game");
+    let jackdaw_dir = workspace_root().join("target/bsn_game_run");
+    std::fs::create_dir_all(&jackdaw_dir).expect("create build dir");
+    let spec = ShimSpec {
+        package_name: "bsn_scene_game".into(),
+        crate_name: "bsn_scene_game".into(),
+        project_root: game_dir.clone(),
+        extension_type: None,
+    };
+    let build = build_project_binary(&spec, &jackdaw_dir, &mut |_| {})
+        .expect("build the project binary the editor way");
+    let binary = build.binary;
+    assert!(
+        binary.exists(),
+        "game binary missing at {}",
+        binary.display()
+    );
+
+    // One scratch tree, two runs: the whole point. The seam discipline
+    // keeps the proof out of the real player tree.
+    let scratch = tempfile::tempdir().expect("scratch save dir");
+    let env = [
+        ("BEVY_ASSET_ROOT", game_dir.as_os_str()),
+        ("JACKDAW_SAVE_DIR", scratch.path().as_os_str()),
+    ];
+
+    let (loaded1, stderr1) =
+        util::run_windowless_game_until(&binary, &game_dir, &env, &["SAVE_WRITTEN"]);
+    assert!(
+        loaded1,
+        "run one never wrote its save; game stderr:\n{stderr1}"
+    );
+    assert!(
+        stderr1.contains("SAVE_FRESH"),
+        "run one is a fresh world: {stderr1}"
+    );
+    assert!(
+        stderr1.contains("SAVE_CONFIG master=0.50"),
+        "no save yet, the hardcoded config stands: {stderr1}"
+    );
+    assert!(
+        stderr1.contains("SAVE_WRITTEN runs=1"),
+        "run one counted and wrote: {stderr1}"
+    );
+
+    let (loaded2, stderr2) =
+        util::run_windowless_game_until(&binary, &game_dir, &env, &["SAVE_WRITTEN"]);
+    assert!(
+        loaded2,
+        "run two never wrote its save; game stderr:\n{stderr2}"
+    );
+    assert!(
+        stderr2.contains("SAVE_LOADED runs=1"),
+        "run two loaded run one's save across the process boundary: {stderr2}"
+    );
+    assert!(
+        stderr2.contains("SAVE_CONFIG master=0.90"),
+        "the saved mix stands over the authored config: {stderr2}"
+    );
+    assert!(
+        stderr2.contains("SAVE_WRITTEN runs=2"),
+        "run two counted and wrote: {stderr2}"
+    );
+
+    // The envelope on disk: the runtime's versioned shape, the game's
+    // profile nested under `profile` — human-readable JSON by contract.
+    let text = std::fs::read_to_string(scratch.path().join("save.json"))
+        .expect("the save landed in the scratch tree");
+    let value: serde_json::Value = serde_json::from_str(&text).expect("valid json");
+    assert_eq!(
+        value
+            .get("save_version")
+            .and_then(serde_json::Value::as_u64),
+        Some(1),
+        "the envelope names its version: {text}"
+    );
+    assert_eq!(
+        value
+            .pointer("/profile/runs_played")
+            .and_then(serde_json::Value::as_u64),
+        Some(2),
+        "both runs counted: {text}"
+    );
+    assert_eq!(
+        value
+            .pointer("/profile/audio/master")
+            .and_then(serde_json::Value::as_f64),
+        Some(0.9),
+        "the player's mix is what the file holds: {text}"
     );
 }

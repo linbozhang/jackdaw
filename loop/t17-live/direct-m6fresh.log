@@ -1,0 +1,14 @@
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.28s
+     Running `target/debug/t17-save`
+[2m2026-10-30T18:40:12.163311Z[0m [32m INFO[0m [2mbevy_diagnostic::system_information_diagnostics_plugin::internal[0m[2m:[0m SystemInfo { os: "macOS 26.6.2 Tahoe", kernel: "25.6.0", cpu: "Apple M1 Pro", core_count: "8", memory: "16.0 GiB" }
+[2m2026-10-30T18:40:12.166409Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-30T18:40:12.229546Z[0m [32m INFO[0m [2mbevy_render::renderer[0m[2m:[0m AdapterInfo { name: "Apple M1 Pro", vendor: 0, device: 0, device_type: IntegratedGpu, device_pci_bus_id: "", driver: "", driver_info: "", backend: Metal, subgroup_min_size: 4, subgroup_max_size: 64, transient_saves_memory: Some(true), limit_bucket: None }
+[2m2026-10-30T18:40:12.501306Z[0m [32m INFO[0m [2mbevy_pbr::cluster[0m[2m:[0m GPU clustering is supported on this device.
+[2m2026-10-30T18:40:12.501500Z[0m [32m INFO[0m [2mbevy_render::batching::gpu_preprocessing[0m[2m:[0m GPU preprocessing is fully supported on this device.
+[2m2026-10-30T18:40:12.527084Z[0m [32m INFO[0m [2mbevy_winit::system[0m[2m:[0m Creating new window t17-save (69v0)
+[2m2026-10-30T18:40:12.660542Z[0m [32m INFO[0m [2mjackdaw_runtime[0m[2m:[0m Loaded 1 asset files from /Users/zhanglinbo/workspace/loop-mac/t17-save/t17-save/assets
+[2m2026-10-30T18:40:12.660682Z[0m [32m INFO[0m [2mjackdaw_runtime[0m[2m:[0m No catalog at /Users/zhanglinbo/workspace/loop-mac/t17-save/t17-save/assets/catalog.bsn, skipping catalog load
+[2m2026-10-30T18:40:12.700007Z[0m [32m INFO[0m [2mjackdaw_runtime::config[0m[2m:[0m config 'audio-config.bsn' loaded; applying it as t17_save::GameAudioConfig's initial value
+[2m2026-10-30T18:40:12.700021Z[0m [33m WARN[0m [2mjackdaw_runtime::config[0m[2m:[0m no config asset at 'game-config.bsn'; t17_save::GameConfig starts at its default
+[2m2026-10-30T18:40:12.700390Z[0m [33m WARN[0m [2mjackdaw_runtime::config[0m[2m:[0m no config asset at 'input-actions.bsn'; jackdaw_runtime::game_input::GameInputConfig starts at its default
+[2m2026-10-30T18:40:12.709550Z[0m [33m WARN[0m [2mjackdaw_runtime::terrain[0m[2m:[0m no active Camera3d, so terrain has no viewer to lay its levels around and will not draw

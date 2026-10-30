@@ -246,11 +246,48 @@
 //! Play with a UI scene tab focused swaps the 3D scene for that UI
 //! alone (it previews the canvas); play from the 3D scene tab to run
 //! the game.
+//!
+//! # Saving progress and settings
+//!
+//! A run ends, the player drags a volume slider, and none of it is
+//! lost: the template persists a small player profile — `GameSave`
+//! below — through the runtime's `SavePlugin`, in one line:
+//!
+//! ```ignore
+//! app.add_plugins(SavePlugin::<GameSave>::new(env!("CARGO_PKG_NAME")));
+//! ```
+//!
+//! The file is `save.json` under the user's own data directory
+//! (`~/Library/Application Support/<game-id>/` on macOS) — which is
+//! what "separate from the scene files" means: scenes and configs are
+//! project assets, the save belongs to the player, and an exported
+//! build neither carries it nor overwrites it.
+//!
+//! The save is a second layer over the configs above: a config asset
+//! is the authored default the game ships with, the save is what the
+//! player changed. `apply_saved_audio` and `apply_saved_input` wait
+//! until the authored configs have landed, then put the saved values
+//! back over them; the `save_*_changes` watchers beside them persist
+//! every later change — a slider drag, a BRP edit — the same frame,
+//! so there is no save call to forget. A run ends at the game-over
+//! screen and `count_run_over` counts it; the third run unlocks
+//! `"endless"`; the menu's `Runs:` line reads a mirror of the save in
+//! `GameState` (bindings resolve resources, and the save itself is
+//! plain JSON you can open and read).
+//!
+//! The store guards itself: a missing file is a quiet first run, a
+//! damaged one is renamed to `save.json.corrupt-<millis>` and the
+//! game carries on, and a save from another version is never
+//! overwritten — the runtime's `SaveStore` docs hold the details.
 
 
 use bevy::audio::Volume;
+use bevy::feathers::controls::FeathersSlider;
 use bevy::prelude::*;
+use bevy::scene::bsn;
+use bevy::ui_widgets::{SliderValue, ValueChange};
 use jackdaw_runtime::prelude::*;
+use serde::{Deserialize, Serialize};
 
 /// Your game's Bevy plugin. `main.rs` adds this for both `cargo run`
 /// and the editor's Play button (same binary).
@@ -298,12 +335,63 @@ impl Plugin for GamePlugin {
             // registration skips generic types: without this one line the
             // scene loader cannot name the component a scene authored.
             .register_type::<AudioPlayer<AudioSource>>()
+            // The pause screen's sliders emit this; generic for the same
+            // reason, so a BRP client can fire it by name (L leg discipline:
+            // drive the real event, not a stand-in).
+            .register_type::<ValueChange<f32>>()
+            // The sliders themselves attach from code (`attach_volume_sliders`
+            // below); feathers types are not in the reflect auto-inventory,
+            // so this line is what lets a BRP client name the widget.
+            .register_type::<FeathersSlider>()
+            // The slider's bar is a `BackgroundGradient` on the widget
+            // root, and a scene component's pieces apply through the type
+            // registry: a type the registry cannot name is dropped from
+            // the widget (its bar then never paints). These are the
+            // gradient's face and payload.
+            .register_type::<bevy::ui::BackgroundGradient>()
+            .register_type::<bevy::ui::Gradient>()
+            .register_type::<bevy::ui::ColorStop>()
+            .register_type::<bevy::ui::InterpolationColorSpace>()
+            // The scene gives the slider its bones (track, thumb, digits);
+            // the feathers runtime dresses them: theme observers, the
+            // embedded fonts the digits read, and the control style systems
+            // that fill the bar and move the thumb with the value. Without
+            // it the widget spawns and works but draws nothing. Coexists
+            // with the widgets runtime's own theme (its finish runs last
+            // by design).
+            .add_plugins(bevy::feathers::FeathersPlugins)
             .add_systems(
                 Update,
                 // Chained: a fresh sink gets the mix before the mirror reads
                 // it — tuple order alone is not execution order.
                 (apply_audio_mix, apply_audio_mix_to_new_sinks, mirror_sound_live).chain(),
             )
+            // Saving (see "Saving progress and settings" above): the
+            // player's profile in `save.json` under the user data
+            // directory. The plugin loads the file, inserts the store
+            // and registers it for reflection; the systems below are
+            // the whole integration.
+            .add_plugins(SavePlugin::<GameSave>::new(env!("CARGO_PKG_NAME")))
+            .add_observer(on_volume_changed)
+            .add_systems(
+                Update,
+                // The saved values stand over the authored defaults: each
+                // system waits until the authored config has landed (its
+                // loader despawned — that is the readiness gate both check),
+                // then the bridge applies the save over it once, and the
+                // watcher arms on the landing frame — skipping it, so an
+                // authored injection is never persisted as a player change.
+                // Every change after that frame (a slider drag, a BRP edit)
+                // lands in the save the same frame.
+                (apply_saved_audio, save_audio_changes)
+                    .after(jackdaw_runtime::apply_config_defaults::<GameAudioConfig>),
+            )
+            .add_systems(
+                Update,
+                (apply_saved_input, save_input_changes)
+                    .after(jackdaw_runtime::apply_config_defaults::<GameInputConfig>),
+            )
+            .add_systems(Update, (attach_volume_sliders, sync_volume_sliders, mirror_save_display))
             .add_systems(OnEnter(GameFlow::Level), spawn_falling_cube)
             .add_systems(Update, falling_cubes)
             // Input: the built-in five actions evaluate every frame; the
@@ -338,7 +426,7 @@ impl Plugin for GamePlugin {
             .add_observer(on_screen_pressed)
             .add_systems(OnEnter(GameFlow::Menu), enter_menu)
             .add_systems(OnEnter(GameFlow::Level), enter_level)
-            .add_systems(OnEnter(GameFlow::GameOver), enter_game_over)
+            .add_systems(OnEnter(GameFlow::GameOver), (enter_game_over, count_run_over))
             .add_systems(Update, spawn_hud_while_level)
             .add_systems(
                 Update,
@@ -677,6 +765,316 @@ fn mirror_sound_live(
             sink.empty(),
             sink.position().as_secs_f32(),
         );
+    }
+}
+
+// ---- Game save: the player's layer ------------------------------------
+// The persisted half of progress, unlocks and settings. The runtime's
+// `SaveStore` owns the file, the version guard and the three-state
+// fallback; the systems below are the whole game-side integration: two
+// bridges that restore the saved settings over the authored defaults,
+// two watchers that persist the player's changes, the run counter, and
+// the pause screen's volume sliders (attached from code, see
+// `attach_volume_sliders`).
+
+/// What this game saves. Plain serde JSON inside the runtime's
+/// envelope (`save.json` under the user data directory). Extend it
+/// freely: the runtime versions the envelope, and a save whose
+/// `profile` no longer fits this type is treated like a damaged one —
+/// backed up, defaults in, the game runs.
+#[derive(Reflect, Clone, Default, Serialize, Deserialize)]
+#[reflect(Default)]
+pub struct GameSave {
+    /// How many runs have ended (a run ends at the game-over screen).
+    pub progress: GameProgress,
+    /// Things the player has unlocked; `"endless"` lands here on the
+    /// third finished run (`count_run_over`).
+    pub unlocks: Vec<String>,
+    /// The player's audio mix, when they have changed it. `None` — the
+    /// fresh first run — keeps the authored `audio-config.bsn` values
+    /// (or the defaults).
+    pub audio: Option<AudioPrefs>,
+    /// The player's rebound actions, when they have changed them.
+    /// Restored through the same union merge `input-actions.bsn` gets,
+    /// so actions the save omits keep their authored bindings.
+    pub input: Option<Vec<jackdaw_runtime::GameActionDef>>,
+}
+
+/// The run counter and whatever else a real game would add (score,
+/// checkpoints). The template keeps the one number the menu shows.
+#[derive(Reflect, Clone, Default, Serialize, Deserialize)]
+#[reflect(Default)]
+pub struct GameProgress {
+    /// Finished runs, counted at every game-over.
+    pub runs_played: u32,
+}
+
+/// The player's audio mix as the save holds it — the same three knobs
+/// `GameAudioConfig` authors, minus the asset plumbing.
+#[derive(Reflect, Clone, Debug, Default, PartialEq, Serialize, Deserialize)]
+#[reflect(Default)]
+pub struct AudioPrefs {
+    pub master: f32,
+    pub music: f32,
+    pub sfx: f32,
+}
+
+impl AudioPrefs {
+    fn from_config(config: &GameAudioConfig) -> Self {
+        Self {
+            master: config.master,
+            music: config.music,
+            sfx: config.sfx,
+        }
+    }
+
+    fn apply_to(&self, config: &mut GameAudioConfig) {
+        config.master = self.master;
+        config.music = self.music;
+        config.sfx = self.sfx;
+    }
+}
+
+/// How many finished runs unlock [`UNLOCK_ENDLESS`].
+const UNLOCK_ENDLESS_AFTER: u32 = 3;
+
+/// The unlock `count_run_over` grants: example data, a string in the
+/// save's `unlocks` list.
+const UNLOCK_ENDLESS: &str = "endless";
+
+/// Put the saved mix over the authored one, once, after the authored
+/// config has landed — a `ConfigLoader` still in flight means
+/// `apply_config_defaults` may yet inject the asset's values and would
+/// wash the save back out. No saved mix (`None`) is the common first
+/// run: the authored values simply stand.
+fn apply_saved_audio(
+    loaders: Query<(), With<ConfigLoader<GameAudioConfig>>>,
+    mut config: ResMut<GameAudioConfig>,
+    save: Res<SaveStore<GameSave>>,
+    mut armed: Local<bool>,
+) {
+    if *armed || !loaders.is_empty() {
+        return;
+    }
+    if let Some(prefs) = save.profile.audio.as_ref() {
+        prefs.apply_to(&mut config);
+    }
+    *armed = true;
+}
+
+/// Persist the player's mix. Armed on the frame the authored config
+/// lands — skipping that frame is what keeps the *authored* injection
+/// from being persisted as a player change, and what keeps a first run
+/// that never touched a slider from leaving a `save.json` behind at
+/// all. Every change after that frame lands in the save the same frame
+/// (`get_mut` marks the store dirty; the runtime's flush writes it).
+fn save_audio_changes(
+    config: Res<GameAudioConfig>,
+    loaders: Query<(), With<ConfigLoader<GameAudioConfig>>>,
+    mut save: ResMut<SaveStore<GameSave>>,
+    mut armed: Local<bool>,
+) {
+    if !*armed {
+        if loaders.is_empty() {
+            *armed = true;
+        }
+        return;
+    }
+    if !config.is_changed() {
+        return;
+    }
+    let prefs = save
+        .get_mut()
+        .audio
+        .get_or_insert_with(AudioPrefs::default);
+    *prefs = AudioPrefs::from_config(&config);
+}
+
+/// Put the saved rebinds over the authored table, once, after the
+/// authored input config has landed — the same union merge
+/// `input-actions.bsn` gets: saved entries win by name, everything the
+/// save omits keeps its authored (or built-in) binding.
+fn apply_saved_input(
+    loaders: Query<(), With<ConfigLoader<GameInputConfig>>>,
+    mut config: ResMut<GameInputConfig>,
+    save: Res<SaveStore<GameSave>>,
+    mut armed: Local<bool>,
+) {
+    if *armed || !loaders.is_empty() {
+        return;
+    }
+    if let Some(saved) = save.profile.input.as_ref() {
+        config.actions = jackdaw_runtime::merge_actions(&config.actions, saved);
+    }
+    *armed = true;
+}
+
+/// Persist the player's action table. Armed like the audio watcher:
+/// the authored injection frame is skipped, so a first run without any
+/// rebind writes nothing.
+fn save_input_changes(
+    config: Res<GameInputConfig>,
+    loaders: Query<(), With<ConfigLoader<GameInputConfig>>>,
+    mut save: ResMut<SaveStore<GameSave>>,
+    mut armed: Local<bool>,
+) {
+    if !*armed {
+        if loaders.is_empty() {
+            *armed = true;
+        }
+        return;
+    }
+    if !config.is_changed() {
+        return;
+    }
+    save.get_mut().input = Some(config.actions.clone());
+}
+
+/// A run ends at the game-over screen: count it, and grant `"endless"`
+/// on the third. `get_mut` marks the store dirty, and the runtime's
+/// flush writes the file on the same frame — no save call to forget.
+fn count_run_over(mut save: ResMut<SaveStore<GameSave>>) {
+    let profile = save.get_mut();
+    profile.progress.runs_played += 1;
+    if profile.progress.runs_played >= UNLOCK_ENDLESS_AFTER
+        && !profile
+            .unlocks
+            .iter()
+            .any(|unlock| unlock == UNLOCK_ENDLESS)
+    {
+        profile.unlocks.push(UNLOCK_ENDLESS.to_string());
+    }
+}
+
+/// The save's display mirror (see `GameState`): runs and the unlock
+/// note copied across on every frame they differ. A restart lands here
+/// too — the file loads before the first update, so the menu shows the
+/// restored numbers at once.
+fn mirror_save_display(save: Res<SaveStore<GameSave>>, mut state: ResMut<GameState>) {
+    let runs = save.profile.progress.runs_played;
+    let note = if save
+        .profile
+        .unlocks
+        .iter()
+        .any(|unlock| unlock == UNLOCK_ENDLESS)
+    {
+        "Endless mode unlocked!"
+    } else {
+        ""
+    };
+    if state.runs_played != runs {
+        state.runs_played = runs;
+    }
+    if state.unlock_note != note {
+        state.unlock_note = note.to_string();
+    }
+}
+
+/// Marks the pause screen's master-volume row (authored in hud.bsn),
+/// the attach point [`attach_volume_sliders`] hangs the slider on — and
+/// (once the slider is attached) the marker the observer and the sync
+/// find the widget by. Music and sfx repeat the shape.
+#[derive(Component, Reflect, Default)]
+#[reflect(Component, Default)]
+pub struct MasterVolumeSlider;
+
+/// The music-volume slider's marker, same shape as [`MasterVolumeSlider`].
+#[derive(Component, Reflect, Default)]
+#[reflect(Component, Default)]
+pub struct MusicVolumeSlider;
+
+/// The sfx-volume slider's marker, same shape as [`MasterVolumeSlider`].
+#[derive(Component, Reflect, Default)]
+#[reflect(Component, Default)]
+pub struct SfxVolumeSlider;
+
+/// Attach the three sliders to the pause screen's authored rows. A
+/// `FeathersSlider` is a *scene component*: the widget is a small scene
+/// (track, thumb, digits) that only comes into the world through the
+/// scene API — spawned as a bare component line in a document it would
+/// sit dead, its scene never built. `spawn_scene` is the whole
+/// attachment: the scene grows under the authored row, beside its
+/// label, and the marker rides the widget so the observer and the sync
+/// below keep pointing at it. `Added` re-fires for every fresh hud the
+/// flow spawns, so each entry into the level re-attaches itself.
+fn attach_volume_sliders(
+    mut commands: Commands,
+    // `Without<SliderValue>`: the marker rides the attached widget too (it
+    // is how the observer and the sync know which knob spoke), and without
+    // the exclusion the widget itself would re-match this query on the next
+    // frame — each slider spawning another slider under it, forever.
+    masters: Query<Entity, (Added<MasterVolumeSlider>, Without<SliderValue>)>,
+    musics: Query<Entity, (Added<MusicVolumeSlider>, Without<SliderValue>)>,
+    sfxs: Query<Entity, (Added<SfxVolumeSlider>, Without<SliderValue>)>,
+) {
+    for entity in &masters {
+        commands
+            .spawn_scene(bsn! { @FeathersSlider })
+            .insert((MasterVolumeSlider, ChildOf(entity)));
+    }
+    for entity in &musics {
+        commands
+            .spawn_scene(bsn! { @FeathersSlider })
+            .insert((MusicVolumeSlider, ChildOf(entity)));
+    }
+    for entity in &sfxs {
+        commands
+            .spawn_scene(bsn! { @FeathersSlider })
+            .insert((SfxVolumeSlider, ChildOf(entity)));
+    }
+}
+
+/// The pause screen's volume sliders write the mix: the widget emits
+/// `ValueChange<f32>`, this observer tells which slider spoke (its
+/// marker) and moves that knob of `GameAudioConfig` — the one resource
+/// `apply_audio_mix` and the save watcher both read. An observer is
+/// the whole bridge: a binding can read a resource but not write one.
+fn on_volume_changed(
+    change: On<ValueChange<f32>>,
+    masters: Query<(), With<MasterVolumeSlider>>,
+    musics: Query<(), With<MusicVolumeSlider>>,
+    sfxs: Query<(), With<SfxVolumeSlider>>,
+    mut config: ResMut<GameAudioConfig>,
+) {
+    if masters.contains(change.source) {
+        config.master = change.value;
+    } else if musics.contains(change.source) {
+        config.music = change.value;
+    } else if sfxs.contains(change.source) {
+        config.sfx = change.value;
+    }
+}
+
+/// Point the sliders back at the mix. The widget's value is
+/// external-state it never reads from the game, so everything that
+/// moves `GameAudioConfig` — the saved restore at startup, a BRP edit,
+/// an authored change — lands in the slider position here. No change
+/// detection gate on purpose: the sliders spawn when the level starts,
+/// long after the startup restore moved the config, and a spawned
+/// slider must pick that value up anyway. `SliderValue` is immutable,
+/// so a sync is a re-insert; the equality guard keeps a drag from
+/// feeding back on itself.
+fn sync_volume_sliders(
+    mut commands: Commands,
+    config: Res<GameAudioConfig>,
+    masters: Query<(Entity, &SliderValue), With<MasterVolumeSlider>>,
+    musics: Query<(Entity, &SliderValue), With<MusicVolumeSlider>>,
+    sfxs: Query<(Entity, &SliderValue), With<SfxVolumeSlider>>,
+) {
+    for (entity, value) in &masters {
+        if (value.0 - config.master).abs() > 1e-5 {
+            commands.entity(entity).insert(SliderValue(config.master));
+        }
+    }
+    for (entity, value) in &musics {
+        if (value.0 - config.music).abs() > 1e-5 {
+            commands.entity(entity).insert(SliderValue(config.music));
+        }
+    }
+    for (entity, value) in &sfxs {
+        if (value.0 - config.sfx).abs() > 1e-5 {
+            commands.entity(entity).insert(SliderValue(config.sfx));
+        }
     }
 }
 
@@ -1058,10 +1456,19 @@ fn spawn_hud_while_level(
 /// resource: the pause screen's `Visibility` is bound to the bool, so
 /// flipping it is the whole show/hide mechanism. The worlds are
 /// `GameFlow`'s to make; overlays inside one world are bools like this.
+/// The other two fields are the save's display mirror (see
+/// `mirror_save_display`): bindings resolve resources, so the menu and
+/// game-over documents read the run counter here rather than naming
+/// the generic save store in a document.
 #[derive(Resource, Reflect, Default)]
 #[reflect(Resource, Default)]
 pub struct GameState {
     pub paused: bool,
+    /// How many runs the save says have ended.
+    pub runs_played: u32,
+    /// The unlock line the menu shows; empty until `"endless"` is in
+    /// the save's `unlocks`.
+    pub unlock_note: String,
 }
 
 /// What a flow or hud button says. The button's `Action` binding in
