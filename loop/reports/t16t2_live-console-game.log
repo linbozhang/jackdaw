@@ -1,0 +1,50 @@
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t16-audio/t16-audio
+L2: afplay blip.wav exit 0
+L2: afplay bgm.wav exit 0
+L2: afplay ambient.wav exit 0
+L2_AFPLAY_CONTROL_PASS
+L3: MenuBgm sample1 vol=0.6000000238418579 pos=3.1229023933410645, sample2 pos=5.173242568969727 ({"finished":false,"kind":"music","paused":false,"position_secs":5.258049964904785,"volume":0.6000000238418579})
+L3: master->0 readback=0.0, MenuBgm volume now 0.0
+L3 M2 BGM: mute+restore cycle complete, ok=true
+L3_M2_BGM_PASS
+M3-direct: sfx sinks before=0, samples with a sfx sink=1, blip volume=0.4000000059604645
+M3-direct: flow moved=true (MenuBgm gone), Ambient now=present
+M3-direct chain complete, ok=true
+M3_DIRECT_CHAIN_PASS
+L5: Ambient sample={"finished":false,"kind":"plain","paused":false,"position_secs":6.664852619171143,"volume":0.800000011920929}
+L5: routing baseline sample: SfxProbe=sfx:0.4000000059604645 MusicProbe=music:0.5 Ambient=plain:0.800000011920929
+L5: SpatialListener entity=717v0
+L5: Ambient emitter GlobalTransform.translation=[6.0,2.0,-4.0] (authored 6,2,-4)
+L5: walk player [-2.0,0.8600000143051147,0.0] -> [-2.0,0.8600000143051147,-2.440000057220459]; listener [-2.0,5.954183578491211,9.210610389709473] -> [-2.0,5.954183578491211,6.770610332489014]
+L5 M4 spatial complete, ok=true
+L5_M4_SPATIAL_PASS
+L9 baseline: SfxProbe=sfx:0.4000000059604645 MusicProbe=music:0.5 Ambient=plain:0.800000011920929
+L9 music=0: SfxProbe=sfx:0.4000000059604645 MusicProbe=music:0.0 Ambient=plain:0.800000011920929
+L9 sfx=0: SfxProbe=sfx:0.0 MusicProbe=music:0.5 Ambient=plain:0.800000011920929
+L9 master=0: SfxProbe=sfx:0.0 MusicProbe=music:0.0 Ambient=plain:0.0
+L9 restored: SfxProbe=sfx:0.4000000059604645 MusicProbe=music:0.5 Ambient=plain:0.800000011920929
+L9 M9/M10 routing complete, ok=true
+L9_M10_ROUTING_PASS
+M7-play: game resource = {"master":1.0,"music":0.5,"sfx":1.0}
+M7-play: MenuBgm volume=0.30000001192092896 (want 0.6x0.5=0.3)
+M7 play face complete, ok=true
+M7_PLAY_FACE_PASS
+L7 red: MenuBgm settings={"duration":null,"mode":"Loop","muted":false,"paused":false,"spatial":false,"spatial_scale":null,"speed":1.0,"start_position":null,"volume":{"Linear":0.6000000238418579}}; SoundLive after settle='ABSENT'
+L7: red state archived (direct-badref_red.log, l7-red-world_red.json)
+L7 green: MenuBgm volume=0.6000000238418579
+L7 M6 bad reference red/green complete, ok=true
+L7_M6_BADREF_PASS
+L4: frame rect (0,0 1280x720), clicking (640,360); sfx sinks before=0
+L4: samples with an sfx sink=2 (hit at(+0,+911)), blip volume=0.4000000059604645
+L4: level sounds present=y (Ambient=plain)
+L10 stop invariant: sha stable=y, no AudioSink in documents
+L4_M3_PIE_CLICK_PASS
+L10_M11_STOP_INVARIANT_PASS
+L6: staged tree carries sounds/ + manifest rows
+L6 staged sample: Ambient={"finished":false,"kind":"plain","paused":false,"position_secs":18.647619247436523,"volume":0.800000011920929}
+L6 staged routing: Ambient=plain:0.800000011920929 MusicProbe=music:0.5 SfxProbe=sfx:0.4000000059604645
+L6 M5 export parity complete, ok=true
+L6_M5_EXPORT_PASS
+WARN_SCAN game phase: generic_registration_lines=0 game_channel_audio_warns=0 attributed_template_states=14 (panics counted: 3)
+WARN_SCAN_GAME_PASS
+VERDICT_GAME_PHASE: L10_M11_STOP_INVARIANT=PASS L2_AFPLAY_CONTROL=PASS L3_M2_BGM=PASS L4_M3_PIE_CLICK=PASS L5_M4_SPATIAL=PASS L6_M5_EXPORT=PASS L7_M6_BADREF=PASS L9_M10_ROUTING=PASS M3_DIRECT_CHAIN=PASS M7_PLAY_FACE=PASS WARN_SCAN_GAME=PASS 

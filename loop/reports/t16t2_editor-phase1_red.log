@@ -1,0 +1,18 @@
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t16-audio/t16-audio
+L1: Audio Source entity not found after add
+L1_M1_CHAIN_FAIL
+M7: audio-config.bsn did not land
+M7_AUTH_FACE_FAIL
+M14: editor GlobalVolume =  (want Linear 0.0)
+M14: MenuBgm not in the editor world
+M14: editor MenuBgm PlaybackSettings =  (authored base stays 0.6)
+shot m14-editor-muted-menu ok (window)
+M14 editor half: GlobalVolume zeroed=n
+M14_EDITOR_MUTED_FAIL
+M12: before=player= settings= bus=
+M12: after =player= settings= bus=
+M12 reopen: menu BGM handle/settings/bus all kept, ok=false
+M12_REOPEN_CONSISTENT_FAIL
+WARN_SCAN editor phase: generic_registration_lines=0 (panics counted: 0)
+WARN_SCAN_EDITOR_PASS
+VERDICT_EDITOR_PHASE: L1_M1_CHAIN=FAIL M12_REOPEN_CONSISTENT=FAIL M14_EDITOR_MUTED=FAIL M7_AUTH_FACE=FAIL WARN_SCAN_EDITOR=PASS 

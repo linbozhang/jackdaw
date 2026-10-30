@@ -1,0 +1,1 @@
+Ambient=plain:0.800000011920929 MusicProbe=music:0.5 SfxProbe=sfx:0.4000000059604645

@@ -1,0 +1,12 @@
+=== fmt ===
+fmt_exit=0
+=== clippy physics ===
+    Checking jackdaw_physics v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/integrations/physics/jackdaw_physics)
+    Checking jackdaw v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw)
+    Finished `dev` profile [optimized + debuginfo] target(s) in 25.89s
+=== audio_gate ===
+test a_bare_audio_player_line_is_refused_not_dropped_silently ... ok
+test despawn_mode_removes_the_audio_entity_when_the_clip_ends ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.84s
+
