@@ -2627,7 +2627,11 @@ fn substitute_placeholders(
         )
         .replace(
             "{{bevy_dependency}}",
-            &jackdaw_project_build::bevy_source::dependency(),
+            // Every template game names `wav`: the shipped sounds are wav
+            // files, and a generated fixture speaks the same format. The
+            // dependency must spell the inline table for the features to be
+            // legal TOML in both the release and the git-branch shape.
+            &jackdaw_project_build::bevy_source::dependency_with_features(&["wav"]),
         )
         // The toolchain file pins the project's own builds (Play included)
         // to the rustc this editor was built with: a Bevy newer than the
@@ -3680,6 +3684,73 @@ mod tests {
         }
     }
 
+    /// The game template teaches the audio pattern (T16): the three-way
+    /// mix config authored as an asset, the bus markers, the mix systems
+    /// that build and refresh each sink's real volume, the `SoundLive`
+    /// mirror that makes playing sounds inspectable, the one-shot button
+    /// blip — and the shipped wav files plus a bevy dependency that can
+    /// decode them, so the menu has its BGM before the author adds
+    /// anything.
+    #[test]
+    fn new_game_project_teaches_the_audio_pattern() {
+        let dest = temp_dir("newgame-audio").join("my-game");
+        scaffold_new_project(&dest, "my-game", TemplateKind::Game).unwrap();
+        let lib = std::fs::read_to_string(dest.join("src/lib.rs")).unwrap();
+        for needle in [
+            "struct GameAudioConfig",
+            "init_asset::<GameAudioConfig>()",
+            "register_asset_reflect::<GameAudioConfig>()",
+            "ConfigPlugin::<GameAudioConfig>::new(\"audio-config.bsn\")",
+            "struct MusicBus",
+            "struct SfxBus",
+            "struct SoundLive",
+            "fn mix_volume",
+            "fn apply_audio_mix",
+            "fn apply_audio_mix_to_new_sinks",
+            "fn mirror_sound_live",
+            "fn press_sound",
+            "sounds/blip.wav",
+            "SpatialListener::default()",
+            "Game audio",
+        ] {
+            assert!(
+                lib.contains(needle),
+                "the template must teach `{needle}`; the audio pattern drifted"
+            );
+        }
+        // The scenes ship playing entities, spelled with the full generic
+        // type path bsn requires, and the sounds they name are real files.
+        let menu = std::fs::read_to_string(dest.join("assets/menu.bsn")).unwrap();
+        for needle in [
+            "bevy_audio::audio::AudioPlayer<bevy_audio::audio_source::AudioSource>(\"sounds/bgm.wav\")",
+            "bevy_audio::audio::PlaybackMode::Loop",
+            "MusicBus",
+        ] {
+            assert!(
+                menu.contains(needle),
+                "the menu scene must teach `{needle}`; the BGM drifted"
+            );
+        }
+        let scene = std::fs::read_to_string(dest.join("assets/scene.bsn")).unwrap();
+        assert!(
+            scene.contains("bevy_audio::audio::PlaybackSettings")
+                && scene.contains("spatial: true"),
+            "the level scene must teach the spatial ambient; the scene drifted"
+        );
+        for sound in ["bgm.wav", "blip.wav", "ambient.wav"] {
+            let path = dest.join("assets/sounds").join(sound);
+            assert!(
+                path.is_file(),
+                "the template ships `{sound}` so audio works with zero user assets"
+            );
+        }
+        let cargo = std::fs::read_to_string(dest.join("Cargo.toml")).unwrap();
+        assert!(
+            cargo.contains("features = [\"wav\"]"),
+            "the game decodes the shipped wav files; the bevy dependency drifted:\n{cargo}"
+        );
+    }
+
     /// The physics module (on by default) shapes the template around
     /// its own teaching: the trigger bridge, the pickup demo, the
     /// collision-layer table, the gravity handoff, and a physical
@@ -3910,7 +3981,10 @@ mod tests {
             "struct HudRoot",
             "Added<HudRoot>",
             "fn on_screen_pressed",
-            "\"resume\" => state.paused = false",
+            // The resume arm also sounds the press (T16's press_sound), so
+            // the needle anchors the two statements it now carries.
+            "\"resume\" => {",
+            "state.paused = false;",
             "fn handle_pause_action",
             "just_pressed(\"Pause\")",
             "add_systems(Update, handle_pause_action.before(move_player))",
@@ -4936,7 +5010,7 @@ mod tests {
         let cargo = std::fs::read_to_string(dest.join("Cargo.toml")).unwrap();
         assert!(cargo.contains(&format!(
             "bevy = {}",
-            jackdaw_project_build::bevy_source::dependency()
+            jackdaw_project_build::bevy_source::dependency_with_features(&["wav"])
         )));
         assert!(!cargo.contains("{{"));
     }

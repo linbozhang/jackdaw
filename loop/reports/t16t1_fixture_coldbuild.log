@@ -1,0 +1,4 @@
+   Compiling jackdaw_runtime v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_runtime)
+   Compiling jackdaw_avian_integration v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/integrations/physics/jackdaw_avian_integration)
+   Compiling t16-audio v0.1.0 (/Users/zhanglinbo/workspace/loop-mac/t16-audio/t16-audio)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 3m 22s

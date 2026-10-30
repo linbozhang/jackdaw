@@ -39,6 +39,23 @@ pub fn dependency() -> String {
     }
 }
 
+/// The value of a project's `bevy` dependency naming extra features, such as
+/// the audio decoders a game's sounds need: `"0.20"` and the git-branch
+/// string are both illegal beside `features`, so both spell the inline table.
+pub fn dependency_with_features(features: &[&str]) -> String {
+    let list = features
+        .iter()
+        .map(|feature| format!("\"{feature}\""))
+        .collect::<Vec<_>>()
+        .join(", ");
+    match BEVY_REV {
+        Some(_) => {
+            format!("{{ git = \"{BEVY_GIT}\", branch = \"{BEVY_BRANCH}\", features = [{list}] }}")
+        }
+        None => format!("{{ version = \"{BEVY_VERSION}\", features = [{list}] }}"),
+    }
+}
+
 /// The commit `lockfile` pins the `bevy` package's git source to.
 pub fn locked_rev(lockfile: &str) -> Option<String> {
     let table: toml::Table = toml::from_str(lockfile).ok()?;
@@ -155,5 +172,30 @@ mod tests {
         ))
         .expect("an inline table body");
         assert_eq!(table["bevy"]["default-features"].as_bool(), Some(false));
+    }
+
+    /// A dependency naming features stays legal TOML in both source shapes:
+    /// a bare version string cannot carry `features`, so both branches spell
+    /// the inline table.
+    #[test]
+    fn a_feature_naming_dependency_parses_in_both_release_and_git_shapes() {
+        let dependency: toml::Value =
+            toml::from_str(&format!("bevy = {}", dependency_with_features(&["wav"])))
+                .expect("a TOML value");
+        let bevy = &dependency["bevy"];
+        assert_eq!(bevy["features"][0].as_str(), Some("wav"));
+        match BEVY_REV {
+            Some(_) => {
+                assert_eq!(bevy["git"].as_str(), Some(BEVY_GIT));
+                assert_eq!(bevy["branch"].as_str(), Some(BEVY_BRANCH));
+            }
+            None => assert_eq!(bevy["version"].as_str(), Some(BEVY_VERSION)),
+        }
+        let multi: toml::Value = toml::from_str(&format!(
+            "bevy = {}",
+            dependency_with_features(&["wav", "vorbis"])
+        ))
+        .expect("a TOML value");
+        assert_eq!(multi["bevy"]["features"].as_array().map(Vec::len), Some(2));
     }
 }

@@ -20,6 +20,7 @@ pub enum DialogPurpose {
     Image,
     Texture,
     Model,
+    Sound,
     Bundle,
     Layout,
 }
@@ -32,6 +33,7 @@ impl DialogPurpose {
             Self::Image => "image",
             Self::Texture => "texture",
             Self::Model => "model",
+            Self::Sound => "sound",
             Self::Bundle => "bundle",
             Self::Layout => "layout",
         }

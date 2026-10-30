@@ -136,7 +136,7 @@ fn the_shipped_binary_scaffolds_without_a_checkout() {
     assert!(
         manifest.contains(&format!(
             "bevy = {}",
-            jackdaw_project_build::bevy_source::dependency()
+            jackdaw_project_build::bevy_source::dependency_with_features(&["wav"])
         )),
         "got:\n{manifest}"
     );

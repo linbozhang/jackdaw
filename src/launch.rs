@@ -140,7 +140,18 @@ pub fn run(extend: impl FnOnce(&mut App)) -> AppExit {
         // `JACKDAW_WINDOW_SIZE`. Spelling its fields out here instead
         // would drop that override.
         .set(editor_window_plugin())
-        .set(render_plugin);
+        .set(render_plugin)
+        // The editor is not a speaker: authored audio belongs to Play and the
+        // game process, so an open scene with a BGM never starts singing in
+        // the editing viewport and PIE never doubles the sound. The engine
+        // multiplies `GlobalVolume` into every sink once, when it is created
+        // (`play_queued_audio_system`), so zero here silences the editor's
+        // sinks without touching the authored volumes and needs no gate
+        // system and no AppState ordering.
+        .set(bevy::audio::AudioPlugin {
+            global_volume: bevy::audio::GlobalVolume::from(bevy::audio::Volume::Linear(0.0)),
+            ..default()
+        });
     // Without a console nothing reads stderr, so the log goes to a file.
     // A shadowing `let` (rather than `+=` assignment) so the binding needs
     // no `mut` on debug builds, where this block is compiled out.

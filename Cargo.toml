@@ -231,6 +231,9 @@ bevy = { git = "https://github.com/bevyengine/bevy", branch = "main", features =
     "file_watcher",
     "reflect_documentation",
     "reflect_functions",
+    # Audio files beyond the default vorbis: .wav is what generated fixtures
+    # and template sounds come as (hound is a light decoder).
+    "wav",
 ] }
 jackdaw_jsn = { version = "0.21.0-dev", path = "crates/jackdaw_jsn" }
 jackdaw_geometry = { version = "0.21.0-dev", path = "crates/jackdaw_geometry" }

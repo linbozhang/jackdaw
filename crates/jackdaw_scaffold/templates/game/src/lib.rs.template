@@ -181,6 +181,31 @@
 //!   swaps the editor's own scene in as the world the game boots into,
 //!   and the flow state follows it (that boot is the level).
 //!
+//! # Game audio
+//!
+//! Three sounds ship with the template, so audio works before you have
+//! added a single file of your own: the menu's BGM (`menu.bsn`'s
+//! `MenuBgm` entity), a click each screen button acknowledges itself with
+//! (`press_sound` below), and the level's spatial drone (`scene.bsn`'s
+//! `Ambient`, panned against the `SpatialListener` the player's camera
+//! carries). Each is one entity carrying a `bevy_audio` component pair:
+//! an `AudioPlayer("sounds/…")` naming a file and a `PlaybackSettings`
+//! choosing loop/one-shot, volume and (for the drone) `spatial`. Note
+//! bevy's spatial audio is left-right panning by distance, not HRTF.
+//!
+//! The three-way mix — master, music, sfx — is the same config-asset
+//! pattern as the tuning above: `GameAudioConfig` below, authored as
+//! `assets/audio-config.bsn` through New Asset, with `MusicBus` /
+//! `SfxBus` markers deciding which bus an entity rides. The engine only
+//! reads `GlobalVolume` when it creates a sink and never follows a
+//! change, so the template's `apply_audio_mix` builds each sink's real
+//! volume as `base × bus × master` and re-applies it when the config
+//! changes — a mid-run edit reaches sounds that are already playing.
+//! While a sound plays, its entity grows a `SoundLive` component (the
+//! `mirror_sound_live` system writes the sink's live numbers into it
+//! every frame), which is what the Resources panel and a BRP query can
+//! read — sinks themselves are not reflected.
+//!
 //! # Game UI
 //!
 //! `assets/hud.bsn` is a UI scene: the same kind of document as
@@ -223,6 +248,7 @@
 //! the game.
 
 
+use bevy::audio::Volume;
 use bevy::prelude::*;
 use jackdaw_runtime::prelude::*;
 
@@ -262,6 +288,22 @@ impl Plugin for GamePlugin {
             .init_asset::<GameConfig>()
             .register_asset_reflect::<GameConfig>()
             .add_plugins(ConfigPlugin::<GameConfig>::default())
+            // Audio (see "Game audio" above): the three-way mix config, the
+            // systems that build and refresh each sink's real volume, and
+            // the mirror that makes playing sounds inspectable.
+            .init_asset::<GameAudioConfig>()
+            .register_asset_reflect::<GameAudioConfig>()
+            .add_plugins(ConfigPlugin::<GameAudioConfig>::new("audio-config.bsn"))
+            // `AudioPlayer` is generic, and the reflect derive's automatic
+            // registration skips generic types: without this one line the
+            // scene loader cannot name the component a scene authored.
+            .register_type::<AudioPlayer<AudioSource>>()
+            .add_systems(
+                Update,
+                // Chained: a fresh sink gets the mix before the mirror reads
+                // it — tuple order alone is not execution order.
+                (apply_audio_mix, apply_audio_mix_to_new_sinks, mirror_sound_live).chain(),
+            )
             .add_systems(OnEnter(GameFlow::Level), spawn_falling_cube)
             .add_systems(Update, falling_cubes)
             // Input: the built-in five actions evaluate every frame; the
@@ -387,6 +429,257 @@ impl Default for GameConfig {
     }
 }
 
+// ---- Game audio: the three-way mix and the live mirror ----------------
+
+/// Game-wide audio levels, the config-asset pattern again: author
+/// `assets/audio-config.bsn` through New Asset (or edit the file), and
+/// `apply_audio_mix` rebuilds every sink's real volume from it — live, in
+/// the editor's Play and in an exported build alike. Until the file exists
+/// the game runs on the `Default` (everything full).
+#[derive(Asset, Resource, Reflect, Clone)]
+#[reflect(Resource, Default, @EditorCategory::new("Game Config"))]
+pub struct GameAudioConfig {
+    /// Multiplies every sound in the game.
+    pub master: f32,
+    /// Multiplies every sound whose entity carries a `MusicBus`.
+    pub music: f32,
+    /// Multiplies every sound whose entity carries an `SfxBus`.
+    pub sfx: f32,
+}
+
+impl Default for GameAudioConfig {
+    fn default() -> Self {
+        Self {
+            master: 1.0,
+            music: 1.0,
+            sfx: 1.0,
+        }
+    }
+}
+
+/// Routes an entity's sound onto the music bus. A component the editor can
+/// add and a scene can author; `apply_audio_mix` reads it as a factor of
+/// `GameAudioConfig.music`.
+#[derive(Component, Reflect, Default)]
+#[reflect(Component, Default, @EditorCategory::new("Audio"))]
+pub struct MusicBus;
+
+/// Routes an entity's sound onto the sfx bus, same shape as [`MusicBus`].
+#[derive(Component, Reflect, Default)]
+#[reflect(Component, Default, @EditorCategory::new("Audio"))]
+pub struct SfxBus;
+
+/// What one sink actually plays at, right now. bevy's `AudioSink` and
+/// `SpatialAudioSink` are not reflected, so nothing outside the process can
+/// read them; this mirror is the inspectable surface — `mirror_sound_live`
+/// writes the sink's live numbers into it every frame, and the Resources
+/// panel (or a BRP query) reads it like any component.
+#[derive(Component, Reflect, Clone, Default)]
+#[reflect(Component, Default, @EditorCategory::new("Audio"))]
+pub struct SoundLive {
+    /// Which bus the sound rides: `"music"`, `"sfx"`, or `"plain"`.
+    pub kind: String,
+    /// The mixed volume the sink plays at (linear scale).
+    pub volume: f32,
+    /// Whether the sink is paused.
+    pub paused: bool,
+    /// Whether the sink has nothing left to play (a one-shot that ended).
+    pub finished: bool,
+    /// How far into the clip the sink is, in seconds.
+    pub position_secs: f32,
+}
+
+/// A sink's real volume: its authored base times its bus times the master.
+/// The engine reads `GlobalVolume` exactly once, when it creates the sink,
+/// and never follows a change — which is why the mix lives here rather
+/// than in `GlobalVolume`.
+fn mix_volume(base: f32, music: bool, sfx: bool, config: &GameAudioConfig) -> f32 {
+    let bus = if music {
+        config.music
+    } else if sfx {
+        config.sfx
+    } else {
+        1.0
+    };
+    base * bus * config.master
+}
+
+/// Re-apply the mix to every sink when the config changes — this is the
+/// half the engine leaves undone ("Changing GlobalVolume does not affect
+/// already playing audio"): a mid-run edit reaches sounds that are
+/// already playing. Runs as a no-op unless the resource changed.
+fn apply_audio_mix(
+    config: Res<GameAudioConfig>,
+    plain: Query<
+        (
+            &PlaybackSettings,
+            Option<&MusicBus>,
+            Option<&SfxBus>,
+            &mut AudioSink,
+        ),
+        Without<SpatialAudioSink>,
+    >,
+    spatial: Query<
+        (
+            &PlaybackSettings,
+            Option<&MusicBus>,
+            Option<&SfxBus>,
+            &mut SpatialAudioSink,
+        ),
+        Without<AudioSink>,
+    >,
+) {
+    if !config.is_changed() {
+        return;
+    }
+    for (settings, music, sfx, mut sink) in plain {
+        let volume = mix_volume(
+            settings.volume.to_linear(),
+            music.is_some(),
+            sfx.is_some(),
+            &config,
+        );
+        sink.set_volume(Volume::Linear(volume));
+    }
+    for (settings, music, sfx, mut sink) in spatial {
+        let volume = mix_volume(
+            settings.volume.to_linear(),
+            music.is_some(),
+            sfx.is_some(),
+            &config,
+        );
+        sink.set_volume(Volume::Linear(volume));
+    }
+}
+
+/// Write the mix onto each sink the frame it appears: the engine built it
+/// from the authored base alone (times `GlobalVolume`, which the template
+/// does not use), so a new sink on a bus starts at the wrong level until
+/// this runs.
+fn apply_audio_mix_to_new_sinks(
+    config: Res<GameAudioConfig>,
+    plain: Query<
+        (
+            &PlaybackSettings,
+            Option<&MusicBus>,
+            Option<&SfxBus>,
+            &mut AudioSink,
+        ),
+        (Added<AudioSink>, Without<SpatialAudioSink>),
+    >,
+    spatial: Query<
+        (
+            &PlaybackSettings,
+            Option<&MusicBus>,
+            Option<&SfxBus>,
+            &mut SpatialAudioSink,
+        ),
+        Added<SpatialAudioSink>,
+    >,
+) {
+    for (settings, music, sfx, mut sink) in plain {
+        let volume = mix_volume(
+            settings.volume.to_linear(),
+            music.is_some(),
+            sfx.is_some(),
+            &config,
+        );
+        sink.set_volume(Volume::Linear(volume));
+    }
+    for (settings, music, sfx, mut sink) in spatial {
+        let volume = mix_volume(
+            settings.volume.to_linear(),
+            music.is_some(),
+            sfx.is_some(),
+            &config,
+        );
+        sink.set_volume(Volume::Linear(volume));
+    }
+}
+
+/// Keep [`SoundLive`] true. Every entity playing a sound grows one (this
+/// system inserts it the first frame it sees the sink), and from then on it
+/// carries the sink's live numbers — the one reflected surface for audio a
+/// game, the editor or a BRP query can read.
+fn mirror_sound_live(
+    mut commands: Commands,
+    plain: Query<
+        (
+            Entity,
+            &AudioSink,
+            Option<&MusicBus>,
+            Option<&SfxBus>,
+        ),
+        Without<SpatialAudioSink>,
+    >,
+    spatial: Query<
+        (
+            Entity,
+            &SpatialAudioSink,
+            Option<&MusicBus>,
+            Option<&SfxBus>,
+        ),
+        Without<AudioSink>,
+    >,
+    mut live: Query<&mut SoundLive>,
+) {
+    let mut update =
+        |entity: Entity,
+         kind: &str,
+         volume: f32,
+         paused: bool,
+         finished: bool,
+         position: f32| {
+            let value = SoundLive {
+                kind: kind.to_string(),
+                volume,
+                paused,
+                finished,
+                position_secs: position,
+            };
+            match live.get_mut(entity) {
+                Ok(mut slot) => *slot = value,
+                Err(_) => {
+                    commands.entity(entity).insert(value);
+                }
+            }
+        };
+    for (entity, sink, music, sfx) in plain {
+        let kind = if music.is_some() {
+            "music"
+        } else if sfx.is_some() {
+            "sfx"
+        } else {
+            "plain"
+        };
+        update(
+            entity,
+            kind,
+            sink.volume().to_linear(),
+            sink.is_paused(),
+            sink.empty(),
+            sink.position().as_secs_f32(),
+        );
+    }
+    for (entity, sink, music, sfx) in spatial {
+        let kind = if music.is_some() {
+            "music"
+        } else if sfx.is_some() {
+            "sfx"
+        } else {
+            "plain"
+        };
+        update(
+            entity,
+            kind,
+            sink.volume().to_linear(),
+            sink.is_paused(),
+            sink.empty(),
+            sink.position().as_secs_f32(),
+        );
+    }
+}
+
 /// A cube the config drives, spawned so there is something to watch:
 /// it falls under gravity and spins at its component's `speed`
 /// scaled by `GameConfig::move_speed` — the per-entity number and
@@ -505,8 +798,10 @@ fn spawn_player(
         .id();
     // The follow camera: a rig parented to the player. Parenting is the
     // whole setup — the plugin above activates a lone rig by itself and
-    // drives it around its parent every frame.
-    commands.spawn((CameraRig::default(), ChildOf(player)));
+    // drives it around its parent every frame. The `SpatialListener` rides
+    // the same entity: spatial sounds (like the level's `Ambient` drone)
+    // pan and fade against wherever the player is.
+    commands.spawn((SpatialListener::default(), CameraRig::default(), ChildOf(player)));
 }
 
 /// The horizontal direction the Move action asks for this frame, in
@@ -853,21 +1148,50 @@ fn wire_hud(
 /// Restart both move the flow to the level (Restart's reset is
 /// `reset_run`, which runs on every entry into the level — switching
 /// IS the reset), Menu goes back to the start screen, Resume drops the
-/// pause veil.
+/// pause veil. Every acknowledged press also sounds the button blip
+/// (`press_sound` below).
 fn on_screen_pressed(
     press: On<ScreenPressed>,
     mut flow: ResMut<NextState<GameFlow>>,
     mut state: ResMut<GameState>,
+    mut commands: Commands,
+    server: Res<AssetServer>,
 ) {
     match press.event().button.as_str() {
         // Start and Restart both move the flow to the level: the run's
         // numbers come back through `reset_run` on the entry, so
         // Restart needs nothing of its own.
-        "start" | "restart" => flow.set(GameFlow::Level),
-        "menu" => flow.set(GameFlow::Menu),
-        "resume" => state.paused = false,
+        "start" | "restart" => {
+            press_sound(&mut commands, &server);
+            flow.set(GameFlow::Level);
+        }
+        "menu" => {
+            press_sound(&mut commands, &server);
+            flow.set(GameFlow::Menu);
+        }
+        "resume" => {
+            press_sound(&mut commands, &server);
+            state.paused = false;
+        }
         _ => {}
     }
+}
+
+/// The file the screen buttons acknowledge a press with.
+const BLIP_SOUND: &str = "sounds/blip.wav";
+
+/// One-shot feedback for a screen press: a short entity that plays
+/// `blip.wav` on the sfx bus and takes itself down when the sound ends —
+/// `PlaybackSettings::DESPAWN` is the whole lifecycle, and the entity's
+/// brief life is the "stop" behavior a one-shot wants.
+fn press_sound(commands: &mut Commands, server: &AssetServer) {
+    // The turbofish is load-bearing: `AudioPlayer`'s generic has a default,
+    // but inference will not apply it in an expression.
+    commands.spawn((
+        AudioPlayer::<AudioSource>(server.load(BLIP_SOUND)),
+        PlaybackSettings::DESPAWN,
+        SfxBus,
+    ));
 }
 
 /// The run's numbers come back on every entry into the level — the

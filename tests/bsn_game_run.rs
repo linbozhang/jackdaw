@@ -50,16 +50,20 @@ fn built_game_loads_and_spawns_a_bsn_scene() {
 
     // Run from the game dir so `assets/scene.bsn` resolves. BEVY_ASSET_ROOT
     // overrides the inherited CARGO_MANIFEST_DIR that bevy would otherwise use.
-    let (loaded, stderr) = util::run_windowless_game(
+    // The wait also covers the game's `AUDIO_SINK_LIVE` line, which the audio
+    // entity's mirror can only print a few frames after the scene lands.
+    let (loaded, stderr) = util::run_windowless_game_until(
         &binary,
         &game_dir,
         &[("BEVY_ASSET_ROOT", game_dir.as_os_str())],
+        &["AUDIO_SINK_LIVE"],
     );
 
     assert!(
         loaded,
         "the built game never loaded the .bsn scene \
-         (no `BSN_SCENE_LOADED ... has_target=true`); game stderr:\n{stderr}"
+         (no `BSN_SCENE_LOADED ... has_target=true`, or the scene's audio entity \
+         never reached a playing sink); game stderr:\n{stderr}"
     );
     // Scatter provenance is scene data, so the runtime has to know the type:
     // a game that cannot apply it loads a scattered scene with the groups
@@ -68,6 +72,33 @@ fn built_game_loads_and_spawns_a_bsn_scene() {
     assert!(
         stderr.contains("scatter_keys=[\"Props\"]"),
         "the runtime did not apply the scene's scatter provenance; game stderr:\n{stderr}"
+    );
+
+    // The audio entity reached a real sink at the mixed volume: the scene
+    // authors base 0.4 on the music bus, the game's config holds master 0.5
+    // and music 0.8, and 0.4 × 0.8 × 0.5 = 0.16. A machine without an audio
+    // output device produces no stream and no sink — the game then never
+    // prints the line and the wait above fails with its stderr, which is the
+    // declared environment dependency of this leg.
+    let live = stderr
+        .lines()
+        .find(|line| line.contains("AUDIO_SINK_LIVE"))
+        .expect("the wait above guarantees the line");
+    assert!(
+        live.contains("kind=music"),
+        "the probe entity reports its bus: {live}"
+    );
+    assert!(
+        live.contains("volume=0.160"),
+        "the sink plays at base 0.4 × music 0.8 × master 0.5: {live}"
+    );
+    assert!(
+        live.contains("paused=false") && live.contains("finished=false"),
+        "the sink is actively playing: {live}"
+    );
+    assert!(
+        !stderr.contains("No audio device found"),
+        "the audio stack should find this machine's output device; stderr:\n{stderr}"
     );
     println!("ok: {stderr}");
 }

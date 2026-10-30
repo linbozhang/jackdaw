@@ -413,6 +413,26 @@ impl JackdawExtension for InspectorExtension {
     }
 
     fn register(&self, ctx: &mut ExtensionContext) {
+        // The audio components get their own tab, ahead of the generic
+        // Components catch-all: an entity carrying audio is doing a
+        // recognizable job, and its settings deserve a named home the same
+        // way physics does. The Add Component picker still groups the
+        // bevy_audio types under their crate's name — the authored-category
+        // attribute cannot be attached to foreign types — but everything the
+        // tab routes lands in one place.
+        ctx.register_inspector_category(jackdaw_api_internal::inspector::InspectorCategory {
+            id: "audio".into(),
+            label: "Audio".into(),
+            description: "How this entity sounds: playback, bus and listening.".into(),
+            icon: jackdaw_feathers::icons::Icon::Volume2,
+            order: 45,
+        });
+        ctx.register_component_category::<bevy::audio::PlaybackSettings>("audio");
+        ctx.register_component_category::<bevy::audio::SpatialListener>("audio");
+        ctx.register_component_category::<bevy::audio::AudioPlayer<bevy::audio::AudioSource>>(
+            "audio",
+        );
+
         ctx.register_window(
             WindowDescriptor::new(InspectorWindow::ID)
                 .with_name("Components")
