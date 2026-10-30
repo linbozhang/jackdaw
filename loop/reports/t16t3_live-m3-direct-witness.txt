@@ -1,0 +1,1 @@
+M3_DIRECT blip_caught=1 blip_volume=0.4000000059604645 flow_moved=true

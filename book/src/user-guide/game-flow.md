@@ -131,9 +131,14 @@ What survives a switch is decided on purpose. The table:
 
 | Kind | Examples | Across a switch |
 |---|---|---|
-| Scene members | pickups, hazards, walls, the hud, everything authored in a `.bsn` the flow moves | **Die with their scene.** The switch despawns them; the next entry starts from a fresh set (fresh entity ids). |
+| Scene members | pickups, hazards, walls, the hud, the menu's theme music, everything authored in a `.bsn` the flow moves | **Die with their scene.** The switch despawns them; the next entry starts from a fresh set (fresh entity ids). |
 | Code-spawned entities | the player, its rig, anything your systems spawn | **Survive.** They belong to no scene document, so no switch touches them — the player's entity id is one and the same from Start through game over to Restart. |
 | Resources | `GameConfig`, `GameState.paused`, your run state | **Survive.** What crosses gets put back in shape by hand — see below. |
+
+The first row is why sounds start and stop without any code: a
+looping theme authored in the menu document is a scene member, so the
+switch to the level is its stop button ([Audio](audio.md) has the
+three sounds the template ships).
 
 The third row is the one to think about: a surviving resource is
 stale state the moment its world is gone. The template's answer is

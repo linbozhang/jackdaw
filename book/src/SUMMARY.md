@@ -24,6 +24,7 @@
 - [Game Parameters](user-guide/game-parameters.md)
 - [Game Input](user-guide/game-input.md)
 - [Game UI](user-guide/game-ui.md)
+- [Audio](user-guide/audio.md)
 - [Game Flow](user-guide/game-flow.md)
 - [The Player Controller](user-guide/player-controller.md)
 - [Animation](user-guide/animation.md)

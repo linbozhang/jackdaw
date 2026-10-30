@@ -1,15 +1,15 @@
-    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.32s
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.34s
      Running `target/debug/t16-audio`
-[2m2026-10-30T08:18:31.251300Z[0m [32m INFO[0m [2mbevy_diagnostic::system_information_diagnostics_plugin::internal[0m[2m:[0m SystemInfo { os: "macOS 26.6.2 Tahoe", kernel: "25.6.0", cpu: "Apple M1 Pro", core_count: "8", memory: "16.0 GiB" }
-[2m2026-10-30T08:18:31.254356Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
-[2m2026-10-30T08:18:31.338565Z[0m [32m INFO[0m [2mbevy_render::renderer[0m[2m:[0m AdapterInfo { name: "Apple M1 Pro", vendor: 0, device: 0, device_type: IntegratedGpu, device_pci_bus_id: "", driver: "", driver_info: "", backend: Metal, subgroup_min_size: 4, subgroup_max_size: 64, transient_saves_memory: Some(true), limit_bucket: None }
-[2m2026-10-30T08:18:31.614371Z[0m [32m INFO[0m [2mbevy_pbr::cluster[0m[2m:[0m GPU clustering is supported on this device.
-[2m2026-10-30T08:18:31.614521Z[0m [32m INFO[0m [2mbevy_render::batching::gpu_preprocessing[0m[2m:[0m GPU preprocessing is fully supported on this device.
-[2m2026-10-30T08:18:31.657554Z[0m [32m INFO[0m [2mbevy_winit::system[0m[2m:[0m Creating new window t16-audio (69v0)
-[2m2026-10-30T08:18:31.849381Z[0m [32m INFO[0m [2mjackdaw_runtime[0m[2m:[0m Loaded 1 asset files from /Users/zhanglinbo/workspace/loop-mac/t16-audio/t16-audio/assets
-[2m2026-10-30T08:18:31.849532Z[0m [32m INFO[0m [2mjackdaw_runtime[0m[2m:[0m No catalog at /Users/zhanglinbo/workspace/loop-mac/t16-audio/t16-audio/assets/catalog.bsn, skipping catalog load
-[2m2026-10-30T08:18:31.879777Z[0m [32m INFO[0m [2mjackdaw_runtime::config[0m[2m:[0m config 'audio-config.bsn' loaded; applying it as t16_audio::GameAudioConfig's initial value
-[2m2026-10-30T08:18:31.880173Z[0m [33m WARN[0m [2mjackdaw_runtime::config[0m[2m:[0m no config asset at 'input-actions.bsn'; jackdaw_runtime::game_input::GameInputConfig starts at its default
-[2m2026-10-30T08:18:31.880209Z[0m [33m WARN[0m [2mjackdaw_runtime::config[0m[2m:[0m no config asset at 'game-config.bsn'; t16_audio::GameConfig starts at its default
-[2m2026-10-30T08:18:31.888436Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Path not found: /Users/zhanglinbo/workspace/loop-mac/t16-audio/t16-audio/assets/sounds/missing.wav
-[2m2026-10-30T08:18:31.889195Z[0m [33m WARN[0m [2mjackdaw_runtime::terrain[0m[2m:[0m no active Camera3d, so terrain has no viewer to lay its levels around and will not draw
+[2m2026-10-30T09:13:13.908226Z[0m [32m INFO[0m [2mbevy_diagnostic::system_information_diagnostics_plugin::internal[0m[2m:[0m SystemInfo { os: "macOS 26.6.2 Tahoe", kernel: "25.6.0", cpu: "Apple M1 Pro", core_count: "8", memory: "16.0 GiB" }
+[2m2026-10-30T09:13:13.911345Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-30T09:13:13.999815Z[0m [32m INFO[0m [2mbevy_render::renderer[0m[2m:[0m AdapterInfo { name: "Apple M1 Pro", vendor: 0, device: 0, device_type: IntegratedGpu, device_pci_bus_id: "", driver: "", driver_info: "", backend: Metal, subgroup_min_size: 4, subgroup_max_size: 64, transient_saves_memory: Some(true), limit_bucket: None }
+[2m2026-10-30T09:13:14.270927Z[0m [32m INFO[0m [2mbevy_pbr::cluster[0m[2m:[0m GPU clustering is supported on this device.
+[2m2026-10-30T09:13:14.271158Z[0m [32m INFO[0m [2mbevy_render::batching::gpu_preprocessing[0m[2m:[0m GPU preprocessing is fully supported on this device.
+[2m2026-10-30T09:13:14.306320Z[0m [32m INFO[0m [2mbevy_winit::system[0m[2m:[0m Creating new window t16-audio (69v0)
+[2m2026-10-30T09:13:14.492098Z[0m [32m INFO[0m [2mjackdaw_runtime[0m[2m:[0m Loaded 1 asset files from /Users/zhanglinbo/workspace/loop-mac/t16-audio/t16-audio/assets
+[2m2026-10-30T09:13:14.492258Z[0m [32m INFO[0m [2mjackdaw_runtime[0m[2m:[0m No catalog at /Users/zhanglinbo/workspace/loop-mac/t16-audio/t16-audio/assets/catalog.bsn, skipping catalog load
+[2m2026-10-30T09:13:14.523306Z[0m [32m INFO[0m [2mjackdaw_runtime::config[0m[2m:[0m config 'audio-config.bsn' loaded; applying it as t16_audio::GameAudioConfig's initial value
+[2m2026-10-30T09:13:14.523418Z[0m [33m WARN[0m [2mjackdaw_runtime::config[0m[2m:[0m no config asset at 'input-actions.bsn'; jackdaw_runtime::game_input::GameInputConfig starts at its default
+[2m2026-10-30T09:13:14.523542Z[0m [33m WARN[0m [2mjackdaw_runtime::config[0m[2m:[0m no config asset at 'game-config.bsn'; t16_audio::GameConfig starts at its default
+[2m2026-10-30T09:13:14.531350Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Path not found: /Users/zhanglinbo/workspace/loop-mac/t16-audio/t16-audio/assets/sounds/missing.wav
+[2m2026-10-30T09:13:14.532057Z[0m [33m WARN[0m [2mjackdaw_runtime::terrain[0m[2m:[0m no active Camera3d, so terrain has no viewer to lay its levels around and will not draw

@@ -1,14 +1,14 @@
-direct-goodref.log 13:[2m2026-10-30T08:20:17.942806Z[0m [33m WARN[0m [2mjackdaw_runtime::config[0m[2m:[0m no config asset at 'game-config.bsn'; t16_audio::GameConfig starts at its default
-direct-level.log 13:[2m2026-10-30T08:16:58.313738Z[0m [33m WARN[0m [2mjackdaw_runtime::config[0m[2m:[0m no config asset at 'game-config.bsn'; t16_audio::GameConfig starts at its default
-direct-level.log 14:[2m2026-10-30T08:16:58.644744Z[0m [33m WARN[0m [2mjackdaw_bind::evaluate[0m[2m:[0m binding 0 on 753v0: no context for 't16_audio::PickupCount.0'
-direct-level.log 15:[2m2026-10-30T08:16:58.644801Z[0m [33m WARN[0m [2mjackdaw_bind::evaluate[0m[2m:[0m binding 0 on 752v0: no context for 't16_audio::PlayerHealth.current'
-direct-level.log 16:[2m2026-10-30T08:16:58.644865Z[0m [33m WARN[0m [2mjackdaw_bind::evaluate[0m[2m:[0m binding 0 on 750v0: no context for 't16_audio::PlayerHealth.current'
-direct-m7music.log 11:[2m2026-10-30T08:17:56.866661Z[0m [33m WARN[0m [2mjackdaw_runtime::config[0m[2m:[0m no config asset at 'game-config.bsn'; t16_audio::GameConfig starts at its default
-direct-menu.log 12:[2m2026-10-30T08:16:13.155094Z[0m [33m WARN[0m [2mjackdaw_runtime::config[0m[2m:[0m no config asset at 'game-config.bsn'; t16_audio::GameConfig starts at its default
-direct-menu.log 15:[2m2026-10-30T08:16:25.184600Z[0m [33m WARN[0m [2mjackdaw_bind::evaluate[0m[2m:[0m binding 0 on 761v0: no context for 't16_audio::PickupCount.0'
-direct-menu.log 16:[2m2026-10-30T08:16:25.185523Z[0m [33m WARN[0m [2mjackdaw_bind::evaluate[0m[2m:[0m binding 0 on 760v0: no context for 't16_audio::PlayerHealth.current'
-direct-menu.log 17:[2m2026-10-30T08:16:25.185555Z[0m [33m WARN[0m [2mjackdaw_bind::evaluate[0m[2m:[0m binding 0 on 758v0: no context for 't16_audio::PlayerHealth.current'
-staged-run.log 12:[2m2026-10-30T08:21:19.557715Z[0m [33m WARN[0m [2mjackdaw_runtime::config[0m[2m:[0m no config asset at 'game-config.bsn'; t16_audio::GameConfig starts at its default
-staged-run.log 13:[2m2026-10-30T08:21:19.595654Z[0m [33m WARN[0m [2mjackdaw_bind::evaluate[0m[2m:[0m binding 0 on 753v0: no context for 't16_audio::PickupCount.0'
-staged-run.log 14:[2m2026-10-30T08:21:19.595701Z[0m [33m WARN[0m [2mjackdaw_bind::evaluate[0m[2m:[0m binding 0 on 752v0: no context for 't16_audio::PlayerHealth.current'
-staged-run.log 15:[2m2026-10-30T08:21:19.595710Z[0m [33m WARN[0m [2mjackdaw_bind::evaluate[0m[2m:[0m binding 0 on 750v0: no context for 't16_audio::PlayerHealth.current'
+direct-goodref.log 13:[2m2026-10-30T09:15:00.677385Z[0m [33m WARN[0m [2mjackdaw_runtime::config[0m[2m:[0m no config asset at 'game-config.bsn'; t16_audio::GameConfig starts at its default
+direct-level.log 13:[2m2026-10-30T09:11:41.049825Z[0m [33m WARN[0m [2mjackdaw_runtime::config[0m[2m:[0m no config asset at 'game-config.bsn'; t16_audio::GameConfig starts at its default
+direct-level.log 14:[2m2026-10-30T09:11:41.361606Z[0m [33m WARN[0m [2mjackdaw_bind::evaluate[0m[2m:[0m binding 0 on 753v0: no context for 't16_audio::PickupCount.0'
+direct-level.log 15:[2m2026-10-30T09:11:41.361664Z[0m [33m WARN[0m [2mjackdaw_bind::evaluate[0m[2m:[0m binding 0 on 752v0: no context for 't16_audio::PlayerHealth.current'
+direct-level.log 16:[2m2026-10-30T09:11:41.361732Z[0m [33m WARN[0m [2mjackdaw_bind::evaluate[0m[2m:[0m binding 0 on 750v0: no context for 't16_audio::PlayerHealth.current'
+direct-m7music.log 13:[2m2026-10-30T09:12:39.714030Z[0m [33m WARN[0m [2mjackdaw_runtime::config[0m[2m:[0m no config asset at 'game-config.bsn'; t16_audio::GameConfig starts at its default
+direct-menu.log 13:[2m2026-10-30T09:10:52.442211Z[0m [33m WARN[0m [2mjackdaw_runtime::config[0m[2m:[0m no config asset at 'game-config.bsn'; t16_audio::GameConfig starts at its default
+direct-menu.log 16:[2m2026-10-30T09:11:07.962566Z[0m [33m WARN[0m [2mjackdaw_bind::evaluate[0m[2m:[0m binding 0 on 761v0: no context for 't16_audio::PickupCount.0'
+direct-menu.log 17:[2m2026-10-30T09:11:07.962645Z[0m [33m WARN[0m [2mjackdaw_bind::evaluate[0m[2m:[0m binding 0 on 760v0: no context for 't16_audio::PlayerHealth.current'
+direct-menu.log 18:[2m2026-10-30T09:11:07.962708Z[0m [33m WARN[0m [2mjackdaw_bind::evaluate[0m[2m:[0m binding 0 on 758v0: no context for 't16_audio::PlayerHealth.current'
+staged-run.log 12:[2m2026-10-30T09:16:00.841881Z[0m [33m WARN[0m [2mjackdaw_runtime::config[0m[2m:[0m no config asset at 'game-config.bsn'; t16_audio::GameConfig starts at its default
+staged-run.log 13:[2m2026-10-30T09:16:00.883968Z[0m [33m WARN[0m [2mjackdaw_bind::evaluate[0m[2m:[0m binding 0 on 753v0: no context for 't16_audio::PickupCount.0'
+staged-run.log 14:[2m2026-10-30T09:16:00.884014Z[0m [33m WARN[0m [2mjackdaw_bind::evaluate[0m[2m:[0m binding 0 on 752v0: no context for 't16_audio::PlayerHealth.current'
+staged-run.log 15:[2m2026-10-30T09:16:00.884023Z[0m [33m WARN[0m [2mjackdaw_bind::evaluate[0m[2m:[0m binding 0 on 750v0: no context for 't16_audio::PlayerHealth.current'

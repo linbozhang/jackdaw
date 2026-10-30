@@ -50,7 +50,9 @@ Flow](game-flow.md) has the rules table).
 The template's camera is a `CameraRig` parented under the player —
 parenting is the whole setup. The runtime plugin the template wires
 activates a lone rig by itself and drives it around its parent every
-frame; no camera code exists in the game.
+frame; no camera code exists in the game. The rig is also where the
+game's ears live — it carries the `SpatialListener` the level's
+spatial sounds pan against ([Audio](audio.md)).
 
 The rig is a component, so its knobs are on the Components panel:
 

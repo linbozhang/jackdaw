@@ -84,6 +84,10 @@ brp() {
   # Reads ride the flaky window (AN9): retry until a parseable body
   # comes back. Callers that mutate go through brp_raw/op — an op
   # executes even when its response comes back empty.
+  # Exhaustion returns 1 (T3 lesson): the bare `echo` fallback used to
+  # return echo's status 0, which made `if brp …` guards — editor_boot's
+  # EDITOR_BOOT_FAIL among them — pass against a dead port and burn the
+  # whole phase on timeouts.
   local method="$1" params="${2:-}"
   local attempt out
   for attempt in 1 2 3 4 5 6 7 8; do
@@ -95,6 +99,7 @@ brp() {
     sleep 3
   done
   echo "$out"
+  return 1
 }
 gbrp() {
   local method="$1" params="${2:-}" id=$RANDOM body out attempt
@@ -166,7 +171,11 @@ editor_boot() { # editor_boot [project]
   local ok=""
   for i in $(seq 1 150); do
     sleep 2
-    if brp jackdaw/status '{}' >/dev/null 2>&1; then ok=1; break; fi
+    # The process check is load-bearing (T3 lesson): brp now returns 1
+    # on exhaustion, but a binary that dies before binding the port
+    # (the stale-binary dyld symbol error) must fail the boot at the
+    # process level, not as a port timeout.
+    if brp jackdaw/status '{}' >/dev/null 2>&1 && pgrep -x jackdaw >/dev/null; then ok=1; break; fi
     pgrep -x jackdaw >/dev/null || break
   done
   [ -n "$ok" ] || { log "EDITOR_BOOT_FAIL"; exit 1; }
@@ -700,10 +709,15 @@ editor_phase() {
   rm -f "$OUTDIR/summary-editor.txt"
   editor_boot "$PROJECT"
   editor_build_settled 600
-  l1_m1_chain
-  m7_auth_face
+  # Order note (T3, honoring the t16-t2 QA reflow item c): the L1 Pick
+  # modal survives save/reopen and pollutes later screenshots — so the
+  # shot-carrying legs (M14, M7's card) run BEFORE L1; L1's own picker
+  # shot legitimately shows the modal, and its four-piece assertions
+  # live in BRP readbacks + document grep.
   m14_editor_mute_witness
   m12_reopen
+  m7_auth_face
+  l1_m1_chain
 
   # The standing warn scan over this phase's editor log. The audio
   # word-list forms: a `cannot apply ... AudioPlayer` line = the generic

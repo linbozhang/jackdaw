@@ -93,6 +93,14 @@ fn ambient_app_reading(assets: bevy::asset::AssetPlugin) -> App {
             .disable::<bevy::audio::AudioPlugin>()
             .disable::<WinitPlugin>(),
     );
+    // Scenes the tests open carry audio entities since the template grew
+    // its audio segment (T16): resolving an authored
+    // `AudioPlayer("sounds/…")` allocates an `AudioSource` handle, which
+    // panics when the asset type was never initialized. Register the type
+    // and its loader — pure file decoding, no output device — so a
+    // headless scene load behaves like the editor's without a backend.
+    app.init_asset::<bevy::audio::AudioSource>();
+    app.init_asset_loader::<bevy::audio::AudioLoader>();
     app
 }
 

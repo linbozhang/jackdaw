@@ -1,0 +1,33 @@
+T16-T3 integration FIRST-RUN red excerpts (2026-10-30 17:27-18:05, pre-fix tree)
+================================================================================
+Archived as excerpts: the full log at t16t3_integration.log was overwritten by
+the final-tree rerun per the covering-archive discipline. These are the exact
+lines grepped from the first run before the rerun (T1/T2 red-archive discipline).
+
+Summary [1989.755s] 5418 tests run: 5415 passed (14 slow), 3 failed, 0 skipped
+
+--- red 1: A6 known item (unchanged, isolated rerun green on final tree) -------
+  TRY 1 FAIL [  17.825s] (─────────) jackdaw::prefabs prefab_lifecycle::prefab_file_change_triggers_reload
+    thread 'prefab_lifecycle::prefab_file_change_triggers_reload' panicked at tests/prefabs/prefab_lifecycle.rs:714:5:
+    watcher reloaded prefab; v2 should be in world. Got ["v1"]
+  (three tries, same signature; = the A6 ticket form, isolated rerun
+   t16t3_a6_isolated.log 1/1 green 2.967s on the final tree)
+
+--- red 2: T1-legacy test debt, fixed this round -------------------------------
+  TRY 1 FAIL [   4.574s] (─────────) jackdaw::inspector category_strip::category_tabs_carry_title_and_description_tooltips
+    thread 'category_strip::category_tabs_carry_title_and_description_tooltips' panicked at tests/inspector/category_strip.rs:88:5:
+    assertion `left == right` failed: one described tooltip per seeded tab
+      left: [("Audio", "How this entity sounds: playback, bus and listening."), ("Components", ...), ("Material", ...), ("Mesh", ...), ("Modifiers", ...), ("Object", ...), ("Physics", ...)]
+     right: [("Components", ...), ("Material", ...), ("Mesh", ...), ("Modifiers", ...), ("Object", ...), ("Physics", ...)]
+  (three tries; root = the strip spawns a tab per registered category and T16-T1
+   registered the Audio one; fix = expected table gained the Audio tuple,
+   tests/inspector/category_strip.rs)
+
+--- red 3: T1-legacy test debt, fixed this round -------------------------------
+  TRY 1 FAIL [   5.201s] (─────────) jackdaw::stage new_project::create_in_the_new_game_dialog_makes_the_offered_project_and_opens_it
+    thread 'new_project::create_in_the_new_game_dialog_makes_the_offered_project_and_opens_it' panicked at /Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_asset/src/server/info.rs:869:17:
+    Cannot allocate an AssetHandle of type 'TypeId(0xaebb11dd261be7cd65865dd136335a4d)' because the asset type has not been initialized. Make sure you have called `app.init_asset::<(actual asset type)>()`
+  (three tries; root = the headless test app disables AudioPlugin so AudioSource
+   was never initialized, and the T1 template scene.bsn now carries an audio
+   entity whose handle resolution allocates one on project open; fix =
+   tests/util/mod.rs registers the asset type and its loader, no backend)
