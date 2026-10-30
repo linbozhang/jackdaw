@@ -3,7 +3,7 @@ L2: afplay blip.wav exit 0
 L2: afplay bgm.wav exit 0
 L2: afplay ambient.wav exit 0
 L2_AFPLAY_CONTROL_PASS
-L3: MenuBgm sample1 vol=0.6000000238418579 pos=3.1229023933410645, sample2 pos=5.173242568969727 ({"finished":false,"kind":"music","paused":false,"position_secs":5.258049964904785,"volume":0.6000000238418579})
+L3: MenuBgm sample1 vol=0.6000000238418579 pos=6.624943256378174, sample2 pos=8.670294761657715 ({"finished":false,"kind":"music","paused":false,"position_secs":8.715192794799805,"volume":0.6000000238418579})
 L3: master->0 readback=0.0, MenuBgm volume now 0.0
 L3 M2 BGM: mute+restore cycle complete, ok=true
 L3_M2_BGM_PASS
@@ -11,11 +11,11 @@ M3-direct: sfx sinks before=0, samples with a sfx sink=1, blip volume=0.40000000
 M3-direct: flow moved=true (MenuBgm gone), Ambient now=present
 M3-direct chain complete, ok=true
 M3_DIRECT_CHAIN_PASS
-L5: Ambient sample={"finished":false,"kind":"plain","paused":false,"position_secs":6.664852619171143,"volume":0.800000011920929}
+L5: Ambient sample={"finished":false,"kind":"plain","paused":false,"position_secs":6.739682674407959,"volume":0.800000011920929}
 L5: routing baseline sample: SfxProbe=sfx:0.4000000059604645 MusicProbe=music:0.5 Ambient=plain:0.800000011920929
 L5: SpatialListener entity=717v0
 L5: Ambient emitter GlobalTransform.translation=[6.0,2.0,-4.0] (authored 6,2,-4)
-L5: walk player [-2.0,0.8600000143051147,0.0] -> [-2.0,0.8600000143051147,-2.440000057220459]; listener [-2.0,5.954183578491211,9.210610389709473] -> [-2.0,5.954183578491211,6.770610332489014]
+L5: walk player [-2.0,0.8600000143051147,0.0] -> [-1.999999761581421,0.8600000143051147,-2.440000057220459]; listener [-2.0,5.954183578491211,9.210610389709473] -> [-1.999999761581421,5.954183578491211,6.770610332489014]
 L5 M4 spatial complete, ok=true
 L5_M4_SPATIAL_PASS
 L9 baseline: SfxProbe=sfx:0.4000000059604645 MusicProbe=music:0.5 Ambient=plain:0.800000011920929
@@ -41,10 +41,10 @@ L10 stop invariant: sha stable=y, no AudioSink in documents
 L4_M3_PIE_CLICK_PASS
 L10_M11_STOP_INVARIANT_PASS
 L6: staged tree carries sounds/ + manifest rows
-L6 staged sample: Ambient={"finished":false,"kind":"plain","paused":false,"position_secs":18.647619247436523,"volume":0.800000011920929}
+L6 staged sample: Ambient={"finished":false,"kind":"plain","paused":false,"position_secs":18.263492584228516,"volume":0.800000011920929}
 L6 staged routing: Ambient=plain:0.800000011920929 MusicProbe=music:0.5 SfxProbe=sfx:0.4000000059604645
 L6 M5 export parity complete, ok=true
 L6_M5_EXPORT_PASS
-WARN_SCAN game phase: generic_registration_lines=0 game_channel_audio_warns=0 attributed_template_states=14 (panics counted: 3)
+WARN_SCAN game phase: generic_registration_lines=0 game_channel_audio_warns=0 attributed_template_states=14 (panics counted: 2)
 WARN_SCAN_GAME_PASS
 VERDICT_GAME_PHASE: L10_M11_STOP_INVARIANT=PASS L2_AFPLAY_CONTROL=PASS L3_M2_BGM=PASS L4_M3_PIE_CLICK=PASS L5_M4_SPATIAL=PASS L6_M5_EXPORT=PASS L7_M6_BADREF=PASS L9_M10_ROUTING=PASS M3_DIRECT_CHAIN=PASS M7_PLAY_FACE=PASS WARN_SCAN_GAME=PASS 

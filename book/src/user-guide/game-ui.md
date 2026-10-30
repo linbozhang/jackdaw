@@ -62,7 +62,8 @@ see [Game Flow](game-flow.md).)
 
 Buttons say which one they are: the pause screen's `Action` binding
 sends `ScreenPressed { button: "resume" }` from its literal, and one
-observer turns that into behavior — drop the veil. (The menu and
+observer turns that into behavior — drop the veil, and sound the
+button's click ([Audio](audio.md)). (The menu and
 end-screen buttons send `"start"`, `"restart"` and `"menu"` from their
 own documents; the same observer moves the flow for them.) The Pause
 *action* (Escape, see [Game Input](game-input.md)) lands on the same

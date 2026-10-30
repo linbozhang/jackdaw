@@ -1,0 +1,10 @@
+=== QA GATES START Fri Oct 30 19:39:46 CST 2026 HEAD=e65a4f9e DIRTY=1 df=98Gi ===
+fmt exit=0
+libtests exit=0
+fast exit=0
+audio_gate exit=0
+clippy_physics exit=0
+integration exit=1
+docs exit=0
+scaffold_e2e exit=0
+=== QA GATES END Fri Oct 30 20:36:09 CST 2026 df=89Gi ===

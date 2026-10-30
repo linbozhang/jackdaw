@@ -1,0 +1,128 @@
+   Compiling jackdaw_project_build v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_project_build)
+   Compiling ring v0.17.14
+warning: public documentation for `sweep_orphan_temp_files` links to private item `TEMP_FRESH_WINDOW`
+   --> crates/jackdaw_api_internal/src/document.rs:207:14
+    |
+207 | /// within [`TEMP_FRESH_WINDOW`] are left alone (another editor instance may
+    |              ^^^^^^^^^^^^^^^^^ this item is private
+    |
+    = note: this link will resolve properly if you pass `--document-private-items`
+    = note: `#[warn(rustdoc::private_intra_doc_links)]` on by default
+
+warning: public documentation for `system_access_entries` links to private item `ambiguities_for`
+   --> crates/jackdaw_remote/src/ecs_methods.rs:147:42
+    |
+147 | /// unregistered (the same fallback as [`ambiguities_for`]).
+    |                                          ^^^^^^^^^^^^^^^ this item is private
+    |
+    = note: this link will resolve properly if you pass `--document-private-items`
+    = note: `#[warn(rustdoc::private_intra_doc_links)]` on by default
+
+warning: `jackdaw_api_internal` (lib doc) generated 1 warning
+warning: `jackdaw_remote` (lib doc) generated 1 warning
+ Documenting jackdaw_project_build v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_project_build)
+    Checking jackdaw_scaffold v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_scaffold)
+    Checking jackdaw_cli_internal v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_cli)
+ Documenting jackdaw_scaffold v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_scaffold)
+ Documenting jackdaw_cli_internal v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_cli)
+warning: public documentation for `ExportManifest` links to private item `EXPORT_MANIFEST`
+   --> crates/jackdaw_project_build/src/export.rs:149:12
+    |
+149 | /// (see [`EXPORT_MANIFEST`]): the receipt that makes "same input, same
+    |            ^^^^^^^^^^^^^^^ this item is private
+    |
+    = note: this link will resolve properly if you pass `--document-private-items`
+    = note: `#[warn(rustdoc::private_intra_doc_links)]` on by default
+
+    Checking jackdaw v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw)
+ Documenting jackdaw v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw)
+   Compiling rustls v0.23.46
+    Checking rustls-webpki v0.103.16
+    Checking ureq v2.12.1
+ Documenting jd v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jd)
+warning: `jackdaw_project_build` (lib doc) generated 1 warning
+warning: public documentation for `GameExportPlugin` links to private item `add_to_extension`
+   --> src/game_export.rs:353:7
+    |
+353 | /// [`add_to_extension`], like every operator.
+    |       ^^^^^^^^^^^^^^^^ this item is private
+    |
+    = note: this link will resolve properly if you pass `--document-private-items`
+    = note: `#[warn(rustdoc::private_intra_doc_links)]` on by default
+
+warning: public documentation for `pie` links to private item `BuildKey`
+  --> src/pie.rs:10:45
+   |
+10 | //! instance number). Builds are keyed by [`BuildKey`]: the project root
+   |                                             ^^^^^^^^ this item is private
+   |
+   = note: this link will resolve properly if you pass `--document-private-items`
+
+warning: public documentation for `handle_reload` links to private item `force_stop_all`
+   --> src/pie.rs:682:30
+    |
+682 | /// The stop is immediate ([`force_stop_all`]), not graceful: a rebuilt
+    |                              ^^^^^^^^^^^^^^ this item is private
+    |
+    = note: this link will resolve properly if you pass `--document-private-items`
+
+warning: public documentation for `handle_stop` links to private item `GRACEFUL_STOP_DEADLINE`
+    --> src/pie.rs:1261:7
+     |
+1261 | /// [`GRACEFUL_STOP_DEADLINE`] window, reaped by [`advance_child`] as they
+     |       ^^^^^^^^^^^^^^^^^^^^^^ this item is private
+     |
+     = note: this link will resolve properly if you pass `--document-private-items`
+
+warning: public documentation for `handle_stop` links to private item `advance_child`
+    --> src/pie.rs:1261:52
+     |
+1261 | /// [`GRACEFUL_STOP_DEADLINE`] window, reaped by [`advance_child`] as they
+     |                                                    ^^^^^^^^^^^^^ this item is private
+     |
+     = note: this link will resolve properly if you pass `--document-private-items`
+
+warning: unresolved link to `StateEvent::Log`
+ --> src/pie_game_log.rs:4:7
+  |
+4 | //! [`StateEvent::Log`]s and the Game panel shows the newest few, so a runtime
+  |       ^^^^^^^^^^^^^^^ no item named `StateEvent` in scope
+  |
+  = note: `#[warn(rustdoc::broken_intra_doc_links)]` on by default
+
+warning: public documentation for `transition_to_editor` links to private item `open_pending_scenes`
+   --> src/project_select.rs:498:7
+    |
+498 | /// [`open_pending_scenes`] takes them one a frame, and falls back to
+    |       ^^^^^^^^^^^^^^^^^^^ this item is private
+    |
+    = note: this link will resolve properly if you pass `--document-private-items`
+
+warning: public documentation for `reference_rewrite` links to private item `follow_a_move`
+ --> src/reference_rewrite.rs:7:30
+  |
+7 | //! arrives at a new path, [`follow_a_move`] rewrites every document that
+  |                              ^^^^^^^^^^^^^ this item is private
+  |
+  = note: this link will resolve properly if you pass `--document-private-items`
+
+warning: public documentation for `begin_session` links to private item `KEPT_SESSIONS`
+   --> src/scene_io/session_journal.rs:116:52
+    |
+116 | /// the state tree, sweep crash leftovers beyond [`KEPT_SESSIONS`], and
+    |                                                    ^^^^^^^^^^^^^ this item is private
+    |
+    = note: this link will resolve properly if you pass `--document-private-items`
+
+warning: public documentation for `test_input` links to private item `Emit::Motion`
+  --> src/test_input.rs:13:10
+   |
+13 | //! is [`Emit::Motion`]: raw relative motion arrives from winit as a
+   |          ^^^^^^^^^^^^ this item is private
+   |
+   = note: this link will resolve properly if you pass `--document-private-items`
+
+warning: `jackdaw` (lib doc) generated 10 warnings
+ Documenting jackdaw_editor v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_editor)
+    Finished `dev` profile [optimized + debuginfo] target(s) in 36.64s
+   Generated /Users/zhanglinbo/workspace/jackdaw/target/doc/bevy_window_chrome/index.html and 58 other files

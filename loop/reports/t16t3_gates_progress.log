@@ -1,0 +1,22 @@
+[17:19:32] fmt start
+[17:19:35] fmt exit=0
+[17:19:35] audio_gate start (M8 anchor)
+[17:21:06] audio_gate exit=0
+[17:21:06] clippy workspace start
+[17:21:25] clippy ws exit=0
+[17:21:25] clippy physics start
+[17:21:36] clippy physics exit=0
+[17:21:36] libtests start
+[17:25:49] libtests exit=0
+[17:25:49] fast start
+[17:27:34] fast exit=0
+[17:27:34] integration start
+[18:05:57] integration exit=1
+[18:05:57] doctests start
+[18:06:18] doctests exit=101
+[18:06:18] docs start
+[18:10:10] docs exit=0
+[18:10:10] scaffold_e2e start
+[18:14:17] scaffold_e2e exit=0
+[18:14:17] ALL GATES DONE
+INTEGRATION_EXIT=1

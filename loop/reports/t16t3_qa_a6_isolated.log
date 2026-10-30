@@ -1,0 +1,8 @@
+   Compiling jackdaw v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw)
+    Finished `test` profile [optimized + debuginfo] target(s) in 6.72s
+────────────
+ Nextest run ID e51802be-e7bb-4fc9-9506-96892a1b9060 with nextest profile: ci
+    Starting 1 test across 1 binary (100 tests skipped)
+        PASS [   3.071s] (1/1) jackdaw::prefabs prefab_lifecycle::prefab_file_change_triggers_reload
+────────────
+     Summary [   3.071s] 1 test run: 1 passed, 100 skipped

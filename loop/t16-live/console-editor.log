@@ -1,11 +1,4 @@
 EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t16-audio/t16-audio
-shot l1-audio-picker ok (window)
-shot l1-reopened-inspector ok (window)
-L1 M1 chain: reopen handle ok, settings ok, marker ok, ok=true
-L1_M1_CHAIN_PASS
-shot m7-config-card ok (window)
-M7 auth face: asset.new + card edit + save + revert, ok=true
-M7_AUTH_FACE_PASS
 M14: editor GlobalVolume = {"volume":{"Linear":0.0}} (want Linear 0.0)
 M14: editor MenuBgm PlaybackSettings = {"duration":null,"mode":"Loop","muted":false,"paused":false,"spatial":false,"spatial_scale":null,"speed":1.0,"start_position":null,"volume":{"Linear":0.6000000238418579}} (authored base stays 0.6)
 shot m14-editor-muted-menu ok (window)
@@ -15,6 +8,13 @@ M12: before=player=present settings={"duration":null,"mode":"Loop","muted":false
 M12: after =player=present settings={"duration":null,"mode":"Loop","muted":false,"paused":false,"spatial":false,"spatial_scale":null,"speed":1.0,"start_position":null,"volume":{"Linear":0.6000000238418579}}
 M12 reopen: menu BGM handle/settings/bus all kept, ok=true
 M12_REOPEN_CONSISTENT_PASS
+shot m7-config-card ok (window)
+M7 auth face: asset.new + card edit + save + revert, ok=true
+M7_AUTH_FACE_PASS
+shot l1-audio-picker ok (window)
+shot l1-reopened-inspector ok (window)
+L1 M1 chain: reopen handle ok, settings ok, marker ok, ok=true
+L1_M1_CHAIN_PASS
 WARN_SCAN editor phase: generic_registration_lines=0 (panics counted: 0)
 WARN_SCAN_EDITOR_PASS
 VERDICT_EDITOR_PHASE: L1_M1_CHAIN=PASS M12_REOPEN_CONSISTENT=PASS M14_EDITOR_MUTED=PASS M7_AUTH_FACE=PASS WARN_SCAN_EDITOR=PASS 

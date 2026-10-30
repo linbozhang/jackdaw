@@ -76,6 +76,12 @@ fn category_tabs_carry_title_and_description_tooltips() {
             "The material assets this entity's surfaces wear.",
         ),
         ("Physics", "Colliders and rigid bodies."),
+        // The audio tab (T16): the strip spawns a tab per registered
+        // category, and audio registered its own alongside the six seeds.
+        (
+            "Audio",
+            "How this entity sounds: playback, bus and listening.",
+        ),
         (
             "Components",
             "Every other component on this entity. Add one here.",
