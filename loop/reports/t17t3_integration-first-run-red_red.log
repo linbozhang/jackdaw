@@ -1,0 +1,31 @@
+
+    thread 'game_flow_template::the_flow_walks_the_three_documents_and_back_with_zero_residue' (23975463) panicked at tests/guards/game_flow_template.rs:570:5:
+    assertion `left == right` failed: the one expected failure is the hud's
+      left: 3
+     right: 1
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+  TRY 2 FAIL [   7.344s] (─────────) jackdaw::guards game_flow_template::the_flow_walks_the_three_documents_and_back_with_zero_residue
+  stdout ───
+
+    running 1 test
+--
+
+    thread 'game_flow_template::the_flow_walks_the_three_documents_and_back_with_zero_residue' (23975741) panicked at tests/guards/game_flow_template.rs:570:5:
+    assertion `left == right` failed: the one expected failure is the hud's
+      left: 3
+     right: 1
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+        PASS [  11.449s] (1497/5440) jackdaw::scenes external_reload::reload_replaces_the_open_scene_and_empties_its_history
+        PASS [  12.779s] (1498/5440) jackdaw::guards game_input::a_rebinding_file_drives_the_actions_it_names
+        PASS [   0.041s] (1499/5440) jackdaw::guards game_input::the_runtime_config_assets_reach_the_new_asset_list
+        PASS [  13.914s] (1500/5440) jackdaw::scenes external_reload::the_prompt_says_what_a_reload_would_cost_a_dirty_tab
+--
+
+    thread 'game_flow_template::the_flow_walks_the_three_documents_and_back_with_zero_residue' (23976018) panicked at tests/guards/game_flow_template.rs:570:5:
+    assertion `left == right` failed: the one expected failure is the hud's
+      left: 3
+     right: 1
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+     Summary [2274.872s] 5440 tests run: 5438 passed (16 slow), 2 failed, 0 skipped

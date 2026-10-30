@@ -346,8 +346,12 @@ prep() {
   fi
   grep -q "GameSave" "$PROJECT/src/lib.rs" \
     || { log "PREP_FAIL fixture lacks the save template section"; exit 1; }
-  grep -q "FeathersSlider" "$PROJECT/assets/hud.bsn" \
-    || { log "PREP_FAIL hud lacks the volume sliders"; exit 1; }
+  # Post-SV9 (form A) the hud authors only the marker rows; the sliders
+  # attach from Rust — check both halves, not the scene-component text.
+  grep -q "MasterVolumeSlider" "$PROJECT/assets/hud.bsn" \
+    || { log "PREP_FAIL hud lacks the volume slider rows"; exit 1; }
+  grep -q "attach_volume_sliders" "$PROJECT/src/lib.rs" \
+    || { log "PREP_FAIL fixture lacks the slider attachment (SV9 form A)"; exit 1; }
 
   write_authored_audio
 

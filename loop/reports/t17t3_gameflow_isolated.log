@@ -1,0 +1,4 @@
+        PASS [   3.997s] (3/3) jackdaw::guards game_flow_template::the_boot_state_follows_the_start_scene
+────────────
+     Summary [   3.998s] 3 tests run: 3 passed, 241 skipped
+gameflow_exit=0

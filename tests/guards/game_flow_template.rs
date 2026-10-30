@@ -77,11 +77,16 @@ struct GameOverRoot;
 #[reflect(Component, Default)]
 struct HudRoot;
 
-/// Template `GameState`.
+/// Template `GameState`. The T17 save section added the save-display
+/// mirror fields (`runs_played`, `unlock_note`) that the menu and
+/// game-over documents bind through `Res(GameState)`; the copy keeps
+/// them so those bindings resolve the way the real game's do.
 #[derive(Resource, Reflect, Default)]
 #[reflect(Resource, Default)]
 struct GameState {
     paused: bool,
+    runs_played: u32,
+    unlock_note: String,
 }
 
 /// Template `ScreenPressed`.
