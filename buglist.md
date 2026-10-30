@@ -460,6 +460,11 @@
   `loop/qa/t14-live.sh` 五腿（L2_REVERT_FIELD/L3_SAVE_AS_VARIANT·PREFAB/L3_UNBUNDLE/L8_PACK）收敛在「对话框提交+字段行定位」脚本驱动缺口（语义面 headless 锚全数在档零缺口，t14-final-qa.md §七）；另 all 模式 warn/N13 扫描 grep 引用陈旧分相文件名（:799-803/:898-903 应随 `$PHASE` 改 `editor-$PHASE.log`——T14 终轮 N13 实为 1 条被记 0）。
   修复方向：对话框提交通道（dialog.answer 已有 BRP 面可接）+Inspector 字段行定位强化（ui_tree 行渲染缺口 T13 已见同族）；grep 随相位修。T15 动画面板驱动同族将再踩，宜先修。
   > 2026-10-30 并账（T15-T2 QA 回流）：`loop/qa/t15-live.sh` 编辑器通道误用 `sample_graph_game`（按提交版重跑 L6 编辑器序列必不匹配）+L9 首 set_state 未等绑定；`jackdaw/screenshot` 同帧 flake（60s 两帧 md5 同，badge 像素级证据待截图通道修复）。随本票同批修。
+  > 2026-10-30 再并账（T16-T2 QA 回流②）：`loop/qa/t16-live.sh` L1 Pick 字段行定位族第 6 腿——编辑器 UI 坐标空间逐 run 漂移，已改「None 行+最近邻图标」相对配对稳住；结构化寻址（无文本图标行）仍缺。
+
+- [ ] **A10. PIE 面板指针转发在缩放布局下未达游戏 UI（product 通道契约票，复现先行）**（2026-10-30 T16-T2 程序发现+QA 建票；主控批准立账）
+  PIE 面板的 input.pointer 转发在缩放布局下初测未达游戏 UI（坐标空间混用嫌疑：ui_tree rect 坐标空间 vs input.pointer frame-relative；`input.pointer` 契约票，收编 T12-T3:108 挂账）。证据现状弱（l4-debug png 不在档）；T12 在档事实「流送帧=底部条带非 16:9」提示第一成因可能是几何误识（frame_rect 选中编辑器 viewport）。对 T16/T12 验收均无阻塞（L4 已用面板带扫格绕开）。
+  修复方向：复现先行（最小现场：缩放布局+带扫格 vs 逐点两形态对照）；再定修层（frame_rect 选取或转发坐标换算）。与 A7（工具层）/A9（BRP 空响应）互独立。
 
 - [ ] **A8. BSN apply 静默丢弃 crate 根 re-export 路径 + misleading remedy（AN8，T15-T2 真机首踩）**（2026-10-30 T15-T2 程序发现+QA 机制核实；主控批准立账）
   场景文档的图族组件必须写定义模块全路径（`…::graph::AnimationGraphRef`），crate 根 re-export 拼写被 `jackdaw_bsn::apply` 静默丢弃（无 warn、组件不落——手写场景/导出迁移场景易踩，fixture 已绕行）；且 `jackdaw_bsn::catalog` 的 remedy 文案（"rebuild the project"）对此误导。

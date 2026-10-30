@@ -1,0 +1,1 @@
+56:[2m2026-10-30T08:33:42.648427Z[0m [33m WARN[0m [2mbevy_remote::builtin_methods[0m[2m:[0m Failed to serialize component `bevy_audio::audio::AudioPlayer<bevy_audio::audio_source::AudioSource>` for entity 4553v1

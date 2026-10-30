@@ -1,6 +1,6 @@
 # Jackdaw Loop 工作契约
 
-> 本目录被 .git/info/exclude 本地忽略，不入库、不影响上游 PR。
+> 仓库迁移（2026-10-28）起本目录**随 git 旅行**（原 .git/info/exclude 忽略已移除，见 loop/MIGRATION.md）；上游 PR 时按需剔除。
 
 ## 目标
 
@@ -44,7 +44,7 @@ markdown 等非 ASCII 文本文件的读改，**只准用字节安全工具（Re
 
 - 分支 `loop/<feature-slug>` 自本地 main 拉；QA 判 PASS 后由主控 `--no-ff` 合入 main（不推远端）。
 - 单任务修复循环上限 5 轮，超出升级用户裁决。
-- 程序/QA 报告、策划方案分别落 `loop/reports/`、`loop/plans/`（不入库）。
+- 程序/QA 报告、策划方案分别落 `loop/reports/`、`loop/plans/`（随目录入库）。
 - 台账 `loop/progress.md`：每个功能闭环后记一行；中断恢复以台账为准。
 - 本仓库不受 P4 管理，纯 git。
 
