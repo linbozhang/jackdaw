@@ -1,0 +1,96 @@
+   Compiling bevy_platform v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_platform)
+   Compiling same-file v1.0.6
+   Compiling objc2-core-services v0.3.2
+   Compiling notify-types v2.2.0
+   Compiling file-id v0.2.3
+   Compiling serde_json v1.0.154
+   Compiling bytes v1.12.1
+   Compiling httparse v1.10.1
+   Compiling walkdir v2.5.0
+   Compiling tokio v1.54.1
+   Compiling anyhow v1.0.104
+   Compiling notify v8.2.1
+   Compiling bevy_utils v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_utils)
+   Compiling bevy_tasks v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_tasks)
+   Compiling http v1.5.0
+   Compiling httpdate v1.0.3
+   Compiling bevy_reflect v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_reflect)
+   Compiling notify-debouncer-full v0.7.0
+   Compiling http-body v1.1.0
+   Compiling strsim v0.11.1
+   Compiling http-body-util v0.1.5
+   Compiling hyper v1.12.0
+   Compiling gltf-json v1.4.1
+   Compiling smol-hyper v0.1.1
+   Compiling gltf v1.4.1
+   Compiling bevy_ecs v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_ecs)
+   Compiling bevy_math v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_math)
+   Compiling bevy_annotations v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_annotations)
+   Compiling glam_matrix_extras v0.4.0
+   Compiling bevy_curve v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_curve)
+   Compiling bevy_shape v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_shape)
+   Compiling bevy_color v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_color)
+   Compiling bevy_heavy v0.6.0
+   Compiling bevy_app v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_app)
+   Compiling bevy_time v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_time)
+   Compiling bevy_transform v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_transform)
+   Compiling bevy_input v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_input)
+   Compiling bevy_log v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_log)
+   Compiling bevy_a11y v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_a11y)
+   Compiling bevy_state v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_state)
+   Compiling bevy_clipboard v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_clipboard)
+   Compiling bevy_diagnostic v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_diagnostic)
+   Compiling bevy_asset v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_asset)
+   Compiling bevy_gilrs v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_gilrs)
+   Compiling bevy_image v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_image)
+   Compiling bevy_mesh v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_mesh)
+   Compiling bevy_shader v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_shader)
+   Compiling bevy_audio v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_audio)
+   Compiling bevy_scene v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_scene)
+   Compiling bevy_window v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_window)
+   Compiling bevy_text v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_text)
+   Compiling bevy_material v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_material)
+   Compiling bevy_animation v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_animation)
+   Compiling bevy_camera v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_camera)
+   Compiling bevy_gizmos v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_gizmos)
+   Compiling bevy_extract v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_extract)
+   Compiling bevy_picking v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_picking)
+   Compiling bevy_world_serialization v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_world_serialization)
+   Compiling bevy_render v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_render)
+   Compiling bevy_light v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_light)
+   Compiling bevy_sprite v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_sprite)
+   Compiling bevy_input_focus v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_input_focus)
+   Compiling bevy_gltf v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_gltf)
+   Compiling bevy_ui v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_ui)
+   Compiling bevy_winit v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_winit)
+   Compiling bevy_core_pipeline v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_core_pipeline)
+   Compiling bevy_ui_widgets v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_ui_widgets)
+   Compiling bevy_sprite_render v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_sprite_render)
+   Compiling bevy_pbr v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_pbr)
+   Compiling bevy_anti_alias v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_anti_alias)
+   Compiling bevy_post_process v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_post_process)
+   Compiling bevy_ui_render v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_ui_render)
+   Compiling bevy_feathers v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_feathers)
+   Compiling bevy_dev_tools v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_dev_tools)
+   Compiling bevy_gizmos_render v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_gizmos_render)
+   Compiling bevy_remote v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_remote)
+   Compiling bevy_internal v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_internal)
+   Compiling bevy v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned)
+   Compiling jackdaw_geometry v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_geometry)
+   Compiling jackdaw_bsn v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_bsn)
+   Compiling jackdaw_pie_protocol v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_pie_protocol)
+   Compiling bevy_transform_interpolation v0.6.0
+   Compiling jackdaw_widgets_runtime v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_widgets_runtime)
+   Compiling jackdaw_bind v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_bind)
+   Compiling avian3d v0.8.0
+   Compiling jackdaw_scene_types v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_scene_types)
+   Compiling jackdaw_prefab v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_prefab)
+   Compiling jackdaw_remote v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_remote)
+   Compiling jackdaw_schema v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_schema)
+   Compiling jackdaw_surface v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_surface)
+   Compiling jackdaw_terrain v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_terrain)
+   Compiling jackdaw_camera_rig v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_camera_rig)
+   Compiling jackdaw_runtime v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_runtime)
+   Compiling jackdaw_avian_integration v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/integrations/physics/jackdaw_avian_integration)
+   Compiling t16-audio v0.1.0 (/Users/zhanglinbo/workspace/loop-mac/t16-audio/t16-audio)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 3m 58s

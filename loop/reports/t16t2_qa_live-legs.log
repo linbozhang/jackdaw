@@ -1,0 +1,21 @@
+=== QA personal legs start Fri Oct 30 16:49:09 CST 2026 ===
+--- L9 rerun: level scene ---
+L9 baseline: SfxProbe=sfx:0.4000000059604645 MusicProbe=music:0.5 Ambient=plain:0.800000011920929
+L9 music=0: SfxProbe=sfx:0.4000000059604645 MusicProbe=music:0.0 Ambient=plain:0.800000011920929
+L9 sfx=0: SfxProbe=sfx:0.0 MusicProbe=music:0.5 Ambient=plain:0.800000011920929
+L9 master=0: SfxProbe=sfx:0.0 MusicProbe=music:0.0 Ambient=plain:0.0
+L9 restored: SfxProbe=sfx:0.4000000059604645 MusicProbe=music:0.5 Ambient=plain:0.800000011920929
+L9_RERUN_VERDICT: true
+--- M6 rerun: bad reference red/green ---
+M6 red: MenuBgm settings present; SoundLive ABSENT after settle
+M6: red evidence archived to t16t2_qa_direct-badref_red.log
+M6: load-error line count in red run log: 1
+M6 green: MenuBgm volume=0.6000000238418579
+M6_RERUN_VERDICT: red=true green=true
+--- M3-direct rerun: trigger chain on the menu ---
+M3 before: sfx sinks=0
+M3: blip samples=1 volume=0.4000000059604645
+M3: flow moved=true, Ambient=present
+M3_RERUN_VERDICT: true
+flow restored to: menu.bsn
+=== QA personal legs done Fri Oct 30 16:51:21 CST 2026 ===
