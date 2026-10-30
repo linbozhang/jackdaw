@@ -4925,6 +4925,7 @@ name = "jackdaw_runtime"
 version = "0.21.0-dev"
 dependencies = [
  "bevy",
+ "dirs",
  "image",
  "jackdaw_animation_runtime",
  "jackdaw_bind",
