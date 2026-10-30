@@ -114,6 +114,17 @@ pub use game_input::{
 mod triggers;
 pub use triggers::{TriggerContact, TriggerEvents, TriggerPhase};
 
+// The player's save store (`save.json` under the user data dir): the
+// persistence half of progress, unlocks and settings, with the
+// version guard and the three-state fallback. A fourth family member
+// beside config/game_input: `SavePlugin::<T>::new(game_id)` is the
+// one line a game adds.
+mod save;
+pub use save::{
+    SAVE_DIR_VAR, SAVE_FILE, SAVE_VERSION, SaveError, SaveMigration, SavePlugin, SaveStatus,
+    SaveStore, flush_saves, save_dir,
+};
+
 // The project's game flow file (`game.flow.json`): which scene a game
 // starts from. A public module so the template's startup line spells
 // `flow::start_scene_or` — the project-level layer between the game's
@@ -190,7 +201,8 @@ pub mod prelude {
         DetailPresser, EditorCategory, EditorDescription, EditorHidden, EditorPreview, GameActions,
         GameInputConfig, InputActionsPlugin, JackdawAssetSourcePlugin, JackdawCameraRigPlugin,
         JackdawCatalog, JackdawCatalogPath, JackdawPlugin, JackdawSceneMember, JackdawSceneRoot,
-        SceneRefused, SkipSerialization, TriggerContact, TriggerEvents, TriggerPhase,
+        SaveMigration, SavePlugin, SaveStatus, SaveStore, SceneRefused, SkipSerialization,
+        TriggerContact, TriggerEvents, TriggerPhase, save_dir,
     };
     #[cfg(feature = "terrain")]
     pub use crate::{DetailPressers, DetailSettings, DetailViewer, TerrainViewer};

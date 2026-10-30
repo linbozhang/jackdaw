@@ -65,6 +65,11 @@ jackdaw_terrain = { version = "0.21.0-dev", path = "../jackdaw_terrain", optiona
 jackdaw_animation_runtime = { version = "0.21.0-dev", path = "../jackdaw_animation_runtime", optional = true }
 serde.workspace = true
 serde_json.workspace = true
+# The save directory lives under the user's own data dir (the player-data
+# convention, and a read-only export can neither carry nor overwrite it).
+# `dirs` directly, not `jackdaw_env`: that is the editor's branded path
+# layer, and a shipped game has no editor.
+dirs.workspace = true
 thiserror = "2"
 
 [features]

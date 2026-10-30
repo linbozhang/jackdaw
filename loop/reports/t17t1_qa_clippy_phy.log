@@ -1,0 +1,9 @@
+== clippy_phy START 2026-10-30 21:58:12
+cwd=/Users/zhanglinbo/workspace/jackdaw
+cmd=cargo clippy -p jackdaw_physics -p jackdaw_avian_integration --all-targets -- --deny warnings
+   Compiling jackdaw_project_build v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_project_build)
+    Checking jackdaw_scaffold v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_scaffold)
+    Checking jackdaw v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw)
+    Checking jackdaw_physics v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/integrations/physics/jackdaw_physics)
+    Finished `dev` profile [optimized + debuginfo] target(s) in 9.28s
+== clippy_phy EXIT=0 2026-10-30 21:58:21

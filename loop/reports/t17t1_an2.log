@@ -1,0 +1,8 @@
+    Finished `test` profile [optimized + debuginfo] target(s) in 0.34s
+────────────
+ Nextest run ID 648a4dce-a3ec-4004-8bf7-7588338b3e0a with nextest profile: ci
+    Starting 1 test across 1 binary
+        PASS [   0.102s] (1/1) jackdaw_runtime::animation_scene_load a_loaded_scene_plays_its_default_state
+────────────
+     Summary [   0.102s] 1 test run: 1 passed, 0 skipped
+AN2_EXIT=0

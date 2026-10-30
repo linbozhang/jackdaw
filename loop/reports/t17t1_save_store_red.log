@@ -1,0 +1,214 @@
+   Compiling jackdaw_runtime v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_runtime)
+error[E0432]: unresolved imports `jackdaw_runtime::SavePlugin`, `jackdaw_runtime::SaveStatus`, `jackdaw_runtime::SaveStore`
+  --> crates/jackdaw_runtime/tests/save_store.rs:44:71
+   |
+44 |     GameActionDef, GameActionKind, GameInputBinding, GameInputConfig, SavePlugin, SaveStatus,
+   |                                                                       ^^^^^^^^^^  ^^^^^^^^^^ no `SaveStatus` in the root
+   |                                                                       |
+   |                                                                       no `SavePlugin` in the root
+45 |     SaveStore, merge_actions,
+   |     ^^^^^^^^^ no `SaveStore` in the root
+   |
+help: a similar name exists in the module
+   |
+44 -     GameActionDef, GameActionKind, GameInputBinding, GameInputConfig, SavePlugin, SaveStatus,
+44 +     GameActionDef, GameActionKind, GameInputBinding, GameInputConfig, ImagePlugin, SaveStatus,
+   |
+
+error[E0433]: cannot find `SaveError` in `jackdaw_runtime`
+   --> crates/jackdaw_runtime/tests/save_store.rs:358:26
+    |
+358 |         jackdaw_runtime::SaveError::VersionGuard { found: 99 }
+    |                          ^^^^^^^^^ could not find `SaveError` in `jackdaw_runtime`
+    |
+help: a struct with a similar name exists
+    |
+358 -         jackdaw_runtime::SaveError::VersionGuard { found: 99 }
+358 +         jackdaw_runtime::BevyError::VersionGuard { found: 99 }
+    |
+
+error[E0433]: cannot find `SaveMigration` in `jackdaw_runtime`
+   --> crates/jackdaw_runtime/tests/save_store.rs:411:28
+    |
+411 |         &[jackdaw_runtime::SaveMigration::new(0, 1, |mut value| {
+    |                            ^^^^^^^^^^^^^ could not find `SaveMigration` in `jackdaw_runtime`
+
+error[E0433]: cannot find `SaveMigration` in `jackdaw_runtime`
+   --> crates/jackdaw_runtime/tests/save_store.rs:433:28
+    |
+433 |         &[jackdaw_runtime::SaveMigration::new(0, 1, |_value| {
+    |                            ^^^^^^^^^^^^^ could not find `SaveMigration` in `jackdaw_runtime`
+
+error[E0433]: cannot find `SaveError` in `jackdaw_runtime`
+   --> crates/jackdaw_runtime/tests/save_store.rs:563:42
+    |
+563 |         matches!(error, jackdaw_runtime::SaveError::Io(_)),
+    |                                          ^^^^^^^^^ could not find `SaveError` in `jackdaw_runtime`
+    |
+help: a struct with a similar name exists
+    |
+563 -         matches!(error, jackdaw_runtime::SaveError::Io(_)),
+563 +         matches!(error, jackdaw_runtime::BevyError::Io(_)),
+    |
+
+error[E0433]: cannot find `SaveError` in `jackdaw_runtime`
+   --> crates/jackdaw_runtime/tests/save_store.rs:761:34
+    |
+761 |             Err(jackdaw_runtime::SaveError::NoSaveDir)
+    |                                  ^^^^^^^^^ could not find `SaveError` in `jackdaw_runtime`
+    |
+help: a struct with a similar name exists
+    |
+761 -             Err(jackdaw_runtime::SaveError::NoSaveDir)
+761 +             Err(jackdaw_runtime::BevyError::NoSaveDir)
+    |
+
+error[E0425]: cannot find function `save_dir` in crate `jackdaw_runtime`
+   --> crates/jackdaw_runtime/tests/save_store.rs:160:32
+    |
+160 |     let dir = jackdaw_runtime::save_dir("t17_probe_game").expect("a data dir on macOS");
+    |                                ^^^^^^^^ not found in `jackdaw_runtime`
+
+error[E0425]: cannot find function `save_dir` in crate `jackdaw_runtime`
+   --> crates/jackdaw_runtime/tests/save_store.rs:179:32
+    |
+179 |     let dir = jackdaw_runtime::save_dir("whatever-game").expect("env wins");
+    |                                ^^^^^^^^ not found in `jackdaw_runtime`
+
+error[E0425]: cannot find value `SAVE_VERSION` in crate `jackdaw_runtime`
+   --> crates/jackdaw_runtime/tests/save_store.rs:370:31
+    |
+370 |         Some(jackdaw_runtime::SAVE_VERSION as u64),
+    |                               ^^^^^^^^^^^^ not found in `jackdaw_runtime`
+
+error[E0433]: cannot find module or crate `dirs` in this scope
+   --> crates/jackdaw_runtime/tests/save_store.rs:161:16
+    |
+161 |     let data = dirs::data_dir().expect("a data dir on macOS");
+    |                ^^^^ use of unresolved module or unlinked crate `dirs`
+    |
+    = help: if you wanted to use a crate named `dirs`, use `cargo add dirs` to add it to your `Cargo.toml`
+
+error[E0107]: method takes 0 generic arguments but 1 generic argument was supplied
+   --> crates/jackdaw_runtime/tests/save_store.rs:208:14
+    |
+208 |             .contains::<SaveStore<TestProfile>>(),
+    |              ^^^^^^^^-------------------------- help: remove the unnecessary generics
+    |              |
+    |              expected 0 generic arguments
+    |
+note: method defined here, with 0 generic parameters
+   --> /Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_reflect/src/type_registry.rs:439:12
+    |
+439 |     pub fn contains(&self, type_id: TypeId) -> bool {
+    |            ^^^^^^^^
+
+error[E0061]: this method takes 1 argument but 0 arguments were supplied
+   --> crates/jackdaw_runtime/tests/save_store.rs:208:14
+    |
+208 |             .contains::<SaveStore<TestProfile>>(),
+    |              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^-- argument #1 of type `TypeId` is missing
+    |
+note: method defined here
+   --> /Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_reflect/src/type_registry.rs:439:12
+    |
+439 |     pub fn contains(&self, type_id: TypeId) -> bool {
+    |            ^^^^^^^^
+help: provide the argument
+    |
+208 |             .contains::<SaveStore<TestProfile>>(/* TypeId */),
+    |                                                 ++++++++++++
+
+error[E0107]: method takes 0 generic arguments but 1 generic argument was supplied
+   --> crates/jackdaw_runtime/tests/save_store.rs:228:26
+    |
+228 |         assert!(registry.contains::<SaveStore<TestProfile>>());
+    |                          ^^^^^^^^-------------------------- help: remove the unnecessary generics
+    |                          |
+    |                          expected 0 generic arguments
+    |
+note: method defined here, with 0 generic parameters
+   --> /Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_reflect/src/type_registry.rs:439:12
+    |
+439 |     pub fn contains(&self, type_id: TypeId) -> bool {
+    |            ^^^^^^^^
+
+error[E0061]: this method takes 1 argument but 0 arguments were supplied
+   --> crates/jackdaw_runtime/tests/save_store.rs:228:26
+    |
+228 |         assert!(registry.contains::<SaveStore<TestProfile>>());
+    |                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^-- argument #1 of type `TypeId` is missing
+    |
+note: method defined here
+   --> /Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_reflect/src/type_registry.rs:439:12
+    |
+439 |     pub fn contains(&self, type_id: TypeId) -> bool {
+    |            ^^^^^^^^
+help: provide the argument
+    |
+228 |         assert!(registry.contains::<SaveStore<TestProfile>>(/* TypeId */));
+    |                                                             ++++++++++++
+
+error[E0107]: method takes 0 generic arguments but 1 generic argument was supplied
+   --> crates/jackdaw_runtime/tests/save_store.rs:229:26
+    |
+229 |         assert!(registry.contains::<SaveStatus>());
+    |                          ^^^^^^^^-------------- help: remove the unnecessary generics
+    |                          |
+    |                          expected 0 generic arguments
+    |
+note: method defined here, with 0 generic parameters
+   --> /Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_reflect/src/type_registry.rs:439:12
+    |
+439 |     pub fn contains(&self, type_id: TypeId) -> bool {
+    |            ^^^^^^^^
+
+error[E0061]: this method takes 1 argument but 0 arguments were supplied
+   --> crates/jackdaw_runtime/tests/save_store.rs:229:26
+    |
+229 |         assert!(registry.contains::<SaveStatus>());
+    |                          ^^^^^^^^^^^^^^^^^^^^^^-- argument #1 of type `TypeId` is missing
+    |
+note: method defined here
+   --> /Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_reflect/src/type_registry.rs:439:12
+    |
+439 |     pub fn contains(&self, type_id: TypeId) -> bool {
+    |            ^^^^^^^^
+help: provide the argument
+    |
+229 |         assert!(registry.contains::<SaveStatus>(/* TypeId */));
+    |                                                 ++++++++++++
+
+error[E0107]: method takes 0 generic arguments but 1 generic argument was supplied
+   --> crates/jackdaw_runtime/tests/save_store.rs:230:26
+    |
+230 |         assert!(registry.contains::<TestProfile>());
+    |                          ^^^^^^^^--------------- help: remove the unnecessary generics
+    |                          |
+    |                          expected 0 generic arguments
+    |
+note: method defined here, with 0 generic parameters
+   --> /Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_reflect/src/type_registry.rs:439:12
+    |
+439 |     pub fn contains(&self, type_id: TypeId) -> bool {
+    |            ^^^^^^^^
+
+error[E0061]: this method takes 1 argument but 0 arguments were supplied
+   --> crates/jackdaw_runtime/tests/save_store.rs:230:26
+    |
+230 |         assert!(registry.contains::<TestProfile>());
+    |                          ^^^^^^^^^^^^^^^^^^^^^^^-- argument #1 of type `TypeId` is missing
+    |
+note: method defined here
+   --> /Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_reflect/src/type_registry.rs:439:12
+    |
+439 |     pub fn contains(&self, type_id: TypeId) -> bool {
+    |            ^^^^^^^^
+help: provide the argument
+    |
+230 |         assert!(registry.contains::<TestProfile>(/* TypeId */));
+    |                                                  ++++++++++++
+
+Some errors have detailed explanations: E0061, E0107, E0425, E0432, E0433.
+For more information about an error, try `rustc --explain E0061`.
+error: could not compile `jackdaw_runtime` (test "save_store") due to 18 previous errors
