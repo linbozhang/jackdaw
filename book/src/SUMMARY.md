@@ -26,6 +26,7 @@
 - [Game UI](user-guide/game-ui.md)
 - [Game Flow](user-guide/game-flow.md)
 - [The Player Controller](user-guide/player-controller.md)
+- [Animation](user-guide/animation.md)
 - [Graphics Panel](user-guide/graphics-panel.md)
 - [Play-in-editor](user-guide/play-in-editor.md)
 - [Remote Debugging](user-guide/remote-debugging.md)

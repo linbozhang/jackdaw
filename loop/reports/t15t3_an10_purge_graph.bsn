@@ -1,0 +1,10 @@
+// jackdaw 0.21.0-dev | bevy main
+#Rig
+jackdaw_animation_runtime::graph::AnimationGraphRef {
+    path: "animation/hero_graph.animgraph.bsn",
+    skeleton_root: "Armature",
+}
+bevy_ecs::hierarchy::Children [
+    #Armature
+    bevy_transform::components::transform::Transform
+]

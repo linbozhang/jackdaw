@@ -1,0 +1,5 @@
+PURGE_BEFORE leaked_nodes=6 graphref=1 sha=8be7b0c351c015d60fdcb6a3e8b1d4c3c1311e9fcb51f46c389a6a2bbc818746
+EDITOR_READY
+SCENE_OPENED
+PURGE_AFTER leaked_nodes=0 graphref=1 sha=2cb5ae8b6623aed7392539bda27a0bdd0ff61cce22e40c436f11afd8ea712682
+AN10_PURGE_PASS

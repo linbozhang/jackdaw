@@ -333,3 +333,118 @@ fn a_graph_opened_from_its_binary_file_is_saved_back_as_binary() {
     let text = jackdaw_bsn::read_document_text(&binary_file).expect("the graph reads back");
     parse_animation_graph(&text, &registry).expect("the graph reads back as a definition");
 }
+
+/// The scene document text as a save emits it.
+fn scene_document_text(app: &mut App) -> String {
+    app.world_mut()
+        .run_system_cached_with(jackdaw::remote::server::scene_bsn_handler, None)
+        .expect("the handler ran")
+        .expect("the document emitted")["bsn"]
+        .as_str()
+        .expect("BSN text")
+        .to_string()
+}
+
+#[test]
+fn the_open_graph_canvas_keeps_its_nodes_out_of_the_scene_document() {
+    let (mut app, _project) = editor_in_a_fresh_project();
+    // A scene document to write, the way an author working inside a scene has.
+    app.world_mut()
+        .insert_resource(jackdaw_bsn::SceneBsnAst::default());
+    author_a_locomotion_graph(&mut app);
+
+    // However long the editor ran, nothing the canvas drew belongs in the
+    // document: the open graph's persistent form is its own file, which the
+    // save above already wrote.
+    for _ in 0..5 {
+        app.update();
+    }
+    let bsn = scene_document_text(&mut app);
+    assert!(
+        !bsn.contains("GraphNode"),
+        "the graph canvas's working nodes are not scene content: {bsn}"
+    );
+    assert!(
+        !bsn.contains("Connection"),
+        "the graph canvas's wires are not scene content: {bsn}"
+    );
+
+    // The exclusion is about the document, not the canvas: every state stays
+    // drawn and editable while the window is open.
+    let nodes = app
+        .world_mut()
+        .query::<&GraphNode>()
+        .iter(app.world())
+        .filter(|node| node.node_type == "anim.state")
+        .count();
+    assert_eq!(nodes, 2, "the canvas still draws every state");
+}
+
+#[test]
+fn a_document_holding_leaked_canvas_nodes_loads_clean_and_saves_without_them() {
+    let (mut app, _project) = editor_in_a_fresh_project();
+    app.world_mut()
+        .insert_resource(jackdaw_bsn::SceneBsnAst::default());
+
+    // What a document written before the canvas kept out of scenes looks
+    // like: the graph window's nodes, registered in the scene document
+    // beside the rig they belong to.
+    let leaked = app
+        .world_mut()
+        .spawn((GraphNode {
+            node_type: "anim.state".into(),
+            position: Vec2::new(60.0, 60.0),
+        },))
+        .id();
+    jackdaw::scene_io::register_entity_in_ast(app.world_mut(), leaked);
+    assert!(
+        app.world()
+            .resource::<jackdaw_bsn::SceneBsnAst>()
+            .ast_for(leaked)
+            .is_some(),
+        "the leaked node has to be in the document for the test to mean anything"
+    );
+
+    // A blend-graph clip's node is the scene-resident form: the clip is
+    // scene content, and the node under it round-trips with it.
+    let clip = app
+        .world_mut()
+        .spawn((
+            jackdaw_animation::Clip::default(),
+            jackdaw_animation::AnimationBlendGraph,
+            Name::new("Walk Blend Graph"),
+        ))
+        .id();
+    let blend_node = app
+        .world_mut()
+        .spawn((
+            GraphNode {
+                node_type: "anim.output".into(),
+                position: Vec2::new(400.0, 160.0),
+            },
+            ChildOf(clip),
+        ))
+        .id();
+    jackdaw::scene_io::register_entity_in_ast(app.world_mut(), blend_node);
+
+    app.update();
+    app.update();
+
+    assert!(
+        app.world().get_entity(leaked).is_err(),
+        "loading a document that still carries canvas nodes should drop them"
+    );
+    assert!(
+        app.world().get_entity(blend_node).is_ok(),
+        "a blend-graph clip's node is scene content and stays"
+    );
+    let bsn = scene_document_text(&mut app);
+    assert!(
+        !bsn.contains("anim.state"),
+        "a resave must not write the canvas nodes back: {bsn}"
+    );
+    assert!(
+        bsn.contains("anim.output"),
+        "the blend graph's node stays in the document: {bsn}"
+    );
+}

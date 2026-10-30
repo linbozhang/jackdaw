@@ -1,171 +1,148 @@
-[2m2026-10-29T21:31:49.950548Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
-[2m2026-10-29T21:31:49.998391Z[0m [32m INFO[0m [2mbevy_render::renderer[0m[2m:[0m AdapterInfo { name: "Apple M1 Pro", vendor: 0, device: 0, device_type: IntegratedGpu, device_pci_bus_id: "", driver: "", driver_info: "", backend: Metal, subgroup_min_size: 4, subgroup_max_size: 64, transient_saves_memory: Some(true), limit_bucket: None }
-[2m2026-10-29T21:31:50.238386Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw::test_input::plugin` of extension `jackdaw.test_input`
-[2m2026-10-29T21:31:50.238552Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw_physics::PhysicsEditorPlugin` of extension `jackdaw.physics`
-[2m2026-10-29T21:31:50.241372Z[0m [32m INFO[0m [2mjackdaw_loader[0m[2m:[0m Dylib loader: no installed extensions
-[2m2026-10-29T21:31:50.241859Z[0m [32m INFO[0m [2mbevy_pbr::cluster[0m[2m:[0m GPU clustering is supported on this device.
-[2m2026-10-29T21:31:50.241892Z[0m [32m INFO[0m [2mbevy_render::batching::gpu_preprocessing[0m[2m:[0m GPU preprocessing is fully supported on this device.
-[2m2026-10-29T21:31:50.269199Z[0m [32m INFO[0m [2mbevy_winit::system[0m[2m:[0m Creating new window jackdaw (71v0)
-[2m2026-10-29T21:31:50.409281Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.multiplayer
-[2m2026-10-29T21:31:50.409370Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.inspector
-[2m2026-10-29T21:31:50.409492Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.ui_palette
-[2m2026-10-29T21:31:50.409546Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core
-[2m2026-10-29T21:31:50.411316Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.test_input
-[2m2026-10-29T21:31:50.411341Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.physics
-[2m2026-10-29T21:31:50.411475Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.viewport_panel
-[2m2026-10-29T21:31:50.411520Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core_windows
-[2m2026-10-29T21:31:50.411553Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.game_panel
-[2m2026-10-29T21:31:50.411566Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.animation_graph
-[2m2026-10-29T21:31:50.411576Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.timeline
-[2m2026-10-29T21:31:50.411586Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.build_panel
-[2m2026-10-29T21:31:50.411596Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.project_window
-[2m2026-10-29T21:31:50.413194Z[0m [33m WARN[0m [2mjackdaw_api_internal::keymap::apply[0m[2m:[0m preset 'classic' has 10 chords claimed by more than one action: ["Delete (Press, Operators): clip.delete_keyframes, entity.delete, brush.delete_element", "Backspace (Press, Operators): clip.delete_keyframes, viewport.draw_brush.remove_last_vertex, brush.delete_element", "Home (Press, Operators): clip.timeline.jump_start, view.frame_all, viewport2d.frame", "Super+KeyC (Press, Operators): clip.copy_keyframes, entity.copy", "Super+KeyV (Press, Operators): clip.paste_keyframes, entity.paste", "Tab (Press, Operators): viewport.draw_brush.toggle_mode, brush.clip.cycle_mode", "Enter (Press, Operators): viewport.draw_brush.commit_polygon, brush.clip.apply", "KeyE (Press, Operators): tool.rotate, brush.mesh.extrude", "Escape (Press, Operators): brush.exit_edit_mode, selection.clear, brush.clip.clear, terrain.tool.exit_to_select", "Super+KeyB (Press, Operators): brush.mesh.edge_bevel, brush.mesh.vertex_bevel"]
-[2m2026-10-29T21:31:50.413236Z[0m [32m INFO[0m [2mjackdaw::extension_lifecycle[0m[2m:[0m applied keymap preset 'classic': 112 entries, 112 bindings, 0 user rows
-[2m2026-10-29T21:31:50.529369Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking /Users/zhanglinbo/workspace/loop-mac/t15-anim/t15-anim/assets recursively
-[2m2026-10-29T21:31:50.529439Z[0m [32m INFO[0m [2mjackdaw::asset_catalog[0m[2m:[0m No asset catalog found, starting with empty catalog
-[2m2026-10-29T21:31:50.641496Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: pre-building the game in the background for a fast first Play
-[2m2026-10-29T21:31:50.642454Z[0m [32m INFO[0m [2mjackdaw::material_browser[0m[2m:[0m update_material_browser_ui: rebuilding with 3 entries
-[2m2026-10-29T21:31:50.787560Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 8, typed 2, referencing 8)
-[2m2026-10-29T21:31:50.787692Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m Indexed 1 asset files
-[2m2026-10-29T21:31:50.815023Z[0m [33m WARN[0m [2mbevy_app::hierarchy[0m[2m:[0m warning[B0004]: The Armature entity with the GlobalTransform component has a parent (the Rig entity) without GlobalTransform.
+[2m2026-10-29T22:59:11.752985Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-29T22:59:11.797849Z[0m [32m INFO[0m [2mbevy_render::renderer[0m[2m:[0m AdapterInfo { name: "Apple M1 Pro", vendor: 0, device: 0, device_type: IntegratedGpu, device_pci_bus_id: "", driver: "", driver_info: "", backend: Metal, subgroup_min_size: 4, subgroup_max_size: 64, transient_saves_memory: Some(true), limit_bucket: None }
+[2m2026-10-29T22:59:11.986309Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw::test_input::plugin` of extension `jackdaw.test_input`
+[2m2026-10-29T22:59:11.986485Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw_physics::PhysicsEditorPlugin` of extension `jackdaw.physics`
+[2m2026-10-29T22:59:11.989192Z[0m [32m INFO[0m [2mjackdaw_loader[0m[2m:[0m Dylib loader: no installed extensions
+[2m2026-10-29T22:59:11.989645Z[0m [32m INFO[0m [2mbevy_pbr::cluster[0m[2m:[0m GPU clustering is supported on this device.
+[2m2026-10-29T22:59:11.989688Z[0m [32m INFO[0m [2mbevy_render::batching::gpu_preprocessing[0m[2m:[0m GPU preprocessing is fully supported on this device.
+[2m2026-10-29T22:59:12.013260Z[0m [32m INFO[0m [2mbevy_winit::system[0m[2m:[0m Creating new window jackdaw (71v0)
+[2m2026-10-29T22:59:12.161116Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.inspector
+[2m2026-10-29T22:59:12.161297Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.physics
+[2m2026-10-29T22:59:12.161509Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.game_panel
+[2m2026-10-29T22:59:12.161525Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.project_window
+[2m2026-10-29T22:59:12.161537Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.animation_graph
+[2m2026-10-29T22:59:12.161548Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.test_input
+[2m2026-10-29T22:59:12.161573Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core
+[2m2026-10-29T22:59:12.163110Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.viewport_panel
+[2m2026-10-29T22:59:12.163158Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core_windows
+[2m2026-10-29T22:59:12.163193Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.multiplayer
+[2m2026-10-29T22:59:12.163208Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.timeline
+[2m2026-10-29T22:59:12.163221Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.ui_palette
+[2m2026-10-29T22:59:12.163265Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.build_panel
+[2m2026-10-29T22:59:12.164787Z[0m [33m WARN[0m [2mjackdaw_api_internal::keymap::apply[0m[2m:[0m preset 'classic' has 10 chords claimed by more than one action: ["Delete (Press, Operators): clip.delete_keyframes, entity.delete, brush.delete_element", "Backspace (Press, Operators): clip.delete_keyframes, viewport.draw_brush.remove_last_vertex, brush.delete_element", "Home (Press, Operators): clip.timeline.jump_start, view.frame_all, viewport2d.frame", "Super+KeyC (Press, Operators): clip.copy_keyframes, entity.copy", "Super+KeyV (Press, Operators): clip.paste_keyframes, entity.paste", "Tab (Press, Operators): viewport.draw_brush.toggle_mode, brush.clip.cycle_mode", "Enter (Press, Operators): viewport.draw_brush.commit_polygon, brush.clip.apply", "KeyE (Press, Operators): tool.rotate, brush.mesh.extrude", "Escape (Press, Operators): brush.exit_edit_mode, selection.clear, brush.clip.clear, terrain.tool.exit_to_select", "Super+KeyB (Press, Operators): brush.mesh.edge_bevel, brush.mesh.vertex_bevel"]
+[2m2026-10-29T22:59:12.164824Z[0m [32m INFO[0m [2mjackdaw::extension_lifecycle[0m[2m:[0m applied keymap preset 'classic': 112 entries, 112 bindings, 0 user rows
+[2m2026-10-29T22:59:12.283963Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking /Users/zhanglinbo/workspace/loop-mac/t15-anim/t15-anim/assets recursively
+[2m2026-10-29T22:59:12.284055Z[0m [32m INFO[0m [2mjackdaw::asset_catalog[0m[2m:[0m No asset catalog found, starting with empty catalog
+[2m2026-10-29T22:59:12.403370Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: pre-building the game in the background for a fast first Play
+[2m2026-10-29T22:59:12.404661Z[0m [32m INFO[0m [2mjackdaw::material_browser[0m[2m:[0m update_material_browser_ui: rebuilding with 3 entries
+[2m2026-10-29T22:59:12.559006Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 8, typed 2, referencing 8)
+[2m2026-10-29T22:59:12.559184Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m Indexed 1 asset files
+[2m2026-10-29T22:59:12.587680Z[0m [33m WARN[0m [2mbevy_app::hierarchy[0m[2m:[0m warning[B0004]: The Armature entity with the GlobalTransform component has a parent (the Rig entity) without GlobalTransform.
 This will cause inconsistent behaviors! See: https://bevy.org/learn/errors/b0004
-[2m2026-10-29T21:31:50.954356Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking /Users/zhanglinbo/workspace/loop-mac/t15-anim/t15-anim/assets recursively
-[2m2026-10-29T21:31:50.976427Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 8, typed 2, referencing 8)
-[2m2026-10-29T21:31:50.976558Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 0)
-[2m2026-10-29T21:31:50.983786Z[0m [33m WARN[0m [2mbevy_app::hierarchy[0m[2m:[0m warning[B0004]: The Armature entity with the GlobalTransform component has a parent (the Rig entity) without GlobalTransform.
+[2m2026-10-29T22:59:12.728203Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking /Users/zhanglinbo/workspace/loop-mac/t15-anim/t15-anim/assets recursively
+[2m2026-10-29T22:59:12.748696Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 8, typed 2, referencing 8)
+[2m2026-10-29T22:59:12.748882Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 0)
+[2m2026-10-29T22:59:12.757182Z[0m [33m WARN[0m [2mbevy_app::hierarchy[0m[2m:[0m warning[B0004]: The Armature entity with the GlobalTransform component has a parent (the Rig entity) without GlobalTransform.
 This will cause inconsistent behaviors! See: https://bevy.org/learn/errors/b0004
-[2m2026-10-29T21:31:51.004335Z[0m [33m WARN[0m [2mbevy_app::hierarchy[0m[2m:[0m warning[B0004]: The Armature entity with the GlobalTransform component has a parent (the Rig entity) without GlobalTransform.
+[2m2026-10-29T22:59:12.786518Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Path not found: /Users/zhanglinbo/workspace/loop-mac/t15-anim/t15-anim/assets/animation/nope.bsn
+[2m2026-10-29T22:59:12.795043Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Path not found: /Users/zhanglinbo/workspace/loop-mac/t15-anim/t15-anim/assets/models/missing.glb
+[2m2026-10-29T22:59:12.808946Z[0m [33m WARN[0m [2mbevy_app::hierarchy[0m[2m:[0m warning[B0004]: The Armature entity with the GlobalTransform component has a parent (the Rig entity) without GlobalTransform.
 This will cause inconsistent behaviors! See: https://bevy.org/learn/errors/b0004
-[2m2026-10-29T21:32:11.525602Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: refreshed project types from schema (15 project components)
-[2m2026-10-29T21:32:11.532841Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking /Users/zhanglinbo/workspace/loop-mac/t15-anim/t15-anim/assets recursively
-[2m2026-10-29T21:32:11.541517Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 8, typed 2, referencing 8)
-[2m2026-10-29T21:32:11.541645Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 0)
-[2m2026-10-29T21:32:20.586051Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: scene.open
-[2m2026-10-29T21:32:20.587145Z[0m [32m INFO[0m [2mjackdaw::scene_io::load[0m[2m:[0m Scene loaded from /Users/zhanglinbo/workspace/loop-mac/t15-anim/t15-anim/assets/anim.bsn (2 entities, 0 embedded assets)
-[2m2026-10-29T21:32:20.598856Z[0m [33m WARN[0m [2mbevy_app::hierarchy[0m[2m:[0m warning[B0004]: The Armature entity with the GlobalTransform component has a parent (the Rig entity) without GlobalTransform.
+[2m2026-10-29T22:59:33.794085Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: refreshed project types from schema (15 project components)
+[2m2026-10-29T22:59:33.795039Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking /Users/zhanglinbo/workspace/loop-mac/t15-anim/t15-anim/assets recursively
+[2m2026-10-29T22:59:33.802509Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 8, typed 2, referencing 8)
+[2m2026-10-29T22:59:33.802644Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 0)
+[2m2026-10-29T22:59:42.863335Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: scene.open
+[2m2026-10-29T22:59:42.865382Z[0m [32m INFO[0m [2mjackdaw::scene_io::load[0m[2m:[0m Scene loaded from /Users/zhanglinbo/workspace/loop-mac/t15-anim/t15-anim/assets/anim.bsn (2 entities, 0 embedded assets)
+[2m2026-10-29T22:59:42.880382Z[0m [33m WARN[0m [2mbevy_app::hierarchy[0m[2m:[0m warning[B0004]: The Armature entity with the GlobalTransform component has a parent (the Rig entity) without GlobalTransform.
 This will cause inconsistent behaviors! See: https://bevy.org/learn/errors/b0004
-[2m2026-10-29T21:32:25.675142Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: pie.play_current
-[2m2026-10-29T21:32:25.685012Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 launched, awaiting connection
-[2m2026-10-29T21:32:25.685060Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 launched with scene override 'anim.bsn' (the editor's scene)
-[2m2026-10-29T21:32:25.963709Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 connected
+[2m2026-10-29T22:59:47.965006Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: pie.play_current
+[2m2026-10-29T22:59:47.975923Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 launched, awaiting connection
+[2m2026-10-29T22:59:47.975949Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 launched with scene override 'anim.bsn' (the editor's scene)
+[2m2026-10-29T22:59:48.250353Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 connected
 
-thread 'main' (20273973) panicked at /rustc/b940084d7eb6a299eb4bfeb8e34901bc051e7ac4/library/alloc/src/vec/mod.rs:2258:13:
+thread 'main' (20447620) panicked at /rustc/b940084d7eb6a299eb4bfeb8e34901bc051e7ac4/library/alloc/src/vec/mod.rs:2258:13:
 swap_remove index (is 0) should be < len (is 0)
 note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
-[2m2026-10-29T21:32:26.807552Z[0m [31mERROR[0m [2mbevy_ecs::error::handler[0m[2m:[0m Encountered an error in system `jackdaw::pie::drain_game_events`: Exclusive system panicked
+[2m2026-10-29T22:59:50.845368Z[0m [31mERROR[0m [2mbevy_ecs::error::handler[0m[2m:[0m Encountered an error in system `jackdaw::pie::drain_game_events`: Exclusive system panicked
 
-
-thread 'main' (20273973) panicked at /rustc/b940084d7eb6a299eb4bfeb8e34901bc051e7ac4/library/alloc/src/vec/mod.rs:2258:13:
-swap_remove index (is 0) should be < len (is 0)
-[2m2026-10-29T21:32:28.526906Z[0m [31mERROR[0m [2mbevy_ecs::error::handler[0m[2m:[0m Encountered an error in system `jackdaw::pie::drain_game_events`: Exclusive system panicked
-
-[2m2026-10-29T21:32:40.397494Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: pie.stop
-[2m2026-10-29T21:32:40.397568Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 asked to stop; exiting on its own for 2s
-[2m2026-10-29T21:32:40.403053Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking /Users/zhanglinbo/workspace/loop-mac/t15-anim/t15-anim/assets recursively
-[2m2026-10-29T21:32:40.412863Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 8, typed 2, referencing 8)
-[2m2026-10-29T21:32:40.413002Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 0)
-[2m2026-10-29T21:32:40.515223Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 exited
-
-thread 'main' (20273973) panicked at /rustc/b940084d7eb6a299eb4bfeb8e34901bc051e7ac4/library/alloc/src/vec/mod.rs:2258:13:
-swap_remove index (is 0) should be < len (is 0)
-[2m2026-10-29T21:32:40.579854Z[0m [31mERROR[0m [2mbevy_ecs::error::handler[0m[2m:[0m Encountered an error in system `jackdaw::pie::cleanup_session_on_stop`: Exclusive system panicked
-
-
-thread 'main' (20273973) panicked at /rustc/b940084d7eb6a299eb4bfeb8e34901bc051e7ac4/library/alloc/src/vec/mod.rs:2258:13:
-swap_remove index (is 0) should be < len (is 0)
-[2m2026-10-29T21:32:40.643694Z[0m [31mERROR[0m [2mbevy_ecs::error::handler[0m[2m:[0m Encountered an error in command `<<bevy_ecs::system::commands::entity_command::despawn::{{closure}} as bevy_ecs::system::commands::entity_command::EntityCommand>::with_entity::{{closure}} as bevy_ecs::system::commands::command::Command>::ignore_error::{{closure}}`: Command panicked
-
-[2m2026-10-29T21:32:40.645767Z[0m [32m INFO[0m [2mjackdaw::scenes::external_watch[0m[2m:[0m /Users/zhanglinbo/workspace/loop-mac/t15-anim/t15-anim/assets/anim.bsn changed on disk; offering a reload
-[2m2026-10-29T21:32:44.458466Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: scene.open
-[2m2026-10-29T21:32:44.459800Z[0m [32m INFO[0m [2mjackdaw::scene_io::load[0m[2m:[0m Scene loaded from /Users/zhanglinbo/workspace/loop-mac/t15-anim/t15-anim/assets/anim.bsn (2 entities, 0 embedded assets)
-[2m2026-10-29T21:32:44.471615Z[0m [33m WARN[0m [2mbevy_app::hierarchy[0m[2m:[0m warning[B0004]: The Armature entity with the GlobalTransform component has a parent (the Rig entity) without GlobalTransform.
+[2m2026-10-29T23:00:02.759359Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: pie.stop
+[2m2026-10-29T23:00:02.759457Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 asked to stop; exiting on its own for 2s
+[2m2026-10-29T23:00:02.798620Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking /Users/zhanglinbo/workspace/loop-mac/t15-anim/t15-anim/assets recursively
+[2m2026-10-29T23:00:02.810850Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 8, typed 2, referencing 8)
+[2m2026-10-29T23:00:02.810990Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 0)
+[2m2026-10-29T23:00:02.873610Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 exited
+[2m2026-10-29T23:00:02.893440Z[0m [33m WARN[0m [2mbevy_app::hierarchy[0m[2m:[0m warning[B0004]: The Armature entity with the GlobalTransform component has a parent (the Rig entity) without GlobalTransform.
 This will cause inconsistent behaviors! See: https://bevy.org/learn/errors/b0004
-[2m2026-10-29T21:32:44.474575Z[0m [33m WARN[0m [2mjackdaw_animation_runtime[0m[2m:[0m animation state `walk` wants clip `No_Such_Clip`, and its source holds ["Jump", "Idle_Loop", "Walk_Loop"]
-[2m2026-10-29T21:32:47.544277Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: dialog.answer
-[2m2026-10-29T21:32:51.586676Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: pie.play_current
-[2m2026-10-29T21:32:51.625598Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: building the game for Play #1
-[2m2026-10-29T21:33:12.170760Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 launched, awaiting connection
-[2m2026-10-29T21:33:12.170814Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 launched with scene override 'anim.bsn' (the editor's scene)
-[2m2026-10-29T21:33:12.446436Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 connected
-
-thread 'main' (20273973) panicked at /rustc/b940084d7eb6a299eb4bfeb8e34901bc051e7ac4/library/alloc/src/vec/mod.rs:2258:13:
-swap_remove index (is 0) should be < len (is 0)
-[2m2026-10-29T21:33:12.575559Z[0m [31mERROR[0m [2mbevy_ecs::error::handler[0m[2m:[0m Encountered an error in system `jackdaw::pie::drain_game_events`: Exclusive system panicked
-
-
-thread 'main' (20273973) panicked at /rustc/b940084d7eb6a299eb4bfeb8e34901bc051e7ac4/library/alloc/src/vec/mod.rs:2258:13:
-swap_remove index (is 0) should be < len (is 0)
-[2m2026-10-29T21:33:12.640104Z[0m [31mERROR[0m [2mbevy_ecs::error::handler[0m[2m:[0m Encountered an error in command `<<bevy_ecs::system::commands::entity_command::despawn::{{closure}} as bevy_ecs::system::commands::entity_command::EntityCommand>::with_entity::{{closure}} as bevy_ecs::system::commands::command::Command>::ignore_error::{{closure}}`: Command panicked
-
-[2m2026-10-29T21:33:12.658699Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: refreshed project types from schema (15 project components)
-[2m2026-10-29T21:33:12.673398Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking /Users/zhanglinbo/workspace/loop-mac/t15-anim/t15-anim/assets recursively
-[2m2026-10-29T21:33:12.686320Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 8, typed 2, referencing 8)
-[2m2026-10-29T21:33:12.686462Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 0)
-[2m2026-10-29T21:33:12.857244Z[0m [33m WARN[0m [2mjackdaw_animation_runtime[0m[2m:[0m animation state `walk` wants clip `No_Such_Clip`, and its source holds ["Jump", "Idle_Loop", "Walk_Loop"]
-[2m2026-10-29T21:33:21.730658Z[0m [32m INFO[0m [2mjackdaw::screenshot[0m[2m:[0m screenshot: wrote /Users/zhanglinbo/workspace/loop-mac/t15-anim/t15-anim/screenshots/t15-l7-game-panel-warn.png
-[2m2026-10-29T21:33:21.894898Z[0m [32m INFO[0m [2mjackdaw::screenshot[0m[2m:[0m screenshot: wrote /Users/zhanglinbo/workspace/loop-mac/t15-anim/t15-anim/screenshots/t15-l7-game-panel-warn.png
-[2m2026-10-29T21:33:21.903761Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: pie.stop
-[2m2026-10-29T21:33:21.903822Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 asked to stop; exiting on its own for 2s
-[2m2026-10-29T21:33:21.916409Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking /Users/zhanglinbo/workspace/loop-mac/t15-anim/t15-anim/assets recursively
-[2m2026-10-29T21:33:21.930356Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 8, typed 2, referencing 8)
-[2m2026-10-29T21:33:21.930487Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 0)
-[2m2026-10-29T21:33:22.035377Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 exited
-
-thread 'main' (20273973) panicked at /rustc/b940084d7eb6a299eb4bfeb8e34901bc051e7ac4/library/alloc/src/vec/mod.rs:2258:13:
-swap_remove index (is 0) should be < len (is 0)
-[2m2026-10-29T21:33:22.098831Z[0m [31mERROR[0m [2mbevy_ecs::error::handler[0m[2m:[0m Encountered an error in system `jackdaw::pie::cleanup_session_on_stop`: Exclusive system panicked
-
-[2m2026-10-29T21:33:22.100458Z[0m [32m INFO[0m [2mjackdaw::scenes::external_watch[0m[2m:[0m /Users/zhanglinbo/workspace/loop-mac/t15-anim/t15-anim/assets/anim.bsn changed on disk; offering a reload
-[2m2026-10-29T21:33:25.967462Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: scene.open
-[2m2026-10-29T21:33:25.968459Z[0m [32m INFO[0m [2mjackdaw::scene_io::load[0m[2m:[0m Scene loaded from /Users/zhanglinbo/workspace/loop-mac/t15-anim/t15-anim/assets/anim.bsn (2 entities, 0 embedded assets)
-[2m2026-10-29T21:33:25.978613Z[0m [33m WARN[0m [2mbevy_app::hierarchy[0m[2m:[0m warning[B0004]: The Armature entity with the GlobalTransform component has a parent (the Rig entity) without GlobalTransform.
+[2m2026-10-29T23:00:02.955543Z[0m [32m INFO[0m [2mjackdaw::scenes::external_watch[0m[2m:[0m /Users/zhanglinbo/workspace/loop-mac/t15-anim/t15-anim/assets/anim.bsn changed on disk; offering a reload
+[2m2026-10-29T23:00:06.807508Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: scene.open
+[2m2026-10-29T23:00:06.808639Z[0m [32m INFO[0m [2mjackdaw::scene_io::load[0m[2m:[0m Scene loaded from /Users/zhanglinbo/workspace/loop-mac/t15-anim/t15-anim/assets/anim.bsn (2 entities, 0 embedded assets)
+[2m2026-10-29T23:00:06.819023Z[0m [33m WARN[0m [2mbevy_app::hierarchy[0m[2m:[0m warning[B0004]: The Armature entity with the GlobalTransform component has a parent (the Rig entity) without GlobalTransform.
 This will cause inconsistent behaviors! See: https://bevy.org/learn/errors/b0004
-[2m2026-10-29T21:33:29.055970Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: dialog.answer
-[2m2026-10-29T21:33:33.078372Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: pie.play_current
-[2m2026-10-29T21:33:33.114649Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: building the game for Play #1
-[2m2026-10-29T21:33:53.496513Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 launched, awaiting connection
-[2m2026-10-29T21:33:53.496554Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 launched with scene override 'anim.bsn' (the editor's scene)
-[2m2026-10-29T21:33:53.534048Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: refreshed project types from schema (15 project components)
-[2m2026-10-29T21:33:53.541831Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking /Users/zhanglinbo/workspace/loop-mac/t15-anim/t15-anim/assets recursively
-[2m2026-10-29T21:33:53.550624Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 8, typed 2, referencing 8)
-[2m2026-10-29T21:33:53.550749Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 0)
-[2m2026-10-29T21:33:53.776294Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 connected
-
-thread 'main' (20273973) panicked at /rustc/b940084d7eb6a299eb4bfeb8e34901bc051e7ac4/library/alloc/src/vec/mod.rs:2258:13:
-swap_remove index (is 0) should be < len (is 0)
-[2m2026-10-29T21:33:53.903707Z[0m [31mERROR[0m [2mbevy_ecs::error::handler[0m[2m:[0m Encountered an error in system `jackdaw::pie::drain_game_events`: Exclusive system panicked
-
-
-thread 'main' (20273973) panicked at /rustc/b940084d7eb6a299eb4bfeb8e34901bc051e7ac4/library/alloc/src/vec/mod.rs:2258:13:
-swap_remove index (is 0) should be < len (is 0)
-[2m2026-10-29T21:33:53.968604Z[0m [31mERROR[0m [2mbevy_ecs::error::handler[0m[2m:[0m Encountered an error in command `<<bevy_ecs::system::commands::entity_command::despawn::{{closure}} as bevy_ecs::system::commands::entity_command::EntityCommand>::with_entity::{{closure}} as bevy_ecs::system::commands::command::Command>::ignore_error::{{closure}}`: Command panicked
-
-[2m2026-10-29T21:34:03.054646Z[0m [32m INFO[0m [2mjackdaw::screenshot[0m[2m:[0m screenshot: wrote /Users/zhanglinbo/workspace/loop-mac/t15-anim/t15-anim/screenshots/t15-l7-game-panel-clean.png
-[2m2026-10-29T21:34:03.091391Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: scene.open
-
-thread 'main' (20273973) panicked at /rustc/b940084d7eb6a299eb4bfeb8e34901bc051e7ac4/library/alloc/src/vec/mod.rs:2258:13:
-swap_remove index (is 0) should be < len (is 0)
-[2m2026-10-29T21:34:03.124445Z[0m [31mERROR[0m [2mbevy_ecs::error::handler[0m[2m:[0m Encountered an error in command `<jackdaw::scenes::operators::scene_open::{{closure}} as bevy_ecs::system::commands::command::Command>::handle_error::{{closure}}`: Command panicked
-
-[2m2026-10-29T21:34:03.150778Z[0m [33m WARN[0m [2mbevy_app::hierarchy[0m[2m:[0m warning[B0004]: The Armature entity with the GlobalTransform component has a parent (the Rig entity) without GlobalTransform.
+[2m2026-10-29T23:00:06.822107Z[0m [33m WARN[0m [2mjackdaw_animation_runtime[0m[2m:[0m animation state `walk` wants clip `No_Such_Clip`, and its source holds ["Jump", "Idle_Loop", "Walk_Loop"]
+[2m2026-10-29T23:00:09.903547Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: dialog.answer
+[2m2026-10-29T23:00:13.944698Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: pie.play_current
+[2m2026-10-29T23:00:13.981307Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: building the game for Play #1
+[2m2026-10-29T23:00:34.473142Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 launched, awaiting connection
+[2m2026-10-29T23:00:34.473186Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 launched with scene override 'anim.bsn' (the editor's scene)
+[2m2026-10-29T23:00:34.756560Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 connected
+[2m2026-10-29T23:00:34.787595Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: refreshed project types from schema (15 project components)
+[2m2026-10-29T23:00:34.788552Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking /Users/zhanglinbo/workspace/loop-mac/t15-anim/t15-anim/assets recursively
+[2m2026-10-29T23:00:34.797502Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 8, typed 2, referencing 8)
+[2m2026-10-29T23:00:34.797632Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 0)
+[2m2026-10-29T23:00:35.192487Z[0m [33m WARN[0m [2mjackdaw_animation_runtime[0m[2m:[0m animation state `walk` wants clip `No_Such_Clip`, and its source holds ["Jump", "Idle_Loop", "Walk_Loop"]
+[2m2026-10-29T23:00:44.045105Z[0m [32m INFO[0m [2mjackdaw::screenshot[0m[2m:[0m screenshot: wrote /Users/zhanglinbo/workspace/loop-mac/t15-anim/t15-anim/screenshots/t15-l7-game-panel-warn.png
+[2m2026-10-29T23:00:44.211492Z[0m [32m INFO[0m [2mjackdaw::screenshot[0m[2m:[0m screenshot: wrote /Users/zhanglinbo/workspace/loop-mac/t15-anim/t15-anim/screenshots/t15-l7-game-panel-warn.png
+[2m2026-10-29T23:00:44.226584Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: pie.stop
+[2m2026-10-29T23:00:44.226635Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 asked to stop; exiting on its own for 2s
+[2m2026-10-29T23:00:44.235016Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking /Users/zhanglinbo/workspace/loop-mac/t15-anim/t15-anim/assets recursively
+[2m2026-10-29T23:00:44.252034Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 8, typed 2, referencing 8)
+[2m2026-10-29T23:00:44.252188Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 0)
+[2m2026-10-29T23:00:44.345800Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 exited
+[2m2026-10-29T23:00:44.365257Z[0m [33m WARN[0m [2mbevy_app::hierarchy[0m[2m:[0m warning[B0004]: The Armature entity with the GlobalTransform component has a parent (the Rig entity) without GlobalTransform.
 This will cause inconsistent behaviors! See: https://bevy.org/learn/errors/b0004
-[2m2026-10-29T21:34:03.245000Z[0m [32m INFO[0m [2mjackdaw::screenshot[0m[2m:[0m screenshot: wrote /Users/zhanglinbo/workspace/loop-mac/t15-anim/t15-anim/screenshots/t15-l7-game-panel-clean.png
-[2m2026-10-29T21:35:33.567120Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: pie.stop
-[2m2026-10-29T21:35:33.567404Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 asked to stop; exiting on its own for 2s
-[2m2026-10-29T21:35:33.706692Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 exited
+[2m2026-10-29T23:00:44.368530Z[0m [33m WARN[0m [2mjackdaw_animation_runtime[0m[2m:[0m animation state `walk` wants clip `No_Such_Clip`, and its source holds ["Jump", "Idle_Loop", "Walk_Loop"]
+[2m2026-10-29T23:00:44.388587Z[0m [32m INFO[0m [2mjackdaw::scenes::external_watch[0m[2m:[0m /Users/zhanglinbo/workspace/loop-mac/t15-anim/t15-anim/assets/anim.bsn changed on disk; offering a reload
+[2m2026-10-29T23:00:48.279300Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: scene.open
+[2m2026-10-29T23:00:48.280519Z[0m [32m INFO[0m [2mjackdaw::scene_io::load[0m[2m:[0m Scene loaded from /Users/zhanglinbo/workspace/loop-mac/t15-anim/t15-anim/assets/anim.bsn (2 entities, 0 embedded assets)
+[2m2026-10-29T23:00:48.293122Z[0m [33m WARN[0m [2mbevy_app::hierarchy[0m[2m:[0m warning[B0004]: The Armature entity with the GlobalTransform component has a parent (the Rig entity) without GlobalTransform.
+This will cause inconsistent behaviors! See: https://bevy.org/learn/errors/b0004
+[2m2026-10-29T23:00:51.362651Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: dialog.answer
+[2m2026-10-29T23:00:55.404761Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: pie.play_current
+[2m2026-10-29T23:00:55.443572Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: building the game for Play #1
+[2m2026-10-29T23:01:15.778174Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 launched, awaiting connection
+[2m2026-10-29T23:01:15.778240Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 launched with scene override 'anim.bsn' (the editor's scene)
+[2m2026-10-29T23:01:15.803682Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: refreshed project types from schema (15 project components)
+[2m2026-10-29T23:01:15.804712Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking /Users/zhanglinbo/workspace/loop-mac/t15-anim/t15-anim/assets recursively
+[2m2026-10-29T23:01:15.813550Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 8, typed 2, referencing 8)
+[2m2026-10-29T23:01:15.813702Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 0)
+[2m2026-10-29T23:01:16.057046Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 connected
 
-thread 'main' (20273973) panicked at /rustc/b940084d7eb6a299eb4bfeb8e34901bc051e7ac4/library/alloc/src/vec/mod.rs:2258:13:
+thread 'main' (20447620) panicked at /rustc/b940084d7eb6a299eb4bfeb8e34901bc051e7ac4/library/alloc/src/vec/mod.rs:2258:13:
 swap_remove index (is 0) should be < len (is 0)
-[2m2026-10-29T21:35:33.770799Z[0m [31mERROR[0m [2mbevy_ecs::error::handler[0m[2m:[0m Encountered an error in system `jackdaw::pie::cleanup_session_on_stop`: Exclusive system panicked
+[2m2026-10-29T23:01:18.649159Z[0m [31mERROR[0m [2mbevy_ecs::error::handler[0m[2m:[0m Encountered an error in system `jackdaw::pie::drain_game_events`: Exclusive system panicked
 
-[2m2026-10-29T21:35:37.710097Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking /Users/zhanglinbo/workspace/loop-mac/t15-anim/t15-anim/assets recursively
-[2m2026-10-29T21:35:37.717962Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 8, typed 2, referencing 8)
-[2m2026-10-29T21:35:37.718089Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 0)
-[2m2026-10-29T21:37:18.861956Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: game.export
-[2m2026-10-29T21:37:25.035154Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: refreshed project types from schema (15 project components)
-[2m2026-10-29T21:37:25.046677Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking /Users/zhanglinbo/workspace/loop-mac/t15-anim/t15-anim/assets recursively
-[2m2026-10-29T21:37:25.058787Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 8, typed 2, referencing 8)
-[2m2026-10-29T21:37:25.058921Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 0)
-[2m2026-10-29T21:38:40.188767Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking /Users/zhanglinbo/workspace/loop-mac/t15-anim/t15-anim/assets recursively
-[2m2026-10-29T21:38:40.198156Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 8, typed 2, referencing 8)
-[2m2026-10-29T21:38:40.198281Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 0)
+[2m2026-10-29T23:01:25.349779Z[0m [32m INFO[0m [2mjackdaw::screenshot[0m[2m:[0m screenshot: wrote /Users/zhanglinbo/workspace/loop-mac/t15-anim/t15-anim/screenshots/t15-l7-game-panel-clean.png
+[2m2026-10-29T23:01:25.405798Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: scene.open
+[2m2026-10-29T23:01:25.411663Z[0m [32m INFO[0m [2mjackdaw::scene_io::load[0m[2m:[0m Scene loaded from /Users/zhanglinbo/workspace/loop-mac/t15-anim/t15-anim/assets/graph.bsn (2 entities, 0 embedded assets)
+
+thread 'main' (20447620) panicked at /rustc/b940084d7eb6a299eb4bfeb8e34901bc051e7ac4/library/alloc/src/vec/mod.rs:2258:13:
+swap_remove index (is 0) should be < len (is 0)
+[2m2026-10-29T23:01:25.470289Z[0m [31mERROR[0m [2mbevy_ecs::error::handler[0m[2m:[0m Encountered an error in system `jackdaw::pie::drain_game_events`: Exclusive system panicked
+
+[2m2026-10-29T23:01:25.475939Z[0m [33m WARN[0m [2mbevy_app::hierarchy[0m[2m:[0m warning[B0004]: The Armature entity with the GlobalTransform component has a parent (the Rig entity) without GlobalTransform.
+This will cause inconsistent behaviors! See: https://bevy.org/learn/errors/b0004
+[2m2026-10-29T23:02:55.271620Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: pie.stop
+[2m2026-10-29T23:02:55.271694Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 asked to stop; exiting on its own for 2s
+[2m2026-10-29T23:02:55.410424Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 exited
+
+thread 'main' (20447620) panicked at /rustc/b940084d7eb6a299eb4bfeb8e34901bc051e7ac4/library/alloc/src/vec/mod.rs:2258:13:
+swap_remove index (is 0) should be < len (is 0)
+[2m2026-10-29T23:02:55.473614Z[0m [31mERROR[0m [2mbevy_ecs::error::handler[0m[2m:[0m Encountered an error in system `jackdaw::pie::cleanup_session_on_stop`: Exclusive system panicked
+
+
+thread 'main' (20447620) panicked at /rustc/b940084d7eb6a299eb4bfeb8e34901bc051e7ac4/library/alloc/src/vec/mod.rs:2258:13:
+swap_remove index (is 0) should be < len (is 0)
+[2m2026-10-29T23:02:55.538385Z[0m [31mERROR[0m [2mbevy_ecs::error::handler[0m[2m:[0m Encountered an error in command `<<bevy_ecs::system::commands::entity_command::despawn::{{closure}} as bevy_ecs::system::commands::entity_command::EntityCommand>::with_entity::{{closure}} as bevy_ecs::system::commands::command::Command>::ignore_error::{{closure}}`: Command panicked
+
+[2m2026-10-29T23:02:59.443125Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking /Users/zhanglinbo/workspace/loop-mac/t15-anim/t15-anim/assets recursively
+[2m2026-10-29T23:02:59.450964Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 8, typed 2, referencing 8)
+[2m2026-10-29T23:02:59.451145Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 0)
+[2m2026-10-29T23:04:39.440734Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: game.export
+[2m2026-10-29T23:04:45.332020Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: refreshed project types from schema (15 project components)
+[2m2026-10-29T23:04:45.333185Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking /Users/zhanglinbo/workspace/loop-mac/t15-anim/t15-anim/assets recursively
+[2m2026-10-29T23:04:45.343620Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 8, typed 2, referencing 8)
+[2m2026-10-29T23:04:45.343788Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 0)
+[2m2026-10-29T23:05:58.627159Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking /Users/zhanglinbo/workspace/loop-mac/t15-anim/t15-anim/assets recursively
+[2m2026-10-29T23:05:58.634530Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 8, typed 2, referencing 8)
+[2m2026-10-29T23:05:58.634669Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 0)
