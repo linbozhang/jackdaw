@@ -236,3 +236,81 @@ M13 亲跑复验 PASS；矩阵 14 格中 13.5 格绿。**唯一阻断=SV9**：�
 程序归档件。
 
 —— QA（loop 自动化验收）2026-10-31
+
+---
+
+# 复验节：SV9 修复单返工（程序提交 **3c4ffa8b**，修复形态 A=模板 Rust 侧 spawn）
+
+> 复验裁决：**PASS（转裁）** —— SV9 五件套逐项亲核兑现，SV9 关闭；T17-T2 按 §十预设的
+> 改判路径转 **PASS**，放行主控（`--no-ff` 合入 main + T17-T3 派发）。复验全程 QA 亲跑
+> （2026-10-31，未设 RUST_BACKTRACE；门前 df=19Gi，门后 19Gi）。
+
+## 十三、修复面逐项核（源码/归档/真机三层）
+
+| # | 修复单项 | QA 复核 | 结果 |
+|---|---|---|---|
+| 1 | hud.bsn 摘三行 `FeathersSlider` 组件行；「标签+marker」行保留，marker 槽补 `Node{width:62%,height:24px,align_self:Center}`（挂接件不参与布局需自带尺寸） | diff 亲读（三行摘除+三槽 Node 逐字）；新 direct 日志零 ERROR 佐证布局槽生效 | ✅ |
+| 2 | `attach_volume_sliders`：`commands.spawn_scene(bsn! { @FeathersSlider }).insert((marker, ChildOf(row)))`；`Added<marker>` 三查询带 `Without<SliderValue>`（挂件自身带 marker 会重命中自查询——程序披露轮内实爆 186 实体连环，已断链） | lib.rs.template diff 亲读（`Added` 只首帧命中+`Without<SliderValue>` 排除挂件，双重断链逻辑推演成立）；186 红态如实入报告 §四/偏差 11 | ✅ |
+| 3 | 渐变四件注册（`BackgroundGradient/Gradient/ColorStop/InterpolationColorSpace`——场景件组件走注册表应用，未注册静默剥落=进度条永不上色）+`bevy::feathers::FeathersPlugins` 进模板（无它控件能用但不画） | diff 亲读四处注册+add_plugins；截图蓝色填充条即注册+着装的活证 | ✅ |
+| 4a | teaches 重钉 Rust 形态（摘 hud 场景件针与旧注册针，钉 `fn attach_volume_sliders`+`spawn_scene(bsn! { @FeathersSlider })`+`register_type::<FeathersSlider>()`） | scaffold diff 亲读（-5/+4）；**scaffold 91/91 亲跑过** | ✅ |
+| 4b | L7 补 PX + SV9 机械断言入腿（查询 `FeathersSlider` 实体→`Node`/`Children` 必在，否则「SV9 red form」红；本跑 `scene component` 计数必 0；BRP 置 `GameState.paused`→`screencapture` 截图腿；marker 查询加 `SliderValue` 过滤=只抓挂件） | t17-live.sh diff 亲读；程序重跑 console 亲读（Node/Children JSON 全文在档+shot 落盘）；**QA 真机复验独立复现**（§十四） | ✅ |
+| 4c | M14 词表补 `scene component|without its scene`（game+editor 两相） | 脚本 diff 亲读两处 grep；程序重跑 WARN_SCAN_GAME unattributed=**0**+editor 相 0（旧词表下该形态原本漏网） | ✅ |
+| 5 | 门禁终树覆盖归档 | **QA 九门亲跑全绿、覆盖 `t17t2_qa_*`**（§十五表） | ✅ |
+| 6 | 披露修正三条 | 报告 diff 亲读：①bsn_game「3/3（run-target 重烟也是套件件）」更正在案；②红→绿叙事按 QA §八更正（第二轮红证与首轮同件=两波修复叙事重构）；③**T3 书单硬性交接两条在案**（回流 E `.tmp` 单写方纪律一句+SV9 处置结果） | ✅ |
+
+**边界纪律**：`git diff ef95c9bc..3c4ffa8b` 对 `crates/jackdaw_runtime/src`、`src/`（编辑器）、
+`crates/jackdaw_api_internal` 零改动——修复守住了「零编辑器产品代码改动」边界（QA §四预判
+的 BSN loader 改造路线未被走）。
+
+## 十四、QA 真机独立复验（自己的进程、自己的截图，非程序证据复读）
+
+fixture 已随新模板重建（lib.rs 含 attach 形态 6 处命中亲 grep）。独立 scratch 直跑：
+
+1. **marker 恰 2 实体 ×3**（Master/Music/Sfx 各 = authored 行 + 挂接件）——186 连环断链的
+   断言口在 QA 自己的跑里复现；
+2. **挂接 widget（821v0）= `Node` 全形**（Flex 布局、height 24px、border_radius 6px、
+   padding 8px——feathers 场景件本体布局）**+ `Children:["825v0"]`**（轨道/把手子件存在）
+   ——FAIL 轮的「无 Node 无 Children」红形态归零；
+3. **本跑 `scene component` ERROR = 0**；
+4. **QA 亲截图**（BRP 置 paused 后 screencapture）：**三条带主题滑条肉眼可见**——Master
+   **0.42** / Music **0.58** / Sfx **1**，与活体 config 逐字段一致；
+5. **ValueChange 全链复验**：BRP trigger 0.58 于查询返回的首个 widget（恰为 Music——查询序
+   不稳定，非点名腿）→ config.music=0.58、master 不动=**observer 按 widget marker 路由正确**
+   → watcher 同帧落盘（save.json `{"master":0.42,"music":0.58,"sfx":1.0}`）。
+
+程序侧证据同核：重跑 game 相 7/7+editor 相 3/3（summary 双件亲读）；L7 trigger 路径+
+重启滑条位 0.3499999940395355≈0.35+Node/Children 机械断言+PX 腿全过；返工轮自身红态两件
+如实先归档（`editor-editor_red2.log` dylib 陈旧=已知形态；186 连环与脚本 marker 双实体红
+写入报告 §五表 5 行）。**nit 一条（不阻）**：报告/提交词称截图「Master 0.42、Music/Sfx 满
+值」，归档 PNG 实读为 Master 0.35/Music 0.6/Sfx 0.5（=L7 时点槽位值，与档自洽；0.42 是 QA
+复验跑里的读数）——叙述滑差，T3 book 引用截图时以归档 PNG 为准。
+
+## 十五、门禁（复验轮，QA 亲跑，覆盖归档 `loop/reports/t17t2_qa_*`）
+
+| 门 | QA 结果（3c4ffa8b 终树） |
+|---|---|
+| fmt | EXIT=0，零 Diff |
+| clippy 全仓（dylib+deny warnings） | EXIT=0，`warning:`=0 |
+| 物理双包 clippy | EXIT=0 |
+| libtests | EXIT=0；**2990** passed/0 failed（亲算）；**scaffold 91/91**（重钉后亲跑） |
+| save_store | **19/19** |
+| audio_gate | **7/7** |
+| AN2 | **1/1** |
+| bsn_game e2e | **3/3** |
+| fast | EXIT=0；**2990/2990（65.4s）**；全文 0 FAILED/0 error/0 diff/0 `warning:` |
+| df | 门前 19Gi → 门后 19Gi（T3 全量门前清盘照旧） |
+
+## 十六、最终裁决
+
+**PASS（转裁，SV9 关闭）**。依据：SV9 修复单六项全兑现（§十三）；QA 独立真机复验
+（恰 2 marker、Node/Children、零 rejection、亲截图三滑条、ValueChange 路由+落盘全链）与
+程序证据互证无虚（§十四）；九门禁终树亲跑全绿（§十五）；边界零越界；披露修正三条+
+T3 交接两条在案。原 FAIL 轮的其余全部判定（核心验收句、T1 回流 D/F、两铁证独立性、
+M13 亲跑、偏差 1-10 ACCEPT）不受返工影响，维持有效。
+
+**放行主控**：①T17-T2 `--no-ff` 合入本地 main（loop 报告随目录入库，含本复验节）；②
+**派发 T17-T3**（终验+文档），交接硬性三条已在案：T3 书单必须含「回流 E `.tmp` 单写方
+纪律一句」+「SV9 处置结果（形态 A）」+book 引用截图以归档 PNG 读数为准；T3 全量门前清
+磁盘；T3 终验复跑重点腿 L3/L4/L5 时 L7 的 PX 腿照新口径带上。
+
+—— QA（loop 自动化验收）复验轮 2026-10-31

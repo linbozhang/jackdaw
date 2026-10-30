@@ -9,4 +9,4 @@
     Checking jd v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jd)
     Checking jackdaw_physics v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/integrations/physics/jackdaw_physics)
     Checking jackdaw_editor v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_editor)
-    Finished `dev` profile [optimized + debuginfo] target(s) in 18.43s
+    Finished `dev` profile [optimized + debuginfo] target(s) in 19.77s

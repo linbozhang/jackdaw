@@ -1,19 +1,19 @@
-=== GATE fmt START 01:28:05 ===
-fmt EXIT=0 01:28:08
-=== GATE clippy_ws START 01:28:08 ===
-clippy_ws EXIT=0 01:28:28
-=== GATE clippy_phy START 01:28:28 ===
-clippy_phy EXIT=0 01:28:37
-=== GATE libtests START 01:28:37 ===
-libtests EXIT=0 01:30:10
-=== GATE save_store START 01:30:10 ===
-save_store EXIT=0 01:30:12
-=== GATE audio_gate START 01:30:12 ===
-audio_gate EXIT=0 01:31:53
-=== GATE an2 START 01:31:53 ===
-an2 EXIT=0 01:31:54
-=== GATE bsngame START 01:31:54 ===
-bsngame EXIT=0 01:32:18
-=== GATE fast START 01:32:18 ===
-fast EXIT=0 01:37:01
-ALL GATES DONE 01:37:01
+=== GATE fmt START 03:16:34 ===
+fmt EXIT=0 03:16:37
+=== GATE clippy_ws START 03:16:37 ===
+clippy_ws EXIT=0 03:16:57
+=== GATE clippy_phy START 03:16:57 ===
+clippy_phy EXIT=0 03:17:18
+=== GATE libtests START 03:17:18 ===
+libtests EXIT=0 03:18:58
+=== GATE save_store START 03:18:58 ===
+save_store EXIT=0 03:18:59
+=== GATE audio_gate START 03:18:59 ===
+audio_gate EXIT=0 03:20:42
+=== GATE an2 START 03:20:42 ===
+an2 EXIT=0 03:20:42
+=== GATE bsngame START 03:20:42 ===
+bsngame EXIT=0 03:21:04
+=== GATE fast START 03:21:04 ===
+fast EXIT=0 03:25:46
+ALL GATES DONE 03:25:46

@@ -2,4 +2,4 @@
     Checking jackdaw_scaffold v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_scaffold)
     Checking jackdaw v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw)
     Checking jackdaw_physics v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/integrations/physics/jackdaw_physics)
-    Finished `dev` profile [optimized + debuginfo] target(s) in 9.56s
+    Finished `dev` profile [optimized + debuginfo] target(s) in 20.43s
