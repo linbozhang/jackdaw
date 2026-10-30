@@ -1,0 +1,19 @@
+=== GATE fmt START 01:28:05 ===
+fmt EXIT=0 01:28:08
+=== GATE clippy_ws START 01:28:08 ===
+clippy_ws EXIT=0 01:28:28
+=== GATE clippy_phy START 01:28:28 ===
+clippy_phy EXIT=0 01:28:37
+=== GATE libtests START 01:28:37 ===
+libtests EXIT=0 01:30:10
+=== GATE save_store START 01:30:10 ===
+save_store EXIT=0 01:30:12
+=== GATE audio_gate START 01:30:12 ===
+audio_gate EXIT=0 01:31:53
+=== GATE an2 START 01:31:53 ===
+an2 EXIT=0 01:31:54
+=== GATE bsngame START 01:31:54 ===
+bsngame EXIT=0 01:32:18
+=== GATE fast START 01:32:18 ===
+fast EXIT=0 01:37:01
+ALL GATES DONE 01:37:01

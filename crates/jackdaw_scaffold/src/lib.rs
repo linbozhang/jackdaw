@@ -3770,15 +3770,17 @@ mod tests {
             "struct AudioPrefs",
             "SavePlugin::<GameSave>::new(env!(\"CARGO_PKG_NAME\"))",
             "register_type::<ValueChange<f32>>()",
-            "register_type::<bevy::feathers::controls::FeathersSlider>()",
+            "register_type::<FeathersSlider>()",
             "fn apply_saved_audio",
             "fn save_audio_changes",
             "fn apply_saved_input",
             "fn save_input_changes",
             "fn count_run_over",
             "fn mirror_save_display",
+            "fn attach_volume_sliders",
             "fn on_volume_changed",
             "fn sync_volume_sliders",
+            "spawn_scene(bsn! { @FeathersSlider })",
             "struct MasterVolumeSlider",
             "ConfigLoader<GameAudioConfig>",
             "merge_actions(&config.actions, saved)",
@@ -3800,12 +3802,7 @@ mod tests {
         // three themed sliders, and the menu and game-over documents
         // read the run counter from the GameState mirror.
         let hud = std::fs::read_to_string(dest.join("assets/hud.bsn")).unwrap();
-        for needle in [
-            "bevy_feathers::controls::slider::FeathersSlider",
-            "MasterVolumeSlider",
-            "MusicVolumeSlider",
-            "SfxVolumeSlider",
-        ] {
+        for needle in ["MasterVolumeSlider", "MusicVolumeSlider", "SfxVolumeSlider"] {
             assert!(
                 hud.contains(needle),
                 "the hud document must teach `{needle}`; the pause screen drifted"

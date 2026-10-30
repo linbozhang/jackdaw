@@ -20,7 +20,7 @@
 | AN2 腿 | `cargo nextest run --profile ci -p jackdaw_runtime --features animation --test animation_scene_load` | **1/1 PASS** | t17t2_an2.log |
 | save_store 套件 | `cargo nextest run --profile ci -p jackdaw_runtime --test save_store` | **19/19 PASS**（17+2 新测试） | t17t2_save_store.log |
 | fast | `cargo xtask fast` | **EXIT=0；Summary 2990/2990（73.7s）；全文 0 FAILED/0 `warning:`** | t17t2_fast.log |
-| bsn_game 双 e2e | `cargo nextest run --profile ci --test bsn_game_run` | **2/2 PASS**（旧件+新双跑腿） | 本文 §二 |
+| bsn_game e2e | `cargo nextest run --profile ci --test bsn_game_run` | **3/3 PASS**（双跑腿+旧件+run-target 重烟；程序报告「2/2」系计数笔误，QA 偏差 12 指正，此处更正） | 本文 §二 |
 | 磁盘 | `df`（门前） | 36Gi 可用（终跑）；**本轮实际撞过一次满盘**，见偏差 4 | — |
 
 ## 一、模板接入面（方案 §六 T2 清单逐项）
@@ -54,15 +54,20 @@
    `mirror_save_display`（Update）把存档值抄给绑定面——绑定解析资源路径，menu/gameover
    文本绑 `Res({{crate_name}}::GameState).runs_played`（泛型 SaveStore 路径不进文档，
    T12 机器现成接线）。重启后镜像由存档值驱动=「menu 可读」的活证。
-6. **设置屏最小面**（决策 7-A）：hud.bsn PauseScreen 增三行「标签+滑条」；
-   滑条=`bevy_feathers::controls::slider::FeathersSlider`（带主题的 feathers 场景件，
-   require 链带 Slider/SliderValue/SliderRange）+模板 marker 三件
-   （Master/Music/SfxVolumeSlider）；`on_volume_changed` 观察者认 marker→写对应
-   `GameAudioConfig` 字段（bind 写路径拒资源，观察者=桥）；`sync_volume_sliders`
-   把 mix 指回滑条位置（无 changed 门——滑条在恢复后才 spawn，等值护栏防反馈环）；
-   `register_type::<ValueChange<f32>>()`+`register_type::<FeathersSlider>()` 两行
-   （泛型与 feathers 类型都不在 reflect auto-inventory——T16 泛型教训的两次适用）。
-   输入改绑演示=BRP mutate（数据级），键位捕获 UI 不做（决策 7-B 记 book 指路，归 T3）。
+6. **设置屏最小面**（决策 7-A）：hud.bsn PauseScreen 增三行「标签+挂点 marker」
+   （行节点+`Node{width:62%,height:24px}` 布局槽）；滑条本体由 **Rust 侧
+   `attach_volume_sliders` 挂接**——`FeathersSlider` 是场景件（scene component），
+   文档里按普通组件行写只挂 require 链、场景永不展开（QA SV9 实锤），唯一合法
+   落地=`commands.spawn_scene(bsn! { @FeathersSlider })`（编辑器 slider_row 同款
+   形态）挂到 authored 行下、marker 随件（查询带 `Without<SliderValue>` 防挂件
+   自触发连环）；滑条条=根节点 `BackgroundGradient`，其类型与载荷三件须显式注册
+   （场景件组件走注册表应用，未注册类型静默剥落）；`FeathersPlugins` 负责着色/
+   内嵌字体/样式系统；`on_volume_changed` 观察者认 marker→写对应 `GameAudioConfig`
+   （bind 写路径拒资源，观察者=桥）；`sync_volume_sliders` 把 mix 指回滑条位置
+   （无 changed 门——滑条在恢复后才 spawn，等值护栏防反馈环）；`register_type::<
+   ValueChange<f32>>()`+`register_type::<FeathersSlider>()` 两行（泛型与 feathers
+   类型都不在 reflect auto-inventory——T16 泛型教训的两次适用）。输入改绑演示=BRP
+   mutate（数据级），键位捕获 UI 不做（决策 7-B 记 book 指路，归 T3）。
 7. **doc 段**：「Saving progress and settings」导览（两层语义、文件在用户目录与场景
    分开、三态守卫指路 runtime SaveStore doc）。
 8. **Cargo.toml.template**：+`serde = { version = "1", features = ["derive"] }`（profile
@@ -151,7 +156,47 @@ authored `audio-config.bsn`（master **0.42**，与所有腿用值 0.7/0.35/0.6/
 | L7 滑条腿 | PASS | **trigger 路径成立**：BRP `world.trigger_event` 打 `bevy_ui_widgets::ValueChange<f32>`（source=实体串形）→观察者写 config→watcher 落盘 0.35；kill -9 重启→滑条 `SliderValue=0.3499999940395355`（=0.35，f32 形）与 mix 同恢复（`l7-path-witness.txt`=trigger，fallback 未动用） |
 | L8 warn 扫描 | PASS | 两相零意外（M14 上表） |
 
-## 四、红→绿实录（先归档纪律）
+## 四、SV9 修复节（QA 裁定 FAIL 的单点；修复形态 A=模板 Rust 侧 spawn 场景件）
+
+**QA 实锤（红，已验在案）**：hud.bsn 把 `FeathersSlider` 按普通组件行写→bevy_scene 只挂
+require 链、场景永不 spawn；每跑 3 条 ERROR（`bevy_scene::scene_component: Entity … was
+spawned with the "scene component" … but without its scene`，M14 词表外未披露）；滑条实体
+无 Node/无 Children（QA 活体探针）——不可见不可拖，只有数据半边活着（L7 全程绕开
+拖拽/视觉所以曾 PASS）。红证归档：`t17t2_live-direct-l1.log` 等日志中的 ERROR 行（修复后
+归零）+QA 报告 §四原文。
+
+**修复（形态 A 五件套，守「零编辑器产品代码改动」边界）**：
+1. **hud.bsn 摘三行 `FeathersSlider` 组件行**；三行「标签+marker」authored 行保留为
+   挂点，marker 行补 `Node{width:62%,height:24px}`（=滑条的布局槽——marker 实体
+   原本无 Node，挂上去的场景件不参与 UI 布局，宽度为零不可见）。
+2. **`attach_volume_sliders`（Update，`Added<marker>` 三查询）**：
+   `commands.spawn_scene(bsn! { @FeathersSlider }).insert((marker, ChildOf(row)))`
+   ——场景件唯一合法落地路径（bevy_scene 文档明言 spawn_scene/`@` 语法；编辑器
+   `slider_row` 同款形态）；marker 随件（观察者/sync 照旧认得）；**查询带
+   `Without<SliderValue>`**——否则挂件自身带 marker 下帧重新命中本查询，每个滑条
+   每帧再生一个滑条（实爆过一次：186 实体连环，轮内红态如实记）。
+3. **渐变三件注册**：`BackgroundGradient/Gradient/ColorStop/InterpolationColorSpace`
+   ——场景件的组件走类型注册表应用，注册表叫不出名的类型**静默从场景件上剥落**
+   （滑条的进度条=根节点上的 BackgroundGradient，剥落后永不上色）；BRP 查询它们的
+   正名=`bevy_ui::gradients::BackgroundGradient`（定义模块路径，非 `ui_node::`）。
+4. **`FeathersPlugins` 进游戏模板**：场景件给出骨骼（轨道/把手/数字），feathers 运行时
+   （主题观察者+内嵌字体+控件样式系统）负责着色与随值移动——没有它控件能用但
+   什么都不画；与 widgets_runtime 的主题共存（其 finish 设计上最后跑）。
+5. **teaches 针更新**：摘 hud 场景件针，钉 Rust 形态（`fn attach_volume_sliders`+
+   `spawn_scene(bsn! { @FeathersSlider })`+`register_type::<FeathersSlider>()`）。
+
+**绿（真机归零核+PX，最终轮 game 相全绿）**：
+- 滑条实体=`bevy_feathers::controls::slider::FeathersSlider` 查询实锤，**Node（feathers
+  轨道布局）+Children（场景子件）+SliderValue** 三件全在；marker 实体恰 2 个
+  （authored 行+挂接件）=连环已断；
+- 全部 direct 日志 **`scene component` ERROR 行=0**（修复前 3/跑）；
+- L7 全链在真滑条上复验：trigger→观察者→watcher→落盘→kill -9 重启→sync 回指
+  （`SliderValue=0.3499999940395355`≈0.35）；
+- **PX 截图腿补齐**（方案 L7 通道 G+PX 的 PX 半边）：BRP 置 `GameState.paused=true`→
+  暂停屏可见→截图归档 `shot-l7-pause-sliders.png`——**三条带主题的滑条肉眼可见**
+  （Master 填充至 0.42 带数字读数、Music/Sfx 满值），与存档/authored 值一致。
+
+## 五、红→绿实录（先归档纪律）
 
 | 轮 | 红（已归档） | 根因 | 绿 |
 |---|---|---|---|
@@ -159,16 +204,17 @@ authored `audio-config.bsn`（master **0.42**，与所有腿用值 0.7/0.35/0.6/
 | 2 | `console-game_red.log`（第二轮）：L7 红（滑条位置 0.0） | `sync_volume_sliders` 挂 `config.is_changed()` 门——存档恢复发生在启动（menu、滑条未 spawn），滑条 spawn 时 change 已消耗，永远拿不到恢复值 | 去门（等值护栏已防反馈环）→ L7 PASS |
 | 3 | `editor-editor_red.log`：EDITOR_BOOT_FAIL（dyld symbol not found） | 编辑器二进制对 dylib 陈旧（t16 同款已知形态） | `cargo build -p jackdaw` 后重跑 → boot 绿 |
 | 4 | `console-editor_export_red.log`：L5 export `linking with cc failed` | **满盘**（251Mi 剩余——release 导出+本轮多份 target 把盘吃满；A6 家族教训实弹） | 清 /tmp 渲染检查工程 19G+workspace incremental 23G→36Gi；重跑 → L5 PASS |
+| 5（SV9 返工轮） | QA 报告 §四+`t17t2_live-direct-l1.log` 等（3 条/跑 scene-component ERROR+实体无 Node/Children）——程序首轮绿态日志中的未披露红 | FeathersSlider 是场景件，文档组件行不展开场景（§四 SV9 节） | 形态 A 挂接（`attach_volume_sliders`）→ Node/Children 实锤+ERROR 归零+PX 截图腿；L7 首复跑红一次（marker 双实体致位置查询抓到行实体——脚本查询加 SliderValue 过滤）→ 复跑全绿 |
 
 另：L7 腿内 ValueChange 触发带文档化 fallback（config mutate=同一资源同一路径），
 最终轮 **trigger 路径成立，fallback 未动用**（`l7-path-witness.txt`=trigger）。
 
-## 五、偏差清单（如实）
+## 六、偏差清单（如实）
 
-1. **🟡 模板接入三次红→绿**（§四表 1/2 行）：FeathersSlider 注册+TypePath 定义模块
+1. **🟡 模板接入三次红→绿**（§五表 1/2 行）：FeathersSlider 注册+TypePath 定义模块
    拼写、sync 的 changed 门。均为新学形态（feathers 类型不入 auto-inventory=widgets_runtime
    手工注册 ThemedText 的同因；泛型 ValueChange 同理），已铸进模板注释与 teaches 针。
-2. **🟡 满盘一次**（§四表 4 行）：环境事故非产品缺陷；教训=**editor/export 相前必须
+2. **🟡 满盘一次**（§五表 4 行）：环境事故非产品缺陷；教训=**editor/export 相前必须
    df**（A6 家族），本轮门禁表记录在案，脚本未加 df 门（记 QA 注意事项）。
 3. **⚪ 模板行数超方案估计**：lib.rs.template +354 行（方案 ~100-120）：三桥+watcher
    armed 机制+三滑条面+doc 段的真实尺寸；对齐 T12/T16 模板段的密度口径，无注水。
@@ -191,8 +237,19 @@ authored `audio-config.bsn`（master **0.42**，与所有腿用值 0.7/0.35/0.6/
    「一个改绑」的语义在盘面等价（盘上即为改绑后的表）。
 10. **⚪ scaffold_e2e 重档未跑**：渲染工程编译证据=live fixture 暖编（`game-warmbuild-prep.log`）
     +渲染工程 cargo check 零错（早期探针）+teaches 91；重档归 T3 终验门（方案 §四-T3 口径）。
+11. **🟡 SV9 返工轮（QA 裁定后）**：修复形态=A（模板 Rust 侧 spawn 场景件，§四 SV9 节
+    五件套）。轮内真实红态两次、均已如实归因并修复：①挂接件自身带 marker 下帧重新命中
+    attach 查询→滑条连环自spawn（186 实体，暂停屏三条叠 bars）——`Without<SliderValue>`
+    断链；②滑条条=BackgroundGradient 被注册表静默剥落+缺 feathers 运行时不着色——
+    渐变四件注册+`FeathersPlugins`。另有脚本侧一次红：marker 双实体（authored 行+挂件）
+    致位置查询抓到行实体→查询加 SliderValue 过滤。全部修复点已铸进模板注释与 teaches。
+12. **⚪ 报告披露修正（QA 偏差 11/12 记账）**：①§〇 bsn_game 门「2/2」实为 **3/3**
+    （run-target 重烟也是套件件），已更正；②红→绿叙事口径按 QA §八更正：**第二轮红证
+    与首轮同件归档**（`console-game_red.log` 单份已含全部四类症状，含 L7 位置空串——
+    原报告写「0.0」与在档「空串」不一致，以归档为准），mtime 只此一份、绿件随后，
+    「两轮」系同一红件两波修复的叙事重构，红证本体为真。
 
-## 六、给 QA 的注意事项
+## 七、给 QA 的注意事项
 
 1. **BRP 读数的 f32 形态**：资源数值返回全精度（0.42→`0.41999998688697815`）；盘上
    save.json（serde 路径）为最短形（`0.42`）。任何 BRP 数值断言必须容差比较
@@ -212,11 +269,31 @@ authored `audio-config.bsn`（master **0.42**，与所有腿用值 0.7/0.35/0.6/
    启动时务必带 seam，否则 PIE 写真档（决策 6-A）。
 6. **editor/export 相前 df**（偏差 2 的教训）；编辑器二进制对 dylib 的陈旧错=
    dyld symbol not found，重编 `-p jackdaw` 即愈（t16 同款）。
-7. **未动面**：buglist/台账/roadmap 未改（T3 口径）；book 章、键位捕获 UI 指路、
-   30 秒用户清单=方案 §四-T3；SV 系无新增票（SV9 起空缺，本轮缺陷全为脚本/环境或
-   已随模板修复吸收）。
+7. **T3 书单硬性交接两条（QA 偏差 13 落账）**：①**回流 E 显式记档**——save.json.tmp
+   是固定名（无 pid/唯一后缀），单写方纪律（决策 6-A 下 PIE 与 direct 双活进程理论
+   交错面），后果被损坏路径兜住（备份+默认，无不可挽回丢失）；book game-saves 章
+   须写一句、或 SV 记档留案（T1 QA 回流 E 原文移交义务，T2 未动、此处显式交接）。
+   ②**SV9 处置结果**写入 T17 闭环材料（修复形态 A=模板 Rust 挂接，teaches 已改钉
+   正确形态）。
+8. **未动面**：buglist/台账/roadmap 未改（T3 口径）；book 章、键位捕获 UI 指路、
+   30 秒用户清单=方案 §四-T3；SV9 已随形态 A 修复（QA 复验口见下）。
+9. **SV9 复验口（给 QA）**：①绿态 direct 日志 `grep -c "scene component"`=0（修复前
+   3/跑，本轮全腿实测零）；②真机进 level 后 BRP 查 `bevy_feathers::controls::slider::
+   FeathersSlider` 实体→`get_components` 含 `bevy_ui::ui_node::Node`+
+   `bevy_ecs::hierarchy::Children`（场景子件）+`bevy_ui_widgets::slider::SliderValue`；
+   ③暂停屏滑条**肉眼可见**（`GameState.paused=true` 绑定面）：三条带主题滑条、
+   Master 按存档值填充至 0.42 且带数字读数、Music/Sfx 满值——`shot-l7-pause-sliders.png`
+   在案（本轮 PX 腿实摄）；④滑条可拖（QA 手测口——自动化腿 L7 的 ValueChange
+   trigger 链已证：事件→观察者→config→watcher→落盘→重启 sync 回指位置与音量同恢复）；
+   ⑤BRP 查询渐变用定义模块路径 `bevy_ui::gradients::BackgroundGradient`（非
+   `ui_node::`——该类型定义在 gradients.rs）。
+10. **marker 双实体注意**：修复后 marker 同时在 authored 行与其滑条子件上（挂接时
+    随件插入）——按 marker 单独查询会得两实体；脚本/QA 查滑条须加
+    `bevy_ui_widgets::slider::SliderValue` 联合过滤（t17-live.sh L7 现行写法）；
+    marker 实体总数恰 2（authored 行+挂接件）也是连环已断的断言口
+    （返工轮内曾实爆 186 实体，见偏差 11）。
 
-## 七、产物清单
+## 八、产物清单
 
 - `crates/jackdaw_scaffold/templates/game/src/lib.rs.template`（+354：doc 段+GameSave
   家族+四桥系统+滑条三 marker+观察者+sync+镜像+注册两行+接线）

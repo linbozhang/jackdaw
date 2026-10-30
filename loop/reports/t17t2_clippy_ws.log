@@ -1,7 +1,7 @@
    Compiling jackdaw_project_build v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_project_build)
-   Compiling ring v0.17.14
-   Compiling rustls v0.23.46
+    Checking ring v0.17.14
     Checking rustls-webpki v0.103.16
+    Checking rustls v0.23.46
     Checking ureq v2.12.1
     Checking jackdaw_scaffold v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_scaffold)
     Checking jackdaw_cli_internal v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_cli)
@@ -9,4 +9,4 @@
     Checking jd v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jd)
     Checking jackdaw_physics v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/integrations/physics/jackdaw_physics)
     Checking jackdaw_editor v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_editor)
-    Finished `dev` profile [optimized + debuginfo] target(s) in 58.87s
+    Finished `dev` profile [optimized + debuginfo] target(s) in 23.83s

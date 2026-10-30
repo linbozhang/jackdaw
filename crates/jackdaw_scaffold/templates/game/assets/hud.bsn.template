@@ -96,6 +96,11 @@ bevy_ui::ui_node::Node {
             bevy_feathers::theme::ThemedText
         ]
         --
+        // The three volume rows: an authored label and the marker the code
+        // hangs the slider on. A `FeathersSlider` is a scene component --
+        // as a bare component line in this document its scene never spawns
+        // and the widget sits dead -- so `attach_volume_sliders` in lib.rs
+        // attaches each slider's real scene to these rows after they spawn.
         #MasterVolumeRow
         bevy_ui::ui_node::Node {
             width: bevy_ui::geometry::Val::Px(280.0),
@@ -109,8 +114,12 @@ bevy_ui::ui_node::Node {
             bevy_feathers::theme::ThemedText
             --
             #MasterVolumeSlider
-            bevy_feathers::controls::slider::FeathersSlider
             {{crate_name}}::MasterVolumeSlider
+            bevy_ui::ui_node::Node {
+                width: bevy_ui::geometry::Val::Percent(62.0),
+                height: bevy_ui::geometry::Val::Px(24.0),
+                align_self: bevy_ui::style::AlignSelf::Center,
+            }
         ]
         --
         #MusicVolumeRow
@@ -126,8 +135,12 @@ bevy_ui::ui_node::Node {
             bevy_feathers::theme::ThemedText
             --
             #MusicVolumeSlider
-            bevy_feathers::controls::slider::FeathersSlider
             {{crate_name}}::MusicVolumeSlider
+            bevy_ui::ui_node::Node {
+                width: bevy_ui::geometry::Val::Percent(62.0),
+                height: bevy_ui::geometry::Val::Px(24.0),
+                align_self: bevy_ui::style::AlignSelf::Center,
+            }
         ]
         --
         #SfxVolumeRow
@@ -143,8 +156,12 @@ bevy_ui::ui_node::Node {
             bevy_feathers::theme::ThemedText
             --
             #SfxVolumeSlider
-            bevy_feathers::controls::slider::FeathersSlider
             {{crate_name}}::SfxVolumeSlider
+            bevy_ui::ui_node::Node {
+                width: bevy_ui::geometry::Val::Percent(62.0),
+                height: bevy_ui::geometry::Val::Px(24.0),
+                align_self: bevy_ui::style::AlignSelf::Center,
+            }
         ]
     ]
 ]

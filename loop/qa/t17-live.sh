@@ -59,6 +59,9 @@ PHEALTH='t17_save::PlayerHealth'
 PMARKER='t17_save::PlayerMarker'
 GSTATE='t17_save::GameState'
 MASTERMARK='t17_save::MasterVolumeSlider'
+FEATHERSSLIDER='bevy_feathers::controls::slider::FeathersSlider'
+UINODE='bevy_ui::ui_node::Node'
+CHILDREN='bevy_ecs::hierarchy::Children'
 SLIDERVAL='bevy_ui_widgets::slider::SliderValue'
 VC='bevy_ui_widgets::ValueChange<f32>'
 NAME='bevy_ecs::name::Name'
@@ -519,9 +522,12 @@ l7_slider() {
   # and the leg records which path landed.
   local ok=true slider sliderev="" wv
   press start
+  # The marker rides two entities (the authored row and the attached
+  # widget); only the widget carries the SliderValue, and it is the one
+  # the event must target.
   local deadline=$((SECONDS + 15)) n=0
   while [ $SECONDS -lt $deadline ]; do
-    slider=$(gbrp world.query "{\"data\":{\"components\":[\"$MASTERMARK\"]}}" 2>/dev/null \
+    slider=$(gbrp world.query "{\"data\":{\"components\":[\"$MASTERMARK\",\"$SLIDERVAL\"]}}" 2>/dev/null \
       | jq -r '[.result[]?][0].entity // empty' 2>/dev/null)
     [ -n "$slider" ] && break
     sleep 1
@@ -550,7 +556,7 @@ l7_slider() {
   press start
   deadline=$((SECONDS + 15)); slider=""
   while [ $SECONDS -lt $deadline ]; do
-    slider=$(gbrp world.query "{\"data\":{\"components\":[\"$MASTERMARK\"]}}" 2>/dev/null \
+    slider=$(gbrp world.query "{\"data\":{\"components\":[\"$MASTERMARK\",\"$SLIDERVAL\"]}}" 2>/dev/null \
       | jq -r '[.result[]?][0].entity // empty' 2>/dev/null)
     [ -n "$slider" ] && break
     sleep 1
@@ -571,6 +577,42 @@ l7_slider() {
     log "L7: slider position after restart = $pos (want 0.35)"
     feq "$num" 0.35 || { log "L7: the slider did not follow the restored mix ($pos)"; ok=false; }
   fi
+  # The SV9 face, green half: the attached slider is a real scene widget —
+  # its entity carries the layout Node and the scene's children (track and
+  # thumb), and the log carries zero scene-component rejections. The red
+  # half (authored as a bare component line) is in the QA findings and the
+  # *_red archives: no Node, no Children, three rejections per run.
+  deadline=$((SECONDS + 15)); slider=""
+  while [ $SECONDS -lt $deadline ]; do
+    slider=$(gbrp world.query "{\"data\":{\"components\":[\"$FEATHERSSLIDER\"]}}" 2>/dev/null \
+      | jq -r '[.result[]?][0].entity // empty' 2>/dev/null)
+    [ -n "$slider" ] && break
+    sleep 1
+  done
+  [ -n "$slider" ] || { log "L7: no attached slider entity found"; ok=false; }
+  if [ -n "$slider" ]; then
+    local sv9json
+    sv9json=$(gbrp world.get_components "{\"entity\":\"$slider\",\"components\":[\"$UINODE\",\"$CHILDREN\"]}" 2>/dev/null \
+      | jq -c '.result.components // empty' 2>/dev/null)
+    log "L7: slider entity $slider = $sv9json"
+    echo "$sv9json" | grep -q "bevy_ui::ui_node::Node" || { log "L7: slider has no Node (SV9 red form)"; ok=false; }
+    echo "$sv9json" | grep -q "bevy_ecs::hierarchy::Children" || { log "L7: slider has no Children (SV9 red form)"; ok=false; }
+  fi
+  local sc_err
+  sc_err=$(grep -ac "scene component" "$OUTDIR/direct-l7.log" 2>/dev/null)
+  [ "${sc_err:-0}" = "0" ] || { log "L7: $sc_err scene-component rejections in this run"; ok=false; }
+  # The PX half the plan always named: pause the game over BRP (the hud's
+  # visibility binding shows the pause screen with the three sliders), and
+  # capture the screen. The shot is evidence, not a pixel assert — the
+  # mechanical truth is the Node/Children readback above.
+  gbrp world.mutate_resources "{\"resource\":\"$GSTATE\",\"path\":\"paused\",\"value\":true}" >/dev/null 2>&1
+  sleep 2
+  if screencapture -x "$OUTDIR/shot-l7-pause-sliders.png" 2>/dev/null && [ -s "$OUTDIR/shot-l7-pause-sliders.png" ]; then
+    log "L7: pause-screen shot captured (shot-l7-pause-sliders.png)"
+  else
+    log "L7: the pause-screen shot never landed"; ok=false
+  fi
+  gbrp world.mutate_resources "{\"resource\":\"$GSTATE\",\"path\":\"paused\",\"value\":false}" >/dev/null 2>&1
   echo "$sliderev" > "$OUTDIR/l7-path-witness.txt"
   log "L7 slider complete ($sliderev path), ok=$ok"
   leg L7_SLIDER "$ok"
@@ -672,7 +714,7 @@ game_phase() {
     [ -f "$gl" ] || continue
     # The corrupt leg's warns are the leg's product; skip it here.
     case "$gl" in *l4.log) continue ;; esac
-    grep -a "UnresolvedTypes\|cannot.apply\|cannot-apply" "$gl" >> "$OUTDIR/warn-unattributed.log" 2>/dev/null || true
+    grep -a "UnresolvedTypes\|cannot.apply\|cannot-apply\|scene component\|without its scene" "$gl" >> "$OUTDIR/warn-unattributed.log" 2>/dev/null || true
     grep -a "game save:" "$gl" | sed "s|^|$(basename "$gl"): |" >> "$OUTDIR/warn-unattributed.log" 2>/dev/null || true
     grep -a "no config asset" "$gl" | sed "s|^|attributed-template-state $(basename "$gl"): |" >> "$OUTDIR/warn-attributed.log" 2>/dev/null || true
   done
@@ -809,7 +851,7 @@ editor_phase() {
   sleep 2
   local log="$OUTDIR/editor-$PHASE.log"
   local unattr n13
-  unattr=$(grep -ac "UnresolvedTypes\|cannot.apply\|cannot-apply" "$log" 2>/dev/null)
+  unattr=$(grep -ac "UnresolvedTypes\|cannot.apply\|cannot-apply\|scene component\|without its scene" "$log" 2>/dev/null)
   n13=$(grep -ac "panicked at" "$log" 2>/dev/null)
   grep -an "panicked at" "$log" 2>/dev/null | head -5 > "$OUTDIR/n13-editor-count.txt" || true
   log "WARN_SCAN editor phase: zero_tolerance=${unattr:-0} (panics counted: ${n13:-0})"

@@ -282,7 +282,9 @@
 
 
 use bevy::audio::Volume;
+use bevy::feathers::controls::FeathersSlider;
 use bevy::prelude::*;
+use bevy::scene::bsn;
 use bevy::ui_widgets::{SliderValue, ValueChange};
 use jackdaw_runtime::prelude::*;
 use serde::{Deserialize, Serialize};
@@ -337,12 +339,27 @@ impl Plugin for GamePlugin {
             // reason, so a BRP client can fire it by name (L leg discipline:
             // drive the real event, not a stand-in).
             .register_type::<ValueChange<f32>>()
-            // The pause screen's sliders are authored feathers scenes, and
-            // feathers types are not in the reflect auto-inventory (the
-            // widgets runtime registers the ui_widgets sliders for the same
-            // reason): without this line the document's slider lines are
-            // refused and the pause screen has no sliders to drag.
-            .register_type::<bevy::feathers::controls::FeathersSlider>()
+            // The sliders themselves attach from code (`attach_volume_sliders`
+            // below); feathers types are not in the reflect auto-inventory,
+            // so this line is what lets a BRP client name the widget.
+            .register_type::<FeathersSlider>()
+            // The slider's bar is a `BackgroundGradient` on the widget
+            // root, and a scene component's pieces apply through the type
+            // registry: a type the registry cannot name is dropped from
+            // the widget (its bar then never paints). These are the
+            // gradient's face and payload.
+            .register_type::<bevy::ui::BackgroundGradient>()
+            .register_type::<bevy::ui::Gradient>()
+            .register_type::<bevy::ui::ColorStop>()
+            .register_type::<bevy::ui::InterpolationColorSpace>()
+            // The scene gives the slider its bones (track, thumb, digits);
+            // the feathers runtime dresses them: theme observers, the
+            // embedded fonts the digits read, and the control style systems
+            // that fill the bar and move the thumb with the value. Without
+            // it the widget spawns and works but draws nothing. Coexists
+            // with the widgets runtime's own theme (its finish runs last
+            // by design).
+            .add_plugins(bevy::feathers::FeathersPlugins)
             .add_systems(
                 Update,
                 // Chained: a fresh sink gets the mix before the mirror reads
@@ -374,7 +391,7 @@ impl Plugin for GamePlugin {
                 (apply_saved_input, save_input_changes)
                     .after(jackdaw_runtime::apply_config_defaults::<GameInputConfig>),
             )
-            .add_systems(Update, (sync_volume_sliders, mirror_save_display))
+            .add_systems(Update, (attach_volume_sliders, sync_volume_sliders, mirror_save_display))
             .add_systems(OnEnter(GameFlow::Level), spawn_falling_cube)
             .add_systems(Update, falling_cubes)
             // Input: the built-in five actions evaluate every frame; the
@@ -757,7 +774,8 @@ fn mirror_sound_live(
 // fallback; the systems below are the whole game-side integration: two
 // bridges that restore the saved settings over the authored defaults,
 // two watchers that persist the player's changes, the run counter, and
-// the pause screen's volume sliders.
+// the pause screen's volume sliders (attached from code, see
+// `attach_volume_sliders`).
 
 /// What this game saves. Plain serde JSON inside the runtime's
 /// envelope (`save.json` under the user data directory). Extend it
@@ -952,9 +970,10 @@ fn mirror_save_display(save: Res<SaveStore<GameSave>>, mut state: ResMut<GameSta
     }
 }
 
-/// Marks the pause screen's master-volume slider, so the observer can
-/// tell which knob a `ValueChange` came from and the sync can point
-/// the restored value back at it. Music and sfx repeat the shape.
+/// Marks the pause screen's master-volume row (authored in hud.bsn),
+/// the attach point [`attach_volume_sliders`] hangs the slider on — and
+/// (once the slider is attached) the marker the observer and the sync
+/// find the widget by. Music and sfx repeat the shape.
 #[derive(Component, Reflect, Default)]
 #[reflect(Component, Default)]
 pub struct MasterVolumeSlider;
@@ -968,6 +987,42 @@ pub struct MusicVolumeSlider;
 #[derive(Component, Reflect, Default)]
 #[reflect(Component, Default)]
 pub struct SfxVolumeSlider;
+
+/// Attach the three sliders to the pause screen's authored rows. A
+/// `FeathersSlider` is a *scene component*: the widget is a small scene
+/// (track, thumb, digits) that only comes into the world through the
+/// scene API — spawned as a bare component line in a document it would
+/// sit dead, its scene never built. `spawn_scene` is the whole
+/// attachment: the scene grows under the authored row, beside its
+/// label, and the marker rides the widget so the observer and the sync
+/// below keep pointing at it. `Added` re-fires for every fresh hud the
+/// flow spawns, so each entry into the level re-attaches itself.
+fn attach_volume_sliders(
+    mut commands: Commands,
+    // `Without<SliderValue>`: the marker rides the attached widget too (it
+    // is how the observer and the sync know which knob spoke), and without
+    // the exclusion the widget itself would re-match this query on the next
+    // frame — each slider spawning another slider under it, forever.
+    masters: Query<Entity, (Added<MasterVolumeSlider>, Without<SliderValue>)>,
+    musics: Query<Entity, (Added<MusicVolumeSlider>, Without<SliderValue>)>,
+    sfxs: Query<Entity, (Added<SfxVolumeSlider>, Without<SliderValue>)>,
+) {
+    for entity in &masters {
+        commands
+            .spawn_scene(bsn! { @FeathersSlider })
+            .insert((MasterVolumeSlider, ChildOf(entity)));
+    }
+    for entity in &musics {
+        commands
+            .spawn_scene(bsn! { @FeathersSlider })
+            .insert((MusicVolumeSlider, ChildOf(entity)));
+    }
+    for entity in &sfxs {
+        commands
+            .spawn_scene(bsn! { @FeathersSlider })
+            .insert((SfxVolumeSlider, ChildOf(entity)));
+    }
+}
 
 /// The pause screen's volume sliders write the mix: the widget emits
 /// `ValueChange<f32>`, this observer tells which slider spoke (its
