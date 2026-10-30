@@ -2,8 +2,8 @@ EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t17-save/t17-save seam
 L5: staged tree clean of player data
 L5 export parity complete, ok=true
 L5_EXPORT_PASS
-L6 PIE complete, ok=true (editor panics counted: 5)
+L6 PIE complete, ok=true (editor panics counted: 6)
 L6_PIE_SLOT_PASS
-WARN_SCAN editor phase: zero_tolerance=0 (panics counted: 5)
+WARN_SCAN editor phase: zero_tolerance=0 (panics counted: 6)
 WARN_SCAN_EDITOR_PASS
 VERDICT_EDITOR_PHASE: L5_EXPORT=PASS L6_PIE_SLOT=PASS WARN_SCAN_EDITOR=PASS 

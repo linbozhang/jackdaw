@@ -1,0 +1,25 @@
+== QA gates start Sat Oct 31 05:42:51 CST 2026 df: 47Gi free ==
+-- fmt start 05:42:51
+-- fmt end 05:42:54 EXIT=0
+-- libtests start 05:42:54
+-- libtests end 05:46:37 EXIT=0
+-- save_store start 05:46:37
+-- save_store end 05:46:39 EXIT=0
+-- audio_gate start 05:46:39
+-- audio_gate end 05:50:13 EXIT=0
+-- fast start 05:50:13
+-- fast end 05:57:40 EXIT=0
+== df before integration: 40Gi free ==
+-- integration start 05:57:40
+== QA gates p2 start Sat Oct 31 06:43:41 CST 2026 df: 40Gi free ==
+-- integration start 06:43:41
+-- integration end 07:24:07 EXIT=1
+-- docs start 07:24:07
+-- docs end 07:24:48 EXIT=0
+-- scaffold_e2e start 07:24:48
+-- scaffold_e2e end 07:28:57 EXIT=0
+-- bsn_game start 07:28:57
+-- bsn_game end 07:29:30 EXIT=0
+-- a6_isolated start 07:29:30
+-- a6_isolated end 07:29:45 EXIT=0
+== QA gates p2 done Sat Oct 31 07:29:45 CST 2026 df after: 39Gi free ==

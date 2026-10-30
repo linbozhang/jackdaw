@@ -1,0 +1,24 @@
+== gates start Sat Oct 31 03:46:04 CST 2026 df: 72Gi free ==
+-- fmt start 03:46:04
+-- fmt end 03:46:07 EXIT=0
+-- clippy_ws start 03:46:07
+-- clippy_ws end 03:46:48 EXIT=0
+-- clippy_physics start 03:46:48
+-- clippy_physics end 03:47:18 EXIT=0
+-- libtests start 03:47:18
+-- libtests end 03:50:42 EXIT=0
+-- save_store start 03:50:42
+-- save_store end 03:50:55 EXIT=0
+-- fast start 03:50:55
+-- fast end 03:54:39 EXIT=0
+== df before integration: 66Gi free ==
+-- integration start 03:54:39
+-- integration end 04:37:54 EXIT=1
+-- doctests start 04:37:54
+-- doctests end 04:38:12 EXIT=101
+-- doc start 04:38:12
+-- doc end 04:39:08 EXIT=0
+-- scaffold_e2e start 04:39:08
+-- scaffold_e2e end 04:44:52 EXIT=0
+== gates done Sat Oct 31 04:44:52 CST 2026 df after: 41Gi free ==
+integration_exit=1

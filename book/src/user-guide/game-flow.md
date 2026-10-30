@@ -147,6 +147,9 @@ the config's number, the player back to the spawn point, the pickup
 counter (with the physics module) back to zero. Because it runs on
 *every* entry, Restart is not special — the end screen's Restart
 button just moves the flow to `Level`, and switching **is** the reset.
+Restart resets the *player*, not the *player's record*: each finished
+run lands in the save file, which outlives the process entirely
+([Game Saves](game-saves.md)).
 
 Prefab instances and nested scenes follow their host scene, like any
 other scene member. A mechanism for marking individual entities to

@@ -1,0 +1,1 @@
+2026-10-30T19:38:06.701841Z  WARN jackdaw_runtime::save: game save: '/Users/zhanglinbo/workspace/loop-mac/t17-save/scratch/save.json' does not read as JSON (EOF while parsing a value at line 1 column 0); starting from the default (the original is kept as 'save.json.corrupt-1793389086701')

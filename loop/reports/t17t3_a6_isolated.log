@@ -1,0 +1,4 @@
+        PASS [   3.192s] (1/1) jackdaw::prefabs prefab_lifecycle::prefab_file_change_triggers_reload
+────────────
+     Summary [   3.193s] 1 test run: 1 passed, 100 skipped
+a6_exit=0

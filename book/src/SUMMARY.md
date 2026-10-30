@@ -26,6 +26,7 @@
 - [Game UI](user-guide/game-ui.md)
 - [Audio](user-guide/audio.md)
 - [Game Flow](user-guide/game-flow.md)
+- [Game Saves](user-guide/game-saves.md)
 - [The Player Controller](user-guide/player-controller.md)
 - [Animation](user-guide/animation.md)
 - [Graphics Panel](user-guide/graphics-panel.md)

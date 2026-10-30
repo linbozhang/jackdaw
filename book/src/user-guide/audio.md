@@ -154,10 +154,13 @@ makes "is it actually playing, and at what volume" a checkable
 question instead of a listenable guess.
 
 A settings screen is the natural consumer of the same resource: its
-sliders would write `GameAudioConfig` (a resource is not a binding
+sliders write `GameAudioConfig` (a resource is not a binding
 *target*, so the write goes through a few lines of game code —
 [Game UI](game-ui.md) has the binding kinds and their limits), and
-the mix system does the rest.
+the mix system does the rest. The template's pause screen is exactly
+this, and the player's mix survives a restart: the save
+([Game Saves](game-saves.md)) puts the changed values back over the
+authored config on the next launch.
 
 ## Files and formats
 

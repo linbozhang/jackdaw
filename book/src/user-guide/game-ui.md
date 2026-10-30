@@ -51,7 +51,7 @@ pure level furniture:
 | Overlay | Shows when | Contents |
 |---|---|---|
 | `#Hud` | always, while its document exists | Health bar, health text, pickups text |
-| `#PauseScreen` | `GameState.paused` | Title + Resume button |
+| `#PauseScreen` | `GameState.paused` | Title + Resume button + three volume sliders |
 
 The game side is deliberately small. `GameState { paused }` is a
 `Resource` of one bool, and **the veil's `Visibility` is bound to it**
@@ -59,6 +59,12 @@ The game side is deliberately small. `GameState { paused }` is a
 game-over screens used to be overlays here too, bound to two more
 bools; they are worlds now, with their own documents and cameras —
 see [Game Flow](game-flow.md).)
+
+The three sliders are the settings screen: each one writes a field of
+`GameAudioConfig` and the save persists it, so the positions (and the
+mix) come back on the next launch — [Game Saves](game-saves.md) has
+the persistence half and the scene-component boundary their wiring
+teaches.
 
 Buttons say which one they are: the pause screen's `Action` binding
 sends `ScreenPressed { button: "resume" }` from its literal, and one
