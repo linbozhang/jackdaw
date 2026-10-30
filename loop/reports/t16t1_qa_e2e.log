@@ -1,0 +1,19 @@
+   Compiling jackdaw v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw)
+    Finished `test` profile [optimized + debuginfo] target(s) in 2.00s
+     Running tests/bsn_game_run.rs (target/debug/deps/bsn_game_run-40982ea52a1750ee)
+
+running 1 test
+ok: [2m2026-10-30T04:42:33.773246Z[0m [32m INFO[0m [2mbevy_diagnostic::system_information_diagnostics_plugin::internal[0m[2m:[0m SystemInfo { os: "macOS 26.6.2 Tahoe", kernel: "25.6.0", cpu: "Apple M1 Pro", core_count: "8", memory: "16.0 GiB" }
+[2m2026-10-30T04:42:33.795125Z[0m [32m INFO[0m [2mbevy_render::renderer[0m[2m:[0m AdapterInfo { name: "Apple M1 Pro", vendor: 0, device: 0, device_type: IntegratedGpu, device_pci_bus_id: "", driver: "", driver_info: "", backend: Metal, subgroup_min_size: 4, subgroup_max_size: 64, transient_saves_memory: Some(true), limit_bucket: None }
+[2m2026-10-30T04:42:33.995881Z[0m [32m INFO[0m [2mbevy_pbr::cluster[0m[2m:[0m GPU clustering is supported on this device.
+[2m2026-10-30T04:42:33.995987Z[0m [32m INFO[0m [2mbevy_render::batching::gpu_preprocessing[0m[2m:[0m GPU preprocessing is fully supported on this device.
+BSN_GAME_STARTED
+[2m2026-10-30T04:42:34.003897Z[0m [32m INFO[0m [2mjackdaw_runtime[0m[2m:[0m No catalog at /Users/zhanglinbo/workspace/jackdaw/tests/fixtures/bsn_game/assets/catalog.bsn, skipping catalog load
+BSN_SCENE_LOADED entities=7 node_ids=1 target=999 has_target=true ids=[999] names=["LineGizmoRenderer", "LineStripGizmoRenderer", "LineJointGizmoRenderer", "Scatter Group", "scene", "Sun", "Bgm Probe", "Main Camera", "Marker Probe", "Root"] scatter_keys=["Props"]
+AUDIO_SINK_LIVE kind=music volume=0.160 paused=false finished=false position=0.35
+
+test built_game_loads_and_spawns_a_bsn_scene ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1 filtered out; finished in 17.53s
+
+EXIT=0
