@@ -1,0 +1,11 @@
+df before gates:
+/dev/disk3s1s1   460Gi    12Gi    69Gi    15%    459k  725M    0%   /
+fmt EXIT=0
+clippy_ws EXIT=0
+clippy_phy EXIT=0
+libtests EXIT=0
+fast EXIT=0
+an2 EXIT=0
+save_store EXIT=0
+rt_suite EXIT=0
+ALL GATES DONE 2026-10-30 22:05:27

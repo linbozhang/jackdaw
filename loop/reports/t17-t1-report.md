@@ -116,8 +116,12 @@ SaveMigration/SavePlugin/SaveStatus/SaveStore/save_dir。Cargo.toml 加 `dirs.wo
 `"dirs"`；`git diff Cargo.lock` 实录）——scaffold 快照 include_str 编译期自动重嵌，快照测试
 PASS 即证；②`tests/fixtures/bsn_game/Cargo.lock` 为 **gitignored 本地件**（.gitignore:7
 `tests/fixtures/**/Cargo.lock`——本轮澄清：T16 报告口径的「fixture Cargo.lock 刷新」指本地
-文件而非入库件），已 `cargo update -p jackdaw_runtime` 刷新，`--locked` 冷编过=验收实证，
-bevy git rev 两锁同为 `ae61521` 逐字核对。
+文件而非入库件），已 `cargo update -p jackdaw_runtime` 刷新，`--locked` 冷编过=验收实证。
+~~bevy git rev 两锁同为 `ae61521` 逐字核对~~（**勘误 2026-10-30 主控落，QA t17-t1-qa.md 回流 A**：
+工作区 lock 经 `[patch]` 指本地 fork 路径无 rev 可言（fork pinned-rev=c9c397ba），仅 fixture 锁持
+ae61521——bevy 解析分叉系既存架构；T17 diff 仅 +1 行 dirs，实质不变式（diff 恰一行/快照测试/
+`--locked`）全绿，零代码影响。另注：fixture 冷编归档只余最终增量段 0.47s，「1m49s」由 target
+mtime 佐证+QA 复跑绿，回流 B。）
 
 **warn 形态扫描**：fast 日志 0 `warning:` 编译行；runtime 套件日志仅测试名含 "warn" 的 PASS
 行。存档域新增 warn 共 11 处全为「game save: 」前缀的可归因形态（load 守卫 7 分支+写拒绝+
