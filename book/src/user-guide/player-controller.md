@@ -9,7 +9,10 @@ stage in three seconds.
 
 Three channels, one behavior: the editor's **Play**, a plain
 `cargo run`, and an **exported build** all run the same binary over
-the same scene, so what you tune in the editor is what ships.
+the same scene, so what you tune in the editor is what ships. The
+body here is boxes and capsules; give it a rigged model and the
+[Animation](animation.md) chapter makes it play idle, walk, and jump
+clips driven by the same states.
 
 ## The five pieces
 

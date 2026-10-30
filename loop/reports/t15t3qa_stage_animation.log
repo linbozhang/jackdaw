@@ -1,0 +1,44 @@
+   Compiling jackdaw v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw)
+    Finished `test` profile [optimized + debuginfo] target(s) in 3.51s
+────────────
+ Nextest run ID 8e90c878-2e28-45c3-bec9-433194cd213e with nextest profile: ci
+    Starting 37 tests across 1 binary (452 tests skipped)
+        PASS [   4.906s] ( 1/37) jackdaw::stage animation_graph::a_document_holding_leaked_canvas_nodes_loads_clean_and_saves_without_them
+        PASS [   4.906s] ( 2/37) jackdaw::stage animation_graph::a_graph_opened_from_its_binary_file_is_saved_back_as_binary
+        PASS [   4.920s] ( 3/37) jackdaw::stage animation_graph::a_graph_authored_through_the_operators_reads_back_off_the_disk
+        PASS [   6.304s] ( 4/37) jackdaw::stage animation_graph::a_graph_held_in_the_binary_form_is_titled_without_its_extension
+        PASS [   4.982s] ( 5/37) jackdaw::stage animation_graph::a_node_taken_off_the_canvas_takes_its_state_and_wires_with_it
+        PASS [   4.984s] ( 6/37) jackdaw::stage animation_graph::a_parameter_written_in_the_window_reaches_the_rig_being_previewed
+        PASS [   4.993s] ( 7/37) jackdaw::stage animation_graph::a_saved_graph_opens_again_with_a_node_for_every_state
+        PASS [   4.992s] ( 8/37) jackdaw::stage animation_graph::a_state_renamed_in_the_window_carries_its_transitions_with_it
+        PASS [   4.926s] ( 9/37) jackdaw::stage animation_graph::undoing_an_added_state_takes_its_node_off_the_canvas
+        PASS [   4.929s] (10/37) jackdaw::stage animation_graph::the_open_graph_canvas_keeps_its_nodes_out_of_the_scene_document
+        PASS [   6.300s] (11/37) jackdaw::stage animation_library::add_as_state_appends_to_the_selected_set_and_undoes
+        PASS [   7.682s] (12/37) jackdaw::stage animation_library::a_document_holding_old_clip_children_loads_clean_and_saves_without_them
+        PASS [   5.516s] (13/37) jackdaw::stage animation_library::discovery_no_longer_writes_clip_entities_into_the_document
+        PASS [   6.792s] (14/37) jackdaw::stage animation_library::indexing_settles_without_reloading_the_gltf
+        PASS [   4.955s] (15/37) jackdaw::stage animation_library::previewing_a_clip_on_a_bound_set_restores_the_set_state_on_stop
+        PASS [   5.679s] (16/37) jackdaw::stage animation_library::previewing_on_a_bare_skeleton_leaves_no_player_behind
+        PASS [   5.305s] (17/37) jackdaw::stage animation_library::the_assets_method_reports_clip_names_with_details
+        PASS [   5.777s] (18/37) jackdaw::stage animation_library::the_library_lists_every_clip_of_a_loaded_file
+        PASS [   5.664s] (19/37) jackdaw::stage animation_library::the_library_tab_lists_the_indexed_files
+        PASS [   5.826s] (20/37) jackdaw::stage animation_library::the_library_tab_refills_after_the_layout_is_rebuilt
+        PASS [   5.702s] (21/37) jackdaw::stage animation_markers::a_clip_previewed_on_a_mannequin_takes_no_events
+        PASS [   5.799s] (22/37) jackdaw::stage animation_markers::a_library_clip_row_comes_back_when_the_document_is_reopened
+        PASS [   5.815s] (23/37) jackdaw::stage animation_markers::a_removed_event_goes_out_of_the_document_too
+        PASS [   5.793s] (24/37) jackdaw::stage animation_markers::a_set_whose_skeleton_spawns_later_still_owns_its_markers
+        PASS [   5.815s] (25/37) jackdaw::stage animation_markers::an_event_on_a_library_clip_makes_a_row_under_the_entity
+        PASS [   5.828s] (26/37) jackdaw::stage animation_markers::an_undone_event_leaves_nothing_behind_for_a_save_to_write
+        PASS [   5.815s] (27/37) jackdaw::stage animation_markers::one_undo_takes_back_the_event_and_the_row_it_made
+        PASS [   5.988s] (28/37) jackdaw::stage animation_markers::playing_past_a_marker_sends_an_animation_event_naming_the_entity
+        PASS [   5.878s] (29/37) jackdaw::stage animation_markers::redoing_an_undone_event_puts_the_row_and_the_marker_back
+        PASS [   5.906s] (30/37) jackdaw::stage animation_markers::scrubbing_back_over_a_marker_sends_it_once_per_pass
+        PASS [   6.150s] (31/37) jackdaw::stage animation_timeline::an_event_lands_on_the_clip_and_undoes
+        PASS [   5.617s] (32/37) jackdaw::stage animation_timeline::an_imported_clip_shows_its_bone_tracks_read_only
+        PASS [   5.475s] (33/37) jackdaw::stage animation_timeline::every_timeline_action_has_an_operator
+        PASS [   5.692s] (34/37) jackdaw::stage animation_timeline::recording_switched_off_leaves_an_edit_alone
+        PASS [   5.250s] (35/37) jackdaw::stage animation_timeline::recording_writes_a_key_at_the_playhead_when_a_tracked_field_changes
+        PASS [   5.900s] (36/37) jackdaw::stage animation_timeline::stopping_the_preview_takes_the_imported_clip_off_the_timeline
+        PASS [   4.990s] (37/37) jackdaw::stage animation_timeline::switching_a_track_off_leaves_its_keys_where_they_are
+────────────
+     Summary [  53.500s] 37 tests run: 37 passed, 452 skipped

@@ -71,6 +71,7 @@ module pairs editor tooling with what the game needs for it:
 | Module | Game side | Requires |
 | --- | --- | --- |
 | `physics` | `avian3d` and its `PhysicsPlugins`, `jackdaw_avian_integration` and its `AvianColliderBridgePlugin` | |
+| `animation` | `jackdaw_runtime` feature `animation` ([Animation](../user-guide/animation.md)) | |
 | `navmesh` | `jackdaw_runtime` feature `navmesh` | |
 | `multiplayer` | `jackdaw_multiplayer` and its types plugin | |
 

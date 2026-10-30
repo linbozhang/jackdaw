@@ -1,4 +1,4 @@
-[2m2026-10-29T20:45:31.873115Z[0m [32m INFO[0m [2mjackdaw::boot_ops[0m[2m:[0m JACKDAW_RUN_OP: animation.preview: `entity` = 4765v0 (hero), from name=hero
-[2m2026-10-29T20:45:31.912555Z[0m [33m WARN[0m [2mjackdaw::animation::preview[0m[2m:[0m animation.preview: models/missing.glb could not be read
-[2m2026-10-29T20:45:34.905087Z[0m [32m INFO[0m [2mjackdaw::boot_ops[0m[2m:[0m JACKDAW_RUN_OP: animation.preview: `entity` = 4765v0 (hero), from name=hero
-[2m2026-10-29T20:45:34.945435Z[0m [33m WARN[0m [2mjackdaw::animation::preview[0m[2m:[0m animation.preview: models/hero.glb holds no clip named `No_Such_Clip`, only ["Jump", "Idle_Loop", "Walk_Loop"]
+[2m2026-10-29T23:12:02.130988Z[0m [32m INFO[0m [2mjackdaw::boot_ops[0m[2m:[0m JACKDAW_RUN_OP: animation.preview: `entity` = 4808v0 (hero), from name=hero
+[2m2026-10-29T23:12:02.174028Z[0m [33m WARN[0m [2mjackdaw::animation::preview[0m[2m:[0m animation.preview: models/missing.glb could not be read
+[2m2026-10-29T23:12:05.154262Z[0m [32m INFO[0m [2mjackdaw::boot_ops[0m[2m:[0m JACKDAW_RUN_OP: animation.preview: `entity` = 4808v0 (hero), from name=hero
+[2m2026-10-29T23:12:05.196989Z[0m [33m WARN[0m [2mjackdaw::animation::preview[0m[2m:[0m animation.preview: models/hero.glb holds no clip named `No_Such_Clip`, only ["Jump", "Idle_Loop", "Walk_Loop"]

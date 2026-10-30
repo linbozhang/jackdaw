@@ -83,8 +83,12 @@ Compared to other game engines, jackdaw is missing a bunch.
 None of these are blockers; they're places where someone with
 taste in the area could lead. One line each:
 
-- Animation graph editor. Started in `crates/jackdaw_animation`,
-  not finished.
+- Animation graph editor. The authoring-and-game loop is closed:
+  clips, states, transitions, and parameters round-trip from the
+  editor's panels into a running game
+  ([Animation](../user-guide/animation.md)). The open depth is
+  retargeting between rigs and richer blend shapes beyond the 1D
+  blend.
 - Particle / VFX editor. Not started.
 - Material graph editor (shader-graph style). Not started.
 - Light baking and lightmap pipeline. Not started.

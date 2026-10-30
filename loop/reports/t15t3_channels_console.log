@@ -1,0 +1,10 @@
+STAGED_UP leak_warns=0
+{"label": "jump-held", "state": "idle", "since": 0.11665371805429459, "transition": {"from": "jump", "remaining_secs": 0.033346302807331085}}
+{"label": "fallback", "state": "idle", "since": 0.13281595706939697, "transition": {"from": "jump", "remaining_secs": 0.017184052616357803}}
+wrote /Users/zhanglinbo/workspace/jackdaw/loop/t15-live/parity-t3-staged-manual.json fell: idle
+DIRECT_UP leak_warns=0
+{"label": "jump-held", "state": "idle", "since": 0.09795983880758286, "transition": {"from": "jump", "remaining_secs": 0.05204017460346222}}
+{"label": "fallback", "state": "idle", "since": 0.12245617061853409, "transition": {"from": "jump", "remaining_secs": 0.027543842792510986}}
+wrote /Users/zhanglinbo/workspace/jackdaw/loop/t15-live/parity-t3-direct-manual.json fell: idle
+STAGED_LEAK_WARNS=0 DIRECT_LEAK_WARNS=0
+T15T3_CHANNELS_DONE

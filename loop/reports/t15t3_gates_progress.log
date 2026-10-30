@@ -1,0 +1,5 @@
+fmt exit=0
+clippy_ws exit=0
+clippy_physics exit=0
+libtests exit=0
+fast exit=0

@@ -328,14 +328,24 @@ editor_build_settled() { # editor_build_settled [timeout] — wait out the edito
   return 1
 }
 
-export_wait() { # export_wait — game.export to a ready staged tree
+export_wait() { # export_wait — game.export, held until the staged tree carries the current scene
+  # A stale tree from an earlier session answers the old file-existence
+  # check before the export refreshes it, which once served the T2 leaked
+  # graph.bsn to the staged parity leg. The staged scene's sha must match
+  # the project's before this returns.
+  local want got st saw_state=""
+  want=$(shasum -a 256 "$PROJECT/assets/graph.bsn" 2>/dev/null | awk '{print $1}')
   op game.export '{}' >/dev/null 2>&1
   local deadline=$((SECONDS + 900))
   while [ $SECONDS -lt $deadline ]; do
-    local st
     st=$(brp jackdaw/export '{}' 2>/dev/null | jq -r '.result.state // empty' 2>/dev/null)
-    [ "$st" = "ready" ] && return 0
-    [ -x "$STAGED_EXE" ] && [ -f "$STAGED/export-manifest.json" ] && return 0
+    [ -n "$st" ] && saw_state=1
+    got=$(shasum -a 256 "$STAGED/assets/graph.bsn" 2>/dev/null | awk '{print $1}')
+    if [ -n "$got" ] && [ "$got" = "$want" ]; then return 0; fi
+    # The method may not answer at all; then the files are the only witness.
+    if [ -z "$saw_state" ] && [ -x "$STAGED_EXE" ] && [ -f "$STAGED/export-manifest.json" ]; then
+      return 0
+    fi
     sleep 3
   done
   return 1
@@ -718,17 +728,17 @@ l3_param_drives_preview() {
     sleep 1
   done
   [ "$(graph_state)" = "idle" ] || { log "L3 parity: entry state never became idle ($(graph_state))"; ok=false; }
-  echo "$(sample_graph_game entry)" >> "$seq"
+  echo "$(sample_graph entry)" >> "$seq"
   # Speed -> walk
   op animation.graph.set_param '{"name":"Speed","value":1}' >/dev/null 2>&1
   sleep 3
   [ "$(graph_state)" = "walk" ] || { log "L3 parity: Speed=1 gave $(graph_state) (want walk)"; ok=false; }
-  echo "$(sample_graph_game speed1)" >> "$seq"
+  echo "$(sample_graph speed1)" >> "$seq"
   # Speed -> idle
   op animation.graph.set_param '{"name":"Speed","value":0}' >/dev/null 2>&1
   sleep 3
   [ "$(graph_state)" = "idle" ] || { log "L3 parity: Speed=0 gave $(graph_state) (want idle)"; ok=false; }
-  echo "$(sample_graph_game speed0)" >> "$seq"
+  echo "$(sample_graph speed0)" >> "$seq"
   # trigger -> jump, then the one-shot falls back to idle by itself
   op animation.graph.set_param '{"name":"Jump","value":1}' >/dev/null 2>&1
   # the one-shot jump holds only ~0.95s (0.8s clip + fade); sample inside
@@ -744,7 +754,7 @@ l3_param_drives_preview() {
     sleep 1
   done
   [ "$fell" = "idle" ] || { log "L3 parity: one-shot never fell back ($fell)"; ok=false; }
-  echo "$(sample_graph_game fallback)" >> "$seq"
+  echo "$(sample_graph fallback)" >> "$seq"
   # park on walk for the screenshot only — the parity record above stays
   # the canonical five-sample sequence every channel replays.
   op animation.graph.set_param '{"name":"Speed","value":1}' >/dev/null 2>&1
@@ -802,6 +812,13 @@ l9_stop_invariant() {
   # the set still answers. State names are anim.bsn's own (lowercase).
   open_scene anim.bsn
   sleep 2
+  # Wait for the scene's Rig to resolve before the first write: a set_state
+  # into a still-settling scene warned "Rig names no entity" once.
+  local rig_wait=0
+  until [ -n "$(name_id Rig)" ]; do
+    if [ $rig_wait -ge 30 ]; then log "L9: the scene's Rig never resolved"; break; fi
+    sleep 1; rig_wait=$((rig_wait + 1))
+  done
   local ok=true
   local sha_before
   sha_before=$(shasum -a 256 "$PROJECT/assets/anim.bsn" | awk '{print $1}')
@@ -1173,13 +1190,32 @@ game_phase() {
   an7_warns=$(grep -Ec "which this editor does not include" "$log" 2>/dev/null)
   refused=$(grep -Ec "Cannot spawn scene" "$log" 2>/dev/null)
   n13=$(grep -c "panicked at" "$log" 2>/dev/null)
-  log "WARN_SCAN game phase: an7_lines=${an7_warns:-0} refused_lines=${refused:-0} (N13 PIE panics counted: ${n13:-0})"
+  # The game channels' own stdout (the AN10 blind spot): the direct and
+  # staged runs log to their own files, which the editor-log scan above
+  # never saw. The leaked canvas nodes warned exactly there.
+  : > "$OUTDIR/animation-warn-lines-game-channels.log"
+  local gl
+  for gl in "$OUTDIR/direct-run.log" "$OUTDIR/staged-run.log"; do
+    [ -f "$gl" ] || continue
+    grep -Ein "animation|clip|graph" "$gl" 2>/dev/null \
+      | grep -Ei "warn|error|fail|missing|not found|unresolved" \
+      | sed "s|^.|$(basename "$gl") &|" >> "$OUTDIR/animation-warn-lines-game-channels.log" || true
+  done
+  local game_channel_warns
+  game_channel_warns=$(grep -c "" "$OUTDIR/animation-warn-lines-game-channels.log" 2>/dev/null)
+  log "WARN_SCAN game phase: an7_lines=${an7_warns:-0} refused_lines=${refused:-0} game_channel_animation_warns=${game_channel_warns:-0} (N13 PIE panics counted: ${n13:-0})"
   grep -n "panicked at" "$log" 2>/dev/null | head -5 >> "$OUTDIR/n13-count.txt" || true
   grep -Ein "animation|clip|graph" "$log" 2>/dev/null | grep -Ei "warn|error|fail|missing|not found|unresolved" \
     > "$OUTDIR/animation-warn-lines-game.log" || true
   [ "${an7_warns:-0}" = "0" ] || leg WARN_SCAN_GAME false
   [ "${refused:-0}" = "0" ] || leg WARN_SCAN_GAME false
-  leg WARN_SCAN_GAME true
+  if [ "${game_channel_warns:-0}" != "0" ]; then
+    leg WARN_SCAN_GAME false
+    log "game-channel warn lines:"
+    cat "$OUTDIR/animation-warn-lines-game-channels.log"
+  else
+    leg WARN_SCAN_GAME true
+  fi
   printf '%s\n' "$(results)" > "$OUTDIR/summary-game.txt"
   log "VERDICT_GAME_PHASE: $(results)"
 }

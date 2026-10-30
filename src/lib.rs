@@ -617,6 +617,7 @@ impl Plugin for EditorCorePlugin {
                 auto_hide_internal_entities,
                 register_animation_entities_in_ast,
                 drop_imported_clip_entities.after(register_animation_entities_in_ast),
+                drop_leaked_graph_canvas_entities.after(drop_imported_clip_entities),
                 follow_scene_selection_to_clip,
                 sync_selected_keyframes_from_selection,
                 auto_save_layout_on_change,
@@ -2123,20 +2124,32 @@ fn on_duration_input_commit(
 /// register them in the JSN AST so they participate in save/load and
 /// undo/redo snapshotting. Runs every frame; cheap because
 /// `register_entity_in_ast` is a no-op for already-registered entities.
+///
+/// Entities wearing
+/// [`GraphCanvasPart`](crate::animation::graph_doc::GraphCanvasPart) are left
+/// out: the Graph window's nodes and wires are working entities whose
+/// persistent form is the open graph's own `.animgraph.bsn` file, not the
+/// scene. Registering them wrote throwaway canvas state into every save, and
+/// every game channel warned the unregistered types away on load. The node
+/// entities a blend-graph clip keeps under itself are scene content and stay
+/// registered, as they always were.
 fn register_animation_entities_in_ast(
     world: &mut World,
     params: &mut QueryState<
         Entity,
-        Or<(
-            Added<jackdaw_animation::Clip>,
-            Added<jackdaw_animation::AnimationTrack>,
-            Added<jackdaw_animation::Vec3Keyframe>,
-            Added<jackdaw_animation::QuatKeyframe>,
-            Added<jackdaw_animation::F32Keyframe>,
-            Added<jackdaw_animation::AnimationBlendGraph>,
-            Added<jackdaw_node_graph::GraphNode>,
-            Added<jackdaw_node_graph::Connection>,
-        )>,
+        (
+            Or<(
+                Added<jackdaw_animation::Clip>,
+                Added<jackdaw_animation::AnimationTrack>,
+                Added<jackdaw_animation::Vec3Keyframe>,
+                Added<jackdaw_animation::QuatKeyframe>,
+                Added<jackdaw_animation::F32Keyframe>,
+                Added<jackdaw_animation::AnimationBlendGraph>,
+                Added<jackdaw_node_graph::GraphNode>,
+                Added<jackdaw_node_graph::Connection>,
+            )>,
+            Without<crate::animation::graph_doc::GraphCanvasPart>,
+        ),
     >,
 ) {
     let entities: Vec<Entity> = params.iter(world).collect();
@@ -2157,6 +2170,42 @@ fn drop_imported_clip_entities(
     stale: &mut QueryState<Entity, With<jackdaw_animation::GltfClipRef>>,
 ) {
     let stale: Vec<Entity> = stale.iter(world).collect();
+    for entity in stale {
+        crate::commands::despawn_scene_entity(world, entity);
+    }
+}
+
+/// Drop the graph-window canvas nodes documents written before the canvas
+/// stayed out of scenes still carry (AN10).
+///
+/// Those entities are working state: the open graph's persistent form is its
+/// `.animgraph.bsn` file, so a document copy of a node is throwaway twice
+/// over — nothing in a game reads it, and every game channel warns the
+/// unregistered `GraphNode` type away on load. Only document-linked entities
+/// are judged (an open canvas's nodes are never linked), and a node under a
+/// blend-graph clip is the scene-resident form and stays.
+fn drop_leaked_graph_canvas_entities(
+    world: &mut World,
+    stale: &mut QueryState<
+        Entity,
+        (
+            Or<(
+                With<jackdaw_node_graph::GraphNode>,
+                With<jackdaw_node_graph::Connection>,
+            )>,
+            With<jackdaw_bsn::AstNodeRef>,
+        ),
+    >,
+) {
+    let stale: Vec<Entity> = stale
+        .iter(world)
+        .filter(|entity| match world.get::<ChildOf>(*entity) {
+            Some(parent) => world
+                .get::<jackdaw_animation::AnimationBlendGraph>(parent.parent())
+                .is_none(),
+            None => true,
+        })
+        .collect();
     for entity in stale {
         crate::commands::despawn_scene_entity(world, entity);
     }

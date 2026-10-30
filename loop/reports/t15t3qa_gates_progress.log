@@ -1,0 +1,6 @@
+fmt exit=0
+libtests exit=0
+fast exit=0
+integration exit=1
+docs exit=0
+scaffold_e2e exit=0
