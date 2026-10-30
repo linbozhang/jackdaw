@@ -38,4 +38,12 @@ bevy_ecs::hierarchy::Children [
         bevy_ui::widget::text::Text("Start")
         bevy_feathers::theme::ThemedText
     ]
+    --
+    #MenuBgm
+    bevy_audio::audio::AudioPlayer<bevy_audio::audio_source::AudioSource>("sounds/bgm.wav")
+    bevy_audio::audio::PlaybackSettings {
+        mode: bevy_audio::audio::PlaybackMode::Loop,
+        volume: bevy_audio::volume::Volume::Linear(0.6),
+    }
+    {{crate_name}}::MusicBus
 ]

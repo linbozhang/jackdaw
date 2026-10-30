@@ -59,6 +59,7 @@ impl Plugin for EntityOpsPlugin {
                 ),
             )
             .add_observer(derive_world_asset_root)
+            .add_observer(derive_audio_source_marker)
             .add_observer(forget_model_root)
             .add_observer(queue_models_past_last_level)
             .add_observer(queue_models_of_ungrouped_levels)
@@ -69,7 +70,12 @@ impl Plugin for EntityOpsPlugin {
             .register_type::<SceneFogVolume>()
             .register_type::<SceneReflectionProbe>()
             .register_type::<SceneAnimationPlayer>()
-            .register_type::<SceneAudioSource>();
+            .register_type::<SceneAudioSource>()
+            // `AudioPlayer` is generic, and the reflect derive's automatic
+            // registration skips generic types: without this line the scene
+            // loader drops the component every authored audio entity
+            // carries when a document loads.
+            .register_type::<AudioPlayer<AudioSource>>();
     }
 }
 
@@ -280,6 +286,22 @@ fn derive_world_asset_root(
         return;
     }
     pending.push(entity, Some(scene));
+}
+
+/// Derive the `SceneAudioSource` marker from an authored `AudioPlayer`.
+///
+/// The marker is editor-only (the `jackdaw::` save-skip keeps it out of the
+/// document), so this observer is what makes it survive: a save/reload, an
+/// undo or a tab swap re-inserts `AudioPlayer` from the document, and the
+/// insert re-derives the gizmo. Same shape as [`derive_world_asset_root`].
+fn derive_audio_source_marker(
+    insert: On<Insert<AudioPlayer>>,
+    marked: Query<(), With<SceneAudioSource>>,
+    mut commands: Commands,
+) {
+    if marked.get(insert.entity).is_err() {
+        commands.entity(insert.entity).insert(SceneAudioSource);
+    }
 }
 
 /// The glTF scene `source` names, as the handle the world-asset spawner
@@ -803,6 +825,14 @@ pub fn create_entity(
             .spawn((
                 Name::new("Audio Source"),
                 SceneAudioSource,
+                // The audio components themselves: the entity is a speaker
+                // from the moment it spawns, not a bare marker. Inserted from
+                // Rust, which needs no reflected `Default` — `AudioPlayer`
+                // has none, which is why this template (not Add Component) is
+                // the main entrance for audio authoring. `PlaybackSettings`'s
+                // fields and the player's file stay editable in the inspector.
+                AudioPlayer(Handle::<AudioSource>::default()),
+                PlaybackSettings::default(),
                 Transform::default(),
                 Visibility::default(),
             ))
@@ -3522,7 +3552,6 @@ mod tests {
 #[cfg(test)]
 mod asset_path_tests {
     use super::*;
-
     /// The directory named here does not exist, so a relative path coming back
     /// is proof nothing went to the filesystem. The mirror is process-global, so
     /// set, clear and the system driving it are one test rather than three.
@@ -3645,6 +3674,68 @@ mod clone_brush_tests {
         assert_eq!(
             spawned_ref.get::<Transform>().map(|t| t.translation.x),
             Some(2.0)
+        );
+    }
+}
+
+#[cfg(test)]
+mod audio_source_template_tests {
+    use super::*;
+
+    /// `Add > Audio Source` spawns a speaker, not a bare marker (T16): the
+    /// entity carries the bevy audio components from the first frame, so the
+    /// inspector has a file to name and playback settings to edit.
+    #[test]
+    fn an_added_audio_source_carries_the_audio_components() {
+        let mut app = App::new();
+        app.add_plugins(MinimalPlugins)
+            .init_resource::<Selection>()
+            .init_resource::<crate::commands::CommandHistory>()
+            .add_plugins(EntityOpsPlugin);
+
+        create_entity_in_world(app.world_mut(), EntityTemplate::AudioSource);
+        app.update();
+
+        let entity = app
+            .world_mut()
+            .query_filtered::<Entity, With<SceneAudioSource>>()
+            .single(app.world())
+            .expect("the template spawned exactly one audio source");
+        let world = app.world();
+        assert!(
+            world.get::<AudioPlayer<AudioSource>>(entity).is_some(),
+            "the entity carries the reference carrier"
+        );
+        let settings = world
+            .get::<PlaybackSettings>(entity)
+            .expect("the entity carries playback settings");
+        assert!(matches!(settings.mode, bevy::audio::PlaybackMode::Once));
+        assert!(
+            (settings.volume.to_linear() - 1.0).abs() < 1e-6,
+            "the template starts at the type defaults, authoring comes after",
+        );
+    }
+
+    /// An `AudioPlayer` arriving from anywhere (document load, undo, tab
+    /// swap) re-derives the editor-only marker, so the gizmo survives every
+    /// path that rebuilds the entity from the document.
+    #[test]
+    fn an_audio_player_from_any_source_derives_the_marker() {
+        let mut app = App::new();
+        app.add_plugins(MinimalPlugins)
+            .init_resource::<Selection>()
+            .add_plugins(EntityOpsPlugin);
+
+        let entity = app
+            .world_mut()
+            .spawn(Transform::default())
+            .insert(AudioPlayer(Handle::<AudioSource>::default()))
+            .id();
+        app.update();
+
+        assert!(
+            app.world().get::<SceneAudioSource>(entity).is_some(),
+            "the observer derives the marker from the insert",
         );
     }
 }

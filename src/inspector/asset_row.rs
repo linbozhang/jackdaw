@@ -49,6 +49,13 @@ const IMAGE_EXTENSIONS: &[&str] = &[
     "png", "jpg", "jpeg", "ktx2", "basis", "dds", "tga", "exr", "hdr", "webp", "bmp",
 ];
 
+/// The file extensions an audio field offers. `ogg`/`oga` decode through the
+/// default vorbis feature; `wav` through the `wav` feature the editor and the
+/// template both enable. The loader's own list (`AudioLoader::extensions`)
+/// also names `spx` when vorbis is on; left out here because speech files are
+/// not what an audio-source row is for.
+const AUDIO_EXTENSIONS: &[&str] = &["ogg", "oga", "wav"];
+
 /// What a handle row writes to.
 #[derive(Clone)]
 pub(crate) enum AssetFieldTarget {
@@ -581,8 +588,22 @@ fn file_extensions(asset_type_path: &str) -> &'static [&'static str] {
 
     if asset_type_path == Image::type_path() {
         IMAGE_EXTENSIONS
+    } else if asset_type_path == AudioSource::type_path() {
+        AUDIO_EXTENSIONS
     } else {
         &[]
+    }
+}
+
+/// Which desktop-dialog memory an asset row's Browse belongs in: sounds for
+/// audio fields, textures for everything else (the historical default).
+fn dialog_purpose(asset_type_path: &str) -> crate::native_dialog::DialogPurpose {
+    use bevy::reflect::TypePath as _;
+
+    if asset_type_path == AudioSource::type_path() {
+        crate::native_dialog::DialogPurpose::Sound
+    } else {
+        crate::native_dialog::DialogPurpose::Texture
     }
 }
 
@@ -684,18 +705,17 @@ fn browse_for_asset(world: &mut World, row: Entity) {
     if extensions.is_empty() {
         return;
     }
+    let purpose = dialog_purpose(&field.asset_type_path);
     let beside = folder_of_asset(world, &field);
     let dialog = match beside {
         Some(folder) => crate::native_dialog::dialog_starting_at(world, Some(folder)),
-        None => {
-            crate::native_dialog::file_dialog(world, crate::native_dialog::DialogPurpose::Texture)
-        }
+        None => crate::native_dialog::file_dialog(world, purpose),
     }
     .set_title(format!("Select a file for {}", field.field_path))
     .add_filter(short_type(&field.asset_type_path), extensions);
     let task =
         bevy::tasks::AsyncComputeTaskPool::get().spawn(async move { dialog.pick_file().await });
-    world.insert_resource(AssetBrowsePick { task, row });
+    world.insert_resource(AssetBrowsePick { task, row, purpose });
 }
 
 /// A file dialog a row opened, waiting on what the user chose.
@@ -703,6 +723,9 @@ fn browse_for_asset(world: &mut World, row: Entity) {
 struct AssetBrowsePick {
     task: bevy::tasks::Task<Option<rfd::FileHandle>>,
     row: Entity,
+    /// The dialog memory the pick belongs in, kept from the open so the
+    /// remembered folder lands under the same purpose.
+    purpose: crate::native_dialog::DialogPurpose,
 }
 
 /// Assign what a row's file dialog came back with.
@@ -721,7 +744,7 @@ pub(crate) fn poll_asset_browse_pick(world: &mut World) {
         return;
     };
     let file = chosen.path().to_path_buf();
-    crate::native_dialog::remember_pick(world, crate::native_dialog::DialogPurpose::Texture, &file);
+    crate::native_dialog::remember_pick(world, pick.purpose, &file);
     let Some(relative) = crate::asset_index::indexed_path(world, &file) else {
         crate::status_bar::notify_error(
             world,
@@ -855,6 +878,39 @@ mod tests {
             assets_for_row(&world, &row_naming(Image::type_path())),
             vec!["textures/rock.png".to_string()],
             "the files offered are the ones an image field can name",
+        );
+    }
+
+    /// An audio field offers the sound files the project holds (T16): the
+    /// picker lists them and Browse stays reachable, where before T16 an
+    /// audio field had neither.
+    #[test]
+    fn an_audio_field_offers_the_sound_files_the_project_holds() {
+        use bevy::audio::AudioSource;
+        use bevy::reflect::TypePath as _;
+
+        let tmp = tempfile::tempdir().expect("tempdir");
+        let sounds = tmp.path().join("assets/sounds");
+        std::fs::create_dir_all(&sounds).expect("a sounds folder");
+        std::fs::write(sounds.join("bgm.wav"), []).expect("a wav file");
+        std::fs::write(sounds.join("voice.ogg"), []).expect("an ogg file");
+        std::fs::write(sounds.join("cover.png"), []).expect("a picture beside them");
+        let mut world = World::new();
+        world.insert_resource(ProjectRoot {
+            root: tmp.path().to_path_buf(),
+            config: ProjectConfig::default(),
+        });
+
+        let mut files = assets_for_row(&world, &row_naming(AudioSource::type_path()));
+        files.sort();
+        assert_eq!(
+            files,
+            vec!["sounds/bgm.wav".to_string(), "sounds/voice.ogg".to_string(),],
+            "the files offered are the ones an audio field can name",
+        );
+        assert!(
+            !file_extensions(Image::type_path()).contains(&"wav"),
+            "the audio arm does not widen the image one",
         );
     }
 

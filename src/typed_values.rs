@@ -143,13 +143,17 @@ pub fn asset_type_path(registry: &TypeRegistry, type_id: TypeId) -> Option<Strin
     let asset_type = registry
         .get_type_data::<ReflectHandle>(handle_type)?
         .asset_type_id();
-    Some(
-        registry
-            .get(asset_type)?
-            .type_info()
-            .type_path()
-            .to_string(),
-    )
+    if let Some(registration) = registry.get(asset_type) {
+        return Some(registration.type_info().type_path().to_string());
+    }
+    // An asset type without a `Reflect` derive never lands in the registry,
+    // but its Handle still does and the row machinery only needs the name:
+    // audio is the case in point (`AudioSource` is bytes, not reflected
+    // fields), so name the non-reflecting asset types here.
+    if asset_type == TypeId::of::<bevy::audio::AudioSource>() {
+        return Some(bevy::audio::AudioSource::type_path().to_string());
+    }
+    None
 }
 
 /// The `Handle<T>` a field's type is, reaching through an `Option` to find it.
@@ -224,5 +228,36 @@ mod tests {
         assert!((hex.red - channels.red).abs() < 1e-4, "{hex:?}");
         assert!((hex.green - channels.green).abs() < 1e-4, "{hex:?}");
         assert!((hex.blue - channels.blue).abs() < 1e-4, "{hex:?}");
+    }
+
+    /// A field naming an asset the registry cannot reflect (`AudioSource`
+    /// derives no `Reflect`) still names itself, so the inspector can build
+    /// the asset row and the picker can list the files it takes.
+    #[test]
+    fn a_handle_field_of_an_unreflected_asset_still_names_it() {
+        use bevy::asset::{Handle, ReflectHandle};
+        use bevy::reflect::TypePath as _;
+
+        let mut registry = TypeRegistry::default();
+        registry.register::<Handle<AudioSource>>();
+        assert!(
+            registry
+                .get_type_data::<ReflectHandle>(TypeId::of::<Handle<AudioSource>>())
+                .is_some(),
+            "the handle registers even though its asset does not reflect"
+        );
+
+        let named = asset_type_path(&registry, TypeId::of::<Handle<AudioSource>>())
+            .expect("the audio handle names its asset");
+        assert_eq!(named, AudioSource::type_path());
+
+        // A handle whose asset IS registered names it from the registry.
+        registry.register::<Handle<StandardMaterial>>();
+        registry.register::<StandardMaterial>();
+        assert_eq!(
+            asset_type_path(&registry, TypeId::of::<Handle<StandardMaterial>>()),
+            Some("bevy_pbr::pbr_material::StandardMaterial".to_string()),
+            "a reflected asset names itself from the registry",
+        );
     }
 }

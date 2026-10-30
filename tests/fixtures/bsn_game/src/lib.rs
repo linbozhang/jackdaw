@@ -6,10 +6,138 @@
 //! and spawns its entities. An update system watches for the authored
 //! marker entity (`SceneNodeId(999)`) and, once it appears, prints a
 //! unique stderr line carrying real counts read out of the live world.
+//!
+//! T16: the scene also carries a `Bgm Probe` entity — an `AudioPlayer`
+//! naming `sounds/probe.wav` on the music bus — and the game builds the
+//! template's three-way mix around it. Once the entity's `SoundLive`
+//! mirror reports a playing sink, a second stderr line carries the mixed
+//! volume, so the real-pipeline proof covers audio too.
 
+use bevy::audio::Volume;
 use bevy::prelude::*;
 use jackdaw_runtime::prelude::*;
 use jackdaw_scene_types::{SceneNodeId, types::ScatterGroup};
+
+/// The mix the probe reads back: master × music = 0.5 × 0.8, times the
+/// scene entity's authored base 0.4, lands at 0.16.
+#[derive(Asset, Resource, Reflect, Clone, Default)]
+#[reflect(Resource, Default)]
+pub struct GameAudioConfig {
+    pub master: f32,
+    pub music: f32,
+    pub sfx: f32,
+}
+
+/// The bus markers and mirror, the same shape the template ships.
+#[derive(Component, Reflect, Default)]
+#[reflect(Component, Default)]
+pub struct MusicBus;
+
+#[derive(Component, Reflect, Default)]
+#[reflect(Component, Default)]
+pub struct SfxBus;
+
+#[derive(Component, Reflect, Clone, Default)]
+#[reflect(Component, Default)]
+pub struct SoundLive {
+    pub kind: String,
+    pub volume: f32,
+    pub paused: bool,
+    pub finished: bool,
+    pub position_secs: f32,
+}
+
+fn mix_volume(base: f32, music: bool, sfx: bool, config: &GameAudioConfig) -> f32 {
+    let bus = if music {
+        config.music
+    } else if sfx {
+        config.sfx
+    } else {
+        1.0
+    };
+    base * bus * config.master
+}
+
+fn apply_audio_mix(
+    config: Res<GameAudioConfig>,
+    plain: Query<
+        (
+            &PlaybackSettings,
+            Option<&MusicBus>,
+            Option<&SfxBus>,
+            &mut AudioSink,
+        ),
+        Without<SpatialAudioSink>,
+    >,
+) {
+    if !config.is_changed() {
+        return;
+    }
+    for (settings, music, sfx, mut sink) in plain {
+        let volume = mix_volume(
+            settings.volume.to_linear(),
+            music.is_some(),
+            sfx.is_some(),
+            &config,
+        );
+        sink.set_volume(Volume::Linear(volume));
+    }
+}
+
+fn apply_audio_mix_to_new_sinks(
+    config: Res<GameAudioConfig>,
+    plain: Query<
+        (
+            &PlaybackSettings,
+            Option<&MusicBus>,
+            Option<&SfxBus>,
+            &mut AudioSink,
+        ),
+        (Added<AudioSink>, Without<SpatialAudioSink>),
+    >,
+) {
+    for (settings, music, sfx, mut sink) in plain {
+        let volume = mix_volume(
+            settings.volume.to_linear(),
+            music.is_some(),
+            sfx.is_some(),
+            &config,
+        );
+        sink.set_volume(Volume::Linear(volume));
+    }
+}
+
+fn mirror_sound_live(
+    mut commands: Commands,
+    plain: Query<
+        (Entity, &AudioSink, Option<&MusicBus>, Option<&SfxBus>),
+        Without<SpatialAudioSink>,
+    >,
+    mut live: Query<&mut SoundLive>,
+) {
+    for (entity, sink, music, sfx) in plain {
+        let kind = if music.is_some() {
+            "music"
+        } else if sfx.is_some() {
+            "sfx"
+        } else {
+            "plain"
+        };
+        let value = SoundLive {
+            kind: kind.to_string(),
+            volume: sink.volume().to_linear(),
+            paused: sink.is_paused(),
+            finished: sink.empty(),
+            position_secs: sink.position().as_secs_f32(),
+        };
+        match live.get_mut(entity) {
+            Ok(mut slot) => *slot = value,
+            Err(_) => {
+                commands.entity(entity).insert(value);
+            }
+        }
+    }
+}
 
 /// A minimal editor extension type kept in this fixture for
 /// `jackdaw_extension` API surface coverage beside the game plugin.
@@ -29,8 +157,33 @@ pub struct GamePlugin;
 
 impl Plugin for GamePlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(Startup, spawn_scene)
-            .add_systems(Update, report_scene_loaded);
+        app.init_asset::<GameAudioConfig>()
+            // `AudioPlayer` is generic, and the reflect derive's automatic
+            // registration skips generic types: the scene's audio entity
+            // only applies with this line.
+            .register_type::<AudioPlayer<AudioSource>>()
+            .insert_resource(GameAudioConfig {
+                master: 0.5,
+                music: 0.8,
+                sfx: 1.0,
+            })
+            .add_systems(Startup, spawn_scene)
+            .add_systems(
+                Update,
+                (
+                    // Chained: a fresh sink gets the mix before the mirror
+                    // reads it, so the reported volume is never the raw base.
+                    // Tuple order alone is not execution order.
+                    (
+                        apply_audio_mix,
+                        apply_audio_mix_to_new_sinks,
+                        mirror_sound_live,
+                    )
+                        .chain(),
+                    report_scene_loaded,
+                    report_sound_live,
+                ),
+            );
     }
 }
 
@@ -91,4 +244,25 @@ fn report_scene_loaded(
         scatter,
     );
     *done = true;
+}
+
+/// Once the scene's audio entity is playing, print its mirrored state once:
+/// the engine-level proof that BSN-loaded audio reaches a real sink at the
+/// mixed volume. The `audio:` prefix keeps the line greppable beside the
+/// other markers.
+fn report_sound_live(mut done: Local<bool>, live: Query<&SoundLive>) {
+    if *done {
+        return;
+    }
+    for sound in &live {
+        if sound.finished || sound.volume <= 0.0 {
+            continue;
+        }
+        eprintln!(
+            "AUDIO_SINK_LIVE kind={} volume={:.3} paused={} finished={} position={:.2}",
+            sound.kind, sound.volume, sound.paused, sound.finished, sound.position_secs,
+        );
+        *done = true;
+        return;
+    }
 }

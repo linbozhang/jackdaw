@@ -332,6 +332,21 @@ pub fn run_windowless_game(
     cwd: &std::path::Path,
     extra_env: &[(&str, &std::ffi::OsStr)],
 ) -> (bool, String) {
+    run_windowless_game_until(binary, cwd, extra_env, &[])
+}
+
+/// As [`run_windowless_game`], also waiting for each of `extra_markers` to
+/// appear in the captured stderr before returning — for a proof line the
+/// game prints a few frames after the scene lands (the audio sink needs a
+/// couple of updates past the scene's spawn).
+#[expect(clippy::allow_attributes, reason = "shared across test binaries")]
+#[allow(dead_code, reason = "only the audio e2e uses this")]
+pub fn run_windowless_game_until(
+    binary: &std::path::Path,
+    cwd: &std::path::Path,
+    extra_env: &[(&str, &std::ffi::OsStr)],
+    extra_markers: &[&str],
+) -> (bool, String) {
     use std::io::BufRead as _;
     use std::sync::{Arc, Mutex, mpsc};
     use std::time::{Duration, Instant};
@@ -389,7 +404,10 @@ pub fn run_windowless_game(
     while Instant::now() < deadline {
         {
             let buf = stderr_buf.lock().unwrap();
-            if buf.contains("BSN_SCENE_LOADED") && buf.contains("has_target=true") {
+            if buf.contains("BSN_SCENE_LOADED")
+                && buf.contains("has_target=true")
+                && extra_markers.iter().all(|marker| buf.contains(marker))
+            {
                 loaded = true;
                 break;
             }
