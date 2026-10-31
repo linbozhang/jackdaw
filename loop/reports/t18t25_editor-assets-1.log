@@ -1,0 +1,240 @@
+[2m2026-10-31T05:29:46.092498Z[0m [32m INFO[0m [2mbevy_diagnostic::system_information_diagnostics_plugin::internal[0m[2m:[0m SystemInfo { os: "macOS 26.6.2 Tahoe", kernel: "25.6.0", cpu: "Apple M1 Pro", core_count: "8", memory: "16.0 GiB" }
+[2m2026-10-31T05:29:46.092909Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-31T05:29:46.140682Z[0m [32m INFO[0m [2mbevy_render::renderer[0m[2m:[0m AdapterInfo { name: "Apple M1 Pro", vendor: 0, device: 0, device_type: IntegratedGpu, device_pci_bus_id: "", driver: "", driver_info: "", backend: Metal, subgroup_min_size: 4, subgroup_max_size: 64, transient_saves_memory: Some(true), limit_bucket: None }
+[2m2026-10-31T05:29:46.367287Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw::test_input::plugin` of extension `jackdaw.test_input`
+[2m2026-10-31T05:29:46.367443Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw_physics::PhysicsEditorPlugin` of extension `jackdaw.physics`
+[2m2026-10-31T05:29:46.369884Z[0m [32m INFO[0m [2mbevy_pbr::cluster[0m[2m:[0m GPU clustering is supported on this device.
+[2m2026-10-31T05:29:46.369915Z[0m [32m INFO[0m [2mbevy_render::batching::gpu_preprocessing[0m[2m:[0m GPU preprocessing is fully supported on this device.
+[2m2026-10-31T05:29:46.396835Z[0m [32m INFO[0m [2mbevy_winit::system[0m[2m:[0m Creating new window jackdaw (71v0)
+[2m2026-10-31T05:29:46.548899Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.project_window
+[2m2026-10-31T05:29:46.549086Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.test_input
+[2m2026-10-31T05:29:46.549151Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.ui_palette
+[2m2026-10-31T05:29:46.549205Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.game_panel
+[2m2026-10-31T05:29:46.549220Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.viewport_panel
+[2m2026-10-31T05:29:46.549371Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.animation_graph
+[2m2026-10-31T05:29:46.549386Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core_windows
+[2m2026-10-31T05:29:46.549420Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.build_panel
+[2m2026-10-31T05:29:46.549431Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.physics
+[2m2026-10-31T05:29:46.549606Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.timeline
+[2m2026-10-31T05:29:46.549626Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.inspector
+[2m2026-10-31T05:29:46.549653Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core
+[2m2026-10-31T05:29:46.551390Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.multiplayer
+[2m2026-10-31T05:29:46.553092Z[0m [33m WARN[0m [2mjackdaw_api_internal::keymap::apply[0m[2m:[0m preset 'classic' has 10 chords claimed by more than one action: ["Home (Press, Operators): viewport2d.frame, clip.timeline.jump_start, view.frame_all", "Delete (Press, Operators): clip.delete_keyframes, entity.delete, brush.delete_element", "Backspace (Press, Operators): clip.delete_keyframes, viewport.draw_brush.remove_last_vertex, brush.delete_element", "Super+KeyC (Press, Operators): clip.copy_keyframes, entity.copy", "Super+KeyV (Press, Operators): clip.paste_keyframes, entity.paste", "Tab (Press, Operators): viewport.draw_brush.toggle_mode, brush.clip.cycle_mode", "Enter (Press, Operators): viewport.draw_brush.commit_polygon, brush.clip.apply", "KeyE (Press, Operators): tool.rotate, brush.mesh.extrude", "Escape (Press, Operators): brush.exit_edit_mode, selection.clear, brush.clip.clear, terrain.tool.exit_to_select", "Super+KeyB (Press, Operators): brush.mesh.edge_bevel, brush.mesh.vertex_bevel"]
+[2m2026-10-31T05:29:46.553145Z[0m [32m INFO[0m [2mjackdaw::extension_lifecycle[0m[2m:[0m applied keymap preset 'classic': 112 entries, 112 bindings, 0 user rows
+[2m2026-10-31T05:29:46.703433Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking /Users/zhanglinbo/workspace/loop-mac/t18-assets/t18-assets/assets recursively
+[2m2026-10-31T05:29:46.703540Z[0m [32m INFO[0m [2mjackdaw::asset_catalog[0m[2m:[0m No asset catalog found, starting with empty catalog
+[2m2026-10-31T05:29:46.737648Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: pre-build disabled; the first Play will compile the game
+[2m2026-10-31T05:29:46.740161Z[0m [32m INFO[0m [2mjackdaw::material_browser[0m[2m:[0m update_material_browser_ui: rebuilding with 1 entries
+[2m2026-10-31T05:29:46.877358Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 5, typed 0, referencing 5)
+[2m2026-10-31T05:29:46.877474Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 0)
+[2m2026-10-31T05:29:47.042875Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking /Users/zhanglinbo/workspace/loop-mac/t18-assets/t18-assets/assets recursively
+[2m2026-10-31T05:29:47.063251Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 5, typed 0, referencing 5)
+[2m2026-10-31T05:29:47.063376Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 0)
+[2m2026-10-31T05:29:56.396779Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: scene.open
+[2m2026-10-31T05:29:56.398279Z[0m [32m INFO[0m [2mjackdaw::scene_io::load[0m[2m:[0m Scene loaded from /Users/zhanglinbo/workspace/loop-mac/t18-assets/t18-assets/assets/t18.bsn (5 entities, 0 embedded assets)
+[2m2026-10-31T05:29:59.478087Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: project.select
+[2m2026-10-31T05:29:59.673526Z[0m [32m INFO[0m [2mjackdaw::screenshot[0m[2m:[0m screenshot: wrote /Users/zhanglinbo/workspace/loop-mac/t18-assets/t18-assets/.jackdaw/thumbnails/bde84cd9464a4db4-18e386282dd5f93a.png
+[2m2026-10-31T05:30:04.543095Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: project.select
+[2m2026-10-31T05:30:05.594907Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: entity.place_gltf
+[2m2026-10-31T05:32:05.161525Z[0m [32m INFO[0m [2mjackdaw::screenshot[0m[2m:[0m screenshot: wrote /Users/zhanglinbo/workspace/loop-mac/t18-assets/t18-assets/screenshots/t18-m3-hero-one.png
+[2m2026-10-31T05:32:05.260957Z[0m [32m INFO[0m [2mjackdaw::screenshot[0m[2m:[0m screenshot: wrote /Users/zhanglinbo/workspace/loop-mac/t18-assets/t18-assets/screenshots/t18-m3-hero-one.png
+[2m2026-10-31T05:32:05.270247Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking /Users/zhanglinbo/workspace/loop-mac/t18-assets/t18-assets/assets recursively
+[2m2026-10-31T05:32:05.282706Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 5, typed 0, referencing 5)
+[2m2026-10-31T05:32:05.282820Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 0)
+[2m2026-10-31T05:32:05.602630Z[0m [32m INFO[0m [2mbevy_asset::server[0m[2m:[0m Reloaded matrix/hero.glb
+[2m2026-10-31T05:32:05.745831Z[0m [32m INFO[0m [2mjackdaw::screenshot[0m[2m:[0m screenshot: wrote /Users/zhanglinbo/workspace/loop-mac/t18-assets/t18-assets/.jackdaw/thumbnails/bde84cd9464a4db4-18e386491e600e0f.png
+[2m2026-10-31T05:32:09.308806Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking /Users/zhanglinbo/workspace/loop-mac/t18-assets/t18-assets/assets recursively
+[2m2026-10-31T05:32:09.319241Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 5, typed 0, referencing 5)
+[2m2026-10-31T05:32:09.319338Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 0)
+[2m2026-10-31T05:32:09.658590Z[0m [32m INFO[0m [2mbevy_asset::server[0m[2m:[0m Reloaded matrix/hero.glb
+[2m2026-10-31T05:32:09.796359Z[0m [32m INFO[0m [2mjackdaw::screenshot[0m[2m:[0m screenshot: wrote /Users/zhanglinbo/workspace/loop-mac/t18-assets/t18-assets/.jackdaw/thumbnails/bde84cd9464a4db4-18e3864a10eb45fe.png
+[2m2026-10-31T05:32:13.466193Z[0m [32m INFO[0m [2mjackdaw::screenshot[0m[2m:[0m screenshot: wrote /Users/zhanglinbo/workspace/loop-mac/t18-assets/t18-assets/screenshots/t18-m3-hero-two.png
+[2m2026-10-31T05:32:13.507974Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: project.select
+[2m2026-10-31T05:32:13.584383Z[0m [32m INFO[0m [2mjackdaw::screenshot[0m[2m:[0m screenshot: wrote /Users/zhanglinbo/workspace/loop-mac/t18-assets/t18-assets/screenshots/t18-m3-hero-two.png
+[2m2026-10-31T05:32:16.199848Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: project.select
+[2m2026-10-31T05:32:18.261365Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: scene.open
+[2m2026-10-31T05:32:18.261509Z[0m [33m WARN[0m [2mjackdaw_api_internal::operator[0m[2m:[0m scene.open: the tab holds unsaved edits, so the file was not reread
+[2m2026-10-31T05:32:21.341624Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: project.select
+[2m2026-10-31T05:32:22.412922Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: input.pointer
+[2m2026-10-31T05:32:23.477720Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking /Users/zhanglinbo/workspace/loop-mac/t18-assets/t18-assets/assets recursively
+[2m2026-10-31T05:32:23.507821Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 5, typed 0, referencing 5)
+[2m2026-10-31T05:32:23.507950Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 0)
+[2m2026-10-31T05:32:23.563204Z[0m [33m WARN[0m [2mbevy_ecs::relationship[0m[2m:[0m The bevy_ecs::hierarchy::ChildOf(4969v3) relationship on entity 5615v1 relates to an entity that does not exist. The invalid bevy_ecs::hierarchy::ChildOf relationship has been removed.
+[2m2026-10-31T05:32:23.847465Z[0m [32m INFO[0m [2mbevy_asset::server[0m[2m:[0m Reloaded t18-drop-src.png
+[2m2026-10-31T05:32:24.736496Z[0m [32m INFO[0m [2mjackdaw::screenshot[0m[2m:[0m screenshot: wrote /Users/zhanglinbo/workspace/loop-mac/t18-assets/t18-assets/screenshots/t18-m1-drop-plate.png
+[2m2026-10-31T05:32:24.854147Z[0m [32m INFO[0m [2mjackdaw::screenshot[0m[2m:[0m screenshot: wrote /Users/zhanglinbo/workspace/loop-mac/t18-assets/t18-assets/screenshots/t18-m1-drop-plate.png
+[2m2026-10-31T05:32:24.937716Z[0m [32m INFO[0m [2mjackdaw::screenshot[0m[2m:[0m screenshot: wrote /Users/zhanglinbo/workspace/loop-mac/t18-assets/t18-assets/screenshots/t18-m1-board-red.png
+[2m2026-10-31T05:32:25.056916Z[0m [32m INFO[0m [2mjackdaw::screenshot[0m[2m:[0m screenshot: wrote /Users/zhanglinbo/workspace/loop-mac/t18-assets/t18-assets/screenshots/t18-m1-board-red.png
+[2m2026-10-31T05:32:28.555105Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking /Users/zhanglinbo/workspace/loop-mac/t18-assets/t18-assets/assets recursively
+[2m2026-10-31T05:32:28.567679Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 5, typed 0, referencing 5)
+[2m2026-10-31T05:32:28.567795Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 0)
+[2m2026-10-31T05:32:28.896231Z[0m [32m INFO[0m [2mbevy_asset::server[0m[2m:[0m Reloaded matrix/board.png
+[2m2026-10-31T05:32:32.658037Z[0m [32m INFO[0m [2mjackdaw::screenshot[0m[2m:[0m screenshot: wrote /Users/zhanglinbo/workspace/loop-mac/t18-assets/t18-assets/screenshots/t18-m1-board-blue.png
+[2m2026-10-31T05:32:32.770027Z[0m [32m INFO[0m [2mjackdaw::screenshot[0m[2m:[0m screenshot: wrote /Users/zhanglinbo/workspace/loop-mac/t18-assets/t18-assets/screenshots/t18-m1-board-blue.png
+[2m2026-10-31T05:32:36.287107Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: project.select
+[2m2026-10-31T05:32:38.729376Z[0m [32m INFO[0m [2mjackdaw::screenshot[0m[2m:[0m screenshot: wrote /Users/zhanglinbo/workspace/loop-mac/t18-assets/t18-assets/screenshots/t18-m1-file-card.png
+[2m2026-10-31T05:32:38.810102Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: input.pointer
+[2m2026-10-31T05:32:39.881946Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking /Users/zhanglinbo/workspace/loop-mac/t18-assets/t18-assets/assets recursively
+[2m2026-10-31T05:32:39.908839Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 5, typed 0, referencing 5)
+[2m2026-10-31T05:32:39.908949Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 0)
+[2m2026-10-31T05:32:39.954824Z[0m [33m WARN[0m [2mbevy_ecs::relationship[0m[2m:[0m The bevy_ecs::hierarchy::ChildOf(5802v1) relationship on entity 5376v3 relates to an entity that does not exist. The invalid bevy_ecs::hierarchy::ChildOf relationship has been removed.
+[2m2026-10-31T05:32:40.213874Z[0m [32m INFO[0m [2mbevy_asset::server[0m[2m:[0m Reloaded t18-tone-src-7.png
+[2m2026-10-31T05:32:45.108990Z[0m [32m INFO[0m [2mjackdaw::screenshot[0m[2m:[0m screenshot: wrote /Users/zhanglinbo/workspace/loop-mac/t18-assets/t18-assets/screenshots/t18-m2-jpg-plate.png
+[2m2026-10-31T05:32:45.218454Z[0m [32m INFO[0m [2mjackdaw::screenshot[0m[2m:[0m screenshot: wrote /Users/zhanglinbo/workspace/loop-mac/t18-assets/t18-assets/screenshots/t18-m2-jpg-plate.png
+[2m2026-10-31T05:32:45.226713Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: material.create
+[2m2026-10-31T05:32:45.231591Z[0m [32m INFO[0m [2mjackdaw::material_browser[0m[2m:[0m update_material_browser_ui: rebuilding with 2 entries
+[2m2026-10-31T05:32:47.291745Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: material.save
+[2m2026-10-31T05:32:47.297528Z[0m [32m INFO[0m [2mjackdaw::material_assets[0m[2m:[0m Saved material 'redshift'
+[2m2026-10-31T05:32:47.303143Z[0m [32m INFO[0m [2mjackdaw::material_browser[0m[2m:[0m update_material_browser_ui: rebuilding with 3 entries
+[2m2026-10-31T05:32:47.319691Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking /Users/zhanglinbo/workspace/loop-mac/t18-assets/t18-assets/assets recursively
+[2m2026-10-31T05:32:47.334202Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 6, typed 1, referencing 5)
+[2m2026-10-31T05:32:47.334324Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 0)
+[2m2026-10-31T05:32:49.360893Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: asset.open
+[2m2026-10-31T05:32:51.395966Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: asset.set
+[2m2026-10-31T05:32:51.396101Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m Set base_color
+[2m2026-10-31T05:32:52.437173Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: asset.save
+[2m2026-10-31T05:32:52.443203Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m Saved 'redshift'
+[2m2026-10-31T05:32:52.465138Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking /Users/zhanglinbo/workspace/loop-mac/t18-assets/t18-assets/assets recursively
+[2m2026-10-31T05:32:52.483714Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 6, typed 1, referencing 5)
+[2m2026-10-31T05:32:52.483817Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 0)
+[2m2026-10-31T05:32:54.504888Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: project.select
+[2m2026-10-31T05:32:54.774975Z[0m [32m INFO[0m [2mjackdaw::screenshot[0m[2m:[0m screenshot: wrote /Users/zhanglinbo/workspace/loop-mac/t18-assets/t18-assets/.jackdaw/thumbnails/a500191e4e510852-18e386541c87659a.png
+[2m2026-10-31T05:32:55.663341Z[0m [32m INFO[0m [2mjackdaw::screenshot[0m[2m:[0m screenshot: wrote /Users/zhanglinbo/workspace/loop-mac/t18-assets/t18-assets/screenshots/t18-m4-material-red.png
+[2m2026-10-31T05:32:55.784355Z[0m [32m INFO[0m [2mjackdaw::screenshot[0m[2m:[0m screenshot: wrote /Users/zhanglinbo/workspace/loop-mac/t18-assets/t18-assets/screenshots/t18-m4-material-red.png
+[2m2026-10-31T05:32:55.798078Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking /Users/zhanglinbo/workspace/loop-mac/t18-assets/t18-assets/assets recursively
+[2m2026-10-31T05:32:55.814993Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 6, typed 1, referencing 5)
+[2m2026-10-31T05:32:55.815321Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 1)
+[2m2026-10-31T05:32:56.049366Z[0m [32m INFO[0m [2mjackdaw::screenshot[0m[2m:[0m screenshot: wrote /Users/zhanglinbo/workspace/loop-mac/t18-assets/t18-assets/.jackdaw/thumbnails/a500191e4e510852-18e38654e04c2592.png
+[2m2026-10-31T05:33:00.519117Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: project.select
+[2m2026-10-31T05:33:03.194595Z[0m [32m INFO[0m [2mjackdaw::screenshot[0m[2m:[0m screenshot: wrote /Users/zhanglinbo/workspace/loop-mac/t18-assets/t18-assets/screenshots/t18-m4-material-card.png
+[2m2026-10-31T05:33:03.243237Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: project.select
+[2m2026-10-31T05:33:03.363878Z[0m [32m INFO[0m [2mjackdaw::screenshot[0m[2m:[0m screenshot: wrote /Users/zhanglinbo/workspace/loop-mac/t18-assets/t18-assets/screenshots/t18-m4-material-card.png
+[2m2026-10-31T05:33:05.563564Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: texture.import
+[2m2026-10-31T05:33:05.580098Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking /Users/zhanglinbo/workspace/loop-mac/t18-assets/t18-assets/assets recursively
+[2m2026-10-31T05:33:05.592558Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 6, typed 1, referencing 5)
+[2m2026-10-31T05:33:05.592669Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 0)
+[2m2026-10-31T05:33:08.004708Z[0m [32m INFO[0m [2mjackdaw::screenshot[0m[2m:[0m screenshot: wrote /Users/zhanglinbo/workspace/loop-mac/t18-assets/t18-assets/screenshots/t18-m7-card-compressed.png
+[2m2026-10-31T05:33:08.153453Z[0m [32m INFO[0m [2mjackdaw::screenshot[0m[2m:[0m screenshot: wrote /Users/zhanglinbo/workspace/loop-mac/t18-assets/t18-assets/screenshots/t18-m7-card-compressed.png
+[2m2026-10-31T05:33:08.166322Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking /Users/zhanglinbo/workspace/loop-mac/t18-assets/t18-assets/assets recursively
+[2m2026-10-31T05:33:08.181968Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 6, typed 1, referencing 5)
+[2m2026-10-31T05:33:08.182084Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 0)
+[2m2026-10-31T05:33:08.396265Z[0m [32m INFO[0m [2mbevy_asset::server[0m[2m:[0m Reloaded matrix/board.png
+[2m2026-10-31T05:33:12.089196Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: project.select
+[2m2026-10-31T05:33:14.450736Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking /Users/zhanglinbo/workspace/loop-mac/t18-assets/t18-assets/assets recursively
+[2m2026-10-31T05:33:14.462567Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 6, typed 1, referencing 5)
+[2m2026-10-31T05:33:14.462701Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 0)
+[2m2026-10-31T05:33:14.801892Z[0m [32m INFO[0m [2mbevy_asset::server[0m[2m:[0m Reloaded sounds/blip.wav
+[2m2026-10-31T05:33:18.531109Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking /Users/zhanglinbo/workspace/loop-mac/t18-assets/t18-assets/assets recursively
+[2m2026-10-31T05:33:18.542834Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 6, typed 1, referencing 5)
+[2m2026-10-31T05:33:18.542960Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 0)
+[2m2026-10-31T05:33:18.835488Z[0m [32m INFO[0m [2mbevy_asset::server[0m[2m:[0m Reloaded sounds/blip.wav
+[2m2026-10-31T05:33:22.560649Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking /Users/zhanglinbo/workspace/loop-mac/t18-assets/t18-assets/assets recursively
+[2m2026-10-31T05:33:22.576994Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 6, typed 1, referencing 5)
+[2m2026-10-31T05:33:22.577126Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 0)
+[2m2026-10-31T05:33:22.854598Z[0m [32m INFO[0m [2mbevy_asset::server[0m[2m:[0m Reloaded sounds/blip.wav
+[2m2026-10-31T05:33:26.630228Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking /Users/zhanglinbo/workspace/loop-mac/t18-assets/t18-assets/assets recursively
+[2m2026-10-31T05:33:26.641278Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 6, typed 1, referencing 5)
+[2m2026-10-31T05:33:26.641396Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 0)
+[2m2026-10-31T05:33:30.738113Z[0m [32m INFO[0m [2mjackdaw::screenshot[0m[2m:[0m screenshot: wrote /Users/zhanglinbo/workspace/loop-mac/t18-assets/t18-assets/screenshots/t18-m9-board-good.png
+[2m2026-10-31T05:33:30.842085Z[0m [32m INFO[0m [2mjackdaw::screenshot[0m[2m:[0m screenshot: wrote /Users/zhanglinbo/workspace/loop-mac/t18-assets/t18-assets/screenshots/t18-m9-board-good.png
+[2m2026-10-31T05:33:31.065410Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking /Users/zhanglinbo/workspace/loop-mac/t18-assets/t18-assets/assets recursively
+[2m2026-10-31T05:33:31.076847Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 6, typed 1, referencing 5)
+[2m2026-10-31T05:33:31.076969Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 0)
+[2m2026-10-31T05:33:31.387464Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Failed to load asset 'matrix/board.png' with asset loader 'bevy_image::image_loader::ImageLoader': Could not load texture file: Error reading image file matrix/board.png: failed to load an image: Format error decoding Png: Invalid PNG signature..
+
+[2m2026-10-31T05:33:31.387790Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Failed to load asset 'matrix/board.png' with asset loader 'bevy_image::image_loader::ImageLoader': Could not load texture file: Error reading image file matrix/board.png: failed to load an image: Format error decoding Png: Invalid PNG signature..
+
+[2m2026-10-31T05:33:31.405847Z[0m [33m WARN[0m [2mjackdaw::asset_failures[0m[2m:[0m asset load failed: /Users/zhanglinbo/workspace/loop-mac/t18-assets/t18-assets/assets/matrix/board.png (Failed to load asset 'matrix/board.png' with asset loader 'bevy_image::image_loader::ImageLoader': Could not load texture file: Error reading image file matrix/board.png: failed to load an image: Format error decoding Png: Invalid PNG signature..
+) -- showing the previous content
+[2m2026-10-31T05:33:31.406150Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Failed to load asset 'matrix/board.png' with asset loader 'bevy_image::image_loader::ImageLoader': Could not load texture file: Error reading image file matrix/board.png: failed to load an image: Format error decoding Png: Invalid PNG signature..
+
+[2m2026-10-31T05:33:35.244741Z[0m [32m INFO[0m [2mjackdaw::screenshot[0m[2m:[0m screenshot: wrote /Users/zhanglinbo/workspace/loop-mac/t18-assets/t18-assets/screenshots/t18-m9-board-broken.png
+[2m2026-10-31T05:33:35.363261Z[0m [32m INFO[0m [2mjackdaw::screenshot[0m[2m:[0m screenshot: wrote /Users/zhanglinbo/workspace/loop-mac/t18-assets/t18-assets/screenshots/t18-m9-board-broken.png
+[2m2026-10-31T05:33:35.586763Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking /Users/zhanglinbo/workspace/loop-mac/t18-assets/t18-assets/assets recursively
+[2m2026-10-31T05:33:35.598644Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 6, typed 1, referencing 5)
+[2m2026-10-31T05:33:35.598766Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 0)
+[2m2026-10-31T05:33:35.960472Z[0m [32m INFO[0m [2mbevy_asset::server[0m[2m:[0m Reloaded matrix/board.png
+[2m2026-10-31T05:33:39.717237Z[0m [32m INFO[0m [2mjackdaw::screenshot[0m[2m:[0m screenshot: wrote /Users/zhanglinbo/workspace/loop-mac/t18-assets/t18-assets/screenshots/t18-m9-board-fixed.png
+[2m2026-10-31T05:33:39.837442Z[0m [32m INFO[0m [2mjackdaw::screenshot[0m[2m:[0m screenshot: wrote /Users/zhanglinbo/workspace/loop-mac/t18-assets/t18-assets/screenshots/t18-m9-board-fixed.png
+[2m2026-10-31T05:33:40.193510Z[0m [32m INFO[0m [2mjackdaw::screenshot[0m[2m:[0m screenshot: wrote /Users/zhanglinbo/workspace/loop-mac/t18-assets/t18-assets/screenshots/t18-m10-hero-good.png
+[2m2026-10-31T05:33:40.305609Z[0m [32m INFO[0m [2mjackdaw::screenshot[0m[2m:[0m screenshot: wrote /Users/zhanglinbo/workspace/loop-mac/t18-assets/t18-assets/screenshots/t18-m10-hero-good.png
+[2m2026-10-31T05:33:40.314301Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking /Users/zhanglinbo/workspace/loop-mac/t18-assets/t18-assets/assets recursively
+[2m2026-10-31T05:33:40.327927Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 6, typed 1, referencing 5)
+[2m2026-10-31T05:33:40.328048Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 0)
+[2m2026-10-31T05:33:40.623864Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Failed to load asset 'matrix/hero.glb' with asset loader 'bevy_gltf::loader::GltfLoader': invalid glTF file: expected value at line 1 column 1
+
+[2m2026-10-31T05:33:40.636124Z[0m [33m WARN[0m [2mjackdaw::asset_failures[0m[2m:[0m asset load failed: /Users/zhanglinbo/workspace/loop-mac/t18-assets/t18-assets/assets/matrix/hero.glb (Failed to load asset 'matrix/hero.glb' with asset loader 'bevy_gltf::loader::GltfLoader': invalid glTF file: expected value at line 1 column 1
+) -- showing the previous content
+[2m2026-10-31T05:33:40.827266Z[0m [32m INFO[0m [2mjackdaw::screenshot[0m[2m:[0m screenshot: wrote /Users/zhanglinbo/workspace/loop-mac/t18-assets/t18-assets/.jackdaw/thumbnails/bde84cd9464a4db4-18e3865f3eb0ce12.png
+[2m2026-10-31T05:33:44.485620Z[0m [32m INFO[0m [2mjackdaw::screenshot[0m[2m:[0m screenshot: wrote /Users/zhanglinbo/workspace/loop-mac/t18-assets/t18-assets/screenshots/t18-m10-hero-broken.png
+[2m2026-10-31T05:33:44.594731Z[0m [32m INFO[0m [2mjackdaw::screenshot[0m[2m:[0m screenshot: wrote /Users/zhanglinbo/workspace/loop-mac/t18-assets/t18-assets/screenshots/t18-m10-hero-broken.png
+[2m2026-10-31T05:33:48.231169Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking /Users/zhanglinbo/workspace/loop-mac/t18-assets/t18-assets/assets recursively
+[2m2026-10-31T05:33:48.239690Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: entity.place_gltf
+[2m2026-10-31T05:33:48.246078Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 6, typed 1, referencing 5)
+[2m2026-10-31T05:33:48.246182Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 0)
+[2m2026-10-31T05:33:48.276058Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Failed to load asset 'matrix/broken_first.glb' with asset loader 'bevy_gltf::loader::GltfLoader': invalid glTF file: expected value at line 1 column 1
+
+[2m2026-10-31T05:33:48.287425Z[0m [33m WARN[0m [2mjackdaw::asset_failures[0m[2m:[0m asset load failed: /Users/zhanglinbo/workspace/loop-mac/t18-assets/t18-assets/assets/matrix/broken_first.glb (Failed to load asset 'matrix/broken_first.glb' with asset loader 'bevy_gltf::loader::GltfLoader': invalid glTF file: expected value at line 1 column 1
+) -- showing the previous content
+[2m2026-10-31T05:33:48.288186Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Failed to load asset 'matrix/broken_first.glb' with asset loader 'bevy_gltf::loader::GltfLoader': invalid glTF file: expected value at line 1 column 1
+
+[2m2026-10-31T05:33:48.314677Z[0m [33m WARN[0m [2mjackdaw::thumbnail[0m[2m:[0m thumbnail: /Users/zhanglinbo/workspace/loop-mac/t18-assets/t18-assets/assets/matrix/broken_first.glb could not be photographed
+[2m2026-10-31T05:33:48.328353Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Failed to load asset 'matrix/broken_first.glb' with asset loader 'bevy_gltf::loader::GltfLoader': invalid glTF file: expected value at line 1 column 1
+
+[2m2026-10-31T05:33:48.589647Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Failed to load asset 'matrix/broken_first.glb' with asset loader 'bevy_gltf::loader::GltfLoader': invalid glTF file: expected value at line 1 column 1
+
+[2m2026-10-31T05:33:48.591865Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Failed to load asset 'matrix/broken_first.glb' with asset loader 'bevy_gltf::loader::GltfLoader': invalid glTF file: expected value at line 1 column 1
+
+[2m2026-10-31T05:33:48.604301Z[0m [33m WARN[0m [2mjackdaw::thumbnail[0m[2m:[0m thumbnail: /Users/zhanglinbo/workspace/loop-mac/t18-assets/t18-assets/assets/matrix/broken_first.glb could not be photographed
+[2m2026-10-31T05:33:48.617660Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Failed to load asset 'matrix/broken_first.glb' with asset loader 'bevy_gltf::loader::GltfLoader': invalid glTF file: expected value at line 1 column 1
+
+[2m2026-10-31T05:33:52.386858Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking /Users/zhanglinbo/workspace/loop-mac/t18-assets/t18-assets/assets recursively
+[2m2026-10-31T05:33:52.398996Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 6, typed 1, referencing 5)
+[2m2026-10-31T05:33:52.399102Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 0)
+[2m2026-10-31T05:33:52.735818Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Path not found: /Users/zhanglinbo/workspace/loop-mac/t18-assets/t18-assets/assets/matrix/broken_first.glb
+[2m2026-10-31T05:33:54.441316Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking /Users/zhanglinbo/workspace/loop-mac/t18-assets/t18-assets/assets recursively
+[2m2026-10-31T05:33:54.452727Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 6, typed 1, referencing 5)
+[2m2026-10-31T05:33:54.452865Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 0)
+[2m2026-10-31T05:33:54.739394Z[0m [32m INFO[0m [2mbevy_asset::server[0m[2m:[0m Reloaded matrix/hero.glb
+[2m2026-10-31T05:33:54.947475Z[0m [32m INFO[0m [2mjackdaw::screenshot[0m[2m:[0m screenshot: wrote /Users/zhanglinbo/workspace/loop-mac/t18-assets/t18-assets/.jackdaw/thumbnails/bde84cd9464a4db4-18e386628aee9418.png
+[2m2026-10-31T05:33:58.572067Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking /Users/zhanglinbo/workspace/loop-mac/t18-assets/t18-assets/assets recursively
+[2m2026-10-31T05:33:58.583810Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 6, typed 0, referencing 5)
+[2m2026-10-31T05:33:58.583884Z[0m [33m WARN[0m [2mjackdaw::asset_index[0m[2m:[0m matrix/redshift.material.bsn no longer holds a type this project knows
+[2m2026-10-31T05:33:58.583955Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 1, reloaded 0)
+[2m2026-10-31T05:33:58.595195Z[0m [32m INFO[0m [2mjackdaw::material_browser[0m[2m:[0m update_material_browser_ui: rebuilding with 3 entries
+[2m2026-10-31T05:34:02.958799Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking /Users/zhanglinbo/workspace/loop-mac/t18-assets/t18-assets/assets recursively
+[2m2026-10-31T05:34:02.969848Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 6, typed 1, referencing 5)
+[2m2026-10-31T05:34:02.970207Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m Indexed 1 asset files
+[2m2026-10-31T05:34:02.988561Z[0m [32m INFO[0m [2mjackdaw::material_browser[0m[2m:[0m update_material_browser_ui: rebuilding with 3 entries
+[2m2026-10-31T05:34:03.446644Z[0m [32m INFO[0m [2mjackdaw::screenshot[0m[2m:[0m screenshot: wrote /Users/zhanglinbo/workspace/loop-mac/t18-assets/t18-assets/.jackdaw/thumbnails/a500191e4e510852-18e386648706c802.png
+[2m2026-10-31T05:34:07.019897Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: project.select
+[2m2026-10-31T05:34:09.492534Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: scene.save
+[2m2026-10-31T05:34:09.498814Z[0m [32m INFO[0m [2mjackdaw::scene_io::save[0m[2m:[0m Scene saved to /Users/zhanglinbo/workspace/loop-mac/t18-assets/t18-assets/assets/t18.bsn
+[2m2026-10-31T05:34:09.498853Z[0m [32m INFO[0m [2mjackdaw::scene_io::session_journal[0m[2m:[0m session journal: /Users/zhanglinbo/workspace/loop-mac/t18-assets/t18-assets/assets/t18.bsn reached disk; dropping its entry
+[2m2026-10-31T05:34:09.524075Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking /Users/zhanglinbo/workspace/loop-mac/t18-assets/t18-assets/assets recursively
+[2m2026-10-31T05:34:09.541037Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 6, typed 1, referencing 5)
+[2m2026-10-31T05:34:09.541238Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 0)
+[2m2026-10-31T05:34:11.608509Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: scene.open
+[2m2026-10-31T05:34:11.610804Z[0m [32m INFO[0m [2mjackdaw::scene_io::load[0m[2m:[0m Scene loaded from /Users/zhanglinbo/workspace/loop-mac/t18-assets/t18-assets/assets/t18.bsn (9 entities, 0 embedded assets)
+[2m2026-10-31T05:34:11.617023Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking /Users/zhanglinbo/workspace/loop-mac/t18-assets/t18-assets/assets recursively
+[2m2026-10-31T05:34:11.619441Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Path not found: /Users/zhanglinbo/workspace/loop-mac/t18-assets/t18-assets/assets/matrix/broken_first.glb
+[2m2026-10-31T05:34:11.633054Z[0m [33m WARN[0m [2mjackdaw::asset_failures[0m[2m:[0m asset load failed: /Users/zhanglinbo/workspace/loop-mac/t18-assets/t18-assets/assets/matrix/broken_first.glb (Path not found: /Users/zhanglinbo/workspace/loop-mac/t18-assets/t18-assets/assets/matrix/broken_first.glb) -- showing the previous content
+[2m2026-10-31T05:34:11.634525Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 6, typed 1, referencing 5)
+[2m2026-10-31T05:34:11.634643Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 0)
+[2m2026-10-31T05:34:11.955835Z[0m [32m INFO[0m [2mbevy_asset::server[0m[2m:[0m Reloaded sounds/blip.wav
+[2m2026-10-31T05:34:18.818451Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking /Users/zhanglinbo/workspace/loop-mac/t18-assets/t18-assets/assets recursively
+[2m2026-10-31T05:34:18.828984Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 6, typed 1, referencing 5)
+[2m2026-10-31T05:34:18.829130Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 0)
+[2m2026-10-31T05:34:19.181160Z[0m [32m INFO[0m [2mbevy_asset::server[0m[2m:[0m Reloaded sounds/blip.wav
+[2m2026-10-31T05:34:22.823717Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: scene.open
+[2m2026-10-31T05:34:22.825781Z[0m [32m INFO[0m [2mjackdaw::scene_io::load[0m[2m:[0m Scene loaded from /Users/zhanglinbo/workspace/loop-mac/t18-assets/t18-assets/assets/t18.bsn (9 entities, 0 embedded assets)
+[2m2026-10-31T05:34:22.833454Z[0m [31mERROR[0m [2mbevy_asset::server[0m[2m:[0m Path not found: /Users/zhanglinbo/workspace/loop-mac/t18-assets/t18-assets/assets/matrix/broken_first.glb
+[2m2026-10-31T05:34:27.996066Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: selection.select
+[2m2026-10-31T05:34:36.600943Z[0m [32m INFO[0m [2mjackdaw::screenshot[0m[2m:[0m screenshot: wrote /Users/zhanglinbo/workspace/loop-mac/t18-assets/t18-assets/screenshots/t18-m12-audio-picker.png
+[2m2026-10-31T05:34:36.634664Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: input.pointer
+[2m2026-10-31T05:34:37.665851Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: input.text
+[2m2026-10-31T05:34:39.692398Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: input.pointer
+[2m2026-10-31T05:34:42.097708Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: input.pointer
+[2m2026-10-31T05:34:44.493259Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: input.pointer
+[2m2026-10-31T05:34:46.991382Z[0m [32m INFO[0m [2mjackdaw::screenshot[0m[2m:[0m screenshot: wrote /Users/zhanglinbo/workspace/loop-mac/t18-assets/t18-assets/screenshots/t18-m12-after-refusal.png
+[2m2026-10-31T05:34:47.137597Z[0m [32m INFO[0m [2mjackdaw::screenshot[0m[2m:[0m screenshot: wrote /Users/zhanglinbo/workspace/loop-mac/t18-assets/t18-assets/screenshots/t18-m12-after-refusal.png

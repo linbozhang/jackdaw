@@ -1,0 +1,31 @@
++ cargo fmt --all --check
+the core crates depend on no third-party Bevy crate
+67 manifests and the module catalog take nothing from git but bevy main at c9c397ba1a73e6cfffe957318e0359330b701865
++ cargo clippy --workspace --all-targets --features dylib -- --deny warnings
+   Compiling jackdaw_project_build v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_project_build)
+   Compiling ring v0.17.14
+    Checking jackdaw_scaffold v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_scaffold)
+    Checking jackdaw_cli_internal v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_cli)
+    Checking jackdaw v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw)
+   Compiling rustls v0.23.46
+    Checking rustls-webpki v0.103.16
+    Checking ureq v2.12.1
+    Checking jd v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jd)
+error: item in documentation is missing backticks
+   --> src/inspector/missing_list.rs:695:42
+    |
+695 |     /// `type_path` after its last `::` (reference_audit's `rsplit` names a
+    |                                          ^^^^^^^^^^^^^^^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#doc_markdown
+    = note: `-D clippy::doc-markdown` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::doc_markdown)]`
+help: try
+    |
+695 -     /// `type_path` after its last `::` (reference_audit's `rsplit` names a
+695 +     /// `type_path` after its last `::` (`reference_audit`'s `rsplit` names a
+    |
+
+error: could not compile `jackdaw` (lib test) due to 1 previous error
+warning: build failed, waiting for other jobs to finish...
+GATE_EXIT=1

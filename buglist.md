@@ -466,6 +466,10 @@
   PIE 面板的 input.pointer 转发在缩放布局下初测未达游戏 UI（坐标空间混用嫌疑：ui_tree rect 坐标空间 vs input.pointer frame-relative；`input.pointer` 契约票，收编 T12-T3:108 挂账）。证据现状弱（l4-debug png 不在档）；T12 在档事实「流送帧=底部条带非 16:9」提示第一成因可能是几何误识（frame_rect 选中编辑器 viewport）。对 T16/T12 验收均无阻塞（L4 已用面板带扫格绕开）。
   修复方向：复现先行（最小现场：缩放布局+带扫格 vs 逐点两形态对照）；再定修层（frame_rect 选取或转发坐标换算）。与 A7（工具层）/A9（BRP 空响应）互独立。
 
+- [ ] **A11. 资产 rebind 只改文档层，活世界组件不随 AST 重绑定同步（newtype 组件世界侧粘性）**（2026-10-31 T18-T2.5 第三轮真机暴露；主控批准立账，独立小任务）
+  `rewrite_ast_reference` 补 TupleStruct 臂+截断拼写放宽（c41f112f）后：rebind 确实重写 open tab 的 AST（重绑后 audit=0，open-tab 遮蔽生效），**但 `scene.save` 从活世界发射**——newtype 组件（如 Song 的 AudioPlayer）仍持旧柄（`jackdaw/scene_bsn` 现场读仍旧路径）→ 文件回写旧路径、audit 回 1。即 rebind 对活分支的更新（`resync_entity_from_ast` 重应用）对 newtype 组件不生效；IsA 域有世界侧更新先例可对照。M14 半格红随本票留档：`t18t25_ar11-docs-audit-{missing,after-rebind}.json`+`t18t25_editor-docs-1.log`（复验前先 prep 归零——该轮 blip.wav 系上轮遗留缺失态）。
+  修复方向：rebind 活分支同步活组件（对照 IsA 先例）或保存采纳重写后 AST；涉及 scene_io/apply 语义。matcher 层（c41f112f）保持有效。
+
 - [ ] **A8. BSN apply 静默丢弃 crate 根 re-export 路径 + misleading remedy（AN8，T15-T2 真机首踩）**（2026-10-30 T15-T2 程序发现+QA 机制核实；主控批准立账）
   场景文档的图族组件必须写定义模块全路径（`…::graph::AnimationGraphRef`），crate 根 re-export 拼写被 `jackdaw_bsn::apply` 静默丢弃（无 warn、组件不落——手写场景/导出迁移场景易踩，fixture 已绕行）；且 `jackdaw_bsn::catalog` 的 remedy 文案（"rebuild the project"）对此误导。
   修复方向：未知路径丢弃补 warn（对照 AN1 运行态 warn 形态，列可用类型面）；remedy 文案按真实成因改写。小票。

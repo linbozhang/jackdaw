@@ -1,0 +1,91 @@
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t18-assets/t18-assets pid=77102
+M3: the placed model shows exactly 1 box
+shot m3-hero-one ok (viewport)
+M3: no Reloaded line after the first write (A6 family missed event); re-triggering once
+M3: box entities after rewrite: 2
+shot m3-hero-two ok (viewport)
+M3: fresh thumbnail bde84cd9464a4db4-18e3864a10eb45fe.png pixels=d2dda8282d3c98da925becc95a200e2d
+M3 GLB faces complete, ok=true
+L3_M3_GLB_PASS
+M8 three-face verdict inside this single leg: m8=true
+L3_M8_THREE_FACES_PASS
+M1: reference plates before=1 after=2: t18-drop-src.png matrix/board.png
+shot m1-drop-plate ok (viewport)
+L1_M1_DROP_PASS
+shot m1-board-red ok (viewport)
+shot m1-board-blue ok (viewport)
+M1: viewport pixel md5 red=53393534e9359090d64e656e1ada1fbc blue=1d11797b8abb4aa0167261b251c3de45
+shot m1-file-card ok (window)
+M1 PNG rewrite face complete, ok=true
+L1_M1_REWRITE_PASS
+M2: jpg plate paths now: t18-tone-src-7.png matrix/board.png t18-drop-src.png
+shot m2-jpg-plate ok (viewport)
+M2: loader-failure lines since drop: 0 (want 0)
+M2 JPG chain complete, ok=true
+L2_M2_JPG_PASS
+shot m4-material-red ok (viewport)
+M4: fresh material thumbnail a500191e4e510852-18e38654e04c2592.png pixels=dc207d5e26c83fea91d427b30a421be3
+M4: note — the card hex did not show 0DFF0D (base_color row only)
+shot m4-material-card ok (window)
+M4 material faces complete, ok=true
+L4_M4_MATERIAL_PASS
+shot m7-card-compressed ok (window)
+M7 import options complete, ok=true
+L6_M7_IMPORT_OPTIONS_PASS
+M5: Reloaded lines after the good rewrite: 1 (want >=1)
+M5: blip failure lines=0 panics=0 (want 0/0 in this window)
+M5: Reloaded lines after the bad probe: 1 (want >=1 — the chain is wired)
+M5: panics after restore: 0 (want 0)
+M5 audio reload chain complete, ok=true
+L5_M5_AUDIO_PASS
+shot m9-board-good ok (viewport)
+M16: editor alive after bad png
+shot m9-board-broken ok (viewport)
+M9: board-region md5 good=36591fe7b501c814cb9e047da221a20c broken=36591fe7b501c814cb9e047da221a20c (equal = old content kept)
+M9: asset load failed lines: 1 (want >=1, the AR3 face)
+M9: Reloaded lines on the fix window: 1 (want >=1 — the AR10 engine face)
+shot m9-board-fixed ok (viewport)
+M9: board-region md5 fixed=36591fe7b501c814cb9e047da221a20c (want != broken and != good: the plate followed a NEW state)
+M9: the plate did not recover to the new state
+M9 bad png complete, ok=false
+L7_M9_BAD_PNG_FAIL
+M10: boxes before: 2
+shot m10-hero-good ok (viewport)
+M16: editor alive after bad glb
+M10: bad window: Reloaded=0 (want 0 — the load refused), load-failure lines=2 (want >=1)
+shot m10-hero-broken ok (viewport)
+M10: viewport md5 in the bad window: 3045254ca33a542e0609effbd433b457
+M10: first-load-bad probe: boxes now 2 (no new box wanted); editor alive
+M10: thumbnail write-off lines in the AR8 window: 2 (want >=1)
+M10 bad glb complete, ok=true
+L7_M10_BAD_GLB_PASS
+M16: editor alive after bad material
+M11: index refusal lines: 1 (want >=1)
+M11 bad material complete, ok=true
+L8_M11_BAD_MAT_PASS
+M12: panic lines in the bad-reopen window: 0 (the play-face reality; >=1 expected)
+M12: no panic observed (noted honestly; sink build timing)
+M12: new panic lines after the restore+reopen: 0 (want 0)
+M12: total panics on the books (M15 expected column): 0
+M12: card chevron click at [
+  1380.5,
+  171.0
+]
+M12: pick icon click at [
+  1439.0,
+  221.75
+]
+shot m12-audio-picker ok (window)
+M12: the picker refused the garbage wav (x=700 title+42, banner seen)
+M12: the document still carries AudioPlayer<bevy_audio::audio_source::AudioSource>("sounds/blip.wav")
+shot m12-after-refusal ok (window)
+M12 bad audio + AU6 complete, ok=true (pick refusal seen=true)
+L8_M12_BAD_AUDIO_PASS
+L8_AU6_PICK_GATE_PASS
+M13: scene sha at the last save=3cdc338d66895d64396e70396c8b169250af4944a2e9106e64d8bb19a9e19670 now=3cdc338d66895d64396e70396c8b169250af4944a2e9106e64d8bb19a9e19670
+M13: audit findings: 0 (no broken references)
+M13 scene integrity complete, ok=true
+M13_INTEGRITY_PASS
+WARN_SCAN: asset_load_failed=4 thumbnail_writeoff=2 index_refusal=1 playface_panics=0 unexpected=0
+M15_WARN_SCAN_PASS
+VERDICT_ASSETS_PHASE: L1_M1_DROP=PASS L1_M1_REWRITE=PASS L2_M2_JPG=PASS L3_M3_GLB=PASS L3_M8_THREE_FACES=PASS L4_M4_MATERIAL=PASS L5_M5_AUDIO=PASS L6_M7_IMPORT_OPTIONS=PASS L7_M10_BAD_GLB=PASS L7_M9_BAD_PNG=FAIL L8_AU6_PICK_GATE=PASS L8_M11_BAD_MAT=PASS L8_M12_BAD_AUDIO=PASS M13_INTEGRITY=PASS M15_WARN_SCAN=PASS 
