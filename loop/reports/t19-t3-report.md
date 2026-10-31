@@ -101,7 +101,7 @@ editor/game/export 全三相（prep/seed 先行），38 判定全 PASS，证据=
 
 - **N13 记数**：editor 相=0；game 相=2（两条 `jackdaw::pie::drain_game_events` panic
   命中，绕行+读回重试绿——与 T2「每 PIE 相 2 次」同形）；export 相=0。
-- **warn 扫描**：editor/direct×5/staged 十一份日志逐条归属——direct/staged/editor
+- **warn 扫描**：editor/direct×6/staged 十份日志逐条归属（勘误 2026-10-31 主控落，t19-final-qa 回流②：direct 实为 6 份、总数实为十份）——direct/staged/editor
   （除 N13 两条外）零命中；词表 `tonemapp|bloom|exposure|solari|ray|UnresolvedTypes|
   panicked`。**M14 全链缺席维持**：全程零 solari/ray 命中。
 - **种子 SHA 终态**：三相跑毕 `655892c6c28327866acaa52c71a1ff510f9d963144b28864d257
