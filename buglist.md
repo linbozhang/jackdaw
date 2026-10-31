@@ -470,6 +470,14 @@
   `rewrite_ast_reference` 补 TupleStruct 臂+截断拼写放宽（c41f112f）后：rebind 确实重写 open tab 的 AST（重绑后 audit=0，open-tab 遮蔽生效），**但 `scene.save` 从活世界发射**——newtype 组件（如 Song 的 AudioPlayer）仍持旧柄（`jackdaw/scene_bsn` 现场读仍旧路径）→ 文件回写旧路径、audit 回 1。即 rebind 对活分支的更新（`resync_entity_from_ast` 重应用）对 newtype 组件不生效；IsA 域有世界侧更新先例可对照。M14 半格红随本票留档：`t18t25_ar11-docs-audit-{missing,after-rebind}.json`+`t18t25_editor-docs-1.log`（复验前先 prep 归零——该轮 blip.wav 系上轮遗留缺失态）。
   修复方向：rebind 活分支同步活组件（对照 IsA 先例）或保存采纳重写后 AST；涉及 scene_io/apply 语义。matcher 层（c41f112f）保持有效。
 
+- [ ] **A12. 经 Basis/BC7 重载过的图片，GPU 消费面停止跟随同 AssetId 后续重载（AR9，渲染提取/GPU 重建侧）**（2026-10-31 T18-T2 真机发现+T2.5 判别探针定位；主控批准立账）
+  texture.import 落 `.meta` 的图片：首次加载走 Basis/BC7 处理后，同路径外写→引擎 `Reloaded` 真触发（offset 计数无歧义）+读取层字节新鲜（T2.5 AR10 修复后单测 5 钉死）→**但板面/视口 GPU 面冻结于首载内容**（crop 像素逐字节恒等，判别探针三件归档）。plain→plain（无 meta）重载跟随正常=AR10 修复不涉此。M9 板面恢复半格红归本票（teal 判别色+双不等判据已钉）。
+  修复方向：渲染提取/GPU 重建侧——processed Basis 轮后同 AssetId 的重载未触发 GPU 资产重建（嫌疑=GpuImage 提取缓存键或 extract 层 changed 判定）。修复面在渲染提取，与读取层（AR10 已修）分界清晰。book 已注记「带 meta 纹理外改勿演示板面」临时边界。
+
+- [ ] **A13. `.jackdaw/imported/` 纹理处理缓存孤儿无界累积（AR7 ⚪）**（2026-10-31 T18-T1 盘点记档；主控批准立账）
+  `TextureImportReader` 按「源字节+meta」哈希落缓存文件（texture_import.rs:115-163），源文件反复改→旧 `.basis` 永不清，`.jackdaw/imported/` 随编辑期无界缓增（低频低危）。AR10 修复（fresh_processed 读时复验）已让陈旧缓存不再被服务，但孤儿文件本身仍不清。
+  修复方向：启动/定期清扫孤儿（对照孤儿 tmp 清扫先例）或 LRU 上限；book `assets.md` 已注记「清 `.jackdaw/imported` 安全」。小票，下轮触碰 texture_import 时顺手。
+
 - [ ] **A8. BSN apply 静默丢弃 crate 根 re-export 路径 + misleading remedy（AN8，T15-T2 真机首踩）**（2026-10-30 T15-T2 程序发现+QA 机制核实；主控批准立账）
   场景文档的图族组件必须写定义模块全路径（`…::graph::AnimationGraphRef`），crate 根 re-export 拼写被 `jackdaw_bsn::apply` 静默丢弃（无 warn、组件不落——手写场景/导出迁移场景易踩，fixture 已绕行）；且 `jackdaw_bsn::catalog` 的 remedy 文案（"rebuild the project"）对此误导。
   修复方向：未知路径丢弃补 warn（对照 AN1 运行态 warn 形态，列可用类型面）；remedy 文案按真实成因改写。小票。
