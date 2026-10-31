@@ -101,7 +101,14 @@ taste in the area could lead. One line each:
   The bitmask and its editing work; the naming is the gap. Not
   started.
 - Asset import beyond GLTF (FBX, USD, batch texture
-  compression). Not started.
+  compression). The common families are in — images (PNG/JPG),
+  GLTF/GLB, materials, audio — with import options, hot reload
+  and failure feedback ([Assets](../user-guide/assets.md)); the
+  open tails are FBX/USD, explicit sRGB overrides and
+  per-texture flips beyond the filename heuristics, decode for
+  mp3/flac, a game-side dev hot-reload module (the template
+  ships without the file watcher), and the compressed-texture
+  face that stops following reloads. Not started.
 - Level streaming for large open worlds. Not started.
 
 If you care about any of these, opening a small "here's what

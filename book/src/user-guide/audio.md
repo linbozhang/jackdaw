@@ -170,7 +170,7 @@ Two formats are wired in, in the editor and in template games alike:
 |---|---|---|
 | Ogg Vorbis | `.ogg` | plays |
 | WAV (PCM) | `.wav` | plays |
-| MP3 / FLAC | `.mp3` / `.flac` | **not enabled** — the asset picker won't offer them and the loader won't decode them; broader decode is future asset-import work |
+| MP3 / FLAC | `.mp3` / `.flac` | **not enabled** — the asset picker won't offer them and the loader won't decode them; see [Assets](assets.md) for the format picture |
 
 The template's three sounds are generated `.wav` files under
 `assets/sounds/` — replace them with your own, same names or new
@@ -187,9 +187,10 @@ Two failure shapes, worth telling apart:
   isn't playing, suspect the path first, and let the picker do the
   pointing instead of typing it.
 * **Broken file (loud).** A file whose extension promises a format
-  the bytes don't deliver crashes the process at decode. Keep real
-  files under real names; forgiving decode is future asset-import
-  work.
+  the bytes don't deliver crashes the process at decode. The
+  editor's picker is the first gate: it refuses to attach a file
+  it cannot decode and leaves the reference unwritten
+  ([Assets](assets.md)). Keep real files under real names.
 
 The 30-second version: point the menu theme at `sounds/missing.wav`,
 Save, Play — the menu runs silent and the log names the path; point

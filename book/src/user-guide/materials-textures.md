@@ -128,3 +128,8 @@ The browser shows both, with the source labelled.
   a material. Scene-local materials still ship inline; a
   reference resolves to the file at that path, so a material
   file left out of the build falls back to a default.
+- **The saved material doesn't follow an external edit.** The
+  index reload walks run on the watcher; give the write a beat to
+  settle, and check that the file still holds a material the
+  project knows (an unparseable file keeps its old value and
+  warns). The full reload picture is [Assets](assets.md).

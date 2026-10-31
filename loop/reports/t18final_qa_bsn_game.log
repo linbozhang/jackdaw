@@ -1,0 +1,33 @@
+error: no test target named `bsn_game` in `jackdaw` package
+help: available test targets:
+    asset_formats
+    asset_watch_reload
+    audio_gate
+    bsn_game_run
+    component_shape_refresh
+    controls
+    dylib_linkage_identity
+    editor_journey
+    export
+    extern_redirect_ecosystem
+    guards
+    inspector
+    keymap
+    mcp_smoke
+    operators
+    outliner
+    panels
+    prefabs
+    reflect_auto_register
+    resource_panel
+    scaffold_e2e
+    scenes
+    sdk_feature_superset
+    sdk_installed_layout
+    sdk_layout
+    sdk_recipe
+    stage
+    stress_reload
+    terrain
+    viewport
+error: command `/Users/zhanglinbo/.rustup/toolchains/1.99.0-aarch64-apple-darwin/bin/cargo '--color=auto' test --no-run '--message-format=json-render-diagnostics' '--package=jackdaw' '--test=bsn_game'` exited with code 101
