@@ -1,0 +1,17 @@
+fn update_game_over(
+    flow: Res<State<GameFlow>>,
+    mut next: ResMut<NextState<GameFlow>>,
+    mut state: ResMut<GameState>,
+    players: Query<&PlayerHealth, With<PlayerMarker>>,
+) {
+    if flow.get() != &GameFlow::Level {
+        return;
+    }
+    for health in &players {
+        if health.current <= 0.0 {
+            state.paused = false;
+            next.set(GameFlow::GameOver);
+            break;
+        }
+    }
+}

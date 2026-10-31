@@ -1,0 +1,16 @@
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t20-game
+PROBE_PIE_UP_PASS
+probe: frame rect probe gave: <none>
+PROBE_PIE_POINTER_PASS
+probe: REAL POINTER reached the game UI at (800,911) — M6's primary channel is usable in the fixed window
+N13 counter (panicked lines in the editor log): 8
+warn-scan probe: 8 hits:
+warn-scan probe | 56:thread 'main' (28155162) panicked at /rustc/b940084d7eb6a299eb4bfeb8e34901bc051e7ac4/library/alloc/src/vec/mod.rs:2258:13:
+warn-scan probe | 59:[2m2026-10-31T19:31:39.028580Z[0m [31mERROR[0m [2mbevy_ecs::error::handler[0m[2m:[0m Encountered an error in system `jackdaw::pie::drain_game_events`: Exclusive system panicked
+warn-scan probe | 62:thread 'main' (28155162) panicked at /rustc/b940084d7eb6a299eb4bfeb8e34901bc051e7ac4/library/alloc/src/vec/mod.rs:2258:13:
+warn-scan probe | 64:[2m2026-10-31T19:31:39.790476Z[0m [31mERROR[0m [2mbevy_ecs::error::handler[0m[2m:[0m Encountered an error in system `jackdaw::pie::drain_game_events`: Exclusive system panicked
+warn-scan probe | 72:thread 'main' (28155162) panicked at /rustc/b940084d7eb6a299eb4bfeb8e34901bc051e7ac4/library/alloc/src/vec/mod.rs:2258:13:
+warn-scan probe | 74:[2m2026-10-31T19:31:47.428511Z[0m [31mERROR[0m [2mbevy_ecs::error::handler[0m[2m:[0m Encountered an error in system `jackdaw::pie::cleanup_session_on_stop`: Exclusive system panicked
+warn-scan probe | 77:thread 'main' (28155162) panicked at /rustc/b940084d7eb6a299eb4bfeb8e34901bc051e7ac4/library/alloc/src/vec/mod.rs:2258:13:
+warn-scan probe | 79:[2m2026-10-31T19:31:47.493241Z[0m [31mERROR[0m [2mbevy_ecs::error::handler[0m[2m:[0m Encountered an error in command `<<bevy_ecs::system::commands::entity_command::despawn::{{closure}} as bevy_ecs::system::commands::entity_command::EntityCommand>::with_entity::{{closure}} as bevy_ecs::system::commands::command::Command>::ignore_error::{{closure}}`: Command panicked
+RESULTS: PROBE_PIE_POINTER=PASS PROBE_PIE_UP=PASS 

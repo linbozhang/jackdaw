@@ -1,0 +1,46 @@
+=== XTASK INTEGRATION 02:35:47 ===
+        PASS [   4.515s] (5433/5459) jackdaw::viewport viewport_redraw::a_scripted_gesture_keeps_the_frames_coming_until_it_has_played
+        PASS [   0.734s] (5434/5459) jackdaw::viewport viewport_redraw::realtime_off_lets_the_window_wait_for_events
+        PASS [   5.007s] (5435/5459) jackdaw::viewport viewport_redraw::an_idle_editor_stops_asking_for_frames_and_held_input_asks_again
+        PASS [   0.770s] (5436/5459) jackdaw::viewport viewport_redraw::realtime_on_never_asks_for_frames_it_already_draws
+        PASS [   0.802s] (5437/5459) jackdaw::viewport viewport_redraw::the_toolbar_says_realtime_is_off_while_it_is
+        PASS [   3.101s] (5438/5459) jackdaw::viewport viewport_redraw::meshes_arriving_keep_the_frames_coming
+        PASS [   0.853s] (5439/5459) jackdaw::viewport viewport_settings::a_changed_setting_is_kept_in_the_users_settings_file
+        PASS [   1.028s] (5440/5459) jackdaw::viewport viewport_settings::a_preset_sets_every_quality_choice_it_names
+        PASS [   1.024s] (5441/5459) jackdaw::viewport viewport_settings::a_show_flag_flips_or_takes_the_state_it_is_given
+        PASS [   1.024s] (5442/5459) jackdaw::viewport viewport_settings::names_the_settings_do_not_have_are_refused
+        PASS [   1.647s] (5443/5459) jackdaw::viewport viewport_settings::changing_viewport_settings_leaves_the_saved_scene_unchanged
+        PASS [   1.184s] (5444/5459) jackdaw::viewport viewport_settings::setting_one_choice_keeps_the_others_and_leaves_the_preset
+        PASS [   1.155s] (5445/5459) jackdaw::viewport viewport_settings::the_smaa_ssao_and_sharpening_choices_round_trip_through_the_users_file
+        PASS [   1.186s] (5446/5459) jackdaw::viewport viewport_settings_menu::a_click_outside_closes_the_menu_with_realtime_off
+        PASS [   1.052s] (5447/5459) jackdaw::viewport viewport_settings_menu::a_narrow_viewport_cuts_the_tools_and_keeps_the_settings_and_mode_controls
+        PASS [   1.778s] (5448/5459) jackdaw::viewport viewport_settings_menu::a_click_outside_closes_the_menu_after_one_of_its_rows_flipped_a_box
+        PASS [   1.129s] (5449/5459) jackdaw::viewport viewport_settings_menu::a_narrow_viewport_lists_the_cut_tools_in_the_overflow_menu
+        PASS [   1.253s] (5450/5459) jackdaw::viewport viewport_settings_menu::a_preset_picked_in_the_quality_menu_holds_and_the_menu_shows_it
+        PASS [   1.008s] (5451/5459) jackdaw::viewport viewport_settings_menu::a_wide_viewport_shows_every_tool_and_no_overflow_menu
+        PASS [   1.531s] (5452/5459) jackdaw::viewport viewport_settings_menu::a_show_row_flips_its_flag_and_stays_open
+        PASS [   1.481s] (5453/5459) jackdaw::viewport viewport_settings_menu::changing_one_quality_choice_shows_the_preset_as_custom
+        PASS [   1.056s] (5454/5459) jackdaw::viewport viewport_settings_menu::realtime_and_stats_flip_from_the_menus_own_rows
+        PASS [   1.204s] (5455/5459) jackdaw::viewport viewport_settings_menu::the_frame_time_graph_row_appears_once_stats_are_on
+        PASS [   1.369s] (5456/5459) jackdaw::viewport viewport_settings_menu::the_menu_opened_from_the_toolbars_right_end_stays_inside_the_window
+        PASS [   1.431s] (5457/5459) jackdaw::viewport viewport_settings_menu::the_view_mode_rows_pick_one_mode_at_a_time
+        PASS [   0.805s] (5458/5459) jackdaw::viewport viewport_stats::the_frame_time_graph_shows_only_when_asked_for_under_the_stats
+        PASS [   1.221s] (5459/5459) jackdaw::viewport viewport_stats::stats_show_a_readout_that_counts_the_scene
+────────────
+     Summary [ 664.365s] 5459 tests run: 5459 passed (1 slow, 1 flaky), 0 skipped
+   FLAKY 2/3 [   6.414s] (1320/5459) jackdaw::prefabs prefab_lifecycle::prefab_file_change_triggers_reload
+INTEGRATION_EXIT=0
+=== SCAFFOLD_E2E COLD 02:49:36 ===
+   Compiling test_fixture_extension v0.0.0 (/Users/zhanglinbo/workspace/jackdaw/tests/fixtures/test_fixture_extension)
+    Finished `test` profile [optimized + debuginfo] target(s) in 2m 27s
+────────────
+ Nextest run ID 16f89554-906f-4a68-af48-3545fc1ff25f with nextest profile: ci
+    Starting 1 test across 1 binary (32 binaries skipped)
+        SLOW [> 30.000s] (───) jackdaw::scaffold_e2e scaffold_game_builds_and_exposes_component
+        SLOW [> 60.000s] (───) jackdaw::scaffold_e2e scaffold_game_builds_and_exposes_component
+        SLOW [> 90.000s] (───) jackdaw::scaffold_e2e scaffold_game_builds_and_exposes_component
+        SLOW [>120.000s] (───) jackdaw::scaffold_e2e scaffold_game_builds_and_exposes_component
+        PASS [ 145.899s] (1/1) jackdaw::scaffold_e2e scaffold_game_builds_and_exposes_component
+────────────
+     Summary [ 145.899s] 1 test run: 1 passed (1 slow), 0 skipped
+SCAFFOLD_E2E_EXIT=0

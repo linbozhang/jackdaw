@@ -222,9 +222,10 @@ the template falls back to a physics-free shape):
   on a fresh project and it lands, it doesn't sink.
 - **Three pickups** — small glowing sensor cubes in a line. Walk
   the player into one and it despawns, the player's `PickupCount`
-  goes up, and the third one logs "Level clear!". A cube merely
-  landing on a pickup does not collect it — only the player's
-  touch counts.
+  goes up, and the third one wins the run: the flow moves to the
+  game-over screen (with a blip), where Restart starts the next
+  one. A cube merely landing on a pickup does not collect it —
+  only the player's touch counts.
 - A **player with a body** — a kinematic capsule collider whose
   movement the [player controller](player-controller.md) sweeps
   through the world (`move_and_slide`: walls stop it, diagonals slide

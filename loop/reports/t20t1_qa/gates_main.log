@@ -1,0 +1,75 @@
+=== QA GATES START 03:36:00 ===
+--- FMT ---
+FMT_EXIT=0
+--- CLIPPY WORKSPACE ---
+    Checking jackdaw v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw)
+    Checking jd v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jd)
+    Checking jackdaw_physics v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/integrations/physics/jackdaw_physics)
+    Checking jackdaw_editor v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_editor)
+    Finished `dev` profile [optimized + debuginfo] target(s) in 17.61s
+CLIPPY_WS_EXIT=
+--- CLIPPY PHYSICS PAIR ---
+    Checking jackdaw v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw)
+    Checking jackdaw_physics v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/integrations/physics/jackdaw_physics)
+    Finished `dev` profile [optimized + debuginfo] target(s) in 10.62s
+CLIPPY_PHYS_EXIT=
+--- LIBTESTS ---
+test self_update::tests::a_cargo_installed_jd_is_left_to_cargo ... ok
+test sign::tests::generated_keys_round_trip_through_pkcs8 ... ok
+test sign::tests::existing_publisher_key_reproduces_its_signature ... ok
+test sign::tests::packed_bundles_verify_and_detect_tampering ... ok
+test self_update::tests::a_standalone_release_jd_may_update_itself ... ok
+test archive::tests::a_gzipped_tarball_unpacks_under_its_single_folder ... ok
+test archive::tests::a_zip_unpacks_its_files ... ok
+test self_update::tests::a_jd_beside_its_editor_or_sdk_stays_with_that_bundle ... ok
+test self_update::tests::development_and_prerelease_builds_are_not_replaced ... ok
+test fetch::tests::file_urls_read_and_hash_local_files ... ok
+
+test result: ok. 22 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+
+     Running unittests src/lib.rs (target/debug/deps/test_fixture_extension-10c810d107661fd8)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (target/debug/deps/viewable_camera_extension-ca3ae02573dcbbac)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+LIBTESTS_EXIT=
+--- XTASK FAST ---
+        PASS [   0.030s] (2975/3002) jackdaw_widgets_runtime tests::a_value_written_from_code_is_not_reported_as_an_edit
+        PASS [   0.027s] (2976/3002) jackdaw_widgets_runtime tests::the_value_is_registered_with_a_default
+        PASS [   0.032s] (2977/3002) jackdaw_widgets_runtime tests::an_idle_input_is_written_by_neither_side
+        PASS [   0.030s] (2978/3002) jackdaw_widgets_runtime tests::an_unauthored_checkbox_is_left_alone
+        PASS [   0.030s] (2979/3002) jd archive::tests::a_gzipped_tarball_unpacks_under_its_single_folder
+        PASS [   0.026s] (2980/3002) jd archive::tests::formats_follow_the_published_extension
+        PASS [   0.029s] (2981/3002) jd archive::tests::a_zip_unpacks_its_files
+        PASS [   0.023s] (2982/3002) jd editor_cli::tests::installs_are_grouped_by_bevy_line_with_main_first
+        PASS [   0.023s] (2983/3002) jd editor_cli::tests::newer_patches_and_nightlies_are_reported_for_installed_lines_only
+        PASS [   0.026s] (2984/3002) jd editors::tests::a_missing_line_names_the_install_command_unless_jd_ships_that_line
+        PASS [   0.023s] (2985/3002) jd editors::tests::a_pinned_project_prefers_its_install_over_the_editor_beside_jd
+        PASS [   0.024s] (2986/3002) jd editors::tests::names_that_could_leave_their_directory_are_refused
+        PASS [   0.027s] (2987/3002) jd editors::tests::an_unpinned_project_opens_with_the_default_editor
+        PASS [   0.022s] (2988/3002) jd editors::tests::version_lines_are_read_from_editor_output
+        PASS [   0.025s] (2989/3002) jd editors::tests::the_exact_editor_beside_jd_wins_over_an_older_install_of_its_line
+        PASS [   0.025s] (2990/3002) jd fetch::tests::plain_http_is_refused_before_connecting
+        PASS [   0.025s] (2991/3002) jd fetch::tests::windows_file_urls_drop_the_slash_before_the_drive
+        PASS [   0.022s] (2992/3002) jd self_update::tests::a_standalone_release_jd_may_update_itself
+        PASS [   0.040s] (2993/3002) jd self_update::tests::a_cargo_installed_jd_is_left_to_cargo
+        PASS [   0.027s] (2994/3002) jd self_update::tests::a_jd_inside_a_managed_install_names_that_install
+        PASS [   0.030s] (2995/3002) jd self_update::tests::a_jd_beside_its_editor_or_sdk_stays_with_that_bundle
+        PASS [   0.022s] (2996/3002) jd self_update::tests::development_and_prerelease_builds_are_not_replaced
+        PASS [   0.056s] (2997/3002) jd fetch::tests::file_urls_read_and_hash_local_files
+        PASS [   0.024s] (2998/3002) jd sign::tests::generated_keys_round_trip_through_pkcs8
+        PASS [   0.024s] (2999/3002) jd sign::tests::packed_bundles_verify_and_detect_tampering
+        PASS [   0.024s] (3000/3002) jd sign::tests::existing_publisher_key_reproduces_its_signature
+        PASS [   0.550s] (3001/3002) jackdaw_widgets_runtime tests::a_keystroke_through_bevys_text_pipeline_reaches_the_value_and_settles
+        PASS [   0.534s] (3002/3002) jackdaw_widgets_runtime tests::a_written_value_settles_once_the_pipeline_has_moved_the_caret
+────────────
+     Summary [  27.189s] 3002 tests run: 3002 passed, 0 skipped
+XTASK_EXIT=
+=== QA GATES DONE 03:41:10 ===

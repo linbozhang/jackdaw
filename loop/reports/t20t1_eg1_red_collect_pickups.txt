@@ -1,0 +1,24 @@
+fn collect_pickups(
+    triggers: Res<TriggerEvents>,
+    pickups: Query<(), With<Pickup>>,
+    mut players: Query<&mut PickupCount, With<PlayerMarker>>,
+    mut commands: Commands,
+) {
+    let mut collected = 0u32;
+    for contact in triggers.enters() {
+        if pickups.contains(contact.trigger) && players.contains(contact.other) {
+            commands.entity(contact.trigger).despawn();
+            collected += 1;
+        }
+    }
+    if collected == 0 {
+        return;
+    }
+    let Ok(mut count) = players.single_mut() else {
+        return;
+    };
+    count.0 += collected;
+    if count.0 >= 3 {
+        info!("Level clear! All {} pickups collected.", count.0);
+    }
+}
