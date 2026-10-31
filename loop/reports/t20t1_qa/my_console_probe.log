@@ -1,0 +1,10 @@
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t20-game
+PROBE_PIE_UP_PASS
+probe: frame rect probe gave: <none>
+PROBE_PIE_POINTER_PASS
+probe: REAL POINTER reached the game UI at (800,911) — M6's primary channel is usable in the fixed window
+N13 counter (panicked lines in the editor log): 2
+warn-scan probe: 2 hits:
+warn-scan probe | 47:thread 'main' (28359444) panicked at /rustc/b940084d7eb6a299eb4bfeb8e34901bc051e7ac4/library/alloc/src/vec/mod.rs:2258:13:
+warn-scan probe | 50:[2m2026-10-31T20:06:27.035962Z[0m [31mERROR[0m [2mbevy_ecs::error::handler[0m[2m:[0m Encountered an error in system `jackdaw::pie::drain_game_events`: Exclusive system panicked
+RESULTS: PROBE_PIE_POINTER=PASS PROBE_PIE_UP=PASS 
