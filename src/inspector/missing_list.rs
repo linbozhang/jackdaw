@@ -692,7 +692,7 @@ mod tests {
 
     /// The finding a tuple-struct reference produces, built the way the
     /// audit actually builds it: the component is the patch's own
-    /// `type_path` after its last `::` (reference_audit's `rsplit` names a
+    /// `type_path` after its last `::` (`reference_audit`'s `rsplit` names a
     /// newtype's generic tail — `AudioSource>` — truncating the full path
     /// with generics), the field the newtype holds, the reference as the
     /// document spells it.

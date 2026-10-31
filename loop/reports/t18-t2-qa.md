@@ -273,6 +273,78 @@ guards asset_lifecycle 5/5、thumbnail::tests 25/25｜**missing_list::tests 2/2*
   主控即可合入+派发 T3。
 - 循环纪律：单任务修复循环上限 5 轮，本任务已用 3 轮（T2/T2.5/T2.6），余量 2。
 
+## 8b. 主控转裁复核——第三轮（c41f112f）与 T18-T2 收口（2026-10-31 终轮）
+
+> 主控裁定：AR12 立独立小票 buglist A11（世界侧粘性）；M14 半格红归 A11 留档；
+> matcher 层生产形态绿=AR11 闭环面；AR12 按 T10/T11「发现→定性→独立立票」先例不追入
+> 本轮。QA 按三点复核：AR11 点验（亲跑）、AR12 归档三件与 A11 票一致性核、收口转裁。
+
+### 1) AR11 点验 ✅ 通过（QA 亲跑）
+
+- **matcher 一行放宽亲读**：`BsnPatch::TupleStruct(data) => data.type_path ==
+  finding.component || data.type_path.rsplit("::").next() ==
+  Some(finding.component.as_str())`——与本报告 §8a-3 处方逐字一致；码注释同步改真
+  （「the audit reports truncated at its last `::`」——第二轮的错误前提已纠正）。
+- **测试助手改真亲读**：`tuple_struct_finding` 的 component 现按 audit 实际方式构建
+  （`type_path.rsplit("::").next()`，泛型尾段=`AudioSource>`）——「the way the audit
+  builds it」自此成真。
+- **红2/绿2 亲核**：`t18t25_ar11-red2.log`（审计真拼写打窄臂→rebind 测试 FAILED，
+  EXIT=101——生产拼写缺口的存在性红，诚实归档）→`t18t25_ar11-green2.log` 2/2；**QA
+  亲跑 missing_list::tests 2/2 绿**（`t18t25_qa_units_missing_list3.log`）。
+- **AR11 闭环面成立**：matcher 层对审计真拼写生产形态绿。
+
+### 2) AR12 归档三件 × A11 票一致性核 ✅ 一致（红证三层已足，QA 未亲跑真机）
+
+- `t18t25_ar11-docs-audit-missing.json`（mv→audit 1 Missing，component=`AudioSource>`）
+  ｜`t18t25_ar11-docs-audit-after-rebind.json`（rebind+save 后仍 1，同源同值）｜
+  `t18t25_editor-docs-1.log`（asset.rebind 06:18:03→scene.save 06:18:06→walk——三层
+  时序闭合）。**与 A11 票内容逐点一致**：世界侧粘性机理（save 从活世界发射、newtype
+  组件持旧柄、文件回写旧路径、audit 回 1）与代码语义吻合（rewrite_tab_reference 活分支
+  的 `resync_entity_from_ast` 对 newtype 不生效；missing_list.rs:483-485「the world the
+  next save emits from reads the component, not the patch」亲读旁证）；matcher 层
+  c41f112f 保持有效的裁定成立（放宽后的匹配器对真拼写必命中——单测已证该函数对
+  `AudioSource>` 拼写完成重写）。
+- **一致性核两点注记**：①「重绑后 audit=0（open-tab 遮蔽）」的中间态为程序观测
+  （commit 陈述），未单独落档——不影响 A11 票成立（粘性由 save 回写反转证明），建议
+  A11 修时把该探针步补进红绿脚本；②该轮 docs 相的 M13/M15 FAIL=上轮遗留缺失态污染
+  （blip.wav 系改名残留，票内如实注记「复验前先 prep 归零」；editor log 的 Path not
+  found 开机行旁证）——blip.wav 已复位（QA 复核在案）。归 A11 留档口径接受：
+  **M14 半格红（rebind 半格）=A11，不阻 T18-T2**；M14 检测半格（audit 报 Missing）
+  在 T2 已绿，AR6 边界格结论不变。
+
+### 3) 门禁复验（QA 亲跑，覆盖归档 `t18t25_qa_*3`）——发现一个合并前置项
+
+| 门 | QA 亲跑结果 |
+|---|---|
+| fmt | ✅ EXIT=0 |
+| libtests | ✅ **3001 passed / 0 failed**（`t18t25_qa_libtests3.log`） |
+| missing_list::tests | ✅ 2/2 |
+| contract-tier clippy（`cargo clippy --workspace -- -D warnings`） | ✅ 过（40s） |
+| **xtask fast** | ❌ **EXIT=1**：clippy `-D warnings` 在 missing_list.rs:695 报 **doc_markdown**（第三轮新 doc 注释里 `reference_audit's` 缺反引号；clippy help 已给修正行）——程序第三轮只重跑了 fmt/libtests/guards，**未重跑 fast/clippy --all-targets** |
+
+定性：一处 **test-doc 文本一 token 级 lint**（`#[cfg(test)]` 注释，零产品行为；
+contract 快门全绿，宽门 fast 被 `-D warnings` 咬住）。**不为它再烧一轮**——按门禁
+纪律也不得带着已知红 fast 合入：**作为合并前置**（随合并提交由程序顺手落：给
+`reference_audit` 加反引号=clippy help 原文，重跑 `cargo xtask fast` 覆盖归档即可；
+逻辑零改动，无需 QA 再复验，fast 绿日志即收口）。
+
+### 4) 最终裁决
+
+**T18-T2：PASS——放行 T3（合入+派发），附一个合并前置（doc 反引号+fast 覆盖归档）。**
+
+- 三件落判：**AR10 已修吸收**（读取层读时复验，单元+真机双绿）；**AR9 另立记档**
+  （渲染/GPU 消费面，随 T3 book 处置；验收句视口面限定「无 meta 主流链」，30 秒清单
+  沿用勿演示注记）；**AR11 matcher 层闭环**（真拼写红→绿 2/2，QA 亲跑）。
+- **AR12=A11 独立票**（世界侧粘性，scene_io/apply 语义）：按 T10/T11 先例不追入本轮；
+  M14 半格红归 A11 留档，AR6 边界格与验收两句字面不受影响（外部改名本为设计边界，
+  audit 检测半格绿、不丢引用铁证绿）。
+- 放行前置（唯一）：`missing_list.rs:695` `reference_audit`→`` `reference_audit` ``
+  + `cargo xtask fast` 重跑覆盖归档（EXIT=0 后即合）。
+- T3 派发注意（沿 §8-2 全部有效，另加）：①T3 终验门跑全量时 fast 已绿（前置落地）；
+  ②book/30 秒清单按 §8a-2 的 AR9 限定与 §8-3 修正式撰写；③A11 票与 AR9 票随 T3 收口
+  一并核对台账；④真机复跑仍守「先 prep 归零+先 cargo build --bin jackdaw」。
+- 循环纪律：修复循环 3/5 轮收口，余量保留；本裁决为终轮，无未决返工项。
+
 ## 9. 产物
 
 - QA 门禁覆盖归档：`loop/reports/t18t2_qa_{fmt,libtests,fast,asset_formats,
