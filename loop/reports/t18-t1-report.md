@@ -129,11 +129,11 @@ clippy。
 |---|---|---|---|
 | 格式 | `cargo fmt --all -- --check` | ✅ EXIT=0 | `t18t1_qa_fmt.log` |
 | Lint 全仓 | `cargo clippy --workspace --all-targets --features dylib -- -D warnings` | ✅ EXIT=0，零 error 行 | `t18t1_qa_clippy.log`（中途 3 轮 doc-markdown/redundant-closure 修正后覆盖归档） |
-| 单测 | `cargo test --workspace --lib --features dylib` | ✅ **2999 passed / 0 failed**（=2990+9 新） | `t18t1_qa_libtests.log`（全文复核：唯一 ERROR 行=PIE 测试故意坏构建场景，既有归因） |
+| 单测 | `cargo test --workspace --lib --features dylib` | ✅ **2999 passed / 0 failed**（=2990+9 新） | `t18t1_qa_libtests.log`（~~全文复核：唯一 ERROR 行=PIE 测试故意坏构建场景，既有归因~~ **勘误：实为 107 条 ERROR 行，QA 逐族归因全为故意场景/无头噪声、零新签名——t18-t1-qa.md 回流**） |
 | fast | `cargo xtask fast` | ✅ EXIT=0，**2999 tests run: 2999 passed, 0 skipped**（日志全文零 error/FAILED/Diff） | `t18t1_qa_fast.log` |
 | 物理双包 clippy | `cargo clippy -p jackdaw_physics -p jackdaw_avian_integration --all-targets -- --deny warnings` | ✅ EXIT=0 | `t18t1_qa_clippy_physics.log` |
 | 受影响域集成 | asset_formats / asset_watch_reload / audio_gate / guards::asset_lifecycle | ✅ 四腿全 EXIT=0 | `t18t1_qa_*.log` + `t18t1_qa_gates_progress.log` |
-| warn 归因 | libtests 日志扫描 `thumbnail\|Failed to\|failed to\|UnresolvedTypes\|cannot-apply` | 仅既有 headless 环境告警（RenderApp/CompressedImageFormatSupport）+keymap/live_edits 既有条目；**本任务新增 warn 仅 AR3 的 `asset load failed:` 一族（设计内）** | `t18t1_qa_libtests.log` |
+| warn 归因 | libtests 日志扫描 `thumbnail\|Failed to\|failed to\|UnresolvedTypes\|cannot-apply` | 仅既有 headless 环境告警（RenderApp/CompressedImageFormatSupport）+keymap/live_edits 既有条目（~~本任务新增 warn 仅 AR3 的 `asset load failed:` 一族~~ **勘误 2026-10-31 主控落，QA t18-t1-qa.md 回流：两轮 libtests 日志实测 `asset load failed:` 0 条——AR3 测试走状态断言非日志；该族只在编辑器真机日志/状态栏出现，T2 M15 预期列按此口径**） | `t18t1_qa_libtests.log` |
 
 磁盘：门前 27Gi free。全程未设 RUST_BACKTRACE。长命令后台+轮询执行，门与编辑器
 无同窗。

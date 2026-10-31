@@ -1,0 +1,12 @@
+    Finished `test` profile [optimized + debuginfo] target(s) in 0.32s
+     Running unittests src/lib.rs (target/debug/deps/jackdaw-9c8a6f6917dc1fc3)
+
+running 5 tests
+test inspector::asset_row::tests::audio_plausibility_reads_the_leading_bytes ... ok
+test inspector::asset_row::tests::an_audio_field_offers_the_sound_files_the_project_holds ... ok
+test inspector::asset_row::tests::committing_an_audio_field_refuses_a_file_that_is_not_a_sound ... ok
+test entity_ops::audio_source_template_tests::an_audio_player_from_any_source_derives_the_marker ... ok
+test entity_ops::audio_source_template_tests::an_added_audio_source_carries_the_audio_components ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 1196 filtered out; finished in 0.01s
+

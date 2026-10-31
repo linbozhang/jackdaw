@@ -1,0 +1,10 @@
+    Finished `test` profile [optimized + debuginfo] target(s) in 0.33s
+     Running unittests src/lib.rs (target/debug/deps/jackdaw-9c8a6f6917dc1fc3)
+
+running 3 tests
+test inspector::file_card::tests::another_images_reloading_leaves_the_card_alone ... ok
+test inspector::file_card::tests::a_load_failure_naming_the_cards_file_marks_it_dirty ... ok
+test inspector::file_card::tests::the_cards_own_image_reloading_marks_it_dirty ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 1198 filtered out; finished in 0.00s
+
