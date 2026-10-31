@@ -178,6 +178,101 @@ FAIL/与门禁不同窗/门前磁盘复核）。结果（`loop/t18-live/console-
 3. **台账/buglist**：T3 职责照方案；AR 编号续编面（AR9/AR10/AR11）的严重度建议——
    AR10 升 🔴（验收句正主+一等公民面）、AR9 并入 AR10 同票、AR11 维持 🟡。
 
+## 8a. T2.5 小修轮复验（2026-10-31 第二轮，提交 `29f6658a`）
+
+> 主控按本报告 §5/§8 裁定面派发：AR10 修复（读时复验）、AR9 判别复探、AR11 单臂修复、
+> 门禁复跑、偏差核。QA 复验口径：源码 diff 亲读+亲跑门禁 10 门（覆盖归档
+> `loop/reports/t18t25_qa_*`）+真机 docs 相亲跑（M14 rebind 决定性判定，程序未跑的面）。
+
+### 复验裁决：**三件两落一打回——AR10 ✅、AR9 另立 ✅、AR11 ✗ 打回（第三轮微修）；T18-T2 暂不放行 T3，AR11 补齐即放行**
+
+#### 1) AR10 修复 ✅ 通过
+
+- **源码亲读**：`fresh_processed()`（texture_import.rs 新增）=本报告 §5 建议的 ②+③ 合体
+  ——每次 `read()` 读时复验：meta 不在/非本处理器→`forget` 删项+回落源字节；是本处理器
+  →源+meta 内容哈希对照缓存名，一致即服务，不一致/无项→`process()` 同门重处理回填。
+  `read_all` 委托 inner（无递归）；失败路径 warn+forget+回落。两条死链（T2 的失败风暴+
+  上一轮画面服务）都断掉。
+- **红绿亲核**：`t18t25_ar10-red.log`（修前 2 新件 FAILED——红证 left 字节头=`0x73 0x42…`
+  非 PNG magic，**陈旧 basis 字节进 PNG loader 的实锤**，3 件回归绿）→
+  `t18t25_ar10-green.log`+QA 亲跑 **5/5**（3 既有回归+2 新）。
+- **真机引擎面 ✅（两轮一致）**：M9 修复写盘窗口 `Reloaded matrix/board.png`=1
+  （**offset 计数，脚手架改进后语义无歧义**——T2 终轮同窗为 0）；失败风暴消失
+  （35 行→4 行，全部落在坏窗内）；QA 抽读 editor-assets-1.log：board.png 3 次 Reloaded
+  （M1/M7/M9 修复窗）+4 次失败（坏窗）——与机理链逐环吻合。
+
+#### 2) AR9 判别复探 ✅ 定位论证闭合（判据升级：以 M9 窗为准，探针单 Reloaded 歧义不再阻断）
+
+- 探针三件亲核：`ar9b-editor.log` 时序（import 05:36:45→Reloaded 05:36:50→after 05:36:55）
+  +**QA 亲算 state0/after 板区 crop 像素逐字节恒等**（md5 `b44df40d…`，中心 (50,142,143)
+  teal）。注记：探针自身仍是单一 Reloaded 行（外写 reload vs import 回声不可分辨——T2-QA
+  §5 的歧义保留）；**但定位论证由 M9 窗闭合**：修复写盘的 `Reloaded=1` 是 offset 计数
+  （外写之后必有新 reload），读取层新鲜字节由单测 5 钉死（陈旧服务已不可能），而板面
+  crop 恒等（good=broken=fixed）→「reload 触发+字节新鲜+Asset 更新+GPU 面冻结于首载内容」
+  四环齐备——**渲染/GPU 重建面定位成立，读取层排除**。
+- **另立记档接受**：AR9=「经 texture.import（Basis/BC7）重载过的图片资产，其 GPU 消费面
+  停止跟随同 AssetId 后续重载」；M9 板面恢复半格红归它（脚本判别色 teal+
+  fixed≠broken 且 fixed≠good 的重设计亲读 ✓——恢复与「从未坏」像素可分）；修复面在
+  渲染提取/GPU 纹理重建（格式变更重上传），T2.5 不动如实。严重度建议 🟡→🔴 由主控随
+  T3 处置（一等公民面+永久静默误导）。
+
+#### 3) AR11 修复 ✗ 打回——**单测绿但生产路径未修（QA 真机 docs 相实证）**
+
+- **源码亲读**：matcher 新臂 `BsnPatch::TupleStruct(data) => data.type_path ==
+  finding.component`（等值匹配）+重写臂（held 值替换）——臂本身正确；**但等值的两侧
+  拼写在生产不相等**：audit 的 finding.component=「type_path rsplit("::") 尾段」
+  （`reference_audit.rs:225-230` 亲读+python 亲证：全路径尾段=`AudioSource>`，归档 json
+  逐字一致），而 patch 的 type_path=parser 全路径含泛型（`syntax/types.rs:163-178`
+  `to_type_path` 亲读）——`"bevy_audio::audio::AudioPlayer<…>" == "AudioSource>"` 恒假。
+  码内注释「the audit reports as its component, spelled the same way here (generics and
+  all)」**前提不成立**（audit 截断，非原样）。UI（findings() 原样）与 BRP（asset.rebind
+  params 原样，`reference_audit.rs:616-639` 亲读）两条生产通路都送截断拼写；等值成立的
+  唯一输入=测试自建的 component=完整 type_path（`tuple_struct_finding` 助手注释自称
+  「the way the audit builds it」——**与 audit 实际构建方式不符**，测试自洽故绿）。
+- **红绿取证复核**：`t18t25_ar11-red.log`（真单臂 sed 中性化后红，取证形态诚实 ✓）+
+  QA 亲跑 2/2 绿——但红绿都只在「完整拼写」输入上成立，未覆盖生产拼写。
+- **QA 真机 docs 相亲跑（决定性面，程序 §9.8-3 留给 QA 的那一格）**：
+  `bash loop/qa/t18-live.sh prep && docs`（二进制先 `cargo build --bin jackdaw`，教训
+  执行）——**T2 的红逐字复现**：`component=AudioSource>` 喂 asset.rebind→「the rebind
+  never reached the document」→rebind+save 后 audit 仍 1 finding（`t18t25_qa_m14-
+  audit-{missing,clean}.json` 亲读：前后同源同值）。**AR11 在生产上未修。**
+- **打回修法（第三轮，微件）**：①matcher 臂放宽一行——
+  `data.type_path == finding.component || data.type_path.rsplit("::").next() ==
+  Some(finding.component.as_str())`（两侧同法取尾段含泛型，与 Struct 臂的 ends_with
+  短名先例同型）；②把测试助手的 component 构建改为 audit 的实际方式（rsplit 尾段）——
+  让「the way the audit builds it」成真，并保留完整拼写等值绿；③收口面=live docs 相
+  （M14 rebind 半格绿）。预计十分钟级。
+
+#### 4) 门禁复跑 ✅（QA 亲跑，覆盖归档 `loop/reports/t18t25_qa_*`）
+
+fmt EXIT=0｜libtests **3001/0**（=2999+2 新，result 行求和亲算）｜fast **3001 passed/
+0 skipped** EXIT=0｜腿 asset_formats 2/2、asset_watch_reload 1/1、audio_gate 7/7、
+guards asset_lifecycle 5/5、thumbnail::tests 25/25｜**missing_list::tests 2/2**｜
+**texture_import 集成 5/5**（QA 新增两门覆盖归档）。clippy（全仓 -D warnings/物理双包）
+采信程序 t18t25_qa_clippy*.log 归档（两轮返工后绿，抽核在案）+fast 内含同参 clippy。
+勿设 RUST_BACKTRACE（env -u 亲证）；磁盘门前 26Gi/后 23Gi。
+
+#### 5) 偏差与合规核 ✅
+
+①M9 判别色重设计（teal+双不等判据）亲读 ✓——首跑误判根因（恢复同画面与从未坏像素不可
+分）成立；②「live 跑前必须 cargo build --bin jackdaw」教训在案且 QA 本轮执行（重建
+22s 后 docs 相 boot 一次成）；③boot 日志分窗（WINDOW+EDITOR_LOG，全部读者随动）亲读 ✓
+——T2-QA 回流②落实；④红态先归档（ar10-red/ar11-red 先于绿）纪律 ✓；⑤fork 零改动、
+零协议/场景格式变更、勿设 RUST_BACKTRACE 全程 ✓；⑥`git show 29f6658a` 提交面=两产品
+文件+新集成测试+脚本+报告+归档（本 QA 报告随提交入库，内容与 QA 存档一致）✓。
+
+#### 6) 转裁（SV 类比）
+
+- **AR10**：落判——修复吸收进 T18，随分支合入。**AR9**：落判——另立记档（渲染面），
+  不阻 T18-T3；book/30 秒清单延续「带 meta 纹理外改勿演示（板面）」注记，验收句的
+  视口面限定「无 meta 主流链」。
+- **AR11**：打回——生产拼写缺口（本节 §3），第三轮微修后以 live docs 相收口。
+- **T18-T2 → T3**：**暂不放行**。放行条件唯一：AR11 打回件落地（matcher 放宽+audit
+  拼写测试+docs 相绿）。其余一切（门禁/合规/AR10/AR9/脚本改进）已就绪，AR11 补齐后
+  无需再复验其他面——QA 对该微件做点验（单测 3 件+docs 相 M14 半格绿）即转 PASS，
+  主控即可合入+派发 T3。
+- 循环纪律：单任务修复循环上限 5 轮，本任务已用 3 轮（T2/T2.5/T2.6），余量 2。
+
 ## 9. 产物
 
 - QA 门禁覆盖归档：`loop/reports/t18t2_qa_{fmt,libtests,fast,asset_formats,

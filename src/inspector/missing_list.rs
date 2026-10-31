@@ -554,13 +554,17 @@ fn rewrite_ast_reference(
                         .ends_with(&format!("::{}", finding.component))
                         || data.type_path == finding.component
                 }
-                // A newtype component — the AudioPlayer a Song carries, the
-                // MeshMaterial3d a mesh wears — is a patch whose type_path
-                // the audit reports as its component, spelled the same way
-                // here (generics and all), so the two meet on equality.
+                // A newtype component — the `AudioPlayer` a Song carries, the
+                // `MeshMaterial3d` a mesh wears — is a patch whose type_path
+                // the audit reports truncated at its last `::` (a generic
+                // tail reads `AudioSource>`), so the arm meets it the way
+                // the Struct arm meets a short name: by the path's own tail.
                 // Without this arm the rebind answered that the document no
                 // longer holds the reference it had just reported (AR11).
-                BsnPatch::TupleStruct(data) => data.type_path == finding.component,
+                BsnPatch::TupleStruct(data) => {
+                    data.type_path == finding.component
+                        || data.type_path.rsplit("::").next() == Some(finding.component.as_str())
+                }
                 BsnPatch::Base(_) => finding.component == "Base",
                 _ => false,
             };
@@ -687,11 +691,13 @@ mod tests {
     use jackdaw_bsn::BsnPatch;
 
     /// The finding a tuple-struct reference produces, built the way the
-    /// audit builds it: the component named by the patch's own `type_path`
-    /// (generics and all — the parser's spelling), the field the newtype
-    /// holds, the reference as the document spells it.
+    /// audit actually builds it: the component is the patch's own
+    /// `type_path` after its last `::` (reference_audit's `rsplit` names a
+    /// newtype's generic tail — `AudioSource>` — truncating the full path
+    /// with generics), the field the newtype holds, the reference as the
+    /// document spells it.
     fn tuple_struct_finding(ast: &mut jackdaw_bsn::SceneBsnAst, entity: &str) -> AuditFinding {
-        let mut component = String::new();
+        let mut type_path = String::new();
         let mut reference = String::new();
         let mut walk: Vec<Entity> = ast.roots.clone();
         while let Some(node) = walk.pop() {
@@ -706,7 +712,7 @@ mod tests {
                 .unwrap_or_default()
             {
                 if let Some(BsnPatch::TupleStruct(data)) = ast.world.get::<BsnPatch>(patch_entity) {
-                    component = data.type_path.clone();
+                    type_path = data.type_path.clone();
                     for value in &data.values {
                         if let jackdaw_bsn::BsnValue::String(spelling) = value {
                             reference = spelling.clone();
@@ -715,6 +721,11 @@ mod tests {
                 }
             }
         }
+        let component = type_path
+            .rsplit("::")
+            .next()
+            .unwrap_or(&type_path)
+            .to_string();
         AuditFinding {
             document: Path::new("t18.bsn").to_path_buf(),
             entity_name: Some(entity.to_string()),

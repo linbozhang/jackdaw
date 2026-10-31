@@ -1,0 +1,18 @@
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t18-assets/t18-assets pid=1880
+M13: reopen Board path=matrix/board.png
+M13: docs-phase audit findings: 1
+shot m13-reopened ok (viewport)
+M13 docs reopen complete, ok=false
+M13_DOCS_REOPEN_FAIL
+M14: note — the browser did not show blip.wav before the move
+M14: the browser did not pick up the new name
+M14: audit Missing findings after the external mv: 1 (want >=1)
+M14: rebind: document=t18.bsn component=AudioSource> reference=sounds/blip.wav -> sounds/blip_renamed.wav
+M14: the rebind never reached the document
+M14: audit findings after rebind+save: 1 (want 0)
+M14 external rename boundary complete, ok=false
+L10_M14_RENAME_FAIL
+WARN_SCAN: asset_load_failed=1 thumbnail_writeoff=0 index_refusal=0 playface_panics=0 unexpected=1
+31:2026-10-31T06:17:37.994219Z  WARN jackdaw_api_internal::operator: scene 't18.bsn': 1 references name files the project does not hold (1 missing) — run asset.audit for the list
+M15_WARN_SCAN_FAIL
+VERDICT_DOCS_PHASE: L10_M14_RENAME=FAIL M13_DOCS_REOPEN=FAIL M15_WARN_SCAN=FAIL 

@@ -1,0 +1,10 @@
+    Finished `test` profile [optimized + debuginfo] target(s) in 0.60s
+     Running unittests src/lib.rs (target/debug/deps/jackdaw-9c8a6f6917dc1fc3)
+
+running 2 tests
+test inspector::missing_list::tests::a_tuple_struct_rebind_stays_on_its_own_component ... ok
+test inspector::missing_list::tests::a_tuple_struct_reference_rebinds ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 1201 filtered out; finished in 0.00s
+
+EXIT=0

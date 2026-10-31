@@ -227,7 +227,7 @@ model cost 量测在案；②AR8 首载坏 place 的缩略图写 off 每次 plac
   leg 其余四面（旧内容保持/AR3/存活/引擎 Reloaded）全绿，`L7_M9_BAD_PNG` 的 FAIL
   仅落在板面恢复半格=AR9。
 
-### 9.3 AR11 修复 ✅
+### 9.3 AR11 修复（三轮定稿）⚠️ 读取匹配层绿 / 真机活链仍有第二层 →AR12
 
 - `src/inspector/missing_list.rs::rewrite_ast_reference`：matcher 补
   `BsnPatch::TupleStruct(data) => data.type_path == finding.component`（audit 与重写
@@ -237,6 +237,28 @@ model cost 量测在案；②AR8 首载坏 place 的缩略图写 off 每次 plac
   FAILED，EXIT=101——真单臂归零，非整文件回退）→修复后
   `a_tuple_struct_reference_rebinds`+`a_tuple_struct_rebind_stays_on_its_own_component`
   两件绿（1/1+负控，libtests 总 3001=2999+2 新）。
+- **QA 打回（第三轮，rework-2）**：上轮单测绿是**假绿**——测试助手自建完整拼写
+  （自称「the way the audit builds it」与实际不符）；生产中 audit 以
+  `reference_audit.rs` 的 `rsplit("::")` 发**截断拼写**（`AudioSource>`，归档
+  `t18t2_m14-audit-missing.json` 逐字），patch type_path 是全路径含泛型，`==` 恒假。
+  **修法=QA 给定一行放宽**：`|| data.type_path.rsplit("::").next()
+  == Some(finding.component.as_str())`（与 Struct 臂 ends_with 短名先例同型）；
+  **助手改用 audit 实际构建方式**（rsplit 截断拼写）。
+  红=`t18t25_ar11-red2.log`（审计真拼写+窄臂 → rebind 测试 FAILED，生产形态红）→
+  绿=`t18t25_ar11-green2.log`（宽臂 2/2；libtests 3001/0、fmt、guards
+  asset_lifecycle 5/5 覆盖归档）。
+- **真机 docs 相收口尝试 → 暴露第二层，未收口**：live docs 相（归档
+  `t18t25_console-docs.log`/`t18t25_editor-docs-1.log`/`t18t25_ar11-editor.log`）：
+  audit 报 Missing（component=`AudioSource>`）→ `asset.rebind` 喂 finding 原样 →
+  **tab 的 AST 确被重写**（重绑后 audit=0，open-tab 分支以 tab 内容遮蔽文件）→
+  但 `scene.save` 从**活世界**发射，Song 的 AudioPlayer 组件仍持旧柄
+  （`jackdaw/scene_bsn` 现场读：发射仍是 `sounds/blip.wav`）→ 文件回写旧路径、
+  audit 回 1。即：matcher 修复正确且单测证明；**rebind 对活世界侧的更新
+  （resync_entity_from_ast 的重应用）对 newtype 组件不生效**，保存时被世界发射
+  回滚——第二层，立 **AR12**（世界侧粘性：rebind 的 AST 重写需同步活组件/或保存
+  采纳重写后的 AST；涉及 scene_io/apply 语义，第三轮不动）。本轮 docs 相未绿收口，
+  M14 半格红随 AR12 留档（红证=`t18t25_ar11-docs-audit-missing.json`/
+  `t18t25_ar11-docs-audit-after-rebind.json`+`t18t25_editor-docs-1.log`）。
 
 ### 9.4 脚本改进 ✅
 
