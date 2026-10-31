@@ -1,0 +1,11 @@
+=== QA drill 1: undo-free document pollution must turn the byte guard red Sat Oct 31 20:53:17 CST 2026 ===
+   Compiling jackdaw v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw)
+    Finished `test` profile [optimized + debuginfo] target(s) in 2.92s
+     Running tests/viewport/main.rs (target/debug/deps/viewport-e8dbffb161455dca)
+
+running 1 test
+This will cause inconsistent behaviors! See: https://bevy.org/learn/errors/b0004
+test graphics_prefs_clean::the_viewport_preferences_leave_the_scene_document_untouched ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 166 filtered out; finished in 4.43s
+

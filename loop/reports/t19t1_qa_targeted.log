@@ -1,0 +1,31 @@
+=== QA new guards isolated Sat Oct 31 20:51:00 CST 2026 ===
+[2m2026-10-31T12:52:41.718135Z[0m [32m INFO[0m [2mjackdaw::scene_io::save[0m[2m:[0m Scene saved to /private/var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/.tmp2TVBU3/assets/valley.bsn
+[2m2026-10-31T12:52:41.727544Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking /var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/.tmp2TVBU3/assets recursively
+[2m2026-10-31T12:52:41.736275Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 1, typed 0, referencing 0)
+[2m2026-10-31T12:52:41.736300Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 0)
+test graphics_prefs_clean::the_prep_chain_authors_an_environment_through_the_operators ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 165 filtered out; finished in 5.99s
+
+=== QA graphics_panel 8 isolated Sat Oct 31 20:52:41 CST 2026 ===
+test graphics_panel::each_viewport_control_reaches_its_operator ... ok
+test graphics_panel::opening_the_panel_docks_a_tab_with_both_sections ... ok
+test graphics_panel::a_scene_slider_commits_once_on_release ... ok
+test graphics_panel::the_opt_out_hint_follows_the_viewport_setting ... ok
+[2m2026-10-31T12:52:50.290063Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk asked with no assets directory open
+[2m2026-10-31T12:52:50.290122Z[0m [32m INFO[0m [2mjackdaw::asset_catalog[0m[2m:[0m No project root, skipping catalog load
+[2m2026-10-31T12:52:50.322457Z[0m [32m INFO[0m [2mjackdaw::material_browser[0m[2m:[0m update_material_browser_ui: rebuilding with 1 entries
+[2m2026-10-31T12:52:50.461797Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: graphics.open
+[2m2026-10-31T12:52:50.513492Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: environment.set
+[2m2026-10-31T12:52:50.520714Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: environment.set
+test graphics_panel::the_scene_rows_write_the_environment ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 159 filtered out; finished in 7.99s
+
+=== QA flake isolated Sat Oct 31 20:52:50 CST 2026 ===
+[2m2026-10-31T12:52:53.448048Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: input.pointer
+[2m2026-10-31T12:52:53.459600Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: viewport.quality.preset
+test viewport_settings_menu::a_preset_picked_in_the_quality_menu_holds_and_the_menu_shows_it ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 166 filtered out; finished in 2.54s
+

@@ -1,0 +1,140 @@
+=== QA physics dual clippy Sat Oct 31 20:32:41 CST 2026 ===
+   Compiling jackdaw_env v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_env)
+    Checking jackdaw_fuzzy v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_fuzzy)
+   Compiling jackdaw_package v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_package)
+   Compiling jackdaw_project_build v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_project_build)
+    Checking jackdaw_material v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_material)
+    Checking jackdaw_feathers v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_feathers)
+    Checking jackdaw_releases v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_releases)
+    Checking jackdaw_scaffold v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_scaffold)
+    Checking jackdaw_panels v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_panels)
+    Checking jackdaw_node_graph v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_node_graph)
+    Checking jackdaw_api_internal v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_api_internal)
+    Checking jackdaw_animation v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_animation)
+    Checking jackdaw_api v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_api)
+    Checking jackdaw_loader v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_loader)
+    Checking jackdaw_physics v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/integrations/physics/jackdaw_physics)
+    Checking jackdaw_multiplayer_editor v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_multiplayer_editor)
+    Checking jackdaw v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw)
+    Finished `dev` profile [optimized + debuginfo] target(s) in 32.05s
+PHYSICS_CLIPPY_EXIT=0
+/dev/disk3s5   460Gi   431Gi   5.9Gi    99%    2.2M   62M    3%   /System/Volumes/Data
+=== QA libtests Sat Oct 31 20:33:13 CST 2026 ===
+test tests::a_game_that_installs_no_theme_still_resolves_its_tokens ... ok
+test tests::a_checked_authored_checkbox_takes_the_checked_tokens ... ok
+test tests::a_chosen_authored_radio_takes_the_checked_ring ... ok
+test tests::a_nine_slice_brings_an_image_node_with_it ... ok
+test tests::a_settled_widget_is_not_rewritten_every_frame ... ok
+test tests::a_toggle_switch_takes_the_switch_tokens_not_the_checkbox_ones ... ok
+test tests::a_typed_edit_is_reported_as_a_value_change ... ok
+test tests::a_typed_edit_and_a_written_value_in_one_frame_settle ... ok
+test tests::a_value_that_arrives_with_an_empty_editor_is_not_wiped_by_it ... ok
+test tests::a_typed_edit_reaches_the_value ... ok
+test tests::a_value_written_from_code_is_not_reported_as_an_edit ... ok
+test tests::a_value_set_from_code_reaches_the_input ... ok
+test tests::an_unauthored_checkbox_is_left_alone ... ok
+test tests::an_idle_input_is_written_by_neither_side ... ok
+test tests::the_value_is_registered_with_a_default ... ok
+test tests::a_keystroke_through_bevys_text_pipeline_reaches_the_value_and_settles ... ok
+test tests::a_written_value_settles_once_the_pipeline_has_moved_the_caret ... ok
+
+test result: ok. 19 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.59s
+
+     Running unittests src/lib.rs (target/debug/deps/jd-412f80ea56a17daa)
+
+running 22 tests
+test archive::tests::formats_follow_the_published_extension ... ok
+test editor_cli::tests::installs_are_grouped_by_bevy_line_with_main_first ... ok
+test editors::tests::an_unpinned_project_opens_with_the_default_editor ... ok
+test editors::tests::names_that_could_leave_their_directory_are_refused ... ok
+test editors::tests::a_pinned_project_prefers_its_install_over_the_editor_beside_jd ... ok
+test editor_cli::tests::newer_patches_and_nightlies_are_reported_for_installed_lines_only ... ok
+test editors::tests::version_lines_are_read_from_editor_output ... ok
+test fetch::tests::windows_file_urls_drop_the_slash_before_the_drive ... ok
+test fetch::tests::plain_http_is_refused_before_connecting ... ok
+test editors::tests::a_missing_line_names_the_install_command_unless_jd_ships_that_line ... ok
+test editors::tests::the_exact_editor_beside_jd_wins_over_an_older_install_of_its_line ... ok
+test self_update::tests::a_jd_inside_a_managed_install_names_that_install ... ok
+test self_update::tests::a_cargo_installed_jd_is_left_to_cargo ... ok
+test self_update::tests::a_standalone_release_jd_may_update_itself ... ok
+test sign::tests::generated_keys_round_trip_through_pkcs8 ... ok
+test sign::tests::existing_publisher_key_reproduces_its_signature ... ok
+test sign::tests::packed_bundles_verify_and_detect_tampering ... ok
+test fetch::tests::file_urls_read_and_hash_local_files ... ok
+test archive::tests::a_zip_unpacks_its_files ... ok
+test self_update::tests::development_and_prerelease_builds_are_not_replaced ... ok
+test archive::tests::a_gzipped_tarball_unpacks_under_its_single_folder ... ok
+test self_update::tests::a_jd_beside_its_editor_or_sdk_stays_with_that_bundle ... ok
+
+test result: ok. 22 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running unittests src/lib.rs (target/debug/deps/test_fixture_extension-10c810d107661fd8)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (target/debug/deps/viewable_camera_extension-ca3ae02573dcbbac)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+LIBTESTS_PIPE_EXIT=?
+=== QA viewport integration Sat Oct 31 20:37:12 CST 2026 ===
+[2m2026-10-31T12:41:55.881326Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.ui_palette
+[2m2026-10-31T12:41:55.881368Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core_windows
+[2m2026-10-31T12:41:55.881395Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.timeline
+[2m2026-10-31T12:41:55.881402Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.project_window
+[2m2026-10-31T12:41:55.882543Z[0m [32m INFO[0m [2mjackdaw::extension_lifecycle[0m[2m:[0m applied keymap preset 'classic': 112 entries, 112 bindings, 0 user rows
+[2m2026-10-31T12:41:56.031776Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: input.pointer
+[2m2026-10-31T12:41:56.080689Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: input.pointer
+[2m2026-10-31T12:41:56.300560Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: input.pointer
+[2m2026-10-31T12:41:56.314342Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: view.mode
+[2m2026-10-31T12:41:56.347932Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: input.pointer
+[2m2026-10-31T12:41:56.360477Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: view.mode
+[2m2026-10-31T12:41:56.391183Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: input.pointer
+[2m2026-10-31T12:41:56.404473Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: view.mode
+test viewport_settings_menu::the_view_mode_rows_pick_one_mode_at_a_time ... ok
+
+failures:
+
+---- viewport_settings_menu::a_preset_picked_in_the_quality_menu_holds_and_the_menu_shows_it stdout ----
+
+thread 'viewport_settings_menu::a_preset_picked_in_the_quality_menu_holds_and_the_menu_shows_it' (26723421) panicked at tests/viewport/viewport_settings_menu.rs:192:5:
+the defaults are the High preset
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    viewport_settings_menu::a_preset_picked_in_the_quality_menu_holds_and_the_menu_shows_it
+
+test result: FAILED. 166 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 82.48s
+
+error: test failed, to rerun pass `-p jackdaw --test viewport`
+=== QA surface integration Sat Oct 31 20:41:56 CST 2026 ===
+test water::tests::the_uniform_struct_matches_the_rust_field_order ... ok
+test water::tests::the_wave_travels_over_the_surface ... ok
+test water::tests::the_wind_carries_the_wave_faster_than_still_air ... ok
+test environment::tests::sky_reflections_filter_the_sky_into_the_specular_term_and_keep_the_trilight_diffuse ... ok
+test probe::tests::a_baked_probe_reflects_through_a_light_probe_the_size_of_its_box ... ok
+test environment::tests::the_sky_cubemap_holds_the_gradient_and_the_sun_scaled_to_the_ambient ... ok
+
+test result: ok. 52 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.07s
+
+   Doc-tests jackdaw_surface
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+=== QA AN2 leg Sat Oct 31 20:41:57 CST 2026 ===
+    Finished `test` profile [optimized + debuginfo] target(s) in 0.30s
+────────────
+ Nextest run ID 60c99210-9ac6-4fff-b1b8-b05c83961551 with nextest profile: default
+    Starting 1 test across 1 binary
+        PASS [   0.241s] (1/1) jackdaw_runtime::animation_scene_load a_loaded_scene_plays_its_default_state
+────────────
+     Summary [   0.242s] 1 test run: 1 passed, 0 skipped
+/dev/disk3s5   460Gi   419Gi    18Gi    96%    2.2M  188M    1%   /System/Volumes/Data
+done

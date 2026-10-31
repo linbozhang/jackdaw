@@ -1,0 +1,5 @@
+=== QA B-run: viewport binary WITHOUT graphics_prefs_clean module Sat Oct 31 20:56:19 CST 2026 ===
+test viewport_settings_menu::a_preset_picked_in_the_quality_menu_holds_and_the_menu_shows_it ... FAILED
+thread 'viewport_settings_menu::a_preset_picked_in_the_quality_menu_holds_and_the_menu_shows_it' (26760518) panicked at tests/viewport/viewport_settings_menu.rs:192:5:
+the defaults are the High preset
+test result: FAILED. 164 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 78.49s

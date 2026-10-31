@@ -1,0 +1,21 @@
+=== QA drill 1b: silent-path document write (undo-free) must turn the byte guard red Sat Oct 31 20:54:25 CST 2026 ===
+running 1 test
+test graphics_prefs_clean::the_viewport_preferences_leave_the_scene_document_untouched ... FAILED
+
+failures:
+
+---- graphics_prefs_clean::the_viewport_preferences_leave_the_scene_document_untouched stdout ----
+
+thread 'graphics_prefs_clean::the_viewport_preferences_leave_the_scene_document_untouched' (26752353) panicked at tests/viewport/graphics_prefs_clean.rs:211:5:
+assertion `left == right` failed: viewport preferences never enter the undo history: ran the whole viewport.* family through the user path and the stack went from 0 entries to 1
+  left: 1
+ right: 0
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    graphics_prefs_clean::the_viewport_preferences_leave_the_scene_document_untouched
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 166 filtered out; finished in 4.46s
+
+error: test failed, to rerun pass `-p jackdaw --test viewport`
