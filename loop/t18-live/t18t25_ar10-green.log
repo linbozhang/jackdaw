@@ -1,0 +1,14 @@
+   Compiling jackdaw_runtime v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_runtime)
+    Finished `test` profile [optimized + debuginfo] target(s) in 7.71s
+     Running tests/texture_import.rs (target/debug/deps/texture_import-37f75b9adec22f0f)
+
+running 5 tests
+test a_texture_with_no_import_meta_reads_byte_identically ... ok
+test a_meta_that_goes_drops_the_processed_entry_and_reads_the_source_again ... ok
+test a_game_with_the_jackdaw_asset_source_loads_imported_textures ... ok
+test an_imported_texture_loads_block_compressed_with_every_mip ... ok
+test a_rewritten_source_reprocesses_under_its_meta ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s
+
+EXIT=0

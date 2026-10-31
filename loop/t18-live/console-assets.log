@@ -1,23 +1,30 @@
-EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t18-assets/t18-assets pid=8233
-M3: the placed model never showed exactly 1 box (saw 1)
-L3_M3_GLB_FAIL
-L3_M8_THREE_FACES_FAIL
-M1: reference plates before=1 after=2: matrix/board.png t18-drop-src.png
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t18-assets/t18-assets pid=77102
+M3: the placed model shows exactly 1 box
+shot m3-hero-one ok (viewport)
+M3: no Reloaded line after the first write (A6 family missed event); re-triggering once
+M3: box entities after rewrite: 2
+shot m3-hero-two ok (viewport)
+M3: fresh thumbnail bde84cd9464a4db4-18e3864a10eb45fe.png pixels=d2dda8282d3c98da925becc95a200e2d
+M3 GLB faces complete, ok=true
+L3_M3_GLB_PASS
+M8 three-face verdict inside this single leg: m8=true
+L3_M8_THREE_FACES_PASS
+M1: reference plates before=1 after=2: t18-drop-src.png matrix/board.png
 shot m1-drop-plate ok (viewport)
 L1_M1_DROP_PASS
 shot m1-board-red ok (viewport)
 shot m1-board-blue ok (viewport)
-M1: viewport pixel md5 red=deeff022bbc96827d48bbf2f4fcd3d42 blue=e0f3711349a80b58037e2af463e6b482
+M1: viewport pixel md5 red=53393534e9359090d64e656e1ada1fbc blue=1d11797b8abb4aa0167261b251c3de45
 shot m1-file-card ok (window)
 M1 PNG rewrite face complete, ok=true
 L1_M1_REWRITE_PASS
-M2: jpg plate paths now: t18-drop-src.png matrix/board.png t18-tone-src-3.png
+M2: jpg plate paths now: t18-tone-src-7.png matrix/board.png t18-drop-src.png
 shot m2-jpg-plate ok (viewport)
 M2: loader-failure lines since drop: 0 (want 0)
 M2 JPG chain complete, ok=true
 L2_M2_JPG_PASS
 shot m4-material-red ok (viewport)
-M4: fresh material thumbnail a500191e4e510852-18e37e6e7338eeb4.png pixels=dc207d5e26c83fea91d427b30a421be3
+M4: fresh material thumbnail a500191e4e510852-18e38654e04c2592.png pixels=dc207d5e26c83fea91d427b30a421be3
 M4: note — the card hex did not show 0DFF0D (base_color row only)
 shot m4-material-card ok (window)
 M4 material faces complete, ok=true
@@ -36,20 +43,19 @@ M16: editor alive after bad png
 shot m9-board-broken ok (viewport)
 M9: board-region md5 good=36591fe7b501c814cb9e047da221a20c broken=36591fe7b501c814cb9e047da221a20c (equal = old content kept)
 M9: asset load failed lines: 1 (want >=1, the AR3 face)
-re-trigger: no engine reaction to the last write (A6 family missed event); writing once more
-re-trigger: no engine reaction to the last write (A6 family missed event); writing once more
+M9: Reloaded lines on the fix window: 1 (want >=1 — the AR10 engine face)
 shot m9-board-fixed ok (viewport)
-M9: board-region md5 fixed=36591fe7b501c814cb9e047da221a20c (want != broken)
-M9: the plate did not recover
+M9: board-region md5 fixed=36591fe7b501c814cb9e047da221a20c (want != broken and != good: the plate followed a NEW state)
+M9: the plate did not recover to the new state
 M9 bad png complete, ok=false
 L7_M9_BAD_PNG_FAIL
-M10: boxes before: 1
+M10: boxes before: 2
 shot m10-hero-good ok (viewport)
 M16: editor alive after bad glb
 M10: bad window: Reloaded=0 (want 0 — the load refused), load-failure lines=2 (want >=1)
 shot m10-hero-broken ok (viewport)
-M10: viewport md5 in the bad window: 064de7e9f72fd065be743a93c238585c
-M10: first-load-bad probe: boxes now 1 (no new box wanted); editor alive
+M10: viewport md5 in the bad window: 3045254ca33a542e0609effbd433b457
+M10: first-load-bad probe: boxes now 2 (no new box wanted); editor alive
 M10: thumbnail write-off lines in the AR8 window: 2 (want >=1)
 M10 bad glb complete, ok=true
 L7_M10_BAD_GLB_PASS
@@ -76,12 +82,10 @@ shot m12-after-refusal ok (window)
 M12 bad audio + AU6 complete, ok=true (pick refusal seen=true)
 L8_M12_BAD_AUDIO_PASS
 L8_AU6_PICK_GATE_PASS
-M13: scene sha at the last save=4b474e54daee6cc6a59a6fe5f7cf4c91ff1f81f8744134af6217bd33d9e57446 now=4b474e54daee6cc6a59a6fe5f7cf4c91ff1f81f8744134af6217bd33d9e57446
+M13: scene sha at the last save=3cdc338d66895d64396e70396c8b169250af4944a2e9106e64d8bb19a9e19670 now=3cdc338d66895d64396e70396c8b169250af4944a2e9106e64d8bb19a9e19670
 M13: audit findings: 0 (no broken references)
 M13 scene integrity complete, ok=true
 M13_INTEGRITY_PASS
-WARN_SCAN: asset_load_failed=8 thumbnail_writeoff=2 index_refusal=1 playface_panics=0 unexpected=2
-39:2026-10-31T03:07:31.680268Z  WARN jackdaw_api_internal::operator: scene.open: the tab holds unsaved edits, so the file was not reread
-63:2026-10-31T03:07:53.762036Z  WARN bevy_ecs::relationship: The bevy_ecs::hierarchy::ChildOf(4483v9) relationship on entity 5086v2 relates to an entity that does not exist. The invalid bevy_ecs::hierarchy::ChildOf relationship has been removed.
-M15_WARN_SCAN_FAIL
-VERDICT_ASSETS_PHASE: L1_M1_DROP=PASS L1_M1_REWRITE=PASS L2_M2_JPG=PASS L3_M3_GLB=FAIL L3_M8_THREE_FACES=FAIL L4_M4_MATERIAL=PASS L5_M5_AUDIO=PASS L6_M7_IMPORT_OPTIONS=PASS L7_M10_BAD_GLB=PASS L7_M9_BAD_PNG=FAIL L8_AU6_PICK_GATE=PASS L8_M11_BAD_MAT=PASS L8_M12_BAD_AUDIO=PASS M13_INTEGRITY=PASS M15_WARN_SCAN=FAIL 
+WARN_SCAN: asset_load_failed=4 thumbnail_writeoff=2 index_refusal=1 playface_panics=0 unexpected=0
+M15_WARN_SCAN_PASS
+VERDICT_ASSETS_PHASE: L1_M1_DROP=PASS L1_M1_REWRITE=PASS L2_M2_JPG=PASS L3_M3_GLB=PASS L3_M8_THREE_FACES=PASS L4_M4_MATERIAL=PASS L5_M5_AUDIO=PASS L6_M7_IMPORT_OPTIONS=PASS L7_M10_BAD_GLB=PASS L7_M9_BAD_PNG=FAIL L8_AU6_PICK_GATE=PASS L8_M11_BAD_MAT=PASS L8_M12_BAD_AUDIO=PASS M13_INTEGRITY=PASS M15_WARN_SCAN=PASS 

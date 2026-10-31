@@ -174,3 +174,69 @@ fn a_texture_with_no_import_meta_reads_byte_identically() {
     );
     assert!(!dir.path().join("cache").exists());
 }
+
+/// AR10: an entry the reader holds dies with the meta that justified it.
+/// After the meta goes and the source is rewritten, a plain read serves the
+/// new source bytes — not the held Basis file, which a plain loader would
+/// refuse forever (the live stuck-failure shape the T2 matrix archived).
+#[test]
+fn a_meta_that_goes_drops_the_processed_entry_and_reads_the_source_again() {
+    let dir = tempfile::tempdir().expect("tempdir");
+    write_png(&dir.path().join("rock.png"), 16);
+    import(dir.path(), "rock.png", true);
+    let reader = TextureImportReader::new(
+        Box::new(FileAssetReader::new(dir.path())),
+        dir.path().join("cache"),
+    );
+
+    // The import round: the meta read processes, and reads serve Basis.
+    let _ = block_on(read_all(&reader, Path::new("rock.png"), true));
+    let processed = block_on(read_all(&reader, Path::new("rock.png"), false));
+    assert_ne!(
+        processed,
+        std::fs::read(dir.path().join("rock.png")).unwrap(),
+        "the processed bytes are served while the meta holds"
+    );
+
+    // The author deletes the meta and rewrites the source.
+    std::fs::remove_file(dir.path().join("rock.png.meta")).expect("the meta is removed");
+    write_png(&dir.path().join("rock.png"), 24);
+    let plain = block_on(read_all(&reader, Path::new("rock.png"), false));
+
+    assert_eq!(
+        plain,
+        std::fs::read(dir.path().join("rock.png")).unwrap(),
+        "after the meta goes the reader serves the source again"
+    );
+}
+
+/// AR9: while the meta stays ours, a rewritten source re-processes. A bare
+/// read (no meta read in between — the shape an asset-server reload makes
+/// when only the source changed) serves freshly processed bytes, not the
+/// previous round's picture.
+#[test]
+fn a_rewritten_source_reprocesses_under_its_meta() {
+    let dir = tempfile::tempdir().expect("tempdir");
+    write_png(&dir.path().join("rock.png"), 16);
+    import(dir.path(), "rock.png", true);
+    let reader = TextureImportReader::new(
+        Box::new(FileAssetReader::new(dir.path())),
+        dir.path().join("cache"),
+    );
+
+    let first = block_on(read_all(&reader, Path::new("rock.png"), false));
+
+    // The source changes; the meta does not.
+    write_png(&dir.path().join("rock.png"), 24);
+    let second = block_on(read_all(&reader, Path::new("rock.png"), false));
+
+    assert_ne!(
+        first, second,
+        "the rewritten source re-processes on a bare read"
+    );
+    assert_eq!(
+        files_under(&dir.path().join("cache")),
+        2,
+        "each source round keeps its own processed file"
+    );
+}

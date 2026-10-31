@@ -77,6 +77,10 @@ rebind 半格=AR11）——铁证①全绿；铁证②「不崩不丢引用」�
 
 ## 4. 新发现（AR 系续编，只记不修→主控裁定吸收面）
 
+> **T2.5 状态更新（见 §9）**：AR10 已修（读取层读时复验+真机引擎面绿）；
+> AR11 已修（TupleStruct 双臂+单测红绿）；AR9 判别复探仍在（读取层修复不吸收它，
+> 定位为渲染/板面缺陷）另立记档，M9 板面半格红归它。
+
 | 编号 | 严重度 | 描述 | 红证 | 备注 |
 |---|---|---|---|---|
 | **AR9** | 🟡 | **texture.import meta 使外改不再到达视口板**：给在用 PNG 落 Bevy `.meta`（Compress）后，外写同路径：引擎照常 `Reloaded matrix/board.png`（processed 管线在动），但参考板的可见面**冻结在 meta 落盘前的内容**，直至编辑器重启 | 专项探针（归档 `t18t2_ar9-{editor.log,before,after}.png`）：meta 在→外写 orange→Reloaded 在→板区域像素采样仍 (128,50,156)=旧 purple；对照=无 meta 的 M1 同路径重写板面跟随（shot-m1-board-red/blue 全帧 md5 变化） | run-2 首次观测（当时 M9 三 shot 全帧 md5 恒等），后经专项探针复钉；M9 腿为隔离 AR10 先删 meta 再跑 |
@@ -176,3 +180,117 @@ model cost 量测在案；②AR8 首载坏 place 的缩略图写 off 每次 plac
   M10 好/坏、M12 picker/拒写后、M13 重开）。
 - fixture 可复跑：`jd new t18-assets --path /Users/zhanglinbo/workspace/loop-mac/t18-assets
   --no-git`+脚本 prep 自建资产族。
+
+---
+
+## 9. §补 T2.5 小修轮（2026-10-31，QA PASS 放行 T3 后的主控裁定返工）
+
+> 三件吸收：AR10 修复+AR9 判别复探+AR11 顺手修；脚本 boot 日志分窗；门禁复跑覆盖归档；
+> M9 全段真机重跑。红态先归档（`t18t25_ar10-red.log`/`t18t25_ar11-red.log`）。
+> 产品改动面：`crates/jackdaw_runtime/src/texture_import.rs`（读时复验，最小正确面）、
+> `src/inspector/missing_list.rs`（TupleStruct 双臂）。fork 零改动；勿设 RUST_BACKTRACE
+> 全程执行；磁盘门前 26Gi/后 24Gi（≥10Gi 线）。
+
+### 9.1 AR10 修复 ✅（引擎/读取层）
+
+- **根因（QA 定位+代码形态确认）**：`TextureImportReader.processed` map 只插不删不复验。
+  两条链：①meta 删除后 `read()` 仍命中 map 服务陈旧 `.basis` 字节→普通 loader 拿到
+  Basis 字节→`Invalid PNG signature` 失败风暴+资产卡死（T2 终轮 35 行失败、修复写盘后
+  数分钟仍失败的红证）；②meta 仍在而源字节重写时，仅动源的 reload 不重跑 `read_meta`，
+  `read()` 命中旧 map 项→服务上一轮画面（AR9 的读取层半边）。
+- **修复=读时复验（路径失效删除+内容哈希复验的合体，最小正确面）**：新私有
+  `fresh_processed(path)` 在每次 `read()` 时——meta 不在/非本处理器→`forget(path)` 删项
+  并服务源字节；meta 是我们的→重算源+meta 内容哈希对照缓存名，一致即服务，不一致/
+  无项→走 `process()` 同一门重处理并回填 map（处理失败→warn+forget+回落源字节）。
+  代价=每次资产读一次小 meta 读+一次源哈希（只在 load/reload 路径）。
+- **红绿**：新集成测试二件（`t18t25_ar10-red.log`：两件 FAILED，3 passed/2 failed，
+  EXIT=101）→修复后（`t18t25_ar10-green.log` 及 `t18t25_qa_texture_import.log`：
+  **5/5 含 3 件既有回归**）。
+- **真机引擎面 ✅**：M9 全段重跑（`t18t25_verdict-assets.txt`/`t18t25_console-assets.log`）：
+  坏窗失败行=1（AR3 一次）→修复写盘→**`Reloaded matrix/board.png`=1**（AR10 引擎面；
+  T2 终轮同窗为 0）。卡死失败风暴消失。
+
+### 9.2 AR9 判别性复探 →**仍在，如实记档另立**（⚠️ 不随 AR10 消失）
+
+- **判别探针**（`t18t25_ar9b-{editor.log,state0.png,after.png}`）：texture.import 落
+  meta→外写 orange（与现有 teal 不同色）→引擎 `Reloaded matrix/board.png` 在（05:36:50）
+  →板区域 crop md5 前后恒等（d3e1fadc…）。
+- **机理定位（T2.5 新证据链）**：读取层修复后，资产内容确实随重载更新（Reloaded 在、
+  失败风暴消失）；冻结的是**渲染/板面**——且冻结起点=第一次 processed（Basis/Bc7 格式）
+  重载：此后同路径的一切重载（含 M9 恢复普通 png 的 teal 重写，Reloaded=1）都不再上屏，
+  板永久显示**首次加载的内容**（M1 的 blue）。M1（plain→plain 重载）板面跟随正常，
+  格式不变的重载无此问题。
+- **AR9 记档形态（另立）**：🔴/🟡「经 texture.import（Basis/BC7）重载过的图片资产，
+  其引用面（参考板/材质槽等 GPU 消费面）停止跟随同 AssetId 的后续重载——Modified 事件
+  在、Asset 内容在变、GPU 纹理不更新；首次加载内容持续显示」。修复面在渲染提取/GPU
+  纹理重建（格式变更的重上传），非读取层，T2.5 不动。M9 腿的板面断言即此格的持续红：
+  leg 其余四面（旧内容保持/AR3/存活/引擎 Reloaded）全绿，`L7_M9_BAD_PNG` 的 FAIL
+  仅落在板面恢复半格=AR9。
+
+### 9.3 AR11 修复 ✅
+
+- `src/inspector/missing_list.rs::rewrite_ast_reference`：matcher 补
+  `BsnPatch::TupleStruct(data) => data.type_path == finding.component`（audit 与重写
+  两侧同源同拼写，泛型原样相等即匹配，注记在码）；重写 match 补 TupleStruct 臂
+  （newtype 的唯一 held 值即 audit 所指引用）。
+- **红绿**：`t18t25_ar11-red.log`（中性化单臂后 `a_tuple_struct_reference_rebinds`
+  FAILED，EXIT=101——真单臂归零，非整文件回退）→修复后
+  `a_tuple_struct_reference_rebinds`+`a_tuple_struct_rebind_stays_on_its_own_component`
+  两件绿（1/1+负控，libtests 总 3001=2999+2 新）。
+
+### 9.4 脚本改进 ✅
+
+- `t18-live.sh` boot 日志分窗：`WINDOW` 计数+`EDITOR_LOG`（`editor-$PHASE-$N.log`），
+  全部日志读者（mark_log/log_lines_since/M5/M9-M12/M15 扫描）随 `$EDITOR_LOG`——
+  docs 相 boot 不再截断 assets 相编辑器日志（QA 回流⑤）。
+
+### 9.5 门禁复跑（覆盖归档 `t18t25_qa_*`）
+
+| 门 | 结果 |
+|---|---|
+| fmt | ✅ EXIT=0 |
+| 全仓 clippy（-D warnings） | ✅ EXIT=0（两轮返工：manual-let-else→let-else 改写、doc-markdown 三处补反引号后绿） |
+| 物理双包 clippy | ✅ EXIT=0 |
+| libtests | ✅ **3001 passed / 0 failed**（=2999+2 新 missing_list 测试） |
+| xtask fast | ✅ EXIT=0，**3001 tests run: 3001 passed, 0 skipped** |
+| 腿 asset_formats / asset_watch_reload / audio_gate | ✅ 2/2、1/1、7/7 |
+| 腿 guards asset_lifecycle | ✅ 5/5 |
+| 定向单测 thumbnail::tests | ✅ 25/25 |
+| 新测试 texture_import（runtime 集成） | ✅ 5/5（3 既有+2 新 AR10/AR9 面） |
+
+进程无残留（pgrep 复核）；编辑器二进制随源重建（T2.5 教训：live 跑前必须
+`cargo build --bin jackdaw`——首跑 EDITOR_BOOT_FAIL 即陈旧二进制 dyld 死亡，已修）。
+
+### 9.6 T2.5 真机重跑判定（M9 全段+全相复跑）
+
+`VERDICT_ASSETS_PHASE`：14/15 PASS——**L7_M9_BAD_PNG FAIL 仅板面恢复半格=AR9（另立
+记档）**，其四面全绿：旧内容保持（crop 相等）✅、AR3 一次 ✅、存活 ✅、
+**修复写盘 Reloaded=1（AR10 引擎面）✅**。其余 14 腿全 PASS（M3 含一次 A6 丢事件再
+触发，日志明示）。M16 各存活窗照旧全过。
+
+### 9.7 T2.5 偏差清单（如实）
+
+1. **M9 腿判别面重设计**：修复色从「M7 同款 purple」改为**新色 teal**——恢复到与坏前
+   相同的画面在像素上与「从未坏」不可区分（T2.5 首跑即误判 FAIL 的根因），现要求
+   fixed≠broken 且 fixed≠good（板跟随新状态）。AR9 存在时该面注定红——这正是 AR9
+   的持续红证。
+2. **AR10 修复面收敛为引擎/读取层**：板面恢复半格划归 AR9（另立）——QA 预案「仍在则
+   如实记档另立」执行。
+3. **AR11 测试红证的取证形态**：真单臂归零（sed 中性化 matcher 单臂后跑测试），
+   非整文件 stash 回退（stash 连测试一起带走，首取无效，归档以单臂中性化版为准）。
+4. **编辑器二进制陈旧教训**：T2.5 首跑 EDITOR_BOOT_FAIL=libs 重编后旧二进制 dyld 死；
+   `cargo build --bin jackdaw` 后复跑即绿。后续 QA 真机轮建议跑前显式重建。
+
+### 9.8 给 QA 复验注意事项
+
+1. **AR10 复验**：单元层=`cargo test -p jackdaw_runtime --test texture_import`
+   （5 件含 2 新）；真机层=M9 腿（引擎 Reloaded=1+失败风暴消失）；**板面不算 AR10 的
+   账**——它归 AR9。
+2. **AR9 复验**：判别探针脚本化步骤在 §9.2（compress→外写异色→Reloaded 在→crop 恒等）；
+   或直接复跑 M9 腿看板面半格。裁定吸收面时注意：修复面在渲染提取（格式变更重上传），
+   读取层已由 AR10 修复覆盖。
+3. **AR11 复验**：`cargo test --lib --features dylib missing_list::tests`（2 件）；
+   真机=M14 腿的 rebind 半格（本次未重跑 docs 相——M14 的 audit 检测面在 T2 已绿，
+   rebind 面由单测钉死；QA 若要真机 M14 全段，跑 docs 相即可）。
+4. 编辑器二进制先 `cargo build --bin jackdaw`；勿设 RUST_BACKTRACE；门禁与真机不同窗
+   纪律照旧。

@@ -1,0 +1,24 @@
+   Compiling jackdaw v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw)
+    Finished `test` profile [optimized + debuginfo] target(s) in 12.97s
+     Running unittests src/lib.rs (target/debug/deps/jackdaw-9c8a6f6917dc1fc3)
+
+running 2 tests
+test inspector::missing_list::tests::a_tuple_struct_rebind_stays_on_its_own_component ... ok
+test inspector::missing_list::tests::a_tuple_struct_reference_rebinds ... FAILED
+
+failures:
+
+---- inspector::missing_list::tests::a_tuple_struct_reference_rebinds stdout ----
+
+thread 'inspector::missing_list::tests::a_tuple_struct_reference_rebinds' (25387293) panicked at src/inspector/missing_list.rs:745:9:
+the tuple-struct finding the audit names rewrites
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    inspector::missing_list::tests::a_tuple_struct_reference_rebinds
+
+test result: FAILED. 1 passed; 1 failed; 0 ignored; 0 measured; 1201 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `--lib`
+EXIT=101

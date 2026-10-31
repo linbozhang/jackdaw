@@ -162,6 +162,69 @@ impl TextureImportReader {
         std::fs::rename(&partial, &file)?;
         Ok((file, settings))
     }
+
+    /// Drop the processed entry for `path`: the meta that justified it is
+    /// gone or no longer ours, so holding it would keep serving Basis bytes
+    /// to a plain loader long after the file reads plain.
+    fn forget(&self, path: &Path) {
+        if let Ok(mut processed) = self.processed.lock() {
+            processed.remove(path);
+        }
+    }
+
+    /// The processed file still good for `path`, re-checked at every read.
+    ///
+    /// An entry lives only while the file's own meta still asks for our
+    /// processor — a deleted or rewritten meta must drop it — and while the
+    /// source bytes hash to the cache name the entry holds, because a
+    /// rewritten source must re-process: a plain `read` rides the reload a
+    /// source change makes even when the `.meta` itself never changed, so
+    /// without the re-check it would serve the previous round's picture.
+    /// The re-check costs one small meta read and one source hash, both on
+    /// the load/reload path only.
+    async fn fresh_processed(&self, path: &Path) -> Option<PathBuf> {
+        let Ok(meta) = self.read_all(path, true).await else {
+            self.forget(path);
+            return None;
+        };
+        let Some(loader) = read_texture_import_meta(&meta) else {
+            self.forget(path);
+            return None;
+        };
+        let mut hasher = DefaultHasher::new();
+        let source = self.read_all(path, false).await.ok()?;
+        source.hash(&mut hasher);
+        meta.hash(&mut hasher);
+        let current = self.cache.join(format!(
+            "{}.{:016x}.basis",
+            path.to_string_lossy(),
+            hasher.finish()
+        ));
+        if self
+            .processed
+            .lock()
+            .ok()
+            .and_then(|processed| processed.get(path).cloned())
+            .is_some_and(|held| held == current)
+        {
+            return Some(current);
+        }
+        // The entry is stale or missing: process through the same door the
+        // meta reader uses, so the cache stays the one place bytes live.
+        match self.process(path, &meta, &loader).await {
+            Ok((file, _)) => {
+                if let Ok(mut processed) = self.processed.lock() {
+                    processed.insert(path.to_path_buf(), file.clone());
+                }
+                Some(file)
+            }
+            Err(err) => {
+                warn!("Texture import of {} failed: {err}", path.display());
+                self.forget(path);
+                None
+            }
+        }
+    }
 }
 
 /// The settings a processed texture loads with: the Basis file Bevy's saver
@@ -187,11 +250,7 @@ fn load_meta(settings: ImageLoaderSettings) -> Vec<u8> {
 
 impl AssetReader for TextureImportReader {
     async fn read<'a>(&'a self, path: &'a Path) -> Result<impl Reader + 'a, AssetReaderError> {
-        let processed = self
-            .processed
-            .lock()
-            .ok()
-            .and_then(|processed| processed.get(path).cloned());
+        let processed = self.fresh_processed(path).await;
         let bytes = match processed.and_then(|file| std::fs::read(file).ok()) {
             Some(bytes) => bytes,
             None => self.read_all(path, false).await?,

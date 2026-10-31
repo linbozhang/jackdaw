@@ -75,6 +75,8 @@ NAME='bevy_ecs::name::Name'
 APLAYER='bevy_audio::audio::AudioPlayer<bevy_audio::audio_source::AudioSource>'
 mkdir -p "$OUTDIR"
 PHASE="${1:-all}"
+WINDOW=0
+EDITOR_LOG="$OUTDIR/editor-$PHASE.log"
 CONSOLE_LOG="$OUTDIR/console-$PHASE.log"
 : > "$CONSOLE_LOG"
 
@@ -151,9 +153,12 @@ alive() { # alive — the M16 face: BRP answers and the boot pid still is
   [ -n "$st" ] || return 1
   [ -z "$pid" ] || [ "$st" = "$pid" ]
 }
+EDITOR_LOG="$OUTDIR/editor-$PHASE.log"
 editor_boot() {
   pkill -x jackdaw 2>/dev/null; sleep 1
-  local boot_log="$OUTDIR/editor-$PHASE.log"
+  WINDOW=$((WINDOW + 1))
+  EDITOR_LOG="$OUTDIR/editor-$PHASE-$WINDOW.log"
+  local boot_log="$EDITOR_LOG"
   : > "$boot_log"
   export JACKDAW_OPEN_PROJECT="$PROJECT"
   # The game side is out of this matrix's scope (decision 6): suppress the
@@ -441,7 +446,7 @@ refimage_count() {
 }
 mark_log() { # mark_log <pattern> <offset-file> — remember the current count
   local n
-  n=$(grep -c "$1" "$OUTDIR/editor-$PHASE.log" 2>/dev/null)
+  n=$(grep -c "$1" "$EDITOR_LOG" 2>/dev/null)
   case "$n" in ''|*[!0-9]*) n=0 ;; esac
   echo "$n" > "$2"
 }
@@ -450,7 +455,7 @@ log_lines_since() { # log_lines_since <pattern> <offset-file> — new matching
                     # The log is appended live, so a read can race the
                     # writer; a non-numeric or failed read counts 0.
   local total saved
-  total=$(grep -c "$1" "$OUTDIR/editor-$PHASE.log" 2>/dev/null)
+  total=$(grep -c "$1" "$EDITOR_LOG" 2>/dev/null)
   case "$total" in ''|*[!0-9]*) total=0 ;; esac
   saved=$(cat "$2" 2>/dev/null)
   case "$saved" in ''|*[!0-9]*) saved=0 ;; esac
@@ -879,8 +884,8 @@ m5_audio_reload() {
   log "M5: Reloaded lines after the good rewrite: $reloaded (want >=1)"
   [ "${reloaded:-0}" -ge 1 ] || ok=false
   local failed panics
-  failed=$(grep -c "asset load failed.*blip" "$OUTDIR/editor-$PHASE.log" 2>/dev/null); failed=${failed:-0}
-  panics=$(grep -c "panicked at" "$OUTDIR/editor-$PHASE.log" 2>/dev/null); panics=${panics:-0}
+  failed=$(grep -c "asset load failed.*blip" "$EDITOR_LOG" 2>/dev/null); failed=${failed:-0}
+  panics=$(grep -c "panicked at" "$EDITOR_LOG" 2>/dev/null); panics=${panics:-0}
   log "M5: blip failure lines=$failed panics=$panics (want 0/0 in this window)"
   [ "$failed" = "0" ] && [ "$panics" = "0" ] || ok=false
   # The garbage probe: reload still fires, still no failure event.
@@ -893,7 +898,7 @@ m5_audio_reload() {
   [ "${reloaded:-0}" -ge 1 ] || ok=false
   cp "$OUTDIR/blip-good-backup.wav" "$BLIP"
   sleep 4
-  panics=$(grep -c "panicked at" "$OUTDIR/editor-$PHASE.log" 2>/dev/null); panics=${panics:-0}
+  panics=$(grep -c "panicked at" "$EDITOR_LOG" 2>/dev/null); panics=${panics:-0}
   log "M5: panics after restore: $panics (want 0)"
   [ "$panics" = "0" ] || ok=false
   alive || { log "M5: the editor did not survive the audio window"; ok=false; }
@@ -931,20 +936,25 @@ m9_bad_png() {
   hits=$(log_lines_since "asset load failed" "$OUTDIR/m9.offset")
   log "M9: asset load failed lines: $hits (want >=1, the AR3 face)"
   [ "${hits:-0}" -ge 1 ] || ok=false
-  grep "asset load failed" "$OUTDIR/editor-$PHASE.log" 2>/dev/null | tail -2 > "$OUTDIR/m9-ar3-lines.log"
-  # The fix: good bytes again (purple, matching the M7 state).
-  png_write "$BOARD" 160 40 200
+  grep "asset load failed" "$EDITOR_LOG" 2>/dev/null | tail -2 > "$OUTDIR/m9-ar3-lines.log"
+  # The fix: a DISTINCT colour (not M7's purple — a recovery to the same
+  # picture is indistinguishable from a never-broken plate). The recovery
+  # face is the crop moving AND the engine's own Reloaded line landing on
+  # the fix write: before the AR10 fix the Reloaded never came and the
+  # plate froze (the archived red); the reader re-check is what makes both
+  # faces land now.
+  png_write "$BOARD" 30 180 180
   sleep 4
-  retrigger_if_silent "Reloaded matrix/board.png" "$OUTDIR/m9-reload.offset" png_write "$BOARD" 160 40 200
-  # Third shape: mtime-only touch. If even this gets no Reloaded line, the
-  # red is the AR10 candidate (a failed reload stops following the file).
-  retrigger_if_silent "Reloaded matrix/board.png" "$OUTDIR/m9-reload.offset" touch "$BOARD"
-  sleep 2
+  retrigger_if_silent "Reloaded matrix/board.png" "$OUTDIR/m9-reload.offset" png_write "$BOARD" 30 180 180
+  local reloaded
+  reloaded=$(log_lines_since "Reloaded matrix/board.png" "$OUTDIR/m9-reload.offset")
+  log "M9: Reloaded lines on the fix window: $reloaded (want >=1 — the AR10 engine face)"
+  [ "${reloaded:-0}" -ge 1 ] || ok=false
   shot m9-board-fixed
   local fixed_md5
   fixed_md5=$(crop_md5 "$OUTDIR/shot-m9-board-fixed.png")
-  log "M9: board-region md5 fixed=$fixed_md5 (want != broken)"
-  [ -n "$fixed_md5" ] && [ "$fixed_md5" != "$bad_md5" ] || { log "M9: the plate did not recover"; ok=false; }
+  log "M9: board-region md5 fixed=$fixed_md5 (want != broken and != good: the plate followed a NEW state)"
+  [ -n "$fixed_md5" ] && [ "$fixed_md5" != "$bad_md5" ] && [ "$fixed_md5" != "$good_md5" ] || { log "M9: the plate did not recover to the new state"; ok=false; }
   alive || { log "M9: the editor did not survive to the fix"; ok=false; }
   log "M9 bad png complete, ok=$ok"
   leg L7_M9_BAD_PNG "$ok"
@@ -990,7 +1000,7 @@ m10_bad_glb() {
   local ar8_warns
   ar8_warns=$(log_lines_since "thumbnail" "$OUTDIR/m10-ar8.offset")
   log "M10: thumbnail write-off lines in the AR8 window: $ar8_warns (want >=1)"
-  grep "thumbnail" "$OUTDIR/editor-$PHASE.log" 2>/dev/null | tail -3 > "$OUTDIR/m10-thumbnail-lines.log"
+  grep "thumbnail" "$EDITOR_LOG" 2>/dev/null | tail -3 > "$OUTDIR/m10-thumbnail-lines.log"
   [ "${ar8_warns:-0}" -ge 1 ] || ok=false
   rm -f "$PROJECT/assets/matrix/broken_first.glb"
   sleep 2
@@ -1023,7 +1033,7 @@ PYT
   hits=$(log_lines_since "no longer holds a type this project knows\|Failed to read" "$OUTDIR/m11.offset")
   log "M11: index refusal lines: $hits (want >=1)"
   [ "${hits:-0}" -ge 1 ] || ok=false
-  grep -E "no longer holds a type|Failed to read" "$OUTDIR/editor-$PHASE.log" 2>/dev/null | tail -2 > "$OUTDIR/m11-lines.log"
+  grep -E "no longer holds a type|Failed to read" "$EDITOR_LOG" 2>/dev/null | tail -2 > "$OUTDIR/m11-lines.log"
   walk
   walk_has "redshift" || { log "M11: the browser list lost redshift across the bad window"; ok=false; }
   # The fix.
@@ -1061,7 +1071,7 @@ m12_bad_audio() {
   local storm
   storm=$(log_lines_since "panicked at" "$OUTDIR/m12.offset")
   log "M12: panic lines in the bad-reopen window: $storm (the play-face reality; >=1 expected)"
-  grep -n "panicked at" "$OUTDIR/editor-$PHASE.log" 2>/dev/null | tail -3 > "$OUTDIR/m12-storm-sample.log"
+  grep -n "panicked at" "$EDITOR_LOG" 2>/dev/null | tail -3 > "$OUTDIR/m12-storm-sample.log"
   [ "${storm:-0}" -ge 1 ] || log "M12: no panic observed (noted honestly; sink build timing)"
   wav_write "$BLIP" 440
   sleep 4
@@ -1072,7 +1082,7 @@ m12_bad_audio() {
   log "M12: new panic lines after the restore+reopen: $regrowth (want 0)"
   [ "$regrowth" = "0" ] || ok=false
   alive || { log "M12: the editor did not survive the restore"; ok=false; }
-  log "M12: total panics on the books (M15 expected column): $(grep -c "panicked at" "$OUTDIR/editor-$PHASE.log" 2>/dev/null)"
+  log "M12: total panics on the books (M15 expected column): $(grep -c "panicked at" "$EDITOR_LOG" 2>/dev/null)"
 
   # The AU6 pick-gate green face: open the Song's audio row picker, offer
   # it the garbage wav, and the commit must be refused with the
@@ -1173,7 +1183,7 @@ m15_warn_scan() {
   # chord presets, headless-noise lines that never appear live) are
   # listed too. What fails the scan is anything OUTSIDE the list.
   sleep 2
-  local log="$OUTDIR/editor-$PHASE.log"
+  local log="$EDITOR_LOG"
   grep -Ein "warn|error|failed|Failed|panic" "$log" 2>/dev/null \
     | grep -Ev "asset load failed|thumbnail:|no longer holds a type|Failed to read|panicked at|Failed to load asset|Path not found|Texture import of|chords claimed by more than one action|Reloaded|the file was not reread|relationship on entity" \
     > "$OUTDIR/warn-lines-$PHASE.log" || true

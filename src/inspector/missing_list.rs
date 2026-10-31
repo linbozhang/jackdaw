@@ -554,6 +554,13 @@ fn rewrite_ast_reference(
                         .ends_with(&format!("::{}", finding.component))
                         || data.type_path == finding.component
                 }
+                // A newtype component — the AudioPlayer a Song carries, the
+                // MeshMaterial3d a mesh wears — is a patch whose type_path
+                // the audit reports as its component, spelled the same way
+                // here (generics and all), so the two meet on equality.
+                // Without this arm the rebind answered that the document no
+                // longer holds the reference it had just reported (AR11).
+                BsnPatch::TupleStruct(data) => data.type_path == finding.component,
                 BsnPatch::Base(_) => finding.component == "Base",
                 _ => false,
             };
@@ -582,6 +589,18 @@ fn rewrite_ast_reference(
                                 }
                             }
                             _ => {}
+                        }
+                    }
+                }
+                BsnPatch::TupleStruct(data) => {
+                    // The newtype's one held value is the reference the
+                    // audit named (its field reads "0").
+                    for value in &mut data.values {
+                        if let BsnValue::String(spelling) = value
+                            && spelling == &finding.reference
+                        {
+                            *spelling = chosen.to_string();
+                            replaced = true;
                         }
                     }
                 }
@@ -658,6 +677,146 @@ fn locate(world: &mut World, finding: &AuditFinding) {
         }
         None => {
             crate::status_bar::notify_warn(world, format!("{named} is not in the open scene"));
+        }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use jackdaw_bsn::BsnPatch;
+
+    /// The finding a tuple-struct reference produces, built the way the
+    /// audit builds it: the component named by the patch's own `type_path`
+    /// (generics and all — the parser's spelling), the field the newtype
+    /// holds, the reference as the document spells it.
+    fn tuple_struct_finding(ast: &mut jackdaw_bsn::SceneBsnAst, entity: &str) -> AuditFinding {
+        let mut component = String::new();
+        let mut reference = String::new();
+        let mut walk: Vec<Entity> = ast.roots.clone();
+        while let Some(node) = walk.pop() {
+            walk.extend(ast.get_children_ast(node));
+            if ast.get_name(node) != Some(entity) {
+                continue;
+            }
+            for patch_entity in ast
+                .get_patches(node)
+                .cloned()
+                .map(|patches| patches.0)
+                .unwrap_or_default()
+            {
+                if let Some(BsnPatch::TupleStruct(data)) = ast.world.get::<BsnPatch>(patch_entity) {
+                    component = data.type_path.clone();
+                    for value in &data.values {
+                        if let jackdaw_bsn::BsnValue::String(spelling) = value {
+                            reference = spelling.clone();
+                        }
+                    }
+                }
+            }
+        }
+        AuditFinding {
+            document: Path::new("t18.bsn").to_path_buf(),
+            entity_name: Some(entity.to_string()),
+            component,
+            field: "0".to_string(),
+            reference,
+            kind: FindingKind::Missing,
+        }
+    }
+
+    /// The tuple-struct references the audit reports — the `AudioPlayer` a
+    /// Song carries — rebind. Before the `TupleStruct` arm the matcher fell
+    /// through and the rebind answered "the document no longer holds that
+    /// reference" for the very finding it had just reported (AR11's red,
+    /// three live runs on the T2 matrix).
+    #[test]
+    fn a_tuple_struct_reference_rebinds() {
+        let text = "#Root\n\
+             bevy_transform::components::transform::Transform\n\
+             bevy_ecs::hierarchy::Children [\n\
+             #Song\n\
+             bevy_audio::audio::AudioPlayer<bevy_audio::audio_source::AudioSource>(\
+             \"sounds/blip.wav\")\n\
+             bevy_audio::audio::PlaybackSettings {\n\
+             mode: bevy_audio::audio::PlaybackMode::Loop,\n\
+             }\n\
+             ]\n";
+        let mut ast = jackdaw_bsn::parse_bsn_text(text).expect("the scene parses");
+        let finding = tuple_struct_finding(&mut ast, "Song");
+
+        let replaced = rewrite_ast_reference(&mut ast, &finding, "sounds/blip_renamed.wav");
+
+        assert!(
+            replaced,
+            "the tuple-struct finding the audit names rewrites"
+        );
+        let mut spelled = String::new();
+        let mut walk: Vec<Entity> = ast.roots.clone();
+        while let Some(node) = walk.pop() {
+            walk.extend(ast.get_children_ast(node));
+            for patch_entity in ast
+                .get_patches(node)
+                .cloned()
+                .map(|patches| patches.0)
+                .unwrap_or_default()
+            {
+                if let Some(BsnPatch::TupleStruct(data)) = ast.world.get::<BsnPatch>(patch_entity) {
+                    for value in &data.values {
+                        if let jackdaw_bsn::BsnValue::String(spelling) = value {
+                            spelled = spelling.clone();
+                        }
+                    }
+                }
+            }
+        }
+        assert_eq!(
+            spelled, "sounds/blip_renamed.wav",
+            "the document carries the chosen path"
+        );
+    }
+
+    /// A finding naming another component leaves the tuple-struct patch
+    /// alone: the arm matches by the patch's own type path, not by the
+    /// reference alone.
+    #[test]
+    fn a_tuple_struct_rebind_stays_on_its_own_component() {
+        let text = "#Song\n\
+             bevy_audio::audio::AudioPlayer<bevy_audio::audio_source::AudioSource>(\
+             \"sounds/blip.wav\")\n";
+        let mut ast = jackdaw_bsn::parse_bsn_text(text).expect("the scene parses");
+        let finding = AuditFinding {
+            document: Path::new("t18.bsn").to_path_buf(),
+            entity_name: Some("Song".to_string()),
+            component: "some_game::SomeOtherComponent".to_string(),
+            field: "0".to_string(),
+            reference: "sounds/blip.wav".to_string(),
+            kind: FindingKind::Missing,
+        };
+
+        let replaced = rewrite_ast_reference(&mut ast, &finding, "sounds/blip_renamed.wav");
+
+        assert!(!replaced, "another component's finding does not rewrite");
+        let mut walk: Vec<Entity> = ast.roots.clone();
+        while let Some(node) = walk.pop() {
+            walk.extend(ast.get_children_ast(node));
+            for patch_entity in ast
+                .get_patches(node)
+                .cloned()
+                .map(|patches| patches.0)
+                .unwrap_or_default()
+            {
+                if let Some(BsnPatch::TupleStruct(data)) = ast.world.get::<BsnPatch>(patch_entity) {
+                    for value in &data.values {
+                        if let jackdaw_bsn::BsnValue::String(spelling) = value {
+                            assert_eq!(
+                                spelling, "sounds/blip.wav",
+                                "the held reference stays untouched"
+                            );
+                        }
+                    }
+                }
+            }
         }
     }
 }

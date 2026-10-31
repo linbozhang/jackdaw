@@ -1,16 +1,16 @@
    Compiling jackdaw v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw)
-    Finished `test` profile [optimized + debuginfo] target(s) in 2.30s
+    Finished `test` profile [optimized + debuginfo] target(s) in 1.78s
      Running tests/audio_gate.rs (target/debug/deps/audio_gate-2df795515812e04f)
 
 running 7 tests
 test audio_component_default_constructibility_matches_the_gate_analysis ... ok
-test a_full_value_audio_player_patch_applies_without_reflect_default ... ok
-test bus_routing_sends_each_sink_its_own_factor ... ok
 test a_bare_audio_player_line_is_refused_not_dropped_silently ... ok
 test a_sink_receives_base_times_bus_times_master_and_follows_a_config_change ... ok
-test despawn_mode_removes_the_audio_entity_when_the_clip_ends ... ok
+test bus_routing_sends_each_sink_its_own_factor ... ok
+test a_full_value_audio_player_patch_applies_without_reflect_default ... ok
 test a_partial_playback_settings_patch_seeds_from_its_default ... ok
+test despawn_mode_removes_the_audio_entity_when_the_clip_ends ... ok
 
-test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 3.67s
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 4.84s
 
-EXIT=0
+GATE_EXIT=0
