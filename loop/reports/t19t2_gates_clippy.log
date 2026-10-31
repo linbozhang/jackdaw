@@ -1,0 +1,12 @@
+=== FMT ===
+FMT_EXIT=0
+=== CLIPPY WS ===
+    Checking schemars v1.2.3
+    Checking rmcp v3.8.0
+    Checking jackdaw_mcp v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_mcp)
+    Finished `dev` profile [optimized + debuginfo] target(s) in 3m 10s
+=== PHYSICS ===
+    Checking jackdaw_physics v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/integrations/physics/jackdaw_physics)
+    Checking jackdaw v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw)
+    Finished `dev` profile [optimized + debuginfo] target(s) in 1m 59s
+PHY_EXIT=0

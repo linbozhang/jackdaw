@@ -1,0 +1,17 @@
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t19-graphics/t19-graphics
+export phase: flow start_scene -> scene.bsn
+M6_STAGED_CARRIES_PASS
+M6: staged scene.bsn SHA == project scene.bsn SHA
+M6_MANIFEST_LINE_PASS
+M6 staged face: {"bloom": 0.800000011920929, "exposure": null, "msaa": "Sample4", "smaa_present": true, "tonemapping": "TonyMcMapface"}
+M6_NUMERIC_PASS
+M7_STAGED_SMAA_PASS
+gshot m6-staged ok (3024 1964)
+M10: the manifest was not rewritten by the second export (ts 1793458428 -> 1793458428)
+M10_PACKAGE_FAIL
+M10 FAILED: diff=[] staged_sha2=655892c6c28327866acaa52c71a1ff510f9d963144b28864d257e1422e9a99a9 want=655892c6c28327866acaa52c71a1ff510f9d963144b28864d257e1422e9a99a9 manifest_ts=1793458428->1793458428
+M16_EXPORT_ALIVE_PASS
+warn-scan staged-run: clean (tonemapp|bloom|exposure|solari|ray|UnresolvedTypes|panicked)
+warn-scan editor: clean (tonemapp|bloom|exposure|solari|ray|UnresolvedTypes|panicked)
+EXPORT_PHASE_FAIL
+RESULTS: EXPORT_PHASE=FAIL M10_PACKAGE=FAIL M16_EXPORT_ALIVE=PASS M6_MANIFEST_LINE=PASS M6_NUMERIC=PASS M6_STAGED_CARRIES=PASS M7_STAGED_SMAA=PASS 

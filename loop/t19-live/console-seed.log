@@ -3,6 +3,6 @@ seed: the document already carries the seeded environment; skipping the write
 SEED_OPCHAIN_PASS
 seed: document sha 655892c6c28327866acaa52c71a1ff510f9d963144b28864d257e1422e9a99a9 -> 655892c6c28327866acaa52c71a1ff510f9d963144b28864d257e1422e9a99a9; component read-back: {"antialiasing":"Smaa","bloom_intensity":0.800000011920929,"bloom_threshold":0.0,"contrast":1.0,"enabled":true,"exposure":13.0,"hue_shift":0.0,"msaa":"Keep","post_exposure":0.0,"saturation":1.0,"shadow_filtering":"Keep",
 seed: the editor wrote the environment itself (decision 3 live); document face: 1 Environment lines
-seed: viewport preset set to high (resource face: {"jsonrpc":"2.0","id":18342,"result":[]})
+seed: viewport preset set to high (resource face: {"jsonrpc":"2.0","id":29298,"error":{"code":-23501,"message":"Unknown resource type: `jackdaw::viewport_settings::ViewportSettings`"}})
 GR6 spot-check slot reserved (lands with T2's A-region legs)
 RESULTS: SEED_OPCHAIN=PASS 

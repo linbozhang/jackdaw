@@ -1,0 +1,57 @@
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t19-graphics/t19-graphics
+game phase: flow start_scene -> scene.bsn
+game phase: editor up, scene open, viewport Camera3d count 1
+M4: PIE game camera entity 755v0
+M4 seed-state face: {"bloom": 0.800000011920929, "exposure": null, "msaa": "Sample4", "smaa_present": true, "tonemapping": "TonyMcMapface"}
+M4_NUMERIC_PASS
+M7_PIE_SMAA_PASS
+gshot m4-pie-stream-a ok (3024 1964)
+M4 bloom-0 face: {"bloom": null, "exposure": null, "msaa": "Sample4", "smaa_present": true, "tonemapping": "TonyMcMapface"}
+M4_PX_STATE_PASS
+gshot m4-pie-stream-b ok (3024 1964)
+M4 restore: seed SHA back
+M4 stream-face pair: pixels: 5939136; changed(>tol 12): 818305 (13.78%); mean channel diff: 2.156
+M4_GR8_LIVE_PASS
+GR8 live first-shot: the PIE face moved with the value (pixels: 5939136; changed(>tol 12): 818305 (13.78%); mean channel diff: 2.156) — faithful verdict holds
+direct_run m5a: game camera 761v0
+M5 seed-state face: {"bloom": 0.800000011920929, "exposure": null, "msaa": "Sample4", "smaa_present": true, "tonemapping": "TonyMcMapface"}
+M5_NUMERIC_PASS
+M7_DIRECT_SMAA_PASS
+gshot m5-direct-a ok (3024 1964)
+direct_run m5b: game camera 761v0
+M5 bloom-0 face: {"bloom": null, "exposure": null, "msaa": "Sample4", "smaa_present": true, "tonemapping": "TonyMcMapface"}
+M5_STATE2_PASS
+gshot m5-direct-b ok (3024 1964)
+M5 restore: seed SHA back
+M5 game-window pair: pixels: 5939136; changed(>tol 12): 2550060 (42.94%); mean channel diff: 5.129
+M5_PX_PASS
+direct_run m7keep: game camera 761v0
+M7 Keep face: {"bloom": 0.800000011920929, "exposure": null, "msaa": "Sample4", "smaa_present": false, "tonemapping": "TonyMcMapface"}
+M7_KEEP_EXIT_PASS
+direct_run m11a: game camera 761v0
+M11 state-1 (viewport TAA+SSAO ultra) face: {"bloom": 0.800000011920929, "exposure": null, "msaa": "Sample4", "smaa_present": true, "tonemapping": "TonyMcMapface"}
+direct_run m11b: game camera 761v0
+M11 state-2 (viewport Off+SSAO off) face: {"bloom": 0.800000011920929, "exposure": null, "msaa": "Sample4", "smaa_present": true, "tonemapping": "TonyMcMapface"}
+M11_IDENTITY_PASS
+M11: the game camera matrix is field-by-field identical across both A-region states
+direct_run m15: game camera 761v0
+M15 direct face: {"bloom": null, "exposure": null, "msaa": "Sample4", "smaa_present": false, "tonemapping": "TonyMcMapface"}
+M15_GAME_PASS
+M15: no Environment on disk -> the game camera carries no scene dress (bevy defaults)
+M15_EDITOR_HINT_PASS
+M15 restore: seed SHA back
+M16_EDITOR_ALIVE_PASS
+N13 counter (panicked lines in the editor log): 4
+warn-scan direct-m5a: clean (tonemapp|bloom|exposure|solari|ray|UnresolvedTypes|panicked)
+warn-scan direct-m5b: clean (tonemapp|bloom|exposure|solari|ray|UnresolvedTypes|panicked)
+warn-scan direct-m7keep: clean (tonemapp|bloom|exposure|solari|ray|UnresolvedTypes|panicked)
+warn-scan direct-m11a: clean (tonemapp|bloom|exposure|solari|ray|UnresolvedTypes|panicked)
+warn-scan direct-m11b: clean (tonemapp|bloom|exposure|solari|ray|UnresolvedTypes|panicked)
+warn-scan direct-m15: clean (tonemapp|bloom|exposure|solari|ray|UnresolvedTypes|panicked)
+warn-scan editor: 4 hits:
+warn-scan editor | 46:thread 'main' (27092493) panicked at /rustc/b940084d7eb6a299eb4bfeb8e34901bc051e7ac4/library/alloc/src/vec/mod.rs:2258:13:
+warn-scan editor | 49:[2m2026-10-31T14:33:09.812533Z[0m [31mERROR[0m [2mbevy_ecs::error::handler[0m[2m:[0m Encountered an error in system `jackdaw::pie::drain_game_events`: Exclusive system panicked
+warn-scan editor | 71:thread 'main' (27092493) panicked at /rustc/b940084d7eb6a299eb4bfeb8e34901bc051e7ac4/library/alloc/src/vec/mod.rs:2258:13:
+warn-scan editor | 73:[2m2026-10-31T14:34:00.439194Z[0m [31mERROR[0m [2mbevy_ecs::error::handler[0m[2m:[0m Encountered an error in system `jackdaw::pie::drain_game_events`: Exclusive system panicked
+GAME_PHASE_PASS
+RESULTS: GAME_PHASE=PASS M11_IDENTITY=PASS M15_EDITOR_HINT=PASS M15_GAME=PASS M16_EDITOR_ALIVE=PASS M4_GR8_LIVE=PASS M4_NUMERIC=PASS M4_PX_STATE=PASS M5_NUMERIC=PASS M5_PX=PASS M5_STATE2=PASS M7_DIRECT_SMAA=PASS M7_KEEP_EXIT=PASS M7_PIE_SMAA=PASS 

@@ -1,0 +1,50 @@
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t19-graphics/t19-graphics
+game phase: flow start_scene -> scene.bsn
+game phase: editor up, scene open, viewport Camera3d count 1
+M4: PIE game camera entity 755v0
+M4 seed-state face: {"bloom": 0.800000011920929, "exposure": null, "msaa": "Sample4", "smaa_present": true, "tonemapping": "TonyMcMapface"}
+M4_NUMERIC_PASS
+M7_PIE_SMAA_PASS
+gshot m4-pie-stream-a ok (3024 1964)
+M4 bloom-0 face: {"bloom": null, "exposure": null, "msaa": "Sample4", "smaa_present": true, "tonemapping": "TonyMcMapface"}
+M4_PX_STATE_PASS
+gshot m4-pie-stream-b ok (3024 1964)
+M4 stream-face pair: pixels: 5939136; changed(>tol 12): 818446 (13.78%); mean channel diff: 2.158
+M4_GR8_LIVE_PASS
+GR8 live first-shot: the PIE face moved with the value (pixels: 5939136; changed(>tol 12): 818446 (13.78%); mean channel diff: 2.158) — faithful verdict holds
+M5 seed-state face: {"bloom": null, "exposure": null, "msaa": "Sample4", "smaa_present": true, "tonemapping": "TonyMcMapface"}
+M5_NUMERIC_FAIL
+M5 numeric FAILED: {"bloom": null, "exposure": null, "msaa": "Sample4", "smaa_present": true, "tonemapping": "TonyMcMapface"}
+M7_DIRECT_SMAA_PASS
+gshot m5-direct-a ok (3024 1964)
+M5 bloom-0 face: {"bloom": null, "exposure": null, "msaa": "Sample4", "smaa_present": true, "tonemapping": "TonyMcMapface"}
+M5_STATE2_PASS
+gshot m5-direct-b ok (3024 1964)
+M5 restore: seed SHA back
+M5 game-window pair: pixels: 5939136; changed(>tol 12): 33827 (0.57%); mean channel diff: 0.337
+M5_PX_FAIL
+M5 pixel pair below threshold (0.57%) or missing
+M7 Keep face: {"bloom": 0.800000011920929, "exposure": null, "msaa": "Sample4", "smaa_present": false, "tonemapping": "TonyMcMapface"}
+M7_KEEP_EXIT_PASS
+M11 state-1 (viewport TAA+SSAO ultra) face: {"bloom": 0.800000011920929, "exposure": null, "msaa": "Sample4", "smaa_present": true, "tonemapping": "TonyMcMapface"}
+M11 state-2 (viewport Off+SSAO off) face: {"bloom": 0.800000011920929, "exposure": null, "msaa": "Sample4", "smaa_present": true, "tonemapping": "TonyMcMapface"}
+M11_IDENTITY_PASS
+M11: the game camera matrix is field-by-field identical across both A-region states
+M15 direct face: {"bloom": null, "exposure": null, "msaa": "Sample4", "smaa_present": false, "tonemapping": "TonyMcMapface"}
+M15_GAME_PASS
+M15: no Environment on disk -> the game camera carries no scene dress (bevy defaults)
+M15_EDITOR_HINT_PASS
+M15 restore: seed SHA back
+M16_EDITOR_ALIVE_PASS
+N13 counter (panicked lines in the editor log): 2
+warn-scan direct-m5a: clean (tonemapp|bloom|exposure|solari|ray|UnresolvedTypes|panicked)
+warn-scan direct-m5b: clean (tonemapp|bloom|exposure|solari|ray|UnresolvedTypes|panicked)
+warn-scan direct-m7keep: clean (tonemapp|bloom|exposure|solari|ray|UnresolvedTypes|panicked)
+warn-scan direct-m11a: clean (tonemapp|bloom|exposure|solari|ray|UnresolvedTypes|panicked)
+warn-scan direct-m11b: clean (tonemapp|bloom|exposure|solari|ray|UnresolvedTypes|panicked)
+warn-scan direct-m15: clean (tonemapp|bloom|exposure|solari|ray|UnresolvedTypes|panicked)
+warn-scan editor: 2 hits:
+warn-scan editor | 64:thread 'main' (27049552) panicked at /rustc/b940084d7eb6a299eb4bfeb8e34901bc051e7ac4/library/alloc/src/vec/mod.rs:2258:13:
+warn-scan editor | 67:[2m2026-10-31T14:10:22.447802Z[0m [31mERROR[0m [2mbevy_ecs::error::handler[0m[2m:[0m Encountered an error in system `jackdaw::pie::drain_game_events`: Exclusive system panicked
+GAME_PHASE_FAIL
+RESULTS: GAME_PHASE=FAIL M11_IDENTITY=PASS M15_EDITOR_HINT=PASS M15_GAME=PASS M16_EDITOR_ALIVE=PASS M4_GR8_LIVE=PASS M4_NUMERIC=PASS M4_PX_STATE=PASS M5_NUMERIC=FAIL M5_PX=FAIL M5_STATE2=PASS M7_DIRECT_SMAA=PASS M7_KEEP_EXIT=PASS M7_PIE_SMAA=PASS 

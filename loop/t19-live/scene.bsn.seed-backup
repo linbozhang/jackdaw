@@ -1,0 +1,72 @@
+// jackdaw 0.21.0-dev | bevy main
+#Root
+bevy_transform::components::transform::Transform
+bevy_camera::visibility::Visibility::Visible
+jackdaw_scene_types::environment::Environment {
+    sky: jackdaw_scene_types::environment::Sky {
+        enabled: true,
+        zenith: bevy_color::color::Color::Srgba(bevy_color::srgba::Srgba { red: 0.20000000298023224, green: 0.41999998688697815, blue: 0.7799999713897705, alpha: 1.0 }),
+        horizon: bevy_color::color::Color::Srgba(bevy_color::srgba::Srgba { red: 0.7200000286102295, green: 0.8399999737739563, blue: 0.949999988079071, alpha: 1.0 }),
+        ground: bevy_color::color::Color::Srgba(bevy_color::srgba::Srgba { red: 0.3499999940395355, green: 0.36000001430511475, blue: 0.3799999952316284, alpha: 1.0 }),
+        horizon_softness: 0.3499999940395355,
+        brightness: 1000.0,
+        sun_size: 1.0,
+        sun_intensity: 1.0,
+        cloud_coverage: 0.0,
+        cloud_color: bevy_color::color::Color::LinearRgba(bevy_color::linear_rgba::LinearRgba { red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0 }),
+        cloud_scale: 1.0,
+        cloud_speed: 0.019999999552965164,
+    },
+    post: jackdaw_scene_types::environment::PostProcess {
+        enabled: true,
+        tonemapper: jackdaw_scene_types::environment::Tonemapper::TonyMcMapface,
+        exposure: 13.0,
+        post_exposure: 0.0,
+        contrast: 1.0,
+        saturation: 1.0,
+        hue_shift: 0.0,
+        temperature: 0.0,
+        tint: 0.0,
+        bloom_intensity: 0.800000011920929,
+        bloom_threshold: 0.0,
+        vignette_intensity: 0.0,
+        vignette_smoothness: 5.0,
+        antialiasing: jackdaw_scene_types::environment::Antialiasing::Smaa,
+        msaa: jackdaw_scene_types::environment::Multisampling::Keep,
+        shadow_filtering: jackdaw_scene_types::environment::ShadowFiltering::Keep,
+    },
+}
+bevy_ecs::hierarchy::Children [
+    #Sun
+    bevy_light::directional_light::DirectionalLight
+    bevy_transform::components::transform::Transform {
+        translation: glam::Vec3 {
+            x: 0.0,
+            y: 8.0,
+            z: 0.0,
+        },
+        rotation: glam::Quat {
+            x: -0.4226183,
+            y: 0.0,
+            z: 0.0,
+            w: 0.9063078,
+        },
+    }
+    bevy_camera::visibility::Visibility::Visible
+    --
+    #Ambient
+    bevy_audio::audio::AudioPlayer<bevy_audio::audio_source::AudioSource>("sounds/ambient.wav")
+    bevy_audio::audio::PlaybackSettings {
+        mode: bevy_audio::audio::PlaybackMode::Loop,
+        volume: bevy_audio::volume::Volume::Linear(0.8),
+        spatial: true,
+    }
+    bevy_transform::components::transform::Transform {
+        translation: glam::Vec3 {
+            x: 6.0,
+            y: 2.0,
+            z: -4.0,
+        },
+    }
+    bevy_camera::visibility::Visibility::Visible
+]
