@@ -1,6 +1,6 @@
 EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t19-graphics/t19-graphics
 export phase: flow start_scene -> scene.bsn
-export_wait: run advanced (idle -> 1793458777) and is ready
+export_wait: run advanced (idle -> 1793464023) and is ready
 M6_STAGED_CARRIES_PASS
 M6: staged scene.bsn SHA == project scene.bsn SHA
 M6_MANIFEST_LINE_PASS
@@ -8,7 +8,7 @@ M6 staged face: {"bloom": 0.800000011920929, "exposure": null, "msaa": "Sample4"
 M6_NUMERIC_PASS
 M7_STAGED_SMAA_PASS
 gshot m6-staged ok (3024 1964)
-export_wait: run advanced (ready -> 1793458829) and is ready
+export_wait: run advanced (ready -> 1793464732) and is ready
 M10_PACKAGE_PASS
 M10: manifest full-list diff empty across the A-region change; manifest freshly written; staged scene bytes equal
 M16_EXPORT_ALIVE_PASS

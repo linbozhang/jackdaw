@@ -125,6 +125,11 @@ genuinely an empty stage and a re-entered level starts from a fresh
 set. Author your own menu the same way: if a screen shows black, the
 first suspect is a missing UI camera.
 
+What the level's camera draws is the scene's own business, too: the
+look the Graphics panel's Scene section authors reaches that camera
+the same way it reaches Play and the exported build
+([Graphics Panel](graphics-panel.md)).
+
 ## Cross-scene objects: the rules
 
 What survives a switch is decided on purpose. The table:

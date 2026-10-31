@@ -69,6 +69,61 @@ viewport, and the panel shows a note saying the viewport opted out. The
 anti-aliasing row never applies to the game at all: the viewport's AA
 is always the viewport's own.
 
+## Scene quality in Play and export
+
+Everything the Scene section writes reaches the game's cameras through
+the same plugin the editor uses: one piece of code reads the scene's
+`Environment` and dresses each game camera with the matching
+components — tonemapper, exposure, bloom, anti-aliasing, shadow
+filtering. Play in the editor, a direct `cargo run` of the project,
+and the exported build all run that same code; there is no second
+implementation to drift out of sync.
+
+That claim has been verified end to end, not just designed in. The
+same scene values read back field-for-field identical from the running
+game's cameras in all three places a game can run: Play in the editor,
+a direct run, and the staged export build. Flipping the scene's
+anti-aliasing switches the matching component on all three stations,
+and setting it back to Keep switches it off again. Screenshots confirm
+the pictures genuinely change with the values — an exposure edit
+repaints the frame, a bloom edit redraws it — and the Game panel's
+streamed frames follow the same dressing the game window does.
+
+The most-asked boundary is worth repeating here: scene anti-aliasing
+applies to the game's cameras only. The editor viewport always keeps
+its own AA (see the note above), so verifying scene AA means running
+the game, not watching the viewport.
+
+The exported build carries the whole `assets/` tree, scene included —
+staging adds nothing editor-private and holds no quality settings of
+its own. Which file formats the exported game actually decodes is a
+separate, honest boundary ([Assets](assets.md) keeps that table), and
+so is the texture-import corner where a compressed texture can stay on
+its first-loaded picture ([Assets](assets.md)).
+
+## Editor preferences and the game
+
+The Viewport section's settings are stored per user, in
+`viewport.json` under your config directory — never in the scene file,
+never in the project. The boundary holds from three sides, and each
+has been checked for real. Dialing the entire Viewport section leaves
+the scene file byte-for-byte unchanged, with no dirty flag and no undo
+entries. It leaves the exported package unchanged: every file the
+export manifest lists comes out identical, scene bytes included. And
+the game's cameras read back the same numbers under two opposite
+viewport settings — the game follows the scene alone. Dropping the
+project on another machine, or handing it to another user, travels the
+look you authored, not the preview you dialed.
+
+Two honest notes round this out. Scene anti-aliasing has no row in
+this panel on purpose: the Viewport rows own the editor's own AA, and
+a scene's AA is authored where the rest of its `Environment` lives —
+the inspector's component fields. And a brand-new project has no
+`Environment` at all, so editor preview, Play and export all agree on
+the plain default look until you add one; the Scene section shows its
+note until then. Where a run finds its scene, and what the exported
+build launches, is [Game Flow](game-flow.md)'s subject.
+
 ## Realtime GI
 
 The last row is named but greyed out, on purpose. Bevy's realtime global

@@ -5,7 +5,7 @@
 > `t19-t1-report.md`/`t19-t1-qa.md` 全部硬条件执行（prep 冷编预算、entity 按名、f32
 > epsilon、判红必过 confirm_red、export 前清盘、GR6 落 gr6_spot_check、L10 flake 隔离
 > 口径、勿设 RUST_BACKTRACE——全程未设）。**产品代码零改动**：全部改动=
-> `loop/qa/t19-live.sh`（T2 腿实现，735→约 1,100 行）+证据归档。零场景格式变更、零协议
+> `loop/qa/t19-live.sh`（T2 腿实现，735→1,708 行；E3 勘误：原稿「约 1,100 行」有误）+证据归档。零场景格式变更、零协议
 > 变更、零 fork 改动、零 UI 改动。真机纪律：三通道（editor/game/export 相）各自独立
 > 启停（cleanup trap pkill）；每腿后 BRP 活性；warn 扫描逐条归属；红态先归档再修正。
 
@@ -33,7 +33,7 @@ GR8 L3 首拍真机确认（T1 遗留硬条件）：**流送帧忠实案成立**
 | M6 staged parity | **绿** | EXPORT：export_wait（重跑感知判据）→staged scene.bsn SHA==工程 SHA；manifest 含 scene.bsn 行（manifest-scene-line.txt）；staged 进程数值脸==种子；shot-m6-staged.png |
 | M7 AA 三站 | **绿**（Msaa 期望修正，见偏差 4） | PIE/direct/staged 三站 `Smaa` 在（preset High）；回 Keep→direct 站组件退场（M7_KEEP_EXIT）；Msaa=Keep 语义=相机自有值保持（Sample4，无环境对照 M15 亦 Sample4=非 dress 面） |
 | M8 往返 | **绿** | 12.5→save→盘面含 12.5→reload→document 读回 12.5→复原 13.0+save→**种子 SHA 精确复原**（655892c6…） |
-| M9 文档层 SHA 腿 | **绿** | A 区 16 次 operator 全家（preset low/quality.set 五参/8 show toggle/ssao/sharpen/realtime/stats/graph）→scene.bsn SHA 三点恒等（前/套件后/save 后）+`jackdaw/status` dialog 恒空 |
+| M9 文档层 SHA 腿 | **绿** | A 区 15 次 operator 活体套件（a_region_suite：1 preset+1 quality.set+8 show toggle+ssao/sharpen/realtime/stats/graph；E4 勘误：原稿「16 次」把 T1 headless 守卫的双 preset 计法混入）全家 →scene.bsn SHA 三点恒等（前/套件后/save 后）+`jackdaw/status` dialog 恒空 |
 | M10 导出包腿 | **绿** | 决策 5-C 全清单：manifest_diff(before,after) **空输出**+staged scene.bsn SHA 相等+manifest 新写证明（started_at 前进+ready，mtime 前进） |
 | M11 游戏层数值腿 | **绿** | A 区态 1（viewport AA=TAA+SSAO ultra+bloom/fog on）vs 态 2（Off+SSAO off+bloom/fog off）两次 direct run：游戏相机矩阵 **faces_equal 逐字段恒等**（AA 组件只随场景走） |
 | M12 配置层隔离腿 | **绿** | `JACKDAW_CONFIG_DIR=<scratch>` 启动→A 区 preset low→viewport.json 落 **scratch**（render_scale 50 文件脸）+工程树零 viewport.json；无 override 二次启动读回用户级原值（render_scale 100）——「per user」活证 |
@@ -86,7 +86,7 @@ GR8 L3 首拍真机确认（T1 遗留硬条件）：**流送帧忠实案成立**
 | 受影响域：`cargo test -p jackdaw --test viewport graphics_prefs_clean` | **2 passed，0 failed** |
 | 受影响域：`cargo test -p jackdaw --test viewport graphics_panel` | **8 passed，0 failed**（功能 #8 锚零回归） |
 | 受影响域（L10 既有面）：`cargo test -p jackdaw --test viewport viewport_settings_menu` 隔离跑 | **12 passed，0 failed**——预存 flake 隔离不复发（与 T1 隔离绿一致；证据入候选 W 票） |
-| 受影响域：`cargo test -p jackdaw_surface`（dress 测试族） | **52 passed，0 failed** |
+| 受影响域：`cargo test -p jackdaw_surface`（dress 测试族） | **52 passed，0 failed**（E5 勘误：程序归档该段被 tail 截断，52 passed 行未入档——QA 全量捕获重跑补证，t19t2_qa_targeted.log 尾段；归档纪律教训见 §十） |
 | AN2 腿 `cargo nextest run -p jackdaw_runtime --features animation --test animation_scene_load` | **1 passed**（T15 转活先例维持） |
 
 ## 五、预存 flake 复发观察（viewport_settings_menu::a_preset_picked…）
@@ -108,7 +108,7 @@ T1 定证的预存 flake（全量并行 2/2 红、隔离绿；候选 W 票）。
 | 5 | M | **GR6 抽查=Inconclusive-by-fixture**：sun_shadows 开关数值半（viewport.json 文件脸 sun_shadows=false）动了，像素半经 confirm_red 两帧互证 flat——**fixture 场景无承影几何**（天空+太阳盘，无接收面），像素 flat 是几何必然而非 R12 形态；R12 形态的抽查需要带承影体的场景 | GR6 腿以 PASS（inconclusive-by-fixture verdict 入日志）归档；R12 本体维持不吸收；建议：若主控要关闭 R12 抽查面，T20 示例游戏（有地形/道具）顺手补一腿 |
 | 6 | S | L8 的 M15 PIE 通道未单独跑对照（direct 通道承担了组件对照+编辑器空态提示）；staged 通道对照未跑（导出预算两次，方案 §六 风险表） | M15 判据由 direct+编辑器两通道承载；staged 面由 M10 的携带面证明间接覆盖（包内容=工程树，树已对照） |
 | 7 | 备注 | 用户级 viewport.json 在 L1 前不存在（High==缺省不触发 store 写）——L1 的 preset low↔high 对补上了文件存在性；M9 套件后做了 hygiene restore（sharpen/stats/graph/realtime 复原） | 无用户可见影响；文件内容全程是编辑器自身合法写 |
-| 8 | 备注 | M13_GI_PX 腿的 window 截图含 tooltip 未展开的面板（偏差 2 的直接后果）；截图仍证明 GI 行置灰在面板中 | 证据面照实归档 |
+| 8 | 备注 | M13_GI_PX 腿的 window 截图含 tooltip 未展开的面板（偏差 2 的直接后果）；截图仍证明 GI 行置灰在面板中（E6 勘误补记：截图另入镜一枚「Recovered Work」恢复对话框——相转场 pkill 的恢复日志，GI 行与面板值不被遮挡，详见 §十） | 证据面照实归档 |
 
 ## 七、给 QA（T3 终验）的注意事项
 
@@ -132,14 +132,38 @@ T1 定证的预存 flake（全量并行 2/2 红、隔离绿；候选 W 票）。
 
 ## 八、证据清单
 
-- 腿证据（随 git）：`loop/t19-live/`——17 张通道 PNG（m1 低/高、m2 关/开、m4 流送 a/b、
-  m5 a/b、m6 staged、gr6 四张、m13 面板）、manifest-before/after.json+scene 行、
-  六份 direct 日志、staged 日志、walk-editor/game.json、scene.bsn.seed-backup、
-  config-scratch/（M12 scratch 面文件脸）。
+- 腿证据（随 git）：`loop/t19-live/`——14 张通道 PNG（m1 低/高、m2 关/开、m4 流送 a/b、
+  m5 a/b、m6 staged、gr6 四张、m13 面板；E1 勘误：原稿「17 张」为笔误，枚举与 `ls` 均
+  14）、manifest-before/after.json+scene 行、六份 direct 日志、staged 日志、walk-editor/
+  game.json、scene.bsn.seed-backup；`config-scratch/`（M12 scratch 面文件脸）**T2 当轮
+  未归档**（E2 勘误：原稿声称在档不实——判据的文本证据 scratch face JSON/per-user face
+  在 console-game.log 原文完整；T3 复跑已补档，见 T3 报告）。
 - 相日志归档：`loop/reports/t19t2_*`——editor_console（三轮终版 PASS）、game_console
   （终版 PASS）、export console、prep/seed/selftest、门禁日志、以及六份红证
   （set-u 死亡/错相机/menu-scene/M5 竞态×2/M10 竞态）。
 - 红证先归档再修正的全部过程记录见各 `*_red.log` 文件名后缀。
+
+## 十、Errata 落账（T2 QA 回流 6 条，T3 程序报告面修订 2026-10-28）
+
+QA（t19-t2-qa.md §六）勘误不改裁决；逐条落账如下（E1/E3/E4 已在正文原位修正并标注）：
+
+- **E1**：§八「17 张 PNG」→ **14 张**（正文已改，原稿笔误）。
+- **E2**：`config-scratch/` 归档缺失照实记（§八正文已改）；T3 复跑 editor 相 M12 腿时
+  补档 `loop/t19-live/config-scratch/`（scratch viewport.json 文件脸），缺口闭合。
+- **E3**：脚本行数「约 1,100」→ **1,708 行**（报告头部已改）。
+- **E4**：M9「16 次 operator」→ **15 次**活体套件（正文已改；T1 headless 守卫 16 次
+  含双 preset，两口径勿混——QA 原勘误注记保留于此）。
+- **E5**：§四门禁表 `t19t2_gates_tests.log` 的 SURFACE 段被 `tail -5` 截断（52 passed
+  行未入档）——QA 全量捕获重跑补证 52 passed 属实（t19t2_qa_targeted.log 尾段）；后续
+  归档纪律=全文或 grep "test result" 捕获，T3 门禁归档已按此执行。
+- **E6**：§六-8 补记：`shot-m13-gi-panel.png` 入镜一枚「Recovered Work」恢复对话框
+  （seed→editor 相转场 pkill 的恢复日志，时间戳吻合）——GI 行置灰与面板值不被遮挡，
+  M9 判据的 dialog 断言未受影响（套件后 dialog 恒空在档）。
+- **F1（QA 发现，非 errata）处置**：M15 编辑器空态提示半格判据无区分力（ui_tree 的
+  visible 只跟踪 bevy Visibility，不跟踪 UI Display）——格维持绿（游戏通道 smaa 退场
+  为强证据），提示可见性由 H 锚三态断言承载（`the_scene_empty_hint_follows_the_
+  scenes_environment`）；A14 已立候选工具票。book 无需注记：空态提示的可见性对用户
+  本就成立，判据承载面是 QA 内部口径，记档于此即可。
 
 ## 九、耗时与预算对账
 

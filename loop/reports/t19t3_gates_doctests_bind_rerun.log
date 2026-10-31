@@ -1,0 +1,78 @@
+=== BIND DOC RERUN 01:16:46 ===
+   Compiling bitflags v2.13.2
+   Compiling rand v0.10.3
+   Compiling indexmap v2.14.2
+   Compiling bevy_platform v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_platform)
+   Compiling derive_more-impl v2.1.1
+   Compiling uuid v1.29.0
+   Compiling bevy_reflect_derive v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_reflect/derive)
+   Compiling objc2 v0.6.5
+   Compiling slotmap v1.1.1
+   Compiling nix v0.31.3
+   Compiling glam v0.33.12
+   Compiling fixedbitset v0.5.7
+   Compiling naga-types v30.0.1
+   Compiling wgpu-types v30.0.1
+   Compiling bevy_utils v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_utils)
+   Compiling block2 v0.6.2
+   Compiling nonmax v0.5.5
+   Compiling dispatch2 v0.3.1
+   Compiling tracing v0.1.44
+   Compiling rustix v1.1.6
+   Compiling itertools v0.14.0
+   Compiling ctrlc v3.5.2
+   Compiling ron v0.12.2
+   Compiling half v2.7.1
+   Compiling regex-syntax v0.8.11
+   Compiling image v0.25.10
+   Compiling polling v3.11.0
+   Compiling async-io v2.6.0
+   Compiling regex-automata v0.4.18
+   Compiling rand_distr v0.6.0
+   Compiling hexasphere v19.0.0
+   Compiling harfrust v0.12.0
+   Compiling accesskit v0.25.2
+   Compiling matchers v0.2.0
+   Compiling tracing-subscriber v0.3.23
+   Compiling parley v0.11.1
+   Compiling derive_more v2.1.1
+   Compiling bevy_reflect v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_reflect)
+   Compiling bevy_tasks v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_tasks)
+   Compiling bevy_ecs v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_ecs)
+   Compiling bevy_math v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_math)
+   Compiling bevy_annotations v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_annotations)
+   Compiling bevy_curve v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_curve)
+   Compiling bevy_shape v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_shape)
+   Compiling bevy_color v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_color)
+   Compiling bevy_app v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_app)
+   Compiling bevy_time v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_time)
+   Compiling bevy_input v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_input)
+   Compiling bevy_transform v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_transform)
+   Compiling bevy_log v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_log)
+   Compiling bevy_clipboard v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_clipboard)
+   Compiling bevy_diagnostic v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_diagnostic)
+   Compiling bevy_a11y v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_a11y)
+   Compiling bevy_asset v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_asset)
+   Compiling bevy_window v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_window)
+   Compiling bevy_image v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_image)
+   Compiling bevy_mesh v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_mesh)
+   Compiling bevy_camera v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_camera)
+   Compiling bevy_text v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_text)
+   Compiling bevy_picking v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_picking)
+   Compiling bevy_sprite v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_sprite)
+   Compiling bevy_input_focus v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_input_focus)
+   Compiling bevy_ui v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_ui)
+   Compiling bevy_ui_widgets v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_ui_widgets)
+   Compiling bevy_internal v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_internal)
+   Compiling bevy v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned)
+   Compiling jackdaw_bind v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_bind)
+    Finished `test` profile [optimized + debuginfo] target(s) in 1m 21s
+   Doc-tests jackdaw_bind
+
+running 1 test
+test crates/jackdaw_bind/src/error.rs - error::BindError (line 9) ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+all doctests ran in 2.55s; merged doctests compilation took 1.19s
+BIND_EXIT=0

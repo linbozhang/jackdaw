@@ -1,0 +1,22 @@
+{
+  "quality": {
+    "render_scale": 50,
+    "anti_aliasing": "off",
+    "shadow_quality": "low",
+    "detail_distance": "near",
+    "sun_shadows": true,
+    "point_shadows": false,
+    "fog": false,
+    "post_processing": false,
+    "bloom": false,
+    "ambient_occlusion": false,
+    "ssao_quality": "high"
+  },
+  "sky_reflection": true,
+  "terrain_detail": true,
+  "realtime": true,
+  "stats": false,
+  "frame_graph": false,
+  "sharpen": false,
+  "sharpen_strength": 0.6
+}
