@@ -160,6 +160,8 @@ the reload -- the reload compares against the *old* baseline,
 so a value that merely matched the old baseline does not get
 mistaken for an authored override and frozen. A file that
 arrives broken keeps the last good copy until it parses again.
+The general picture — which faces follow which file, and what a
+broken file does — is [Assets](assets.md).
 
 ## Reopen, restart, and export
 

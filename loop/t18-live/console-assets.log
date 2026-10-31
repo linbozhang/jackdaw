@@ -1,10 +1,10 @@
-EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t18-assets/t18-assets pid=77102
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t18-assets/t18-assets pid=19847
 M3: the placed model shows exactly 1 box
 shot m3-hero-one ok (viewport)
 M3: no Reloaded line after the first write (A6 family missed event); re-triggering once
 M3: box entities after rewrite: 2
 shot m3-hero-two ok (viewport)
-M3: fresh thumbnail bde84cd9464a4db4-18e3864a10eb45fe.png pixels=d2dda8282d3c98da925becc95a200e2d
+M3: fresh thumbnail bde84cd9464a4db4-18e38af96cec9db7.png pixels=fa93ba8cc3f3dc16e28c01ab26d17d4e
 M3 GLB faces complete, ok=true
 L3_M3_GLB_PASS
 M8 three-face verdict inside this single leg: m8=true
@@ -18,13 +18,13 @@ M1: viewport pixel md5 red=53393534e9359090d64e656e1ada1fbc blue=1d11797b8abb4aa
 shot m1-file-card ok (window)
 M1 PNG rewrite face complete, ok=true
 L1_M1_REWRITE_PASS
-M2: jpg plate paths now: t18-tone-src-7.png matrix/board.png t18-drop-src.png
+M2: jpg plate paths now: t18-tone-src-8.png t18-drop-src.png matrix/board.png
 shot m2-jpg-plate ok (viewport)
 M2: loader-failure lines since drop: 0 (want 0)
 M2 JPG chain complete, ok=true
 L2_M2_JPG_PASS
 shot m4-material-red ok (viewport)
-M4: fresh material thumbnail a500191e4e510852-18e38654e04c2592.png pixels=dc207d5e26c83fea91d427b30a421be3
+M4: fresh material thumbnail a500191e4e510852-18e38b04441b4b83.png pixels=dc207d5e26c83fea91d427b30a421be3
 M4: note — the card hex did not show 0DFF0D (base_color row only)
 shot m4-material-card ok (window)
 M4 material faces complete, ok=true
@@ -54,7 +54,7 @@ shot m10-hero-good ok (viewport)
 M16: editor alive after bad glb
 M10: bad window: Reloaded=0 (want 0 — the load refused), load-failure lines=2 (want >=1)
 shot m10-hero-broken ok (viewport)
-M10: viewport md5 in the bad window: 3045254ca33a542e0609effbd433b457
+M10: viewport md5 in the bad window: 018f30013f551306306dae2267d5775b
 M10: first-load-bad probe: boxes now 2 (no new box wanted); editor alive
 M10: thumbnail write-off lines in the AR8 window: 2 (want >=1)
 M10 bad glb complete, ok=true
@@ -82,7 +82,7 @@ shot m12-after-refusal ok (window)
 M12 bad audio + AU6 complete, ok=true (pick refusal seen=true)
 L8_M12_BAD_AUDIO_PASS
 L8_AU6_PICK_GATE_PASS
-M13: scene sha at the last save=3cdc338d66895d64396e70396c8b169250af4944a2e9106e64d8bb19a9e19670 now=3cdc338d66895d64396e70396c8b169250af4944a2e9106e64d8bb19a9e19670
+M13: scene sha at the last save=d22caf81b745b55e71e2e448d8ec790436bfd803556e70898bbbbe2bde993b22 now=d22caf81b745b55e71e2e448d8ec790436bfd803556e70898bbbbe2bde993b22
 M13: audit findings: 0 (no broken references)
 M13 scene integrity complete, ok=true
 M13_INTEGRITY_PASS
