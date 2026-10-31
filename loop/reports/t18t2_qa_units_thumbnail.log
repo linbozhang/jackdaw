@@ -1,0 +1,81 @@
+   Compiling bevy_dylib v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_dylib)
+   Compiling bevy v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned)
+   Compiling jackdaw_geometry v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_geometry)
+   Compiling jackdaw_commands v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_commands)
+   Compiling jackdaw_input v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_input)
+   Compiling jackdaw_localization v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_localization)
+   Compiling jackdaw_bsn v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_bsn)
+   Compiling jackdaw_pie_protocol v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_pie_protocol)
+   Compiling jackdaw_widgets_runtime v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_widgets_runtime)
+   Compiling jackdaw_bind v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_bind)
+   Compiling jackdaw_widgets v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_widgets)
+   Compiling jackdaw_scene_types v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_scene_types)
+   Compiling jackdaw_animation_runtime v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_animation_runtime)
+   Compiling jackdaw_prefab v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_prefab)
+   Compiling jackdaw_feathers v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_feathers)
+   Compiling jackdaw_terrain v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_terrain)
+   Compiling jackdaw_schema v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_schema)
+   Compiling jackdaw_camera_rig v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_camera_rig)
+   Compiling jackdaw_surface v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_surface)
+   Compiling bevy_transform_interpolation v0.6.0
+   Compiling jackdaw_panels v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_panels)
+   Compiling jackdaw_node_graph v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_node_graph)
+   Compiling jackdaw_api_internal v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_api_internal)
+   Compiling jackdaw_runtime v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_runtime)
+   Compiling avian3d v0.8.0
+   Compiling jackdaw_project_build v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_project_build)
+   Compiling jackdaw_multiplayer v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_multiplayer)
+   Compiling jackdaw_scaffold v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_scaffold)
+   Compiling jackdaw_loader v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_loader)
+   Compiling jackdaw_animation v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_animation)
+   Compiling jackdaw_jsn v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_jsn)
+   Compiling jackdaw_csg v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_csg)
+   Compiling jackdaw_select v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_select)
+   Compiling jackdaw_hull v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_hull)
+   Compiling jackdaw_pick v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_pick)
+   Compiling jackdaw_uv v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_uv)
+   Compiling jackdaw_remote v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_remote)
+   Compiling jackdaw_camera v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_camera)
+   Compiling bevy_window_chrome v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/bevy_window_chrome)
+   Compiling jackdaw_avian_integration v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/integrations/physics/jackdaw_avian_integration)
+   Compiling jackdaw_dylib v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_dylib)
+   Compiling jackdaw_api v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_api)
+   Compiling jackdaw_extension v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_extension)
+   Compiling jackdaw_physics v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/integrations/physics/jackdaw_physics)
+   Compiling jackdaw_multiplayer_editor v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_multiplayer_editor)
+   Compiling jackdaw_sdk v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_sdk)
+   Compiling test_fixture_extension v0.0.0 (/Users/zhanglinbo/workspace/jackdaw/tests/fixtures/test_fixture_extension)
+   Compiling jackdaw v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw)
+    Finished `test` profile [optimized + debuginfo] target(s) in 2m 10s
+     Running unittests src/lib.rs (target/debug/deps/jackdaw-9c8a6f6917dc1fc3)
+
+running 25 tests
+test thumbnail::tests::a_degenerate_model_still_gets_a_usable_camera ... ok
+test thumbnail::tests::a_change_batch_settles_before_it_is_taken ... ok
+test thumbnail::tests::a_failed_model_is_never_retried_at_the_same_mtime ... ok
+test thumbnail::tests::a_material_saved_again_is_photographed_again ... ok
+test thumbnail::tests::a_changed_mtime_invalidates_and_requeues ... ok
+test thumbnail::tests::a_failure_is_reported_once_per_file ... ok
+test thumbnail::tests::a_ready_thumbnail_is_not_requeued ... ok
+test thumbnail::tests::a_scene_outside_the_assets_folder_still_gets_a_file_name ... ok
+test thumbnail::tests::a_scene_picture_is_named_after_the_scene_under_the_project ... ok
+test thumbnail::tests::cache_key_changes_with_path_and_with_mtime ... ok
+test thumbnail::tests::fit_distance_scales_with_radius_and_shrinks_with_field_of_view ... ok
+test thumbnail::tests::framing_centres_an_off_origin_model ... ok
+test thumbnail::tests::is_failed_reads_true_only_for_a_failure_at_the_current_mtime ... ok
+test thumbnail::tests::model_paths_are_gltf_and_glb_only ... ok
+test thumbnail::tests::a_change_event_forgets_the_picture_and_the_next_request_rerenders ... ok
+test thumbnail::tests::requesting_the_same_path_twice_queues_it_once ... ok
+test thumbnail::tests::saving_every_tab_pictures_only_the_scene_on_screen ... ok
+test thumbnail::tests::pictured_paths_answer_their_extension_or_their_kind ... ok
+test thumbnail::tests::a_saved_scene_shows_its_picture_and_an_unsaved_one_keeps_its_icon ... ok
+test thumbnail::tests::a_prefab_takes_the_models_the_prefab_it_names_brings ... ok
+test thumbnail::tests::a_subject_whose_models_have_all_failed_is_written_off ... ok
+test thumbnail::tests::the_thumbnail_camera_renders_only_while_a_thumbnail_is_in_flight ... ok
+test thumbnail::tests::a_thumbnail_is_not_requested_for_an_undrawn_tile ... ok
+test thumbnail::tests::a_prefab_with_meshes_gets_a_thumbnail_and_one_without_keeps_its_icon ... ok
+test thumbnail::tests::a_material_tile_carries_a_rendered_image_once_the_stage_has_run ... ok
+
+test result: ok. 25 passed; 0 failed; 0 ignored; 0 measured; 1176 filtered out; finished in 1.83s
+
+EXIT=0

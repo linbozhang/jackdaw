@@ -1,0 +1,2 @@
+39:[2m2026-10-31T03:07:31.680268Z[0m [33m WARN[0m [2mjackdaw_api_internal::operator[0m[2m:[0m scene.open: the tab holds unsaved edits, so the file was not reread
+63:[2m2026-10-31T03:07:53.762036Z[0m [33m WARN[0m [2mbevy_ecs::relationship[0m[2m:[0m The bevy_ecs::hierarchy::ChildOf(4483v9) relationship on entity 5086v2 relates to an entity that does not exist. The invalid bevy_ecs::hierarchy::ChildOf relationship has been removed.
