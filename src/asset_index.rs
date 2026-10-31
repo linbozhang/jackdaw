@@ -18,7 +18,7 @@
 use std::collections::{BTreeMap, HashMap, HashSet};
 use std::path::{Path, PathBuf};
 use std::sync::{Mutex, mpsc};
-use std::time::SystemTime;
+use std::time::{Duration, Instant, SystemTime};
 
 use bevy::asset::{ReflectAsset, UntypedAssetId, UntypedHandle};
 use bevy::prelude::*;
@@ -808,11 +808,60 @@ pub fn note_written(world: &mut World, path: &Path) {
 #[derive(Resource)]
 struct AssetFileWatcher {
     _watcher: notify::RecommendedWatcher,
-    receiver: Mutex<mpsc::Receiver<()>>,
+    receiver: Mutex<mpsc::Receiver<Vec<PathBuf>>>,
 }
 
 #[derive(Resource, Default)]
 struct AssetScanPending(bool);
+
+/// The files the assets watcher has reported as changed since they were last
+/// taken (AR1).
+///
+/// The watcher is the editor's one trigger source for "a file moved under
+/// us": the walk reads the typed files back into their handles, and the faces
+/// that show *pictures* and *listings* of files -- the Project window's tiles
+/// and the thumbnail cache -- take the changed paths from here rather than
+/// watching the directory themselves. Paths accumulate until a consumer takes
+/// them settled, so a burst of writes (a tool that saves twice, a
+/// temp-swap writer) costs one refresh, not one per event.
+#[derive(Resource, Default)]
+pub struct AssetWatchChanges {
+    pub(crate) paths: Vec<PathBuf>,
+    /// When the first event of the unsettled batch arrived.
+    pub(crate) arrival: Option<Instant>,
+}
+
+/// How long a burst of external writes may accumulate before the faces that
+/// follow them act on it. Above the engine's own watcher debounce, below
+/// human impatience: a save by a rename-plus-replace lands as one refresh.
+pub const CHANGE_SETTLE: Duration = Duration::from_millis(300);
+
+impl AssetWatchChanges {
+    /// Add the paths one watcher event reported.
+    pub(crate) fn push(&mut self, arrived: &[PathBuf]) {
+        for path in arrived {
+            if !self.paths.contains(path) {
+                self.paths.push(path.clone());
+            }
+        }
+        self.arrival.get_or_insert_with(Instant::now);
+    }
+
+    /// The batch once it has had [`CHANGE_SETTLE`] to stop growing, clearing
+    /// it. `None` while a batch is still young, or there is nothing to take.
+    pub fn take_settled(&mut self, now: Instant) -> Option<Vec<PathBuf>> {
+        if self.paths.is_empty() {
+            self.arrival = None;
+            return None;
+        }
+        self.arrival
+            .is_some_and(|arrival| now.duration_since(arrival) >= CHANGE_SETTLE)
+            .then(|| {
+                self.arrival = None;
+                std::mem::take(&mut self.paths)
+            })
+    }
+}
 
 /// Counts the walks of the project's files that have landed, so a panel that
 /// lists something the index itself does not hold -- the texture sets, say --
@@ -836,11 +885,16 @@ struct AssetWalkTask {
     writes: u64,
 }
 
-pub(crate) fn plugin(app: &mut App) {
+/// Indexing the open project's assets: one walk when the project opens, the
+/// watcher keeping it in step, and the changed paths the other faces take
+/// (`AssetWatchChanges`). Public so a test can stand the indexing alone, the
+/// arrangement `PrefabWatcherPlugin` tests use too.
+pub fn plugin(app: &mut App) {
     app.init_resource::<AssetIndex>()
         .init_resource::<AssetKindCache>()
         .init_resource::<AssetScanPending>()
         .init_resource::<AssetWalks>()
+        .init_resource::<AssetWatchChanges>()
         .add_systems(OnEnter(crate::AppState::Editor), open_asset_index)
         .add_systems(
             Update,
@@ -956,7 +1010,7 @@ fn watch_asset_files(world: &mut World) {
                     EventKind::Create(_) | EventKind::Remove(_) | EventKind::Modify(_)
                 )
             {
-                let _ = sender.send(());
+                let _ = sender.send(event.paths);
             }
         });
     let Ok(mut watcher) = watcher else { return };
@@ -975,14 +1029,18 @@ fn watch_asset_files(world: &mut World) {
 fn poll_asset_watcher(
     watcher: Option<Res<AssetFileWatcher>>,
     mut pending: ResMut<AssetScanPending>,
+    mut changes: ResMut<AssetWatchChanges>,
 ) {
     let Some(watcher) = watcher else { return };
     let Ok(receiver) = watcher.receiver.lock() else {
         return;
     };
-    if receiver.try_recv().is_ok() {
-        while receiver.try_recv().is_ok() {}
+    if let Ok(paths) = receiver.try_recv() {
+        changes.push(&paths);
         pending.0 = true;
+        while let Ok(paths) = receiver.try_recv() {
+            changes.push(&paths);
+        }
     }
 }
 

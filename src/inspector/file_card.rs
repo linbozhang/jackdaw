@@ -51,6 +51,7 @@ pub(super) fn plugin(app: &mut App) {
             drop_a_definition_that_is_gone,
             drop_a_file_the_selection_left,
             rebuild_on_preview_change,
+            rebuild_when_the_file_changes,
         )
             .run_if(in_state(crate::AppState::Editor)),
     );
@@ -225,6 +226,55 @@ fn rebuild_on_preview_change(
         return;
     };
     commands.entity(entity).try_insert(super::InspectorDirty);
+}
+
+/// The card's file changed under it (AR4): the picture the `ImageNode` holds
+/// re-loads in place -- same handle, new pixels -- but the card's text lines
+/// (path, texture description, size) describe what they read at build time,
+/// so they sit one rewrite behind until the card is asked to build again. The
+/// same goes for a load failure worth facing: the card stands for a file the
+/// editor could not read. A card for another file is not touched.
+fn rebuild_when_the_file_changes(
+    open: Res<OpenFileCard>,
+    files: Query<&SelectedFile>,
+    mut images: MessageReader<AssetEvent<Image>>,
+    mut failures: MessageReader<bevy::asset::UntypedAssetLoadFailedEvent>,
+    preview: Option<Res<AssetPreviewState>>,
+    project: Option<Res<crate::project::ProjectRoot>>,
+    mut commands: Commands,
+) {
+    let Some(entity) = open.0 else {
+        return;
+    };
+    let Ok(file) = files.get(entity) else {
+        return;
+    };
+    let drawn = preview
+        .as_ref()
+        .and_then(|preview| preview.selected_info.as_ref())
+        .and_then(|info| info.image_handle.as_ref())
+        .map(bevy::asset::Handle::id);
+    let relative = project
+        .as_deref()
+        .and_then(|project| file.path.strip_prefix(project.assets_dir()).ok());
+
+    let mut changed = false;
+    for event in images.read() {
+        if let AssetEvent::Modified { id } = event
+            && drawn == Some(*id)
+        {
+            changed = true;
+        }
+    }
+    for failure in failures.read() {
+        let named = failure.path.path();
+        if relative.is_some_and(|relative| relative == named) {
+            changed = true;
+        }
+    }
+    if changed {
+        commands.entity(entity).try_insert(super::InspectorDirty);
+    }
 }
 
 fn file_name(path: &Path) -> String {
@@ -783,4 +833,129 @@ fn spawn_action(world: &mut World, body: Entity, label: &str, operator: &'static
         .spawn((button(ButtonProps::new(label.to_string())), call))
         .id();
     world.entity_mut(action).insert(ChildOf(slot));
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use bevy::asset::UntypedAssetLoadFailedEvent;
+    use bevy::ecs::system::RunSystemOnce as _;
+
+    /// A file card for `root`'s asset `relative`, with the preview state a
+    /// drawn image card carries.
+    fn card_world(root: &Path, relative: &str) -> (World, Handle<Image>) {
+        let mut world = World::new();
+        world.init_resource::<Assets<Image>>();
+        let path = root.join("assets").join(relative);
+        let handle = world.resource_mut::<Assets<Image>>().add(Image::default());
+        world.spawn(SelectedFile {
+            path: path.clone(),
+            kind: AssetFileKind::Scene,
+        });
+        world.insert_resource(OpenFileCard(None));
+        world.insert_resource(AssetPreviewState {
+            selected_path: Some(path),
+            selected_info: Some(TextureInfo {
+                image_handle: Some(handle.clone()),
+                is_cubemap: false,
+                is_array: false,
+                layer_count: 1,
+                face_count: 1,
+            }),
+            current_layer: 0,
+            layer_images: Vec::new(),
+        });
+        world.insert_resource(crate::project::ProjectRoot {
+            root: root.to_path_buf(),
+            config: crate::project::ProjectConfig::default(),
+        });
+        (world, handle)
+    }
+
+    fn open_the_card(world: &mut World) -> Entity {
+        let mut files = world.query::<(Entity, &SelectedFile)>();
+        let entity = files
+            .iter(world)
+            .next()
+            .map(|(entity, _)| entity)
+            .expect("the card's file exists");
+        world.resource_mut::<OpenFileCard>().0 = Some(entity);
+        entity
+    }
+
+    /// The card's own picture reloading in place asks for a rebuild; another
+    /// image reloading does not (AR4).
+    #[test]
+    fn the_cards_own_image_reloading_marks_it_dirty() {
+        let tmp = tempfile::tempdir().expect("tempdir");
+        let (mut world, handle) = card_world(tmp.path(), "sky.png");
+        world.init_resource::<Messages<AssetEvent<Image>>>();
+        world.init_resource::<Messages<UntypedAssetLoadFailedEvent>>();
+        let entity = open_the_card(&mut world);
+        assert!(!world.get::<super::super::InspectorDirty>(entity).is_some());
+
+        world
+            .resource_mut::<Messages<AssetEvent<Image>>>()
+            .write(AssetEvent::Modified { id: handle.id() });
+        world
+            .run_system_once(rebuild_when_the_file_changes)
+            .expect("ran");
+
+        assert!(
+            world.get::<super::super::InspectorDirty>(entity).is_some(),
+            "the card rebuilds when its own picture reloads"
+        );
+    }
+
+    #[test]
+    fn another_images_reloading_leaves_the_card_alone() {
+        let tmp = tempfile::tempdir().expect("tempdir");
+        let (mut world, _handle) = card_world(tmp.path(), "sky.png");
+        world.init_resource::<Messages<AssetEvent<Image>>>();
+        world.init_resource::<Messages<UntypedAssetLoadFailedEvent>>();
+        let entity = open_the_card(&mut world);
+        let other = world.resource_mut::<Assets<Image>>().add(Image::default());
+
+        world
+            .resource_mut::<Messages<AssetEvent<Image>>>()
+            .write(AssetEvent::Modified { id: other.id() });
+        world
+            .run_system_once(rebuild_when_the_file_changes)
+            .expect("ran");
+
+        assert!(
+            !world.get::<super::super::InspectorDirty>(entity).is_some(),
+            "another image's reload says nothing about this card"
+        );
+    }
+
+    /// A load failure naming the card's file asks for a rebuild too: the card
+    /// stands for a file the editor could not read (AR4, the AR3 tie-in).
+    #[test]
+    fn a_load_failure_naming_the_cards_file_marks_it_dirty() {
+        let tmp = tempfile::tempdir().expect("tempdir");
+        let (mut world, _handle) = card_world(tmp.path(), "sky.png");
+        world.init_resource::<Messages<UntypedAssetLoadFailedEvent>>();
+        world.init_resource::<Messages<AssetEvent<Image>>>();
+        let entity = open_the_card(&mut world);
+
+        world
+            .resource_mut::<Messages<UntypedAssetLoadFailedEvent>>()
+            .write(UntypedAssetLoadFailedEvent {
+                id: Handle::<Image>::default().id().untyped(),
+                path: bevy::asset::AssetPath::parse("sky.png"),
+                error: bevy::asset::AssetLoadError::MissingAssetLoader {
+                    asset_type_id: None,
+                    asset_path: "sky.png".to_string(),
+                },
+            });
+        world
+            .run_system_once(rebuild_when_the_file_changes)
+            .expect("ran");
+
+        assert!(
+            world.get::<super::super::InspectorDirty>(entity).is_some(),
+            "the card for the failed file rebuilds"
+        );
+    }
 }

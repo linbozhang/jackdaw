@@ -1,0 +1,8 @@
+    Finished `test` profile [optimized + debuginfo] target(s) in 0.78s
+     Running unittests src/lib.rs (target/debug/deps/jackdaw-9c8a6f6917dc1fc3)
+
+running 1 test
+test asset_failures::tests::a_failure_warns_once_per_path_and_again_after_the_file_changes ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1200 filtered out; finished in 0.03s
+

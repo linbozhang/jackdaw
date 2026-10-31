@@ -1,0 +1,28 @@
+===== watch_reload run 1 =====
+   Compiling jackdaw v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw)
+    Finished `test` profile [optimized + debuginfo] target(s) in 1.88s
+     Running tests/asset_watch_reload.rs (target/debug/deps/asset_watch_reload-f8979a06107b4497)
+
+running 1 test
+test an_external_write_reloads_into_the_handle_references_hold ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.97s
+
+===== watch_reload run 2 =====
+    Finished `test` profile [optimized + debuginfo] target(s) in 0.34s
+     Running tests/asset_watch_reload.rs (target/debug/deps/asset_watch_reload-f8979a06107b4497)
+
+running 1 test
+test an_external_write_reloads_into_the_handle_references_hold ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.96s
+
+===== watch_reload run 3 =====
+    Finished `test` profile [optimized + debuginfo] target(s) in 0.33s
+     Running tests/asset_watch_reload.rs (target/debug/deps/asset_watch_reload-f8979a06107b4497)
+
+running 1 test
+test an_external_write_reloads_into_the_handle_references_hold ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.97s
+

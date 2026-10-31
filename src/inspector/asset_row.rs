@@ -475,11 +475,58 @@ fn inspected_rows_changed(
 
 // -- Writing --------------------------------------------------------------
 
+/// Whether the bytes of an audio file name a format the audio loader
+/// decodes (AR5/AU6, the editor's half).
+///
+/// The loader stores raw bytes and decodes only when a sink is built, so a
+/// bad or mislabeled file loads fine and panics at play -- in the game
+/// process, crashing it. The editor cannot reach the decoder (`bevy_audio` does
+/// not re-export rodio), so the gate is the honest byte check: a wav names
+/// itself `RIFF` with the form code `WAVE` at offset 8, an ogg starts with
+/// `OggS`. Anything else, including an empty file, refuses at the moment of
+/// writing the reference rather than surprising the author at play time.
+fn audio_file_plausible(bytes: &[u8]) -> bool {
+    bytes.starts_with(b"OggS")
+        || (bytes.len() >= 12 && bytes.starts_with(b"RIFF") && &bytes[8..12] == b"WAVE")
+}
+
+/// Whether the audio file the reference names decodes plausibly. A file that
+/// cannot be read refuses too: the picker only offers project files, so a
+/// missing one has gone since it was listed.
+fn audio_reference_is_sound(world: &World, path: &str) -> bool {
+    let file = crate::asset_index::absolute_path(world, Path::new(path));
+    std::fs::read(&file)
+        .map(|bytes| audio_file_plausible(&bytes))
+        .unwrap_or(false)
+}
+
+/// Whether a row's type is the audio source, whose references the editor
+/// checks at write time.
+fn names_audio_source(asset_type_path: &str) -> bool {
+    use bevy::reflect::TypePath as _;
+    asset_type_path == bevy::audio::AudioSource::type_path()
+}
+
 /// Write a path into the field a row stands for, as one undo entry.
 pub(crate) fn commit_asset_row(world: &mut World, row: Entity, path: &str) -> bool {
     let Some(field) = world.get::<AssetFieldRow>(row).cloned() else {
         return false;
     };
+    // A sound the editor cannot vouch for never reaches the field: the game
+    // process would take the panic the decode raises at play time (AR5).
+    // Clearing the field names no file, so it needs no check.
+    if !path.is_empty()
+        && names_audio_source(&field.asset_type_path)
+        && !audio_reference_is_sound(world, path)
+    {
+        crate::status_bar::notify_warn(
+            world,
+            format!(
+                "{path} is not a sound file the editor can decode; the reference was not written"
+            ),
+        );
+        return false;
+    }
     if world.get::<AssetFieldWriter>(row).is_some() {
         let Some(writer) = world.entity_mut(row).take::<AssetFieldWriter>() else {
             return false;
@@ -945,5 +992,99 @@ mod tests {
         });
 
         assert!(assets_for_row(&world, &row_naming("my_game::Mystery")).is_empty());
+    }
+
+    // -- The audio gate at write time (AR5/AU6) --------------------------------
+
+    /// The smallest plausible wav: the RIFF header with the WAVE form code.
+    const WAV_HEADER: &[u8] = b"RIFF\x24\x00\x00\x00WAVEfmt \x10\x00\x00\x00";
+
+    #[test]
+    fn audio_plausibility_reads_the_leading_bytes() {
+        assert!(audio_file_plausible(WAV_HEADER), "a wav names itself");
+        assert!(
+            audio_file_plausible(b"OggS\x00\x02\x00\x00\x00\x00\x00\x00"),
+            "an ogg names itself"
+        );
+        assert!(
+            !audio_file_plausible(b"RIFFxxxxWAVX"),
+            "a RIFF file whose form code is not WAVE is refused"
+        );
+        assert!(!audio_file_plausible(b"garbage, not audio at all"));
+        assert!(!audio_file_plausible(&[]), "an empty file is not a sound");
+        assert!(
+            !audio_file_plausible(b"RI"),
+            "a truncated header is not a sound"
+        );
+    }
+
+    /// Committing a sound the editor cannot vouch for refuses the write: the
+    /// writer hook never runs, the author is told, and clearing the field
+    /// (which names no file) still works.
+    #[test]
+    fn committing_an_audio_field_refuses_a_file_that_is_not_a_sound() {
+        use bevy::audio::AudioSource;
+        use bevy::reflect::TypePath as _;
+
+        let tmp = tempfile::tempdir().expect("tempdir");
+        let sounds = tmp.path().join("assets/sounds");
+        std::fs::create_dir_all(&sounds).expect("a sounds folder");
+        std::fs::write(sounds.join("bad.wav"), b"not really audio").expect("a bad wav");
+        std::fs::write(sounds.join("bgm.wav"), WAV_HEADER).expect("a good wav");
+
+        let mut world = World::new();
+        world.insert_resource(ProjectRoot {
+            root: tmp.path().to_path_buf(),
+            config: ProjectConfig::default(),
+        });
+        world.init_resource::<crate::status_bar::StatusNotice>();
+
+        let wrote = std::sync::atomic::AtomicBool::new(false);
+        let wrote = std::sync::Arc::new(wrote);
+        let flag = std::sync::Arc::clone(&wrote);
+        let row = world
+            .spawn((
+                row_naming(AudioSource::type_path()),
+                AssetFieldWriter(Box::new(move |_world: &mut World, _path: &str| {
+                    flag.store(true, std::sync::atomic::Ordering::Relaxed);
+                    true
+                })),
+            ))
+            .id();
+
+        assert!(
+            !commit_asset_row(&mut world, row, "sounds/bad.wav"),
+            "a file whose bytes name no format is refused"
+        );
+        assert!(
+            !wrote.load(std::sync::atomic::Ordering::Relaxed),
+            "the field was not written"
+        );
+        assert!(
+            world
+                .resource::<crate::status_bar::StatusNotice>()
+                .text()
+                .contains("sounds/bad.wav"),
+            "the refusal names the file"
+        );
+
+        assert!(
+            commit_asset_row(&mut world, row, "sounds/bgm.wav"),
+            "a plausible wav commits"
+        );
+        assert!(
+            wrote.load(std::sync::atomic::Ordering::Relaxed),
+            "the field was written"
+        );
+
+        wrote.store(false, std::sync::atomic::Ordering::Relaxed);
+        assert!(
+            commit_asset_row(&mut world, row, ""),
+            "clearing the field names no file and needs no check"
+        );
+        assert!(
+            wrote.load(std::sync::atomic::Ordering::Relaxed),
+            "the clear reached the field"
+        );
     }
 }

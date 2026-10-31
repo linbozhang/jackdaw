@@ -1,0 +1,32 @@
+[09:20:38] RUST_BACKTRACE=[] (must be empty)
+[09:20:38] disk before: /dev/disk3s5   460Gi   422Gi    14Gi    97%    2.2M  148M    1%   /System/Volumes/Data
+[09:20:38] gate 1 fmt: cargo fmt --all -- --check
+[09:20:41] FMT_EXIT=0
+[09:20:41] gate 2 clippy workspace: cargo clippy --workspace --all-targets --features dylib -- --deny warnings
+[09:21:03] CLIPPY_EXIT=0
+[09:21:03] gate 3 clippy physics dual: cargo clippy -p jackdaw_physics -p jackdaw_avian_integration --all-targets -- --deny warnings
+[09:21:13] CLIPPY_PHYSICS_EXIT=0
+[09:21:13] gate 4 libtests: cargo test --workspace --lib --features dylib (expect 2999)
+[09:23:00] LIBTESTS_EXIT=0
+[09:23:00] gate 5 fast: cargo xtask fast (expect 2999)
+[09:24:38] FAST_EXIT=0
+[09:24:38] gate 6 leg asset_formats
+[09:26:13] ASSET_FORMATS_EXIT=0
+[09:26:13] gate 7 leg asset_watch_reload, 3 runs for A6 stability (appended)
+[09:26:20] WATCH_RELOAD_RUN1_EXIT=0
+[09:26:21] WATCH_RELOAD_RUN2_EXIT=0
+[09:26:23] WATCH_RELOAD_RUN3_EXIT=0
+[09:26:23] gate 8 leg audio_gate
+[09:26:30] AUDIO_GATE_EXIT=0
+[09:26:30] gate 9 leg guards asset_lifecycle
+[09:26:30] ASSET_LIFECYCLE_EXIT=101
+[09:26:30] targeted units: thumbnail::tests (AR1 x3 + 19 regression)
+[09:31:04] UNITS_THUMBNAIL_EXIT=0
+[09:31:04] targeted units: asset_failures (AR3)
+[09:31:05] UNITS_AR3_EXIT=0
+[09:31:05] targeted units: file_card::tests (AR4 x3)
+[09:31:06] UNITS_AR4_EXIT=0
+[09:31:06] targeted units: audio gate (AU6 x2)
+[09:31:06] UNITS_AU6_EXIT=0
+[09:31:06] disk after: /dev/disk3s5   460Gi   425Gi    11Gi    98%    2.2M  117M    2%   /System/Volumes/Data
+[09:31:06] ALL_GATES_DONE

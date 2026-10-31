@@ -13,6 +13,7 @@ pub mod animation;
 pub mod app_ops;
 pub mod asset_catalog;
 pub mod asset_drag;
+pub mod asset_failures;
 pub mod asset_files;
 pub mod asset_index;
 pub mod asset_ingest;
@@ -518,6 +519,7 @@ impl Plugin for EditorCorePlugin {
         .add_plugins(native_dialog::NativeDialogPlugin)
         .add_plugins(definition_assets::plugin)
         .add_plugins(asset_index::plugin)
+        .add_plugins(asset_failures::plugin)
         .add_plugins(thumbnail::plugin)
         .add_plugins(boot_ops::plugin)
         .add_plugins(fps_overlay::plugin)
