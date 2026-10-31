@@ -1,0 +1,6 @@
+selftest png_pixels_md5: stable per content, distinct per colour (130015da112f2b9084bcf384fd3b2cb4 vs 3d76de288c0d845b4a106cc44b65d792)
+selftest pixdiff identical: pixels: 4096; changed(>tol 12): 0 (0.00%); mean channel diff: 0.000
+selftest pixdiff complementary colours: pixels: 4096; changed(>tol 12): 4096 (100.00%); mean channel diff: 113.333
+selftest crop_md5: rect-stable, rect-distinct
+SELFTEST_HELPERS_PASS
+RESULTS: SELFTEST_HELPERS=PASS 

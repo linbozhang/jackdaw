@@ -1,0 +1,109 @@
+=== PHYSICS CLIPPY (rerun to confirm after disk recovery) ===
+    Finished `dev` profile [optimized + debuginfo] target(s) in 0.55s
+PHY_EXIT=
+=== LIBTESTS ===
+test result: ok. 26 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 28 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 28 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.22s
+test result: ok. 22 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 227 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.53s
+test result: ok. 28 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 85 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.28s
+test result: ok. 14 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+test result: ok. 91 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.52s
+test result: ok. 48 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.07s
+test result: ok. 26 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 24 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 52 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+test result: ok. 531 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.60s
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 20 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+test result: ok. 19 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.54s
+test result: ok. 22 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+LIBTESTS_EXIT=
+=== VIEWPORT TESTS ===
+test viewport_redraw::a_click_pressed_and_released_within_one_frame_asks_for_frames ... ok
+test viewport_redraw::realtime_on_never_asks_for_frames_it_already_draws ... ok
+test viewport_redraw::meshes_arriving_keep_the_frames_coming ... ok
+test viewport_redraw::the_toolbar_says_realtime_is_off_while_it_is ... ok
+test viewport_settings::a_changed_setting_is_kept_in_the_users_settings_file ... ok
+test viewport_settings::a_preset_sets_every_quality_choice_it_names ... ok
+test viewport_redraw::a_scripted_gesture_keeps_the_frames_coming_until_it_has_played ... ok
+test viewport_settings::a_show_flag_flips_or_takes_the_state_it_is_given ... ok
+test viewport_redraw::an_idle_editor_stops_asking_for_frames_and_held_input_asks_again ... ok
+test viewport_settings::names_the_settings_do_not_have_are_refused ... ok
+test viewport_settings::setting_one_choice_keeps_the_others_and_leaves_the_preset ... ok
+test viewport_redraw::a_long_task_keeps_the_frames_coming_while_it_runs ... ok
+test viewport_settings::the_smaa_ssao_and_sharpening_choices_round_trip_through_the_users_file ... ok
+test viewport_settings_menu::a_click_outside_closes_the_menu_with_realtime_off ... ok
+test viewport_settings_menu::a_narrow_viewport_cuts_the_tools_and_keeps_the_settings_and_mode_controls ... ok
+test viewport_settings_menu::a_narrow_viewport_lists_the_cut_tools_in_the_overflow_menu ... ok
+test viewport_settings_menu::a_show_row_flips_its_flag_and_stays_open ... ok
+test viewport_settings_menu::a_preset_picked_in_the_quality_menu_holds_and_the_menu_shows_it ... FAILED
+test viewport_settings_menu::a_wide_viewport_shows_every_tool_and_no_overflow_menu ... ok
+test viewport_settings_menu::a_click_outside_closes_the_menu_after_one_of_its_rows_flipped_a_box ... ok
+test viewport_settings_menu::changing_one_quality_choice_shows_the_preset_as_custom ... ok
+test viewport_settings_menu::realtime_and_stats_flip_from_the_menus_own_rows ... ok
+test viewport_settings_menu::the_frame_time_graph_row_appears_once_stats_are_on ... ok
+test viewport_settings_menu::the_menu_opened_from_the_toolbars_right_end_stays_inside_the_window ... ok
+test viewport_stats::stats_show_a_readout_that_counts_the_scene ... ok
+test viewport_settings::changing_viewport_settings_leaves_the_saved_scene_unchanged ... ok
+test viewport_stats::the_frame_time_graph_shows_only_when_asked_for_under_the_stats ... ok
+test viewport_settings_menu::the_view_mode_rows_pick_one_mode_at_a_time ... ok
+test result: FAILED. 166 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 81.16s
+error: test failed, to rerun pass `-p jackdaw --test viewport`
+VIEWPORT_EXIT=
+=== SURFACE TESTS ===
+test foliage::tests::variation_differs_between_two_places_and_holds_within_one ... ok
+test probe::tests::an_image_that_is_not_six_square_faces_is_refused ... ok
+test probe::tests::six_stacked_faces_become_a_half_float_cubemap_in_the_same_order ... ok
+test shadow_views::tests::shadow_views_go_when_the_light_is_no_longer_extracted ... ok
+test shadow_views::tests::shadow_views_go_with_a_despawned_light ... ok
+test tests::a_material_reports_which_normal_maps_are_bound ... ok
+test shadow_views::tests::shadow_views_stay_while_the_light_is_extracted_again ... ok
+test tests::a_painted_mask_reads_the_channel_it_names ... ok
+test tests::a_surface_facing_up_takes_the_layer_and_a_wall_takes_none ... ok
+test tests::an_unedited_material_takes_none_of_its_layer ... ok
+test tests::every_material_binding_is_declared_in_the_shader_at_its_derive_index ... ok
+test tests::lifting_the_mask_reaches_down_the_face ... ok
+test environment::tests::the_chosen_antialiasing_and_shadow_filter_replace_the_cameras_own_until_the_environment_goes ... ok
+test tests::the_narrowest_threshold_leaves_a_partly_lit_mask_partly_covered ... ok
+test tests::the_uniform_struct_matches_the_rust_field_order ... ok
+test environment::tests::trilight_reflections_leave_the_sky_unfiltered ... ok
+test water::tests::a_flat_surface_rides_no_wave_and_a_raised_one_rides_a_taller_one ... ok
+test environment::tests::the_chosen_multisampling_reaches_every_camera_that_can_take_it ... ok
+test water::tests::a_material_reports_which_maps_are_bound ... ok
+test water::tests::every_material_binding_is_declared_in_the_shader_at_its_derive_index ... ok
+test water::tests::the_shallows_take_the_shallow_colour_and_the_deep_the_deep_one ... ok
+test water::tests::foam_gathers_at_the_shore_and_stops_beyond_its_reach ... ok
+test water::tests::the_uniform_struct_matches_the_rust_field_order ... ok
+test water::tests::the_wind_carries_the_wave_faster_than_still_air ... ok
+test probe::tests::a_baked_probe_reflects_through_a_light_probe_the_size_of_its_box ... ok
+test water::tests::the_wave_travels_over_the_surface ... ok
+test environment::tests::sky_reflections_filter_the_sky_into_the_specular_term_and_keep_the_trilight_diffuse ... ok
+test environment::tests::the_sky_cubemap_holds_the_gradient_and_the_sun_scaled_to_the_ambient ... ok
+test result: ok. 52 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+SURFACE_EXIT=
+=== AN2 LEG ===
+   Compiling jackdaw_runtime v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_runtime)
+    Finished `test` profile [optimized + debuginfo] target(s) in 9.26s
+────────────
+ Nextest run ID b4616e75-a22d-45af-8225-80bb00ffde43 with nextest profile: ci
+    Starting 1 test across 1 binary
+        PASS [   0.050s] (1/1) jackdaw_runtime::animation_scene_load a_loaded_scene_plays_its_default_state
+────────────
+     Summary [   0.051s] 1 test run: 1 passed, 0 skipped
+AN2_EXIT=
