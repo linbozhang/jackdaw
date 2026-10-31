@@ -2,7 +2,7 @@ EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t19-graphics/t19-graph
 L1_PRESET_FACE_PASS
 L1 preset face: low={"render_scale":50,"aa":"off","ssao":"high","post":false,"sharpen":true} high={"render_scale":100,"aa":"fxaa","ssao":"high","post":true,"sharpen":true}
 L1_SEED_VERIFY_PASS
-editor camera: entity 3909v0 (Camera3d count: 1)
+editor camera: entity 3910v0 (Camera3d count: 1)
 shot m1-low ok (viewport)
 probe Exposure: bevy_camera::camera::Exposure silent (errors: {"code":-23402,"message":"type `bevy_camera::camera::Exposure` did not register the `ReflectSerialize` or `ReflectSerializeWithRegistry` type data. For certain )
 probe Exposure: bevy_camera::exposure::Exposure silent (errors: {"code":-23402,"message":"Unknown component type: `bevy_camera::exposure::Exposure`"})
@@ -19,7 +19,7 @@ shot m2-on ok (viewport)
 M2 pixel pair: pixels: 2806708; changed(>tol 12): 812659 (28.95%); mean channel diff: 3.890
 M2_BLOOM_PX_PASS
 M3_AA_BOUNDARY_PASS
-M3: document antialiasing=Taa, viewport camera carries no TemporalAntiAliasing ({"code":-23403,"message":"Component `bevy_anti_alias::taa::TemporalAntiAliasing` not present in Entity 3909v0"}) — the boundary itself
+M3: document antialiasing=Taa, viewport camera carries no TemporalAntiAliasing ({"code":-23403,"message":"Component `bevy_anti_alias::taa::TemporalAntiAliasing` not present in Entity 3910v0"}) — the boundary itself
 shot gr6-sun-on ok (viewport)
 shot gr6-sun-off ok (viewport)
 GR6 pixel half: pixels: 2806708; changed(>tol 12): 0 (0.00%); mean channel diff: 0.000
@@ -36,7 +36,7 @@ M9_SHA_PASS
 M9: scene.bsn byte-identical through the whole A-region suite + save; no dirty dialog
 M13_GI_ROW_PASS
 M13_GI_DISABLED_PASS
-M13 live disabled proof: {"jsonrpc":"2.0","id":8271,"error":{"code":-32602,"message":"the control is disabled (checkbox )"}}
+M13 live disabled proof: {"jsonrpc":"2.0","id":2141,"error":{"code":-32602,"message":"the control is disabled (checkbox )"}}
 shot m13-gi-panel ok (window)
 M13_GI_PX_PASS
 M13: greyed GI row archived (shot-m13-gi-panel.png); tooltip text face = headless anchor

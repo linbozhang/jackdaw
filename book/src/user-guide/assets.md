@@ -36,7 +36,9 @@ Two format boundaries are worth knowing as they are, honestly:
   thumbnails and hot-reloads like a PNG. The game template keeps
   its Bevy features to `wav` — it ships no jpg assets — so a game
   that should load `.jpg` at runtime adds `"jpeg"` to its own Bevy
-  features.
+  features. The exported build carries whatever `assets/` holds
+  either way — [Graphics Panel](graphics-panel.md) covers the
+  scene-quality side of that story.
 - **MP3 and FLAC are not enabled** anywhere yet: the pickers don't
   offer them and the loaders won't decode them. Ogg Vorbis and WAV
   are the audio pair ([Audio](audio.md)).

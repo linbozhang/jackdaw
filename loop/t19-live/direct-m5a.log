@@ -1,15 +1,15 @@
-    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.35s
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.49s
      Running `target/debug/t19-graphics`
-[2m2026-10-31T14:35:13.178395Z[0m [32m INFO[0m [2mbevy_diagnostic::system_information_diagnostics_plugin::internal[0m[2m:[0m SystemInfo { os: "macOS 26.6.2 Tahoe", kernel: "25.6.0", cpu: "Apple M1 Pro", core_count: "8", memory: "16.0 GiB" }
-[2m2026-10-31T14:35:13.181738Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
-[2m2026-10-31T14:35:13.276793Z[0m [32m INFO[0m [2mbevy_render::renderer[0m[2m:[0m AdapterInfo { name: "Apple M1 Pro", vendor: 0, device: 0, device_type: IntegratedGpu, device_pci_bus_id: "", driver: "", driver_info: "", backend: Metal, subgroup_min_size: 4, subgroup_max_size: 64, transient_saves_memory: Some(true), limit_bucket: None }
-[2m2026-10-31T14:35:13.583294Z[0m [32m INFO[0m [2mbevy_pbr::cluster[0m[2m:[0m GPU clustering is supported on this device.
-[2m2026-10-31T14:35:13.583524Z[0m [32m INFO[0m [2mbevy_render::batching::gpu_preprocessing[0m[2m:[0m GPU preprocessing is fully supported on this device.
-[2m2026-10-31T14:35:13.623991Z[0m [32m INFO[0m [2mbevy_winit::system[0m[2m:[0m Creating new window t19-graphics (69v0)
-[2m2026-10-31T14:35:13.806645Z[0m [32m INFO[0m [2mjackdaw_runtime[0m[2m:[0m No catalog at /Users/zhanglinbo/workspace/loop-mac/t19-graphics/t19-graphics/assets/catalog.bsn, skipping catalog load
-[2m2026-10-31T14:35:13.853973Z[0m [33m WARN[0m [2mjackdaw_runtime::config[0m[2m:[0m no config asset at 'input-actions.bsn'; jackdaw_runtime::game_input::GameInputConfig starts at its default
-[2m2026-10-31T14:35:13.853989Z[0m [33m WARN[0m [2mjackdaw_runtime::config[0m[2m:[0m no config asset at 'game-config.bsn'; t19_graphics::GameConfig starts at its default
-[2m2026-10-31T14:35:13.854038Z[0m [33m WARN[0m [2mjackdaw_runtime::config[0m[2m:[0m no config asset at 'audio-config.bsn'; t19_graphics::GameAudioConfig starts at its default
-[2m2026-10-31T14:35:14.247837Z[0m [33m WARN[0m [2mjackdaw_bind::evaluate[0m[2m:[0m binding 0 on 794v0: no context for 't19_graphics::PlayerHealth.current'
-[2m2026-10-31T14:35:14.247911Z[0m [33m WARN[0m [2mjackdaw_bind::evaluate[0m[2m:[0m binding 0 on 797v0: no context for 't19_graphics::PickupCount.0'
-[2m2026-10-31T14:35:14.247930Z[0m [33m WARN[0m [2mjackdaw_bind::evaluate[0m[2m:[0m binding 0 on 796v0: no context for 't19_graphics::PlayerHealth.current'
+[2m2026-10-31T16:20:38.959458Z[0m [32m INFO[0m [2mbevy_diagnostic::system_information_diagnostics_plugin::internal[0m[2m:[0m SystemInfo { os: "macOS 26.6.2 Tahoe", kernel: "25.6.0", cpu: "Apple M1 Pro", core_count: "8", memory: "16.0 GiB" }
+[2m2026-10-31T16:20:38.962358Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-31T16:20:39.066905Z[0m [32m INFO[0m [2mbevy_render::renderer[0m[2m:[0m AdapterInfo { name: "Apple M1 Pro", vendor: 0, device: 0, device_type: IntegratedGpu, device_pci_bus_id: "", driver: "", driver_info: "", backend: Metal, subgroup_min_size: 4, subgroup_max_size: 64, transient_saves_memory: Some(true), limit_bucket: None }
+[2m2026-10-31T16:20:39.365721Z[0m [32m INFO[0m [2mbevy_pbr::cluster[0m[2m:[0m GPU clustering is supported on this device.
+[2m2026-10-31T16:20:39.365940Z[0m [32m INFO[0m [2mbevy_render::batching::gpu_preprocessing[0m[2m:[0m GPU preprocessing is fully supported on this device.
+[2m2026-10-31T16:20:39.404675Z[0m [32m INFO[0m [2mbevy_winit::system[0m[2m:[0m Creating new window t19-graphics (69v0)
+[2m2026-10-31T16:20:39.591590Z[0m [32m INFO[0m [2mjackdaw_runtime[0m[2m:[0m No catalog at /Users/zhanglinbo/workspace/loop-mac/t19-graphics/t19-graphics/assets/catalog.bsn, skipping catalog load
+[2m2026-10-31T16:20:39.639673Z[0m [33m WARN[0m [2mjackdaw_runtime::config[0m[2m:[0m no config asset at 'game-config.bsn'; t19_graphics::GameConfig starts at its default
+[2m2026-10-31T16:20:39.639850Z[0m [33m WARN[0m [2mjackdaw_runtime::config[0m[2m:[0m no config asset at 'audio-config.bsn'; t19_graphics::GameAudioConfig starts at its default
+[2m2026-10-31T16:20:39.640022Z[0m [33m WARN[0m [2mjackdaw_runtime::config[0m[2m:[0m no config asset at 'input-actions.bsn'; jackdaw_runtime::game_input::GameInputConfig starts at its default
+[2m2026-10-31T16:20:40.037733Z[0m [33m WARN[0m [2mjackdaw_bind::evaluate[0m[2m:[0m binding 0 on 794v0: no context for 't19_graphics::PlayerHealth.current'
+[2m2026-10-31T16:20:40.037802Z[0m [33m WARN[0m [2mjackdaw_bind::evaluate[0m[2m:[0m binding 0 on 797v0: no context for 't19_graphics::PickupCount.0'
+[2m2026-10-31T16:20:40.037822Z[0m [33m WARN[0m [2mjackdaw_bind::evaluate[0m[2m:[0m binding 0 on 796v0: no context for 't19_graphics::PlayerHealth.current'
