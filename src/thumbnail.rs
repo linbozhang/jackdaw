@@ -30,7 +30,7 @@
 
 use std::collections::{HashMap, HashSet, VecDeque};
 use std::path::{Path, PathBuf};
-use std::time::SystemTime;
+use std::time::{Instant, SystemTime};
 
 use bevy::{
     asset::{RenderAssetUsages, embedded_asset, load_embedded_asset},
@@ -47,8 +47,10 @@ use jackdaw_bsn::{BsnPatch, SceneBsnAst, apply_component_patch, patch_type_path}
 use jackdaw_feathers::tokens;
 use path_slash::PathExt as _;
 
-use crate::asset_index::AssetIndex;
+use crate::asset_files::{AssetFileKind, read_asset_kind};
+use crate::asset_index::{AssetIndex, AssetWatchChanges};
 use crate::entity_ops::GltfSource;
+use jackdaw_api::prelude::AssetKinds;
 
 /// Render layer the thumbnail stage owns exclusively. Layer 0 is the world,
 /// layer 1 is the material preview, and per-viewport grids start at layer 3
@@ -128,9 +130,85 @@ pub(crate) fn plugin(app: &mut App) {
                 (drive_thumbnail_queue, activate_camera_while_working).chain(),
                 update_thumbnail_slots,
                 capture_pending_scene,
+                respond_to_asset_changes,
             )
                 .run_if(in_state(crate::AppState::Editor)),
         );
+}
+
+/// Answer a burst of external file writes (AR1).
+///
+/// The assets watcher is the one trigger source: it reports the changed paths
+/// and the walk reads the typed files back, but two faces are left behind
+/// unless they are told again -- a tile's picture is latched once installed
+/// (`ThumbnailSlot::applied` never re-asks), and the thumbnail cache keeps what
+/// it produced for the mtime it saw. So a settled burst drops the pictured
+/// files' cache entries (`forget`, which also unlocks a previously failed
+/// attempt) and asks the browser to rebuild its tiles, which re-requests the
+/// pictures from scratch. Image tiles' texture-info lines are rebuilt the same
+/// way, so a picture of any changed file asks for a refresh. The settle window
+/// is [`crate::asset_index::CHANGE_SETTLE`].
+fn respond_to_asset_changes(
+    mut changes: ResMut<AssetWatchChanges>,
+    mut thumbnails: ResMut<Thumbnails>,
+    mut project: ResMut<crate::project_window::ProjectWindowState>,
+    kinds: Option<Res<AssetKinds>>,
+) {
+    respond_to_changes(
+        &mut changes,
+        &mut thumbnails,
+        &mut project,
+        kinds.as_deref(),
+    );
+}
+
+/// The response itself, split from the system wrapper so the rules are
+/// testable without a schedule.
+fn respond_to_changes(
+    changes: &mut AssetWatchChanges,
+    thumbnails: &mut Thumbnails,
+    project: &mut crate::project_window::ProjectWindowState,
+    kinds: Option<&AssetKinds>,
+) {
+    let Some(batch) = changes.take_settled(Instant::now()) else {
+        return;
+    };
+    let mut pictured = Vec::new();
+    for path in &batch {
+        if is_pictured_path(path, kinds) {
+            thumbnails.forget(path);
+            pictured.push(path.display().to_string());
+        }
+    }
+    if !pictured.is_empty() {
+        debug!("thumbnail: file change re-asks {}", pictured.join(", "));
+    }
+    project.needs_refresh = true;
+}
+
+/// Whether the file at `path` is one a tile is pictured with: a glTF model,
+/// a material file, or a prefab document. Scenes are left alone -- their
+/// picture is the viewport capture a save writes, not a photograph of the
+/// file.
+fn is_pictured_path(path: &Path, kinds: Option<&AssetKinds>) -> bool {
+    if is_model_path(path) {
+        return true;
+    }
+    let Some(kinds) = kinds else {
+        return false;
+    };
+    // The kind of a non-document file is answered by its extension above;
+    // only documents are read here.
+    if !jackdaw_bsn::is_document_path(path) {
+        return false;
+    }
+    match read_asset_kind(path, kinds) {
+        AssetFileKind::Prefab => true,
+        AssetFileKind::Asset { type_path } => kinds
+            .by_type_path(&type_path)
+            .is_some_and(|kind| kind.kind == crate::definition_assets::MATERIAL_KIND),
+        AssetFileKind::Scene => false,
+    }
 }
 
 /// True when `path` names a glTF model the browser should photograph.
@@ -1584,6 +1662,140 @@ mod tests {
         assert!(
             thumbnails.warned.insert(path.to_path_buf()),
             "forgetting the file lets it report again"
+        );
+    }
+
+    // -- Content changes (AR1) ------------------------------------------------
+
+    fn material_kinds() -> AssetKinds {
+        let mut kinds = AssetKinds::default();
+        kinds.register(jackdaw_api::prelude::AssetKind::compiled(
+            crate::definition_assets::MATERIAL_KIND,
+            "Material",
+            <StandardMaterial as bevy::reflect::TypePath>::type_path(),
+        ));
+        kinds
+    }
+
+    /// What a change report does to the files a tile is pictured with.
+    #[test]
+    fn pictured_paths_answer_their_extension_or_their_kind() {
+        let kinds = material_kinds();
+        let dir = tempfile::tempdir().expect("tempdir");
+        let material = dir.path().join("bark.material.bsn");
+        std::fs::write(
+            &material,
+            crate::asset_files::asset_file_text(
+                <StandardMaterial as bevy::reflect::TypePath>::type_path(),
+                "#bark\nbevy_pbr::pbr_material::StandardMaterial { }\n",
+            ),
+        )
+        .expect("the material is written");
+        let prefab = dir.path().join("rock.bsn");
+        std::fs::write(
+            &prefab,
+            "jackdaw::prefab::components::Prefab\n\
+             jackdaw::prefab::components::PrefabEntityId(0)\n\
+             #rock\n",
+        )
+        .expect("the prefab is written");
+        let scene = dir.path().join("zone.bsn");
+        std::fs::write(
+            &scene,
+            "#Root\nbevy_transform::components::transform::Transform\n",
+        )
+        .expect("the scene is written");
+
+        assert!(
+            is_pictured_path(Path::new("/kit/tree.glb"), None),
+            "a model needs no kinds"
+        );
+        assert!(is_pictured_path(Path::new("/kit/tree.GLTF"), Some(&kinds)));
+        assert!(is_pictured_path(&material, Some(&kinds)));
+        assert!(is_pictured_path(&prefab, Some(&kinds)));
+        assert!(
+            !is_pictured_path(&scene, Some(&kinds)),
+            "a scene's picture is the viewport capture a save writes"
+        );
+        assert!(!is_pictured_path(Path::new("/kit/sky.png"), Some(&kinds)));
+    }
+
+    /// A settled change report for a pictured file drops the cache entry (so a
+    /// failed or stale attempt gets a fresh one) and asks the browser to
+    /// rebuild its tiles, which re-requests the picture (AR1).
+    #[test]
+    fn a_change_event_forgets_the_picture_and_the_next_request_rerenders() {
+        let dir = tempfile::tempdir().expect("tempdir");
+        let model = dir.path().join("tree.glb");
+        std::fs::write(&model, b"not really a glb").expect("the model is written");
+        let mtime = std::fs::metadata(&model)
+            .and_then(|meta| meta.modified())
+            .expect("the mtime is read");
+
+        let mut changes = AssetWatchChanges::default();
+        changes.push(std::slice::from_ref(&model));
+        // Old enough that the burst has settled.
+        changes.arrival =
+            Some(Instant::now() - (crate::asset_index::CHANGE_SETTLE + Duration::from_millis(50)));
+
+        let mut thumbnails = Thumbnails::default();
+        thumbnails
+            .cache
+            .record(&model, mtime, ThumbState::Ready(Handle::default()));
+
+        let mut world = World::new();
+        world.insert_resource(changes);
+        world.insert_resource(thumbnails);
+        world.insert_resource(crate::project_window::ProjectWindowState::at(dir.path()));
+
+        let mut thumbnails = world.remove_resource::<Thumbnails>().expect("thumbnails");
+        let mut changes = world
+            .remove_resource::<AssetWatchChanges>()
+            .expect("changes");
+        let mut project = world
+            .remove_resource::<crate::project_window::ProjectWindowState>()
+            .expect("state");
+
+        respond_to_changes(&mut changes, &mut thumbnails, &mut project, None);
+
+        assert!(project.needs_refresh, "the browser rebuilds its tiles");
+        assert!(
+            thumbnails.cache.ready(&model, mtime).is_none(),
+            "the picture produced at the old mtime is forgotten"
+        );
+        thumbnails.request(&model, Subject::Model);
+        assert_eq!(
+            thumbnails.cache.take_next(),
+            Some((model, Subject::Model)),
+            "with the cache entry dropped, the next request queues a fresh photograph"
+        );
+    }
+
+    /// A burst the watcher has just reported waits for its settle window
+    /// before any face acts on it, and arrives as one deduplicated batch
+    /// (AR1).
+    #[test]
+    fn a_change_batch_settles_before_it_is_taken() {
+        let mut changes = AssetWatchChanges::default();
+        let tree = PathBuf::from("/kit/tree.glb");
+        let rock = PathBuf::from("/kit/rock.glb");
+        changes.push(std::slice::from_ref(&tree));
+        assert!(
+            changes.take_settled(Instant::now()).is_none(),
+            "the burst is younger than the settle window"
+        );
+        changes.push(std::slice::from_ref(&tree));
+        changes.push(std::slice::from_ref(&rock));
+
+        let settled = changes
+            .take_settled(
+                Instant::now() + (crate::asset_index::CHANGE_SETTLE + Duration::from_millis(50)),
+            )
+            .expect("the burst has settled");
+        assert_eq!(settled, vec![tree, rock], "one batch, without duplicates");
+        assert!(
+            changes.take_settled(Instant::now()).is_none(),
+            "and taking it empties the report"
         );
     }
 

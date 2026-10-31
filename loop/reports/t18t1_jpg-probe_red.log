@@ -1,0 +1,24 @@
+    Finished `test` profile [optimized + debuginfo] target(s) in 0.33s
+     Running tests/asset_formats.rs (target/debug/deps/asset_formats-a40f126b7d17191e)
+
+running 2 tests
+test the_workspace_selection_teaches_the_jpeg_feature ... ok
+test a_jpg_the_import_ui_invites_decodes ... FAILED
+
+failures:
+
+---- a_jpg_the_import_ui_invites_decodes stdout ----
+DEBUG state: Loading
+
+thread 'a_jpg_the_import_ui_invites_decodes' (24822860) panicked at tests/asset_formats.rs:92:5:
+a jpg the import UI invites must decode; got Failed(AssetLoaderError(AssetLoaderError { path: pictures/probe.jpg, loader_name: "bevy_image::image_loader::ImageLoader", error: FileTexture(FileTextureError { error: InvalidImageExtension("jpg"), path: "pictures/probe.jpg" })
+ })) -- if this reads as a missing loader, the workspace bevy selection lost the `jpeg` feature
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    a_jpg_the_import_ui_invites_decodes
+
+test result: FAILED. 1 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.38s
+
+error: test failed, to rerun pass `--test asset_formats`

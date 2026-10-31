@@ -234,6 +234,10 @@ bevy = { git = "https://github.com/bevyengine/bevy", branch = "main", features =
     # Audio files beyond the default vorbis: .wav is what generated fixtures
     # and template sounds come as (hound is a light decoder).
     "wav",
+    # The import face invites .jpg (`asset_ingest::classify`, the pick
+    # filters), so the decode half has to answer it (zune-jpeg is a light
+    # decoder). The template game does not name it: it ships no jpg assets.
+    "jpeg",
 ] }
 jackdaw_jsn = { version = "0.21.0-dev", path = "crates/jackdaw_jsn" }
 jackdaw_geometry = { version = "0.21.0-dev", path = "crates/jackdaw_geometry" }
