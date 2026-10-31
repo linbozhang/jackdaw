@@ -77,7 +77,9 @@
 //!   whole pattern: the player walks into a pickup, it despawns and
 //!   the count goes up — only the player's touch counts, so a cube
 //!   settling onto a pickup leaves it alone; collect all three and
-//!   the level clears.
+//!   the run is won — the flow moves to the game-over screen, the
+//!   same move that ends a lost run, so the end screen's Restart
+//!   starts the next one.
 //! * **Collision layers**: a `CollisionLayers` component (fields
 //!   `memberships` and `filters`, one bit per layer) decides who
 //!   interacts with whom — a contact only exists when each side's
@@ -192,6 +194,9 @@
 //! an `AudioPlayer("sounds/…")` naming a file and a `PlaybackSettings`
 //! choosing loop/one-shot, volume and (for the drone) `spatial`. Note
 //! bevy's spatial audio is left-right panning by distance, not HRTF.
+//! The blip pulls double duty as the win's fanfare: `collect_pickups`
+//! sounds it once on the sfx bus as the third pickup lands, right
+//! before the flow moves to the end screen.
 //!
 //! The three-way mix — master, music, sfx — is the same config-asset
 //! pattern as the tuning above: `GameAudioConfig` below, authored as

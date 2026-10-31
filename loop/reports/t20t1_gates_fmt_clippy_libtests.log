@@ -1,0 +1,183 @@
+=== FMT 02:32:49 ===
+FMT_EXIT=0
+=== CLIPPY WS 02:32:52 ===
+    Checking jackdaw_geometry v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_geometry)
+    Checking jackdaw_bsn v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_bsn)
+    Checking jackdaw_bind v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_bind)
+   Compiling jackdaw_env v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_env)
+    Checking jackdaw_widgets_runtime v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_widgets_runtime)
+    Checking jackdaw_pie_protocol v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_pie_protocol)
+    Checking jackdaw_input v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_input)
+    Checking jackdaw_commands v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_commands)
+    Checking jackdaw_localization v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_localization)
+    Checking jackdaw_fuzzy v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_fuzzy)
+    Checking jackdaw_widgets v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_widgets)
+   Compiling jackdaw_api_macros v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_api_macros)
+   Compiling jackdaw_project_build v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_project_build)
+   Compiling jackdaw_package v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_package)
+    Checking jackdaw_releases v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_releases)
+    Checking jackdaw_rustc_wrapper v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_rustc_wrapper)
+    Checking bevy_window_chrome v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/bevy_window_chrome)
+    Checking jackdaw_animation_runtime v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_animation_runtime)
+    Checking jackdaw_prefab v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_prefab)
+    Checking jackdaw_remote v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_remote)
+    Checking jackdaw_scene_types v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_scene_types)
+    Checking jackdaw_csg v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_csg)
+    Checking jackdaw_uv v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_uv)
+    Checking jackdaw_select v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_select)
+    Checking jackdaw_hull v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_hull)
+    Checking jackdaw_pick v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_pick)
+    Checking jackdaw_material v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_material)
+    Checking jackdaw_camera v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_camera)
+    Checking jackdaw_snap v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_snap)
+    Checking ring v0.17.14
+    Checking jackdaw_mcp v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_mcp)
+    Checking rustls-webpki v0.103.16
+    Checking jackdaw_terrain v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_terrain)
+    Checking jackdaw_schema v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_schema)
+    Checking jackdaw_surface v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_surface)
+    Checking jackdaw_camera_rig v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_camera_rig)
+    Checking jackdaw_feathers v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_feathers)
+    Checking jackdaw_multiplayer v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_multiplayer)
+    Checking jackdaw_jsn v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_jsn)
+    Checking rustls v0.23.46
+    Checking jackdaw_scaffold v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_scaffold)
+    Checking jackdaw_cli_internal v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_cli)
+    Checking jackdaw_runtime v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_runtime)
+    Checking ureq v2.12.1
+    Checking jackdaw_panels v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_panels)
+    Checking jackdaw_node_graph v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_node_graph)
+    Checking jd v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jd)
+    Checking jackdaw_avian_integration v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/integrations/physics/jackdaw_avian_integration)
+    Checking jackdaw_api_internal v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_api_internal)
+    Checking jackdaw_animation v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_animation)
+    Checking jackdaw_dylib v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_dylib)
+    Checking jackdaw_loader v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_loader)
+    Checking jackdaw_api v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_api)
+    Checking jackdaw_sdk v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_sdk)
+    Checking jackdaw_multiplayer_editor v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_multiplayer_editor)
+    Checking jackdaw_physics v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/integrations/physics/jackdaw_physics)
+    Checking jackdaw_extension v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_extension)
+    Checking test_fixture_extension v0.0.0 (/Users/zhanglinbo/workspace/jackdaw/tests/fixtures/test_fixture_extension)
+    Checking viewable_camera_extension v0.1.0 (/Users/zhanglinbo/workspace/jackdaw/examples/extension/viewable_camera_extension)
+    Checking dynamic_extension v0.1.0 (/Users/zhanglinbo/workspace/jackdaw/examples/extension/dynamic_extension)
+    Checking jackdaw v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw)
+    Checking jackdaw_editor v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_editor)
+    Finished `dev` profile [optimized + debuginfo] target(s) in 41.85s
+CLIPPY_WS_EXIT=0
+=== CLIPPY PHYSICS 02:33:35 ===
+    Checking jackdaw_geometry v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_geometry)
+    Checking jackdaw_bsn v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_bsn)
+    Checking jackdaw_bind v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_bind)
+    Checking jackdaw_input v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_input)
+    Checking jackdaw_commands v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_commands)
+    Checking jackdaw_widgets_runtime v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_widgets_runtime)
+    Checking jackdaw_localization v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_localization)
+    Checking jackdaw_env v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_env)
+   Compiling jackdaw_api_macros v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_api_macros)
+   Compiling jackdaw_project_build v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_project_build)
+    Checking jackdaw_package v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_package)
+    Checking jackdaw_pie_protocol v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_pie_protocol)
+    Checking jackdaw_releases v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_releases)
+    Checking bevy_window_chrome v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/bevy_window_chrome)
+    Checking jackdaw_widgets v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_widgets)
+    Checking jackdaw_camera v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_camera)
+    Checking jackdaw_rustc_wrapper v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_rustc_wrapper)
+    Checking jackdaw_snap v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_snap)
+    Checking jackdaw_prefab v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_prefab)
+    Checking jackdaw_animation_runtime v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_animation_runtime)
+    Checking jackdaw_remote v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_remote)
+    Checking jackdaw_scene_types v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_scene_types)
+    Checking jackdaw_select v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_select)
+    Checking jackdaw_hull v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_hull)
+    Checking jackdaw_pick v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_pick)
+    Checking jackdaw_csg v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_csg)
+    Checking jackdaw_uv v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_uv)
+    Checking jackdaw_terrain v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_terrain)
+    Checking jackdaw_schema v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_schema)
+    Checking jackdaw_camera_rig v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_camera_rig)
+    Checking jackdaw_surface v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_surface)
+    Checking jackdaw_feathers v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_feathers)
+    Checking jackdaw_multiplayer v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_multiplayer)
+    Checking jackdaw_jsn v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_jsn)
+    Checking jackdaw_scaffold v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_scaffold)
+    Checking jackdaw_runtime v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_runtime)
+    Checking jackdaw_panels v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_panels)
+    Checking jackdaw_node_graph v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_node_graph)
+    Checking jackdaw_avian_integration v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/integrations/physics/jackdaw_avian_integration)
+    Checking jackdaw_animation v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_animation)
+    Checking jackdaw_api_internal v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_api_internal)
+    Checking jackdaw_api v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_api)
+    Checking jackdaw_loader v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_loader)
+    Checking jackdaw_physics v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/integrations/physics/jackdaw_physics)
+    Checking jackdaw_multiplayer_editor v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_multiplayer_editor)
+    Checking jackdaw v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw)
+    Finished `dev` profile [optimized + debuginfo] target(s) in 28.73s
+CLIPPY_PHY_EXIT=0
+=== LIBTESTS 02:34:04 ===
+test tests::a_theme_that_is_there_but_holds_nothing_is_filled_in ... ok
+test tests::a_nine_slice_brings_an_image_node_with_it ... ok
+test tests::a_toggle_switch_takes_the_switch_tokens_not_the_checkbox_ones ... ok
+test tests::a_chosen_authored_radio_takes_the_checked_ring ... ok
+test tests::a_checked_authored_checkbox_takes_the_checked_tokens ... ok
+test tests::a_typed_edit_is_reported_as_a_value_change ... ok
+test tests::a_settled_widget_is_not_rewritten_every_frame ... ok
+test tests::a_typed_edit_reaches_the_value ... ok
+test tests::a_typed_edit_and_a_written_value_in_one_frame_settle ... ok
+test tests::a_value_written_from_code_is_not_reported_as_an_edit ... ok
+test tests::a_value_set_from_code_reaches_the_input ... ok
+test tests::a_value_that_arrives_with_an_empty_editor_is_not_wiped_by_it ... ok
+test tests::the_value_is_registered_with_a_default ... ok
+test tests::an_unauthored_checkbox_is_left_alone ... ok
+test tests::an_idle_input_is_written_by_neither_side ... ok
+test tests::a_written_value_settles_once_the_pipeline_has_moved_the_caret ... ok
+test tests::a_keystroke_through_bevys_text_pipeline_reaches_the_value_and_settles ... ok
+
+test result: ok. 19 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.55s
+
+     Running unittests src/lib.rs (target/debug/deps/jd-412f80ea56a17daa)
+
+running 22 tests
+test archive::tests::formats_follow_the_published_extension ... ok
+test editor_cli::tests::newer_patches_and_nightlies_are_reported_for_installed_lines_only ... ok
+test editor_cli::tests::installs_are_grouped_by_bevy_line_with_main_first ... ok
+test editors::tests::a_missing_line_names_the_install_command_unless_jd_ships_that_line ... ok
+test editors::tests::a_pinned_project_prefers_its_install_over_the_editor_beside_jd ... ok
+test editors::tests::an_unpinned_project_opens_with_the_default_editor ... ok
+test archive::tests::a_gzipped_tarball_unpacks_under_its_single_folder ... ok
+test archive::tests::a_zip_unpacks_its_files ... ok
+test editors::tests::names_that_could_leave_their_directory_are_refused ... ok
+test editors::tests::the_exact_editor_beside_jd_wins_over_an_older_install_of_its_line ... ok
+test editors::tests::version_lines_are_read_from_editor_output ... ok
+test fetch::tests::plain_http_is_refused_before_connecting ... ok
+test fetch::tests::windows_file_urls_drop_the_slash_before_the_drive ... ok
+test sign::tests::generated_keys_round_trip_through_pkcs8 ... ok
+test sign::tests::existing_publisher_key_reproduces_its_signature ... ok
+test sign::tests::packed_bundles_verify_and_detect_tampering ... ok
+test self_update::tests::development_and_prerelease_builds_are_not_replaced ... ok
+test self_update::tests::a_cargo_installed_jd_is_left_to_cargo ... ok
+test self_update::tests::a_jd_beside_its_editor_or_sdk_stays_with_that_bundle ... ok
+test self_update::tests::a_jd_inside_a_managed_install_names_that_install ... ok
+test self_update::tests::a_standalone_release_jd_may_update_itself ... ok
+test fetch::tests::file_urls_read_and_hash_local_files ... ok
+
+test result: ok. 22 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+
+     Running unittests src/lib.rs (target/debug/deps/test_fixture_extension-10c810d107661fd8)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (target/debug/deps/viewable_camera_extension-ca3ae02573dcbbac)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+LIBTESTS_EXIT=0
+=== LIBTESTS TARGETED: jackdaw_scaffold 02:35:29 ===
+
+test result: ok. 92 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.90s
+
+SCAFFOLD_LIBTESTS_EXIT=0

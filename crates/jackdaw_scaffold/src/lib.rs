@@ -3162,7 +3162,9 @@ fn spawn_walls(
 
 /// The pickup pattern itself: when the *player* starts touching a
 /// `Pickup`, the pickup goes away and the count goes up; the third
-/// one clears the level. The other side of the contact is checked
+/// one wins the run — the flow moves to the game-over screen, the
+/// very move blood-out makes, so the end screen and its Restart are
+/// the win's way out too. The other side of the contact is checked
 /// on purpose — a prop merely settling onto a pickup (the falling
 /// cube landing on one) must not collect it. Swap `Pickup` for your
 /// own marker and this is a coin, a key, a landmine — whatever a
@@ -3171,7 +3173,9 @@ fn collect_pickups(
     triggers: Res<TriggerEvents>,
     pickups: Query<(), With<Pickup>>,
     mut players: Query<&mut PickupCount, With<PlayerMarker>>,
+    mut flow: ResMut<NextState<GameFlow>>,
     mut commands: Commands,
+    server: Res<AssetServer>,
 ) {
     let mut collected = 0u32;
     for contact in triggers.enters() {
@@ -3189,6 +3193,15 @@ fn collect_pickups(
     count.0 += collected;
     if count.0 >= 3 {
         info!("Level clear! All {} pickups collected.", count.0);
+        // The win acknowledges itself with the button blip: the same
+        // one-shot `press_sound` sends, riding the sfx bus and taking
+        // itself down when it ends.
+        commands.spawn((
+            AudioPlayer::<AudioSource>(server.load(BLIP_SOUND)),
+            PlaybackSettings::DESPAWN,
+            SfxBus,
+        ));
+        flow.set(GameFlow::GameOver);
     }
 }
 
@@ -3838,6 +3851,11 @@ mod tests {
             "PickupCount",
             "players.contains(contact.other)",
             "Level clear",
+            // The win is a flow move, not just a log line (T20/EG1):
+            // `flow.set` spells it here because `update_game_over`
+            // transitions through `next.set` — this anchor pins the
+            // pickup arm's own move to the game-over screen.
+            "flow.set(GameFlow::GameOver)",
             "CollisionLayers",
             "memberships 0b100",
             "apply_gravity_from_config",
@@ -3885,6 +3903,47 @@ mod tests {
         assert!(
             plain_lib.contains("transform.translation.y += config.gravity * dt;"),
             "the manual fall stands in without physics"
+        );
+    }
+
+    /// The win the pickup demo teaches (T20/EG1, decision 1-A): the
+    /// third pickup moves the flow to the game-over screen — the very
+    /// move blood-out takes, so the end screen's Restart covers both —
+    /// and acknowledges itself with the button blip on the sfx bus. A
+    /// fresh project can be won, not only lost.
+    #[test]
+    fn new_game_project_teaches_the_win_transition() {
+        let dest = temp_dir("newgame-win").join("my-game");
+        scaffold_new_project(&dest, "my-game", TemplateKind::Game).unwrap();
+        let lib = std::fs::read_to_string(dest.join("src/lib.rs")).unwrap();
+        for needle in [
+            // The log line stays; the win moves the flow on top of it.
+            "Level clear!",
+            // The pickup arm's own move: spelled `flow.set` here, where
+            // `update_game_over` transitions through `next.set`.
+            "flow.set(GameFlow::GameOver)",
+            // The header prose names the win and the end screen it lands on.
+            "the run is won",
+        ] {
+            assert!(
+                lib.contains(needle),
+                "the template must teach `{needle}`; the win transition drifted"
+            );
+        }
+        // The blip sounds exactly twice in the template — `press_sound`'s
+        // acknowledgment and the win's: a third (or a vanished one) means
+        // the pair drifted.
+        assert_eq!(
+            lib.matches("server.load(BLIP_SOUND)").count(),
+            2,
+            "the template teaches exactly two blip spawns (press + win)"
+        );
+        // The win does not resurrect the pickups or re-enter the level
+        // by itself: the game-over screen's Restart is the way back, and
+        // that door is the template's existing `"restart"` arm.
+        assert!(
+            lib.contains("\"start\" | \"restart\" =>"),
+            "the win's way back is the shared restart arm; the flow pattern drifted"
         );
     }
 
