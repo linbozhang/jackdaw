@@ -1,0 +1,11 @@
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t19-graphics/t19-graphics
+L1_PRESET_FACE_PASS
+L1 preset face: low={"render_scale":50,"aa":"off","ssao":"high","post":false,"sharpen":false} high={"render_scale":100,"aa":"fxaa","ssao":"high","post":true,"sharpen":false}
+L1_SEED_VERIFY_PASS
+editor camera: entity 3909v0 (Camera3d count: 4)
+shot m1-low ok (viewport)
+probe Exposure: bevy_camera::camera::Exposure silent (errors: )
+probe Exposure: bevy_camera::exposure::Exposure silent (errors: )
+M1_EXPOSURE_R_FAIL
+loop/qa/t19-live.sh: line 1032: ECOMP_ERRORS: unbound variable
+loop/qa/t19-live.sh: line 83: 36866 Terminated: 15          nohup env DYLD_LIBRARY_PATH="$TOOLCHAIN_LIB" ./target/debug/jackdaw > "$boot_log" 2>&1

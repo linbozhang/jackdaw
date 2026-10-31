@@ -1,0 +1,39 @@
+=== SURFACE ===
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+SURFACE_EXIT=0
+=== GRAPHICS_PANEL ===
+test graphics_panel::opening_the_panel_docks_a_tab_with_both_sections ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 159 filtered out; finished in 5.90s
+
+=== GRAPHICS_PREFS_CLEAN GUARD ===
+test graphics_prefs_clean::the_prep_chain_authors_an_environment_through_the_operators ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 165 filtered out; finished in 4.56s
+
+=== VIEWPORT_SETTINGS_MENU ISOLATION ===
+test viewport_settings_menu::the_view_mode_rows_pick_one_mode_at_a_time ... ok
+
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 155 filtered out; finished in 5.76s
+
+=== AN2 LEG ===
+────────────
+ Nextest run ID 63aac4bb-2b8f-4baa-b120-b9a98f4cc966 with nextest profile: default
+    Starting 1 test across 1 binary
+        PASS [   0.102s] (1/1) jackdaw_runtime::animation_scene_load a_loaded_scene_plays_its_default_state
+────────────
+     Summary [   0.102s] 1 test run: 1 passed, 0 skipped
+AN2_EXIT=0
+=== DF ===
+Filesystem        Size    Used   Avail Capacity iused ifree %iused  Mounted on
+/dev/disk3s1s1   460Gi    12Gi    26Gi    32%    459k  272M    0%   /
+=== SURFACE (full capture, QA rerun to fix tail-5 cut) ===
+     Running unittests src/lib.rs (target/debug/deps/jackdaw_surface-1fae7c61a24594d2)
+test result: ok. 52 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+   Doc-tests jackdaw_surface
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+SURFACE_EXIT=0

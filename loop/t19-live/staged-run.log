@@ -1,0 +1,14 @@
+[2m2026-10-31T14:59:46.075030Z[0m [32m INFO[0m [2mbevy_diagnostic::system_information_diagnostics_plugin::internal[0m[2m:[0m SystemInfo { os: "macOS 26.6.2 Tahoe", kernel: "25.6.0", cpu: "Apple M1 Pro", core_count: "8", memory: "16.0 GiB" }
+[2m2026-10-31T14:59:46.076039Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-10-31T14:59:46.121672Z[0m [32m INFO[0m [2mbevy_render::renderer[0m[2m:[0m AdapterInfo { name: "Apple M1 Pro", vendor: 0, device: 0, device_type: IntegratedGpu, device_pci_bus_id: "", driver: "", driver_info: "", backend: Metal, subgroup_min_size: 4, subgroup_max_size: 64, transient_saves_memory: Some(true), limit_bucket: None }
+[2m2026-10-31T14:59:46.216559Z[0m [32m INFO[0m [2mbevy_pbr::cluster[0m[2m:[0m GPU clustering is supported on this device.
+[2m2026-10-31T14:59:46.216612Z[0m [32m INFO[0m [2mbevy_render::batching::gpu_preprocessing[0m[2m:[0m GPU preprocessing is fully supported on this device.
+[2m2026-10-31T14:59:46.244472Z[0m [32m INFO[0m [2mbevy_winit::system[0m[2m:[0m Creating new window t19-graphics (69v0)
+[2m2026-10-31T14:59:46.349373Z[0m [32m INFO[0m [2mjackdaw_remote::methods[0m[2m:[0m JackdawRemote: Generated 472 new component definitions in .jackdaw/components.json
+[2m2026-10-31T14:59:46.350662Z[0m [32m INFO[0m [2mjackdaw_runtime[0m[2m:[0m No catalog at /Users/zhanglinbo/workspace/loop-mac/t19-graphics/t19-graphics/.jackdaw/dist/release/assets/catalog.bsn, skipping catalog load
+[2m2026-10-31T14:59:46.357038Z[0m [33m WARN[0m [2mjackdaw_runtime::config[0m[2m:[0m no config asset at 'game-config.bsn'; t19_graphics::GameConfig starts at its default
+[2m2026-10-31T14:59:46.357073Z[0m [33m WARN[0m [2mjackdaw_runtime::config[0m[2m:[0m no config asset at 'audio-config.bsn'; t19_graphics::GameAudioConfig starts at its default
+[2m2026-10-31T14:59:46.357090Z[0m [33m WARN[0m [2mjackdaw_runtime::config[0m[2m:[0m no config asset at 'input-actions.bsn'; jackdaw_runtime::game_input::GameInputConfig starts at its default
+[2m2026-10-31T14:59:46.398872Z[0m [33m WARN[0m [2mjackdaw_bind::evaluate[0m[2m:[0m binding 0 on 794v0: no context for 't19_graphics::PlayerHealth.current'
+[2m2026-10-31T14:59:46.398938Z[0m [33m WARN[0m [2mjackdaw_bind::evaluate[0m[2m:[0m binding 0 on 797v0: no context for 't19_graphics::PickupCount.0'
+[2m2026-10-31T14:59:46.398943Z[0m [33m WARN[0m [2mjackdaw_bind::evaluate[0m[2m:[0m binding 0 on 796v0: no context for 't19_graphics::PlayerHealth.current'

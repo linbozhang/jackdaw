@@ -1,0 +1,54 @@
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t19-graphics/t19-graphics
+L1_PRESET_FACE_PASS
+L1 preset face: low={"render_scale":50,"aa":"off","ssao":"high","post":false,"sharpen":true} high={"render_scale":100,"aa":"fxaa","ssao":"high","post":true,"sharpen":true}
+L1_SEED_VERIFY_PASS
+editor camera: entity 3909v0 (Camera3d count: 1)
+shot m1-low ok (viewport)
+probe Exposure: bevy_camera::camera::Exposure silent (errors: {"code":-23402,"message":"type `bevy_camera::camera::Exposure` did not register the `ReflectSerialize` or `ReflectSerializeWithRegistry` type data. For certain )
+probe Exposure: bevy_camera::exposure::Exposure silent (errors: {"code":-23402,"message":"Unknown component type: `bevy_camera::exposure::Exposure`"})
+M1_EXPOSURE_R_PASS
+M1 numeric via document:13.0 (component read refused: {"code":-23402,"message":"Unknown component type: `bevy_camera::exposure::Exposure`"})
+shot m1-high ok (viewport)
+M1 pixel pair: pixels: 2806708; changed(>tol 12): 2806708 (100.00%); mean channel diff: 73.359
+M1_EXPOSURE_PX_PASS
+shot m2-off ok (viewport)
+probe Bloom: bevy_post_process::bloom::settings::Bloom answers ({"composite_mode":"EnergyConserving","high_pass_frequency":1.0,"intensity":0.800000011920929,"low_frequency_boost":0.699999988079071,"low_frequency_boost_curvature":0.949999988079071,"max_mip_dimension":512,"prefilter":{"threshold":0.0,"threshold_softness":0.0},"scale":[1.0,1.0]})
+M2_BLOOM_R_PASS
+M2 numeric: Bloom{intensity:0.8} answers via bevy_post_process::bloom::settings::Bloom
+shot m2-on ok (viewport)
+M2 pixel pair: pixels: 2806708; changed(>tol 12): 812659 (28.95%); mean channel diff: 3.890
+M2_BLOOM_PX_PASS
+M3_AA_BOUNDARY_PASS
+M3: document antialiasing=Taa, viewport camera carries no TemporalAntiAliasing ({"code":-23403,"message":"Component `bevy_anti_alias::taa::TemporalAntiAliasing` not present in Entity 3909v0"}) — the boundary itself
+shot gr6-sun-on ok (viewport)
+shot gr6-sun-off ok (viewport)
+GR6 pixel half: pixels: 2806708; changed(>tol 12): 0 (0.00%); mean channel diff: 0.000
+shot gr6-sunstill-flakecheck1 ok (viewport)
+shot gr6-sunstill-flakecheck2 ok (viewport)
+confirm_red gr6-sunstill: two fresh same-state shots agree — the red is real
+GR6 INCONCLUSIVE: settings moved (sun_shadows=false on file) but the picture is flat — the fixture frame holds no shadow receivers (sky only), so this is not chargeable as the R12 shape
+GR6_SPOT_PASS
+GR6 verdict: inconclusive-by-fixture (recorded in the report; R12 spot check needs a geometry-bearing scene)
+M8_ROUNDTRIP_PASS
+M8: 12.5 on disk after save; reopened document reads 12.5 (component face: refused {"code":-23402,"message":"type `bevy_camera::camera::Exposure` did not register the `ReflectSerialize` or `ReflectSerializeWithRegistry` type data. For certain types, this may need to be registered manually using `register_type_data` (stack: `bevy_camera::camera::Exposure`)"})
+M8 restore: document back at the seed SHA
+M9_SHA_PASS
+M9: scene.bsn byte-identical through the whole A-region suite + save; no dirty dialog
+M13_GI_ROW_PASS
+M13_GI_DISABLED_PASS
+M13 live disabled proof: {"jsonrpc":"2.0","id":8271,"error":{"code":-32602,"message":"the control is disabled (checkbox )"}}
+shot m13-gi-panel ok (window)
+M13_GI_PX_PASS
+M13: greyed GI row archived (shot-m13-gi-panel.png); tooltip text face = headless anchor
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t19-graphics/t19-graphics
+M12_SCRATCH_PASS
+M12: store landed in the scratch config dir; project tree clean ({"render_scale":50,"aa":"off","ssao":"high","post":false,"sharpen":false})
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t19-graphics/t19-graphics
+M12_PER_USER_PASS
+M12: the boot without the override reads the user-level original back ({"render_scale":100,"aa":"fxaa","ssao":"high","post":true,"sharpen":false}) — the scratch write stayed put
+M16_EDITOR_ALIVE_PASS
+N13 counter (panicked lines in the editor log): 0
+0
+warn-scan editor: clean (tonemapp|bloom|exposure|solari|ray|UnresolvedTypes|panicked)
+EDITOR_PHASE_PASS
+RESULTS: EDITOR_PHASE=PASS GR6_SPOT=PASS L1_PRESET_FACE=PASS L1_SEED_VERIFY=PASS M12_PER_USER=PASS M12_SCRATCH=PASS M13_GI_DISABLED=PASS M13_GI_PX=PASS M13_GI_ROW=PASS M16_EDITOR_ALIVE=PASS M1_EXPOSURE_PX=PASS M1_EXPOSURE_R=PASS M2_BLOOM_PX=PASS M2_BLOOM_R=PASS M3_AA_BOUNDARY=PASS M8_ROUNDTRIP=PASS M9_SHA=PASS 

@@ -478,6 +478,14 @@
   `TextureImportReader` 按「源字节+meta」哈希落缓存文件（texture_import.rs:115-163），源文件反复改→旧 `.basis` 永不清，`.jackdaw/imported/` 随编辑期无界缓增（低频低危）。AR10 修复（fresh_processed 读时复验）已让陈旧缓存不再被服务，但孤儿文件本身仍不清。
   修复方向：启动/定期清扫孤儿（对照孤儿 tmp 清扫先例）或 LRU 上限；book `assets.md` 已注记「清 `.jackdaw/imported` 安全」。小票，下轮触碰 texture_import 时顺手。
 
+- [ ] **A14. ui_tree 不暴露 `Display::None`/ui_hover（工具面洞，F1）**（2026-10-31 T19-T2 QA 发现；主控批准立账——MCP 优先原则家族）
+  `ui_tree.visible` 只跟踪 `Visibility` 不跟踪 `Display::None`——「空态提示有区分力」类格的 walk 判据失去区分力（T19-T2 M15 亲验：两态 walk 均含文案节点，格靠其他锚承载维持绿）。ui_hover 同未暴露。
+  修复方向：ui_tree 增 `display`/`hover` 字段（jackdaw_mcp 工具层，对照既有 visible 形态）。小票。
+
+- [ ] **A15. viewport_settings_menu preset 选取 flake（候选 W 票）**（2026-10-31 T19-T1/T2 QA 两轮证据；主控批准立账）
+  `a_preset_picked…:192`：T19-T1 全量红+摘模同红（164/1 同签名同 panic 行）、T19-T2 真机期未与画质腿同窗但**当日隔离 12/12 绿不复发**——并行撞共享 `viewport.json` 机理候选（T1 归档 t19t1_viewport_flake.log）+UI 时序。间歇形态非确定性红。
+  修复方向：测试间 viewport.json 隔离（对照 JACKDAW_CONFIG_DIR 换向先例）或重试窗；证据素材三件在 `t19t1_viewport_flake.log`/`t19t2_gates_tests.log`。
+
 - [ ] **A8. BSN apply 静默丢弃 crate 根 re-export 路径 + misleading remedy（AN8，T15-T2 真机首踩）**（2026-10-30 T15-T2 程序发现+QA 机制核实；主控批准立账）
   场景文档的图族组件必须写定义模块全路径（`…::graph::AnimationGraphRef`），crate 根 re-export 拼写被 `jackdaw_bsn::apply` 静默丢弃（无 warn、组件不落——手写场景/导出迁移场景易踩，fixture 已绕行）；且 `jackdaw_bsn::catalog` 的 remedy 文案（"rebuild the project"）对此误导。
   修复方向：未知路径丢弃补 warn（对照 AN1 运行态 warn 形态，列可用类型面）；remedy 文案按真实成因改写。小票。
