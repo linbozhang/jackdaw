@@ -1,0 +1,7 @@
+    Finished `test` profile [optimized + debuginfo] target(s) in 0.43s
+────────────
+ Nextest run ID 3a82cb2a-7264-4c4c-8338-ca1d2635e74a with nextest profile: ci
+    Starting 1 test across 33 binaries (3166 tests skipped)
+        PASS [   1.870s] (1/1) jackdaw::prefabs prefab_lifecycle::prefab_file_change_triggers_reload
+────────────
+     Summary [   1.876s] 1 test run: 1 passed, 3166 skipped

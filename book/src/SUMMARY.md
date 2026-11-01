@@ -25,6 +25,7 @@
 - [Game Parameters](user-guide/game-parameters.md)
 - [Game Input](user-guide/game-input.md)
 - [Game UI](user-guide/game-ui.md)
+- [Sprites in 2D](user-guide/sprites-2d.md)
 - [Audio](user-guide/audio.md)
 - [Game Flow](user-guide/game-flow.md)
 - [Game Saves](user-guide/game-saves.md)

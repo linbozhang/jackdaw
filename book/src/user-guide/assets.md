@@ -27,7 +27,10 @@ file is broken. The per-domain chapters go deeper:
 A dropped or pasted image is imported (copied into `assets/` if it
 came from outside) *and* placed as a reference plate at the cursor,
 ready to trace over. A dropped model is placed as a full instance.
-Everything else lands as a file the Project window lists.
+Everything else lands as a file the Project window lists. One exception
+by scene kind: drop an image onto a **2D world scene's** canvas and it
+becomes a sprite instead of a plate —
+[Sprites in 2D](sprites-2d.md) covers that canvas.
 
 Two format boundaries are worth knowing as they are, honestly:
 

@@ -95,7 +95,7 @@ TRANSFORM='bevy_transform::components::transform::Transform'
 NAME='bevy_ecs::name::Name'
 CAM2D='bevy_camera::components::Camera2d'
 EPSILON=0.001
-WARN_PATTERN='UnresolvedTypes|cannot-apply|panicked'
+WARN_PATTERN='UnresolvedTypes|cannot-apply|panicked|asset load failed|Could not find an asset loader'
 
 RESULTS_FILE="$(mktemp /tmp/t21-live.XXXXXX)"
 touch "$RESULTS_FILE"
@@ -671,6 +671,79 @@ eid() { # eid <name> — the editor entity carrying this Name
   brp world.query "{\"data\":{\"components\":[\"$NAME\"]}}" 2>/dev/null \
     | jq -r --arg n "$1" '[.result[]? | select(.components["'"$NAME"'"] == $n) | .entity][0]' 2>/dev/null
 }
+read_ready() { # read_ready <id> <component> [tries] — hold until a component
+  # read answers (the T2 QA read-ready gate: whole read windows can sit dead
+  # for minutes; legs that read values should not start inside one).
+  local id="$1" comp="$2" tries="${3:-30}" probe
+  for probe in $(seq 1 "$tries"); do
+    [ -n "$(ecomp_once "$id" "$comp")" ] && return 0
+    sleep 3
+  done
+  log "read_ready: no answer after $((tries*3))s (the read window stayed dead)"
+  return 1
+}
+camera_ready() { # camera_ready [tries] — hold until camera_state answers with
+  # an ortho_scale (the M3 drag's reach maths needs the fitted zoom; a dead
+  # read here silently degrades zoom to 1.0 and the handle grab misses).
+  local tries="${1:-20}" probe ortho
+  for probe in $(seq 1 "$tries"); do
+    ortho=$(brp jackdaw/camera_state '{}' 2>/dev/null | jq -r '.result.projection.ortho_scale // .result.ortho_scale // empty' 2>/dev/null)
+    [ -n "$ortho" ] && { echo "$ortho"; return 0; }
+    sleep 3
+  done
+  log "camera_ready: no ortho_scale after $((tries*3))s"
+  return 1
+}
+set_verified() { # set_verified <entity> <type_path> <field> <json> — a
+  # component.set whose write is read back before being trusted (the round-2
+  # session took writes silently: the op answered, the scene never changed).
+  # <field> may be a dotted path ("translation.z"); numeric reads compare
+  # with a tolerance, everything else as jq equality.
+  local id="$1" comp="$2" field="$3" value="$4" attempt got
+  for attempt in 1 2 3; do
+    op component.set "{\"entity\":$id,\"type_path\":\"$comp\",\"field\":\"$field\",\"value\":$value}" >/dev/null 2>&1
+    sleep 1; wait_idle 60 >/dev/null
+    got=$(ecomp "$id" "$comp")
+    if python3 - "$got" "$field" "$value" << 'PYT' 2>/dev/null
+import json, sys
+def walk(obj, path):
+    for part in path.split("."):
+        if not isinstance(obj, dict) or part not in obj:
+            return None
+        obj = obj[part]
+    return obj
+face, field, value = sys.argv[1], sys.argv[2], sys.argv[3]
+try:
+    face = json.loads(face)
+except Exception:
+    sys.exit(1)
+try:
+    value = json.loads(value)
+except Exception:
+    value = value
+cur = walk(face, field)
+if cur is None and isinstance(face, dict):
+    for v in face.values():          # some faces wrap the component by type path
+        cur = walk(v, field)
+        if cur is not None:
+            break
+if isinstance(cur, (int, float)) and isinstance(value, (int, float)):
+    sys.exit(0 if abs(float(cur) - float(value)) < 1e-4 else 1)
+sys.exit(0 if cur == value else 1)
+PYT
+    then
+      return 0
+    fi
+  done
+  log "set_verified FAILED: $field (last face: ${got:-none})"
+  return 1
+}
+ecomp_once() { # ecomp_once <id> <component> — one component read, no retry
+  local id="$1" comp="$2"
+  [ -n "$id" ] || return 0
+  brp world.get_components "{\"entity\":\"$id\",\"components\":[\"$comp\"]}" 2>/dev/null \
+    | jq -c --arg c "$comp" '.result.components[$c] // .result[$c] // empty' 2>/dev/null
+}
 gid() { # gid <name> — the game entity id carrying this Name
   gbrp world.query "{\"data\":{\"components\":[\"$NAME\"]}}" 2>/dev/null \
     | jq -r --arg n "$1" '[.result[]? | select(.components["'"$NAME"'"] == $n) | .entity][0]' 2>/dev/null
@@ -1101,13 +1174,22 @@ editor_phase() {
   # file drag has no synthetic seam; the product form is proven by proxy.
   op sprite.add '{"name":"Dropped","path":"hero.png","x":-160,"y":-40}' >/dev/null 2>&1
   sleep 2; wait_idle 120 >/dev/null
-  local drop_face; drop_face=$(ecomp "$(eid Dropped)" "$SPRITE")
-  if [ -n "$drop_sprite" ] && echo "$drop_face" | jq -e '.image != null' >/dev/null 2>&1; then
+  local drop_sprite; drop_sprite=$(eid Dropped)
+  # Judge by presence, not by a Sprite-face read: the Sprite component is not
+  # BRP-serializable on either side (-23402, the recorded D4 structural
+  # limit), so a `.image` face read can never answer. The query face is the
+  # honest channel (N12's presence+transform split).
+  local drop_present=""
+  if [ -n "$drop_sprite" ]; then
+    drop_present=$(brp world.query "{\"data\":{\"components\":[\"$SPRITE\"]}}" 2>/dev/null \
+      | jq -r --arg e "$drop_sprite" '[.result[]? | select(.entity | tostring == $e)] | length' 2>/dev/null)
+  fi
+  if [ "${drop_present:-0}" != "0" ] && [ -n "$drop_present" ]; then
     leg M1_IMAGE true
-    log "M1c sprite-with-image face (the drop's product form): $drop_face"
+    log "M1c sprite-with-image entity present in the With<Sprite> query (face reads are the D4 -23402 structural limit)"
   else
     leg M1_IMAGE false; ok=false
-    log "M1c FAILED: entity=${drop_sprite:-none} face=$drop_face"
+    log "M1c FAILED: entity=${drop_sprite:-none} query-rows=$drop_present"
   fi
 
   # ---- M2: picking + outline. A world-space click on the Hero selects it;
@@ -1168,9 +1250,14 @@ editor_phase() {
   # entity ids are per-session and the reads want the current generation.
   op input.pointer '{"action":"click","x":0,"y":0,"space":"world"}' >/dev/null 2>&1
   sleep 2; wait_idle 60 >/dev/null
+  read_ready "$(eid Hero)" "$TRANSFORM" 20 \
+    && log "M3 read-ready gate open" || log "M3 read-ready gate never opened (proceeding anyway; the T2 QA tool-ticket family)"
   hero_e=$(eid Hero)
   local zoom ortho
-  ortho=$(brp jackdaw/camera_state '{}' 2>/dev/null | jq -r '.result.projection.ortho_scale // .result.ortho_scale // empty' 2>/dev/null)
+  # The reach maths needs the fitted zoom; hold for camera_state (a dead read
+  # here silently degrades zoom to 1.0 and the handle grab misses — the
+  # round-2 session's M3 failure mode).
+  ortho=$(camera_ready 20) || ortho=""
   if [ -n "$ortho" ] && python3 -c "import sys; sys.exit(0 if float('$ortho') > 0 else 1)"; then
     zoom=$(python3 -c "print(1.0 / float('$ortho'))")
   else
@@ -1370,32 +1457,52 @@ editor_phase() {
   # top+1), a z flip trades the winner, readbacks follow.
   op sprite.add '{"name":"TopSpr","path":"blue.png","x":-150,"y":-40}' >/dev/null 2>&1
   sleep 2; wait_idle 120 >/dev/null
-  # Overlap them exactly: put TopSpr on Hero's spot.
-  op component.set "{\"entity\":$(eid TopSpr),\"type_path\":\"$TRANSFORM\",\"field\":\"translation\",\"value\":{\"x\":0.0,\"y\":0.0,\"z\":2.0}}" >/dev/null 2>&1
-  sleep 1; wait_idle 60 >/dev/null
-  op component.set "{\"entity\":$(eid Hero),\"type_path\":\"$TRANSFORM\",\"field\":\"translation.z\",\"value\":\"1.0\"}" >/dev/null 2>&1
-  sleep 1; wait_idle 60 >/dev/null
+  # Overlap them exactly: put TopSpr on Hero's spot. Each write is verified
+  # by readback (the round-2 session took these writes silently — the op
+  # answered, the scene never changed, and the flip pair came out identical).
+  set_verified "$(eid TopSpr)" "$TRANSFORM" "translation" '{"x":0.0,"y":0.0,"z":2.0}' \
+    || log "M7: TopSpr overlap write did not verify (continuing; the shot pair will tell)"
+  set_verified "$(eid Hero)" "$TRANSFORM" "translation.z" '"1.0"' \
+    || log "M7: Hero z=1 write did not verify (continuing)"
   settle_pixels 2
-  shot m7-blue-top viewport2d || ok=false
-  local blue_c
+  shot m7-blue-top window || ok=false
+  local blue_c red_c0
   blue_c=$(color_census "$OUTDIR/shot-m7-blue-top.png" 40 80 200)
-  log "M7 blue-on-top census: $blue_c%"
-  op component.set "{\"entity\":$(eid Hero),\"type_path\":\"$TRANSFORM\",\"field\":\"translation.z\",\"value\":\"3.0\"}" >/dev/null 2>&1
-  sleep 1; wait_idle 60 >/dev/null
-  settle_pixels 2
-  shot m7-red-top viewport2d || ok=false
-  local red_c
+  red_c0=$(color_census "$OUTDIR/shot-m7-blue-top.png" 200 30 30)
+  log "M7 blue-on-top census: blue $blue_c% red $red_c0%"
+  set_verified "$(eid Hero)" "$TRANSFORM" "translation.z" '"3.0"' \
+    || log "M7: Hero z=3 write did not verify (continuing)"
+  settle_pixels 4
+  shot m7-red-top window || ok=false
   red_c=$(color_census "$OUTDIR/shot-m7-red-top.png" 200 30 30)
   local blue_c2
   blue_c2=$(color_census "$OUTDIR/shot-m7-red-top.png" 40 80 200)
   log "M7 red-on-top census: red $red_c% blue $blue_c2%"
-  if python3 -c "import sys; sys.exit(0 if float('${blue_c:-0}') > 0.05 else 1)" \
-     && python3 -c "import sys; sys.exit(0 if float('${red_c:-0}') > 0.05 else 1)" \
-     && python3 -c "import sys; sys.exit(0 if float('${red_c:-0}') > float('${blue_c2:-0}') else 1)"; then
+  # The frame-diff criterion (T2 QA A2): the two window shots must differ —
+  # the viewport2d channel served stale frames in the T2 session, so sameness
+  # here is the stale-frame tell, not a stable scene. The colour shares move
+  # WITH the flip (red up, blue down); window chrome adds a constant to both
+  # shots, so the ordering of absolute shares is not the criterion.
+  local m7_diff=false
+  if [ -s "$OUTDIR/shot-m7-blue-top.png" ] && [ -s "$OUTDIR/shot-m7-red-top.png" ] \
+     && ! cmp -s "$OUTDIR/shot-m7-blue-top.png" "$OUTDIR/shot-m7-red-top.png"; then
+    m7_diff=true
+  fi
+  log "M7 frame-diff: $m7_diff (md5 $(md5 -q "$OUTDIR/shot-m7-blue-top.png" 2>/dev/null | cut -c1-8) vs $(md5 -q "$OUTDIR/shot-m7-red-top.png" 2>/dev/null | cut -c1-8))"
+  if [ "$m7_diff" = true ] \
+     && python3 - "$red_c0" "$red_c" "$blue_c" "$blue_c2" << 'PYT'
+import sys
+def f(v):
+    try: return float(v)
+    except Exception: return 0.0
+red0, red1, blue0, blue1 = (f(a) for a in sys.argv[1:5])
+sys.exit(0 if red1 > red0 and blue0 > blue1 else 1)
+PYT
+  then
     leg M7_Z_FLIP_PX true
   else
     leg M7_Z_FLIP_PX false; ok=false
-    log "M7 z flip FAILED: blue-top $blue_c%, red-top red $red_c% blue $blue_c2%"
+    log "M7 z flip FAILED: frame-diff=$m7_diff red ${red_c0:-0}->${red_c:-0} blue ${blue_c:-0}->${blue_c2:-0}"
   fi
   # Clean the overlap back apart and the z values to the plain ones.
   op component.set "{\"entity\":$(eid Hero),\"type_path\":\"$TRANSFORM\",\"field\":\"translation.z\",\"value\":\"0.0\"}" >/dev/null 2>&1
@@ -1407,6 +1514,8 @@ editor_phase() {
   # click it, Anchor.0 reads back the constant; one undo takes it back.
   op input.pointer '{"action":"click","x":0,"y":0,"space":"world"}' >/dev/null 2>&1
   sleep 2; wait_idle 60 >/dev/null
+  read_ready "$(eid Hero)" "$ANCHOR" 20 \
+    && log "SP9 read-ready gate open" || log "SP9 read-ready gate never opened (proceeding; D10 family)"
   walk
   # A collapsed card zeroes its subtree rects; expand via the card's header.
   local collapsed
@@ -1559,27 +1668,48 @@ atlas_phase() {
   fi
 
   # Index switch: frame 0 is the red tile, frame 1 green, frame 2 blue. Each
-  # switch repaints the sprite; the census follows.
+  # switch repaints the sprite; the census follows. Frame-diff criterion
+  # (T2 QA A5): the three window shots must pairwise differ — existence
+  # censuses pass trivially on the unworn full-sheet render (A17), so
+  # sameness is the stale/no-wear tell.
   settle_pixels 2
-  shot atlas-index0 viewport2d || ok=false
+  shot atlas-index0 window || ok=false
   local c0; c0=$(color_census "$OUTDIR/shot-atlas-index0.png" 200 30 30)
   op component.set "{\"entity\":$sheet_e,\"type_path\":\"$SPRITE\",\"field\":\"texture_atlas.index\",\"value\":\"1\"}" >/dev/null 2>&1
   sleep 1; wait_idle 60 >/dev/null
-  settle_pixels 2
-  shot atlas-index1 viewport2d || ok=false
+  settle_pixels 4
+  shot atlas-index1 window || ok=false
   local c1; c1=$(color_census "$OUTDIR/shot-atlas-index1.png" 30 180 60)
   op component.set "{\"entity\":$sheet_e,\"type_path\":\"$SPRITE\",\"field\":\"texture_atlas.index\",\"value\":\"2\"}" >/dev/null 2>&1
   sleep 1; wait_idle 60 >/dev/null
-  settle_pixels 2
-  shot atlas-index2 viewport2d || ok=false
+  settle_pixels 4
+  shot atlas-index2 window || ok=false
   local c2; c2=$(color_census "$OUTDIR/shot-atlas-index2.png" 40 80 200)
   log "ATLAS index census: index0 red $c0%, index1 green $c1%, index2 blue $c2%"
-  if python3 -c "import sys; sys.exit(0 if float('${c0:-0}') > 0.02 else 1)" \
-     && python3 -c "import sys; sys.exit(0 if float('${c1:-0}') > 0.02 else 1)" \
-     && python3 -c "import sys; sys.exit(0 if float('${c2:-0}') > 0.02 else 1)"; then
+  local idx_diff=false
+  # The diff is judged on the sprite-region crop, not the whole window:
+  # window chrome (clock text and friends) differs between any two shots,
+  # which would make a whole-window frame-diff trivially true — the mirror
+  # image of T2 QA A5's existence-census false positive.
+  local crop_dir="/tmp/t21-atlas-crops-$$"
+  mkdir -p "$crop_dir"
+  local i
+  for i in 0 1 2; do
+    sips -c 110 130 --cropOffset 450 1300 "$OUTDIR/shot-atlas-index$i.png" \
+      --out "$crop_dir/index$i.png" >/dev/null 2>&1
+  done
+  if [ -s "$crop_dir/index0.png" ] && [ -s "$crop_dir/index1.png" ] \
+     && [ -s "$crop_dir/index2.png" ] \
+     && ! cmp -s "$crop_dir/index0.png" "$crop_dir/index1.png" \
+     && ! cmp -s "$crop_dir/index1.png" "$crop_dir/index2.png"; then
+    idx_diff=true
+  fi
+  log "ATLAS index frame-diff (sprite-region crop): $idx_diff"
+  if [ "$idx_diff" = true ]; then
     leg ATLAS_INDEX_PX true
   else
     leg ATLAS_INDEX_PX false; ok=false
+    log "ATLAS index PX FAILED: sprite-region crops identical (the component.set wear route is the recorded D9 driver gap; the editor canvas renders the full sheet per A17 — the run side wears and renders the indexed tile, judged in the game phase)"
   fi
 
   # The atlas card reopens for editing after scene tabs visited it.
@@ -1654,8 +1784,11 @@ numeric_parity() { # numeric_parity <tag> — the saved fields read back == what
 }
 atlas_face() { # atlas_face <tag> <scene-file> — the atlas index face: the
                # document text names index 2 and the window draws the blue tile.
+               # The type path appears both as the editor's save spelling
+               # (bevy_image::…) and the fixture's re-export spelling
+               # (bevy_sprite::…) — the engine parses both.
   local tag="$1" file="$2"
-  grep -q "bevy_image::texture_atlas::TextureAtlas" "$file" \
+  grep -Eq "bevy_(image|sprite)::texture_atlas::TextureAtlas" "$file" \
     && grep -q "index: 2" "$file" \
     && log "$tag: the document carries the worn atlas (TextureAtlas, index 2)" \
     || { leg "$tag" false; log "$tag: the document lost the atlas wear"; return 1; }

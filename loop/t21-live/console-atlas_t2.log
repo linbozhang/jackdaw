@@ -1,0 +1,20 @@
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t21-sprite/t21-sprite
+ATLAS_KIND_FACE_FAIL
+ATLAS kind face: the walk found no 'Sprite Atlas' text (menu depth?); the asset.new route continues
+ATLAS_NEW_PASS
+ATLAS_GRID_PASS
+ATLAS grid: the saved card holds 6 URect rows (2x3 of 32x16)
+ATLAS_UNDO_PASS
+ATLAS_REDO_PASS
+ecomp 5418v4 bevy_sprite::sprite::Sprite raw tail:  to be registered manually using `register_type_data` (stack: `bevy_sprite::sprite::Sprite` -> `bevy_asset::handle::Handle<bevy_image::image::Image>` -> `bevy_platform::sync::Arc<bevy_asset::handle::StrongHandle>`)"}}}}
+ATLAS sprite face: ecomp 5418v4 bevy_sprite::sprite::Sprite raw tail:  to be registered manually using `register_type_data` (stack: `bevy_sprite::sprite::Sprite` -> `bevy_asset::handle::Handle<bevy_image::image::Image>` -> `bevy_platform::sync::Arc<bevy_asset::handle::StrongHandle>`)"}}}}
+ATLAS_WEAR_FAIL
+ATLAS wear FAILED: ecomp 5418v4 bevy_sprite::sprite::Sprite raw tail:  to be registered manually using `register_type_data` (stack: `bevy_sprite::sprite::Sprite` -> `bevy_asset::handle::Handle<bevy_image::image::Image>` -> `bevy_platform::sync::Arc<bevy_asset::handle::StrongHandle>`)"}}}}
+shot atlas-index0 ok (viewport2d)
+shot atlas-index1 ok (viewport2d)
+shot atlas-index2 ok (viewport2d)
+ATLAS index census: index0 red 0.652%, index1 green 0.068%, index2 blue 0.068%
+ATLAS_INDEX_PX_PASS
+ATLAS_REOPEN_PASS
+WARN_SCAN atlas-editor: zero hits
+ATLAS done: ATLAS_GRID=PASS ATLAS_INDEX_PX=PASS ATLAS_KIND_FACE=FAIL ATLAS_NEW=PASS ATLAS_REDO=PASS ATLAS_REOPEN=PASS ATLAS_UNDO=PASS ATLAS_WEAR=FAIL 

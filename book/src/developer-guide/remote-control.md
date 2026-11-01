@@ -220,6 +220,11 @@ call_operator(id: "input.motion", params: { dx: 320, dy: 0, steps: 16 })
 camera_state()
 ```
 
+On a 2D world scene, `input.pointer` also takes `space: "world"`: the
+coordinates are world units, y up, framed by the panel's pan and zoom —
+so clicks land where the math says regardless of the view
+([Sprites in 2D](../user-guide/sprites-2d.md) is the user-facing tour).
+
 Two gates shape a look gesture. Single-frame deltas beyond 1000 px are
 dropped whole, so split large travels across `steps`; and the first frames
 after a right-button press are suppressed, so after
