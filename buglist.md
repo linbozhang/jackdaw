@@ -486,6 +486,10 @@
   `a_preset_picked…:192`：T19-T1 全量红+摘模同红（164/1 同签名同 panic 行）、T19-T2 真机期未与画质腿同窗但**当日隔离 12/12 绿不复发**——并行撞共享 `viewport.json` 机理候选（T1 归档 t19t1_viewport_flake.log）+UI 时序。间歇形态非确定性红。
   修复方向：测试间 viewport.json 隔离（对照 JACKDAW_CONFIG_DIR 换向先例）或重试窗；证据素材三件在 `t19t1_viewport_flake.log`/`t19t2_gates_tests.log`。
 
+- [ ] **A16. GameFlow `State<T>` 未反射注册——flow 通道 BRP 死（EG8，T20-T2 真机发现）**（2026-10-31 T20-T2 程序发现+QA 核实；主控批准立账）
+  `State<GameFlow>` 未 `register_type_state`：BRP/flow 写通道死（红证 `t20t2_eg8_flow_state_red.log`），模板改走文档根标记读（有效替代，T2 M 系全绿承载）。`register_type_state` 一行可通——但 T20 守「零产品改动」定性未动，模板接入归下轮触碰模板时顺手（对照 T16-AU6 处置先例）。
+  修复方向：模板 `register_type_state::<GameFlow>()` 一行+teaches 锚；A11（世界侧粘性）修复时顺路核 flow 通道联动。
+
 - [ ] **A8. BSN apply 静默丢弃 crate 根 re-export 路径 + misleading remedy（AN8，T15-T2 真机首踩）**（2026-10-30 T15-T2 程序发现+QA 机制核实；主控批准立账）
   场景文档的图族组件必须写定义模块全路径（`…::graph::AnimationGraphRef`），crate 根 re-export 拼写被 `jackdaw_bsn::apply` 静默丢弃（无 warn、组件不落——手写场景/导出迁移场景易踩，fixture 已绕行）；且 `jackdaw_bsn::catalog` 的 remedy 文案（"rebuild the project"）对此误导。
   修复方向：未知路径丢弃补 warn（对照 AN1 运行态 warn 形态，列可用类型面）；remedy 文案按真实成因改写。小票。
