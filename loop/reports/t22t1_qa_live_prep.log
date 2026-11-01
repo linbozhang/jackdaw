@@ -1,0 +1,520 @@
+PREP disk face: 71Gi free (A6 discipline: closed fixtures are the hogs)
+PREP_JD_NEW_PASS
+PREP_REMOTE_INJECT_PASS
+PREP_SHEET_PASS
+PREP_SCENE_2D_PASS
+TPL_module_physics_player_body_PASS
+TPL_module_physics_falling_body_PASS
+TPL_module_physics_manual_gravity_PASS
+TPL_module_physics_demo_PASS
+TPL_SCAFFOLD_FAMILY_PASS
+TPL_TILEMAP_ABSENT_PASS
+    Updating git repository `https://github.com/bevyengine/bevy`
+    Updating crates.io index
+     Locking 29 packages to highest Rust 1.99.0 compatible versions
+      Adding anyhow v1.0.104
+      Adding bevy_remote v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_remote)
+      Adding file-id v0.2.3
+      Adding http v1.5.0
+      Adding http-body v1.1.0
+      Adding http-body-util v0.1.5
+      Adding httparse v1.10.1
+      Adding httpdate v1.0.3
+      Adding hyper v1.12.0
+      Adding jackdaw_remote v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_remote)
+      Adding kqueue v1.2.1
+      Adding kqueue-sys v1.1.2
+      Adding notify v8.2.1
+      Adding notify-debouncer-full v0.7.0
+      Adding notify-types v2.2.0
+      Adding objc2-core-services v0.3.2
+      Adding smol-hyper v0.1.1
+      Adding windows-sys v0.60.2
+      Adding windows-targets v0.53.5
+      Adding windows_aarch64_gnullvm v0.53.1
+      Adding windows_aarch64_msvc v0.53.1
+      Adding windows_i686_gnu v0.53.1
+      Adding windows_i686_gnullvm v0.53.1
+      Adding windows_i686_msvc v0.53.1
+      Adding windows_x86_64_gnu v0.53.1
+      Adding windows_x86_64_gnullvm v0.53.1
+      Adding windows_x86_64_msvc v0.53.1
+      Adding zune-core v0.5.3
+      Adding zune-jpeg v0.5.15
+   Compiling proc-macro2 v1.0.107
+   Compiling unicode-ident v1.0.27
+   Compiling quote v1.0.47
+   Compiling serde_core v1.0.229
+   Compiling libc v0.2.191
+   Compiling cfg-if v1.0.5
+   Compiling serde v1.0.229
+   Compiling autocfg v1.5.1
+   Compiling equivalent v1.0.3
+   Compiling libm v0.2.16
+   Compiling objc2-encode v4.1.0
+   Compiling num-traits v0.2.19
+   Compiling pin-project-lite v0.2.17
+   Compiling foldhash v0.2.0
+   Compiling thiserror v2.0.21
+   Compiling crossbeam-utils v0.8.23
+   Compiling objc2 v0.6.5
+   Compiling syn v3.0.9
+   Compiling syn v2.0.119
+   Compiling hashbrown v0.17.1
+   Compiling log v0.4.34
+   Compiling getrandom v0.4.3
+   Compiling rand_core v0.10.1
+   Compiling winnow v1.0.4
+   Compiling toml_datetime v1.1.2+spec-1.1.0
+   Compiling parking v2.2.1
+   Compiling indexmap v2.14.2
+   Compiling futures-core v0.3.34
+   Compiling cfg_aliases v0.2.2
+   Compiling bytemuck_derive v1.12.1
+   Compiling serde_derive v1.0.229
+   Compiling thiserror-impl v2.0.21
+   Compiling toml_parser v1.1.5+spec-1.1.0
+   Compiling fastrand v2.5.0
+   Compiling futures-io v0.3.34
+   Compiling concurrent-queue v2.5.0
+   Compiling toml_edit v0.25.17+spec-1.1.0
+   Compiling futures-lite v2.6.1
+   Compiling event-listener v5.4.2
+   Compiling raw-window-handle v0.6.2
+   Compiling bytemuck v1.25.2
+   Compiling bevy_macro_utils v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_macro_utils)
+   Compiling rustix v1.1.6
+   Compiling rustc-hash v1.1.0
+   Compiling block2 v0.6.2
+   Compiling static_assertions v1.1.0
+   Compiling slab v0.4.12
+   Compiling uuid v1.29.0
+   Compiling event-listener-strategy v0.5.4
+   Compiling errno v0.3.14
+   Compiling encase_derive_impl v0.13.0
+   Compiling typewit v1.15.2
+   Compiling chacha20 v0.10.2
+   Compiling bitflags v2.13.2
+   Compiling const_panic v0.2.17
+   Compiling async-io v2.6.0
+   Compiling unicode-segmentation v1.13.3
+   Compiling dispatch2 v0.3.1
+   Compiling encase_derive v0.13.0
+   Compiling convert_case v0.10.0
+   Compiling rand v0.10.3
+   Compiling approx v0.5.1
+   Compiling unicode-xid v0.2.6
+   Compiling objc2-core-foundation v0.3.2
+   Compiling encase v0.13.0
+   Compiling async-channel v2.5.0
+   Compiling derive_more-impl v2.1.1
+   Compiling once_cell v1.21.4
+   Compiling typeid v1.0.3
+   Compiling arrayvec v0.7.8
+   Compiling spin v0.12.3
+   Compiling thread_local v1.1.10
+   Compiling erased-serde v0.4.11
+   Compiling rustc-hash v2.1.3
+   Compiling foldhash v0.1.5
+   Compiling mutants v0.0.3
+   Compiling hashbrown v0.15.5
+   Compiling unsynn v0.3.0
+   Compiling fixedbitset v0.5.7
+   Compiling disqualified v1.1.0
+   Compiling glam v0.33.12
+   Compiling downcast-rs v2.0.2
+   Compiling bevy_reflect_derive v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_reflect/derive)
+   Compiling polling v3.11.0
+   Compiling derive_more v2.1.1
+   Compiling smallvec v1.16.4
+   Compiling naga-types v30.0.1
+   Compiling bevy_platform v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_platform)
+   Compiling smol_str v0.2.2
+   Compiling wgpu-types v30.0.1
+   Compiling bevy_utils v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_utils)
+   Compiling petgraph v0.8.3
+   Compiling assert_type_match v0.1.1
+   Compiling bevy_ptr v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_ptr)
+   Compiling inventory v0.3.25
+   Compiling variadics_please v2.0.0
+   Compiling atomic-waker v1.1.2
+   Compiling async-task v4.7.1
+   Compiling memchr v2.8.3
+   Compiling zerocopy v0.8.63
+   Compiling version_check v0.9.5
+   Compiling async-executor v1.14.0
+   Compiling bevy_ecs_macro_logic v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_ecs/macro_logic)
+   Compiling slotmap v1.1.1
+   Compiling zerocopy-derive v0.8.63
+   Compiling nix v0.31.3
+   Compiling crossbeam-queue v0.3.14
+   Compiling nonmax v0.5.5
+   Compiling bevy_ecs_macros v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_ecs/macros)
+   Compiling bevy_tasks v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_tasks)
+   Compiling bumpalo v3.20.3
+   Compiling shlex v2.0.1
+   Compiling find-msvc-tools v0.1.15
+   Compiling cc v1.10.0
+   Compiling bevy_derive v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_derive)
+   Compiling either v1.19.0
+   Compiling tracing-core v0.1.36
+   Compiling ctrlc v3.5.2
+   Compiling tracing-attributes v0.1.31
+   Compiling bevy_reflect v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_reflect)
+   Compiling objc2-io-kit v0.3.2
+   Compiling crossbeam-channel v0.5.17
+   Compiling same-file v1.0.6
+   Compiling blake3 v1.8.7
+   Compiling walkdir v2.5.0
+   Compiling piper v0.2.5
+   Compiling objc2-core-services v0.3.2
+   Compiling notify-types v2.2.0
+   Compiling blocking v1.7.0
+   Compiling sysinfo v0.39.6
+   Compiling async-lock v3.4.2
+   Compiling notify v8.2.1
+   Compiling futures-macro v0.3.34
+   Compiling tracing v0.1.44
+   Compiling const-fnv1a-hash v1.1.0
+   Compiling file-id v0.2.3
+   Compiling futures-task v0.3.34
+   Compiling constant_time_eq v0.4.2
+   Compiling notify-debouncer-full v0.7.0
+   Compiling async-fs v2.2.0
+   Compiling futures-util v0.3.34
+   Compiling ron v0.12.2
+   Compiling stackfuture v0.3.1
+   Compiling bevy_asset_macros v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_asset/macros)
+   Compiling async-broadcast v0.7.2
+   Compiling atomicow v1.2.0
+   Compiling lazy_static v1.5.1
+   Compiling simd-adler32 v0.3.10
+   Compiling bitflags v1.3.2
+   Compiling adler2 v2.0.1
+   Compiling crc32fast v1.5.3
+   Compiling itertools v0.14.0
+   Compiling aho-corasick v1.1.5
+   Compiling regex-syntax v0.8.11
+   Compiling half v2.7.1
+   Compiling miniz_oxide v0.9.1
+   Compiling basis-universal-sys v0.3.1
+   Compiling miniz_oxide v0.8.9
+   Compiling fdeflate v0.3.7
+   Compiling rand_distr v0.6.0
+   Compiling zune-core v0.5.3
+   Compiling pxfm v0.1.30
+   Compiling regex-automata v0.4.18
+   Compiling const_soft_float v0.1.4
+   Compiling zune-jpeg v0.5.15
+   Compiling flate2 v1.1.10
+   Compiling constgebra v0.1.4
+   Compiling euclid v0.22.14
+   Compiling png v0.18.1
+   Compiling synstructure v0.14.0
+   Compiling stable_deref_trait v1.2.1
+   Compiling twox-hash v2.1.5
+   Compiling byteorder-lite v0.1.0
+   Compiling ruzstd v0.9.1
+   Compiling guillotiere v0.7.0
+   Compiling moxcms v0.8.1
+   Compiling hexasphere v19.0.0
+   Compiling ktx2 v0.5.0
+   Compiling bevy_mikktspace v1.0.0
+   Compiling rectangle-pack v0.4.2
+   Compiling zerofrom-derive v0.1.8
+   Compiling yoke-derive v0.8.4
+   Compiling objc2-foundation v0.3.2
+   Compiling unicode-width v0.2.2
+   Compiling matchers v0.2.0
+   Compiling sharded-slab v0.1.7
+   Compiling tracing-log v0.2.0
+   Compiling nu-ansi-term v0.50.3
+   Compiling zerofrom v0.1.8
+   Compiling zerovec-derive v0.11.7
+   Compiling lexical-util v1.0.7
+   Compiling tracing-subscriber v0.3.23
+   Compiling displaydoc v0.2.7
+   Compiling yoke v0.8.4
+   Compiling image v0.25.10
+   Compiling fnv v1.0.7
+   Compiling zerovec v0.11.9
+   Compiling writeable v0.6.4
+   Compiling lexical-write-integer v1.0.6
+   Compiling lexical-parse-integer v1.0.6
+   Compiling lexical-write-float v1.0.6
+   Compiling lexical-parse-float v1.0.6
+   Compiling tinystr v0.8.5
+   Compiling naga v30.0.1
+   Compiling parking_lot_core v0.9.12
+   Compiling bevy_ecs v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_ecs)
+   Compiling bevy_math v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_math)
+   Compiling litemap v0.8.3
+   Compiling bit-vec v0.9.1
+   Compiling lalrpop-util v0.23.2
+   Compiling anstyle v1.0.14
+   Compiling bevy_curve v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_curve)
+   Compiling bevy_shape v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_shape)
+   Compiling logos-codegen v0.16.1
+   Compiling bit-set v0.10.0
+   Compiling icu_locale_core v2.4.0
+   Compiling bevy_color v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_color)
+   Compiling logos-derive v0.16.1
+   Compiling objc2-metal v0.3.2
+   Compiling lexical-core v1.0.6
+   Compiling potential_utf v0.1.6
+   Compiling zerotrie v0.2.5
+   Compiling codespan-reporting v0.13.1
+   Compiling itertools v0.15.0
+   Compiling objc2-core-graphics v0.3.2
+   Compiling basis-universal v0.3.1
+   Compiling scopeguard v1.2.0
+   Compiling utf8parse v0.2.2
+   Compiling anstyle-parse v1.0.0
+   Compiling lock_api v0.4.14
+   Compiling wgsl-types v0.6.0
+   Compiling objc2-quartz-core v0.3.2
+   Compiling icu_provider v2.4.0
+   Compiling lexical v7.0.5
+   Compiling logos v0.16.1
+   Compiling annotate-snippets v0.12.17
+   Compiling font-types v0.12.7
+   Compiling wgpu-hal v30.0.1
+   Compiling serde_spanned v1.1.2
+   Compiling utf8_iter v1.0.4
+   Compiling colorchoice v1.0.5
+   Compiling toml_writer v1.1.3+spec-1.1.0
+   Compiling is_terminal_polyfill v1.70.2
+   Compiling anstyle-query v1.1.5
+   Compiling wgsl-parse v0.6.0
+   Compiling anstream v1.0.0
+   Compiling toml v1.1.8+spec-1.1.0
+   Compiling icu_collections v2.4.0
+   Compiling read-fonts v0.41.0
+   Compiling wesl-macros v0.6.0
+   Compiling parking_lot v0.12.5
+   Compiling raw-window-metal v1.1.0
+   Compiling libloading v0.8.9
+   Compiling wesl-core v0.1.0
+   Compiling glob v0.3.4
+   Compiling allocator-api2 v0.2.21
+   Compiling icu_locale_fallback_data v2.4.0
+   Compiling icu_properties_data v2.4.0
+   Compiling profiling v1.0.18
+   Compiling hashbrown v0.16.1
+   Compiling wgpu-core v30.0.1
+   Compiling byteorder v1.5.0
+   Compiling icu_normalizer_data v2.4.0
+   Compiling icu_segmenter_data v2.4.0
+   Compiling litrs v1.0.1
+   Compiling bevy_app v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_app)
+   Compiling document-features v0.2.12
+   Compiling bevy_gizmos_macros v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_gizmos/macros)
+   Compiling bevy_material_macros v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_material/macros)
+   Compiling wgpu-naga-bridge v30.0.1
+   Compiling bevy_extract_macros v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_extract/macros)
+   Compiling bevy_time v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_time)
+   Compiling bevy_transform v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_transform)
+   Compiling bevy_diagnostic v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_diagnostic)
+   Compiling bevy_input v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_input)
+   Compiling bevy_asset v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_asset)
+   Compiling bevy_log v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_log)
+   Compiling wesl v0.6.0
+   Compiling wgpu-core-deps-apple v30.0.1
+   Compiling wgpu v30.0.1
+   Compiling itoa v1.0.18
+   Compiling skrifa v0.44.0
+   Compiling icu_locale_fallback v2.4.0
+   Compiling icu_properties v2.4.0
+   Compiling enumn v0.1.14
+   Compiling memmap2 v0.9.12
+   Compiling parlance v0.1.1
+   Compiling linebender_resource_handle v0.1.1
+   Compiling fontique v0.11.1
+   Compiling accesskit v0.25.2
+   Compiling parley_data v0.11.1
+   Compiling icu_segmenter v2.4.0
+   Compiling icu_normalizer v2.4.0
+   Compiling bevy_render_macros v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_render/macros)
+   Compiling harfrust v0.12.0
+   Compiling weak-table v0.4.0
+   Compiling offset-allocator v0.2.0
+   Compiling bevy_encase_derive v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_encase_derive)
+   Compiling yazi v0.2.1
+   Compiling bevy_image v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_image)
+   Compiling bevy_mesh v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_mesh)
+   Compiling zeno v0.3.3
+   Compiling parley v0.11.1
+   Compiling bevy_window v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_window)
+   Compiling bevy_shader v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_shader)
+   Compiling bevy_material v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_material)
+   Compiling swash v0.2.10
+   Compiling bevy_camera v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_camera)
+   Compiling bevy_clipboard v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_clipboard)
+   Compiling zmij v1.0.23
+   Compiling objc-sys v0.3.5
+   Compiling bevy_text v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_text)
+   Compiling radsort v0.1.1
+   Compiling serde_json v1.0.154
+   Compiling radium v0.7.0
+   Compiling objc2-core-audio-types v0.3.2
+   Compiling tap v1.0.1
+   Compiling inflections v1.1.1
+   Compiling objc2-core-audio v0.3.2
+   Compiling gltf-derive v1.4.1
+   Compiling wyz v0.5.1
+   Compiling bevy_gizmos v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_gizmos)
+   Compiling bevy_picking v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_picking)
+   Compiling bevy_extract v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_extract)
+   Compiling objc2 v0.5.3
+   Compiling bevy_render v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_render)
+   Compiling bevy_light v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_light)
+   Compiling bevy_a11y v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_a11y)
+   Compiling funty v2.0.0
+   Compiling bevy_sprite v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_sprite)
+   Compiling bevy_input_focus v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_input_focus)
+   Compiling bitvec v1.1.1
+   Compiling block2 v0.5.1
+   Compiling gltf-json v1.4.1
+   Compiling objc2-audio-toolbox v0.3.2
+   Compiling taffy v0.14.0
+   Compiling bevy_animation_macros v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_animation/macros)
+   Compiling num-integer v0.1.47
+   Compiling core-foundation-sys v0.8.7
+   Compiling bytes v1.12.1
+   Compiling dispatch v0.2.0
+   Compiling cpal v0.17.3
+   Compiling objc2-foundation v0.2.2
+   Compiling http v1.5.0
+   Compiling core-foundation v0.9.4
+   Compiling bevy_ui v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_ui)
+   Compiling num-bigint v0.4.8
+   Compiling gltf v1.4.1
+   Compiling bevy_animation v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_animation)
+   Compiling coreaudio-rs v0.14.2
+   Compiling bevy_world_serialization v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_world_serialization)
+   Compiling ogg v0.8.0
+   Compiling foreign-types-macros v0.2.4
+   Compiling bevy_core_pipeline v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_core_pipeline)
+   Compiling mach2 v0.5.0
+   Compiling httparse v1.10.1
+   Compiling dasp_sample v0.11.0
+   Compiling base64 v0.23.1
+   Compiling tinyvec v1.13.3
+   Compiling foreign-types-shared v0.3.1
+   Compiling percent-encoding v2.3.2
+   Compiling foreign-types v0.5.0
+   Compiling lewton v0.10.2
+   Compiling bevy_gltf v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_gltf)
+   Compiling objc2-app-kit v0.2.2
+   Compiling num-rational v0.4.2
+   Compiling http-body v1.1.0
+   Compiling core-graphics-types v0.1.3
+   Compiling winit v0.30.13
+   Compiling hound v3.5.1
+   Compiling rodio v0.22.2
+   Compiling core-graphics v0.23.2
+   Compiling bevy_sprite_render v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_sprite_render)
+   Compiling bevy_pbr v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_pbr)
+   Compiling accesskit_consumer v0.39.2
+   Compiling bevy_ui_widgets v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_ui_widgets)
+   Compiling bevy_state_macros v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_state/macros)
+   Compiling tokio v1.54.1
+   Compiling cursor-icon v1.2.0
+   Compiling anyhow v1.0.104
+   Compiling httpdate v1.0.3
+   Compiling dpi v0.1.2
+   Compiling vec_map v0.8.2
+   Compiling gilrs v0.11.2
+   Compiling gilrs-core v0.6.8
+   Compiling bevy_ui_render v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_ui_render)
+   Compiling hyper v1.12.0
+   Compiling bevy_state v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_state)
+   Compiling accesskit_macos v0.27.2
+   Compiling bevy_audio v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_audio)
+   Compiling bevy_scene_macros v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_scene/macros)
+   Compiling strsim v0.11.1
+   Compiling accesskit_winit v0.34.2
+   Compiling smol-hyper v0.1.1
+   Compiling bevy_scene v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_scene)
+   Compiling http-body-util v0.1.5
+   Compiling bevy_annotations v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_annotations)
+   Compiling bevy_gilrs v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_gilrs)
+   Compiling bevy_winit v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_winit)
+   Compiling bevy_feathers v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_feathers)
+   Compiling bevy_post_process v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_post_process)
+   Compiling bevy_anti_alias v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_anti_alias)
+   Compiling bevy_dev_tools v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_dev_tools)
+   Compiling bevy_gizmos_render v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_gizmos_render)
+   Compiling thiserror v1.0.69
+   Compiling thiserror-impl v1.0.69
+   Compiling getrandom v0.3.4
+   Compiling path-slash v0.2.1
+   Compiling meshopt v0.6.2
+   Compiling geometry-predicates v0.3.0
+   Compiling cdt v0.1.0
+   Compiling earcutr v0.5.0
+   Compiling float-cmp v0.10.0
+   Compiling crossbeam-epoch v0.9.21
+   Compiling rand_core v0.9.5
+   Compiling ppv-lite86 v0.2.21
+   Compiling crossbeam-deque v0.8.8
+   Compiling bevy_remote v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_remote)
+   Compiling dunce v1.0.5
+   Compiling rand_chacha v0.9.0
+   Compiling cobs v0.3.0
+   Compiling heapless v0.8.0
+   Compiling rayon-core v1.13.0
+   Compiling postcard v1.1.3
+   Compiling rand v0.9.5
+   Compiling hash32 v0.3.1
+   Compiling nom v8.0.0
+   Compiling wide v1.7.1
+   Compiling num-complex v0.4.6
+   Compiling pathdiff v0.2.3
+   Compiling ipc-channel v0.22.0
+   Compiling bevy_internal v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_internal)
+   Compiling proc-macro-error-attr3 v3.1.1
+   Compiling arbitrary-chunks v0.4.1
+   Compiling bevy v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned)
+   Compiling jackdaw_geometry v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_geometry)
+   Compiling jackdaw_bsn v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_bsn)
+   Compiling partition v0.1.2
+   Compiling robust v1.2.0
+   Compiling simba v0.10.2
+   Compiling option-ext v0.2.0
+   Compiling dirs-sys v0.5.0
+   Compiling spade v2.15.1
+   Compiling rdst v0.20.14
+   Compiling proc-macro-error3 v3.1.1
+   Compiling jackdaw_scene_types v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_scene_types)
+   Compiling jackdaw_pie_protocol v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_pie_protocol)
+   Compiling glamx v0.3.1
+   Compiling rayon v1.12.0
+   Compiling rstar v0.13.0
+   Compiling glam_matrix_extras v0.4.0
+   Compiling glam v0.34.1
+   Compiling num-derive v0.5.1
+   Compiling ordered-float v5.5.1
+   Compiling ena v0.14.4
+   Compiling avian_derive v0.2.3
+   Compiling parry3d v0.31.1
+   Compiling bevy_heavy v0.6.0
+   Compiling jackdaw_prefab v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_prefab)
+   Compiling dirs v6.0.0
+   Compiling jackdaw_bind v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_bind)
+   Compiling bevy_transform_interpolation v0.6.0
+   Compiling jackdaw_surface v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_surface)
+   Compiling obvhs v0.4.0
+   Compiling jackdaw_terrain v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_terrain)
+   Compiling jackdaw_camera_rig v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_camera_rig)
+   Compiling jackdaw_schema v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_schema)
+   Compiling jackdaw_widgets_runtime v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_widgets_runtime)
+   Compiling avian3d v0.8.0
+   Compiling jackdaw_remote v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_remote)
+   Compiling jackdaw_runtime v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_runtime)
+   Compiling jackdaw_avian_integration v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/integrations/physics/jackdaw_avian_integration)
+   Compiling t22-tilemap v0.1.0 (/Users/zhanglinbo/workspace/loop-mac/t22-tilemap/t22-tilemap)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 2m 16s
+PREP_GAME_WARM_PASS
+PREP done: PREP_GAME_WARM=PASS PREP_JD_NEW=PASS PREP_REMOTE_INJECT=PASS PREP_SCENE_2D=PASS PREP_SHEET=PASS TPL_SCAFFOLD_FAMILY=PASS TPL_TILEMAP_ABSENT=PASS TPL_module_physics_demo=PASS TPL_module_physics_falling_body=PASS TPL_module_physics_manual_gravity=PASS TPL_module_physics_player_body=PASS 
+fixture: /Users/zhanglinbo/workspace/loop-mac/t22-tilemap/t22-tilemap
