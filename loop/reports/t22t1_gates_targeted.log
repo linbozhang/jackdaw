@@ -1,0 +1,73 @@
+   Compiling jackdaw v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw)
+    Finished `test` profile [optimized + debuginfo] target(s) in 3.15s
+────────────
+ Nextest run ID deaef402-2ec5-42e7-981c-431a55678feb with nextest profile: ci
+    Starting 65 tests across 1 binary (500 tests skipped)
+        PASS [   2.092s] ( 1/65) jackdaw::stage sprite_drop::a_drop_the_sprite_add_gate_refuses_leaves_the_drag_alone
+        PASS [   2.465s] ( 2/65) jackdaw::stage sprite_drop::a_drop_on_a_world_scene_adds_one_sprite_under_the_root_at_the_point
+        PASS [   2.924s] ( 3/65) jackdaw::stage sprite_drop::a_drop_off_the_stage_adds_nothing
+        PASS [   3.407s] ( 4/65) jackdaw::stage sprite_drop::a_drop_and_sprite_add_make_the_same_entity
+        PASS [   1.904s] ( 5/65) jackdaw::stage sprite_drop::a_drop_with_the_grid_snap_on_lands_on_the_grid
+        PASS [   2.169s] ( 6/65) jackdaw::stage sprite_drop::sprite_add_with_no_position_lands_at_the_centre_of_the_view
+        PASS [   2.351s] ( 7/65) jackdaw::stage sprite_gizmo::a_body_drag_moves_a_sprite_whose_selected_group_is_no_sprite
+        PASS [   2.463s] ( 8/65) jackdaw::stage sprite_gizmo::a_body_drag_moves_the_selection_by_the_world_delta
+        PASS [   2.304s] ( 9/65) jackdaw::stage sprite_gizmo::a_click_on_one_of_several_selected_sprites_narrows_to_it
+        PASS [   2.157s] (10/65) jackdaw::stage sprite_gizmo::a_jittery_click_still_narrows_and_records_nothing
+        PASS [   2.067s] (11/65) jackdaw::stage sprite_gizmo::a_move_takes_a_selection_whose_primary_image_never_loaded
+        PASS [   2.136s] (12/65) jackdaw::stage sprite_gizmo::a_move_takes_a_selection_whose_primary_is_no_sprite
+        PASS [   2.157s] (13/65) jackdaw::stage sprite_gizmo::a_nudge_moves_a_selected_parent_and_child_once
+        PASS [   2.144s] (14/65) jackdaw::stage sprite_gizmo::a_nudge_steps_in_the_world_through_a_turned_parent
+        PASS [   2.222s] (15/65) jackdaw::stage sprite_gizmo::a_reload_mid_drag_forgets_the_drag
+        PASS [   2.163s] (16/65) jackdaw::stage sprite_gizmo::a_rotate_drag_turns_the_sprite_about_its_anchor
+        PASS [   2.191s] (17/65) jackdaw::stage sprite_gizmo::a_rotate_follows_the_pointer_under_a_mirrored_parent
+        PASS [   2.131s] (18/65) jackdaw::stage sprite_gizmo::a_scale_drag_holds_the_opposite_edge
+        PASS [   3.524s] (19/65) jackdaw::stage sprite_gizmo::a_saved_and_reopened_scene_keeps_the_dragged_transform
+        PASS [   2.624s] (20/65) jackdaw::stage sprite_gizmo::a_scale_never_reaches_zero_and_flips_past_it
+        PASS [   2.640s] (21/65) jackdaw::stage sprite_gizmo::a_tool_key_mid_drag_neither_switches_nor_strands_the_drag
+        PASS [   2.069s] (22/65) jackdaw::stage sprite_gizmo::an_authored_mesh2d_still_saves
+        PASS [   2.450s] (23/65) jackdaw::stage sprite_gizmo::ctrl_lands_the_rotation_itself_on_an_increment
+        PASS [   2.580s] (24/65) jackdaw::stage sprite_gizmo::ctrl_steps_only_the_axes_a_scale_handle_drives
+        PASS [   2.438s] (25/65) jackdaw::stage sprite_gizmo::ctrl_turns_in_rotate_increments
+        PASS [   2.442s] (26/65) jackdaw::stage sprite_gizmo::escape_mid_drag_restores_and_records_nothing
+        PASS [   1.801s] (27/65) jackdaw::stage sprite_gizmo::escape_with_no_drag_still_clears_the_selection
+        PASS [   2.610s] (28/65) jackdaw::stage sprite_gizmo::rotate_and_scale_take_the_whole_selection_about_the_primary
+        PASS [   2.531s] (29/65) jackdaw::stage sprite_gizmo::shift_and_ctrl_step_the_uniform_factor_and_keep_proportions
+        PASS [   1.762s] (30/65) jackdaw::stage sprite_gizmo::the_3d_gizmo_draws_on_a_layer_the_2d_view_never_renders
+        PASS [   2.884s] (31/65) jackdaw::stage sprite_gizmo::shift_scales_uniformly_and_ctrl_in_increments
+        PASS [   1.826s] (32/65) jackdaw::stage sprite_gizmo::the_arrows_nudge_a_sprite_along_world_y_not_z
+        PASS [   2.374s] (33/65) jackdaw::stage sprite_gizmo::the_axis_handles_keep_to_their_axis
+        PASS [   2.470s] (34/65) jackdaw::stage sprite_gizmo::the_page_keys_leave_a_sprite_where_it_is
+        PASS [   2.306s] (35/65) jackdaw::stage sprite_gizmo::the_tools_are_available_on_a_2d_world_and_refused_on_a_ui_canvas
+        PASS [   2.133s] (36/65) jackdaw::stage sprite_gizmo::the_tools_are_refused_on_a_2d_panel_that_is_playing
+        PASS [   2.330s] (37/65) jackdaw::stage sprite_gizmo::undo_mid_drag_cancels_the_drag_first
+        PASS [   2.473s] (38/65) jackdaw::stage sprite_picking::a_drag_starts_no_band_and_keeps_the_selection
+        PASS [   2.511s] (39/65) jackdaw::stage sprite_picking::a_miss_clears_and_modifiers_extend_or_toggle
+        PASS [   2.452s] (40/65) jackdaw::stage sprite_picking::a_scale_factor_of_two_keeps_picking_and_sizes_in_step
+        PASS [   1.912s] (41/65) jackdaw::stage sprite_picking::a_tie_on_z_goes_to_the_later_sprite_in_the_document
+        PASS [   1.956s] (42/65) jackdaw::stage sprite_picking::a_transparent_texel_is_clicked_through
+        PASS [   2.125s] (43/65) jackdaw::stage sprite_picking::a_world_click_selects_the_sprite_by_its_anchor
+        PASS [   2.249s] (44/65) jackdaw::stage sprite_picking::each_selected_sprite_gets_one_outline_on_its_transformed_rect
+        PASS [   2.265s] (45/65) jackdaw::stage sprite_picking::hidden_editor_and_unloaded_sprites_do_not_pick
+        PASS [   2.240s] (46/65) jackdaw::stage sprite_picking::rotation_and_scale_are_respected
+        PASS [   1.894s] (47/65) jackdaw::stage sprite_picking::the_render_image_matches_the_stage_in_a_world_scene
+        PASS [   1.952s] (48/65) jackdaw::stage sprite_picking::the_topmost_sprite_wins
+        PASS [   2.300s] (49/65) jackdaw::stage sprite_snap::a_drag_lands_on_a_neighbours_edge_and_shows_where
+        PASS [   2.310s] (50/65) jackdaw::stage sprite_snap::a_drag_lands_the_anchor_on_a_whole_pixel
+        PASS [   2.429s] (51/65) jackdaw::stage sprite_snap::a_drag_lands_the_sprite_on_a_grid_line
+        PASS [   2.232s] (52/65) jackdaw::stage sprite_snap::a_scale_handle_lands_its_edge_on_a_neighbour
+        PASS [   2.031s] (53/65) jackdaw::stage sprite_snap::a_scale_whose_edge_cannot_reach_the_line_does_not_land
+        PASS [   2.296s] (54/65) jackdaw::stage sprite_snap::an_axis_handle_snaps_only_its_own_axis
+        PASS [   3.216s] (55/65) jackdaw::stage sprite_snap::a_sheared_sprite_scales_without_the_canvas_snap
+        PASS [   2.655s] (56/65) jackdaw::stage sprite_snap::an_odd_sized_sprite_keeps_its_edges_on_whole_pixels
+        PASS [   2.486s] (57/65) jackdaw::stage sprite_snap::ctrl_suspends_snapping_for_a_move
+        PASS [   1.781s] (58/65) jackdaw::stage sprite_snap::the_grid_still_snaps_a_sprite_of_unknown_size
+        PASS [   1.907s] (59/65) jackdaw::stage sprite_snap::the_snap_menu_offers_the_world_scenes_kinds
+        PASS [   2.240s] (60/65) jackdaw::stage sprite_snap::the_snap_reference_is_the_primary_even_when_its_parent_carries_it
+        PASS [   2.247s] (61/65) jackdaw::stage sprite_snap::with_snapping_off_nothing_snaps
+        PASS [   3.057s] (62/65) jackdaw::stage tilemap_guard::an_atlas_sprite_is_the_discriminating_control
+        PASS [   2.157s] (63/65) jackdaw::stage world_guides::a_sprite_drag_lands_its_edge_on_a_guide_and_shows_where
+        PASS [   3.179s] (64/65) jackdaw::stage tilemap_guard::the_tile_form_saves_a_rect_and_never_an_atlas
+        PASS [   2.175s] (65/65) jackdaw::stage world_guides::a_ui_scenes_guides_never_snap_a_sprite_on_the_world_panel
+────────────
+     Summary [  38.379s] 65 tests run: 65 passed, 500 skipped
+EXIT=0

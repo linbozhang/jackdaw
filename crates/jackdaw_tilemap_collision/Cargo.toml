@@ -1,0 +1,17 @@
+[package]
+name = "jackdaw_tilemap_collision"
+version.workspace = true
+rust-version.workspace = true
+edition = "2024"
+description = "Engine-agnostic tile-grid collision kernel for jackdaw 2D levels"
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/jbuehler23/jackdaw"
+
+[dependencies]
+glam.workspace = true
+
+[dev-dependencies]
+bevy.workspace = true
+
+[lints]
+workspace = true

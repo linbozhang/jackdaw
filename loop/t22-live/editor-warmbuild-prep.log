@@ -1,0 +1,9 @@
+   Compiling jackdaw_project_build v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_project_build)
+   Compiling jackdaw_package v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_package)
+   Compiling ureq v2.12.1
+   Compiling jackdaw_loader v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_loader)
+   Compiling jackdaw_scaffold v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_scaffold)
+   Compiling jackdaw_cli_internal v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_cli)
+   Compiling jackdaw v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw)
+   Compiling jd v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jd)
+    Finished `dev` profile [optimized + debuginfo] target(s) in 25.01s

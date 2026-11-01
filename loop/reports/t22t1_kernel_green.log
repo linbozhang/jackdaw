@@ -1,0 +1,32 @@
+   Compiling jackdaw_tilemap_collision v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_tilemap_collision)
+    Finished `test` profile [optimized + debuginfo] target(s) in 2.01s
+     Running unittests src/lib.rs (target/debug/deps/jackdaw_tilemap_collision-2826e7ab773aedd6)
+
+running 8 tests
+test tests::a_falling_probe_lands_on_the_floor_and_stays_put ... ok
+test tests::a_trigger_cell_reports_while_overlapped_and_silences_after ... ok
+test tests::the_point_query_reads_the_cell_under_a_world_point ... ok
+test tests::grid_math_round_trips_world_points_through_cells ... ok
+test tests::the_neighbor_query_reports_the_four_adjacent_modes ... ok
+test tests::solid_and_out_of_bounds_cells_never_answer_the_trigger_query ... ok
+test tests::a_walking_probe_is_stopped_by_a_wall_column ... ok
+test tests::the_region_query_census_of_a_box_finds_solid_and_trigger ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/player_probe_app.rs (target/debug/deps/player_probe_app-38f43703cdb4420d)
+
+running 3 tests
+test the_wall_blocks_a_walking_probe ... ok
+test the_ground_holds_a_falling_probe ... ok
+test the_trigger_reports_a_crossing ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+
+   Doc-tests jackdaw_tilemap_collision
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+EXIT=0
