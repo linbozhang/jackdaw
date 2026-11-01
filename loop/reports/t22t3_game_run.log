@@ -1,0 +1,26 @@
+warning: unused variable: `parent`
+    --> src/lib.rs:2228:20
+     |
+2228 |         for (tile, parent) in tiles
+     |                    ^^^^^^ help: if this is intentional, prefix it with an underscore: `_parent`
+     |
+     = note: `#[warn(unused_variables)]` (part of `#[warn(unused)]`) on by default
+
+warning: `t22-tilemap` (lib) generated 1 warning (run `cargo fix --lib -p t22-tilemap` to apply 1 suggestion)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.48s
+     Running `target/debug/t22-tilemap`
+[2m2026-11-01T20:13:45.956726Z[0m [32m INFO[0m [2mbevy_diagnostic::system_information_diagnostics_plugin::internal[0m[2m:[0m SystemInfo { os: "macOS 26.6.2 Tahoe", kernel: "25.6.0", cpu: "Apple M1 Pro", core_count: "8", memory: "16.0 GiB" }
+[2m2026-11-01T20:13:45.959765Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-11-01T20:13:46.023793Z[0m [32m INFO[0m [2mbevy_render::renderer[0m[2m:[0m AdapterInfo { name: "Apple M1 Pro", vendor: 0, device: 0, device_type: IntegratedGpu, device_pci_bus_id: "", driver: "", driver_info: "", backend: Metal, subgroup_min_size: 4, subgroup_max_size: 64, transient_saves_memory: Some(true), limit_bucket: None }
+[2m2026-11-01T20:13:46.299780Z[0m [32m INFO[0m [2mbevy_pbr::cluster[0m[2m:[0m GPU clustering is supported on this device.
+[2m2026-11-01T20:13:46.299915Z[0m [32m INFO[0m [2mbevy_render::batching::gpu_preprocessing[0m[2m:[0m GPU preprocessing is fully supported on this device.
+[2m2026-11-01T20:13:46.327915Z[0m [32m INFO[0m [2mbevy_winit::system[0m[2m:[0m Creating new window t22-tilemap (69v0)
+[2m2026-11-01T20:13:46.491142Z[0m [32m INFO[0m [2mjackdaw_runtime[0m[2m:[0m No catalog at /Users/zhanglinbo/workspace/loop-mac/t22-tilemap/t22-tilemap/assets/catalog.bsn, skipping catalog load
+[2m2026-11-01T20:13:46.537798Z[0m [33m WARN[0m [2mjackdaw_runtime::config[0m[2m:[0m no config asset at 'input-actions.bsn'; jackdaw_runtime::game_input::GameInputConfig starts at its default
+[2m2026-11-01T20:13:46.537883Z[0m [33m WARN[0m [2mjackdaw_runtime::config[0m[2m:[0m no config asset at 'game-config.bsn'; t22_tilemap::GameConfig starts at its default
+[2m2026-11-01T20:13:46.537840Z[0m [33m WARN[0m [2mjackdaw_runtime::config[0m[2m:[0m no config asset at 'audio-config.bsn'; t22_tilemap::GameAudioConfig starts at its default
+[2m2026-11-01T20:13:46.921347Z[0m [33m WARN[0m [2mjackdaw_bind::evaluate[0m[2m:[0m binding 0 on 823v0: no context for 't22_tilemap::PickupCount.0'
+[2m2026-11-01T20:13:46.921408Z[0m [33m WARN[0m [2mjackdaw_bind::evaluate[0m[2m:[0m binding 0 on 822v0: no context for 't22_tilemap::PlayerHealth.current'
+[2m2026-11-01T20:13:46.921427Z[0m [33m WARN[0m [2mjackdaw_bind::evaluate[0m[2m:[0m binding 0 on 820v0: no context for 't22_tilemap::PlayerHealth.current'
+[2m2026-11-01T20:13:47.073478Z[0m [33m WARN[0m [2mbevy_render::camera[0m[2m:[0m Camera order ambiguities detected for active cameras with the following priorities: {(0, Some(Window(NormalizedWindowRef(69v0))))}. To fix this, ensure there is exactly one Camera entity spawned with a given order for a given RenderTarget. Ambiguities should be resolved because either (1) multiple active cameras were spawned accidentally, which will result in rendering multiple instances of the scene or (2) for cases where multiple active cameras is intentional, ambiguities could result in unpredictable render results.
+[2m2026-11-01T20:13:56.852283Z[0m [32m INFO[0m [2mt22_tilemap[0m[2m:[0m Tilemap: the probe walked into a trigger cell!

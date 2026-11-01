@@ -1,0 +1,20 @@
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t22-tilemap/t22-tilemap
+PIE_UP_PASS
+pie probe sample 1: x=96.0 y=76.0009994506836
+pie probe sample 2: x=96.0 y=76.0009994506836
+pie probe sample 3: x=96.0 y=76.0009994506836
+pie probe sample 4: x=96.0 y=76.0009994506836
+pie probe sample 5: x=96.0 y=76.0009994506836
+pie probe sample 6: x=96.0 y=76.0009994506836
+PIE_GROUND_PASS
+pie wall probe: x=275.9989929199219 (blocked ~276, past = 300+)
+PIE_WALL_PASS
+pie TriggerCensus: 0 true
+PIE_TRIGGER_PASS
+shot-pie-streamframe0: size=3024 1898 md5=367ff2757ac4154079dd62a10306df93
+shot-pie-stream: size=3024 1898 md5=41a4d8575ec141be8563c225e8c7fc9a
+pie strip red census: 0.5035 (image 3024x1898)
+PIE_PX_PASS
+WARN_EDITOR_PASS
+EDITOR_ALIVE_PASS
+PIE done: EDITOR_ALIVE=PASS PIE_GROUND=PASS PIE_PX=PASS PIE_TRIGGER=PASS PIE_UP=PASS PIE_WALL=PASS WARN_EDITOR=PASS 

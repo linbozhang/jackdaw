@@ -1,0 +1,19 @@
+GAME_UP_PASS
+probe sample 1: x=96.0 y=76.0009994506836
+probe sample 2: x=96.0 y=76.0009994506836
+probe sample 3: x=96.0 y=76.0009994506836
+probe sample 4: x=96.0 y=76.0009994506836
+probe sample 5: x=96.0 y=76.0009994506836
+probe sample 6: x=96.0 y=76.0009994506836
+probe sample 7: x=96.0 y=76.0009994506836
+probe sample 8: x=96.0 y=76.0009994506836
+GROUND_HOLDS_PASS
+wall probe after the full lane: x=275.9989929199219 y=76.0009994506836 (blocked ~276, past = 300+)
+WALL_BLOCKS_PASS
+WALL_GROUNDED_PASS
+TriggerCensus: inside=0 crossed=true
+TRIGGER_FIRES_PASS
+game stdout: the trigger crossing was logged
+TRIGGER_LOG_PASS
+WARN_GAME_PASS
+RUN done: GAME_UP=PASS GROUND_HOLDS=PASS TRIGGER_FIRES=PASS TRIGGER_LOG=PASS WALL_BLOCKS=PASS WALL_GROUNDED=PASS WARN_GAME=PASS 

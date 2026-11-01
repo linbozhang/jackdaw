@@ -1,0 +1,6 @@
+flow level face: TilemapLayer=3 PlayerProbe=1
+FLOW_LEVEL_PASS
+flow residue: TilemapLayer=0 PlayerProbe=1
+FLOW_RESIDUE_PASS
+WARN_GAME_PASS
+FLOW done: FLOW_LEVEL=PASS FLOW_RESIDUE=PASS WARN_GAME=PASS 

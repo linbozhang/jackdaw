@@ -1,0 +1,6 @@
+=== targeted ===
+        PASS [   2.041s] (70/71) jackdaw::stage world_guides::a_sprite_drag_lands_its_edge_on_a_guide_and_shows_where
+        PASS [   1.502s] (71/71) jackdaw::stage world_guides::a_ui_scenes_guides_never_snap_a_sprite_on_the_world_panel
+────────────
+     Summary [  49.622s] 71 tests run: 71 passed, 500 skipped
+TARGETED_EXIT=0
