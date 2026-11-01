@@ -1,0 +1,19 @@
+=== fmt (rerun after cargo fmt applied; FMT_EXIT records this run) ===
+FMT_EXIT=0
+=== clippy ws ===
+    Checking jackdaw_physics v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/integrations/physics/jackdaw_physics)
+    Finished `dev` profile [optimized + debuginfo] target(s) in 13.06s
+CLIPPY_WS_EXIT=0
+=== libtests ===
+────────────
+     Summary [  45.161s] 3047 tests run: 3047 passed, 0 skipped
+LIBTESTS_EXIT=0
+=== targeted ===
+────────────
+     Summary [  47.343s] 71 tests run: 71 passed, 500 skipped
+TARGETED_EXIT=0
+=== fast ===
+        PASS [   1.222s] (3047/3047) jackdaw_widgets_runtime tests::a_written_value_settles_once_the_pipeline_has_moved_the_caret
+────────────
+     Summary [  45.568s] 3047 tests run: 3047 passed, 0 skipped
+FAST_EXIT=0

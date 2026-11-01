@@ -60,5 +60,17 @@
     "runtime_features": ["animation"],
     "provides": ["jackdaw_animation_runtime"],
     "component_prefixes": ["jackdaw_animation_runtime::"]
+  },
+  {
+    "id": "tilemap",
+    "name": "Tilemap",
+    "description": "Tile-grid levels: edit tilemap layers in the editor and resolve against them in the game with the collision kernel.",
+    "crates": [
+      {
+        "name": "jackdaw_tilemap_collision"
+      }
+    ],
+    "provides": ["jackdaw_tilemap_collision"],
+    "component_prefixes": ["jackdaw_tilemap_collision::"]
   }
 ]

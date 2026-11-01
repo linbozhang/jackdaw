@@ -18,6 +18,20 @@ pub enum ActiveTool {
     Translate,
     Rotate,
     Scale,
+    /// Tile-grid authoring (T22): pointer strokes paint, erase and fill
+    /// cells of the active tilemap layer; the palette panel rides along.
+    /// The manipulator gizmos stand down, the way they do for `Select`.
+    Tilemap,
+}
+
+impl ActiveTool {
+    /// Whether the tool drives the transform gizmos. `Select` manipulates
+    /// nothing and `Tilemap` paints cells; everything else shows its
+    /// gizmo on a selection.
+    #[must_use]
+    pub fn is_manipulator(self) -> bool {
+        !matches!(self, Self::Select | Self::Tilemap)
+    }
 }
 
 #[cfg(test)]

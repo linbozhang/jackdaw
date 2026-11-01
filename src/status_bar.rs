@@ -472,6 +472,7 @@ fn update_status_right(
             ActiveTool::Translate => "Translate",
             ActiveTool::Rotate => "Rotate",
             ActiveTool::Scale => "Scale",
+            ActiveTool::Tilemap => "Tilemap",
         };
         let axis_str = match axis {
             GizmoAxis::X => "X",
@@ -524,6 +525,7 @@ fn update_status_right(
         ActiveTool::Translate => "Translate",
         ActiveTool::Rotate => "Rotate",
         ActiveTool::Scale => "Scale",
+        ActiveTool::Tilemap => "Tilemap",
     };
     let space_str = match *space {
         GizmoSpace::World => "World",

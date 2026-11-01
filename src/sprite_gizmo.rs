@@ -250,12 +250,12 @@ fn gizmo_parts(
     pivot: Vec2,
     corners: impl FnOnce() -> Option<[Vec2; 4]>,
 ) -> Vec<Part> {
-    if tool == ActiveTool::Select {
+    if !tool.is_manipulator() {
         return Vec::new();
     }
     let mut parts = vec![Part::square(pivot, PIVOT_SIZE, tokens::TEXT_PRIMARY).round()];
     match tool {
-        ActiveTool::Select => {}
+        ActiveTool::Select | ActiveTool::Tilemap => {}
         ActiveTool::Translate => {
             for (kind, direction, color) in [
                 (SpriteHandle::AxisX, Vec2::X, tokens::AXIS_X_COLOR),

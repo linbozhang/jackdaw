@@ -172,6 +172,8 @@ pub mod test_input;
 pub mod texture_files;
 pub mod texture_import;
 pub mod thumbnail;
+pub mod tilemap;
+pub mod tilemap_palette;
 pub(crate) mod timestamps;
 pub mod tool_ops;
 pub mod toolbar_overflow;
@@ -495,6 +497,8 @@ impl Plugin for EditorCorePlugin {
                 material_ui::plugin,
                 canvas_snap::plugin,
                 sprite_ops::plugin,
+                tilemap::plugin,
+                tilemap_palette::plugin,
                 undo_snapshot::plugin,
                 migrate_dialog::plugin,
             ),

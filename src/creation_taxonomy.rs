@@ -17,6 +17,7 @@ use crate::entity_ops::{
 #[cfg(feature = "multiplayer")]
 use crate::entity_ops::{EntityAddNetworkRoomOp, EntityAddSpawnPointOp, EntityAddZoneTransitionOp};
 use crate::sprite_ops::SpriteAddOp;
+use crate::tilemap::TilemapLayerAddOp;
 
 /// Action prefix of an entry that creates a registered UI widget.
 pub const WIDGET_ACTION_PREFIX: &str = "widget:";
@@ -258,6 +259,11 @@ fn two_d(taxonomy: &mut CreationTaxonomy, world: &mut World) {
         .push(group(TWO_D_GROUP, "2D", TWO_D_GROUP_ORDER));
     taxonomy.entries.extend([
         entry(TWO_D_GROUP, SpriteAddOp::LABEL, op_action::<SpriteAddOp>()),
+        entry(
+            TWO_D_GROUP,
+            TilemapLayerAddOp::LABEL,
+            op_action::<TilemapLayerAddOp>(),
+        ),
         entry(TWO_D_GROUP, "Empty 2D", op_action::<EntityAddEmptyOp>()),
     ]);
 }

@@ -15,13 +15,16 @@ pub(crate) fn add_to_extension(ctx: &mut ExtensionContext) {
     ctx.register_operator::<ToolSelectOp>()
         .register_operator::<ToolTranslateOp>()
         .register_operator::<ToolRotateOp>()
-        .register_operator::<ToolScaleOp>();
+        .register_operator::<ToolScaleOp>()
+        .register_operator::<ToolTilemapOp>();
 
     // Defaults recorded into the keymap; bindings themselves come from the preset applier.
     ctx.bind_operator::<CoreExtensionInputContext, ToolSelectOp>([PresetInput::key("KeyQ")]);
     ctx.bind_operator::<CoreExtensionInputContext, ToolTranslateOp>([PresetInput::key("KeyW")]);
     ctx.bind_operator::<CoreExtensionInputContext, ToolRotateOp>([PresetInput::key("KeyE")]);
     ctx.bind_operator::<CoreExtensionInputContext, ToolScaleOp>([PresetInput::key("KeyR")]);
+    // T tilemap (T22): the fifth tool. Q/W/E/R stay the manipulators.
+    ctx.bind_operator::<CoreExtensionInputContext, ToolTilemapOp>([PresetInput::key("KeyT")]);
 }
 
 /// Tool switching is allowed in any edit mode (Object / Vertex / Edge / Face).
@@ -84,6 +87,11 @@ pub(crate) fn tool_scale_impl(world: &mut World) {
     world.insert_resource(ActiveTool::Scale);
 }
 
+pub(crate) fn tool_tilemap_impl(world: &mut World) {
+    world.insert_resource(ActiveTool::Tilemap);
+    crate::edit_mode_ops::set_edit_mode_object(world);
+}
+
 #[operator(id = "tool.select", label = "Select Tool", is_available = can_change_tool)]
 pub fn tool_select(_: In<OperatorParameters>, world: &mut World) -> OperatorResult {
     tool_select_impl(world);
@@ -109,6 +117,14 @@ pub fn tool_rotate(_: In<OperatorParameters>, world: &mut World) -> OperatorResu
 #[operator(id = "tool.scale", label = "Scale Tool", is_available = can_change_tool)]
 pub fn tool_scale(_: In<OperatorParameters>, world: &mut World) -> OperatorResult {
     tool_scale_impl(world);
+    OperatorResult::Finished
+}
+
+/// The Tilemap tool (T22): tile-grid authoring on a 2D world scene. Its
+/// strokes paint, erase and fill cells; the palette panel rides along.
+#[operator(id = "tool.tilemap", label = "Tilemap Tool", is_available = can_change_tool)]
+pub fn tool_tilemap(_: In<OperatorParameters>, world: &mut World) -> OperatorResult {
+    tool_tilemap_impl(world);
     OperatorResult::Finished
 }
 

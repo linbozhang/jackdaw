@@ -6,7 +6,9 @@
 
 use std::path::{Path, PathBuf};
 
-use jackdaw::scaffold::{TemplateKind, check_new_project, scaffold_new_project};
+use jackdaw::scaffold::{
+    TemplateKind, check_new_project, scaffold_new_project, scaffold_new_project_with,
+};
 use jackdaw_project_build::{BuildEvent, build_project_binary, shim_spec_for_project};
 
 #[test]
@@ -82,6 +84,68 @@ fn scaffold_game_builds_and_exposes_component() {
             .iter()
             .any(|c| c.type_path == spinning_cube.type_path),
         "the schema the editor watches on disk holds the component"
+    );
+}
+
+/// The tilemap module's half of the e2e: a project asked for the module
+/// builds too, kernel crate and all — the emitted `TilemapProbePlugin`
+/// section is real code, not just teaches anchors (T22-T2). The build
+/// shares the default template's dependency target (same template
+/// revision key), so the marginal cost is the game's own lib.
+#[test]
+fn scaffold_tilemap_module_builds_the_probe() {
+    let key = template_revision();
+    let work = scratch_root().join(&key);
+    let dest = work.join("tilemap-game");
+    let _ = std::fs::remove_dir_all(&dest);
+    std::fs::create_dir_all(&work).expect("a scratch dir for the scaffolded project");
+
+    let mut modules = std::collections::BTreeSet::new();
+    modules.insert("tilemap".to_string());
+    scaffold_new_project_with(&dest, "tilemap-game", TemplateKind::Game, &modules)
+        .expect("scaffold a tilemap game");
+    let warnings = check_new_project(&dest);
+    assert!(
+        warnings.is_empty(),
+        "the new-project flow resolves a fresh project: {warnings:?}"
+    );
+    reuse_dependency_build(&dest, &dependency_cache(&key));
+
+    let spec = shim_spec_for_project(&dest).expect("scaffolded project is a jackdaw project");
+    let jackdaw_dir = dest.join(".jackdaw");
+    let mut log = Vec::new();
+    let mut collect_log = |event: BuildEvent| {
+        if let BuildEvent::Log(line) = event {
+            log.push(line);
+        }
+    };
+    let build =
+        build_project_binary(&spec, &jackdaw_dir, &mut collect_log).unwrap_or_else(|error| {
+            panic!(
+                "the tilemap module's game must build: {error}\n{}",
+                log.join("\n")
+            )
+        });
+    let schema = build.schema.unwrap_or_else(|| {
+        panic!(
+            "no schema extracted from the built binary; the build said:\n{}",
+            log.join("\n")
+        )
+    });
+    // The trigger census is registered for reflection (tooling reads it
+    // while the game runs), so the extracted schema names it — proof the
+    // module's plugin ran in the binary that was built.
+    assert!(
+        schema
+            .components
+            .iter()
+            .any(|c| c.type_path.ends_with("::TriggerCensus")),
+        "the tilemap module's census is a schema component; got: {:?}",
+        schema
+            .components
+            .iter()
+            .map(|c| c.type_path.as_str())
+            .collect::<Vec<_>>()
     );
 }
 

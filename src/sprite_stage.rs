@@ -384,6 +384,7 @@ fn on_sprite_press(
     event: On<PointerPress>,
     ui_scale: Res<UiScale>,
     keys: Res<ButtonInput<KeyCode>>,
+    active_tool: Res<crate::active_tool::ActiveTool>,
     hosts: Query<&Viewport2dPanelHost>,
     stages: Query<(&ComputedNode, &UiGlobalTransform), With<Scene2dViewport>>,
     ui_roots: Query<&UiTargetCamera, AuthoredUiSceneRoot>,
@@ -397,6 +398,12 @@ fn on_sprite_press(
     mut commands: Commands,
 ) -> Result {
     if event.button != PointerButton::Primary {
+        return Ok(());
+    }
+    // The Tilemap tool owns the press: its stroke paints cells, and a tile
+    // under it is Locked (the picker passes those over) — a layer parent,
+    // though, would still answer, so the tool stands the picker down whole.
+    if *active_tool == crate::active_tool::ActiveTool::Tilemap {
         return Ok(());
     }
     let target = event.event_target();

@@ -132,7 +132,7 @@ fn snap_toggle(
     }
     if mouse.just_released(MouseButton::Middle) && *travel <= SNAP_CLICK_MAX_TRAVEL {
         let toggled = match *mode {
-            ActiveTool::Select => false,
+            ActiveTool::Select | ActiveTool::Tilemap => false,
             ActiveTool::Translate => {
                 snap_settings.translate_snap = !snap_settings.translate_snap;
                 true
