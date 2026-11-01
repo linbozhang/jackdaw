@@ -1,0 +1,9 @@
+        PASS [   1.459s] (1/1) jackdaw::prefabs prefab_lifecycle::prefab_file_change_triggers_reload
+────────────
+     Summary [   1.464s] 1 test run: 1 passed, 3055 skipped
+────────────
+ Nextest run ID 5c41e3d3-a7db-40ab-b24f-a835accf3570 with nextest profile: ci
+    Starting 1 test across 33 binaries (3055 tests skipped)
+        PASS [   1.416s] (1/1) jackdaw::prefabs prefab_lifecycle::prefab_file_change_triggers_reload
+────────────
+     Summary [   1.421s] 1 test run: 1 passed, 3055 skipped
