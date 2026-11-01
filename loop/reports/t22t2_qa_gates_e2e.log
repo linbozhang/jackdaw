@@ -1,0 +1,13 @@
+   Compiling jackdaw v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw)
+    Finished `test` profile [optimized + debuginfo] target(s) in 1.68s
+────────────
+ Nextest run ID 22ef55cf-e920-4ca4-973c-948c1b3fc5de with nextest profile: default
+    Starting 1 test across 1 binary (1 test skipped)
+        SLOW [> 30.000s] (───) jackdaw::scaffold_e2e scaffold_tilemap_module_builds_the_probe
+        SLOW [> 60.000s] (───) jackdaw::scaffold_e2e scaffold_tilemap_module_builds_the_probe
+        SLOW [> 90.000s] (───) jackdaw::scaffold_e2e scaffold_tilemap_module_builds_the_probe
+        SLOW [>120.000s] (───) jackdaw::scaffold_e2e scaffold_tilemap_module_builds_the_probe
+        PASS [ 125.894s] (1/1) jackdaw::scaffold_e2e scaffold_tilemap_module_builds_the_probe
+────────────
+     Summary [ 125.894s] 1 test run: 1 passed (1 slow), 1 skipped
+EXIT=0

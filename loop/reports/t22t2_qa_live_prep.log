@@ -1,0 +1,14 @@
+PREP disk face: 127Gi free (A6 discipline: closed fixtures are the hogs)
+PREP_JD_NEW_PASS
+PREP_REMOTE_INJECT_PASS
+PREP_SHEET_PASS
+PREP_SCENE_2D_PASS
+TPL_module_physics_player_body_PASS
+TPL_module_physics_falling_body_PASS
+TPL_module_physics_manual_gravity_PASS
+TPL_module_physics_demo_PASS
+TPL_SCAFFOLD_FAMILY_PASS
+TPL_TILEMAP_PRESENT_PASS
+PREP_GAME_WARM_PASS
+PREP done: PREP_GAME_WARM=PASS PREP_JD_NEW=PASS PREP_REMOTE_INJECT=PASS PREP_SCENE_2D=PASS PREP_SHEET=PASS TPL_SCAFFOLD_FAMILY=PASS TPL_TILEMAP_PRESENT=PASS TPL_module_physics_demo=PASS TPL_module_physics_falling_body=PASS TPL_module_physics_manual_gravity=PASS TPL_module_physics_player_body=PASS 
+fixture: /Users/zhanglinbo/workspace/loop-mac/t22-tilemap/t22-tilemap
