@@ -161,6 +161,11 @@ pub mod sdk_paths;
 pub mod sdk_setup;
 pub mod selection;
 pub mod snapping;
+pub mod sprite_atlas;
+pub mod sprite_gizmo;
+pub mod sprite_ops;
+pub mod sprite_snap;
+pub mod sprite_stage;
 pub mod status_bar;
 pub mod terrain;
 pub mod test_input;
@@ -447,6 +452,8 @@ impl Plugin for EditorCorePlugin {
                 jackdaw_localization::LocalizationPlugin,
             ),
         ))
+        .add_plugins(sprite_stage::SpriteStagePlugin)
+        .add_plugins(sprite_gizmo::SpriteGizmoPlugin)
         .add_plugins(prefab::PrefabPlugin)
         .add_plugins(prefab::watcher::PrefabWatcherPlugin)
         .add_plugins(jackdaw_surface::EnvironmentPlugin)
@@ -487,6 +494,7 @@ impl Plugin for EditorCorePlugin {
                 material_preview::MaterialPreviewPlugin,
                 material_ui::plugin,
                 canvas_snap::plugin,
+                sprite_ops::plugin,
                 undo_snapshot::plugin,
                 migrate_dialog::plugin,
             ),

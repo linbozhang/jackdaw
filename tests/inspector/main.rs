@@ -25,6 +25,7 @@ mod project_component_card;
 mod scene_data_cards;
 mod schema_definition_card;
 mod selection_switch;
+mod sprite_atlas;
 mod three_way_matrix;
 mod typed_entry;
 mod unloaded_component_card;

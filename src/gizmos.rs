@@ -1,4 +1,5 @@
 use bevy::{
+    camera::visibility::RenderLayers,
     ecs::system::SystemParam,
     picking::cursor::{EntityCursor, OverrideCursor},
     prelude::*,
@@ -20,9 +21,14 @@ use crate::{
     viewport_util::{point_to_segment_dist, window_to_viewport_cursor_for},
 };
 
-/// Gizmo group for transform gizmos, rendered on top of all geometry.
+/// Gizmo group for transform gizmos, rendered on top of all geometry, on
+/// [`TRANSFORM_GIZMO_LAYER`] alone: the 3D viewports render that layer and the
+/// 2D view, which has a gizmo of its own, does not.
 #[derive(Default, Reflect, GizmoConfigGroup)]
-struct TransformGizmoGroup;
+pub struct TransformGizmoGroup;
+
+/// The render layer of [`TransformGizmoGroup`].
+pub const TRANSFORM_GIZMO_LAYER: usize = 3;
 
 /// Bundles viewport-pick params used by `gizmo_drag` (the system has
 /// many params; bundling keeps it under Bevy's system-param ceiling).
@@ -78,7 +84,8 @@ const GIZMO_SCREEN_SCALE: f32 = 0.1;
 const INACTIVE_ALPHA: f32 = 0.15;
 const ROTATE_SENSITIVITY: f32 = 0.01;
 const SCALE_SENSITIVITY: f32 = 0.005;
-const MIN_SCALE: f32 = 0.01;
+/// The smallest scale a gizmo drag leaves on an axis.
+pub(crate) const MIN_SCALE: f32 = 0.01;
 const AXIS_HIT_DISTANCE: f32 = 35.0;
 /// Pixel radius around the projected gizmo center that grabs the uniform
 /// scale handle. Smaller than `AXIS_START_OFFSET` projected, so it never
@@ -177,6 +184,7 @@ impl Plugin for TransformGizmosPlugin {
                     gizmo_drag_edit_invoke_trigger,
                 )
                     .chain()
+                    .run_if(crate::viewport_2d::three_d_world_is_current)
                     .in_set(crate::EditorInteractionSystems),
             )
             .add_systems(
@@ -197,6 +205,7 @@ fn configure_transform_gizmos(mut config_store: ResMut<GizmoConfigStore>) {
     let (config, _) = config_store.config_mut::<TransformGizmoGroup>();
     config.depth_bias = -1.0;
     config.line.width = 3.0;
+    config.render_layers = RenderLayers::layer(TRANSFORM_GIZMO_LAYER);
 }
 
 /// World-space size for the transform gizmo, picked so it occupies a

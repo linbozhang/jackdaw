@@ -334,6 +334,7 @@ fn the_parametric_authoring_operators_are_registered() {
             &["terrain", "x", "z", "radius", "slot", "opacity"][..],
         ),
         ("selection.extend", &["name"][..]),
+        ("sprite.add", &["path", "x", "y", "parent", "name"][..]),
         ("prefab.pack", &["entity", "path", "overwrite"][..]),
         (
             "prefab.pack_matching",

@@ -33,7 +33,9 @@ use jackdaw_feathers::{
 use jackdaw_scene_types::{CanvasGuides, UiSceneRoot};
 
 use crate::{
-    canvas_snap::{CanvasGuidesOp, CanvasRulersOp, CanvasSnap, CanvasSnapKind, CanvasSnapOp},
+    canvas_snap::{
+        CanvasGuidesOp, CanvasRulersOp, CanvasSnap, CanvasSnapKind, CanvasSnapOp, GuideScene,
+    },
     prefab::{AuthoredUiSceneRoot, ImportedUiSceneRoot},
     prelude::*,
     selection::Selection,
@@ -172,6 +174,20 @@ impl Default for Ui2dView {
 /// from the centre of the canvas. Screen pixels run y-down and the pan y-up.
 pub fn world_at(view: Ui2dView, area_offset: Vec2) -> Vec2 {
     view.pan + Vec2::new(area_offset.x, -area_offset.y) / view.zoom
+}
+
+/// World point (y up) drawn at `pixel` of a panel's render-target image,
+/// measured from the image's top-left corner, when the panel shows a 2D world
+/// scene through `view`. Matches the camera [`apply_2d_view`] places: centred
+/// on the pan, `1 / zoom` world units per target pixel.
+pub fn target_pixel_to_world(view: Ui2dView, target_size: UVec2, pixel: Vec2) -> Vec2 {
+    world_at(view, pixel - target_size.as_vec2() / 2.0)
+}
+
+/// Inverse of [`target_pixel_to_world`].
+pub fn world_to_target_pixel(view: Ui2dView, target_size: UVec2, world: Vec2) -> Vec2 {
+    let offset = (world - view.pan) * view.zoom;
+    Vec2::new(offset.x, -offset.y) + target_size.as_vec2() / 2.0
 }
 
 /// Zoom by `ticks` wheel steps about the point under the cursor: the pan is
@@ -328,7 +344,7 @@ pub struct Viewport2dPanelHost {
     /// framing.
     pub fit_pending: bool,
     /// Size of the camera's render-target image, in its own pixels: the
-    /// reference size of the active UI scene, or the stage's own size when none
+    /// reference size of the active UI scene, or the stage's logical size when none
     /// is open. Cached here so the pan/zoom pass need not touch `Assets<Image>`.
     pub target_size: UVec2,
 }
@@ -774,28 +790,34 @@ fn park_ui_scene_roots(commands: &mut Commands, images: &mut Assets<Image>) -> E
 /// This is the reference-resolution contract: Bevy derives a UI root's layout
 /// viewport from its target's size, so sizing the image to `reference_size`
 /// makes authored layout compute at the resolution it was designed for whatever
-/// the dock leaf measures. With no UI scene open the stage fills its area and
+/// the dock leaf measures. With no UI scene on the panel the stage fills its area and
 /// the panel is a plain 1:1 viewport.
 ///
 /// A pending fit ([`request_2d_fit`]) lands here too, this being the one place
 /// holding both the reference size and the area's laid-out size.
 pub fn size_targets_to_reference(
-    roots: Query<&UiSceneRoot, AuthoredUiSceneRoot>,
+    roots: Query<(&UiSceneRoot, Option<&UiTargetCamera>), AuthoredUiSceneRoot>,
+    worlds: crate::sprite_stage::Scene2dRoots,
     mut hosts: Query<&mut Viewport2dPanelHost>,
     targets: Query<&RenderTarget, With<Viewport2dCamera>>,
     mut stages: Query<(&mut Node, &ComputedNode), With<Scene2dViewport>>,
     areas: Query<&ComputedNode, With<Scene2dStageArea>>,
     mut images: ResMut<Assets<Image>>,
 ) {
-    let reference = roots
+    let ui_reference = roots
         .iter()
         .next()
-        .map(|root| root.reference_size.max(UVec2::ONE));
+        .map(|(root, _)| root.reference_size.max(UVec2::ONE));
 
     for mut host in &mut hosts {
         let Ok((mut node, computed)) = stages.get_mut(host.stage) else {
             continue;
         };
+        // A panel showing the 2D world beside an open UI scene is a plain
+        // viewport, not the canvas.
+        let routed = roots.iter().filter_map(|(_, routed)| routed);
+        let reference = ui_reference
+            .filter(|_| !crate::sprite_stage::world_on_panel(!worlds.is_empty(), routed, &host));
 
         // The area's logical size, because a `Node` is written in logical
         // pixels and so is the view's zoom.
@@ -828,7 +850,21 @@ pub fn size_targets_to_reference(
                 }
                 reference
             }
-            None => computed.size().as_uvec2().max(UVec2::ONE),
+            // Logical pixels, the measure the view is driven in, so one
+            // target pixel is one stage logical pixel at any scale factor.
+            None => {
+                let size = (computed.size() * computed.inverse_scale_factor())
+                    .round()
+                    .as_uvec2()
+                    .max(UVec2::ONE);
+                if let Ok(RenderTarget::Image(target)) = targets.get(host.camera)
+                    && let Some(mut image) = images.get_mut(&target.handle)
+                    && image.size() != size
+                {
+                    image.resize(size.to_extents());
+                }
+                size
+            }
         };
         if host.target_size != target_size {
             host.target_size = target_size;
@@ -1084,14 +1120,63 @@ mod ruler_label_step_tests {
     }
 }
 
+#[cfg(test)]
+mod world_mapping_tests {
+    use super::*;
+
+    const TARGET: UVec2 = UVec2::new(800, 600);
+
+    #[test]
+    fn the_image_centre_shows_the_pan() {
+        let view = Ui2dView {
+            pan: Vec2::new(30.0, -12.0),
+            zoom: 2.0,
+            ..default()
+        };
+        assert_eq!(
+            target_pixel_to_world(view, TARGET, Vec2::new(400.0, 300.0)),
+            view.pan
+        );
+    }
+
+    #[test]
+    fn pixels_run_y_down_and_world_y_up_scaled_by_zoom() {
+        let view = Ui2dView {
+            pan: Vec2::ZERO,
+            zoom: 2.0,
+            ..default()
+        };
+        let world = target_pixel_to_world(view, TARGET, Vec2::new(500.0, 200.0));
+        assert_eq!(world, Vec2::new(50.0, 50.0));
+    }
+
+    #[test]
+    fn the_two_mappings_are_inverses() {
+        let view = Ui2dView {
+            pan: Vec2::new(-140.0, 75.5),
+            zoom: 0.37,
+            ..default()
+        };
+        for world in [Vec2::ZERO, Vec2::new(12.5, -900.0), Vec2::new(-3.0, 41.0)] {
+            let pixel = world_to_target_pixel(view, TARGET, world);
+            let back = target_pixel_to_world(view, TARGET, pixel);
+            assert!(
+                (back - world).length() < 1e-3,
+                "{world} came back as {back}"
+            );
+        }
+    }
+}
+
 /// Draw each panel's rulers for the view it is showing, and take the gutter down
 /// when the rulers are off. Runs after the stage has been placed, so a ruler
 /// measures against the same area size the canvas was laid into.
 fn sync_rulers(
     snap: Res<CanvasSnap>,
-    roots: Query<(Entity, &UiSceneRoot), AuthoredUiSceneRoot>,
+    scene: GuideScene,
     hosts: Query<&Viewport2dPanelHost>,
     areas: Query<&ComputedNode, With<Scene2dStageArea>>,
+    stages: Query<&ComputedNode, With<Scene2dViewport>>,
     rulers: Query<(Entity, &CanvasRuler, Option<&RulerMarks>, Option<&Children>)>,
     parts: Query<Entity, With<CanvasRulerPart>>,
     mark_nodes: Query<&RulerMarkNode>,
@@ -1114,13 +1199,6 @@ fn sync_rulers(
         return;
     }
 
-    // A malformed document holding several roots picks the lowest entity, the
-    // same one the guide operators write.
-    let reference = roots
-        .iter()
-        .min_by_key(|(entity, _)| *entity)
-        .map(|(_, root)| root.reference_size.max(UVec2::ONE));
-
     for (entity, ruler, drawn, children) in &rulers {
         let Ok(host) = hosts.get(ruler.host) else {
             continue;
@@ -1129,19 +1207,28 @@ fn sync_rulers(
             .get(host.area)
             .map(|area| area.size() * area.inverse_scale_factor())
             .unwrap_or(Vec2::ZERO);
-        let Some(reference) = reference else {
+        let Some(((_, space), stage)) = scene.open(Some(host)).zip(stages.get(host.stage).ok())
+        else {
             if drawn.is_some() {
                 despawn_ruler_marks(&mut commands, children, &mark_nodes);
                 commands.entity(entity).remove::<RulerMarks>();
             }
             continue;
         };
-        let origin = stage_origin(reference, host.view, area);
-        let (origin, length) = match ruler.axis {
-            CanvasAxis::Vertical => (origin.x, area.x),
-            CanvasAxis::Horizontal => (origin.y, area.y),
-        };
-        let marks = ruler_marks(origin, host.view.zoom, length);
+        let scale = crate::ui_stage::stage_scale(stage, host.target_size);
+        let (origin, step) = space.ruler_axis(host, area, scale, ruler.axis);
+        // Adding zero turns a negated zero into the "0" the label prints.
+        let marks: Vec<RulerMark> = ruler_marks(
+            origin,
+            step.abs(),
+            crate::ui_stage::axis_of(area, ruler.axis),
+        )
+        .into_iter()
+        .map(|mark| RulerMark {
+            authored: mark.authored * step.signum() + 0.0,
+            ..mark
+        })
+        .collect();
         let reading = RulerMarks(
             marks
                 .iter()
@@ -1203,48 +1290,55 @@ fn despawn_ruler_marks(
 fn sync_ruler_guide_marks(
     mut commands: Commands,
     snap: Res<CanvasSnap>,
-    scenes: Query<(Entity, &UiSceneRoot, Option<&CanvasGuides>), AuthoredUiSceneRoot>,
+    scene: GuideScene,
+    guides: Query<&CanvasGuides>,
     hosts: Query<&Viewport2dPanelHost>,
     areas: Query<&ComputedNode, With<Scene2dStageArea>>,
+    stages: Query<&ComputedNode, With<Scene2dViewport>>,
     rulers: Query<(Entity, &CanvasRuler)>,
     marks: Query<(Entity, &RulerGuideMark)>,
     mut nodes: Query<&mut Node>,
 ) {
-    let scene = scenes
-        .iter()
-        .min_by_key(|(entity, _, _)| *entity)
-        .filter(|_| snap.show_rulers && snap.show_guides);
-
     let mut wanted: Vec<(Entity, RulerGuideMark, f32)> = Vec::new();
-    if let Some((_, root, Some(guides))) = scene {
-        let reference = root.reference_size.max(UVec2::ONE);
-        for (ruler_entity, ruler) in &rulers {
-            let Ok(host) = hosts.get(ruler.host) else {
-                continue;
-            };
-            if host.mode != Viewport2dMode::Edit {
-                continue;
-            }
-            let area = areas
-                .get(host.area)
-                .map(|area| area.size() * area.inverse_scale_factor())
-                .unwrap_or(Vec2::ZERO);
-            let origin = stage_origin(reference, host.view, area);
-            let (origin, positions) = match ruler.axis {
-                CanvasAxis::Vertical => (origin.x, &guides.vertical),
-                CanvasAxis::Horizontal => (origin.y, &guides.horizontal),
-            };
-            for (index, at) in positions.iter().enumerate() {
-                wanted.push((
-                    ruler_entity,
-                    RulerGuideMark {
-                        host: ruler.host,
-                        axis: ruler.axis,
-                        index,
-                    },
-                    origin + at * host.view.zoom,
-                ));
-            }
+    for (ruler_entity, ruler) in rulers
+        .iter()
+        .filter(|_| snap.show_rulers && snap.show_guides)
+    {
+        let Ok(host) = hosts.get(ruler.host) else {
+            continue;
+        };
+        if host.mode != Viewport2dMode::Edit {
+            continue;
+        }
+        let Some((space, guides)) = scene
+            .open(Some(host))
+            .and_then(|(root, space)| Some((space, guides.get(root).ok()?)))
+        else {
+            continue;
+        };
+        let Ok(stage) = stages.get(host.stage) else {
+            continue;
+        };
+        let area = areas
+            .get(host.area)
+            .map(|area| area.size() * area.inverse_scale_factor())
+            .unwrap_or(Vec2::ZERO);
+        let scale = crate::ui_stage::stage_scale(stage, host.target_size);
+        let (origin, step) = space.ruler_axis(host, area, scale, ruler.axis);
+        let positions = match ruler.axis {
+            CanvasAxis::Vertical => &guides.vertical,
+            CanvasAxis::Horizontal => &guides.horizontal,
+        };
+        for (index, at) in positions.iter().enumerate() {
+            wanted.push((
+                ruler_entity,
+                RulerGuideMark {
+                    host: ruler.host,
+                    axis: ruler.axis,
+                    index,
+                },
+                origin + step * at,
+            ));
         }
     }
 
@@ -1780,10 +1874,10 @@ fn snap_menu_rows(world: &World, host: Entity) -> Vec<(String, String)> {
             kind.label(),
         )
     };
-    let grid = world
-        .get::<Viewport2dPanelHost>(host)
-        .map(|host| host.view.grid)
-        .unwrap_or(DEFAULT_UI_GRID);
+    let panel = world.get::<Viewport2dPanelHost>(host);
+    let grid = panel.map_or(DEFAULT_UI_GRID, |host| host.view.grid);
+    let world_scene =
+        panel.is_some_and(|host| crate::sprite_stage::world_shows_2d_world(world, host));
 
     let mut rows = vec![
         kind_row(CanvasSnapKind::Enabled),
@@ -1798,6 +1892,7 @@ fn snap_menu_rows(world: &World, host: Entity) -> Vec<(String, String)> {
         CanvasSnapKind::ALL
             .into_iter()
             .filter(|kind| !matches!(kind, CanvasSnapKind::Enabled | CanvasSnapKind::Pixel))
+            .filter(|kind| kind.applies(world_scene))
             .map(kind_row),
     );
     rows.push((SEPARATOR_ACTION.to_string(), String::new()));
@@ -2073,6 +2168,23 @@ impl FrontedViewport<'_, '_> {
     /// canvas, so a workspace with no viewport open still answers yes.
     pub(crate) fn is_three_d(&self) -> bool {
         !self.is_two_d()
+    }
+
+    /// The 2D panel the user is looking at: the one under the cursor, else
+    /// the fronted viewport panel while it shows 2D.
+    pub(crate) fn two_d_host(&self) -> Option<&Viewport2dPanelHost> {
+        if let Some(host) = self
+            .hosts
+            .iter()
+            .find(|host| entity_is_hovered(host.area, &self.hover_map, &self.parents))
+        {
+            return Some(host);
+        }
+        if !self.is_two_d() {
+            return None;
+        }
+        fronted_viewport_hosts(&self.tree, &self.contents)
+            .find_map(|entity| self.hosts.get(entity).ok())
     }
 }
 

@@ -32,15 +32,16 @@ use bevy::{
 };
 use jackdaw_feathers::tokens;
 use jackdaw_scene_types::{CanvasGuides, Locked};
-use jackdaw_snap::{SnapLine, SnapRect, snap_edges_2d_with_winners};
+use jackdaw_snap::{SnapLine, SnapRect, dragged_part, land_2d};
 use path_slash::PathExt as _;
 
 use crate::{
     EditorEntity,
-    canvas_snap::CanvasSnap,
+    canvas_snap::{CanvasSnap, GuideScene, GuideSpace},
     commands::push_layout_edits,
     prefab::AuthoredUiSceneRoot,
     selection::Selection,
+    sprite_stage::{Scene2dRoots, shows_2d_world},
     viewport_2d::{
         CanvasRuler, Scene2dViewport, Viewport2dMode, Viewport2dPanelHost, cursor_stage_offset,
         target_pixels_per_stage_pixel,
@@ -81,7 +82,7 @@ const GUIDE_HIT_WIDTH: f32 = 5.0;
 /// authored ones, so the radius stays constant on screen at any zoom; the
 /// gesture converts it with the scale the panel is drawing at (see
 /// [`live_scale`]).
-const EDGE_SNAP_PIXELS: f32 = 6.0;
+pub(crate) const EDGE_SNAP_PIXELS: f32 = 6.0;
 
 /// The eight handle positions, clockwise from the top-left corner.
 const HANDLE_POSITIONS: [(i8, i8); 8] = [
@@ -726,6 +727,15 @@ pub fn stage_pixels_per_target_pixel(target_scale: f32, inverse_scale_factor: f3
     inverse_scale_factor / target_scale
 }
 
+/// [`stage_pixels_per_target_pixel`] for a laid-out `stage` showing a
+/// `target_size` render target.
+pub(crate) fn stage_scale(stage: &ComputedNode, target_size: UVec2) -> f32 {
+    stage_pixels_per_target_pixel(
+        target_pixels_per_stage_pixel(stage.size(), target_size),
+        stage.inverse_scale_factor(),
+    )
+}
+
 /// Authored (render-target) pixels per pointer pixel: what a
 /// [`PointerDrag`] distance is multiplied by to become an authored delta.
 ///
@@ -957,6 +967,7 @@ fn on_marquee_start(
     hosts: Query<(Entity, &Viewport2dPanelHost)>,
     stages: Query<(&ComputedNode, &UiGlobalTransform), With<Scene2dViewport>>,
     roots: Query<(Entity, &UiTargetCamera), AuthoredUiSceneRoot>,
+    scene_roots: Scene2dRoots,
     nodes: AuthoredNodes,
     children: Query<&Children>,
     selection: Res<Selection>,
@@ -992,6 +1003,11 @@ fn on_marquee_start(
     let Ok(stage) = stages.get(host.stage) else {
         return;
     };
+    // A 2D world scene's stage belongs to the sprite adapter.
+    if shows_2d_world(host, roots.iter().map(|(_, routed)| routed), &scene_roots) {
+        marquee.seed = None;
+        return;
+    }
     let cursor = event.pointer.position / ui_scale.0;
     if let StagePick::Hit(entity) = hit_at(
         cursor,
@@ -1535,10 +1551,47 @@ fn on_stage_press(
     }
 }
 
+/// What an image drop on a 2D world stage snaps by.
+#[derive(SystemParam)]
+struct WorldDropSnap<'w, 's> {
+    snap: Res<'w, CanvasSnap>,
+    keys: Option<Res<'w, ButtonInput<KeyCode>>>,
+    scene: GuideScene<'w, 's>,
+    guides: Query<'w, 's, &'static jackdaw_scene_types::CanvasGuides>,
+}
+
+impl WorldDropSnap<'_, '_> {
+    /// `point` on `host`'s stage, landed the way a sprite drag lands.
+    fn land(
+        &self,
+        point: Vec2,
+        host: &Viewport2dPanelHost,
+        stage: &ComputedNode,
+        ui_scale: f32,
+    ) -> Vec2 {
+        let ctrl = self
+            .keys
+            .as_ref()
+            .is_some_and(|keys| keys.any_pressed([KeyCode::ControlLeft, KeyCode::ControlRight]));
+        let rules = crate::sprite_snap::SpriteSnapRules::new(
+            &self.snap,
+            self.snap.magnet(ctrl),
+            host.view.grid,
+            crate::sprite_gizmo::snap_radius(host, stage, ui_scale),
+        );
+        let guides = self
+            .scene
+            .open(Some(host))
+            .and_then(|(root, _)| self.guides.get(root).ok());
+        crate::sprite_ops::snap_point(point, &rules, guides)
+    }
+}
+
 /// Land an asset dragged out of the Project window on the canvas, claimed
 /// off the dock the way a press is and only in [`Viewport2dMode::Edit`].
-/// What the drop means is decided by what is under the cursor; see
-/// [`crate::ui_asset_drop::classify_drop`].
+/// On a 2D world scene the image becomes a sprite at the drop point, through
+/// `sprite.add`; on a UI scene what the drop means is decided by what is
+/// under the cursor; see [`crate::ui_asset_drop::classify_drop`].
 fn on_stage_asset_drop(
     mut event: On<PointerDragDrop>,
     ui_scale: Res<UiScale>,
@@ -1551,6 +1604,8 @@ fn on_stage_asset_drop(
     mut drag: ResMut<crate::asset_drag::ActiveAssetDrag>,
     mut commands: Commands,
     mut hit_cache: ResMut<StageHitCache>,
+    sprite_gate: crate::sprite_ops::SpriteAddGate,
+    world_drop: WorldDropSnap,
 ) {
     let target = event.event_target();
     let panel = match overlays.get(target) {
@@ -1566,14 +1621,38 @@ fn on_stage_asset_drop(
     if host.mode != Viewport2dMode::Edit {
         return;
     }
-    let Some(path) = drag.image.take() else {
+    if drag.image.is_none() {
         return;
-    };
-    event.propagate(false);
+    }
     let Ok(stage) = stages.get(host.stage) else {
         return;
     };
     let cursor = event.pointer.position / ui_scale.0;
+    let routed = roots.iter().map(|(_, routed)| routed);
+    if shows_2d_world(host, routed, sprite_gate.scene_roots()) {
+        // A drop that adds nothing leaves the drag to whoever else can take it.
+        let (computed, transform) = stage;
+        let (point, inside) =
+            crate::sprite_stage::stage_world_point(cursor, host, computed, transform);
+        if !inside {
+            return;
+        }
+        if !sprite_gate.allows() {
+            warn!("image drop: sprite.add is not available now, so nothing was added");
+            return;
+        }
+        let Some(path) = drag.image.take() else {
+            return;
+        };
+        event.propagate(false);
+        let point = world_drop.land(point, host, computed, ui_scale.0);
+        crate::sprite_ops::dispatch_drop(&mut commands, path.to_slash_lossy().into_owned(), point);
+        return;
+    }
+    let Some(path) = drag.image.take() else {
+        return;
+    };
+    event.propagate(false);
     let under = match hit_at(
         cursor,
         host,
@@ -2444,7 +2523,7 @@ fn gather_candidates(world: &World, entity: Entity, kinds: &CanvasSnap) -> SnapC
         }
     }
 
-    if kinds.guides
+    if kinds.snaps_to_guides()
         && let Some(guides) = world.get::<CanvasGuides>(scene_root(world, entity))
     {
         for at in &guides.vertical {
@@ -2703,44 +2782,19 @@ fn snap_gesture(
     if !magnet {
         return SnapOutcome::default();
     }
-    let min = Vec2::new(rect.x, rect.y);
-    let moving = match edges {
-        (0, 0) => SnapRect::from_min_size(min, Vec2::new(rect.z, rect.w)),
-        (x, y) => {
-            let corner = Vec2::new(
-                if x > 0 { min.x + rect.z } else { min.x },
-                if y > 0 { min.y + rect.w } else { min.y },
-            );
-            SnapRect {
-                min: corner,
-                max: corner,
-            }
-        }
-    };
-    const NONE: [Candidate; 0] = [];
-    let x = if edges == (0, 0) || edges.0 != 0 {
-        candidates.x.as_slice()
-    } else {
-        &NONE
-    };
-    let y = if edges == (0, 0) || edges.1 != 0 {
-        candidates.y.as_slice()
-    } else {
-        &NONE
-    };
-    let at_x: Vec<f32> = x.iter().map(|candidate| candidate.at).collect();
-    let at_y: Vec<f32> = y.iter().map(|candidate| candidate.at).collect();
-    let (won_x, won_y) = snap_edges_2d_with_winners(moving, &at_x, &at_y, EDGE_SNAP_PIXELS * scale);
+    let (moving, axes) = dragged_part(
+        SnapRect::from_min_size(Vec2::new(rect.x, rect.y), Vec2::new(rect.z, rect.w)),
+        [edges.0, edges.1],
+    );
+    let at_x: Vec<f32> = candidates.x.iter().map(|candidate| candidate.at).collect();
+    let at_y: Vec<f32> = candidates.y.iter().map(|candidate| candidate.at).collect();
     // The grid only has a say on an axis no neighbour claimed; rounding an
     // edge landing afterwards would take it back off.
-    let lattice = snap_to_pixel_grid(moving.min, grid) - moving.min;
+    let landing = land_2d(moving, axes, &at_x, &at_y, EDGE_SNAP_PIXELS * scale, grid);
     SnapOutcome {
-        nudge: Vec2::new(
-            won_x.map_or(lattice.x, |snap| snap.delta),
-            won_y.map_or(lattice.y, |snap| snap.delta),
-        ),
-        x: won_x.map(|snap| winner(snap, x, edges.0)),
-        y: won_y.map(|snap| winner(snap, y, edges.1)),
+        nudge: landing.nudge,
+        x: landing.x.map(|snap| winner(snap, &candidates.x, edges.0)),
+        y: landing.y.map(|snap| winner(snap, &candidates.y, edges.1)),
     }
 }
 
@@ -2760,15 +2814,6 @@ fn winner(snap: jackdaw_snap::AxisSnap, candidates: &[Candidate], edge: i8) -> S
         percent: candidate.percent,
         line,
     }
-}
-
-/// `point` rounded onto a lattice of `grid` authored pixels. A non-positive
-/// or non-finite grid is no grid at all rather than a division by zero.
-pub fn snap_to_pixel_grid(point: Vec2, grid: f32) -> Vec2 {
-    if grid <= 0.0 || !grid.is_finite() {
-        return point;
-    }
-    (point / grid).round() * grid
 }
 
 fn on_gesture_end(mut event: On<PointerDragEnd>, parts: GestureTargets, mut commands: Commands) {
@@ -2935,8 +2980,14 @@ fn sync_snap_highlights(
     stages: Query<&ComputedNode, With<Scene2dViewport>>,
     highlights: Query<(Entity, &SnapHighlight)>,
     mut nodes: Query<&mut Node>,
+    sprites: Option<Res<crate::sprite_gizmo::SpriteManipulation>>,
 ) {
-    let wanted = highlight_lines(&manipulation, &hosts, &stages);
+    let mut wanted = highlight_lines(&manipulation, &hosts, &stages);
+    if let Some(sprites) = sprites {
+        wanted.extend(crate::sprite_gizmo::snap_highlight_lines(
+            &sprites, &hosts, &stages,
+        ));
+    }
 
     for (entity, highlight) in &highlights {
         match wanted
@@ -2985,12 +3036,12 @@ fn sync_snap_highlights(
 
 /// One line the running gesture wants drawn. Every landing is painted
 /// [`tokens::SNAP_HIGHLIGHT`], whatever kind of line it was.
-struct HighlightLine {
-    host: Entity,
-    stage: Entity,
-    axis: CanvasAxis,
+pub(crate) struct HighlightLine {
+    pub(crate) host: Entity,
+    pub(crate) stage: Entity,
+    pub(crate) axis: CanvasAxis,
     /// Where the line sits in the stage's logical pixels.
-    at: f32,
+    pub(crate) at: f32,
 }
 
 /// The lines the gesture in progress is landing on, in the stage's own
@@ -3063,13 +3114,14 @@ fn place_highlight(node: &mut Node, axis: CanvasAxis, at: f32) {
 fn sync_guide_lines(
     mut commands: Commands,
     snap: Res<CanvasSnap>,
-    roots: Query<(Entity, &CanvasGuides), AuthoredUiSceneRoot>,
+    scene: GuideScene,
+    guides: Query<&CanvasGuides>,
     hosts: Query<(Entity, &Viewport2dPanelHost)>,
     stages: Query<&ComputedNode, With<Scene2dViewport>>,
     lines: Query<(Entity, &GuideLine)>,
     mut nodes: Query<&mut Node>,
 ) {
-    let wanted = guide_lines(&snap, &roots, &hosts, &stages);
+    let wanted = guide_lines(&snap, &scene, &guides, &hosts, &stages);
 
     for (entity, line) in &lines {
         match wanted.iter().find(|want| {
@@ -3137,23 +3189,19 @@ struct WantedGuide {
     at: f32,
 }
 
-/// Every guide every panel wants drawn. A guide's position is canvas-global
-/// authored pixels and the stage node *is* the canvas, so there is no
-/// parent corner to add, unlike a snap landing.
+/// Every guide every panel wants drawn. The stage node *is* the render
+/// target, so a guide's target pixel needs no parent corner added, unlike a
+/// snap landing.
 fn guide_lines(
     snap: &CanvasSnap,
-    roots: &Query<(Entity, &CanvasGuides), AuthoredUiSceneRoot>,
+    scene: &GuideScene,
+    guides: &Query<&CanvasGuides>,
     hosts: &Query<(Entity, &Viewport2dPanelHost)>,
     stages: &Query<&ComputedNode, With<Scene2dViewport>>,
 ) -> Vec<WantedGuide> {
     if !snap.show_guides {
         return Vec::new();
     }
-    // A malformed document holding several roots picks the lowest entity,
-    // the same one the guide operators write.
-    let Some((_, guides)) = roots.iter().min_by_key(|(entity, _)| *entity) else {
-        return Vec::new();
-    };
 
     let mut wanted = Vec::new();
     for (host_entity, host) in hosts {
@@ -3163,8 +3211,13 @@ fn guide_lines(
         let Ok(stage) = stages.get(host.stage) else {
             continue;
         };
-        let target_scale = target_pixels_per_stage_pixel(stage.size(), host.target_size);
-        let scale = stage_pixels_per_target_pixel(target_scale, stage.inverse_scale_factor());
+        let Some((space, guides)) = scene
+            .open(Some(host))
+            .and_then(|(root, space)| Some((space, guides.get(root).ok()?)))
+        else {
+            continue;
+        };
+        let scale = stage_scale(stage, host.target_size);
         for (axis, positions) in [
             (CanvasAxis::Vertical, &guides.vertical),
             (CanvasAxis::Horizontal, &guides.horizontal),
@@ -3175,7 +3228,7 @@ fn guide_lines(
                     stage: host.stage,
                     axis,
                     index,
-                    at: at * scale,
+                    at: space.to_target(host, axis, *at) * scale,
                 });
             }
         }
@@ -3209,8 +3262,8 @@ pub struct GuideManipulation {
 }
 
 impl GuideManipulation {
-    /// Where the guide being dragged is now, in canvas-global authored
-    /// pixels, or `None` when no guide is being dragged.
+    /// Where the guide being dragged is now, in the scene's guide units,
+    /// or `None` when no guide is being dragged.
     pub fn position(&self) -> Option<f32> {
         self.active.as_ref().map(|drag| drag.position)
     }
@@ -3221,12 +3274,14 @@ struct GuideDrag {
     /// The panel the drag is running on, so every event maps the cursor
     /// through the canvas that panel is showing.
     host: Entity,
-    /// The UI scene root the guides belong to.
+    /// The scene root the guides belong to.
     root: Entity,
+    /// What the guides are measured in.
+    space: GuideSpace,
     axis: CanvasAxis,
     /// The axis's other guides, which the drag leaves where they are.
     others: Vec<f32>,
-    /// Where the dragged guide is now, in canvas-global authored pixels.
+    /// Where the dragged guide is now, in the scene's guide units.
     position: f32,
     /// The guides as the drag found them, for the history entry and for
     /// Escape.
@@ -3341,6 +3396,7 @@ fn on_guide_drag_start(
     mut event: On<PointerDragStart>,
     parts: GuideTargets,
     pointer: GuidePointer,
+    scene: GuideScene,
     mut commands: Commands,
 ) {
     let target = event.event_target();
@@ -3352,8 +3408,16 @@ fn on_guide_drag_start(
         return;
     }
     event.propagate(false);
+    let Some(scene) = parts
+        .hosts
+        .get(host)
+        .ok()
+        .and_then(|panel| scene.open(Some(panel)))
+    else {
+        return;
+    };
     commands.queue(move |world: &mut World| {
-        let started = begin_guide_drag(world, host, axis, index, cursor);
+        let started = begin_guide_drag(world, scene, host, axis, index, cursor);
         world.resource_mut::<GuideManipulation>().active = started;
     });
 }
@@ -3363,15 +3427,12 @@ fn on_guide_drag_start(
 /// scene; the history hears about it once, on release.
 fn begin_guide_drag(
     world: &mut World,
+    (root, space): (Entity, GuideSpace),
     host: Entity,
     axis: CanvasAxis,
     index: Option<usize>,
     cursor: Vec2,
 ) -> Option<GuideDrag> {
-    let root = world
-        .query_filtered::<Entity, AuthoredUiSceneRoot>()
-        .iter(world)
-        .min()?;
     let before = world.get::<CanvasGuides>(root).cloned();
     let mut others = before
         .clone()
@@ -3383,12 +3444,13 @@ fn begin_guide_drag(
     let position = match index {
         Some(index) if index < others.len() => others.remove(index),
         Some(_) => return None,
-        None => guide_landing(world, host, axis, cursor)?,
+        None => guide_landing(world, host, space, axis, cursor)?,
     };
 
     let drag = GuideDrag {
         host,
         root,
+        space,
         axis,
         others,
         position,
@@ -3419,7 +3481,8 @@ fn on_guide_drag(
             let Some(drag) = manipulation.active.as_mut() else {
                 return;
             };
-            let Some(position) = guide_landing(world, drag.host, drag.axis, cursor) else {
+            let Some(position) = guide_landing(world, drag.host, drag.space, drag.axis, cursor)
+            else {
                 return;
             };
             drag.position = position;
@@ -3468,6 +3531,7 @@ fn finish_guide_drag(world: &mut World, commit: bool) {
 pub fn cancel_canvas_gestures(world: &mut World) {
     finish_manipulation(world, false);
     finish_guide_drag(world, false);
+    crate::sprite_gizmo::cancel_sprite_drag(world);
 }
 
 /// Escape puts the guides back exactly as the drag found them.
@@ -3485,12 +3549,19 @@ fn cancel_guide_drag(
     }
 }
 
-/// Where a guide dragged to `cursor` comes to rest, in canvas-global
-/// authored pixels. Whole pixels at the least, so the figure can be typed
-/// back into the inspector; with the canvas's magnet on it lands on the
-/// panel's own lattice instead, and Ctrl inverts that.
-fn guide_landing(world: &World, host: Entity, axis: CanvasAxis, cursor: Vec2) -> Option<f32> {
-    let raw = axis_of(cursor_on_canvas(world, host, cursor)?, axis);
+/// Where a guide dragged to `cursor` comes to rest, in the scene's guide
+/// units, on the lattice `GuideSpace::lattice` names. Ctrl inverts the
+/// canvas's magnet.
+fn guide_landing(
+    world: &World,
+    host: Entity,
+    space: GuideSpace,
+    axis: CanvasAxis,
+    cursor: Vec2,
+) -> Option<f32> {
+    let panel = world.get::<Viewport2dPanelHost>(host)?;
+    let pixel = axis_of(cursor_on_canvas(world, panel, cursor)?, axis);
+    let raw = space.position_at(panel, axis, pixel);
     let ctrl = world
         .get_resource::<ButtonInput<KeyCode>>()
         .is_some_and(|keys| keys.any_pressed([KeyCode::ControlLeft, KeyCode::ControlRight]));
@@ -3498,17 +3569,14 @@ fn guide_landing(world: &World, host: Entity, axis: CanvasAxis, cursor: Vec2) ->
         .get_resource::<CanvasSnap>()
         .copied()
         .unwrap_or_default();
-    let grid = world
-        .get::<Viewport2dPanelHost>(host)
-        .map_or(0.0, |host| host.view.grid);
-    if kinds.magnet(ctrl) && grid > 0.0 && grid.is_finite() {
-        return Some((raw / grid).round() * grid);
-    }
-    Some(raw.round())
+    Some(match space.lattice(&kinds, ctrl, panel.view.grid) {
+        Some(step) => (raw / step).round() * step,
+        None => raw,
+    })
 }
 
 /// The coordinate a guide of this axis is stated in.
-fn axis_of(point: Vec2, axis: CanvasAxis) -> f32 {
+pub(crate) fn axis_of(point: Vec2, axis: CanvasAxis) -> f32 {
     match axis {
         CanvasAxis::Vertical => point.x,
         CanvasAxis::Horizontal => point.y,
@@ -3517,8 +3585,7 @@ fn axis_of(point: Vec2, axis: CanvasAxis) -> f32 {
 
 /// Where the cursor (ui-logical pixels) is over a panel's canvas, in
 /// canvas-global authored pixels, on the canvas or off it.
-fn cursor_on_canvas(world: &World, host: Entity, cursor: Vec2) -> Option<Vec2> {
-    let host = world.get::<Viewport2dPanelHost>(host)?;
+fn cursor_on_canvas(world: &World, host: &Viewport2dPanelHost, cursor: Vec2) -> Option<Vec2> {
     let computed = world.get::<ComputedNode>(host.stage)?;
     let transform = world.get::<UiGlobalTransform>(host.stage)?;
     let target_scale = target_pixels_per_stage_pixel(computed.size(), host.target_size);
