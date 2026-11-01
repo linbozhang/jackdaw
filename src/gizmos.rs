@@ -288,7 +288,7 @@ pub(crate) fn handle_gizmo_hover(
         return;
     };
 
-    if matches!(*mode, ActiveTool::Select) {
+    if !mode.is_manipulator() {
         return;
     }
 
@@ -352,7 +352,7 @@ pub(crate) fn handle_gizmo_hover(
                 *dir,
                 ROTATE_RING_RADIUS * scale,
             ),
-            ActiveTool::Select => continue,
+            ActiveTool::Select | ActiveTool::Tilemap => continue,
         };
         if dist < threshold && dist < best_dist {
             best_dist = dist;
@@ -424,7 +424,7 @@ fn gizmo_drag_edit_invoke_trigger(
         || object_drag.active
         || !mouse.just_pressed(MouseButton::Left)
         || hover.hovered_axis.is_none()
-        || matches!(*mode, ActiveTool::Select)
+        || !mode.is_manipulator()
         || !matches!(*edit_mode, crate::brush::EditMode::BrushEdit(_))
         || !has_sub_selection
         || modal.active.is_some()
@@ -639,7 +639,7 @@ pub fn gizmo_drag(
                 }
             }
         }
-        ActiveTool::Select => return Some(OperatorResult::Finished),
+        ActiveTool::Select | ActiveTool::Tilemap => return Some(OperatorResult::Finished),
     }
     Some(OperatorResult::Running)
 }
@@ -914,7 +914,7 @@ pub fn gizmo_drag_edit(
                 plan.push((capture.entity, new_local));
             }
         }
-        ActiveTool::Select => return Some(OperatorResult::Finished),
+        ActiveTool::Select | ActiveTool::Tilemap => return Some(OperatorResult::Finished),
     }
 
     drag_state.draw_pos = new_draw_pos;
@@ -997,7 +997,7 @@ fn draw_gizmos(
     face_drag: Res<crate::brush::BrushDragState>,
     edit_ctx: EditGizmoCtx,
 ) {
-    if matches!(*mode, ActiveTool::Select) {
+    if !mode.is_manipulator() {
         return;
     }
 
@@ -1127,7 +1127,7 @@ fn draw_gizmos(
             let uniform_color = axis_color(GizmoAxis::Uniform, active_axis, dragging);
             draw_wire_cube(&mut gizmos, gizmo_pos, cube_half, uniform_color);
         }
-        ActiveTool::Select => {}
+        ActiveTool::Select | ActiveTool::Tilemap => {}
     }
 }
 

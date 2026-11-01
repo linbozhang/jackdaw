@@ -1,0 +1,10 @@
+=== targeted: sprite + tilemap stage ===
+    the UI guide is not the world's: Vec3(0.0, 0.0, 0.0)
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+error: test run failed
+TARGETED_EXIT=0
+=== clippy ws (capture) ===
+    Checking jackdaw_editor v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_editor)
+    Finished `dev` profile [optimized + debuginfo] target(s) in 21.22s
+CLIPPY_WS_EXIT=0

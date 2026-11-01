@@ -1,0 +1,4 @@
+=== repaint doc-sync red proof (the sync removed from repaint_tile; extended save test red) ===
+RED: reopened (0,0) reads tile 2 (stale patch) instead of 5 — see session transcript; green rerun below
+────────────
+     Summary [   2.136s] 1 test run: 1 passed, 570 skipped

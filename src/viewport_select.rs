@@ -328,6 +328,7 @@ fn box_select_pending_trigger(
     pointer: crate::modal_inputs::PointerInputs,
     vp: ViewportCursor,
     guards: InteractionGuards,
+    active_tool: Res<crate::active_tool::ActiveTool>,
     mut box_state: ResMut<BoxSelectState>,
     viewport_query: Query<(&ComputedNode, &UiGlobalTransform), With<SceneViewport>>,
     selection: Res<Selection>,
@@ -335,6 +336,10 @@ fn box_select_pending_trigger(
     transforms: Query<&GlobalTransform>,
     brush_caches: Query<&BrushMeshCache>,
 ) {
+    // The Tilemap tool owns the left button on the 2D canvas.
+    if *active_tool == crate::active_tool::ActiveTool::Tilemap {
+        return;
+    }
     // `gizmo_drag.active` doesn't flip until next frame because the
     // gizmo invoke-trigger queues its dispatch; `gizmo_hover` covers
     // the same-frame case.

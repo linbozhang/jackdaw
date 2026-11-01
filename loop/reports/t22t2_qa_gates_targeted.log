@@ -1,0 +1,125 @@
+   Compiling bevy_dylib v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_dylib)
+   Compiling bevy v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned)
+   Compiling jackdaw_geometry v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_geometry)
+   Compiling jackdaw_commands v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_commands)
+   Compiling jackdaw_input v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_input)
+   Compiling jackdaw_localization v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_localization)
+   Compiling jackdaw_bsn v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_bsn)
+   Compiling bevy_transform_interpolation v0.6.0
+   Compiling jackdaw_bind v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_bind)
+   Compiling jackdaw_widgets_runtime v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_widgets_runtime)
+   Compiling jackdaw_widgets v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_widgets)
+   Compiling jackdaw_scene_types v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_scene_types)
+   Compiling jackdaw_prefab v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_prefab)
+   Compiling avian3d v0.8.0
+   Compiling jackdaw_feathers v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_feathers)
+   Compiling jackdaw_terrain v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_terrain)
+   Compiling jackdaw_schema v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_schema)
+   Compiling jackdaw_camera_rig v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_camera_rig)
+   Compiling jackdaw_surface v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_surface)
+   Compiling jackdaw_project_build v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_project_build)
+   Compiling jackdaw_multiplayer v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_multiplayer)
+   Compiling jackdaw_panels v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_panels)
+   Compiling jackdaw_node_graph v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_node_graph)
+   Compiling jackdaw_api_internal v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_api_internal)
+   Compiling jackdaw_runtime v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_runtime)
+   Compiling jackdaw_avian_integration v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/integrations/physics/jackdaw_avian_integration)
+   Compiling jackdaw_animation_runtime v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_animation_runtime)
+   Compiling jackdaw_pie_protocol v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_pie_protocol)
+   Compiling jackdaw_animation v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_animation)
+   Compiling jackdaw_remote v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_remote)
+   Compiling jackdaw_loader v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_loader)
+   Compiling jackdaw_scaffold v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_scaffold)
+   Compiling jackdaw_jsn v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_jsn)
+   Compiling jackdaw_csg v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_csg)
+   Compiling jackdaw_pick v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_pick)
+   Compiling jackdaw_hull v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_hull)
+   Compiling jackdaw_uv v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_uv)
+   Compiling jackdaw_select v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_select)
+   Compiling jackdaw_camera v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_camera)
+   Compiling bevy_window_chrome v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/bevy_window_chrome)
+   Compiling jackdaw_dylib v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_dylib)
+   Compiling jackdaw_api v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_api)
+   Compiling jackdaw_multiplayer_editor v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_multiplayer_editor)
+   Compiling jackdaw_physics v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/integrations/physics/jackdaw_physics)
+   Compiling jackdaw v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw)
+   Compiling jackdaw_extension v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_extension)
+   Compiling test_fixture_extension v0.0.0 (/Users/zhanglinbo/workspace/jackdaw/tests/fixtures/test_fixture_extension)
+    Finished `test` profile [optimized + debuginfo] target(s) in 1m 26s
+────────────
+ Nextest run ID b521f527-2a99-4a22-9193-ddbd1355ed56 with nextest profile: ci
+    Starting 71 tests across 1 binary (500 tests skipped)
+        PASS [   2.430s] ( 1/71) jackdaw::stage sprite_drop::a_drop_on_a_world_scene_adds_one_sprite_under_the_root_at_the_point
+        PASS [   2.868s] ( 2/71) jackdaw::stage sprite_drop::a_drop_and_sprite_add_make_the_same_entity
+        PASS [   3.402s] ( 3/71) jackdaw::stage sprite_drop::a_drop_the_sprite_add_gate_refuses_leaves_the_drag_alone
+        PASS [   3.965s] ( 4/71) jackdaw::stage sprite_drop::a_drop_off_the_stage_adds_nothing
+        PASS [   2.131s] ( 5/71) jackdaw::stage sprite_drop::a_drop_with_the_grid_snap_on_lands_on_the_grid
+        PASS [   2.407s] ( 6/71) jackdaw::stage sprite_drop::sprite_add_with_no_position_lands_at_the_centre_of_the_view
+        PASS [   2.618s] ( 7/71) jackdaw::stage sprite_gizmo::a_body_drag_moves_a_sprite_whose_selected_group_is_no_sprite
+        PASS [   2.722s] ( 8/71) jackdaw::stage sprite_gizmo::a_body_drag_moves_the_selection_by_the_world_delta
+        PASS [   2.647s] ( 9/71) jackdaw::stage sprite_gizmo::a_click_on_one_of_several_selected_sprites_narrows_to_it
+        PASS [   2.488s] (10/71) jackdaw::stage sprite_gizmo::a_jittery_click_still_narrows_and_records_nothing
+        PASS [   2.397s] (11/71) jackdaw::stage sprite_gizmo::a_move_takes_a_selection_whose_primary_image_never_loaded
+        PASS [   2.453s] (12/71) jackdaw::stage sprite_gizmo::a_move_takes_a_selection_whose_primary_is_no_sprite
+        PASS [   2.492s] (13/71) jackdaw::stage sprite_gizmo::a_nudge_moves_a_selected_parent_and_child_once
+        PASS [   2.506s] (14/71) jackdaw::stage sprite_gizmo::a_nudge_steps_in_the_world_through_a_turned_parent
+        PASS [   2.506s] (15/71) jackdaw::stage sprite_gizmo::a_reload_mid_drag_forgets_the_drag
+        PASS [   2.489s] (16/71) jackdaw::stage sprite_gizmo::a_rotate_drag_turns_the_sprite_about_its_anchor
+        PASS [   2.495s] (17/71) jackdaw::stage sprite_gizmo::a_rotate_follows_the_pointer_under_a_mirrored_parent
+        PASS [   2.447s] (18/71) jackdaw::stage sprite_gizmo::a_scale_drag_holds_the_opposite_edge
+        PASS [   3.977s] (19/71) jackdaw::stage sprite_gizmo::a_saved_and_reopened_scene_keeps_the_dragged_transform
+        PASS [   2.955s] (20/71) jackdaw::stage sprite_gizmo::a_scale_never_reaches_zero_and_flips_past_it
+        PASS [   2.917s] (21/71) jackdaw::stage sprite_gizmo::a_tool_key_mid_drag_neither_switches_nor_strands_the_drag
+        PASS [   2.301s] (22/71) jackdaw::stage sprite_gizmo::an_authored_mesh2d_still_saves
+        PASS [   2.655s] (23/71) jackdaw::stage sprite_gizmo::ctrl_lands_the_rotation_itself_on_an_increment
+        PASS [   2.868s] (24/71) jackdaw::stage sprite_gizmo::ctrl_steps_only_the_axes_a_scale_handle_drives
+        PASS [   2.791s] (25/71) jackdaw::stage sprite_gizmo::ctrl_turns_in_rotate_increments
+        PASS [   2.771s] (26/71) jackdaw::stage sprite_gizmo::escape_mid_drag_restores_and_records_nothing
+        PASS [   2.096s] (27/71) jackdaw::stage sprite_gizmo::escape_with_no_drag_still_clears_the_selection
+        PASS [   2.773s] (28/71) jackdaw::stage sprite_gizmo::rotate_and_scale_take_the_whole_selection_about_the_primary
+        PASS [   2.679s] (29/71) jackdaw::stage sprite_gizmo::shift_and_ctrl_step_the_uniform_factor_and_keep_proportions
+        PASS [   2.024s] (30/71) jackdaw::stage sprite_gizmo::the_3d_gizmo_draws_on_a_layer_the_2d_view_never_renders
+        PASS [   3.136s] (31/71) jackdaw::stage sprite_gizmo::shift_scales_uniformly_and_ctrl_in_increments
+        PASS [   2.065s] (32/71) jackdaw::stage sprite_gizmo::the_arrows_nudge_a_sprite_along_world_y_not_z
+        PASS [   2.634s] (33/71) jackdaw::stage sprite_gizmo::the_axis_handles_keep_to_their_axis
+        PASS [   2.620s] (34/71) jackdaw::stage sprite_gizmo::the_page_keys_leave_a_sprite_where_it_is
+        PASS [   2.594s] (35/71) jackdaw::stage sprite_gizmo::the_tools_are_available_on_a_2d_world_and_refused_on_a_ui_canvas
+        PASS [   2.436s] (36/71) jackdaw::stage sprite_gizmo::the_tools_are_refused_on_a_2d_panel_that_is_playing
+        PASS [   2.510s] (37/71) jackdaw::stage sprite_gizmo::undo_mid_drag_cancels_the_drag_first
+        PASS [   2.615s] (38/71) jackdaw::stage sprite_picking::a_drag_starts_no_band_and_keeps_the_selection
+        PASS [   2.645s] (39/71) jackdaw::stage sprite_picking::a_miss_clears_and_modifiers_extend_or_toggle
+        PASS [   2.665s] (40/71) jackdaw::stage sprite_picking::a_scale_factor_of_two_keeps_picking_and_sizes_in_step
+        PASS [   2.212s] (41/71) jackdaw::stage sprite_picking::a_tie_on_z_goes_to_the_later_sprite_in_the_document
+        PASS [   2.272s] (42/71) jackdaw::stage sprite_picking::a_transparent_texel_is_clicked_through
+        PASS [   2.430s] (43/71) jackdaw::stage sprite_picking::a_world_click_selects_the_sprite_by_its_anchor
+        PASS [   2.545s] (44/71) jackdaw::stage sprite_picking::each_selected_sprite_gets_one_outline_on_its_transformed_rect
+        PASS [   2.597s] (45/71) jackdaw::stage sprite_picking::hidden_editor_and_unloaded_sprites_do_not_pick
+        PASS [   2.549s] (46/71) jackdaw::stage sprite_picking::rotation_and_scale_are_respected
+        PASS [   2.225s] (47/71) jackdaw::stage sprite_picking::the_render_image_matches_the_stage_in_a_world_scene
+        PASS [   2.254s] (48/71) jackdaw::stage sprite_picking::the_topmost_sprite_wins
+        PASS [   2.586s] (49/71) jackdaw::stage sprite_snap::a_drag_lands_on_a_neighbours_edge_and_shows_where
+        PASS [   2.587s] (50/71) jackdaw::stage sprite_snap::a_drag_lands_the_anchor_on_a_whole_pixel
+        PASS [   2.726s] (51/71) jackdaw::stage sprite_snap::a_drag_lands_the_sprite_on_a_grid_line
+        PASS [   2.555s] (52/71) jackdaw::stage sprite_snap::a_scale_handle_lands_its_edge_on_a_neighbour
+        PASS [   2.355s] (53/71) jackdaw::stage sprite_snap::a_scale_whose_edge_cannot_reach_the_line_does_not_land
+        PASS [   2.559s] (54/71) jackdaw::stage sprite_snap::an_axis_handle_snaps_only_its_own_axis
+        PASS [   3.595s] (55/71) jackdaw::stage sprite_snap::a_sheared_sprite_scales_without_the_canvas_snap
+        PASS [   2.974s] (56/71) jackdaw::stage sprite_snap::an_odd_sized_sprite_keeps_its_edges_on_whole_pixels
+        PASS [   2.791s] (57/71) jackdaw::stage sprite_snap::ctrl_suspends_snapping_for_a_move
+        PASS [   2.057s] (58/71) jackdaw::stage sprite_snap::the_grid_still_snaps_a_sprite_of_unknown_size
+        PASS [   2.227s] (59/71) jackdaw::stage sprite_snap::the_snap_menu_offers_the_world_scenes_kinds
+        PASS [   2.540s] (60/71) jackdaw::stage sprite_snap::the_snap_reference_is_the_primary_even_when_its_parent_carries_it
+        PASS [   2.567s] (61/71) jackdaw::stage sprite_snap::with_snapping_off_nothing_snaps
+        PASS [   3.484s] (62/71) jackdaw::stage tilemap_guard::an_atlas_sprite_is_the_discriminating_control
+        PASS [   3.095s] (63/71) jackdaw::stage tilemap_ops::fill_and_flood_cover_their_regions
+        PASS [   3.670s] (64/71) jackdaw::stage tilemap_ops::a_layer_paints_erases_and_undoes_one_stroke_per_call
+        PASS [   5.644s] (65/71) jackdaw::stage tilemap_guard::the_tile_form_saves_a_rect_and_never_an_atlas
+        PASS [   3.288s] (66/71) jackdaw::stage tilemap_ops::layers_switch_active_visibility_and_mode
+        PASS [   3.106s] (67/71) jackdaw::stage tilemap_ops::the_palette_session_tracks_the_tile_and_brush
+        PASS [   3.017s] (68/71) jackdaw::stage tilemap_ops::the_tilemap_tool_switches_and_the_palette_stays_out_of_history
+        PASS [   2.561s] (69/71) jackdaw::stage world_guides::a_sprite_drag_lands_its_edge_on_a_guide_and_shows_where
+        PASS [   4.719s] (70/71) jackdaw::stage tilemap_ops::the_tilemap_scene_saves_and_reopens
+        PASS [   2.059s] (71/71) jackdaw::stage world_guides::a_ui_scenes_guides_never_snap_a_sprite_on_the_world_panel
+────────────
+     Summary [  49.097s] 71 tests run: 71 passed, 500 skipped
+EXIT=0

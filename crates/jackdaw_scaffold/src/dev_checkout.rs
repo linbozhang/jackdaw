@@ -86,11 +86,12 @@ pub(crate) fn rewrite_jackdaw_dep_for_dev_checkout(dest: &Path) {
 }
 
 /// The jackdaw crates a scaffolded project may depend on directly.
-const DEV_PATH_DEPS: [&str; 4] = [
+const DEV_PATH_DEPS: [&str; 5] = [
     "jackdaw_runtime",
     "jackdaw_extension",
     "jackdaw_multiplayer",
     "jackdaw_avian_integration",
+    "jackdaw_tilemap_collision",
 ];
 
 /// Where crate `name` sits inside the checkout: `crates/` for most, the

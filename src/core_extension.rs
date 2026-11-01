@@ -261,6 +261,8 @@ impl JackdawExtension for JackdawCoreExtension {
         crate::material_assets::add_to_extension(ctx);
         crate::definition_assets::add_to_extension(ctx);
         crate::sprite_atlas::add_to_extension(ctx);
+        crate::tilemap::add_to_extension(ctx);
+        crate::tilemap_palette::add_to_extension(ctx);
         crate::asset_migration::add_to_extension(ctx);
         crate::reference_audit::add_to_extension(ctx);
         crate::prefab::placement_migration::add_to_extension(ctx);

@@ -1,0 +1,11 @@
+        PASS [   0.098s] (93/93) jackdaw_scaffold tests::upgrade_drops_a_removed_runtime_feature_and_records_its_module
+────────────
+     Summary [   0.657s] 93 tests run: 93 passed, 0 skipped
+    Starting 1 test across 1 binary (1 test skipped)
+        SLOW [> 30.000s] (───) jackdaw::scaffold_e2e scaffold_tilemap_module_builds_the_probe
+        SLOW [> 60.000s] (───) jackdaw::scaffold_e2e scaffold_tilemap_module_builds_the_probe
+        SLOW [> 90.000s] (───) jackdaw::scaffold_e2e scaffold_tilemap_module_builds_the_probe
+        SLOW [>120.000s] (───) jackdaw::scaffold_e2e scaffold_tilemap_module_builds_the_probe
+        PASS [ 125.654s] (1/1) jackdaw::scaffold_e2e scaffold_tilemap_module_builds_the_probe
+────────────
+     Summary [ 125.654s] 1 test run: 1 passed (1 slow), 1 skipped

@@ -553,7 +553,7 @@ fn plan_object(
                 plan.push((e, old, new));
             }
         }
-        ActiveTool::Select => {}
+        ActiveTool::Select | ActiveTool::Tilemap => {}
     }
     plan
 }
@@ -610,7 +610,7 @@ fn apply_sub_elements(
                 pivot + factor * (w - pivot)
             });
         }
-        ActiveTool::Select => {}
+        ActiveTool::Select | ActiveTool::Tilemap => {}
     }
 }
 

@@ -36,7 +36,7 @@ use crate::{
     pie::PieWindowModeToggleOp,
     pie_mirror::{PieViewHeader, PieViewMode, PieViewSegment},
     snapping::SnapSettings,
-    tool_ops::{ToolRotateOp, ToolScaleOp, ToolSelectOp, ToolTranslateOp},
+    tool_ops::{ToolRotateOp, ToolScaleOp, ToolSelectOp, ToolTilemapOp, ToolTranslateOp},
     viewport::SceneViewport,
     windowing::{JackdawIcon, title_bar_repo_link},
 };
@@ -434,6 +434,10 @@ fn toolbar_tools() -> impl Scene {
             --
             @toolbar_op_button(ToolScaleOp::ID, Icon::Scale3d)
             --
+            // Tile-grid authoring (T22): the palette panel rides along
+            // while the tool is active.
+            @toolbar_op_button(ToolTilemapOp::ID, Icon::Grid3x3)
+            --
             @toolbar_separator()
             --
             // Gizmo space toggle. Active highlight = `Local`; default
@@ -710,6 +714,7 @@ fn is_main_toolbar_op(id: &str) -> bool {
         || id == ToolTranslateOp::ID
         || id == ToolRotateOp::ID
         || id == ToolScaleOp::ID
+        || id == ToolTilemapOp::ID
         || id == GizmoSpaceToggleOp::ID
         || id == ActivateDrawBrushModalOp::ID
         || id == MeasureDistanceOp::ID
@@ -769,6 +774,8 @@ pub fn update_toolbar_button_variants(
             *active_tool == ActiveTool::Rotate
         } else if id == ToolScaleOp::ID {
             *active_tool == ActiveTool::Scale
+        } else if id == ToolTilemapOp::ID {
+            *active_tool == ActiveTool::Tilemap
         } else if id == GizmoSpaceToggleOp::ID {
             *gizmo_space == GizmoSpace::Local
         } else if id == ToolSelectOp::ID {

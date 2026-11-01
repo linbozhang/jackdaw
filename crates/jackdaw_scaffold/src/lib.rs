@@ -2609,6 +2609,21 @@ fn substitute_placeholders(
         "{{module_physics_demo}}",
         &module_physics_demo(modules),
     );
+    let text = replace_line(
+        &text,
+        "{{module_tilemap_doc}}",
+        &module_tilemap_doc(modules),
+    );
+    let text = replace_line(
+        &text,
+        "{{module_tilemap_collision}}",
+        &module_tilemap_collision(modules),
+    );
+    let text = replace_line(
+        &text,
+        "{{module_tilemap_player}}",
+        &module_tilemap_player(modules),
+    );
     text.replace("{{project-name | title_case}}", title)
         .replace(
             "{{jackdaw_modules}}",
@@ -3300,6 +3315,301 @@ fn reset_run_counters(
     .to_string()
 }
 
+/// The template header's tilemap section: the module teaches a 2D half —
+/// tile-grid levels authored in the editor, resolved here with the
+/// collision kernel. Emitted only with the module: a game without it
+/// should not carry prose about tooling it did not ask for.
+fn module_tilemap_doc(modules: &ModuleSet) -> String {
+    if !modules.contains("tilemap") {
+        return String::new();
+    }
+    r#"//!
+//! # Tilemap & 2D collision
+//!
+//! The tilemap module adds a 2D half to this 3D template: tile-grid
+//! levels authored in jackdaw (the Tilemap tool — T on the keyboard —
+//! with a palette that paints, erases and fills cells into layers),
+//! and here in the template, the running half. Every tilemap layer of
+//! the loaded scene becomes a collision grid, and a red probe body
+//! walks it: gravity pulls, floors hold, walls stop, trigger cells
+//! report. `collect_level_grid`, `apply_walk_input`, `resolve_probe`
+//! and `census_triggers` below are the whole pattern — swap the probe
+//! for your own player and keep the loop: read input, resolve with
+//! `move_probe`, census the triggers.
+"#
+    .to_string()
+}
+
+/// The tilemap module's line in `GamePlugin::build`: the plugin the
+/// player section below defines. Empty without the module.
+fn module_tilemap_collision(modules: &ModuleSet) -> String {
+    if !modules.contains("tilemap") {
+        return String::new();
+    }
+    [
+        "        // Tilemap & the 2D probe (the docs at the top walk the
+",
+        "        // pattern): the scene's tile layers become a collision grid
+",
+        "        // and the probe body below walks it with the kernel's sweep.
+",
+        "        app.add_plugins(TilemapProbePlugin);
+",
+    ]
+    .concat()
+}
+
+/// The tilemap module's teaching section, the player-probe pattern: the
+/// scene's tilemap layers become one collision grid, the probe walks it
+/// with `move_probe`, and the trigger census reports crossings. Empty
+/// without the module.
+fn module_tilemap_player(modules: &ModuleSet) -> String {
+    if !modules.contains("tilemap") {
+        return String::new();
+    }
+    r#"// ---- Tilemap & 2D collision: the probe body ----------------------
+// The scene's tilemap layers (edited in jackdaw with the Tilemap
+// tool) become one collision grid; a 2D probe body walks it. The
+// three-step loop a tilemap game lives on: read the input, resolve
+// the move with `move_probe`, census the trigger cells.
+
+use jackdaw_runtime::{TileCollisionMode, TileGridCell, TilemapLayer};
+use jackdaw_tilemap_collision::{CollisionMode, Probe, TileGrid, move_probe};
+
+/// The layer-to-grid teaching numbers. A fixed step keeps the walk
+/// deterministic — swap in `Res<Time>` if you prefer wall-clock pace.
+const PROBE_DT: f32 = 1.0 / 60.0;
+const PROBE_GRAVITY: f32 = 900.0;
+const PROBE_WALK: f32 = 120.0;
+/// The probe draws in front of the tiles (tile z comes from the layer).
+const PROBE_Z: f32 = 100.0;
+
+/// Everything the tilemap module adds to the game: the grid and the
+/// probe body. The 2D camera (order 1) draws the tilemap world over
+/// the 3D view, so the level is visible whatever the flow shows.
+struct TilemapProbePlugin;
+
+impl Plugin for TilemapProbePlugin {
+    fn build(&self, app: &mut App) {
+        app.init_resource::<LevelGrid>()
+            .init_resource::<TriggerCensus>()
+            .register_type::<TriggerCensus>()
+            .add_systems(Startup, spawn_tilemap_probe)
+            .add_systems(
+                Update,
+                (
+                    collect_level_grid,
+                    // Chained: input integrates forces onto the probe, the
+                    // kernel resolves them, the census reads the result.
+                    (apply_walk_input, resolve_probe, census_triggers).chain(),
+                    sync_probe_sprite,
+                ),
+            );
+    }
+}
+
+/// The collision grid the scene's tilemap layers become. `None` until a
+/// layer with tiles has loaded — the scene loads async after boot.
+#[derive(Resource, Default)]
+struct LevelGrid(Option<TileGrid>);
+
+/// The 2D probe body: a kernel `Probe` (centre, half extents, velocity,
+/// grounded latch) wearing a colored square. The prototype of a player —
+/// swap it for yours and keep the loop below.
+#[derive(Component)]
+struct PlayerProbe {
+    body: Probe,
+}
+
+/// The trigger cells under the probe this frame, plus whether any
+/// crossing happened at all — the prototype of the flip a real game
+/// turns into an event or a counter. Registered for reflection, so
+/// tooling can read it while the game runs.
+#[derive(Resource, Default, Reflect)]
+#[reflect(Resource)]
+struct TriggerCensus {
+    inside: usize,
+    crossed: bool,
+}
+
+/// Spawn the probe and its orthographic camera, once at boot.
+fn spawn_tilemap_probe(mut commands: Commands) {
+    commands.spawn((Name::new("Tilemap Camera"), Camera2d, Camera {
+        order: 1,
+        ..default()
+    }));
+    commands.spawn((
+        Name::new("Player Probe"),
+        PlayerProbe {
+            body: Probe {
+                center: Vec2::new(96.0, 160.0),
+                half_size: Vec2::splat(12.0),
+                velocity: Vec2::ZERO,
+                grounded: false,
+            },
+        },
+        Sprite::from_color(Color::srgb(0.9, 0.3, 0.3), Vec2::splat(24.0)),
+        Transform::from_xyz(96.0, 160.0, PROBE_Z),
+    ));
+}
+
+/// Rebuild the grid when the scene's tilemap faces change: layers or
+/// tiles arriving (the scene loads async), leaving or being edited. One
+/// kernel grid spans every layer; a cell goes to the layer with the
+/// highest draw order that authors it. The lowest layer anchors the
+/// grid's origin, so keep layers aligned (a layer moved off-grid in the
+/// editor snaps its tiles to the nearest grid cell here).
+fn collect_level_grid(
+    layers_changed: Query<
+        (),
+        (
+            With<TilemapLayer>,
+            Or<(Added<TilemapLayer>, Changed<TilemapLayer>)>,
+        ),
+    >,
+    cells_changed: Query<
+        (),
+        (
+            With<TileGridCell>,
+            Or<(Added<TileGridCell>, Changed<TileGridCell>)>,
+        ),
+    >,
+    layers: Query<(&TilemapLayer, &TileCollisionMode, &GlobalTransform, Entity)>,
+    tiles: Query<(&TileGridCell, &ChildOf)>,
+    mut level: ResMut<LevelGrid>,
+) {
+    if layers_changed.is_empty() && cells_changed.is_empty() {
+        return;
+    }
+    let mut forms: Vec<_> = layers.iter().collect();
+    if forms.is_empty() {
+        level.0 = None;
+        return;
+    }
+    // Draw order low to high: a higher layer's cell wins.
+    forms.sort_by_key(|(layer, _, _, entity)| (layer.order, *entity));
+    let width = forms.iter().map(|(layer, ..)| layer.columns).max().unwrap_or(1);
+    let height = forms.iter().map(|(layer, ..)| layer.rows).max().unwrap_or(1);
+    let (_, _, base_global, _) = forms[0];
+    let origin = base_global.translation().truncate();
+    let cell = forms[0].0.cell_size.x.max(1.0);
+    let mut grid = TileGrid::new(origin, cell, width, height);
+    for (layer, mode, global, entity) in forms {
+        let cell_mode = match mode {
+            TileCollisionMode::Passable => CollisionMode::Passable,
+            TileCollisionMode::Solid => CollisionMode::Solid,
+            TileCollisionMode::Trigger => CollisionMode::Trigger,
+        };
+        let layer_origin = global.translation().truncate();
+        let offset_x = ((layer_origin.x - origin.x) / cell).round() as i32;
+        let offset_y = ((layer_origin.y - origin.y) / cell).round() as i32;
+        for (tile, parent) in tiles
+            .iter()
+            .filter(|(_, parent)| parent.parent() == entity)
+        {
+            if tile.cell.x < 0
+                || tile.cell.y < 0
+                || tile.cell.x >= layer.columns as i32
+                || tile.cell.y >= layer.rows as i32
+            {
+                continue;
+            }
+            let gx = tile.cell.x + offset_x;
+            let gy = tile.cell.y + offset_y;
+            if gx < 0 || gy < 0 || gx >= width as i32 || gy >= height as i32 {
+                continue;
+            }
+            grid.set(IVec2::new(gx, gy), cell_mode);
+        }
+    }
+    level.0 = Some(grid);
+}
+
+/// Step one: gravity onto the probe, the Move action's x onto the walk.
+/// Runs inside a level only — the same gate `move_player` keeps.
+fn apply_walk_input(
+    actions: Res<GameActions>,
+    flow: Res<State<GameFlow>>,
+    state: Res<GameState>,
+    mut probes: Query<&mut PlayerProbe>,
+) {
+    if flow.get() != &GameFlow::Level || state.paused {
+        return;
+    }
+    let walk = actions.value("Move").x * PROBE_WALK;
+    for mut probe in &mut probes {
+        probe.body.velocity.x = walk;
+        probe.body.velocity.y -= PROBE_GRAVITY * PROBE_DT;
+    }
+}
+
+/// Step two: the kernel resolves the move against the grid's solid
+/// cells — floors hold, walls clamp with a separation gap, triggers
+/// pass. A missing grid (no tilemap in the scene yet) lets the probe
+/// idle.
+fn resolve_probe(
+    level: Res<LevelGrid>,
+    flow: Res<State<GameFlow>>,
+    state: Res<GameState>,
+    mut probes: Query<&mut PlayerProbe>,
+) {
+    if flow.get() != &GameFlow::Level || state.paused {
+        return;
+    }
+    let Some(grid) = level.0.as_ref() else {
+        return;
+    };
+    for mut probe in &mut probes {
+        let outcome = move_probe(grid, &probe.body, PROBE_DT);
+        probe.body.center = outcome.center;
+        probe.body.velocity = outcome.velocity;
+        probe.body.grounded = outcome.grounded;
+    }
+}
+
+/// Step three: which trigger cells the probe overlaps, and whether the
+/// run has crossed one at all. Log the first crossing so a fresh game
+/// says so out loud.
+fn census_triggers(
+    level: Res<LevelGrid>,
+    flow: Res<State<GameFlow>>,
+    state: Res<GameState>,
+    probes: Query<&PlayerProbe>,
+    mut census: ResMut<TriggerCensus>,
+) {
+    if flow.get() != &GameFlow::Level || state.paused {
+        return;
+    }
+    let Some(grid) = level.0.as_ref() else {
+        return;
+    };
+    let Ok(probe) = probes.single() else {
+        return;
+    };
+    let bounds = jackdaw_tilemap_collision::Aabb::from_center_half(
+        probe.body.center,
+        probe.body.half_size,
+    );
+    census.inside = grid.trigger_cells_overlapping(&bounds).count();
+    if census.inside > 0 && !census.crossed {
+        info!("Tilemap: the probe walked into a trigger cell!");
+    }
+    census.crossed |= census.inside > 0;
+}
+
+/// Put the probe's sprite where the kernel left the body: what you see
+/// is what collides.
+fn sync_probe_sprite(
+    mut sprites: Query<(&mut Transform, &PlayerProbe), Without<TilemapLayer>>,
+) {
+    for (mut transform, probe) in &mut sprites {
+        transform.translation = probe.body.center.extend(PROBE_Z);
+    }
+}
+"#
+    .to_string()
+}
+
 /// How a scaffolded project asks for one of the public jackdaw crates: the
 /// registry line for a released editor, the exact revision for one built from
 /// git, the workspace crate for one built from a checkout. A version
@@ -3904,6 +4214,78 @@ mod tests {
             plain_lib.contains("transform.translation.y += config.gravity * dt;"),
             "the manual fall stands in without physics"
         );
+    }
+
+    /// The tilemap module (T22, opt-in) teaches the 2D half: the manifest
+    /// carries the collision kernel, the template builds a grid from the
+    /// scene's tilemap layers, and a probe body walks it with the
+    /// kernel's sweep and a trigger census — the shape the kernel
+    /// prototype (`player_probe_app`) pinned. Without the module none of
+    /// it exists: the placeholders withdraw to empty lines, the header
+    /// prose included.
+    #[test]
+    fn new_game_project_teaches_the_tilemap_collision_pattern() {
+        let dest = temp_dir("newgame-tilemap").join("my-game");
+        scaffold_new_project_with(&dest, "my-game", TemplateKind::Game, &modules(&["tilemap"]))
+            .unwrap();
+        let manifest = std::fs::read_to_string(dest.join("Cargo.toml")).unwrap();
+        assert!(
+            manifest.contains("jackdaw_tilemap_collision = {"),
+            "the tilemap module's kernel crate rides the manifest: {manifest}"
+        );
+        let lib = std::fs::read_to_string(dest.join("src/lib.rs")).unwrap();
+        for needle in [
+            "TilemapProbePlugin",
+            "struct LevelGrid",
+            "struct PlayerProbe",
+            "struct TriggerCensus",
+            "TileCollisionMode::Solid => CollisionMode::Solid",
+            "TileGrid::new",
+            "move_probe(",
+            "trigger_cells_overlapping",
+            "spawn_tilemap_probe",
+            "collect_level_grid",
+            "apply_walk_input",
+            "resolve_probe",
+            "census_triggers",
+            // The header teaches the editor half the module pairs with.
+            "Tilemap & 2D collision",
+        ] {
+            assert!(
+                lib.contains(needle),
+                "the template must teach `{needle}`; the tilemap pattern drifted"
+            );
+        }
+        assert!(
+            !lib.contains("{{"),
+            "every placeholder is substituted, got:\n{}",
+            lib.lines().find(|line| line.contains("{{")).unwrap_or("…")
+        );
+
+        // Without the module the same template carries no tilemap: no
+        // kernel crate, no probe code, no header section — the 3D
+        // template stands alone.
+        let plain = temp_dir("newgame-tilemap-plain").join("my-game");
+        scaffold_new_project_with(
+            &plain,
+            "my-game",
+            TemplateKind::Game,
+            &modules(&["physics"]),
+        )
+        .unwrap();
+        let plain_manifest = std::fs::read_to_string(plain.join("Cargo.toml")).unwrap();
+        let plain_lib = std::fs::read_to_string(plain.join("src/lib.rs")).unwrap();
+        for gone in [
+            "jackdaw_tilemap_collision",
+            "TilemapProbePlugin",
+            "struct PlayerProbe",
+            "Tilemap & 2D collision",
+        ] {
+            assert!(
+                !plain_manifest.contains(gone) && !plain_lib.contains(gone),
+                "without the tilemap module `{gone}` must not appear"
+            );
+        }
     }
 
     /// The win the pickup demo teaches (T20/EG1, decision 1-A): the

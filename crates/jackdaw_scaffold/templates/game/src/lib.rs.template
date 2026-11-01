@@ -142,6 +142,7 @@
 //!   module the player still walks, camera-relative and
 //!   frame-rate-independent, but does not jump or collide.
 {{module_physics_player_doc}}
+{{module_tilemap_doc}}
 //!
 //! # Game flow
 //!
@@ -448,6 +449,7 @@ impl Plugin for GamePlugin {
             // (T12-T2 caught this live).
             .add_systems(Update, handle_pause_action.before(move_player));
 {{module_physics_statements}}
+{{module_tilemap_collision}}
     }
 }
 
@@ -1691,3 +1693,4 @@ fn update_game_over(
 }
 {{module_physics_player_move}}
 {{module_physics_demo}}
+{{module_tilemap_player}}

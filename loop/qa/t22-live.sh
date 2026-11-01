@@ -517,11 +517,16 @@ template_precheck() {
   done
   grep -qF "fn module_physics_player_body" "$scf" \
     && leg TPL_SCAFFOLD_FAMILY true || { leg TPL_SCAFFOLD_FAMILY false; ok=false; }
-  if grep -qF "{{module_tilemap_collision}}" "$tpl"; then
-    leg TPL_TILEMAP_ABSENT false; ok=false
-    log "template_precheck: {{module_tilemap_collision}} appeared without this branch's T2 work"
+  # T2 landed the tilemap module section: the pre-T2 absence guard flips
+  # into an existence assertion (T1 QA handover item). Both the template
+  # placeholder and the scaffold emitter must be in place.
+  if grep -qF "{{module_tilemap_collision}}" "$tpl" \
+    && grep -qF "fn module_tilemap_collision" "$scf" \
+    && grep -qF "fn module_tilemap_player" "$scf"; then
+    leg TPL_TILEMAP_PRESENT true
   else
-    leg TPL_TILEMAP_ABSENT true
+    leg TPL_TILEMAP_PRESENT false; ok=false
+    log "template_precheck: the tilemap module section is missing after T2"
   fi
   $ok
 }
