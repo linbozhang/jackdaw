@@ -1,11 +1,66 @@
 EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t21-sprite/t21-sprite
-M1a selection after sprite.add: [{"entity":4294962555,"name":"OpSprite2"}]
+M1a selection after sprite.add: [{"entity":4294962561,"name":"OpSprite"}]
 M1a face: {"alpha_mode":"Blend","color":{"LinearRgba":{"alpha":1.0,"blue":1.0,"green":1.0,"red":1.0}},"custom_size":[32.0,32.0],"flip_x":false,"flip_y":false,"image":{"Uuid":"97128bb1-2588-480b-bdc6-87b4adbec477"},"image_mode":"Auto","rect":null,"texture_atlas":null}
 M1_OPERATOR_PASS
 M7_NEW_TOP_FAIL
 M7 new-sprite z read back '', wanted >= 1
 M1b picker search box: 4294962963
-M1b picker Sprite row: 4294961597
+M1b picker Sprite row: 4294961639
 M1_MENU_FAIL
-M1b FAILED: selection [{"entity":4294962555,"name":"OpSprite2"}] -> [{"entity":4294962555,"name":"OpSprite2"}] (row=4294961597)
-ecomp 4720v0 bevy_sprite::sprite::Sprite raw tail:  to be registered manually using `register_type_data` (stack: `bevy_sprite::sprite::Sprite` -> `bevy_asset::handle::Handle<bevy_image::image::Image>` -> `bevy_platform::sync::Arc<bevy_asset::handle::StrongHandle>`)"}}}}
+M1b FAILED: selection [{"entity":4294962561,"name":"OpSprite"}] -> [{"entity":4294962561,"name":"OpSprite"}] (row=4294961639)
+M1_IMAGE_PASS
+M1c sprite-with-image entity present in the With<Sprite> query (face reads are the D4 -23402 structural limit)
+shot m2-unselected ok (viewport2d)
+shot m2-unselected-window ok (window)
+M2_PICK_PASS
+M2: world click selected Hero (4714v0); selection=[{"entity":4294962581,"name":"Hero"}]
+shot m2-selected ok (viewport2d)
+shot m2-selected-window ok (window)
+M2 outline canvas half: pixels: 702218; changed(>tol 12): 0 (0.00%); mean channel diff: 0.000
+M2 outline window half: pixels: 5739552; changed(>tol 12): 72916 (1.27%); mean channel diff: 0.521
+M2_OUTLINE_PX_PASS
+M2_CLEAR_PASS
+M3 read-ready gate open
+camera_ready: no ortho_scale after 60s
+M3: camera_state gave no ortho_scale (''); assuming zoom 1 (log the fit if drags miss)
+M3: view zoom = 1.0 (ortho_scale )
+M3_DRAG_FAIL
+M3 drag FAILED: x  -> '' (the handle grab missed? zoom=1.0 reach=56.0)
+M3_ARROWS_FAIL
+M3 arrows FAILED: x  -> ''
+M3_UNDO_FAIL
+M3 undo FAILED: x '' vs the start 
+M3B_ROTATE_PASS
+M3b rotate knob: [0.0,0.0,0.0,1.0] -> [0.0,0.0,-0.7071067690849304,0.7071068286895752]
+M3B_SCALE_FAIL
+M3b scale corner FAILED:  -> ''
+SNAP_GRID_FAIL
+SNAP grid FAILED: (, ?) -> ('', '')
+GUIDES face on root 5725v5: {"horizontal":[],"vertical":[64.0]}
+GUIDES_ADD_PASS
+GUIDES_SNAP_FAIL
+GUIDES snap FAILED: Hero x = '' (wanted 32 or 64)
+set_verified FAILED: translation (last face: {"rotation":[0.0,0.0,0.0,1.0],"scale":[1.0,1.0,1.0],"translation":[-150.0,-40.0,3.0]})
+M7: TopSpr overlap write did not verify (continuing; the shot pair will tell)
+set_verified FAILED: translation.z (last face: {"rotation":[0.0,0.0,0.0,1.0],"scale":[1.0,1.0,1.0],"translation":[0.0,0.0,0.0]})
+M7: Hero z=1 write did not verify (continuing)
+shot m7-blue-top ok (window)
+M7 blue-on-top census: blue 0.420% red 0.355%
+set_verified FAILED: translation.z (last face: {"rotation":[0.0,0.0,0.0,1.0],"scale":[1.0,1.0,1.0],"translation":[0.0,0.0,0.0]})
+M7: Hero z=3 write did not verify (continuing)
+shot m7-red-top ok (window)
+M7 red-on-top census: red 0.355% blue 0.420%
+M7 frame-diff: true (md5 dd64f46d vs f7f6d962)
+M7_Z_FLIP_PX_FAIL
+M7 z flip FAILED: frame-diff=true red 0.355->0.355 blue 0.420->0.420
+SP9 read-ready gate open
+SP9: the Anchor card sits collapsed; clicking header 34359732666
+SP9_PRESET_FAIL
+SP9 FAILED: no preset cell in the inspector walk (is Hero selected? was the editor rebuilt?)
+M9 saved scene sha=ea23b51e51adf0b0c21f899fb0b8d5cdf01665501c403d253b88c3f43b11bf13
+M9_BSN_TYPES_PASS
+M9 Anchor after reopen: [0.0,0.0]
+M9_REOPEN_PASS
+M9_KIND_REOPENED_PASS
+WARN_SCAN editor-editor: zero hits
+EDITOR done: GUIDES_ADD=PASS GUIDES_SNAP=FAIL M1_IMAGE=PASS M1_MENU=FAIL M1_OPERATOR=PASS M2_CLEAR=PASS M2_OUTLINE_PX=PASS M2_PICK=PASS M3B_ROTATE=PASS M3B_SCALE=FAIL M3_ARROWS=FAIL M3_DRAG=FAIL M3_UNDO=FAIL M7_NEW_TOP=FAIL M7_Z_FLIP_PX=FAIL M9_BSN_TYPES=PASS M9_KIND_REOPENED=PASS M9_REOPEN=PASS SNAP_GRID=FAIL SP9_PRESET=FAIL 

@@ -1,84 +1,72 @@
-[2m2026-11-01T08:12:03.658582Z[0m [32m INFO[0m [2mbevy_diagnostic::system_information_diagnostics_plugin::internal[0m[2m:[0m SystemInfo { os: "macOS 26.6.2 Tahoe", kernel: "25.6.0", cpu: "Apple M1 Pro", core_count: "8", memory: "16.0 GiB" }
-[2m2026-11-01T08:12:03.659585Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
-[2m2026-11-01T08:12:03.709791Z[0m [32m INFO[0m [2mbevy_render::renderer[0m[2m:[0m AdapterInfo { name: "Apple M1 Pro", vendor: 0, device: 0, device_type: IntegratedGpu, device_pci_bus_id: "", driver: "", driver_info: "", backend: Metal, subgroup_min_size: 4, subgroup_max_size: 64, transient_saves_memory: Some(true), limit_bucket: None }
-[2m2026-11-01T08:12:03.925635Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw::test_input::plugin` of extension `jackdaw.test_input`
-[2m2026-11-01T08:12:03.925836Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw_physics::PhysicsEditorPlugin` of extension `jackdaw.physics`
-[2m2026-11-01T08:12:03.930616Z[0m [32m INFO[0m [2mbevy_pbr::cluster[0m[2m:[0m GPU clustering is supported on this device.
-[2m2026-11-01T08:12:03.930674Z[0m [32m INFO[0m [2mbevy_render::batching::gpu_preprocessing[0m[2m:[0m GPU preprocessing is fully supported on this device.
-[2m2026-11-01T08:12:03.954631Z[0m [32m INFO[0m [2mbevy_winit::system[0m[2m:[0m Creating new window jackdaw (71v0)
-[2m2026-11-01T08:12:04.092926Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.ui_palette
-[2m2026-11-01T08:12:04.093325Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core
-[2m2026-11-01T08:12:04.096184Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.game_panel
-[2m2026-11-01T08:12:04.096260Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.build_panel
-[2m2026-11-01T08:12:04.096276Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.project_window
-[2m2026-11-01T08:12:04.096288Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.animation_graph
-[2m2026-11-01T08:12:04.096303Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core_windows
-[2m2026-11-01T08:12:04.096339Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.test_input
-[2m2026-11-01T08:12:04.096357Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.inspector
-[2m2026-11-01T08:12:04.096399Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.viewport_panel
-[2m2026-11-01T08:12:04.096504Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.timeline
-[2m2026-11-01T08:12:04.096520Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.multiplayer
-[2m2026-11-01T08:12:04.096537Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.physics
-[2m2026-11-01T08:12:04.098857Z[0m [33m WARN[0m [2mjackdaw_api_internal::keymap::apply[0m[2m:[0m preset 'classic' has 10 chords claimed by more than one action: ["Delete (Press, Operators): clip.delete_keyframes, entity.delete, brush.delete_element", "Backspace (Press, Operators): clip.delete_keyframes, viewport.draw_brush.remove_last_vertex, brush.delete_element", "Home (Press, Operators): clip.timeline.jump_start, view.frame_all, viewport2d.frame", "Super+KeyC (Press, Operators): clip.copy_keyframes, entity.copy", "Super+KeyV (Press, Operators): clip.paste_keyframes, entity.paste", "Tab (Press, Operators): viewport.draw_brush.toggle_mode, brush.clip.cycle_mode", "Enter (Press, Operators): viewport.draw_brush.commit_polygon, brush.clip.apply", "KeyE (Press, Operators): tool.rotate, brush.mesh.extrude", "Escape (Press, Operators): brush.exit_edit_mode, selection.clear, brush.clip.clear, terrain.tool.exit_to_select", "Super+KeyB (Press, Operators): brush.mesh.edge_bevel, brush.mesh.vertex_bevel"]
-[2m2026-11-01T08:12:04.098934Z[0m [32m INFO[0m [2mjackdaw::extension_lifecycle[0m[2m:[0m applied keymap preset 'classic': 112 entries, 112 bindings, 0 user rows
-[2m2026-11-01T08:12:04.258559Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking /Users/zhanglinbo/workspace/loop-mac/t21-sprite/t21-sprite/assets recursively
-[2m2026-11-01T08:12:04.258680Z[0m [32m INFO[0m [2mjackdaw::asset_catalog[0m[2m:[0m No asset catalog found, starting with empty catalog
-[2m2026-11-01T08:12:04.352627Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: pre-building the game in the background for a fast first Play
-[2m2026-11-01T08:12:04.354692Z[0m [32m INFO[0m [2mjackdaw::material_browser[0m[2m:[0m update_material_browser_ui: rebuilding with 1 entries
-[2m2026-11-01T08:12:04.499761Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 4, typed 0, referencing 4)
-[2m2026-11-01T08:12:04.499892Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 0)
-[2m2026-11-01T08:12:04.670357Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking /Users/zhanglinbo/workspace/loop-mac/t21-sprite/t21-sprite/assets recursively
-[2m2026-11-01T08:12:04.692900Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 4, typed 0, referencing 4)
-[2m2026-11-01T08:12:04.693050Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 0)
-[2m2026-11-01T08:12:26.076153Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: refreshed project types from schema (23 project components)
-[2m2026-11-01T08:12:26.076868Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking /Users/zhanglinbo/workspace/loop-mac/t21-sprite/t21-sprite/assets recursively
-[2m2026-11-01T08:12:26.091813Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 4, typed 0, referencing 4)
-[2m2026-11-01T08:12:26.091932Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 0)
-[2m2026-11-01T08:12:33.080488Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: scene.open
-[2m2026-11-01T08:12:33.083226Z[0m [32m INFO[0m [2mjackdaw::scene_io::load[0m[2m:[0m Scene loaded from /Users/zhanglinbo/workspace/loop-mac/t21-sprite/t21-sprite/assets/scene.bsn (3 entities, 0 embedded assets)
-[2m2026-11-01T08:12:40.083669Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: asset.new
-[2m2026-11-01T08:12:40.089908Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m content/sheet.bsn
-[2m2026-11-01T08:12:41.071799Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking /Users/zhanglinbo/workspace/loop-mac/t21-sprite/t21-sprite/assets recursively
-[2m2026-11-01T08:12:41.101061Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 5, typed 1, referencing 4)
-[2m2026-11-01T08:12:41.101204Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 0)
-[2m2026-11-01T08:12:44.081532Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: sprite.atlas.grid
-[2m2026-11-01T08:12:44.081948Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m Cut the atlas into 2 by 3, 6 frames
-[2m2026-11-01T08:12:48.088924Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: asset.save
-[2m2026-11-01T08:12:48.094363Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m Saved 'sheet'
-[2m2026-11-01T08:12:49.075401Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking /Users/zhanglinbo/workspace/loop-mac/t21-sprite/t21-sprite/assets recursively
-[2m2026-11-01T08:12:50.073763Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 5, typed 1, referencing 4)
-[2m2026-11-01T08:12:50.073915Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 0)
-[2m2026-11-01T08:12:52.079578Z[0m [33m WARN[0m [2mbevy_ecs::relationship[0m[2m:[0m The bevy_ecs::hierarchy::ChildOf(4721v1) relationship on entity 4766v1 relates to an entity that does not exist. The invalid bevy_ecs::hierarchy::ChildOf relationship has been removed.
-[2m2026-11-01T08:12:52.088334Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: history.undo
-[2m2026-11-01T08:12:55.085934Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: asset.save
-[2m2026-11-01T08:12:55.091961Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m Saved 'sheet'
-[2m2026-11-01T08:12:56.078943Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking /Users/zhanglinbo/workspace/loop-mac/t21-sprite/t21-sprite/assets recursively
-[2m2026-11-01T08:12:57.073255Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 5, typed 1, referencing 4)
-[2m2026-11-01T08:12:57.073444Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 0)
-[2m2026-11-01T08:12:59.080350Z[0m [33m WARN[0m [2mbevy_ecs::relationship[0m[2m:[0m The bevy_ecs::hierarchy::ChildOf(4801v3) relationship on entity 5410v1 relates to an entity that does not exist. The invalid bevy_ecs::hierarchy::ChildOf relationship has been removed.
-[2m2026-11-01T08:12:59.086850Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: history.redo
-[2m2026-11-01T08:13:01.093683Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: asset.save
-[2m2026-11-01T08:13:01.099355Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m Saved 'sheet'
-[2m2026-11-01T08:13:02.078662Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking /Users/zhanglinbo/workspace/loop-mac/t21-sprite/t21-sprite/assets recursively
-[2m2026-11-01T08:13:03.082284Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 5, typed 1, referencing 4)
-[2m2026-11-01T08:13:03.082552Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 0)
-[2m2026-11-01T08:13:05.085676Z[0m [33m WARN[0m [2mbevy_ecs::relationship[0m[2m:[0m The bevy_ecs::hierarchy::ChildOf(4892v2) relationship on entity 5314v2 relates to an entity that does not exist. The invalid bevy_ecs::hierarchy::ChildOf relationship has been removed.
-[2m2026-11-01T08:13:05.095385Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: sprite.add
-[2m2026-11-01T08:13:41.085511Z[0m [32m INFO[0m [2mjackdaw::screenshot[0m[2m:[0m screenshot: wrote /Users/zhanglinbo/workspace/loop-mac/t21-sprite/t21-sprite/screenshots/t21-atlas-index0.png
-[2m2026-11-01T08:13:44.081741Z[0m [32m INFO[0m [2mjackdaw::screenshot[0m[2m:[0m screenshot: wrote /Users/zhanglinbo/workspace/loop-mac/t21-sprite/t21-sprite/screenshots/t21-atlas-index0.png
-[2m2026-11-01T08:13:48.092421Z[0m [32m INFO[0m [2mjackdaw::screenshot[0m[2m:[0m screenshot: wrote /Users/zhanglinbo/workspace/loop-mac/t21-sprite/t21-sprite/screenshots/t21-atlas-index1.png
-[2m2026-11-01T08:13:51.081195Z[0m [32m INFO[0m [2mjackdaw::screenshot[0m[2m:[0m screenshot: wrote /Users/zhanglinbo/workspace/loop-mac/t21-sprite/t21-sprite/screenshots/t21-atlas-index1.png
-[2m2026-11-01T08:13:56.083500Z[0m [32m INFO[0m [2mjackdaw::screenshot[0m[2m:[0m screenshot: wrote /Users/zhanglinbo/workspace/loop-mac/t21-sprite/t21-sprite/screenshots/t21-atlas-index2.png
-[2m2026-11-01T08:13:58.093474Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: asset.open
-[2m2026-11-01T08:13:59.138597Z[0m [32m INFO[0m [2mjackdaw::screenshot[0m[2m:[0m screenshot: wrote /Users/zhanglinbo/workspace/loop-mac/t21-sprite/t21-sprite/screenshots/t21-atlas-index2.png
-[2m2026-11-01T08:14:00.145485Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: asset.save
-[2m2026-11-01T08:14:00.145903Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m Saved 'sheet'
-[2m2026-11-01T08:14:02.088098Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: scene.open
-[2m2026-11-01T08:14:02.088459Z[0m [33m WARN[0m [2mjackdaw_api_internal::operator[0m[2m:[0m scene.open: the tab holds unsaved edits, so the file was not reread
-[2m2026-11-01T08:14:08.083852Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: scene.save
-[2m2026-11-01T08:14:08.092397Z[0m [32m INFO[0m [2mjackdaw::scene_io::save[0m[2m:[0m Scene saved to /Users/zhanglinbo/workspace/loop-mac/t21-sprite/t21-sprite/assets/scene.bsn
-[2m2026-11-01T08:14:08.092456Z[0m [32m INFO[0m [2mjackdaw::scene_io::session_journal[0m[2m:[0m session journal: /Users/zhanglinbo/workspace/loop-mac/t21-sprite/t21-sprite/assets/scene.bsn reached disk; dropping its entry
-[2m2026-11-01T08:14:09.080538Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking /Users/zhanglinbo/workspace/loop-mac/t21-sprite/t21-sprite/assets recursively
-[2m2026-11-01T08:14:10.080362Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 5, typed 1, referencing 4)
-[2m2026-11-01T08:14:10.080652Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 0)
-[2m2026-11-01T08:14:12.110367Z[0m [33m WARN[0m [2mbevy_ecs::relationship[0m[2m:[0m The bevy_ecs::hierarchy::ChildOf(5393v4) relationship on entity 5282v4 relates to an entity that does not exist. The invalid bevy_ecs::hierarchy::ChildOf relationship has been removed.
+[2m2026-11-01T11:38:21.871587Z[0m [32m INFO[0m [2mbevy_diagnostic::system_information_diagnostics_plugin::internal[0m[2m:[0m SystemInfo { os: "macOS 26.6.2 Tahoe", kernel: "25.6.0", cpu: "Apple M1 Pro", core_count: "8", memory: "16.0 GiB" }
+[2m2026-11-01T11:38:21.872099Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-11-01T11:38:21.921830Z[0m [32m INFO[0m [2mbevy_render::renderer[0m[2m:[0m AdapterInfo { name: "Apple M1 Pro", vendor: 0, device: 0, device_type: IntegratedGpu, device_pci_bus_id: "", driver: "", driver_info: "", backend: Metal, subgroup_min_size: 4, subgroup_max_size: 64, transient_saves_memory: Some(true), limit_bucket: None }
+[2m2026-11-01T11:38:22.118376Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw::test_input::plugin` of extension `jackdaw.test_input`
+[2m2026-11-01T11:38:22.118534Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw_physics::PhysicsEditorPlugin` of extension `jackdaw.physics`
+[2m2026-11-01T11:38:22.121097Z[0m [32m INFO[0m [2mbevy_pbr::cluster[0m[2m:[0m GPU clustering is supported on this device.
+[2m2026-11-01T11:38:22.121134Z[0m [32m INFO[0m [2mbevy_render::batching::gpu_preprocessing[0m[2m:[0m GPU preprocessing is fully supported on this device.
+[2m2026-11-01T11:38:22.144813Z[0m [32m INFO[0m [2mbevy_winit::system[0m[2m:[0m Creating new window jackdaw (71v0)
+[2m2026-11-01T11:38:22.280951Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.project_window
+[2m2026-11-01T11:38:22.281137Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.build_panel
+[2m2026-11-01T11:38:22.281155Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.inspector
+[2m2026-11-01T11:38:22.281186Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.test_input
+[2m2026-11-01T11:38:22.281235Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.timeline
+[2m2026-11-01T11:38:22.281248Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.animation_graph
+[2m2026-11-01T11:38:22.281257Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core
+[2m2026-11-01T11:38:22.282846Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.game_panel
+[2m2026-11-01T11:38:22.282862Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.viewport_panel
+[2m2026-11-01T11:38:22.282933Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.ui_palette
+[2m2026-11-01T11:38:22.282992Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.multiplayer
+[2m2026-11-01T11:38:22.283010Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.physics
+[2m2026-11-01T11:38:22.283115Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core_windows
+[2m2026-11-01T11:38:22.284775Z[0m [33m WARN[0m [2mjackdaw_api_internal::keymap::apply[0m[2m:[0m preset 'classic' has 10 chords claimed by more than one action: ["Delete (Press, Operators): clip.delete_keyframes, entity.delete, brush.delete_element", "Backspace (Press, Operators): clip.delete_keyframes, viewport.draw_brush.remove_last_vertex, brush.delete_element", "Home (Press, Operators): clip.timeline.jump_start, view.frame_all, viewport2d.frame", "Super+KeyC (Press, Operators): clip.copy_keyframes, entity.copy", "Super+KeyV (Press, Operators): clip.paste_keyframes, entity.paste", "Tab (Press, Operators): viewport.draw_brush.toggle_mode, brush.clip.cycle_mode", "Enter (Press, Operators): viewport.draw_brush.commit_polygon, brush.clip.apply", "KeyE (Press, Operators): tool.rotate, brush.mesh.extrude", "Escape (Press, Operators): brush.exit_edit_mode, selection.clear, brush.clip.clear, terrain.tool.exit_to_select", "Super+KeyB (Press, Operators): brush.mesh.edge_bevel, brush.mesh.vertex_bevel"]
+[2m2026-11-01T11:38:22.284810Z[0m [32m INFO[0m [2mjackdaw::extension_lifecycle[0m[2m:[0m applied keymap preset 'classic': 112 entries, 112 bindings, 0 user rows
+[2m2026-11-01T11:38:22.429041Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking /Users/zhanglinbo/workspace/loop-mac/t21-sprite/t21-sprite/assets recursively
+[2m2026-11-01T11:38:22.429154Z[0m [32m INFO[0m [2mjackdaw::asset_catalog[0m[2m:[0m No asset catalog found, starting with empty catalog
+[2m2026-11-01T11:38:22.519543Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: pre-building the game in the background for a fast first Play
+[2m2026-11-01T11:38:22.521462Z[0m [32m INFO[0m [2mjackdaw::material_browser[0m[2m:[0m update_material_browser_ui: rebuilding with 1 entries
+[2m2026-11-01T11:38:22.663030Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 5, typed 1, referencing 4)
+[2m2026-11-01T11:38:22.663242Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m Indexed 1 asset files
+[2m2026-11-01T11:38:22.822228Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking /Users/zhanglinbo/workspace/loop-mac/t21-sprite/t21-sprite/assets recursively
+[2m2026-11-01T11:38:22.842790Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 5, typed 1, referencing 4)
+[2m2026-11-01T11:38:22.842941Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 0)
+[2m2026-11-01T11:38:43.270421Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: refreshed project types from schema (23 project components)
+[2m2026-11-01T11:38:43.270918Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking /Users/zhanglinbo/workspace/loop-mac/t21-sprite/t21-sprite/assets recursively
+[2m2026-11-01T11:38:43.283407Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 5, typed 1, referencing 4)
+[2m2026-11-01T11:38:43.283526Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 0)
+[2m2026-11-01T11:38:50.272594Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: scene.open
+[2m2026-11-01T11:38:50.276318Z[0m [32m INFO[0m [2mjackdaw::scene_io::load[0m[2m:[0m Scene loaded from /Users/zhanglinbo/workspace/loop-mac/t21-sprite/t21-sprite/assets/scene.bsn (7 entities, 0 embedded assets)
+[2m2026-11-01T11:38:57.275097Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: asset.new
+[2m2026-11-01T11:38:57.275405Z[0m [33m WARN[0m [2mjackdaw_api_internal::operator[0m[2m:[0m asset.new: /Users/zhanglinbo/workspace/loop-mac/t21-sprite/t21-sprite/assets/content/sheet.bsn is already there
+[2m2026-11-01T11:38:57.275439Z[0m [33m WARN[0m [2mjackdaw_api_internal::operator[0m[2m:[0m asset.new: nothing was created, and no asset is open now
+[2m2026-11-01T11:39:01.285096Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: sprite.atlas.grid
+[2m2026-11-01T11:39:01.285436Z[0m [33m WARN[0m [2mjackdaw_api_internal::operator[0m[2m:[0m sprite.atlas.grid: no bevy_image::texture_atlas::TextureAtlasLayout asset is open
+[2m2026-11-01T11:39:05.273398Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: asset.save
+[2m2026-11-01T11:39:05.273582Z[0m [33m WARN[0m [2mjackdaw_api_internal::operator[0m[2m:[0m asset.save: no asset is open
+[2m2026-11-01T11:39:09.274502Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: history.undo
+[2m2026-11-01T11:39:12.274526Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: asset.save
+[2m2026-11-01T11:39:12.274628Z[0m [33m WARN[0m [2mjackdaw_api_internal::operator[0m[2m:[0m asset.save: no asset is open
+[2m2026-11-01T11:39:16.284677Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: history.redo
+[2m2026-11-01T11:39:19.283677Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: asset.save
+[2m2026-11-01T11:39:19.283798Z[0m [33m WARN[0m [2mjackdaw_api_internal::operator[0m[2m:[0m asset.save: no asset is open
+[2m2026-11-01T11:39:23.275017Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: sprite.add
+[2m2026-11-01T11:39:57.345441Z[0m [32m INFO[0m [2mjackdaw::screenshot[0m[2m:[0m screenshot: wrote /Users/zhanglinbo/workspace/loop-mac/t21-sprite/t21-sprite/screenshots/t21-atlas-index0.png
+[2m2026-11-01T11:40:00.315230Z[0m [32m INFO[0m [2mjackdaw::screenshot[0m[2m:[0m screenshot: wrote /Users/zhanglinbo/workspace/loop-mac/t21-sprite/t21-sprite/screenshots/t21-atlas-index0.png
+[2m2026-11-01T11:40:15.341492Z[0m [32m INFO[0m [2mjackdaw::screenshot[0m[2m:[0m screenshot: wrote /Users/zhanglinbo/workspace/loop-mac/t21-sprite/t21-sprite/screenshots/t21-atlas-index1.png
+[2m2026-11-01T11:40:18.315431Z[0m [32m INFO[0m [2mjackdaw::screenshot[0m[2m:[0m screenshot: wrote /Users/zhanglinbo/workspace/loop-mac/t21-sprite/t21-sprite/screenshots/t21-atlas-index1.png
+[2m2026-11-01T11:40:33.339699Z[0m [32m INFO[0m [2mjackdaw::screenshot[0m[2m:[0m screenshot: wrote /Users/zhanglinbo/workspace/loop-mac/t21-sprite/t21-sprite/screenshots/t21-atlas-index2.png
+[2m2026-11-01T11:40:36.315624Z[0m [32m INFO[0m [2mjackdaw::screenshot[0m[2m:[0m screenshot: wrote /Users/zhanglinbo/workspace/loop-mac/t21-sprite/t21-sprite/screenshots/t21-atlas-index2.png
+[2m2026-11-01T11:40:43.300321Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: asset.open
+[2m2026-11-01T11:40:43.300553Z[0m [33m WARN[0m [2mjackdaw::definition_assets[0m[2m:[0m /Users/zhanglinbo/workspace/loop-mac/t21-sprite/t21-sprite/assets/content/sheet.bsn is opened by the panel that loads its kind
+[2m2026-11-01T11:40:43.300576Z[0m [33m WARN[0m [2mjackdaw_api_internal::operator[0m[2m:[0m asset.open: /Users/zhanglinbo/workspace/loop-mac/t21-sprite/t21-sprite/assets/content/sheet.bsn is not an asset file
+[2m2026-11-01T11:40:47.311671Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: asset.save
+[2m2026-11-01T11:40:47.311809Z[0m [33m WARN[0m [2mjackdaw_api_internal::operator[0m[2m:[0m asset.save: no asset is open
+[2m2026-11-01T11:40:49.284412Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: scene.open
+[2m2026-11-01T11:40:49.284534Z[0m [33m WARN[0m [2mjackdaw_api_internal::operator[0m[2m:[0m scene.open: the tab holds unsaved edits, so the file was not reread
+[2m2026-11-01T11:40:55.302200Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: scene.save
+[2m2026-11-01T11:40:55.313838Z[0m [32m INFO[0m [2mjackdaw::scene_io::save[0m[2m:[0m Scene saved to /Users/zhanglinbo/workspace/loop-mac/t21-sprite/t21-sprite/assets/scene.bsn
+[2m2026-11-01T11:40:55.313922Z[0m [32m INFO[0m [2mjackdaw::scene_io::session_journal[0m[2m:[0m session journal: /Users/zhanglinbo/workspace/loop-mac/t21-sprite/t21-sprite/assets/scene.bsn reached disk; dropping its entry
+[2m2026-11-01T11:40:56.287824Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking /Users/zhanglinbo/workspace/loop-mac/t21-sprite/t21-sprite/assets recursively
+[2m2026-11-01T11:40:57.290854Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 5, typed 1, referencing 4)
+[2m2026-11-01T11:40:57.291296Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 0)
+[2m2026-11-01T11:40:59.323408Z[0m [33m WARN[0m [2mbevy_ecs::relationship[0m[2m:[0m The bevy_ecs::hierarchy::ChildOf(5270v1) relationship on entity 5249v1 relates to an entity that does not exist. The invalid bevy_ecs::hierarchy::ChildOf relationship has been removed.

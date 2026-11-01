@@ -40,6 +40,13 @@ Nothing scales by it at runtime; see
 [Resolution discipline](#resolution-discipline) for what actually
 keeps a screen correct at other sizes.
 
+The UI canvas is one of two 2D canvases. A **2D world scene** — the
+other kind — draws in world units instead of screen pixels: sprites,
+guides on the scene root, and an Add menu **2D** group that appears only
+while such a scene is open. That half of the story, including what a
+dropped image becomes on each canvas, is
+[Sprites in 2D](sprites-2d.md)'s subject.
+
 ## The template's two overlays
 
 Open `assets/hud.bsn` (double-click it in the Project window) and the

@@ -1,0 +1,21 @@
+    Blocking waiting for file lock on build directory
+   Compiling bevy_image v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_image)
+   Compiling bevy_camera v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_camera)
+   Compiling bevy_text v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_text)
+   Compiling bevy_picking v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_picking)
+   Compiling bevy_sprite v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_sprite)
+   Compiling bevy_input_focus v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_input_focus)
+   Compiling bevy_ui v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_ui)
+   Compiling bevy_ui_widgets v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_ui_widgets)
+   Compiling bevy_internal v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_internal)
+   Compiling bevy v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned)
+   Compiling jackdaw_bind v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_bind)
+    Finished `test` profile [optimized + debuginfo] target(s) in 2m 27s
+   Doc-tests jackdaw_bind
+
+running 1 test
+test crates/jackdaw_bind/src/error.rs - error::BindError (line 9) ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+all doctests ran in 2.94s; merged doctests compilation took 1.42s

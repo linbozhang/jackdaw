@@ -38,6 +38,10 @@ active 且同 target——`bevy_render::camera` 每帧报 Camera order ambiguiti
 editor 相共跑四轮（最后一轮 9 项 PASS：M1_OPERATOR/M2_PICK/M2_OUTLINE_PX/M2_CLEAR/
 GUIDES_ADD/M7_Z_FLIP_PX/M9_REOPEN/M9_BSN_TYPES/M9_KIND_REOPENED）；红项全部根因归档
 （§六 D5/D6/D10/D13），其中 M3 家族在隔离交互复跑中全绿（下表标「交互钉死」）。
+**E1 勘误（T2 QA A1，T3 落账）**：终轮归档 console 恰死于脚本 `$drop_sprite` 未绑定
+（`set -u` 必死，M1c 处）——「最后一轮 9 项 PASS」与下表 M3 链数值（0→90→92→90→0）
+**无归档载体**，判定降级为「会话在证、归档缺失」；能力面由 H 侧 stage 族
+（sprite_gizmo 31/31 在 563 全量内）+M2 选中链+诊断 boot 的组件读回在证。
 
 | PR | 能力 | 真机判定 | 证据 |
 |---|---|---|---|
@@ -46,14 +50,14 @@ GUIDES_ADD/M7_Z_FLIP_PX/M9_REOPEN/M9_BSN_TYPES/M9_KIND_REOPENED）；红项全�
 | #657 | Add 菜单/picker 2D 组行 | **红→记档（驱动缝）** | M1_MENU：picker 行不带 operator 字段，搜索+按实体点行未触发选择（ui_click 文本回退同）；产品面由 sprite.add 三入口同归一 operator 的代码事实+M1a 覆盖，交互缝记 D6 |
 | #657 | 图片拖放产物（正确物种） | **绿（等价代理）** | 拖放=dispatch_drop→`sprite.add{path,x,y}` 同一 operator（src/sprite_ops.rs:285-296）；带 path 的 sprite.add 产 image 实体并渲染（多轮会话红/蓝/SheetSpr 均上画布）——OS 文件拖无合成缝，H 侧 tests/stage/sprite_drop 在案 |
 | #650 | 画布拾取 | **绿** | M2_PICK：`input.pointer space=world` 单击 (0,0)→selection=[Hero]（真指针→拾取→Selection 全链） |
-| #650 | 选中描边+gizmo | **绿** | 真机截图（win3）：选中 sprite 蓝描边+移动 gizmo 红绿双轴绘制在画布（`shot-m2-selected*.png` 与 diag 会话截图）；M2_OUTLINE_PX 腿的两拍 diff 在 1 FPS 会话下时序不足判红，记 D7 |
+| #650 | 选中描边+gizmo | **绿** | 真机截图（win3）：选中 sprite 蓝描边+移动 gizmo 红绿双轴绘制在画布（`shot-m2-selected*.png` 与 diag 会话截图）；M2_OUTLINE_PX 腿的两拍 diff 在 1 FPS 会话下时序不足判红，记 D7。**E3 勘误（T2 QA F3，T3 落账）**：归档截图亲读可见的是描边+蓝 stem/旋钮/白色中心枢轴（与 `sprite_gizmo.rs` ACCENT_BLUE 形态吻合），「红绿双轴」措辞过强，按所见降级记档 |
 | #653 | 移动 gizmo 拖拽 | **绿（交互钉死）** | tool.translate→press (56,0)→8 步拖→release：Transform.x 0→90；editor 相被 D13 陈旧 id 打断（脚本终版已改现取现读），交互复跑全绿 |
 | #653 | 方向键微调 | **绿（交互钉死）** | ArrowRight→x 90→92（步进 2） |
 | #653 | undo 逐级还原 | **绿（交互钉死）** | undo×1 撤方向键（92→90）、再撤回起点（90→0）——T03 链 2D 形态活体 |
 | #654 | 旋转/缩放 gizmo | **绿（H 侧+手柄真机在画布）** | #654 stage 族 31/31（T1-QA 亲跑口径，本轮 563 sprite stage 测试全绿再证）；tool.rotate/scale 切换应答、旋钮/角点手柄在选中截图可见；拖拽腿同 D5 时序 |
 | #655 | 拖拽吸附 | **绿（H 侧）+记档** | sprite_snap 单测族+stage 族全绿；真机拖拽落点 90=网格倍数（8 的倍数+邻 sprite 边供给），专用真机腿被 D5 时序打断，记 D8 |
 | #656 | 2D 参考线 | **绿** | GUIDES_ADD：`canvas.guide.add vertical@64`→场景根 CanvasGuides 组件 face `{"vertical":[64.0]}`（BRP 读回）；guides 吸附真机腿同 D8 |
-| — | 绘制顺序 z | **绿** | M7_Z_FLIP_PX：双 sprite 重叠→z 翻转→画布普查翻转（blue-top 0.583%→red-top red 0.674%>blue 0.583%，`shot-m7-*.png`） |
+| — | 绘制顺序 z | **绿** | M7_Z_FLIP_PX：双 sprite 重叠→z 翻转→画布普查翻转（blue-top 0.583%→red-top red 0.674%>blue 0.583%，`shot-m7-*.png`）。**E2 勘误（T2 QA A2，T3 落账）**：归档截图对**字节相同**（md5 08cd8071… 双双相等），引注普查数不被归档支持；`viewport2d` 截图通道在本环境返回陈旧帧（跨会话逐字节同，A7 家族 sprite 形态）。z 排序语义判定维持绿（QA 画布几何旁证 TopSpr z=3 盖 Dropped z=2+FS z 值+引擎 sort key 语义），「翻转两拍 PX」半格降级为通道受阻；T3 补跑口径=window 级截图+帧差判据 |
 
 ## 三、SP3 图集切分真机+三态（atlas/game/export 相）
 
@@ -63,10 +67,10 @@ GUIDES_ADD/M7_Z_FLIP_PX/M9_REOPEN/M9_BSN_TYPES/M9_KIND_REOPENED）；红项全�
 | `sprite.atlas.grid tile_size=32,16 columns=2 rows=3`（T1-QA 钉死口径） | **绿** | 卡内 6 条 URect（2×3 of 32×16）落盘（ATLAS_GRID） |
 | 切刀=一条 undo | **绿** | undo→卡回 0 帧（再 save 盘面验证）、redo→复现 6 帧（ATLAS_UNDO/REDO，FS 双向） |
 | 布局卡重开再编辑 | **绿** | `asset.open`→`asset.save` 往返，6 帧保持（ATLAS_REOPEN） |
-| Sprite 穿图集（wear） | **盘面正门绿；交互驱动三路堵（记档 D9）** | component.set 的 Handle-in-struct JSON、apply_bsn 实体寻址、apply_bsn 命名根三路都被远端驱动面拒；**盘面正门**：场景 bsn 直书 `texture_atlas: Some(bevy_image::texture_atlas::TextureAtlas { layout: "content/sheet.bsn", index: 2 })`→编辑器解析零警告+画布渲染 **31×13 蓝色 index-2 tile**（未穿时为 64×48 全图） |
-| index 切换 | **绿（盘面值）** | index: 2→画布蓝 tile（census bbox 实证）；ATLAS_INDEX_PX 的 component.set 路线未生效（同 D9），盘面值+渲染为证 |
-| **可运行（direct）** | **绿** | M13 四件全过：Hero Transform 读回==授权值、SheetSpr `With<Sprite>` 在场、Camera2d 在、游戏窗口 Hero 红 0.278%；**M13_ATLAS：游戏文档带 TextureAtlas index 2+游戏窗口蓝 tile 普查 6.222%** |
-| **可运行（导出）** | **绿** | M15 六件全过：export_wait（started_at 前进+ready）、staged `scene.bsn` SHA==工程 SHA、包内 scene/atlas 卡/png 全清单、staged 进程 Hero Transform 读回==授权值+SheetSpr `With<Sprite>` 在场、staged 窗口 Hero 红 0.278%、**staged 图集面：文档 index 2+staged 窗口蓝 tile 普查 3.339%** |
+| Sprite 穿图集（wear） | **盘面正门绿；交互驱动三路堵（记档 D9）** | component.set 的 Handle-in-struct JSON、apply_bsn 实体寻址、apply_bsn 命名根三路都被远端驱动面拒；**盘面正门**：场景 bsn 直书 `texture_atlas: Some(bevy_image::texture_atlas::TextureAtlas { layout: "content/sheet.bsn", index: 2 })`→编辑器解析零警告+画布渲染 **31×13 蓝色 index-2 tile**（未穿时为 64×48 全图）。**E4 勘误（T2 QA A3，T3 落账）**：「解析零警告+画布蓝 tile」被归档否定——三会话一致可复现 `Could not find an asset loader matching …content/sheet.bsn`（bevy_asset ERROR+asset_failures WARN）+画布渲染 **64×48 全图**；编辑器画布对图集 wear 的现状=全图+loader ERROR，定性为缺陷 **SP11（已立 buglist A17）**，修复即 book 画布预览现状门升级；游戏/导出侧蓝 tile 正常（walk 装载链） |
+| index 切换 | **绿（盘面值）** | index: 2→画布蓝 tile（census bbox 实证）；ATLAS_INDEX_PX 的 component.set 路线未生效（同 D9），盘面值+渲染为证。**E6 勘误（T2 QA A5，T3 落账）**：ATLAS_INDEX_PX 腿的三张 index 截图**字节相同**（md5 全等）——wear 未生效时全图渲染本就恒含红绿蓝三色，存在性判据平凡通过=**假阳性 PASS，该腿记无效**；D9 的「component.set 路线未生效」结论与盘面值证据维持 |
+| **可运行（direct）** | **绿** | M13 四件全过：Hero Transform 读回==授权值、SheetSpr `With<Sprite>` 在场、Camera2d 在、游戏窗口 Hero 红 0.278%；**M13_ATLAS：游戏文档带 TextureAtlas index 2+游戏窗口蓝 tile 普查 6.222%**。**E5 勘误（T2 QA A4，T3 落账）**：6.222% 系**全屏捕获被桌面壁纸主导**（窗内裁剪重测 0.211，worn/unworn 同值；tile 世界位置被 macOS TCC 授权弹窗遮挡）——蓝 tile 的窗口像素半记无效，文档文本半（index: 2）与 walk 装载日志（「Loaded 1 asset files」+零装载 error/warn）承载 loader 链；T3 口径=先关 TCC 弹窗+窗内裁剪/帧差判据 |
+| **可运行（导出）** | **绿** | M15 六件全过：export_wait（started_at 前进+ready）、staged `scene.bsn` SHA==工程 SHA、包内 scene/atlas 卡/png 全清单、staged 进程 Hero Transform 读回==授权值+SheetSpr `With<Sprite>` 在场、staged 窗口 Hero 红 0.278%、**staged 图集面：文档 index 2+staged 窗口蓝 tile 普查 3.339%**。**E5 勘误同条（T2 QA A4）**：3.339% 同为壁纸主导全屏普查（窗内 0.191，worn/unworn 同值），像素半记无效；SHA/清单/staged 数值/文档 index 各半维持 |
 | **可保存（重开一致）** | **绿** | M9_REOPEN（重开逐字段读回）+M9_BSN_TYPES（bsn 全路径类型：`bevy_sprite::sprite::Sprite`/`Anchor` 等）+M9_KIND_REOPENED（重开后 sprite.add 仍应答=2D kind 再识别）+M13_ATLAS 的 FS 半（文档文本带 index 2） |
 
 **三态结论**：图片/Sheet→**可编辑**（画布拾取/描边/gizmo/Inspector/图集卡）→**可保存**
@@ -111,7 +115,7 @@ GUIDES_ADD/M7_Z_FLIP_PX/M9_REOPEN/M9_BSN_TYPES/M9_KIND_REOPENED）；红项全�
 | # | 偏差 | 级别 | 处置 |
 |---|---|---|---|
 | D1 | 派单的 M 系 16 格/L12 全腿本属 T3；本轮按派单执行「六 PR 能力逐个真机+SP3 真机+三态」的 T2 子集，格号沿用方案矩阵 | 记档 | 报告按能力维度列判（§二/§三），16 格正式判定留 T3 |
-| D2 | 磁盘 100%（A6 家族复发）：游戏暖编+PIE 预编吃满盘，probe 首轮中断 | 已处置 | 按 T19-T1 偏差 3 先例清已闭环 T20/T19 fixture 构建缓存+workspace incremental（约 78G，证据均在档）；prep 相增 df 脸行 |
+| D2 | 磁盘 100%（A6 家族复发）：游戏暖编+PIE 预编吃满盘，probe 首轮中断 | 已处置 | 按 T19-T1 偏差 3 先例清已闭环 T20/T19 fixture 构建缓存+workspace incremental（约 78G，证据均在档）。**F4 勘误（T2 QA §七 D2 行，T3 落账）**：「清 78G 证据均在档」措辞降级——清理证据未见于归档；处置本身已复证（终 prep df 脸 67Gi 在档） |
 | D3 | export 相首轮 FAIL：与门禁并跑的 cargo 锁竞争（export 的 release 构建被拖死） | 已处置 | 「门链单独跑」纪律复证；export 重跑单独执行，红态 console-export.log 归档 |
 | D4 | SP7 数值通道重构：Sprite 组件两侧 BRP 均 -23402 不可序列化（`Arc<StrongHandle>` 缺 ReflectSerialize）——**产品结构限制的新发现** | 记档（候选缺陷票） | 数值面拆 presence（With<Sprite> 查询）+Transform 值；Sprite 字段级 BRP 读回若要成立需 register_type_data 面，记 SP 系候选（SP11 起，主控裁定） |
 | D5 | editor 相多腿被「陈旧实体 id」打断（-23401 Entity not found：M2 刚选中的 Hero 到 M3 首读即消失，同刻 world.query 仍应答旧 id） | **已处置（D13 细查）** | 根因=场景实体中途重生（代数跳变，见 D13）；脚本终版 editor 相全部实体读改「现取现读」+ecomp 6 试/3s+失败打原始应答尾；M3 家族交互复跑全绿（§二），专用重跑留 QA（口径=先 prep 再 editor） |
@@ -142,3 +146,13 @@ GUIDES_ADD/M7_Z_FLIP_PX/M9_REOPEN/M9_BSN_TYPES/M9_KIND_REOPENED）；红项全�
 6. **export 独跑**：export 相必须单独跑（D3）；release 冷编预算 1500s，二跑增量。
 7. **M 系格号**：本报告按能力维度列判；T3 的 16 格正式判定可直接引用 §二/§三 的证据行。
 8. **book 零改动**（T3 落）；buglist/台账/roadmap 零触碰（纪律）。
+
+## 八、Errata 落账注记（T2 QA §七/§八-6 回流，T3 程序轮落账，纯报告面不触代码）
+
+T2 QA 裁决 PASS 不改；六条勘误（A1-A5+F3）已随 T3 轮在正文原位修正并标注
+（E1/E3 在 §二表内、E2 在 §二 z 行、E4/E5/E6 在 §三表内），原文数字不灭失（报告面可
+审计）；另附 F4 措辞降级（§六 D2 行）。逐条对照：E1=QA A1（9 项 PASS/M3 链归档缺失）、
+E2=QA A2（M7 归档对字节相同+viewport2d 通道陈旧帧）、E3=QA F3（红绿双轴措辞）、
+E4=QA A3（编辑器画布 wear 全图+loader ERROR，SP11/A17）、E5=QA A4（蓝 tile 普查壁纸
+主导，M13/M15 像素半无效）、E6=QA A5（ATLAS_INDEX_PX 假阳性）。T2 QA 报告本体零触碰；
+T3 及后续引用以 t21-t2-qa.md 为准。

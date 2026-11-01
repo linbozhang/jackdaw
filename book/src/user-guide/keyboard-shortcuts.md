@@ -33,7 +33,7 @@
 | M | Toggle snapping (same as the toolbar magnet) |
 | MMB | Toggle snap |
 | Ctrl (during drag) | Toggle snap |
-| Arrows | Nudge (grid-unit move) |
+| Arrows | Nudge (grid-unit move); in a 2D scene, moves the selected sprite |
 | Alt+Arrows | 90 deg rotate |
 | PageUp / PageDown | Nudge vertical |
 
