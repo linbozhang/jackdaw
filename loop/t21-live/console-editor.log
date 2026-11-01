@@ -1,0 +1,11 @@
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t21-sprite/t21-sprite
+M1a selection after sprite.add: [{"entity":4294962555,"name":"OpSprite2"}]
+M1a face: {"alpha_mode":"Blend","color":{"LinearRgba":{"alpha":1.0,"blue":1.0,"green":1.0,"red":1.0}},"custom_size":[32.0,32.0],"flip_x":false,"flip_y":false,"image":{"Uuid":"97128bb1-2588-480b-bdc6-87b4adbec477"},"image_mode":"Auto","rect":null,"texture_atlas":null}
+M1_OPERATOR_PASS
+M7_NEW_TOP_FAIL
+M7 new-sprite z read back '', wanted >= 1
+M1b picker search box: 4294962963
+M1b picker Sprite row: 4294961597
+M1_MENU_FAIL
+M1b FAILED: selection [{"entity":4294962555,"name":"OpSprite2"}] -> [{"entity":4294962555,"name":"OpSprite2"}] (row=4294961597)
+ecomp 4720v0 bevy_sprite::sprite::Sprite raw tail:  to be registered manually using `register_type_data` (stack: `bevy_sprite::sprite::Sprite` -> `bevy_asset::handle::Handle<bevy_image::image::Image>` -> `bevy_platform::sync::Arc<bevy_asset::handle::StrongHandle>`)"}}}}

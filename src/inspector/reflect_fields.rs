@@ -76,6 +76,18 @@ pub(crate) fn spawn_reflected_fields(
     editor_font: &Handle<Font>,
     icon_font: &Handle<Font>,
 ) {
+    // The Anchor card opens with the 3×3 pivot preset grid (SP9), above the
+    // raw offset row the tuple arm spawns; both write the same field.
+    if let Some(anchor) = reflected.downcast_ref::<bevy::sprite::Anchor>() {
+        super::anchor_presets::spawn_preset_grid(
+            commands,
+            parent,
+            source_entity,
+            anchor.as_vec(),
+            &base_path,
+            type_path,
+        );
+    }
     match reflected.reflect_ref() {
         ReflectRef::Struct(s) => {
             for i in 0..s.field_len() {
@@ -2164,7 +2176,7 @@ fn color_to_canonical_json(
 
 /// Apply a field value change with undo support via the field-edit lifecycle
 /// ([`crate::commands::field_edit_commit`]). Propagates to the current selection.
-fn apply_field_json_with_undo(
+pub(crate) fn apply_field_json_with_undo(
     world: &mut World,
     entity: Entity,
     type_path: &str,

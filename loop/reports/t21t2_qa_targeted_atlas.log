@@ -1,0 +1,11 @@
+== targeted_atlas START 18:00:30
+   Compiling jackdaw v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw)
+    Finished `test` profile [optimized + debuginfo] target(s) in 2.86s
+────────────
+ Nextest run ID fc4caef6-4301-411c-9ae2-0d5528817abf with nextest profile: ci
+    Starting 2 tests across 1 binary (166 tests skipped)
+        PASS [   2.217s] (1/2) jackdaw::inspector sprite_atlas::the_grid_refuses_to_run_without_a_tile_size
+        PASS [   2.270s] (2/2) jackdaw::inspector sprite_atlas::a_sprite_atlas_is_creatable_and_the_grid_cuts_it_into_frames
+────────────
+     Summary [   2.271s] 2 tests run: 2 passed, 166 skipped
+== targeted_atlas EXIT=0 END 18:00:39

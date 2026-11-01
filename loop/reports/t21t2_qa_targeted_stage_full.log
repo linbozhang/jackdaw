@@ -1,0 +1,570 @@
+    Finished `test` profile [optimized + debuginfo] target(s) in 0.30s
+────────────
+ Nextest run ID 2ad79007-1f6a-4d1e-b602-27c3f3e7151b with nextest profile: ci
+    Starting 563 tests across 1 binary
+        PASS [   2.770s] (  1/563) jackdaw::stage animation_graph::a_graph_held_in_the_binary_form_is_titled_without_its_extension
+        PASS [   2.770s] (  2/563) jackdaw::stage animation_graph::a_document_holding_leaked_canvas_nodes_loads_clean_and_saves_without_them
+        PASS [   3.421s] (  3/563) jackdaw::stage animation_graph::a_graph_authored_through_the_operators_reads_back_off_the_disk
+        PASS [   4.129s] (  4/563) jackdaw::stage add_component::add_component_is_offered_on_the_view_the_inspector_opens_on
+        PASS [   3.141s] (  5/563) jackdaw::stage animation_graph::a_graph_opened_from_its_binary_file_is_saved_back_as_binary
+        PASS [   3.142s] (  6/563) jackdaw::stage animation_graph::a_node_taken_off_the_canvas_takes_its_state_and_wires_with_it
+        PASS [   3.122s] (  7/563) jackdaw::stage animation_graph::a_parameter_written_in_the_window_reaches_the_rig_being_previewed
+        PASS [   2.414s] (  8/563) jackdaw::stage animation_graph::a_saved_graph_opens_again_with_a_node_for_every_state
+        PASS [   3.172s] (  9/563) jackdaw::stage animation_graph::a_state_renamed_in_the_window_carries_its_transitions_with_it
+        PASS [   3.173s] ( 10/563) jackdaw::stage animation_graph::the_open_graph_canvas_keeps_its_nodes_out_of_the_scene_document
+        PASS [   2.970s] ( 11/563) jackdaw::stage animation_graph::undoing_an_added_state_takes_its_node_off_the_canvas
+        PASS [   4.938s] ( 12/563) jackdaw::stage animation_library::a_document_holding_old_clip_children_loads_clean_and_saves_without_them
+        PASS [   4.231s] ( 13/563) jackdaw::stage animation_library::add_as_state_appends_to_the_selected_set_and_undoes
+        PASS [   4.527s] ( 14/563) jackdaw::stage animation_library::discovery_no_longer_writes_clip_entities_into_the_document
+        PASS [   3.840s] ( 15/563) jackdaw::stage animation_library::previewing_a_clip_on_a_bound_set_restores_the_set_state_on_stop
+        PASS [   6.229s] ( 16/563) jackdaw::stage animation_library::indexing_settles_without_reloading_the_gltf
+        PASS [   3.976s] ( 17/563) jackdaw::stage animation_library::previewing_on_a_bare_skeleton_leaves_no_player_behind
+        PASS [   4.031s] ( 18/563) jackdaw::stage animation_library::the_assets_method_reports_clip_names_with_details
+        PASS [   3.863s] ( 19/563) jackdaw::stage animation_library::the_library_lists_every_clip_of_a_loaded_file
+        PASS [   3.830s] ( 20/563) jackdaw::stage animation_library::the_library_tab_lists_the_indexed_files
+        PASS [   3.876s] ( 21/563) jackdaw::stage animation_library::the_library_tab_refills_after_the_layout_is_rebuilt
+        PASS [   3.880s] ( 22/563) jackdaw::stage animation_markers::a_clip_previewed_on_a_mannequin_takes_no_events
+        PASS [   3.938s] ( 23/563) jackdaw::stage animation_markers::a_library_clip_row_comes_back_when_the_document_is_reopened
+        PASS [   3.947s] ( 24/563) jackdaw::stage animation_markers::a_removed_event_goes_out_of_the_document_too
+        PASS [   3.957s] ( 25/563) jackdaw::stage animation_markers::a_set_whose_skeleton_spawns_later_still_owns_its_markers
+        PASS [   3.979s] ( 26/563) jackdaw::stage animation_markers::an_event_on_a_library_clip_makes_a_row_under_the_entity
+        PASS [   3.912s] ( 27/563) jackdaw::stage animation_markers::an_undone_event_leaves_nothing_behind_for_a_save_to_write
+        PASS [   3.952s] ( 28/563) jackdaw::stage animation_markers::one_undo_takes_back_the_event_and_the_row_it_made
+        PASS [   4.080s] ( 29/563) jackdaw::stage animation_markers::playing_past_a_marker_sends_an_animation_event_naming_the_entity
+        PASS [   3.974s] ( 30/563) jackdaw::stage animation_markers::redoing_an_undone_event_puts_the_row_and_the_marker_back
+        PASS [   4.095s] ( 31/563) jackdaw::stage animation_markers::scrubbing_back_over_a_marker_sends_it_once_per_pass
+        PASS [   3.881s] ( 32/563) jackdaw::stage animation_timeline::an_event_lands_on_the_clip_and_undoes
+        PASS [   3.974s] ( 33/563) jackdaw::stage animation_timeline::an_imported_clip_shows_its_bone_tracks_read_only
+        PASS [   4.065s] ( 34/563) jackdaw::stage animation_timeline::every_timeline_action_has_an_operator
+        PASS [   3.997s] ( 35/563) jackdaw::stage animation_timeline::recording_switched_off_leaves_an_edit_alone
+        PASS [   4.110s] ( 36/563) jackdaw::stage animation_timeline::recording_writes_a_key_at_the_playhead_when_a_tracked_field_changes
+        PASS [   1.379s] ( 37/563) jackdaw::stage asset_references::a_cancelled_delete_leaves_nothing_for_the_next_dialog_to_take
+        PASS [   1.422s] ( 38/563) jackdaw::stage asset_references::a_delete_answered_and_dismissed_in_one_frame_still_takes_the_file
+        PASS [   3.996s] ( 39/563) jackdaw::stage animation_timeline::stopping_the_preview_takes_the_imported_clip_off_the_timeline
+        PASS [   4.051s] ( 40/563) jackdaw::stage animation_timeline::switching_a_track_off_leaves_its_keys_where_they_are
+        PASS [   1.502s] ( 41/563) jackdaw::stage asset_references::a_delete_asked_for_while_a_confirmation_is_up_leaves_that_one_standing
+        PASS [   1.688s] ( 42/563) jackdaw::stage asset_references::a_name_two_files_share_is_kept_rather_than_pointed_at_either
+        PASS [   1.814s] ( 43/563) jackdaw::stage asset_references::a_reference_into_a_model_names_the_file_it_reaches_into
+        PASS [   1.848s] ( 44/563) jackdaw::stage asset_references::a_reference_resolves_to_the_document_held_as_binary
+        PASS [   1.853s] ( 45/563) jackdaw::stage asset_references::a_reference_resolves_to_the_material_it_names_after_that_file_turns_binary
+        PASS [   1.771s] ( 46/563) jackdaw::stage asset_references::a_reference_the_editor_cannot_resolve_survives_the_save
+        PASS [   1.846s] ( 47/563) jackdaw::stage asset_references::a_scene_naming_a_material_by_name_saves_it_as_a_path
+        PASS [   1.885s] ( 48/563) jackdaw::stage asset_references::a_scene_referencing_an_asset_outside_the_materials_folder_round_trips
+        PASS [   1.960s] ( 49/563) jackdaw::stage asset_references::asset_set_takes_a_material_path_and_still_takes_a_bare_name
+        PASS [   2.248s] ( 50/563) jackdaw::stage asset_references::converting_a_document_a_tab_has_open_is_refused
+        PASS [   1.812s] ( 51/563) jackdaw::stage asset_references::deleting_a_folder_names_what_points_into_it
+        PASS [   1.903s] ( 52/563) jackdaw::stage asset_references::deleting_a_referenced_file_is_refused_until_it_is_forced
+        PASS [   1.862s] ( 53/563) jackdaw::stage asset_references::material_apply_takes_the_path_of_a_material_file
+        PASS [   1.743s] ( 54/563) jackdaw::stage asset_references::the_references_of_a_material_name_every_document_that_spells_its_path
+        PASS [   2.087s] ( 55/563) jackdaw::stage asset_references::undo_takes_a_material_field_back_to_the_path_it_held
+        PASS [   2.547s] ( 56/563) jackdaw::stage brush_ops::a_brush_applied_as_bsn_derives_its_mesh
+        PASS [   1.488s] ( 57/563) jackdaw::stage brush_ops::brush_csg_intersect_unavailable_without_two_brushes
+        PASS [   1.607s] ( 58/563) jackdaw::stage brush_ops::brush_csg_subtract_unavailable_without_two_brushes
+        PASS [   2.669s] ( 59/563) jackdaw::stage brush_ops::a_brush_spelled_only_as_planes_derives_its_mesh
+        PASS [   1.453s] ( 60/563) jackdaw::stage brush_ops::brush_extend_face_unavailable_without_resolvable_face
+        PASS [   1.847s] ( 61/563) jackdaw::stage brush_ops::brush_join_unavailable_without_two_brushes
+        PASS [   1.772s] ( 62/563) jackdaw::stage canvas_guides::a_bare_canvas_guides_line_still_loads
+        PASS [   2.199s] ( 63/563) jackdaw::stage canvas_guides::a_guide_edit_is_one_undo_entry
+        PASS [   1.775s] ( 64/563) jackdaw::stage canvas_guides::guides_added_by_operator_round_trip_through_save_and_open
+        PASS [   1.817s] ( 65/563) jackdaw::stage canvas_guides::removing_the_last_guide_takes_the_component_off_the_root
+        PASS [   1.899s] ( 66/563) jackdaw::stage canvas_snap::a_checked_row_clicked_without_a_press_does_not_swallow_a_later_click
+        PASS [   2.066s] ( 67/563) jackdaw::stage canvas_snap::a_checked_row_in_the_top_bar_leaves_its_menu_open_and_the_bar_walkable
+        PASS [   1.969s] ( 68/563) jackdaw::stage canvas_snap::a_grid_row_moves_the_panel_whose_menu_it_is_in
+        PASS [   1.740s] ( 69/563) jackdaw::stage canvas_snap::clicking_a_snap_row_flips_the_kind_and_leaves_the_menu_open
+        PASS [   2.574s] ( 70/563) jackdaw::stage canvas_snap::a_grid_row_naming_no_open_panel_moves_every_panel
+        PASS [   1.600s] ( 71/563) jackdaw::stage canvas_snap::the_header_snap_menu_lists_every_kind_with_its_state
+        PASS [   1.493s] ( 72/563) jackdaw::stage canvas_snap::the_snap_kinds_ship_with_the_defaults_the_canvas_expects
+        PASS [   1.842s] ( 73/563) jackdaw::stage canvas_snap::the_snap_kinds_stay_out_of_undo_snapshots
+        PASS [   1.975s] ( 74/563) jackdaw::stage canvas_snap::the_snap_kinds_survive_a_project_reopen_beside_the_build_settings
+        PASS [   3.221s] ( 75/563) jackdaw::stage canvas_snap::the_magnet_chord_flips_the_canvas_under_the_pointer
+        PASS [   1.706s] ( 76/563) jackdaw::stage canvas_snap::the_snap_operator_sets_flips_and_refuses_an_unknown_kind
+        PASS [   1.706s] ( 77/563) jackdaw::stage canvas_snap::the_view_menu_carries_the_canvas_view_toggles
+        PASS [   1.945s] ( 78/563) jackdaw::stage definition_assets::a_definition_is_created_edited_and_saved_through_its_operators
+        PASS [   2.295s] ( 79/563) jackdaw::stage definition_assets::a_definition_file_reports_the_kind_its_type_belongs_to
+        PASS [   1.960s] ( 80/563) jackdaw::stage definition_assets::a_definition_saves_back_to_the_file_it_was_opened_from
+        PASS [   1.715s] ( 81/563) jackdaw::stage definition_assets::a_duplicate_is_written_beside_its_source_under_its_own_name
+        PASS [   1.732s] ( 82/563) jackdaw::stage definition_assets::a_duplicate_keeps_what_shares_the_line_with_the_root_name
+        PASS [   1.875s] ( 83/563) jackdaw::stage definition_assets::a_duplicate_names_a_root_that_carried_no_name
+        PASS [   1.917s] ( 84/563) jackdaw::stage definition_assets::a_duplicate_of_a_copy_counts_up_from_the_name_they_share
+        PASS [   1.917s] ( 85/563) jackdaw::stage definition_assets::a_duplicate_onto_a_name_already_taken_is_refused
+        PASS [   1.837s] ( 86/563) jackdaw::stage definition_assets::a_duplicate_under_a_name_needing_quotes_is_written_quoted
+        PASS [   1.831s] ( 87/563) jackdaw::stage definition_assets::a_duplicated_scene_keeps_its_roots
+        PASS [   1.846s] ( 88/563) jackdaw::stage definition_assets::a_file_deleted_on_disk_closes_its_card
+        PASS [   1.893s] ( 89/563) jackdaw::stage definition_assets::a_file_deleted_under_a_dirty_card_leaves_the_card_open
+        PASS [   1.847s] ( 90/563) jackdaw::stage definition_assets::a_file_edited_on_disk_reloads_into_the_handle_it_already_had
+        PASS [   1.808s] ( 91/563) jackdaw::stage definition_assets::a_file_that_stops_naming_a_known_type_leaves_the_index
+        PASS [   1.812s] ( 92/563) jackdaw::stage definition_assets::a_kind_is_named_by_its_id_its_type_path_or_its_label
+        PASS [   1.766s] ( 93/563) jackdaw::stage definition_assets::a_material_file_is_indexed_alongside_every_other_kind
+        PASS [   1.810s] ( 94/563) jackdaw::stage definition_assets::a_material_file_is_not_deleted_through_the_definition_operator
+        PASS [   1.970s] ( 95/563) jackdaw::stage definition_assets::a_material_is_opened_and_its_fields_set_through_the_definition_operators
+        PASS [   1.994s] ( 96/563) jackdaw::stage definition_assets::a_material_saved_by_its_own_operator_carries_what_asset_set_wrote
+        PASS [   1.912s] ( 97/563) jackdaw::stage definition_assets::a_refused_create_keeps_a_card_holding_edits_that_are_not_on_disk
+        PASS [   1.866s] ( 98/563) jackdaw::stage definition_assets::a_refused_create_tells_the_caller_and_leaves_no_asset_open
+        PASS [   1.718s] ( 99/563) jackdaw::stage definition_assets::a_scene_entity_edit_still_lands_while_a_definition_is_open
+        PASS [   1.676s] (100/563) jackdaw::stage definition_assets::an_asset_file_in_any_folder_is_indexed_by_its_path
+        PASS [   1.883s] (101/563) jackdaw::stage definition_assets::asset_get_reports_the_open_file_and_what_a_field_holds
+        PASS [   2.058s] (102/563) jackdaw::stage definition_assets::asset_set_fills_a_texture_slot_from_a_path_and_the_save_keeps_it
+        PASS [   1.971s] (103/563) jackdaw::stage definition_assets::asset_set_takes_a_colour_as_channels_and_undo_puts_the_old_one_back
+        PASS [   1.940s] (104/563) jackdaw::stage definition_assets::creating_a_definition_refuses_a_name_whose_file_is_already_there
+        PASS [   1.817s] (105/563) jackdaw::stage definition_assets::deleting_a_definition_closes_its_card_and_drops_the_entry
+        PASS [   1.709s] (106/563) jackdaw::stage definition_assets::undo_reaches_the_definition_after_its_card_is_closed
+        PASS [   1.849s] (107/563) jackdaw::stage definition_assets::undo_takes_back_one_definition_field_edit
+        PASS [   1.868s] (108/563) jackdaw::stage definition_assets::unregistering_a_definition_type_drops_its_entries_and_closes_the_card
+        PASS [   1.838s] (109/563) jackdaw::stage extension_app_plugin::a_rebuild_that_keeps_the_plugin_activates_live
+        PASS [   1.756s] (110/563) jackdaw::stage extension_app_plugin::an_extension_enabled_at_launch_adds_its_plugin_before_the_app_runs
+        PASS [   1.678s] (111/563) jackdaw::stage extension_app_plugin::an_extension_loaded_after_launch_waits_for_a_restart
+        PASS [   1.676s] (112/563) jackdaw::stage extension_app_plugin::an_extension_turned_off_at_launch_waits_for_a_restart_when_enabled
+        PASS [   1.735s] (113/563) jackdaw::stage extension_reload::a_panel_the_reloaded_extension_no_longer_offers_stays_closed
+        PASS [   1.794s] (114/563) jackdaw::stage extension_reload::a_reloaded_extension_keeps_its_open_panel_where_it_was
+        PASS [   1.813s] (115/563) jackdaw::stage extension_reload::a_reloaded_panel_shows_what_the_new_build_registers
+        PASS [   3.504s] (116/563) jackdaw::stage foliage::a_foliage_material_file_round_trips_through_save_and_load
+        PASS [   3.054s] (117/563) jackdaw::stage foliage::a_foliage_material_takes_the_wind_the_scene_is_blowing_by
+        PASS [   2.667s] (118/563) jackdaw::stage foliage::the_new_asset_list_offers_a_foliage_material
+        PASS [   3.142s] (119/563) jackdaw::stage foliage::applying_a_foliage_material_replaces_the_meshs_material_component
+        PASS [   1.418s] (120/563) jackdaw::stage gltf_authoring::a_delete_is_one_history_entry
+        PASS [   1.902s] (121/563) jackdaw::stage gltf_authoring::a_despawned_parent_takes_the_models_its_children_queued_with_it
+        PASS [   1.806s] (122/563) jackdaw::stage gltf_authoring::a_lod_groups_levels_get_no_model_instance_until_the_group_goes
+        PASS [   2.253s] (123/563) jackdaw::stage gltf_authoring::a_model_queued_beside_the_scene_survives_the_scene_being_taken_down
+        PASS [   1.857s] (124/563) jackdaw::stage gltf_authoring::a_model_whose_source_went_while_its_root_waited_never_comes_on
+        PASS [   1.870s] (125/563) jackdaw::stage gltf_authoring::a_placed_model_loads_its_meshes_with_the_textures_its_materials_name
+        PASS [   1.906s] (126/563) jackdaw::stage gltf_authoring::an_undo_that_respawns_the_scene_leaves_no_model_queued_for_an_entity_that_has_gone
+        PASS [   1.896s] (127/563) jackdaw::stage gltf_authoring::gltf_source_derives_world_asset_root_and_stays_out_of_the_document
+        PASS [   1.872s] (128/563) jackdaw::stage gltf_authoring::undo_redo_restores_a_loadable_gltf
+        PASS [   1.926s] (129/563) jackdaw::stage gltf_authoring::undoing_a_bulk_model_delete_restores_every_hierarchy
+        PASS [   0.037s] (130/563) jackdaw::stage gltf_authoring::world_asset_root_skip_path_matches_real_type_path
+        PASS [   1.897s] (131/563) jackdaw::stage gltf_authoring::undoing_a_delete_of_a_group_and_one_of_its_models_restores_that_model_once
+        PASS [   1.850s] (132/563) jackdaw::stage gltf_authoring::undoing_a_group_delete_puts_its_models_back_under_it
+        PASS [   1.811s] (133/563) jackdaw::stage gltf_authoring::undoing_a_model_delete_restores_its_hierarchy
+        PASS [   1.664s] (134/563) jackdaw::stage launcher::a_module_description_is_the_widest_part_of_its_row_in_a_narrow_window
+        PASS [   1.710s] (135/563) jackdaw::stage launcher::a_project_whose_editor_is_missing_asks_and_installing_runs_jd
+        PASS [   1.824s] (136/563) jackdaw::stage launcher::an_idle_launcher_spawns_and_rebuilds_nothing
+        PASS [   1.837s] (137/563) jackdaw::stage launcher::clicking_a_page_in_the_sidebar_and_a_filter_shows_them
+        PASS [   1.811s] (138/563) jackdaw::stage launcher::clicking_a_project_pinned_to_another_install_hands_it_to_that_editor
+        PASS [   1.789s] (139/563) jackdaw::stage launcher::opening_a_copy_moves_the_copy_to_this_editor_and_leaves_the_original
+        PASS [   2.014s] (140/563) jackdaw::stage launcher::the_extensions_page_lists_optional_extensions_and_applies_module_changes
+        PASS [   1.833s] (141/563) jackdaw::stage launcher::uninstalling_an_editor_projects_open_with_asks_first_then_forces
+        PASS [   3.702s] (142/563) jackdaw::stage launcher::the_new_project_page_creates_the_chosen_template_pinned_to_this_editor
+        PASS [   3.887s] (143/563) jackdaw::stage layered_surface::a_layered_surface_file_round_trips_through_save_and_load
+        PASS [   3.381s] (144/563) jackdaw::stage layered_surface::a_scene_naming_a_layered_surface_reloads_with_it_on_the_mesh
+        PASS [   3.658s] (145/563) jackdaw::stage layered_surface::applying_a_layered_surface_replaces_the_meshs_material_component
+        PASS [   2.842s] (146/563) jackdaw::stage layered_surface::swapping_a_meshs_material_lists_it_for_respecialization_either_way
+        PASS [   1.885s] (147/563) jackdaw::stage live_levels::a_model_with_lod_settings_draws_live_levels_and_saves_as_a_plain_placement
+        PASS [   3.073s] (148/563) jackdaw::stage layered_surface::the_new_asset_list_offers_a_layered_surface
+        PASS [   3.742s] (149/563) jackdaw::stage layered_surface::undoing_the_apply_puts_the_standard_material_back
+        PASS [   2.474s] (150/563) jackdaw::stage live_levels::forcing_a_level_draws_it_at_any_distance_and_leaves_the_document_unchanged
+        PASS [   2.261s] (151/563) jackdaw::stage live_levels::level_swaps_add_no_undo_history_and_no_outliner_rows
+        PASS [   2.289s] (152/563) jackdaw::stage live_levels::opening_a_scene_finishes_once_every_group_draws_something
+        PASS [   1.964s] (153/563) jackdaw::stage lod_bar::a_placements_drag_writes_its_override_and_leaves_the_model_alone
+        PASS [   2.609s] (154/563) jackdaw::stage live_levels::saving_after_flying_across_every_switch_writes_the_same_bytes
+        PASS [   1.691s] (155/563) jackdaw::stage lod_bar::clicking_a_segment_forces_its_level_and_clicking_again_lets_go
+        PASS [   2.065s] (156/563) jackdaw::stage lod_bar::dragging_a_divider_moves_its_switch_as_one_undo_entry
+        PASS [   1.658s] (157/563) jackdaw::stage lod_bar::the_lod_colour_view_tints_parts_without_touching_the_document
+        PASS [   3.473s] (158/563) jackdaw::stage lod_upgrade::a_group_whose_level_has_its_own_transform_stays_hand_built
+        PASS [   3.893s] (159/563) jackdaw::stage lod_upgrade::a_group_naming_its_model_opens_upgraded_and_switches_where_it_did
+        PASS [   3.341s] (160/563) jackdaw::stage lod_upgrade::an_instance_overriding_a_groups_heights_gets_a_lod_override
+        PASS [   3.774s] (161/563) jackdaw::stage lod_upgrade::one_undo_restores_the_old_form_and_redo_upgrades_again
+        PASS [   6.834s] (162/563) jackdaw::stage lod_upgrade::a_scene_written_with_defaults_left_out_upgrades_like_one_spelling_them
+        PASS [   4.958s] (163/563) jackdaw::stage lod_upgrade::an_instance_that_changes_a_level_keeps_its_prefabs_groups
+        PASS [   6.379s] (164/563) jackdaw::stage lod_upgrade::opening_an_old_form_scene_writes_nothing_and_adds_one_history_entry
+        PASS [   3.700s] (165/563) jackdaw::stage lod_upgrade::saving_after_opening_writes_the_model_settings_and_drops_level_children_and_listings
+        PASS [   6.442s] (166/563) jackdaw::stage lod_upgrade::reopening_a_saved_upgrade_adds_no_history_entry
+        PASS [   5.497s] (167/563) jackdaw::stage material_overrides::a_models_overrides_survive_packing_into_a_prefab_and_dress_every_instance
+        PASS [   5.659s] (168/563) jackdaw::stage material_overrides::an_instance_keeps_following_the_prefab_entries_it_did_not_override
+        PASS [   2.827s] (169/563) jackdaw::stage material_overrides::an_override_naming_no_material_is_refused
+        PASS [   6.185s] (170/563) jackdaw::stage material_overrides::an_instances_own_override_wins_over_its_prefabs
+        PASS [   3.642s] (171/563) jackdaw::stage material_overrides::an_override_on_a_placed_model_saves_reloads_and_dresses_its_part
+        PASS [   3.404s] (172/563) jackdaw::stage material_row::a_brush_takes_the_material_its_row_names_onto_its_faces
+        PASS [   3.882s] (173/563) jackdaw::stage material_overrides::applying_a_material_to_a_models_part_overrides_it_on_the_model_and_undo_takes_it_back
+        PASS [   3.759s] (174/563) jackdaw::stage material_row::a_brush_takes_the_material_the_apply_operator_names_by_path
+        PASS [   0.039s] (175/563) jackdaw::stage mesh_quick_menu::action_equals_operator_id_and_labels_present
+        PASS [   0.037s] (176/563) jackdaw::stage mesh_quick_menu::clip_and_knife_have_no_quick_menu
+        PASS [   0.037s] (177/563) jackdaw::stage mesh_quick_menu::items_for_submode_returns_configured_ops_per_mode
+        PASS [   4.676s] (178/563) jackdaw::stage material_row::a_material_picked_on_an_authored_mesh_survives_a_save_and_a_reopen
+        PASS [   2.872s] (179/563) jackdaw::stage material_row::a_mesh_the_scene_does_not_author_still_lists_its_material
+        PASS [   2.847s] (180/563) jackdaw::stage model_lod::apply_writes_one_models_meta_without_saving_the_scene
+        PASS [   3.707s] (181/563) jackdaw::stage material_row::picking_a_material_for_such_a_mesh_dresses_it_without_authoring_it
+        PASS [   2.953s] (182/563) jackdaw::stage model_lod::importing_finds_the_files_beside_a_model_and_writes_its_meta_only_on_save
+        PASS [   1.793s] (183/563) jackdaw::stage modeling_essentials::apply_bakes_mirror_into_authored_topology
+        PASS [   4.213s] (184/563) jackdaw::stage model_lod::nodes_named_by_level_inside_one_file_import_as_node_levels
+        PASS [   3.155s] (185/563) jackdaw::stage model_lod::reimporting_keeps_the_screen_heights_of_saved_settings
+        PASS [   4.031s] (186/563) jackdaw::stage model_lod::undoing_an_import_drops_the_settings_it_made_and_save_writes_none
+        PASS [   1.426s] (187/563) jackdaw::stage modeling_essentials::bisect_cut_geometry_is_not_editable
+        PASS [   1.857s] (188/563) jackdaw::stage modeling_essentials::mirror_ops_gate_on_selection_and_component
+        PASS [   2.282s] (189/563) jackdaw::stage modeling_essentials::mirrored_brush_cache_holds_both_halves_with_source_maps
+        PASS [   1.829s] (190/563) jackdaw::stage modeling_essentials::modifier_add_mirror_matches_standalone_cache
+        PASS [   1.748s] (191/563) jackdaw::stage modeling_essentials::modifier_apply_bakes_and_removes_entry
+        PASS [   1.756s] (192/563) jackdaw::stage modeling_essentials::modifier_move_reorders
+        PASS [   1.774s] (193/563) jackdaw::stage modeling_essentials::modifier_remove_restores_base_cache
+        PASS [   1.783s] (194/563) jackdaw::stage modeling_essentials::modifier_toggle_flips_flag
+        PASS [   1.785s] (195/563) jackdaw::stage modeling_essentials::non_bisecting_mirror_leaves_every_vert_editable
+        PASS [   1.779s] (196/563) jackdaw::stage modeling_essentials::picking_remaps_to_authored_space
+        PASS [   1.784s] (197/563) jackdaw::stage modeling_essentials::reference_image_maintenance_installs_placeholder_for_empty_path
+        PASS [   1.783s] (198/563) jackdaw::stage modeling_essentials::reference_image_opacity_change_updates_alpha_without_clobbering_scale
+        PASS [   1.783s] (199/563) jackdaw::stage modeling_essentials::reference_image_round_trips_through_scene_document
+        PASS [   1.787s] (200/563) jackdaw::stage modeling_essentials::removing_mirror_restores_authored_only_cache
+        PASS [   1.788s] (201/563) jackdaw::stage modeling_essentials::symmetrize_x_bakes_authored_topology
+        PASS [   1.797s] (202/563) jackdaw::stage modeling_essentials::symmetrize_x_bakes_prior_live_y_mirror
+        PASS [   1.797s] (203/563) jackdaw::stage modeling_essentials::xray_overrides_every_chunk_and_restores_on_toggle_off
+        PASS [   3.509s] (204/563) jackdaw::stage new_asset::a_creation_never_writes_over_a_file_already_there
+        PASS [   3.065s] (205/563) jackdaw::stage new_asset::a_material_picked_from_the_list_joins_the_materials_panel
+        PASS [   2.700s] (206/563) jackdaw::stage new_asset::a_name_with_a_flavour_keeps_the_flavour_and_is_known_by_its_stem
+        PASS [   3.145s] (207/563) jackdaw::stage new_asset::a_name_that_carries_its_own_extension_writes_one_file
+        PASS [   3.075s] (208/563) jackdaw::stage new_asset::an_asset_is_written_into_whatever_folder_it_is_asked_for
+        PASS [   3.068s] (209/563) jackdaw::stage new_asset::an_asset_with_no_name_takes_the_next_free_one
+        PASS [   3.070s] (210/563) jackdaw::stage new_asset::nothing_is_written_outside_the_project_assets
+        PASS [   3.070s] (211/563) jackdaw::stage new_asset::creating_where_nothing_can_be_written_leaves_no_entry_behind
+        PASS [   3.057s] (212/563) jackdaw::stage new_asset::the_new_asset_list_offers_every_kind_and_no_scene
+        PASS [   3.057s] (213/563) jackdaw::stage new_asset::the_add_menu_offers_every_kind_and_creates_where_the_browser_is
+        PASS [   3.063s] (214/563) jackdaw::stage new_asset::the_new_asset_list_reports_what_it_offers_and_takes_a_kind_outright
+        PASS [   3.063s] (215/563) jackdaw::stage new_asset::the_same_name_in_two_folders_is_two_assets
+        PASS [   1.426s] (216/563) jackdaw::stage new_project::a_name_the_command_line_would_refuse_is_refused_by_the_dialog_too
+        PASS [   2.896s] (217/563) jackdaw::stage new_asset::the_status_names_the_list_of_kinds_while_it_is_up
+        PASS [   4.212s] (218/563) jackdaw::stage new_project::a_typed_name_names_the_project_the_dialog_creates
+        PASS [   3.855s] (219/563) jackdaw::stage new_project::physics_is_on_by_default_and_ships_with_the_game
+        PASS [   2.385s] (220/563) jackdaw::stage new_project::ticking_navmesh_gives_the_created_game_the_navmesh_feature
+        PASS [   5.545s] (221/563) jackdaw::stage new_project::create_in_the_new_game_dialog_makes_the_offered_project_and_opens_it
+        PASS [   2.083s] (222/563) jackdaw::stage new_project::while_a_create_runs_the_dialog_is_locked_and_quiet_about_its_own_folder
+        PASS [   1.867s] (223/563) jackdaw::stage play_controls::a_game_in_its_own_window_leaves_the_dock_alone
+        PASS [   0.038s] (224/563) jackdaw::stage positionable_mirror_plane::snap_resolves_to_nearest_vertex_then_grid_then_free
+        PASS [   2.296s] (225/563) jackdaw::stage play_controls::the_game_panel_comes_forward_when_play_starts_and_steps_back_when_it_ends
+        PASS [   1.910s] (226/563) jackdaw::stage play_controls::with_no_game_running_pause_and_stop_are_refused_and_the_editor_settles_on_stopped
+        PASS [   1.577s] (227/563) jackdaw::stage positionable_mirror_plane::plane_set_moves_the_mirror_offset_and_refolds
+        PASS [   1.667s] (228/563) jackdaw::stage project_definitions::a_colour_field_on_a_project_component_takes_channels
+        PASS [   1.872s] (229/563) jackdaw::stage project_definitions::a_compiled_kind_survives_the_project_that_reported_its_type
+        PASS [   2.060s] (230/563) jackdaw::stage project_definitions::a_definition_edit_and_a_scene_edit_undo_in_the_order_they_were_made
+        PASS [   1.984s] (231/563) jackdaw::stage project_definitions::a_definition_is_created_edited_and_saved_through_its_operators
+        PASS [   1.920s] (232/563) jackdaw::stage project_definitions::a_field_set_back_to_its_default_stops_being_written_at_all
+        PASS [   2.802s] (233/563) jackdaw::stage project_definitions::a_definition_is_named_by_the_stem_before_the_first_dot_of_its_file
+        PASS [   2.009s] (234/563) jackdaw::stage project_definitions::a_field_the_schema_no_longer_declares_survives_an_edit_and_a_save
+        PASS [   2.099s] (235/563) jackdaw::stage project_definitions::a_file_whose_fields_the_schema_no_longer_declares_keeps_the_ones_it_does
+        PASS [   1.733s] (236/563) jackdaw::stage project_definitions::a_kind_reports_what_the_project_holds
+        PASS [   1.875s] (237/563) jackdaw::stage project_definitions::a_kind_the_editor_compiled_in_wins_over_the_schemas
+        PASS [   1.909s] (238/563) jackdaw::stage project_definitions::a_kind_whose_type_leaves_the_schema_takes_its_entries_and_its_card_with_it
+        PASS [   1.898s] (239/563) jackdaw::stage project_definitions::a_new_definition_asked_for_by_a_file_path_drops_its_kind_segment
+        PASS [   1.781s] (240/563) jackdaw::stage project_definitions::a_new_definition_asked_for_by_file_path_takes_that_name_and_folder
+        PASS [   1.827s] (241/563) jackdaw::stage project_definitions::a_new_definition_goes_by_the_file_it_was_asked_for_rather_than_the_name
+        PASS [   1.917s] (242/563) jackdaw::stage project_definitions::a_new_definition_lands_in_the_folder_it_was_asked_for_and_opens_from_there
+        PASS [   1.900s] (243/563) jackdaw::stage project_definitions::a_saved_definition_carries_its_type_in_its_header
+        PASS [   3.092s] (244/563) jackdaw::stage project_definitions::a_re_saved_definition_keeps_a_quoted_root_name_quoted
+        PASS [   2.992s] (245/563) jackdaw::stage project_definitions::a_re_saved_definition_keeps_the_root_name_its_file_carries
+        PASS [   1.608s] (246/563) jackdaw::stage project_definitions::a_schema_asset_type_registers_a_kind_with_nothing_declared
+        PASS [   1.859s] (247/563) jackdaw::stage project_definitions::a_variant_the_type_does_not_have_is_refused
+        PASS [   3.480s] (248/563) jackdaw::stage project_definitions::a_saved_definition_is_listed_and_read_back_when_the_project_is_opened_again
+        PASS [   2.290s] (249/563) jackdaw::stage project_definitions::creating_a_definition_over_a_file_that_is_already_there_is_refused
+        PASS [   2.718s] (250/563) jackdaw::stage project_definitions::editing_one_field_of_a_loaded_file_rewrites_one_line
+        PASS [   4.213s] (251/563) jackdaw::stage project_definitions::an_asset_file_in_another_folder_is_found_by_the_scan
+        PASS [   3.281s] (252/563) jackdaw::stage project_definitions::an_objective_carrying_fields_is_written_as_its_type_declares_it_and_read_back
+        PASS [   1.852s] (253/563) jackdaw::stage project_definitions::undo_takes_back_one_edit_to_a_definition
+        PASS [   3.969s] (254/563) jackdaw::stage project_startup::a_texture_dropped_in_after_the_project_opened_reaches_the_materials_panel
+        PASS [   3.970s] (255/563) jackdaw::stage project_startup::a_scene_taken_down_takes_the_models_it_had_queued_with_it
+        PASS [   3.198s] (256/563) jackdaw::stage project_startup::opening_a_project_names_its_phases_and_stops_naming_when_it_is_done
+        PASS [   4.580s] (257/563) jackdaw::stage project_startup::going_home_closes_the_projects_tabs
+        PASS [   3.655s] (258/563) jackdaw::stage project_startup::opening_a_project_spawns_the_prefab_instances_its_scene_holds_and_indexes_its_materials
+        PASS [   3.655s] (259/563) jackdaw::stage project_startup::opening_a_project_queues_one_model_for_each_the_document_names
+        PASS [   3.990s] (260/563) jackdaw::stage project_startup::the_footer_names_the_scene_it_is_opening_before_it_opens_it
+        PASS [   3.065s] (261/563) jackdaw::stage project_window::a_folder_that_goes_while_it_is_showing_falls_back_to_the_root
+        PASS [   3.066s] (262/563) jackdaw::stage project_startup::the_frame_that_opens_a_project_does_not_walk_its_assets
+        PASS [   7.278s] (263/563) jackdaw::stage project_startup::opening_another_project_leaves_the_first_projects_tabs_behind
+        PASS [   4.463s] (264/563) jackdaw::stage project_window::a_scene_file_card_carries_the_button_that_opens_it
+        PASS [   2.930s] (265/563) jackdaw::stage project_window::filtering_by_kind_shows_only_the_files_of_that_kind
+        PASS [   2.928s] (266/563) jackdaw::stage project_window::searching_shows_only_the_files_whose_name_holds_the_text
+        PASS [   2.905s] (267/563) jackdaw::stage project_window::selecting_a_definition_file_shows_its_card_in_the_inspector
+        PASS [   3.198s] (268/563) jackdaw::stage project_window::selecting_a_material_file_shows_its_card_in_the_inspector
+        PASS [   3.674s] (269/563) jackdaw::stage project_window::the_folder_tree_lists_each_folder_once
+        PASS [   4.502s] (270/563) jackdaw::stage reflection_probe::a_baked_probe_keeps_its_bake_across_a_save_and_reopen
+        PASS [   3.343s] (271/563) jackdaw::stage reflection_probe::a_new_probe_reflects_nothing_until_it_is_baked
+        PASS [   1.484s] (272/563) jackdaw::stage remote_placement::a_model_placed_without_a_height_lands_on_the_ground
+        PASS [   2.486s] (273/563) jackdaw::stage remote_placement::a_list_holding_an_id_the_scene_no_longer_answers_to_is_refused_whole
+        PASS [   1.750s] (274/563) jackdaw::stage remote_placement::a_selected_model_drops_onto_the_ground_and_one_undo_lifts_it_back
+        PASS [   2.407s] (275/563) jackdaw::stage remote_placement::a_scene_finds_its_prefab_from_a_directory_the_editor_was_not_launched_in
+        PASS [   3.243s] (276/563) jackdaw::stage remote_placement::a_scene_naming_a_prefab_by_an_absolute_path_is_not_saved_over
+        PASS [   3.907s] (277/563) jackdaw::stage remote_placement::a_scene_in_a_folder_spells_its_prefab_source_as_the_zone_beside_it_does
+        PASS [   1.527s] (278/563) jackdaw::stage remote_placement::an_editor_entity_answers_to_no_id
+        PASS [   2.371s] (279/563) jackdaw::stage remote_placement::an_entity_under_a_moved_parent_drops_to_the_ground_in_world_space
+        PASS [   3.025s] (280/563) jackdaw::stage remote_placement::an_instance_lands_under_the_parent_it_names
+        PASS [   3.568s] (281/563) jackdaw::stage remote_placement::an_instance_whose_parent_is_not_in_the_document_stands_where_it_was_placed
+        PASS [   5.857s] (282/563) jackdaw::stage remote_placement::an_instance_that_inherited_nothing_is_selected_by_the_label_its_row_shows
+        PASS [   2.681s] (283/563) jackdaw::stage remote_placement::an_instance_with_no_parent_joins_the_scene_root
+        PASS [   7.112s] (284/563) jackdaw::stage remote_placement::an_instance_that_inherited_nothing_leaves_with_the_scene_that_held_it
+        PASS [   1.543s] (285/563) jackdaw::stage remote_placement::dropping_a_selection_leaves_what_has_no_ground_under_it_where_it_stands
+        PASS [   5.661s] (286/563) jackdaw::stage remote_placement::an_instance_whose_prefab_is_missing_keeps_its_row_and_its_reference
+        PASS [   2.831s] (287/563) jackdaw::stage remote_placement::deleting_by_id_takes_one_namesake_and_leaves_the_other
+        PASS [   1.619s] (288/563) jackdaw::stage remote_placement::placing_an_instance_of_a_prefab_that_is_not_there_tells_the_caller
+        PASS [   2.907s] (289/563) jackdaw::stage remote_placement::reopening_a_scene_rereads_the_file_and_keeps_the_selection_by_name
+        PASS [   2.918s] (290/563) jackdaw::stage remote_placement::reopening_a_scene_holding_unsaved_edits_does_not_reread_it
+        PASS [   2.704s] (291/563) jackdaw::stage remote_placement::reopening_a_scene_the_file_has_moved_on_from_rereads_it
+        PASS [   2.315s] (292/563) jackdaw::stage remote_placement::selecting_by_id_tells_two_entities_of_one_name_apart
+        PASS [   6.781s] (293/563) jackdaw::stage remote_placement::opening_a_scene_whose_prefab_is_gone_tells_the_caller_which_file
+        PASS [   1.601s] (294/563) jackdaw::stage remote_placement::the_ground_under_a_point_follows_the_terrain_that_holds_it
+        PASS [   2.995s] (295/563) jackdaw::stage remote_placement::reparenting_by_id_moves_the_namesake_that_was_named
+        PASS [   1.566s] (296/563) jackdaw::stage remote_placement::the_height_under_a_point_is_the_ground_there_and_nothing_off_the_terrain
+        PASS [   3.111s] (297/563) jackdaw::stage remote_placement::undoing_a_group_added_before_a_prefab_spawn_takes_it_back_without_panicking
+        PASS [   3.128s] (298/563) jackdaw::stage save_before_play::an_edited_scene_never_saved_is_not_played_and_says_why
+        PASS [   3.513s] (299/563) jackdaw::stage save_before_play::play_saves_the_edited_scene_before_the_game_starts
+        PASS [   7.341s] (300/563) jackdaw::stage remote_placement::the_scene_tree_names_an_instance_that_inherited_nothing_after_its_file
+        PASS [   3.562s] (301/563) jackdaw::stage save_before_play::with_save_before_play_off_play_leaves_the_file_alone
+        PASS [   4.235s] (302/563) jackdaw::stage scene_environment::a_camera_the_environment_dresses_saves_as_it_was_authored
+        PASS [   2.964s] (303/563) jackdaw::stage scene_environment::a_scene_saved_with_an_environment_reloads_with_it
+        PASS [   3.689s] (304/563) jackdaw::stage scene_environment::the_environment_operator_sets_fields_by_path_and_undo_puts_them_back
+        PASS [   3.691s] (305/563) jackdaw::stage scene_environment::the_environment_operator_refuses_a_field_it_does_not_have
+        PASS [   3.883s] (306/563) jackdaw::stage scene_wind::a_scene_with_per_layer_wind_loads_with_a_wind_that_reproduces_it
+        PASS [   4.209s] (307/563) jackdaw::stage scene_wind::the_scene_wind_the_render_side_reads_is_still_until_a_scene_holds_one
+        PASS [   1.732s] (308/563) jackdaw::stage selection_undo::selecting_something_is_not_an_edit
+        PASS [   2.079s] (309/563) jackdaw::stage selection_undo::undo_stands_down_while_shift_is_held
+        PASS [   3.302s] (310/563) jackdaw::stage scene_wind::the_wind_operator_sets_the_scenes_wind_and_undo_puts_it_back
+        PASS [   3.906s] (311/563) jackdaw::stage scene_wind::two_layers_that_blew_apart_come_back_under_one_wind
+        PASS [   1.713s] (312/563) jackdaw::stage selection_undo::undoing_a_delete_selects_the_node_it_puts_back
+        PASS [   1.538s] (313/563) jackdaw::stage selection_undo::undoing_a_drag_keeps_the_selection_it_was_dragged_with
+        PASS [   1.989s] (314/563) jackdaw::stage selection_undo::undoing_a_group_selects_what_was_grouped
+        PASS [   1.869s] (315/563) jackdaw::stage sprite_drop::a_drop_and_sprite_add_make_the_same_entity
+        PASS [   1.875s] (316/563) jackdaw::stage sprite_drop::a_drop_off_the_stage_adds_nothing
+        PASS [   1.869s] (317/563) jackdaw::stage sprite_drop::a_drop_on_a_world_scene_adds_one_sprite_under_the_root_at_the_point
+        PASS [   1.839s] (318/563) jackdaw::stage sprite_drop::a_drop_the_sprite_add_gate_refuses_leaves_the_drag_alone
+        PASS [   1.791s] (319/563) jackdaw::stage sprite_drop::a_drop_with_the_grid_snap_on_lands_on_the_grid
+        PASS [   1.859s] (320/563) jackdaw::stage sprite_drop::sprite_add_with_no_position_lands_at_the_centre_of_the_view
+        PASS [   2.017s] (321/563) jackdaw::stage sprite_gizmo::a_body_drag_moves_a_sprite_whose_selected_group_is_no_sprite
+        PASS [   2.111s] (322/563) jackdaw::stage sprite_gizmo::a_body_drag_moves_the_selection_by_the_world_delta
+        PASS [   1.979s] (323/563) jackdaw::stage sprite_gizmo::a_click_on_one_of_several_selected_sprites_narrows_to_it
+        PASS [   1.884s] (324/563) jackdaw::stage sprite_gizmo::a_jittery_click_still_narrows_and_records_nothing
+        PASS [   1.662s] (325/563) jackdaw::stage sprite_gizmo::a_move_takes_a_selection_whose_primary_image_never_loaded
+        PASS [   1.759s] (326/563) jackdaw::stage sprite_gizmo::a_move_takes_a_selection_whose_primary_is_no_sprite
+        PASS [   1.815s] (327/563) jackdaw::stage sprite_gizmo::a_nudge_moves_a_selected_parent_and_child_once
+        PASS [   1.824s] (328/563) jackdaw::stage sprite_gizmo::a_nudge_steps_in_the_world_through_a_turned_parent
+        PASS [   1.905s] (329/563) jackdaw::stage sprite_gizmo::a_reload_mid_drag_forgets_the_drag
+        PASS [   1.829s] (330/563) jackdaw::stage sprite_gizmo::a_rotate_drag_turns_the_sprite_about_its_anchor
+        PASS [   1.888s] (331/563) jackdaw::stage sprite_gizmo::a_rotate_follows_the_pointer_under_a_mirrored_parent
+        PASS [   1.794s] (332/563) jackdaw::stage sprite_gizmo::a_scale_drag_holds_the_opposite_edge
+        PASS [   2.989s] (333/563) jackdaw::stage sprite_gizmo::a_saved_and_reopened_scene_keeps_the_dragged_transform
+        PASS [   2.252s] (334/563) jackdaw::stage sprite_gizmo::a_scale_never_reaches_zero_and_flips_past_it
+        PASS [   2.224s] (335/563) jackdaw::stage sprite_gizmo::a_tool_key_mid_drag_neither_switches_nor_strands_the_drag
+        PASS [   1.805s] (336/563) jackdaw::stage sprite_gizmo::an_authored_mesh2d_still_saves
+        PASS [   2.281s] (337/563) jackdaw::stage sprite_gizmo::ctrl_lands_the_rotation_itself_on_an_increment
+        PASS [   2.316s] (338/563) jackdaw::stage sprite_gizmo::ctrl_steps_only_the_axes_a_scale_handle_drives
+        PASS [   1.981s] (339/563) jackdaw::stage sprite_gizmo::ctrl_turns_in_rotate_increments
+        PASS [   2.148s] (340/563) jackdaw::stage sprite_gizmo::escape_mid_drag_restores_and_records_nothing
+        PASS [   1.408s] (341/563) jackdaw::stage sprite_gizmo::escape_with_no_drag_still_clears_the_selection
+        PASS [   2.288s] (342/563) jackdaw::stage sprite_gizmo::rotate_and_scale_take_the_whole_selection_about_the_primary
+        PASS [   2.246s] (343/563) jackdaw::stage sprite_gizmo::shift_and_ctrl_step_the_uniform_factor_and_keep_proportions
+        PASS [   1.504s] (344/563) jackdaw::stage sprite_gizmo::the_3d_gizmo_draws_on_a_layer_the_2d_view_never_renders
+        PASS [   2.520s] (345/563) jackdaw::stage sprite_gizmo::shift_scales_uniformly_and_ctrl_in_increments
+        PASS [   1.621s] (346/563) jackdaw::stage sprite_gizmo::the_arrows_nudge_a_sprite_along_world_y_not_z
+        PASS [   2.173s] (347/563) jackdaw::stage sprite_gizmo::the_axis_handles_keep_to_their_axis
+        PASS [   2.187s] (348/563) jackdaw::stage sprite_gizmo::the_page_keys_leave_a_sprite_where_it_is
+        PASS [   1.986s] (349/563) jackdaw::stage sprite_gizmo::the_tools_are_available_on_a_2d_world_and_refused_on_a_ui_canvas
+        PASS [   1.642s] (350/563) jackdaw::stage sprite_gizmo::the_tools_are_refused_on_a_2d_panel_that_is_playing
+        PASS [   1.990s] (351/563) jackdaw::stage sprite_gizmo::undo_mid_drag_cancels_the_drag_first
+        PASS [   2.082s] (352/563) jackdaw::stage sprite_picking::a_drag_starts_no_band_and_keeps_the_selection
+        PASS [   2.105s] (353/563) jackdaw::stage sprite_picking::a_miss_clears_and_modifiers_extend_or_toggle
+        PASS [   1.716s] (354/563) jackdaw::stage sprite_picking::a_scale_factor_of_two_keeps_picking_and_sizes_in_step
+        PASS [   1.515s] (355/563) jackdaw::stage sprite_picking::a_tie_on_z_goes_to_the_later_sprite_in_the_document
+        PASS [   1.620s] (356/563) jackdaw::stage sprite_picking::a_transparent_texel_is_clicked_through
+        PASS [   1.870s] (357/563) jackdaw::stage sprite_picking::a_world_click_selects_the_sprite_by_its_anchor
+        PASS [   2.282s] (358/563) jackdaw::stage sprite_picking::each_selected_sprite_gets_one_outline_on_its_transformed_rect
+        PASS [   1.981s] (359/563) jackdaw::stage sprite_picking::hidden_editor_and_unloaded_sprites_do_not_pick
+        PASS [   1.923s] (360/563) jackdaw::stage sprite_picking::rotation_and_scale_are_respected
+        PASS [   1.529s] (361/563) jackdaw::stage sprite_picking::the_render_image_matches_the_stage_in_a_world_scene
+        PASS [   1.657s] (362/563) jackdaw::stage sprite_picking::the_topmost_sprite_wins
+        PASS [   1.974s] (363/563) jackdaw::stage sprite_snap::a_drag_lands_on_a_neighbours_edge_and_shows_where
+        PASS [   1.964s] (364/563) jackdaw::stage sprite_snap::a_drag_lands_the_anchor_on_a_whole_pixel
+        PASS [   2.066s] (365/563) jackdaw::stage sprite_snap::a_drag_lands_the_sprite_on_a_grid_line
+        PASS [   1.910s] (366/563) jackdaw::stage sprite_snap::a_scale_handle_lands_its_edge_on_a_neighbour
+        PASS [   1.730s] (367/563) jackdaw::stage sprite_snap::a_scale_whose_edge_cannot_reach_the_line_does_not_land
+        PASS [   1.896s] (368/563) jackdaw::stage sprite_snap::an_axis_handle_snaps_only_its_own_axis
+        PASS [   2.757s] (369/563) jackdaw::stage sprite_snap::a_sheared_sprite_scales_without_the_canvas_snap
+        PASS [   2.230s] (370/563) jackdaw::stage sprite_snap::an_odd_sized_sprite_keeps_its_edges_on_whole_pixels
+        PASS [   2.080s] (371/563) jackdaw::stage sprite_snap::ctrl_suspends_snapping_for_a_move
+        PASS [   1.596s] (372/563) jackdaw::stage sprite_snap::the_grid_still_snaps_a_sprite_of_unknown_size
+        PASS [   1.608s] (373/563) jackdaw::stage sprite_snap::the_snap_menu_offers_the_world_scenes_kinds
+        PASS [   1.923s] (374/563) jackdaw::stage sprite_snap::the_snap_reference_is_the_primary_even_when_its_parent_carries_it
+        PASS [   1.966s] (375/563) jackdaw::stage sprite_snap::with_snapping_off_nothing_snaps
+        PASS [   1.914s] (376/563) jackdaw::stage synthetic_input::a_canvas_position_lands_where_the_panel_is_showing_it
+        PASS [   1.929s] (377/563) jackdaw::stage synthetic_input::a_chord_typed_into_the_add_entity_search_runs_no_operator
+        PASS [   2.011s] (378/563) jackdaw::stage synthetic_input::a_chord_typed_into_the_canvas_entry_runs_no_operator
+        PASS [   1.856s] (379/563) jackdaw::stage synthetic_input::a_click_draws_the_same_selection_chrome_an_operator_does
+        PASS [   1.849s] (380/563) jackdaw::stage synthetic_input::a_cold_double_click_opens_the_in_place_editor
+        PASS [   1.746s] (381/563) jackdaw::stage synthetic_input::a_double_click_on_a_selected_small_label_opens_the_entry
+        PASS [   1.628s] (382/563) jackdaw::stage synthetic_input::a_double_click_on_an_unselected_small_label_opens_the_entry
+        PASS [   1.892s] (383/563) jackdaw::stage synthetic_input::a_drag_moves_the_node_it_started_on_and_records_one_entry
+        PASS [   1.867s] (384/563) jackdaw::stage synthetic_input::a_key_reaches_the_editors_own_chords
+        PASS [   1.866s] (385/563) jackdaw::stage synthetic_input::a_letter_arms_no_axis_while_the_canvas_is_in_front
+        PASS [   1.737s] (386/563) jackdaw::stage synthetic_input::a_move_hovers_the_node_it_stops_over
+        PASS [   1.816s] (387/563) jackdaw::stage synthetic_input::a_rest_lets_frames_pass_without_moving_the_pointer
+        PASS [   1.810s] (388/563) jackdaw::stage synthetic_input::a_single_click_opens_no_entry
+        PASS [   1.856s] (389/563) jackdaw::stage synthetic_input::copy_and_paste_chords_work_from_the_keyboard
+        PASS [   1.858s] (390/563) jackdaw::stage synthetic_input::every_selected_node_is_outlined_and_the_primary_carries_the_handles
+        PASS [   1.693s] (391/563) jackdaw::stage synthetic_input::primary_arrow_up_reorders_from_the_keyboard
+        PASS [   1.840s] (392/563) jackdaw::stage synthetic_input::shift_extends_what_a_click_selected
+        PASS [   1.806s] (393/563) jackdaw::stage synthetic_input::the_input_operators_are_listed_but_never_bound
+        PASS [   1.819s] (394/563) jackdaw::stage synthetic_input::the_same_letter_still_arms_the_axis_away_from_the_canvas
+        PASS [   2.020s] (395/563) jackdaw::stage synthetic_input::typing_into_a_freshly_opened_entry_replaces_the_label
+        PASS [   2.063s] (396/563) jackdaw::stage synthetic_input::typing_reaches_the_entry_the_canvas_opened
+        PASS [   1.940s] (397/563) jackdaw::stage ui_align::a_member_its_parent_lays_out_refuses_the_whole_press
+        PASS [   1.916s] (398/563) jackdaw::stage ui_align::an_alignment_leaves_a_locked_member_where_it_is
+        PASS [   1.657s] (399/563) jackdaw::stage ui_align::distributing_does_not_count_a_locked_member
+        PASS [   1.540s] (400/563) jackdaw::stage ui_align::distributing_evens_the_gaps_and_leaves_the_ends_alone
+        PASS [   1.699s] (401/563) jackdaw::stage ui_align::distributing_holds_the_member_that_reaches_furthest
+        PASS [   1.769s] (402/563) jackdaw::stage ui_align::distributing_the_other_way_moves_the_other_axis
+        PASS [   1.804s] (403/563) jackdaw::stage ui_align::distributing_two_nodes_refuses_rather_than_doing_nothing_quietly
+        PASS [   1.807s] (404/563) jackdaw::stage ui_align::one_alignment_is_one_history_entry_that_undoes
+        PASS [   1.948s] (405/563) jackdaw::stage ui_align::one_selected_node_is_not_an_alignment
+        PASS [   1.665s] (406/563) jackdaw::stage ui_asset_drop::a_canvas_drop_saves_where_it_landed
+        PASS [   1.599s] (407/563) jackdaw::stage ui_asset_drop::a_drop_on_a_container_puts_an_image_in_it
+        PASS [   1.665s] (408/563) jackdaw::stage ui_asset_drop::a_drop_on_an_image_node_sets_its_texture
+        PASS [   1.796s] (409/563) jackdaw::stage ui_asset_drop::a_drop_on_bare_canvas_places_an_image_where_it_landed
+        PASS [   1.527s] (410/563) jackdaw::stage ui_asset_drop::a_drop_records_the_project_relative_path_of_the_file_it_carried
+        PASS [   5.817s] (411/563) jackdaw::stage ui_align::each_alignment_lands_every_member_on_its_own_line
+        PASS [   1.705s] (412/563) jackdaw::stage ui_asset_drop::redo_puts_a_dropped_image_back_where_it_landed
+        PASS [   1.974s] (413/563) jackdaw::stage ui_drag_readout::a_move_states_where_the_node_is
+        PASS [   1.845s] (414/563) jackdaw::stage ui_drag_readout::a_resize_states_the_size_instead
+        PASS [   1.839s] (415/563) jackdaw::stage ui_drag_readout::the_spacing_line_reads_negative_once_the_nodes_overlap
+        PASS [   1.842s] (416/563) jackdaw::stage ui_drag_readout::the_spacing_line_states_the_gap_to_the_nearest_sibling_edge
+        PASS [   1.739s] (417/563) jackdaw::stage ui_grouping::a_group_is_one_entry_and_undo_puts_the_members_back
+        PASS [   1.770s] (418/563) jackdaw::stage ui_grouping::a_group_wraps_the_selection_at_its_bounding_rect
+        PASS [   1.800s] (419/563) jackdaw::stage ui_grouping::a_mixed_selection_places_one_member_and_flows_the_other
+        PASS [   1.812s] (420/563) jackdaw::stage ui_grouping::group_undo_puts_the_members_back_around_a_sibling_that_was_never_selected
+        PASS [   1.790s] (421/563) jackdaw::stage ui_grouping::grouping_a_rotated_node_is_refused_out_loud
+        PASS [   1.772s] (422/563) jackdaw::stage ui_grouping::grouping_a_translated_member_is_refused_out_loud
+        PASS [   1.782s] (423/563) jackdaw::stage ui_grouping::grouping_across_two_parents_is_refused_out_loud
+        PASS [   1.777s] (424/563) jackdaw::stage ui_grouping::grouping_refuses_outside_a_ui_scene
+        PASS [   1.846s] (425/563) jackdaw::stage ui_grouping::grouping_two_palette_buttons_moves_them_in_to_be_laid_out_again
+        PASS [   1.822s] (426/563) jackdaw::stage ui_grouping::neither_operator_touches_the_scene_root
+        PASS [   1.800s] (427/563) jackdaw::stage ui_grouping::undoing_a_group_selects_the_members_again
+        PASS [   1.815s] (428/563) jackdaw::stage ui_grouping::undoing_an_ungroup_selects_the_container_again
+        PASS [   1.816s] (429/563) jackdaw::stage ui_grouping::ungroup_carries_out_a_child_that_is_not_a_node
+        PASS [   1.808s] (430/563) jackdaw::stage ui_grouping::ungroup_lifts_the_children_into_the_containers_place
+        PASS [   1.835s] (431/563) jackdaw::stage ui_grouping::ungrouping_an_empty_node_is_refused_out_loud
+        PASS [   1.706s] (432/563) jackdaw::stage ui_layout_presets::a_preset_is_one_undo_entry
+        PASS [   2.570s] (433/563) jackdaw::stage ui_layout_presets::a_document_whose_root_states_no_size_opens_with_the_canvas_sized_root
+        PASS [   2.051s] (434/563) jackdaw::stage ui_layout_presets::a_preset_places_against_whatever_reference_the_scene_states
+        PASS [   1.994s] (435/563) jackdaw::stage ui_layout_presets::a_preset_that_places_a_flowed_child_absolutely_says_so
+        PASS [   1.602s] (436/563) jackdaw::stage ui_layout_presets::an_anchor_captures_a_padded_content_box_at_its_own_size_on_a_hidpi_screen
+        PASS [   1.684s] (437/563) jackdaw::stage ui_layout_presets::an_unknown_preset_is_refused
+        PASS [   1.741s] (438/563) jackdaw::stage ui_layout_presets::bottom_right_puts_the_node_in_the_far_corner_of_the_canvas
+        PASS [   1.798s] (439/563) jackdaw::stage ui_layout_presets::center_in_flow_promotes_nothing_and_says_nothing
+        PASS [   1.791s] (440/563) jackdaw::stage ui_layout_presets::every_preset_writes_the_whole_placement
+        PASS [   1.817s] (441/563) jackdaw::stage ui_layout_presets::full_rect_drops_the_size_and_the_next_anchor_captures_the_stretch
+        PASS [   1.797s] (442/563) jackdaw::stage ui_layout_presets::middle_center_centres_an_auto_sized_panel_instead_of_stretching_it
+        PASS [   1.765s] (443/563) jackdaw::stage ui_layout_presets::the_card_row_offers_every_preset_and_dispatches_it
+        PASS [   2.226s] (444/563) jackdaw::stage ui_lock::a_lock_survives_a_save_and_a_reload
+        PASS [   1.796s] (445/563) jackdaw::stage ui_lock::a_locked_node_does_not_swallow_the_press_it_declines
+        PASS [   1.954s] (446/563) jackdaw::stage ui_lock::a_nudge_leaves_a_locked_node_where_it_is
+        PASS [   1.953s] (447/563) jackdaw::stage ui_lock::a_press_over_a_locked_node_reaches_what_is_under_it
+        PASS [   1.579s] (448/563) jackdaw::stage ui_lock::an_unrelated_undo_leaves_the_lock_alone
+        PASS [   1.964s] (449/563) jackdaw::stage ui_lock::locking_a_container_leaves_its_children_pickable
+        PASS [   1.707s] (450/563) jackdaw::stage ui_lock::the_lock_control_says_what_a_lock_lets_through
+        PASS [   1.787s] (451/563) jackdaw::stage ui_lock::the_outliner_still_selects_a_locked_node
+        PASS [   1.810s] (452/563) jackdaw::stage ui_lock::the_row_shows_a_closed_padlock_once_the_node_is_locked
+        PASS [   1.815s] (453/563) jackdaw::stage ui_lock::undo_after_locking_unlocks
+        PASS [   2.007s] (454/563) jackdaw::stage ui_marquee::a_band_takes_every_node_it_is_pulled_across
+        PASS [   1.902s] (455/563) jackdaw::stage ui_marquee::a_band_that_crosses_nothing_empties_the_selection
+        PASS [   1.784s] (456/563) jackdaw::stage ui_marquee::a_drag_on_the_backdrops_own_outline_is_still_a_band
+        PASS [   1.775s] (457/563) jackdaw::stage ui_marquee::a_drag_that_starts_on_a_node_moves_it_instead_of_banding
+        PASS [   1.729s] (458/563) jackdaw::stage ui_marquee::a_fully_locked_scene_still_pulls_out_a_band
+        PASS [   1.892s] (459/563) jackdaw::stage ui_marquee::a_locked_background_lets_a_band_be_pulled_out_over_it
+        PASS [   1.863s] (460/563) jackdaw::stage ui_marquee::escape_drops_the_band_and_leaves_the_selection_alone
+        PASS [   1.884s] (461/563) jackdaw::stage ui_marquee::shift_adds_the_bands_catch_and_ctrl_toggles_it
+        PASS [   1.816s] (462/563) jackdaw::stage ui_marquee::the_band_is_drawn_over_the_stage_where_the_drag_put_it
+        PASS [   1.676s] (463/563) jackdaw::stage ui_stage_manipulation::a_canvas_in_interact_mode_does_not_nudge
+        PASS [   1.721s] (464/563) jackdaw::stage ui_stage_manipulation::a_click_that_never_moved_records_nothing
+        PASS [   1.762s] (465/563) jackdaw::stage ui_stage_manipulation::a_container_and_its_child_selected_together_move_the_child_once
+        PASS [   1.835s] (466/563) jackdaw::stage ui_stage_manipulation::a_drag_moves_every_selected_node_and_undoes_as_one
+        PASS [   2.496s] (467/563) jackdaw::stage ui_stage_manipulation::a_drag_lands_on_a_guide_when_that_kind_is_on
+        PASS [   1.936s] (468/563) jackdaw::stage ui_stage_manipulation::a_drag_on_a_default_canvas_already_snaps
+        PASS [   3.305s] (469/563) jackdaw::stage ui_stage_manipulation::a_drag_edits_the_offsets_the_node_was_authored_with
+        PASS [   1.418s] (470/563) jackdaw::stage ui_stage_manipulation::a_drag_that_snapped_nothing_draws_nothing
+        PASS [   1.839s] (471/563) jackdaw::stage ui_stage_manipulation::a_focused_text_field_keeps_the_arrow_keys
+        PASS [   2.410s] (472/563) jackdaw::stage ui_stage_manipulation::a_dragged_guide_lands_on_a_whole_pixel_or_on_the_grid
+        PASS [   2.416s] (473/563) jackdaw::stage ui_stage_manipulation::a_guide_cannot_be_dragged_in_interact_mode
+        PASS [   2.028s] (474/563) jackdaw::stage ui_stage_manipulation::a_guide_drag_reads_the_panned_and_zoomed_canvas
+        PASS [   1.525s] (475/563) jackdaw::stage ui_stage_manipulation::a_guide_drag_that_did_not_move_records_nothing
+        PASS [   1.683s] (476/563) jackdaw::stage ui_stage_manipulation::a_guide_over_a_node_is_dragged_from_the_line
+        PASS [   1.827s] (477/563) jackdaw::stage ui_stage_manipulation::a_move_gesture_is_one_undoable_entry
+        PASS [   2.534s] (478/563) jackdaw::stage ui_stage_manipulation::a_kind_switched_off_frees_the_edge_it_governs
+        PASS [   2.001s] (479/563) jackdaw::stage ui_stage_manipulation::a_node_under_a_guide_can_still_be_picked_up
+        PASS [   2.687s] (480/563) jackdaw::stage ui_stage_manipulation::a_move_lands_on_a_sibling_centre_when_that_kind_is_on
+        PASS [   1.756s] (481/563) jackdaw::stage ui_stage_manipulation::a_nudge_ignores_the_snap_kinds
+        PASS [   1.891s] (482/563) jackdaw::stage ui_stage_manipulation::a_nudge_of_a_flowed_child_is_refused_with_a_notice
+        PASS [   1.562s] (483/563) jackdaw::stage ui_stage_manipulation::a_nudged_node_keeps_its_authored_offsets
+        PASS [   1.764s] (484/563) jackdaw::stage ui_stage_manipulation::a_percent_anchored_node_landing_on_a_third_writes_the_third
+        PASS [   1.962s] (485/563) jackdaw::stage ui_stage_manipulation::a_press_on_a_selected_containers_child_selects_the_child
+        PASS [   0.039s] (486/563) jackdaw::stage ui_stage_manipulation::a_rect_is_written_back_through_the_scheme_it_was_read_from
+        PASS [   1.689s] (487/563) jackdaw::stage ui_stage_manipulation::a_press_on_the_frame_child_selects_through_propagation
+        PASS [   3.412s] (488/563) jackdaw::stage ui_stage_manipulation::a_percent_anchored_node_landing_on_a_quarter_line_writes_the_exact_percent
+        PASS [   1.722s] (489/563) jackdaw::stage ui_stage_manipulation::a_press_on_the_selected_nodes_own_body_still_moves_it
+        PASS [   1.584s] (490/563) jackdaw::stage ui_stage_manipulation::a_resize_dragged_past_the_far_edge_stops_at_it
+        PASS [   1.889s] (491/563) jackdaw::stage ui_stage_manipulation::a_resize_of_a_far_pinned_node_leaves_the_far_offset_alone
+        PASS [   1.837s] (492/563) jackdaw::stage ui_stage_manipulation::a_resize_sizes_a_flowed_child_and_a_move_promotes_it
+        PASS [   1.760s] (493/563) jackdaw::stage ui_stage_manipulation::a_small_nodes_handles_ring_it_rather_than_cover_it
+        PASS [   2.559s] (494/563) jackdaw::stage ui_stage_manipulation::a_sibling_edge_beats_a_percent_line_the_same_distance_away
+        PASS [   2.700s] (495/563) jackdaw::stage ui_stage_manipulation::a_snapped_drag_draws_the_line_it_landed_on_and_lets_go_of_it
+        PASS [   1.665s] (496/563) jackdaw::stage ui_stage_manipulation::a_snapped_multi_move_keeps_the_selection_arranged
+        PASS [   2.866s] (497/563) jackdaw::stage ui_stage_manipulation::a_snapped_gesture_lands_on_the_canvas_pixel_grid
+        PASS [   0.037s] (498/563) jackdaw::stage ui_stage_manipulation::a_unit_with_no_basis_is_left_as_it_was
+        PASS [   0.037s] (499/563) jackdaw::stage ui_stage_manipulation::a_wide_ruler_is_marked_all_the_way_to_its_far_end
+        PASS [   2.231s] (500/563) jackdaw::stage ui_stage_manipulation::a_snapped_move_lands_on_a_sibling_edge_unless_ctrl_says_otherwise
+        PASS [   1.389s] (501/563) jackdaw::stage ui_stage_manipulation::a_stage_press_never_reaches_the_dock
+        PASS [   1.551s] (502/563) jackdaw::stage ui_stage_manipulation::a_transform_selection_still_nudges_in_world_units
+        PASS [   1.954s] (503/563) jackdaw::stage ui_stage_manipulation::a_zoom_mid_drag_moves_the_drag_onto_the_new_scale
+        PASS [   0.038s] (504/563) jackdaw::stage ui_stage_manipulation::authored_pixels_scale_into_the_stage_node_through_both_factors
+        PASS [   2.190s] (505/563) jackdaw::stage ui_stage_manipulation::a_zoomed_and_panned_view_still_selects_what_the_cursor_is_over
+        PASS [   2.068s] (506/563) jackdaw::stage ui_stage_manipulation::an_undo_during_a_guide_drag_puts_the_guides_back
+        PASS [   1.748s] (507/563) jackdaw::stage ui_stage_manipulation::an_unmeasured_node_holds_the_outline_rather_than_dropping_it
+        PASS [   1.731s] (508/563) jackdaw::stage ui_stage_manipulation::clicking_the_stage_selects_and_outlines_the_authored_node
+        PASS [   2.494s] (509/563) jackdaw::stage ui_stage_manipulation::ctrl_selects_at_the_press_and_inverts_the_magnet_during_the_drag
+        PASS [   2.000s] (510/563) jackdaw::stage ui_stage_manipulation::dragging_a_guide_moves_it_and_dragging_it_back_onto_the_ruler_removes_it
+        PASS [   2.519s] (511/563) jackdaw::stage ui_stage_manipulation::ctrl_turns_the_grid_and_the_edges_on_together
+        PASS [   1.783s] (512/563) jackdaw::stage ui_stage_manipulation::dragging_off_a_ruler_creates_a_guide_where_the_pointer_stops
+        PASS [   4.154s] (513/563) jackdaw::stage ui_stage_manipulation::ctrl_still_inverts_the_kinds_together_with_the_grid
+        PASS [   1.489s] (514/563) jackdaw::stage ui_stage_manipulation::each_guide_is_marked_on_its_ruler
+        PASS [   1.983s] (515/563) jackdaw::stage ui_stage_manipulation::escape_abandons_a_gesture_in_progress
+        PASS [   1.683s] (516/563) jackdaw::stage ui_stage_manipulation::escape_abandons_a_guide_drag
+        PASS [   1.804s] (517/563) jackdaw::stage ui_stage_manipulation::every_panel_showing_the_scene_draws_its_guides
+        PASS [   2.630s] (518/563) jackdaw::stage ui_stage_manipulation::offsets_inside_a_bordered_parent_are_measured_from_the_padding_box
+        PASS [   1.660s] (519/563) jackdaw::stage ui_stage_manipulation::panning_moves_a_rulers_marks_rather_than_making_them_again
+        PASS [   3.370s] (520/563) jackdaw::stage ui_stage_manipulation::other_nodes_reach_across_the_tree_only_when_asked
+        PASS [   2.647s] (521/563) jackdaw::stage ui_stage_manipulation::pixel_snap_off_keeps_the_fraction_a_zoomed_drag_produced
+        PASS [   1.561s] (522/563) jackdaw::stage ui_stage_manipulation::redo_restores_the_rect_a_canvas_drag_wrote
+        PASS [   1.638s] (523/563) jackdaw::stage ui_stage_manipulation::ruler_labels_count_every_hundred_authored_pixels_at_the_zoom
+        PASS [   1.396s] (524/563) jackdaw::stage ui_stage_manipulation::rulers_sit_outside_the_area_the_stage_is_measured_against
+        PASS [   1.765s] (525/563) jackdaw::stage ui_stage_manipulation::shift_adds_and_ctrl_toggles_on_the_canvas
+        PASS [   2.120s] (526/563) jackdaw::stage ui_stage_manipulation::show_rulers_off_gives_the_area_the_gutter_back
+        PASS [   2.312s] (527/563) jackdaw::stage ui_stage_manipulation::the_arrow_keys_nudge_the_selected_nodes
+        PASS [   1.892s] (528/563) jackdaw::stage ui_stage_manipulation::the_canvas_and_the_outliner_share_one_selection
+        PASS [   1.715s] (529/563) jackdaw::stage ui_stage_manipulation::the_cursor_outlines_what_a_press_would_select
+        PASS [   1.778s] (530/563) jackdaw::stage ui_stage_manipulation::the_gesture_records_the_winning_line
+        PASS [   1.765s] (531/563) jackdaw::stage ui_stage_manipulation::the_outline_goes_away_when_the_pointer_leaves_the_stage
+        PASS [   2.499s] (532/563) jackdaw::stage ui_stage_manipulation::the_landing_line_is_told_apart_from_the_outline_and_the_guides
+        PASS [   0.038s] (533/563) jackdaw::stage ui_stage_manipulation::the_stage_and_the_authored_canvas_round_trip
+        PASS [   2.004s] (534/563) jackdaw::stage ui_stage_manipulation::the_outline_stands_down_over_every_selected_node
+        PASS [   0.039s] (535/563) jackdaw::stage ui_stage_manipulation::the_topmost_hit_is_the_last_painted_rect
+        PASS [   1.688s] (536/563) jackdaw::stage ui_stage_manipulation::the_selection_chrome_reads_against_content_of_any_colour
+        PASS [   1.646s] (537/563) jackdaw::stage ui_stage_manipulation::the_top_left_handle_moves_the_offset_and_the_size_together
+        PASS [   1.860s] (538/563) jackdaw::stage ui_stage_manipulation::the_view_does_not_move_the_authored_scene_under_the_cursor
+        PASS [   2.408s] (539/563) jackdaw::stage ui_stage_manipulation::the_zoom_operator_frames_the_panel_it_names
+        PASS [   1.553s] (540/563) jackdaw::stage ui_text_edit::a_commit_writes_one_node_and_leaves_the_selection_as_it_was
+        PASS [   3.554s] (541/563) jackdaw::stage ui_stage_manipulation::the_snap_radius_is_the_same_on_screen_at_any_zoom
+        PASS [   1.673s] (542/563) jackdaw::stage ui_text_edit::a_double_click_on_a_node_with_no_text_opens_nothing
+        PASS [   1.552s] (543/563) jackdaw::stage ui_text_edit::a_double_click_on_text_opens_an_entry_over_it
+        PASS [   1.775s] (544/563) jackdaw::stage ui_text_edit::enter_commits_the_text_as_one_entry_that_undoes
+        PASS [   2.183s] (545/563) jackdaw::stage ui_text_edit::escape_puts_the_entry_away_and_writes_nothing
+        PASS [   1.845s] (546/563) jackdaw::stage ui_text_edit::text_that_came_back_unchanged_records_nothing
+        PASS [   1.793s] (547/563) jackdaw::stage ui_text_edit::the_entry_follows_the_canvas_it_is_drawn_on
+        PASS [   3.443s] (548/563) jackdaw::stage water::a_water_file_round_trips_through_save_and_load
+        PASS [   3.035s] (549/563) jackdaw::stage water::applying_water_replaces_the_meshs_material_component
+        PASS [   2.681s] (550/563) jackdaw::stage water::the_new_asset_list_offers_water
+        PASS [   3.134s] (551/563) jackdaw::stage water::the_cameras_take_a_depth_prepass_once_a_scene_holds_water
+        PASS [   2.100s] (552/563) jackdaw::stage world_guides::a_guide_pulled_off_the_ruler_lands_in_world_units_and_drops_back
+        PASS [   2.319s] (553/563) jackdaw::stage world_guides::a_ruler_guide_honours_the_grid_and_pixel_switches
+        PASS [   1.812s] (554/563) jackdaw::stage world_guides::a_ruler_mark_and_its_guide_line_coincide_on_a_fractional_stage
+        PASS [   2.520s] (555/563) jackdaw::stage world_guides::a_sprite_drag_lands_its_edge_on_a_guide_and_shows_where
+        PASS [   1.661s] (556/563) jackdaw::stage world_guides::a_ui_scenes_guides_never_snap_a_sprite_on_the_world_panel
+        PASS [   1.893s] (557/563) jackdaw::stage world_guides::an_anchor_only_move_still_lands_on_a_guide
+        PASS [   1.870s] (558/563) jackdaw::stage world_guides::each_panel_draws_the_guides_of_the_scene_it_shows
+        PASS [   3.502s] (559/563) jackdaw::stage world_guides::an_operator_guide_sits_on_the_2d_root_in_world_units_and_reopens
+        PASS [   1.865s] (560/563) jackdaw::stage world_guides::only_the_shown_world_roots_guides_snap
+        PASS [   2.561s] (561/563) jackdaw::stage world_guides::guides_switched_off_or_hidden_do_not_snap
+        PASS [   1.661s] (562/563) jackdaw::stage world_guides::operator_guide_edits_undo_one_at_a_time
+        PASS [   1.104s] (563/563) jackdaw::stage world_guides::the_rulers_read_world_units_with_y_up
+────────────
+     Summary [ 333.635s] 563 tests run: 563 passed, 0 skipped
+== EXIT=0 END 18:11:40

@@ -1,4 +1,5 @@
 pub(crate) mod add_header;
+pub(crate) mod anchor_presets;
 pub(crate) mod anim_diamond;
 mod animation_graph_card;
 pub(crate) mod asset_row;
@@ -134,6 +135,7 @@ impl Plugin for InspectorPlugin {
             .add_observer(brush_display::on_brush_face_text_commit)
             .add_observer(on_name_field_commit)
             .add_observer(anim_diamond::on_diamond_click)
+            .add_observer(anchor_presets::on_anchor_preset_change)
             .init_resource::<live_edit_dots::LiveEditMenuTarget>()
             .add_observer(live_edit_dots::on_live_edit_menu_action)
             .add_observer(on_category_strip_mount_added)
@@ -166,6 +168,7 @@ impl Plugin for InspectorPlugin {
                         node_card::paint_node_segments,
                         node_card::refresh_node_enum_combos,
                         node_card::refresh_node_optional_numbers,
+                        anchor_presets::paint_anchor_presets,
                         bindings_card::refresh_bindings_card_on_change,
                         definition_card::keep_unsaved_marker_in_step,
                         definition_card::keep_broken_marker_in_step,

@@ -1,0 +1,3 @@
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t21-sprite/t21-sprite
+QA: readiness gate: NEVER-READY
+QA: ABORT: Transform reads never became ready
