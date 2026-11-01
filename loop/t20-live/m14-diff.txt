@@ -1,0 +1,4 @@
+PURE_COUNT 9 INJECTED_COUNT 10
+ADDED ['assets/game-config.bsn']
+REMOVED []
+CHANGED ['assets/game.flow.json', 'assets/hud.bsn', 'assets/menu.bsn', 'assets/scene.bsn', 't20-game']

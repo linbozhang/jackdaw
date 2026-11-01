@@ -1,0 +1,21 @@
+dirty-2 health {"current":0.0,"max":100.0}
+dirty-2 pickups 2
+dirty-2 position {"rotation":[0.0,-0.003559752833098173,0.0,0.9999936819076538],"scale":[1.0,1.0,1.0],"translation":[2.695554733276367,0.8599998354911804,-0.02743726409971714]}
+dirty-2 props 0
+dirty-2 menubgm 
+dirty-2 ambient 
+dirty-2 runs {"jsonrpc":"2.0","id":21927,"result":{"value":{"paused":false,"runs_played":2,"unlock_note":""}}}
+dirty-2 health {"current":0.0,"max":100.0}
+dirty-2 pickups 2
+dirty-2 position {"rotation":[0.0,0.019007086753845215,0.0,0.9998193383216858],"scale":[1.0,1.0,1.0],"translation":[2.0550098419189453,0.8600014448165894,0.5553814768791199]}
+dirty-2 props 0
+dirty-2 menubgm 
+dirty-2 ambient 
+dirty-2 runs {"jsonrpc":"2.0","id":2919,"result":{"value":{"paused":false,"runs_played":2,"unlock_note":""}}}
+dirty-2 health {"current":0.0,"max":100.0}
+dirty-2 pickups 2
+dirty-2 position {"rotation":[0.0,0.021790312603116035,0.0,0.9997625350952148],"scale":[1.0,1.0,1.0],"translation":[2.0667054653167725,0.8600000143051147,0.5913726687431335]}
+dirty-2 props 0
+dirty-2 menubgm 
+dirty-2 ambient 
+dirty-2 runs {"jsonrpc":"2.0","id":8679,"result":{"value":{"paused":false,"runs_played":2,"unlock_note":""}}}

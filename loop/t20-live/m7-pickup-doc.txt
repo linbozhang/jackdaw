@@ -1,0 +1,19 @@
+    ]
+    --
+    #Empty
+    bevy_camera::visibility::Visibility::Inherited
+    jackdaw_scene_types::node_id::SceneNodeId(7320395146716281835)
+    bevy_transform::components::transform::Transform {
+        translation: glam::Vec3 {
+            x: -2.0,
+            y: 0.5,
+            z: 0.800000011920929,
+        },
+    }
+    t20_game::Pickup
+    jackdaw_avian_integration::AvianCollider(avian3d::collision::collider::constructor::ColliderConstructor::TrimeshFromMesh)
+    avian3d::collision::collider::Sensor
+    --
+    #"Audio Source"
+    bevy_audio::audio::AudioPlayer<bevy_audio::audio_source::AudioSource>("sounds/blip.wav")
+    bevy_camera::visibility::Visibility::Inherited

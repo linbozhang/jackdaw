@@ -1,0 +1,7 @@
+# EG8 red evidence: 2026-11-01 08:07:11
+# world.get_resources on State<t20_game::GameFlow> — the T1-proposed flow channel:
+bevy_ecs::state::state_res::State<t20_game::GameFlow> => {"jsonrpc":"2.0","id":1,"error":{"code":-23501,"message":"Unknown resource type: `bevy_ecs::state::state_res::State<t20_game::GameFlow>`"}}
+bevy_state::state::resources::State<t20_game::GameFlow> => {"jsonrpc":"2.0","id":1,"error":{"code":-23501,"message":"Unknown resource type: `bevy_state::state::resources::State<t20_game::GameFlow>`"}
+bevy_state::state::State<t20_game::GameFlow> => {"jsonrpc":"2.0","id":1,"error":{"code":-23501,"message":"Unknown resource type: `bevy_state::state::State<t20_game::GameFlow>`"}}
+# world.list_resources carries no State<t20_game::GameFlow> row:
+NO GameFlow row

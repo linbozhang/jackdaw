@@ -1,0 +1,21 @@
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t20-game
+export_wait: run advanced (idle -> 1793491003) and is ready
+M11_EXPORT_READY_PASS
+M14_MARKER_FILTER_PASS
+M14 diff: PURE_COUNT 9 INJECTED_COUNT 10 ADDED ['assets/game-config.bsn'] REMOVED [] CHANGED ['assets/game.flow.json', 'assets/hud.bsn', 'assets/menu.bsn', 'assets/scene.bsn', 't20-game'] 
+M14_MANIFEST_DIFF_PASS
+export: editor down for the staged legs
+walk_calibrate: move_speed -> 0.5; dx=0.1291 over 400ms -> 0.000323 u/ms
+M11: staged count=3 win blip=MISSED
+M11 staged: the HUD binding copy reads Orbs: 0
+M7_STAGED_PASS
+M5b: before kill -9: mirror=12 file=12
+M5b: after restart: mirror=12 file=12
+M8_STAGED_PASS
+M5B_KILL9_PERSIST_PASS
+M11_STAGED_WINLOOP_PASS
+warn-scan export: clean
+warn-scan staged: clean
+N13 report (export): panicked_at_lines=0 (events per the E3 note) | drain_game_events=0 cleanup_session_on_stop=0 other=0
+VERDICT_EXPORT: M11_EXPORT_READY=PASS M11_STAGED_WINLOOP=PASS M14_MANIFEST_DIFF=PASS M14_MARKER_FILTER=PASS M5B_KILL9_PERSIST=PASS M7_STAGED=PASS M8_STAGED=PASS 
+RESULTS: M11_EXPORT_READY=PASS M11_STAGED_WINLOOP=PASS M14_MANIFEST_DIFF=PASS M14_MARKER_FILTER=PASS M5B_KILL9_PERSIST=PASS M7_STAGED=PASS M8_STAGED=PASS 

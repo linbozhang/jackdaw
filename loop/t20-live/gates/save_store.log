@@ -1,0 +1,27 @@
+    Blocking waiting for file lock on build directory
+    Finished `test` profile [optimized + debuginfo] target(s) in 11.26s
+     Running tests/save_store.rs (target/debug/deps/save_store-dcab935eb08b1ba8)
+
+running 19 tests
+test a_missing_save_file_starts_fresh_quietly ... ok
+test a_missing_directory_is_a_quiet_nodir ... ok
+test an_older_save_without_a_migration_is_suppressed_too ... ok
+test a_stray_temp_file_is_never_taken_for_a_save ... ok
+test an_unwritable_directory_warns_and_the_game_keeps_running ... ok
+test a_registered_migration_upgrades_an_older_save ... ok
+test a_generic_save_store_needs_explicit_registration_to_be_reflect_reachable ... ok
+test every_corrupt_load_leaves_its_own_backup ... ok
+test a_save_survives_the_process_boundary_between_two_apps ... ok
+test migration_chain_boundaries_stay_on_the_safe_side ... ok
+test the_input_types_a_save_embeds_round_trip_through_json ... ok
+test the_on_disk_envelope_shape_is_pinned ... ok
+test a_newer_save_is_never_overwritten_automatically ... ok
+test the_store_reports_its_slot_and_reloads_it ... ok
+test the_saved_input_table_merges_with_the_defaults_as_a_union ... ok
+test the_environment_seam_moves_the_whole_save_directory ... ok
+test the_save_directory_lives_in_application_support_on_macos ... ok
+test the_flush_system_is_what_carries_a_mutation_to_disk ... ok
+test a_corrupt_save_is_backed_up_and_the_game_runs_on ... ok
+
+test result: ok. 19 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.12s
+
