@@ -111,7 +111,7 @@ each through a real path rather than a demo:
 
 | Class | In the profile | How it gets there |
 |---|---|---|
-| Progress | `progress.runs_played` | counted at every game-over (`OnEnter(GameFlow::GameOver)` — [Game Flow](game-flow.md)'s states are the hooks) |
+| Progress | `progress.runs_played` | counted at every game-over (`OnEnter(GameFlow::GameOver)` — [Game Flow](game-flow.md)'s states are the hooks) — and both endings are game-overs, so a run won on the third pickup counts like a run lost |
 | Unlocks | `unlocks` | the third finished run pushes `"endless"` |
 | Audio | `audio` (`master`/`music`/`sfx`) | the pause screen's sliders and any other writer of `GameAudioConfig`; a watcher persists every change the same frame |
 | Input | `input` (rebound actions) | the same watcher shape over `GameInputConfig` |

@@ -1,0 +1,35 @@
+df before gates:
+/dev/disk3s1s1   460Gi    12Gi    37Gi    24%    459k  391M    0%   /
+=== fmt START 2026-11-01 10:32:36 ===
+fmt EXIT=0 2026-11-01 10:32:39
+=== fmt END rc=0 2026-11-01 10:32:39 ===
+/dev/disk3s1s1   460Gi    12Gi    37Gi    24%    459k  391M    0%   /
+=== libtests START 2026-11-01 10:32:39 ===
+libtests EXIT=0 2026-11-01 10:35:55
+=== libtests END rc=0 2026-11-01 10:35:55 ===
+/dev/disk3s1s1   460Gi    12Gi    37Gi    25%    459k  389M    0%   /
+=== fast START 2026-11-01 10:35:55 ===
+fast EXIT=0 2026-11-01 10:37:14
+=== fast END rc=0 2026-11-01 10:37:14 ===
+/dev/disk3s1s1   460Gi    12Gi    37Gi    25%    459k  389M    0%   /
+=== audio_gate START 2026-11-01 10:37:14 ===
+audio_gate EXIT=0 2026-11-01 10:38:51
+=== audio_gate END rc=0 2026-11-01 10:38:51 ===
+/dev/disk3s1s1   460Gi    12Gi    37Gi    25%    459k  387M    0%   /
+=== save_store START 2026-11-01 10:38:51 ===
+save_store EXIT=0 2026-11-01 10:38:53
+=== save_store END rc=0 2026-11-01 10:38:53 ===
+/dev/disk3s1s1   460Gi    12Gi    37Gi    25%    459k  387M    0%   /
+=== integration START 2026-11-01 10:38:53 ===
+integration EXIT=1 2026-11-01 10:59:42
+=== integration END rc=1 2026-11-01 10:59:42 ===
+/dev/disk3s1s1   460Gi    12Gi    37Gi    25%    459k  389M    0%   /
+=== docs START 2026-11-01 10:59:42 ===
+docs EXIT=0 2026-11-01 11:00:25
+=== docs END rc=0 2026-11-01 11:00:25 ===
+/dev/disk3s1s1   460Gi    12Gi    37Gi    25%    459k  390M    0%   /
+=== scaffold_e2e START 2026-11-01 11:00:25 ===
+scaffold_e2e EXIT=0 2026-11-01 11:04:41
+=== scaffold_e2e END rc=0 2026-11-01 11:04:41 ===
+/dev/disk3s1s1   460Gi    12Gi    37Gi    25%    459k  389M    0%   /
+ALL_GATES_DONE 2026-11-01 11:04:41

@@ -1,0 +1,56 @@
+post-3 health {"current":100.0,"max":100.0}
+post-3 pickups 0
+post-3 position {"rotation":[0.0,0.0,0.0,1.0],"scale":[1.0,1.0,1.0],"translation":[-2.0,0.8600000739097595,0.0]}
+post-3 props 3
+post-3 menubgm 
+post-3 ambient {"finished":false,"kind":"plain","paused":false,"position_secs":12.376871109008789,"volume":0.800000011920929}
+post-3 runs {"jsonrpc":"2.0","id":27607,"result":{"value":{"paused":false,"runs_played":3,"unlock_note":"Endless mode unlocked!"}}}
+post-3 health {"current":100.0,"max":100.0}
+post-3 pickups 0
+post-3 position {"rotation":[0.0,0.0,0.0,1.0],"scale":[1.0,1.0,1.0],"translation":[-2.0,0.8600000143051147,0.0]}
+post-3 props 3
+post-3 menubgm 
+post-3 ambient {"finished":false,"kind":"plain","paused":false,"position_secs":12.376871109008789,"volume":0.800000011920929}
+post-3 runs {"jsonrpc":"2.0","id":4605,"result":{"value":{"paused":false,"runs_played":3,"unlock_note":"Endless mode unlocked!"}}}
+post-3 health {"current":100.0,"max":100.0}
+post-3 pickups 0
+post-3 position {"rotation":[0.0,0.0,0.0,1.0],"scale":[1.0,1.0,1.0],"translation":[-2.0,0.8600000143051147,0.0]}
+post-3 props 3
+post-3 menubgm 
+post-3 ambient {"finished":false,"kind":"plain","paused":false,"position_secs":12.3319730758667,"volume":0.800000011920929}
+post-3 runs {"jsonrpc":"2.0","id":6563,"result":{"value":{"paused":false,"runs_played":3,"unlock_note":"Endless mode unlocked!"}}}
+post-3 health {"current":100.0,"max":100.0}
+post-3 pickups 0
+post-3 position {"rotation":[0.0,0.0,0.0,1.0],"scale":[1.0,1.0,1.0],"translation":[-2.0,0.8600000143051147,0.0]}
+post-3 props 3
+post-3 menubgm 
+post-3 ambient {"finished":false,"kind":"plain","paused":false,"position_secs":12.321995735168457,"volume":0.800000011920929}
+post-3 runs {"jsonrpc":"2.0","id":17452,"result":{"value":{"paused":false,"runs_played":7,"unlock_note":"Endless mode unlocked!"}}}
+post-3 health {"current":100.0,"max":100.0}
+post-3 pickups 0
+post-3 position {"rotation":[0.0,0.0,0.0,1.0],"scale":[1.0,1.0,1.0],"translation":[-2.0,0.8600000739097595,0.0]}
+post-3 props 3
+post-3 menubgm 
+post-3 ambient {"finished":false,"kind":"plain","paused":false,"position_secs":12.376871109008789,"volume":0.800000011920929}
+post-3 runs {"jsonrpc":"2.0","id":10375,"result":{"value":{"paused":false,"runs_played":3,"unlock_note":"Endless mode unlocked!"}}}
+post-3 health {"current":100.0,"max":100.0}
+post-3 pickups 0
+post-3 position {"rotation":[0.0,0.0,0.0,1.0],"scale":[1.0,1.0,1.0],"translation":[-2.0,0.8600000143051147,0.0]}
+post-3 props 3
+post-3 menubgm 
+post-3 ambient {"finished":false,"kind":"plain","paused":false,"position_secs":12.341950416564941,"volume":0.800000011920929}
+post-3 runs {"jsonrpc":"2.0","id":4338,"result":{"value":{"paused":false,"runs_played":3,"unlock_note":"Endless mode unlocked!"}}}
+post-3 health {"current":100.0,"max":100.0}
+post-3 pickups 0
+post-3 position {"rotation":[0.0,0.0,0.0,1.0],"scale":[1.0,1.0,1.0],"translation":[-2.0,0.8600000739097595,0.0]}
+post-3 props 3
+post-3 menubgm 
+post-3 ambient {"finished":false,"kind":"plain","paused":false,"position_secs":12.376871109008789,"volume":0.800000011920929}
+post-3 runs {"jsonrpc":"2.0","id":23870,"result":{"value":{"paused":false,"runs_played":3,"unlock_note":"Endless mode unlocked!"}}}
+post-3 health {"current":100.0,"max":100.0}
+post-3 pickups 0
+post-3 position {"rotation":[0.0,0.0,0.0,1.0],"scale":[1.0,1.0,1.0],"translation":[-2.0,0.8600000739097595,0.0]}
+post-3 props 3
+post-3 menubgm 
+post-3 ambient {"finished":false,"kind":"plain","paused":false,"position_secs":12.3319730758667,"volume":0.800000011920929}
+post-3 runs {"jsonrpc":"2.0","id":30227,"result":{"value":{"paused":false,"runs_played":3,"unlock_note":"Endless mode unlocked!"}}}

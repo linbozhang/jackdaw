@@ -19,3 +19,31 @@ post-m3 props 3
 post-m3 menubgm 
 post-m3 ambient {"finished":false,"kind":"plain","paused":false,"position_secs":12.3319730758667,"volume":0.800000011920929}
 post-m3 runs {"jsonrpc":"2.0","id":15701,"result":{"value":{"paused":false,"runs_played":5,"unlock_note":"Endless mode unlocked!"}}}
+post-m3 health {"current":100.0,"max":100.0}
+post-m3 pickups 0
+post-m3 position {"rotation":[0.0,0.0,0.0,1.0],"scale":[1.0,1.0,1.0],"translation":[-2.0,0.8600000739097595,0.0]}
+post-m3 props 3
+post-m3 menubgm 
+post-m3 ambient {"finished":false,"kind":"plain","paused":false,"position_secs":12.3319730758667,"volume":0.800000011920929}
+post-m3 runs {"jsonrpc":"2.0","id":14643,"result":{"value":{"paused":false,"runs_played":5,"unlock_note":"Endless mode unlocked!"}}}
+post-m3 health {"current":100.0,"max":100.0}
+post-m3 pickups 0
+post-m3 position {"rotation":[0.0,0.0,0.0,1.0],"scale":[1.0,1.0,1.0],"translation":[-2.0,0.8600000143051147,0.0]}
+post-m3 props 3
+post-m3 menubgm 
+post-m3 ambient {"finished":false,"kind":"plain","paused":false,"position_secs":12.326984405517578,"volume":0.800000011920929}
+post-m3 runs {"jsonrpc":"2.0","id":10919,"result":{"value":{"paused":false,"runs_played":5,"unlock_note":"Endless mode unlocked!"}}}
+post-m3 health {"current":100.0,"max":100.0}
+post-m3 pickups 0
+post-m3 position {"rotation":[0.0,0.0,0.0,1.0],"scale":[1.0,1.0,1.0],"translation":[-2.0,0.8600000739097595,0.0]}
+post-m3 props 3
+post-m3 menubgm 
+post-m3 ambient {"finished":false,"kind":"plain","paused":false,"position_secs":12.376871109008789,"volume":0.800000011920929}
+post-m3 runs {"jsonrpc":"2.0","id":11204,"result":{"value":{"paused":false,"runs_played":5,"unlock_note":"Endless mode unlocked!"}}}
+post-m3 health {"current":100.0,"max":100.0}
+post-m3 pickups 0
+post-m3 position {"rotation":[0.0,0.0,0.0,1.0],"scale":[1.0,1.0,1.0],"translation":[-2.0,0.8600000143051147,0.0]}
+post-m3 props 3
+post-m3 menubgm 
+post-m3 ambient {"finished":false,"kind":"plain","paused":false,"position_secs":12.28707504272461,"volume":0.800000011920929}
+post-m3 runs {"jsonrpc":"2.0","id":14042,"result":{"value":{"paused":false,"runs_played":5,"unlock_note":"Endless mode unlocked!"}}}

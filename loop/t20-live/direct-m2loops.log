@@ -1,33 +1,33 @@
     Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.30s
      Running `target/debug/t20-game`
-[2m2026-10-31T22:30:11.180332Z[0m [32m INFO[0m [2mbevy_diagnostic::system_information_diagnostics_plugin::internal[0m[2m:[0m SystemInfo { os: "macOS 26.6.2 Tahoe", kernel: "25.6.0", cpu: "Apple M1 Pro", core_count: "8", memory: "16.0 GiB" }
-[2m2026-10-31T22:30:11.183419Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
-[2m2026-10-31T22:30:11.256659Z[0m [32m INFO[0m [2mbevy_render::renderer[0m[2m:[0m AdapterInfo { name: "Apple M1 Pro", vendor: 0, device: 0, device_type: IntegratedGpu, device_pci_bus_id: "", driver: "", driver_info: "", backend: Metal, subgroup_min_size: 4, subgroup_max_size: 64, transient_saves_memory: Some(true), limit_bucket: None }
-[2m2026-10-31T22:30:11.544413Z[0m [32m INFO[0m [2mbevy_pbr::cluster[0m[2m:[0m GPU clustering is supported on this device.
-[2m2026-10-31T22:30:11.544617Z[0m [32m INFO[0m [2mbevy_render::batching::gpu_preprocessing[0m[2m:[0m GPU preprocessing is fully supported on this device.
-[2m2026-10-31T22:30:11.576472Z[0m [32m INFO[0m [2mbevy_winit::system[0m[2m:[0m Creating new window t20-game (69v0)
-[2m2026-10-31T22:30:11.736822Z[0m [32m INFO[0m [2mjackdaw_runtime[0m[2m:[0m No catalog at /Users/zhanglinbo/workspace/loop-mac/t20-game/assets/catalog.bsn, skipping catalog load
-[2m2026-10-31T22:30:11.776992Z[0m [33m WARN[0m [2mjackdaw_runtime::config[0m[2m:[0m no config asset at 'game-config.bsn'; t20_game::GameConfig starts at its default
-[2m2026-10-31T22:30:11.777155Z[0m [33m WARN[0m [2mjackdaw_runtime::config[0m[2m:[0m no config asset at 'audio-config.bsn'; t20_game::GameAudioConfig starts at its default
-[2m2026-10-31T22:30:11.777307Z[0m [33m WARN[0m [2mjackdaw_runtime::config[0m[2m:[0m no config asset at 'input-actions.bsn'; jackdaw_runtime::game_input::GameInputConfig starts at its default
-[2m2026-10-31T22:30:11.787420Z[0m [33m WARN[0m [2mjackdaw_runtime::terrain[0m[2m:[0m no active Camera3d, so terrain has no viewer to lay its levels around and will not draw
-[2m2026-10-31T22:30:18.475138Z[0m [33m WARN[0m [2mavian3d::dynamics::rigid_body::mass_properties[0m[2m:[0m Dynamic rigid body 795v0 has no mass or inertia. This can cause NaN values. Consider adding a `MassPropertiesBundle` or a `Collider` with mass.
-[2m2026-10-31T22:30:18.517922Z[0m [33m WARN[0m [2mjackdaw_bind::evaluate[0m[2m:[0m binding 0 on 802v0: no context for 't20_game::PlayerHealth.current'
-[2m2026-10-31T22:30:18.517978Z[0m [33m WARN[0m [2mjackdaw_bind::evaluate[0m[2m:[0m binding 0 on 803v0: no context for 't20_game::PickupCount.0'
-[2m2026-10-31T22:30:18.517995Z[0m [33m WARN[0m [2mjackdaw_bind::evaluate[0m[2m:[0m binding 0 on 800v0: no context for 't20_game::PlayerHealth.current'
-[2m2026-10-31T22:31:24.519696Z[0m [33m WARN[0m [2mavian3d::dynamics::rigid_body::mass_properties[0m[2m:[0m Dynamic rigid body 845v0 has no mass or inertia. This can cause NaN values. Consider adding a `MassPropertiesBundle` or a `Collider` with mass.
-[2m2026-10-31T22:31:24.551086Z[0m [33m WARN[0m [2mjackdaw_bind::evaluate[0m[2m:[0m binding 0 on 851v0: no context for 't20_game::PlayerHealth.current'
-[2m2026-10-31T22:31:24.551151Z[0m [33m WARN[0m [2mjackdaw_bind::evaluate[0m[2m:[0m binding 0 on 852v0: no context for 't20_game::PickupCount.0'
-[2m2026-10-31T22:31:24.551167Z[0m [33m WARN[0m [2mjackdaw_bind::evaluate[0m[2m:[0m binding 0 on 849v0: no context for 't20_game::PlayerHealth.current'
-[2m2026-10-31T22:32:39.645552Z[0m [33m WARN[0m [2mavian3d::dynamics::rigid_body::mass_properties[0m[2m:[0m Dynamic rigid body 894v0 has no mass or inertia. This can cause NaN values. Consider adding a `MassPropertiesBundle` or a `Collider` with mass.
-[2m2026-10-31T22:32:39.687239Z[0m [33m WARN[0m [2mjackdaw_bind::evaluate[0m[2m:[0m binding 0 on 903v0: no context for 't20_game::PlayerHealth.current'
-[2m2026-10-31T22:32:39.687320Z[0m [33m WARN[0m [2mjackdaw_bind::evaluate[0m[2m:[0m binding 0 on 904v0: no context for 't20_game::PickupCount.0'
-[2m2026-10-31T22:32:39.687335Z[0m [33m WARN[0m [2mjackdaw_bind::evaluate[0m[2m:[0m binding 0 on 901v0: no context for 't20_game::PlayerHealth.current'
-[2m2026-10-31T22:33:55.009379Z[0m [33m WARN[0m [2mavian3d::dynamics::rigid_body::mass_properties[0m[2m:[0m Dynamic rigid body 943v0 has no mass or inertia. This can cause NaN values. Consider adding a `MassPropertiesBundle` or a `Collider` with mass.
-[2m2026-10-31T22:33:55.040896Z[0m [33m WARN[0m [2mjackdaw_bind::evaluate[0m[2m:[0m binding 0 on 929v1: no context for 't20_game::PlayerHealth.current'
-[2m2026-10-31T22:33:55.040961Z[0m [33m WARN[0m [2mjackdaw_bind::evaluate[0m[2m:[0m binding 0 on 899v1: no context for 't20_game::PickupCount.0'
-[2m2026-10-31T22:33:55.040980Z[0m [33m WARN[0m [2mjackdaw_bind::evaluate[0m[2m:[0m binding 0 on 932v1: no context for 't20_game::PlayerHealth.current'
-[2m2026-10-31T22:34:16.274025Z[0m [33m WARN[0m [2mavian3d::dynamics::rigid_body::mass_properties[0m[2m:[0m Dynamic rigid body 874v1 has no mass or inertia. This can cause NaN values. Consider adding a `MassPropertiesBundle` or a `Collider` with mass.
-[2m2026-10-31T22:34:16.305422Z[0m [33m WARN[0m [2mjackdaw_bind::evaluate[0m[2m:[0m binding 0 on 872v1: no context for 't20_game::PlayerHealth.current'
-[2m2026-10-31T22:34:16.305501Z[0m [33m WARN[0m [2mjackdaw_bind::evaluate[0m[2m:[0m binding 0 on 873v1: no context for 't20_game::PickupCount.0'
-[2m2026-10-31T22:34:16.305518Z[0m [33m WARN[0m [2mjackdaw_bind::evaluate[0m[2m:[0m binding 0 on 859v1: no context for 't20_game::PlayerHealth.current'
+[2m2026-11-01T01:51:53.584869Z[0m [32m INFO[0m [2mbevy_diagnostic::system_information_diagnostics_plugin::internal[0m[2m:[0m SystemInfo { os: "macOS 26.6.2 Tahoe", kernel: "25.6.0", cpu: "Apple M1 Pro", core_count: "8", memory: "16.0 GiB" }
+[2m2026-11-01T01:51:53.588001Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-11-01T01:51:53.648907Z[0m [32m INFO[0m [2mbevy_render::renderer[0m[2m:[0m AdapterInfo { name: "Apple M1 Pro", vendor: 0, device: 0, device_type: IntegratedGpu, device_pci_bus_id: "", driver: "", driver_info: "", backend: Metal, subgroup_min_size: 4, subgroup_max_size: 64, transient_saves_memory: Some(true), limit_bucket: None }
+[2m2026-11-01T01:51:53.925225Z[0m [32m INFO[0m [2mbevy_pbr::cluster[0m[2m:[0m GPU clustering is supported on this device.
+[2m2026-11-01T01:51:53.925486Z[0m [32m INFO[0m [2mbevy_render::batching::gpu_preprocessing[0m[2m:[0m GPU preprocessing is fully supported on this device.
+[2m2026-11-01T01:51:53.952230Z[0m [32m INFO[0m [2mbevy_winit::system[0m[2m:[0m Creating new window t20-game (69v0)
+[2m2026-11-01T01:51:54.083808Z[0m [32m INFO[0m [2mjackdaw_runtime[0m[2m:[0m No catalog at /Users/zhanglinbo/workspace/loop-mac/t20-game/assets/catalog.bsn, skipping catalog load
+[2m2026-11-01T01:51:54.123596Z[0m [33m WARN[0m [2mjackdaw_runtime::config[0m[2m:[0m no config asset at 'audio-config.bsn'; t20_game::GameAudioConfig starts at its default
+[2m2026-11-01T01:51:54.123611Z[0m [33m WARN[0m [2mjackdaw_runtime::config[0m[2m:[0m no config asset at 'game-config.bsn'; t20_game::GameConfig starts at its default
+[2m2026-11-01T01:51:54.123636Z[0m [33m WARN[0m [2mjackdaw_runtime::config[0m[2m:[0m no config asset at 'input-actions.bsn'; jackdaw_runtime::game_input::GameInputConfig starts at its default
+[2m2026-11-01T01:51:54.133681Z[0m [33m WARN[0m [2mjackdaw_runtime::terrain[0m[2m:[0m no active Camera3d, so terrain has no viewer to lay its levels around and will not draw
+[2m2026-11-01T01:52:01.118439Z[0m [33m WARN[0m [2mavian3d::dynamics::rigid_body::mass_properties[0m[2m:[0m Dynamic rigid body 795v0 has no mass or inertia. This can cause NaN values. Consider adding a `MassPropertiesBundle` or a `Collider` with mass.
+[2m2026-11-01T01:52:01.160923Z[0m [33m WARN[0m [2mjackdaw_bind::evaluate[0m[2m:[0m binding 0 on 802v0: no context for 't20_game::PlayerHealth.current'
+[2m2026-11-01T01:52:01.160978Z[0m [33m WARN[0m [2mjackdaw_bind::evaluate[0m[2m:[0m binding 0 on 803v0: no context for 't20_game::PickupCount.0'
+[2m2026-11-01T01:52:01.160996Z[0m [33m WARN[0m [2mjackdaw_bind::evaluate[0m[2m:[0m binding 0 on 800v0: no context for 't20_game::PlayerHealth.current'
+[2m2026-11-01T01:53:21.791767Z[0m [33m WARN[0m [2mavian3d::dynamics::rigid_body::mass_properties[0m[2m:[0m Dynamic rigid body 845v0 has no mass or inertia. This can cause NaN values. Consider adding a `MassPropertiesBundle` or a `Collider` with mass.
+[2m2026-11-01T01:53:21.835341Z[0m [33m WARN[0m [2mjackdaw_bind::evaluate[0m[2m:[0m binding 0 on 854v0: no context for 't20_game::PlayerHealth.current'
+[2m2026-11-01T01:53:21.835433Z[0m [33m WARN[0m [2mjackdaw_bind::evaluate[0m[2m:[0m binding 0 on 855v0: no context for 't20_game::PickupCount.0'
+[2m2026-11-01T01:53:21.835453Z[0m [33m WARN[0m [2mjackdaw_bind::evaluate[0m[2m:[0m binding 0 on 852v0: no context for 't20_game::PlayerHealth.current'
+[2m2026-11-01T01:54:48.305773Z[0m [33m WARN[0m [2mavian3d::dynamics::rigid_body::mass_properties[0m[2m:[0m Dynamic rigid body 894v0 has no mass or inertia. This can cause NaN values. Consider adding a `MassPropertiesBundle` or a `Collider` with mass.
+[2m2026-11-01T01:54:48.337720Z[0m [33m WARN[0m [2mjackdaw_bind::evaluate[0m[2m:[0m binding 0 on 900v0: no context for 't20_game::PlayerHealth.current'
+[2m2026-11-01T01:54:48.337794Z[0m [33m WARN[0m [2mjackdaw_bind::evaluate[0m[2m:[0m binding 0 on 901v0: no context for 't20_game::PickupCount.0'
+[2m2026-11-01T01:54:48.337809Z[0m [33m WARN[0m [2mjackdaw_bind::evaluate[0m[2m:[0m binding 0 on 898v0: no context for 't20_game::PlayerHealth.current'
+[2m2026-11-01T01:56:14.689650Z[0m [33m WARN[0m [2mavian3d::dynamics::rigid_body::mass_properties[0m[2m:[0m Dynamic rigid body 943v0 has no mass or inertia. This can cause NaN values. Consider adding a `MassPropertiesBundle` or a `Collider` with mass.
+[2m2026-11-01T01:56:14.721856Z[0m [33m WARN[0m [2mjackdaw_bind::evaluate[0m[2m:[0m binding 0 on 929v1: no context for 't20_game::PlayerHealth.current'
+[2m2026-11-01T01:56:14.721915Z[0m [33m WARN[0m [2mjackdaw_bind::evaluate[0m[2m:[0m binding 0 on 896v1: no context for 't20_game::PickupCount.0'
+[2m2026-11-01T01:56:14.721931Z[0m [33m WARN[0m [2mjackdaw_bind::evaluate[0m[2m:[0m binding 0 on 932v1: no context for 't20_game::PlayerHealth.current'
+[2m2026-11-01T01:56:35.908839Z[0m [33m WARN[0m [2mavian3d::dynamics::rigid_body::mass_properties[0m[2m:[0m Dynamic rigid body 874v1 has no mass or inertia. This can cause NaN values. Consider adding a `MassPropertiesBundle` or a `Collider` with mass.
+[2m2026-11-01T01:56:35.951244Z[0m [33m WARN[0m [2mjackdaw_bind::evaluate[0m[2m:[0m binding 0 on 858v1: no context for 't20_game::PlayerHealth.current'
+[2m2026-11-01T01:56:35.951313Z[0m [33m WARN[0m [2mjackdaw_bind::evaluate[0m[2m:[0m binding 0 on 859v1: no context for 't20_game::PickupCount.0'
+[2m2026-11-01T01:56:35.951329Z[0m [33m WARN[0m [2mjackdaw_bind::evaluate[0m[2m:[0m binding 0 on 873v1: no context for 't20_game::PlayerHealth.current'

@@ -19,3 +19,45 @@ post-1 props 3
 post-1 menubgm 
 post-1 ambient {"finished":false,"kind":"plain","paused":false,"position_secs":12.361905097961426,"volume":0.800000011920929}
 post-1 runs {"jsonrpc":"2.0","id":30996,"result":{"value":{"paused":false,"runs_played":1,"unlock_note":""}}}
+post-1 health {"current":100.0,"max":100.0}
+post-1 pickups 0
+post-1 position {"rotation":[0.0,0.0,0.0,1.0],"scale":[1.0,1.0,1.0],"translation":[-2.0,0.8600000739097595,0.0]}
+post-1 props 3
+post-1 menubgm 
+post-1 ambient {"finished":false,"kind":"plain","paused":false,"position_secs":12.28707504272461,"volume":0.800000011920929}
+post-1 runs {"jsonrpc":"2.0","id":10970,"result":{"value":{"paused":false,"runs_played":1,"unlock_note":""}}}
+post-1 health {"current":100.0,"max":100.0}
+post-1 pickups 0
+post-1 position {"rotation":[0.0,0.0,0.0,1.0],"scale":[1.0,1.0,1.0],"translation":[-2.0,0.8600000739097595,0.0]}
+post-1 props 3
+post-1 menubgm 
+post-1 ambient {"finished":false,"kind":"plain","paused":false,"position_secs":12.282086372375488,"volume":0.800000011920929}
+post-1 runs {"jsonrpc":"2.0","id":3834,"result":{"value":{"paused":false,"runs_played":5,"unlock_note":"Endless mode unlocked!"}}}
+post-1 health {"current":100.0,"max":100.0}
+post-1 pickups 0
+post-1 position {"rotation":[0.0,0.0,0.0,1.0],"scale":[1.0,1.0,1.0],"translation":[-2.0,0.8600000143051147,0.0]}
+post-1 props 3
+post-1 menubgm 
+post-1 ambient {"finished":false,"kind":"plain","paused":false,"position_secs":12.3319730758667,"volume":0.800000011920929}
+post-1 runs {"jsonrpc":"2.0","id":32509,"result":{"value":{"paused":false,"runs_played":1,"unlock_note":""}}}
+post-1 health {"current":100.0,"max":100.0}
+post-1 pickups 0
+post-1 position {"rotation":[0.0,0.0,0.0,1.0],"scale":[1.0,1.0,1.0],"translation":[-2.0,0.8600000143051147,0.0]}
+post-1 props 3
+post-1 menubgm 
+post-1 ambient {"finished":false,"kind":"plain","paused":false,"position_secs":12.3319730758667,"volume":0.800000011920929}
+post-1 runs {"jsonrpc":"2.0","id":5059,"result":{"value":{"paused":false,"runs_played":1,"unlock_note":""}}}
+post-1 health {"current":100.0,"max":100.0}
+post-1 pickups 0
+post-1 position {"rotation":[0.0,0.0,0.0,1.0],"scale":[1.0,1.0,1.0],"translation":[-2.0,0.8600000143051147,0.0]}
+post-1 props 3
+post-1 menubgm 
+post-1 ambient {"finished":false,"kind":"plain","paused":false,"position_secs":12.28707504272461,"volume":0.800000011920929}
+post-1 runs {"jsonrpc":"2.0","id":12090,"result":{"value":{"paused":false,"runs_played":1,"unlock_note":""}}}
+post-1 health {"current":100.0,"max":100.0}
+post-1 pickups 0
+post-1 position {"rotation":[0.0,0.0,0.0,1.0],"scale":[1.0,1.0,1.0],"translation":[-2.0,0.8600000739097595,0.0]}
+post-1 props 3
+post-1 menubgm 
+post-1 ambient {"finished":false,"kind":"plain","paused":false,"position_secs":12.3319730758667,"volume":0.800000011920929}
+post-1 runs {"jsonrpc":"2.0","id":25038,"result":{"value":{"paused":false,"runs_played":1,"unlock_note":""}}}

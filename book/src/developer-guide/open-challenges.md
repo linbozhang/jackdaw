@@ -271,3 +271,22 @@ Where to dig in: `src/input_contexts.rs`
 (`MAX_PLAUSIBLE_POINTER_DELTA`, `drop_synthetic_pointer_jump`)
 and the constant's doc comment, which records the measured
 background.
+
+## Example-game orchestration edges (T20)
+
+The template ships a complete example game (menu → level → two
+endings → restart, with audio and saves), and T20 verified the whole
+chain live including a pure-package export that runs with an empty
+environment. Two edges are recorded as designed boundaries rather
+than defects:
+
+- Level props are code-generated and the editor can only add to
+  them, not replace them (`collect_pickups` guards the player but
+  props have no such guard). Moving a level to fully authored props
+  is a template-extension exercise, not an editor gap.
+- The Gatekeeper right-click opening on first launch of an exported
+  pure package (EG6) is macOS policy, not an editor defect; the
+  in-app right-click path is the supported route.
+
+Where to dig in: `loop/plans/t20-example-game.md` (the degree table
+and the M12/M13 isolation evidence).

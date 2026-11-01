@@ -1,0 +1,53 @@
+{
+  "profile": "release",
+  "jackdaw": "0.21.0-dev",
+  "bevy_rev": "c9c397ba1a73e6cfffe957318e0359330b701865",
+  "generated_unix": 1793494790,
+  "files": [
+    {
+      "path": "assets/game.flow.json",
+      "sha256": "fb19da8f8b3a7e74d2e44899c2b5d14d9598b1b04a529f2de7e2d7bbd0369470",
+      "size": 103
+    },
+    {
+      "path": "assets/gameover.bsn",
+      "sha256": "3d3cedcf94e93c4b3d5522db6260725b09b7e22694163d231ae9126c0bcbe9e6",
+      "size": 3245
+    },
+    {
+      "path": "assets/hud.bsn",
+      "sha256": "f1e39e529eab2a7652ac8190d07ac8305bd0f038850f1fbc1109e3901045fe21",
+      "size": 7810
+    },
+    {
+      "path": "assets/menu.bsn",
+      "sha256": "437b36e3a7dae786948f36d771c22b0f69ea65aaed24356ce0a9147be3c28521",
+      "size": 2642
+    },
+    {
+      "path": "assets/scene.bsn",
+      "sha256": "f54daf7508ac0ea851b351a24e75ed98ecdd8f89316feb37a67b2d08f1a7e4de",
+      "size": 1125
+    },
+    {
+      "path": "assets/sounds/ambient.wav",
+      "sha256": "eeb2e3442ee55cd221648e54aff2ccea53f89aca0461cb87fcf919cc5ff1b68f",
+      "size": 132344
+    },
+    {
+      "path": "assets/sounds/bgm.wav",
+      "sha256": "e412bf046ea769de52562d3aecfb6b19866e2042735c135806e285157b63e122",
+      "size": 88244
+    },
+    {
+      "path": "assets/sounds/blip.wav",
+      "sha256": "a505a1dc6438db544f87cdb51d527548dd34bb3c23f81705c4b8d77a1a5e53f0",
+      "size": 5336
+    },
+    {
+      "path": "t20-game",
+      "sha256": "95e44a5f790c33fb0158b73cfd7c6d0719691d46cc2c3534f12a9b4a4f56244c",
+      "size": 207312048
+    }
+  ]
+}

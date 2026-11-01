@@ -1,0 +1,25 @@
+    Finished `test` profile [optimized + debuginfo] target(s) in 0.36s
+────────────
+ Nextest run ID 146935b7-fce5-4fc0-8649-4bb7af31fead with nextest profile: ci
+    Starting 19 tests across 1 binary
+        PASS [   0.023s] ( 1/19) jackdaw_runtime::save_store a_missing_save_file_starts_fresh_quietly
+        PASS [   0.023s] ( 2/19) jackdaw_runtime::save_store a_missing_directory_is_a_quiet_nodir
+        PASS [   0.045s] ( 3/19) jackdaw_runtime::save_store a_stray_temp_file_is_never_taken_for_a_save
+        PASS [   0.049s] ( 4/19) jackdaw_runtime::save_store an_older_save_without_a_migration_is_suppressed_too
+        PASS [   0.075s] ( 5/19) jackdaw_runtime::save_store a_registered_migration_upgrades_an_older_save
+        PASS [   0.054s] ( 6/19) jackdaw_runtime::save_store an_unwritable_directory_warns_and_the_game_keeps_running
+        PASS [   0.082s] ( 7/19) jackdaw_runtime::save_store a_generic_save_store_needs_explicit_registration_to_be_reflect_reachable
+        PASS [   0.017s] ( 8/19) jackdaw_runtime::save_store the_environment_seam_moves_the_whole_save_directory
+        PASS [   0.096s] ( 9/19) jackdaw_runtime::save_store a_save_survives_the_process_boundary_between_two_apps
+        PASS [   0.097s] (10/19) jackdaw_runtime::save_store a_newer_save_is_never_overwritten_automatically
+        PASS [   0.042s] (11/19) jackdaw_runtime::save_store every_corrupt_load_leaves_its_own_backup
+        PASS [   0.032s] (12/19) jackdaw_runtime::save_store migration_chain_boundaries_stay_on_the_safe_side
+        PASS [   0.026s] (13/19) jackdaw_runtime::save_store the_input_types_a_save_embeds_round_trip_through_json
+        PASS [   0.015s] (14/19) jackdaw_runtime::save_store the_save_directory_lives_in_application_support_on_macos
+        PASS [   0.035s] (15/19) jackdaw_runtime::save_store the_flush_system_is_what_carries_a_mutation_to_disk
+        PASS [   0.029s] (16/19) jackdaw_runtime::save_store the_on_disk_envelope_shape_is_pinned
+        PASS [   0.021s] (17/19) jackdaw_runtime::save_store the_store_reports_its_slot_and_reloads_it
+        PASS [   0.029s] (18/19) jackdaw_runtime::save_store the_saved_input_table_merges_with_the_defaults_as_a_union
+        PASS [   0.135s] (19/19) jackdaw_runtime::save_store a_corrupt_save_is_backed_up_and_the_game_runs_on
+────────────
+     Summary [   0.136s] 19 tests run: 19 passed, 0 skipped

@@ -5,3 +5,8 @@ PREP_OK fixture=/Users/zhanglinbo/workspace/loop-mac/t20-game (clean — run the
 RESULTS: 
 PREP_OK fixture=/Users/zhanglinbo/workspace/loop-mac/t20-game (clean — run the inject phase only after the pure legs)
 RESULTS: 
+=== phase prep run 2026-11-01 08:44:36 ===
+prep: removing the stale fixture /Users/zhanglinbo/workspace/loop-mac/t20-game
+prep: save scratch = /Users/zhanglinbo/workspace/jackdaw/loop/t20-live/save-scratch (JACKDAW_SAVE_DIR on every game run)
+PREP_OK fixture=/Users/zhanglinbo/workspace/loop-mac/t20-game (clean — run the inject phase only after the pure legs)
+RESULTS: 

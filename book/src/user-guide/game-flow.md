@@ -161,11 +161,107 @@ other scene member. A mechanism for marking individual entities to
 outlive their scene has no current user and is not built; the
 code-spawned-entity row covers every case the template knows.
 
+## The example game, end to end
+
+Put the chapters together and a new project *is* a small, complete
+game — and it plays as one: the whole loop has been walked on a real
+machine, on a project fresh from `jd new`, from the first Play through
+an exported build, without writing a line of code. The inventory, and
+what each piece is for:
+
+- **The loop.** Play: the menu — theme music, `Runs: 0`, **Start** —
+  then the level: a player, a ground, two walls, three pickups, a red
+  hazard, the falling cube, the HUD over it all. Every run ends on
+  the same screen, by one of two doors. Walk into the hazard until
+  the bar empties — that is blood-out. Or collect **all three
+  pickups**: a blip sounds, the flow makes the very move blood-out
+  makes, and the run is *won* on the same end screen. (A run that
+  dies has at most two pickups collected — the third one ends the run
+  by winning it.) **Restart** re-enters the level fresh;
+  **Menu** walks back to the start screen; loop it and nothing
+  accumulates.
+- **The volumes.** The pause screen's three sliders — master, music,
+  sfx — write `GameAudioConfig`, the save brings them back on the
+  next launch, and the mix reaches sounds that are already playing
+  ([Audio](audio.md)'s three-way mix).
+- **The record.** Every finished run — won or lost — counts one into
+  the menu's `Runs:`; the third finished run unlocks endless mode;
+  and the count survives killing the process and relaunching
+  ([Game Saves](game-saves.md)).
+- **The package.** **Build Game...** before *and* after editing —
+  retitle the menu, rewrite the HUD copy, author a config, place a
+  fourth pickup, point the start scene elsewhere — and every edit
+  ships: the staged game plays the loop, shows your titles and copy,
+  reads your configs, and collects your placed pickup alongside the
+  template's three.
+
+### What the editor configures, and what stays code
+
+Out of the box the game plays with zero authoring. The template's
+code is not a cost — it is the shipped behavior (a new project's
+`src/lib.rs` teaches every pattern it uses). What you can then change
+from the editor, and where the boundary honestly sits:
+
+| Layer | What it is | Reachable from the editor? |
+|---|---|---|
+| Behavior | movement, collision, pickup counting, the flow's switches, the sounds | No — template code, and yours to copy and edit |
+| Scene documents | `menu.bsn`, `hud.bsn`, `gameover.bsn`, `scene.bsn` | Yes — real documents; restyle, retext, save, and the game picks it up |
+| Config assets | `GameConfig`, `GameAudioConfig`, `GameInputConfig` | Yes — **New Asset** cards ([Game Parameters](game-parameters.md)) |
+| Where it starts | `game.flow.json` | Yes — **Set as Startup Scene**, or edit the file |
+| Placing things | extra pickups, sound sources, your own player | Yes — a supported path ([Physics](physics.md), [Audio](audio.md)) |
+| The level's own props | ground, the three pickups, the walls, the hazard | No — they spawn on every level entry, unconditionally |
+| Flow conditions | blood-out, the buttons, three pickups → game over | No — a binding reads a resource but cannot write one, so "when to switch worlds" is not a config |
+
+Two boundaries worth knowing exactly:
+
+- **Placed props add; they do not replace.** A fourth pickup placed
+  in `scene.bsn` collects alongside the template's three (the count
+  reads 4), and the code-spawned line spawns anyway. The player is
+  the exception in the other direction — the template's spawn keeps
+  an existing player rather than doubling it. The only off-switch for
+  the code-spawned props is the physics module's, which takes
+  collision and pickups down with it.
+- **Winning is template behavior.** Both endings are systems in the
+  game crate your project carries — the win arm of `collect_pickups`
+  and the blood-out arm of the hazard damage. Copy and edit them to
+  change what winning means in your game.
+
+One tooling note while we are being exact: the flow state itself
+(`State<GameFlow>`) is not reflect-registered, so the game-side
+[remote](remote-debugging.md) channel can neither read nor write it —
+which world is up is observed through the document roots (`MenuRoot`,
+`HudRoot`, `GameOverRoot`), and tools watch those markers. Opening
+the flow channel to BRP is filed as ticket A16.
+
+### Running without the toolchain
+
+The exported package needs nothing from the machine that built it:
+the executable is statically linked (an export refuses a
+`dynamic_linking` build rather than ship one), the whole asset tree
+stands beside the executable, and the asset root resolves to that
+directory when nothing else names one ([Play-in-editor](play-in-editor.md)
+has the staged layout). The audit face, if you want to check rather
+than trust: `otool -L` on a staged executable lists only system
+libraries — no rustup, no Homebrew, no `/Users/` paths — and no
+`LC_RPATH` entries; the manifest's per-file hashes re-verify a moved
+or copied package file by file. The machine test behind this chapter:
+copy the dist folder somewhere foreign, strip the environment down to
+`HOME` and `/usr/bin:/bin`, launch from another working directory —
+the menu comes up, the loop plays, and the log is clean.
+
+Two honest edges. The shipped package has **no remote-debugging
+channel**: game-side BRP is a test seam that an injection adds, so
+tool-driven assertions run against the editor and injected builds,
+not the shipping face ([Remote Debugging](remote-debugging.md)). And
+the executable is unsigned ad-hoc, so on a Mac that did not build it
+the first open is a **right-click → Open** past Gatekeeper.
+
 ## The 30-second check
 
 1. New project, **Play**: the menu; click **Start** — the level with
    the HUD over it. Walk into the red hazard until the bar empties:
-   the end screen. **Restart** → full health, spawn point, pickups
+   the end screen. Or collect all three pickups: the same end screen,
+   by winning. **Restart** → full health, spawn point, pickups
    back; **Menu** (end screen) → the start screen again. Loop it —
    nothing accumulates.
 2. Project window, right-click `scene.bsn` → **Set as Startup Scene**

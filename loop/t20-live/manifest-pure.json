@@ -2,7 +2,7 @@
   "profile": "release",
   "jackdaw": "0.21.0-dev",
   "bevy_rev": "c9c397ba1a73e6cfffe957318e0359330b701865",
-  "generated_unix": 1793481083,
+  "generated_unix": 1793494790,
   "files": [
     {
       "path": "assets/game.flow.json",
