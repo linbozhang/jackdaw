@@ -1,0 +1,17 @@
+   Compiling jackdaw_project_build v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_project_build)
+   Compiling jackdaw_package v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_package)
+   Compiling bevy_ecs_tilemap v0.20.0
+   Compiling jackdaw_loader v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_loader)
+   Compiling jackdaw_scaffold v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_scaffold)
+   Compiling jackdaw v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw)
+    Finished `test` profile [optimized + debuginfo] target(s) in 20.43s
+     Running tests/bevy_ecs_tilemap_probe.rs (target/debug/deps/bevy_ecs_tilemap_probe-e5004d20d3633482)
+
+running 3 tests
+test the_single_texture_variant_holds_a_plain_image_handle ... ok
+test tile_components_carry_the_reflect_faces_the_inspector_needs ... ok
+test a_minimal_tilemap_spawns_headless ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.18s
+
+EXIT=0

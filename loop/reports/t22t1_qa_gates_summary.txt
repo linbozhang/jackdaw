@@ -1,0 +1,15 @@
+[23:14:08] START fmt
+[23:14:11] DONE fmt EXIT=0
+[23:14:11] START clippy_ws
+[23:14:29] DONE clippy_ws EXIT=0
+[23:14:29] START clippy_phys
+[23:14:41] DONE clippy_phys EXIT=0
+[23:14:41] START libtests
+[23:18:31] DONE libtests EXIT=0
+[23:18:31] START kernel
+[23:18:32] DONE kernel EXIT=0
+[23:18:32] START targeted
+[23:20:46] DONE targeted EXIT=0
+[23:20:46] START fast
+[23:25:12] DONE fast EXIT=0
+[23:25:12] ALL GATES DONE

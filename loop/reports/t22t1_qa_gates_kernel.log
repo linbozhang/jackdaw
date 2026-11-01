@@ -1,0 +1,17 @@
+    Finished `test` profile [optimized + debuginfo] target(s) in 0.39s
+────────────
+ Nextest run ID a1032f49-99d6-4b53-9efe-f70fee2be190 with nextest profile: ci
+    Starting 11 tests across 2 binaries
+        PASS [   0.016s] ( 1/11) jackdaw_tilemap_collision tests::the_point_query_reads_the_cell_under_a_world_point
+        PASS [   0.016s] ( 2/11) jackdaw_tilemap_collision tests::solid_and_out_of_bounds_cells_never_answer_the_trigger_query
+        PASS [   0.017s] ( 3/11) jackdaw_tilemap_collision tests::the_region_query_census_of_a_box_finds_solid_and_trigger
+        PASS [   0.018s] ( 4/11) jackdaw_tilemap_collision tests::a_falling_probe_lands_on_the_floor_and_stays_put
+        PASS [   0.018s] ( 5/11) jackdaw_tilemap_collision tests::a_trigger_cell_reports_while_overlapped_and_silences_after
+        PASS [   0.018s] ( 6/11) jackdaw_tilemap_collision tests::a_walking_probe_is_stopped_by_a_wall_column
+        PASS [   0.018s] ( 7/11) jackdaw_tilemap_collision tests::the_neighbor_query_reports_the_four_adjacent_modes
+        PASS [   0.019s] ( 8/11) jackdaw_tilemap_collision tests::grid_math_round_trips_world_points_through_cells
+        PASS [   0.067s] ( 9/11) jackdaw_tilemap_collision::player_probe_app the_wall_blocks_a_walking_probe
+        PASS [   0.071s] (10/11) jackdaw_tilemap_collision::player_probe_app the_ground_holds_a_falling_probe
+        PASS [   0.072s] (11/11) jackdaw_tilemap_collision::player_probe_app the_trigger_reports_a_crossing
+────────────
+     Summary [   0.088s] 11 tests run: 11 passed, 0 skipped
