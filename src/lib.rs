@@ -161,6 +161,7 @@ pub mod sdk_paths;
 pub mod sdk_setup;
 pub mod selection;
 pub mod snapping;
+pub mod sprite_atlas;
 pub mod sprite_gizmo;
 pub mod sprite_ops;
 pub mod sprite_snap;

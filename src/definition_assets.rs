@@ -507,21 +507,29 @@ fn write_asset_field(
         .and_then(|text| text_value_for_asset_field(world, handle, type_path, field_path, text));
     let registry = world.resource::<AppTypeRegistry>().clone();
     let registry = registry.read();
-    let Some(reflect_asset) = registry
-        .get_with_type_path(type_path)
-        .and_then(|registration| registration.data::<ReflectAsset>())
-    else {
+    let Some(registration) = registry.get_with_type_path(type_path) else {
         return false;
     };
+    let Some(reflect_asset) = registration.data::<ReflectAsset>() else {
+        return false;
+    };
+    if field_path.is_empty() {
+        // A whole-value write replaces the asset: reflect apply patches in
+        // place, and would keep list entries the new value does not have.
+        use serde::de::DeserializeSeed as _;
+        let deserializer =
+            bevy::reflect::serde::TypedReflectDeserializer::new(registration, &registry);
+        let Ok(fresh) = deserializer.deserialize(json) else {
+            return false;
+        };
+        return reflect_asset
+            .insert(world, handle.id(), fresh.as_ref())
+            .is_ok();
+    }
     let Some(value) = reflect_asset.get_mut(world, handle.id()) else {
         return false;
     };
-    let field = if field_path.is_empty() {
-        Some(value.as_partial_reflect_mut())
-    } else {
-        value.reflect_path_mut(field_path).ok()
-    };
-    let Some(field) = field else {
+    let Some(field) = value.reflect_path_mut(field_path).ok() else {
         return false;
     };
     match spelled {
@@ -876,6 +884,46 @@ fn run_and_remember(
         .resource_mut::<CommandHistory>()
         .push_executed(Box::new(command));
     true
+}
+
+/// Set the whole value of the open asset of `type_path`, as one undo entry.
+/// `produce` builds the new JSON from the one the asset holds now, so the
+/// undo side puts back exactly what was there. The open card's rows rebuild
+/// when the write lands. Says why not, when no card of the type is open or
+/// the value would not go in.
+pub(crate) fn commit_whole_definition(
+    world: &mut World,
+    type_path: &str,
+    produce: impl FnOnce(&serde_json::Value) -> Option<serde_json::Value>,
+) -> Result<(), String> {
+    let Some(entity) = open_edit_of(world, type_path) else {
+        return Err(format!("no {type_path} asset is open"));
+    };
+    let Some(path) = world
+        .get::<DefinitionAssetEdit>(entity)
+        .map(|edit| edit.path.clone())
+    else {
+        return Err("the open card is editing nothing".to_string());
+    };
+    let Some(old_json) = definition_field_json(world, &path, type_path, "") else {
+        return Err("the open asset could not be read".to_string());
+    };
+    let Some(new_json) = produce(&old_json) else {
+        return Err("the new value did not compute".to_string());
+    };
+    let command = SetDefinitionField {
+        path,
+        type_path: type_path.to_string(),
+        field_path: String::new(),
+        old_json,
+        new_json: new_json.clone(),
+        rebuilds_rows: true,
+    };
+    if run_and_remember(world, command, &new_json) {
+        Ok(())
+    } else {
+        Err(format!("{type_path} did not take the new value"))
+    }
 }
 
 /// An edit to the element one past the end of a list, as the whole-list edit
@@ -1353,8 +1401,11 @@ pub const FOLIAGE_KIND: &str = "foliage";
 /// The kind a material that draws a lake, a river or a sea holds.
 pub const WATER_KIND: &str = "water";
 
+/// The kind a sprite-sheet layout that cuts an image into frames holds.
+pub const SPRITE_ATLAS_KIND: &str = "sprite_atlas";
+
 /// The types the editor has compiled in.
-fn compiled_kinds() -> [AssetKind; 6] {
+fn compiled_kinds() -> [AssetKind; 7] {
     use jackdaw_api_internal::lucide_icons::Icon;
     [
         AssetKind::compiled(
@@ -1389,6 +1440,12 @@ fn compiled_kinds() -> [AssetKind; 6] {
             <jackdaw_surface::WaterMaterial as bevy::reflect::TypePath>::type_path(),
         )
         .with_icon(Icon::Waves),
+        AssetKind::compiled(
+            SPRITE_ATLAS_KIND,
+            "Sprite Atlas",
+            <bevy::image::TextureAtlasLayout as bevy::reflect::TypePath>::type_path(),
+        )
+        .with_icon(Icon::Grid2x2),
     ]
 }
 
