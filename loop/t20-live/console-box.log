@@ -56,3 +56,417 @@ warn-scan box: clean
 N13 report (box): panicked_at_lines=0 (events per the E3 note) | drain_game_events=0 cleanup_session_on_stop=0 other=0
 VERDICT_BOX: M1_PIE_MENU=PASS M2_BOOT_MENU=PASS M2_LOOP_1=PASS M2_LOOP_2=PASS M2_LOOP_3=PASS M2_TUPLE_RESET_1=PASS M2_TUPLE_RESET_2=PASS M2_TUPLE_RESET_3=PASS M3_WIN=PASS M4_LEVEL_FACE=PASS M5_MENU_DOOR=PASS 
 RESULTS: M1_PIE_MENU=PASS M2_BOOT_MENU=PASS M2_LOOP_1=PASS M2_LOOP_2=PASS M2_LOOP_3=PASS M2_TUPLE_RESET_1=PASS M2_TUPLE_RESET_2=PASS M2_TUPLE_RESET_3=PASS M3_WIN=PASS M4_LEVEL_FACE=PASS M5_MENU_DOOR=PASS 
+=== phase box run 2026-11-01 09:03:01 ===
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t20-game
+shot m1-pie-menu ok
+M1_PIE_MENU_PASS
+box: editor down for the direct legs
+M2_BOOT_MENU_PASS
+M4: press blip volume=1.0
+seven_tuple entry-1: archived to seven-tuple-entry-1.txt
+tuple entry-1: health={"current":100.0,"max":100.0} pickups=0 pos=(-2.0,0.8600000143051147,0.0) props=3 menubgm=ABSENT ambient=present runs=0
+tuple entry-1: FRESH OK
+walk_calibrate: move_speed -> 0.5; dx=0.1986 over 400ms -> 0.000496 u/ms
+M2 walk: at wall -1.8013602495193481 -2.1821882724761963 -> -1.801360011100769 -2.3728883266448975 -> -1.8013601303100586 -2.440000057220459 (d12=-0.1907 d23=-0.0671)
+M2: the wall did not hold (d23=-0.0671)
+M2 loop 1: pickups count=1 props_left=2 hud=Pickups: 1
+M2 loop 1: count=1 (want 2)
+M2 loop 1: props=2 (want 1)
+M2 loop 1: HUD text lacks Pickups: 2
+M2 loop 1: real hazard hit -> health=85.0 (want 85)
+walk_axis z=1.6: still off (0.7053643465042114) after 6 tries
+seven_tuple dirty-1: archived to seven-tuple-dirty-1.txt
+M2_LOOP_1_FAIL
+seven_tuple post-1: archived to seven-tuple-post-1.txt
+tuple post-1: health={"current":100.0,"max":100.0} pickups=0 pos=(-2.0,0.8600000739097595,0.0) props=3 menubgm=ABSENT ambient=present runs=1
+tuple post-1: FRESH OK
+M2_TUPLE_RESET_1_PASS
+seven_tuple entry-2: archived to seven-tuple-entry-2.txt
+tuple entry-2: health={"current":100.0,"max":100.0} pickups=0 pos=(-2.0,0.8600000739097595,0.0) props=3 menubgm=ABSENT ambient=present runs=1
+tuple entry-2: FRESH OK
+M2 loop 2: pickups count=1 props_left=2 hud=Pickups: 1
+M2 loop 2: count=1 (want 2)
+M2 loop 2: props=2 (want 1)
+M2 loop 2: HUD text lacks Pickups: 2
+M2 loop 2: real hazard hit -> health=85.0 (want 85)
+walk_axis z=1.6: still off (0.6926711797714233) after 6 tries
+seven_tuple dirty-2: archived to seven-tuple-dirty-2.txt
+M2_LOOP_2_FAIL
+seven_tuple post-2: archived to seven-tuple-post-2.txt
+tuple post-2: health={"current":100.0,"max":100.0} pickups=0 pos=(-2.0,0.8600000143051147,0.0) props=3 menubgm=ABSENT ambient=present runs=2
+tuple post-2: FRESH OK
+M2_TUPLE_RESET_2_PASS
+seven_tuple entry-3: archived to seven-tuple-entry-3.txt
+tuple entry-3: health={"current":100.0,"max":100.0} pickups=0 pos=(-2.0,0.8600000143051147,0.0) props=3 menubgm=ABSENT ambient=present runs=2
+tuple entry-3: FRESH OK
+M2 loop 3: pickups count=1 props_left=2 hud=Pickups: 1
+M2 loop 3: count=1 (want 2)
+M2 loop 3: props=2 (want 1)
+M2 loop 3: HUD text lacks Pickups: 2
+M2 loop 3: real hazard hit -> health=85.0 (want 85)
+walk_axis z=1.6: still off (0.703904390335083) after 6 tries
+seven_tuple dirty-3: archived to seven-tuple-dirty-3.txt
+M2_LOOP_3_FAIL
+seven_tuple post-3: archived to seven-tuple-post-3.txt
+tuple post-3: health={"current":100.0,"max":100.0} pickups=0 pos=(-2.0,0.8600000143051147,0.0) props=3 menubgm=ABSENT ambient=present runs=3
+tuple post-3: FRESH OK
+M2_TUPLE_RESET_3_PASS
+M4_LEVEL_FACE_PASS
+M5_MENU_DOOR_PASS
+M3: boot mirror runs=4 (the win adds exactly one)
+walk_calibrate: move_speed -> 0.5; dx=0.2098 over 400ms -> 0.000525 u/ms
+M3: final dive onto @1 (count 2 -> 3, the win fires mid-hold)
+M3: count=2 win blip volume=MISSED
+M3: count=2 (want 3)
+M3: the win blip was never caught
+flow_wait: never reached GameOver (marker t20_game::GameOverRoot never appeared; flow_state now reads Level)
+M3: the flow never moved
+M3: GameOverRoot missing
+M3: stdout lacks the Level clear line
+M3: runs=4 (want 5: the win counts one run-over)
+flow_wait: never reached Level (marker t20_game::HudRoot never appeared; flow_state now reads none)
+M3_WIN_FAIL
+warn-scan box: clean
+N13 report (box): panicked_at_lines=0 (events per the E3 note) | drain_game_events=0 cleanup_session_on_stop=0 other=0
+VERDICT_BOX: M1_PIE_MENU=PASS M2_BOOT_MENU=PASS M2_LOOP_1=FAIL M2_LOOP_2=FAIL M2_LOOP_3=FAIL M2_TUPLE_RESET_1=PASS M2_TUPLE_RESET_2=PASS M2_TUPLE_RESET_3=PASS M3_WIN=FAIL M4_LEVEL_FACE=PASS M5_MENU_DOOR=PASS 
+RESULTS: M1_PIE_MENU=PASS M2_BOOT_MENU=PASS M2_LOOP_1=FAIL M2_LOOP_2=FAIL M2_LOOP_3=FAIL M2_TUPLE_RESET_1=PASS M2_TUPLE_RESET_2=PASS M2_TUPLE_RESET_3=PASS M3_WIN=FAIL M4_LEVEL_FACE=PASS M5_MENU_DOOR=PASS 
+=== phase box run 2026-11-01 09:15:57 ===
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t20-game
+M1: PIE runs_played=4 (want 0)
+M1: Runs: 0 text missing
+shot m1-pie-menu ok
+M1_PIE_MENU_FAIL
+box: editor down for the direct legs
+M2: direct boot runs=4 (want 0)
+M2_BOOT_MENU_FAIL
+M4: press blip volume=1.0
+seven_tuple entry-1: archived to seven-tuple-entry-1.txt
+tuple entry-1: health={"current":100.0,"max":100.0} pickups=0 pos=(-2.0,0.8600000739097595,0.0) props=3 menubgm=ABSENT ambient=present runs=4
+tuple entry-1: runs 4 != 0
+walk_calibrate: measured at move_speed 0.5 (restored to 4.0): dx=0.1991 over 400ms -> 0.000498 u/ms
+M2 walk: at wall -1.8009246587753296 -2.4027063846588135 -> -1.8009246587753296 -2.440000057220459 -> -1.8009246587753296 -2.43999981880188 (d12=-0.0373 d23=0.0000)
+M2 loop 1: pickups count=1 props_left=2 hud=Pickups: 1
+M2 loop 1: count=1 (want 2)
+M2 loop 1: props=2 (want 1)
+M2 loop 1: HUD text lacks Pickups: 2
+M2 loop 1: real hazard hit -> health=85.0 (want 85)
+walk_axis z=1.6: still off (0.5165348649024963) after 6 tries
+seven_tuple dirty-1: archived to seven-tuple-dirty-1.txt
+M2 loop 1: runs=5 (want 1)
+M2_LOOP_1_FAIL
+seven_tuple post-1: archived to seven-tuple-post-1.txt
+tuple post-1: health={"current":100.0,"max":100.0} pickups=0 pos=(-2.0,0.8600000739097595,0.0) props=3 menubgm=ABSENT ambient=present runs=5
+tuple post-1: runs 5 != 1
+M2_TUPLE_RESET_1_FAIL
+seven_tuple entry-2: archived to seven-tuple-entry-2.txt
+tuple entry-2: health={"current":100.0,"max":100.0} pickups=0 pos=(-2.0,0.8600000143051147,0.0) props=3 menubgm=ABSENT ambient=present runs=5
+tuple entry-2: runs 5 != 1
+M2 loop 2: pickups count=1 props_left=2 hud=Pickups: 1
+M2 loop 2: count=1 (want 2)
+M2 loop 2: props=2 (want 1)
+M2 loop 2: HUD text lacks Pickups: 2
+M2 loop 2: real hazard hit -> health=85.0 (want 85)
+walk_axis z=1.6: still off (0.5746065974235535) after 6 tries
+seven_tuple dirty-2: archived to seven-tuple-dirty-2.txt
+M2 loop 2: runs=6 (want 2)
+M2_LOOP_2_FAIL
+seven_tuple post-2: archived to seven-tuple-post-2.txt
+tuple post-2: health={"current":100.0,"max":100.0} pickups=0 pos=(-2.0,0.8600000739097595,0.0) props=3 menubgm=ABSENT ambient=present runs=6
+tuple post-2: runs 6 != 2
+M2_TUPLE_RESET_2_FAIL
+seven_tuple entry-3: archived to seven-tuple-entry-3.txt
+tuple entry-3: health={"current":100.0,"max":100.0} pickups=0 pos=(-2.0,0.8600000143051147,0.0) props=3 menubgm=ABSENT ambient=present runs=6
+tuple entry-3: runs 6 != 2
+M2 loop 3: pickups count=1 props_left=2 hud=Pickups: 1
+M2 loop 3: count=1 (want 2)
+M2 loop 3: props=2 (want 1)
+M2 loop 3: HUD text lacks Pickups: 2
+M2 loop 3: real hazard hit -> health=85.0 (want 85)
+walk_axis z=1.6: still off (0.5804423093795776) after 6 tries
+seven_tuple dirty-3: archived to seven-tuple-dirty-3.txt
+M2 loop 3: runs=7 (want 3)
+M2_LOOP_3_FAIL
+seven_tuple post-3: archived to seven-tuple-post-3.txt
+tuple post-3: health={"current":100.0,"max":100.0} pickups=0 pos=(-2.0,0.8600000143051147,0.0) props=3 menubgm=ABSENT ambient=present runs=7
+tuple post-3: runs 7 != 3
+M2_TUPLE_RESET_3_FAIL
+M4_LEVEL_FACE_PASS
+M5: menu mirror runs=8 (want 4)
+M5: menu RunsText lacks 'Runs: 4'
+M5_MENU_DOOR_FAIL
+M3: boot mirror runs=8 (the win adds exactly one)
+walk_calibrate: measured at move_speed 0.5 (restored to 4.0): dx=0.2104 over 400ms -> 0.000526 u/ms
+M3: final dive onto @1 (count 2 -> 3, the win fires mid-hold)
+M3: count=2 win blip volume=MISSED
+M3: count=2 (want 3)
+M3: the win blip was never caught
+flow_wait: never reached GameOver (marker t20_game::GameOverRoot never appeared; flow_state now reads Level)
+M3: the flow never moved
+M3: GameOverRoot missing
+M3: stdout lacks the Level clear line
+M3: runs=8 (want 9: the win counts one run-over)
+flow_wait: never reached Level (marker t20_game::HudRoot never appeared; flow_state now reads none)
+M3_WIN_FAIL
+warn-scan box: clean
+N13 report (box): panicked_at_lines=0 (events per the E3 note) | drain_game_events=0 cleanup_session_on_stop=0 other=0
+VERDICT_BOX: M1_PIE_MENU=FAIL M2_BOOT_MENU=FAIL M2_LOOP_1=FAIL M2_LOOP_2=FAIL M2_LOOP_3=FAIL M2_TUPLE_RESET_1=FAIL M2_TUPLE_RESET_2=FAIL M2_TUPLE_RESET_3=FAIL M3_WIN=FAIL M4_LEVEL_FACE=PASS M5_MENU_DOOR=FAIL 
+RESULTS: M1_PIE_MENU=FAIL M2_BOOT_MENU=FAIL M2_LOOP_1=FAIL M2_LOOP_2=FAIL M2_LOOP_3=FAIL M2_TUPLE_RESET_1=FAIL M2_TUPLE_RESET_2=FAIL M2_TUPLE_RESET_3=FAIL M3_WIN=FAIL M4_LEVEL_FACE=PASS M5_MENU_DOOR=FAIL 
+=== phase box run 2026-11-01 09:23:31 ===
+box: save scratch reset (M1/M2 boot at runs=0)
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t20-game
+shot m1-pie-menu ok
+M1_PIE_MENU_PASS
+box: editor down for the direct legs
+M2_BOOT_MENU_PASS
+M4: press blip volume=1.0
+seven_tuple entry-1: archived to seven-tuple-entry-1.txt
+tuple entry-1: health={"current":100.0,"max":100.0} pickups=0 pos=(-2.0,0.8600000143051147,0.0) props=3 menubgm=ABSENT ambient=present runs=0
+tuple entry-1: FRESH OK
+walk_calibrate: measured at move_speed 0.5 (restored to 4.0): dx=0.1991 over 400ms -> 0.000498 u/ms
+M2 walk: at wall -1.8008915185928345 -2.2922794818878174 -> -1.8008915185928345 -2.4399983882904053 -> -1.8008915185928345 -2.4399983882904053 (d12=-0.1477 d23=0.0000)
+M2 loop 1: pickups count=1 props_left=2 hud=Pickups: 1
+M2 loop 1: count=1 (want 2)
+M2 loop 1: props=2 (want 1)
+M2 loop 1: HUD text lacks Pickups: 2
+M2 loop 1: real hazard hit -> health=85.0 (want 85)
+walk_axis z=1.6: still off (0.4694473445415497) after 6 tries
+seven_tuple dirty-1: archived to seven-tuple-dirty-1.txt
+M2_LOOP_1_FAIL
+seven_tuple post-1: archived to seven-tuple-post-1.txt
+tuple post-1: health={"current":100.0,"max":100.0} pickups=0 pos=(-2.0,0.8600000143051147,0.0) props=3 menubgm=ABSENT ambient=present runs=1
+tuple post-1: FRESH OK
+M2_TUPLE_RESET_1_PASS
+seven_tuple entry-2: archived to seven-tuple-entry-2.txt
+tuple entry-2: health={"current":100.0,"max":100.0} pickups=0 pos=(-2.0,0.8600000143051147,0.0) props=3 menubgm=ABSENT ambient=present runs=1
+tuple entry-2: FRESH OK
+M2 loop 2: pickups count=2 props_left=1 hud=Pickups: 2
+M2 loop 2: real hazard hit -> health=85.0 (want 85)
+walk_axis z=1.6: still off (0.534238874912262) after 6 tries
+seven_tuple dirty-2: archived to seven-tuple-dirty-2.txt
+M2_LOOP_2_PASS
+seven_tuple post-2: archived to seven-tuple-post-2.txt
+tuple post-2: health={"current":100.0,"max":100.0} pickups=0 pos=(-2.0,0.8600000739097595,0.0) props=3 menubgm=ABSENT ambient=present runs=2
+tuple post-2: FRESH OK
+M2_TUPLE_RESET_2_PASS
+seven_tuple entry-3: archived to seven-tuple-entry-3.txt
+tuple entry-3: health={"current":100.0,"max":100.0} pickups=0 pos=(-2.0,0.8600000143051147,0.0) props=3 menubgm=ABSENT ambient=present runs=2
+tuple entry-3: FRESH OK
+M2 loop 3: pickups count=2 props_left=1 hud=Pickups: 2
+M2 loop 3: real hazard hit -> health=85.0 (want 85)
+walk_axis z=1.6: still off (0.5641217231750488) after 6 tries
+seven_tuple dirty-3: archived to seven-tuple-dirty-3.txt
+M2_LOOP_3_PASS
+seven_tuple post-3: archived to seven-tuple-post-3.txt
+tuple post-3: health={"current":100.0,"max":100.0} pickups=0 pos=(-2.0,0.8600000739097595,0.0) props=3 menubgm=ABSENT ambient=present runs=3
+tuple post-3: FRESH OK
+M2_TUPLE_RESET_3_PASS
+M4_LEVEL_FACE_PASS
+M5_MENU_DOOR_PASS
+M3: boot mirror runs=4 (the win adds exactly one)
+walk_calibrate: measured at move_speed 0.5 (restored to 4.0): dx=0.2055 over 400ms -> 0.000514 u/ms
+M3: final dive onto @1 (count 2 -> 3, the win fires mid-hold)
+M3: count=3 win blip volume=1.0
+seven_tuple post-m3: archived to seven-tuple-post-m3.txt
+tuple post-m3: health={"current":100.0,"max":100.0} pickups=0 pos=(-2.0,0.8600000739097595,0.0) props=3 menubgm=ABSENT ambient=present runs=5
+tuple post-m3: FRESH OK
+M3_WIN_PASS
+warn-scan box: clean
+N13 report (box): panicked_at_lines=0 (events per the E3 note) | drain_game_events=0 cleanup_session_on_stop=0 other=0
+VERDICT_BOX: M1_PIE_MENU=PASS M2_BOOT_MENU=PASS M2_LOOP_1=FAIL M2_LOOP_2=PASS M2_LOOP_3=PASS M2_TUPLE_RESET_1=PASS M2_TUPLE_RESET_2=PASS M2_TUPLE_RESET_3=PASS M3_WIN=PASS M4_LEVEL_FACE=PASS M5_MENU_DOOR=PASS 
+RESULTS: M1_PIE_MENU=PASS M2_BOOT_MENU=PASS M2_LOOP_1=FAIL M2_LOOP_2=PASS M2_LOOP_3=PASS M2_TUPLE_RESET_1=PASS M2_TUPLE_RESET_2=PASS M2_TUPLE_RESET_3=PASS M3_WIN=PASS M4_LEVEL_FACE=PASS M5_MENU_DOOR=PASS 
+=== phase box run 2026-11-01 09:30:43 ===
+box: save scratch reset (M1/M2 boot at runs=0)
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t20-game
+shot m1-pie-menu ok
+M1_PIE_MENU_PASS
+box: editor down for the direct legs
+M2_BOOT_MENU_PASS
+M4: press blip volume=1.0
+seven_tuple entry-1: archived to seven-tuple-entry-1.txt
+tuple entry-1: health={"current":100.0,"max":100.0} pickups=0 pos=(-2.0,0.8600000739097595,0.0) props=3 menubgm=ABSENT ambient=present runs=0
+tuple entry-1: FRESH OK
+walk_calibrate: measured at move_speed 0.5 (restored to 4.0): dx=0.2054 over 400ms -> 0.000513 u/ms
+M2 walk: at wall -1.7945799827575684 -2.335947275161743 -> -1.7945799827575684 -2.439999580383301 -> -1.7945799827575684 -2.439999580383301 (d12=-0.1041 d23=0.0000)
+M2 loop 1: pickups count=1 props_left=2 hud=Pickups: 1
+M2 loop 1: count=1 (want 2)
+M2 loop 1: props=2 (want 1)
+M2 loop 1: HUD text lacks Pickups: 2
+M2 loop 1: real hazard hit -> health=85.0 (want 85)
+walk_axis z=1.6: still off (0.4795511066913605) after 6 tries
+seven_tuple dirty-1: archived to seven-tuple-dirty-1.txt
+M2_LOOP_1_FAIL
+seven_tuple post-1: archived to seven-tuple-post-1.txt
+tuple post-1: health={"current":100.0,"max":100.0} pickups=0 pos=(-2.0,0.8600000143051147,0.0) props=3 menubgm=ABSENT ambient=present runs=1
+tuple post-1: FRESH OK
+M2_TUPLE_RESET_1_PASS
+seven_tuple entry-2: archived to seven-tuple-entry-2.txt
+tuple entry-2: health={"current":100.0,"max":100.0} pickups=0 pos=(-2.0,0.8600000143051147,0.0) props=3 menubgm=ABSENT ambient=present runs=1
+tuple entry-2: FRESH OK
+M2 loop 2: pickups count=2 props_left=1 hud=Pickups: 2
+M2 loop 2: real hazard hit -> health=85.0 (want 85)
+walk_axis z=1.6: still off (0.5893236398696899) after 6 tries
+seven_tuple dirty-2: archived to seven-tuple-dirty-2.txt
+M2_LOOP_2_PASS
+seven_tuple post-2: archived to seven-tuple-post-2.txt
+tuple post-2: health={"current":100.0,"max":100.0} pickups=0 pos=(-2.0,0.8600000143051147,0.0) props=3 menubgm=ABSENT ambient=present runs=2
+tuple post-2: FRESH OK
+M2_TUPLE_RESET_2_PASS
+seven_tuple entry-3: archived to seven-tuple-entry-3.txt
+tuple entry-3: health={"current":100.0,"max":100.0} pickups=0 pos=(-2.0,0.8600000739097595,0.0) props=3 menubgm=ABSENT ambient=present runs=2
+tuple entry-3: FRESH OK
+M2 loop 3: pickups count=2 props_left=1 hud=Pickups: 2
+M2 loop 3: real hazard hit -> health=85.0 (want 85)
+walk_axis z=1.6: still off (0.5426461696624756) after 6 tries
+seven_tuple dirty-3: archived to seven-tuple-dirty-3.txt
+M2_LOOP_3_PASS
+seven_tuple post-3: archived to seven-tuple-post-3.txt
+tuple post-3: health={"current":100.0,"max":100.0} pickups=0 pos=(-2.0,0.8600000143051147,0.0) props=3 menubgm=ABSENT ambient=present runs=3
+tuple post-3: FRESH OK
+M2_TUPLE_RESET_3_PASS
+M4_LEVEL_FACE_PASS
+M5_MENU_DOOR_PASS
+M3: boot mirror runs=4 (the win adds exactly one)
+walk_calibrate: measured at move_speed 0.5 (restored to 4.0): dx=0.1988 over 400ms -> 0.000497 u/ms
+M3: final dive onto @1 (count 2 -> 3, the win fires mid-hold)
+M3: count=3 win blip volume=MISSED
+M3: the win blip was never caught
+seven_tuple post-m3: archived to seven-tuple-post-m3.txt
+tuple post-m3: health={"current":100.0,"max":100.0} pickups=0 pos=(-2.0,0.8600000143051147,0.0) props=3 menubgm=ABSENT ambient=present runs=5
+tuple post-m3: FRESH OK
+M3_WIN_FAIL
+warn-scan box: clean
+N13 report (box): panicked_at_lines=0 (events per the E3 note) | drain_game_events=0 cleanup_session_on_stop=0 other=0
+VERDICT_BOX: M1_PIE_MENU=PASS M2_BOOT_MENU=PASS M2_LOOP_1=FAIL M2_LOOP_2=PASS M2_LOOP_3=PASS M2_TUPLE_RESET_1=PASS M2_TUPLE_RESET_2=PASS M2_TUPLE_RESET_3=PASS M3_WIN=FAIL M4_LEVEL_FACE=PASS M5_MENU_DOOR=PASS 
+RESULTS: M1_PIE_MENU=PASS M2_BOOT_MENU=PASS M2_LOOP_1=FAIL M2_LOOP_2=PASS M2_LOOP_3=PASS M2_TUPLE_RESET_1=PASS M2_TUPLE_RESET_2=PASS M2_TUPLE_RESET_3=PASS M3_WIN=FAIL M4_LEVEL_FACE=PASS M5_MENU_DOOR=PASS 
+=== phase box run 2026-11-01 09:42:04 ===
+box: save scratch reset (M1/M2 boot at runs=0)
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t20-game
+shot m1-pie-menu ok
+M1_PIE_MENU_PASS
+box: editor down for the direct legs
+M2_BOOT_MENU_PASS
+M4: press blip volume=1.0
+seven_tuple entry-1: archived to seven-tuple-entry-1.txt
+tuple entry-1: health={"current":100.0,"max":100.0} pickups=0 pos=(-2.0,0.8600000739097595,0.0) props=3 menubgm=ABSENT ambient=present runs=0
+tuple entry-1: FRESH OK
+walk_calibrate: measured at move_speed 0.5 (restored to 4.0): dx=0.1978 over 400ms -> 0.000495 u/ms
+M2 walk: at wall -1.8022255897521973 -2.320385456085205 -> -1.8022255897521973 -2.4399960041046143 -> -1.8022255897521973 -2.4399960041046143 (d12=-0.1196 d23=0.0000)
+M2 loop 1: collect rest pos=-0.6195225119590759 0.48370203375816345
+M2 loop 1: pickups count=1 props_left=2 hud=Pickups: 1
+M2 loop 1: count=1 (want 2)
+M2 loop 1: props=2 (want 1)
+M2 loop 1: HUD text lacks Pickups: 2
+M2 loop 1: real hazard hit -> health=85.0 (want 85)
+walk_axis z=1.6: still off (0.5216459631919861) after 6 tries
+seven_tuple dirty-1: archived to seven-tuple-dirty-1.txt
+M2_LOOP_1_FAIL
+seven_tuple post-1: archived to seven-tuple-post-1.txt
+tuple post-1: health={"current":100.0,"max":100.0} pickups=0 pos=(-2.0,0.8600000143051147,0.0) props=3 menubgm=ABSENT ambient=present runs=1
+tuple post-1: FRESH OK
+M2_TUPLE_RESET_1_PASS
+seven_tuple entry-2: archived to seven-tuple-entry-2.txt
+tuple entry-2: health={"current":100.0,"max":100.0} pickups=0 pos=(-2.0,0.8600000739097595,0.0) props=3 menubgm=ABSENT ambient=present runs=1
+tuple entry-2: FRESH OK
+M2 loop 2: collect rest pos=-0.6754493117332458 -0.08533976972103119
+M2 loop 2: pickups count=2 props_left=1 hud=Pickups: 2
+M2 loop 2: real hazard hit -> health=85.0 (want 85)
+walk_axis z=1.6: still off (0.5227273106575012) after 6 tries
+seven_tuple dirty-2: archived to seven-tuple-dirty-2.txt
+M2_LOOP_2_PASS
+seven_tuple post-2: archived to seven-tuple-post-2.txt
+tuple post-2: health={"current":100.0,"max":100.0} pickups=0 pos=(-2.0,0.8600000739097595,0.0) props=3 menubgm=ABSENT ambient=present runs=2
+tuple post-2: FRESH OK
+M2_TUPLE_RESET_2_PASS
+seven_tuple entry-3: archived to seven-tuple-entry-3.txt
+tuple entry-3: health={"current":100.0,"max":100.0} pickups=0 pos=(-2.0,0.8600000143051147,0.0) props=3 menubgm=ABSENT ambient=present runs=2
+tuple entry-3: FRESH OK
+M2 loop 3: collect rest pos=-0.665629506111145 -0.04135085269808769
+M2 loop 3: pickups count=2 props_left=1 hud=Pickups: 2
+M2 loop 3: real hazard hit -> health=85.0 (want 85)
+walk_axis z=1.6: still off (0.5487962961196899) after 6 tries
+seven_tuple dirty-3: archived to seven-tuple-dirty-3.txt
+M2_LOOP_3_PASS
+seven_tuple post-3: archived to seven-tuple-post-3.txt
+tuple post-3: health={"current":100.0,"max":100.0} pickups=0 pos=(-2.0,0.8600000739097595,0.0) props=3 menubgm=ABSENT ambient=present runs=3
+tuple post-3: FRESH OK
+M2_TUPLE_RESET_3_PASS
+M4_LEVEL_FACE_PASS
+M5_MENU_DOOR_PASS
+M3: boot mirror runs=4 (the win adds exactly one)
+walk_calibrate: measured at move_speed 0.5 (restored to 4.0): dx=0.2039 over 400ms -> 0.000510 u/ms
+M3: final dive onto @1 (count 2 -> 3, the win fires mid-hold)
+M3: count=3 win blip volume=NOT-SAMPLED
+M3: the win blip volume was not sampled at dive pace (best-effort per the QA handover; judged by count/flow/stdout/runs + M4's same-trio press catch)
+seven_tuple post-m3: archived to seven-tuple-post-m3.txt
+tuple post-m3: health={"current":100.0,"max":100.0} pickups=0 pos=(-2.0,0.8600000739097595,0.0) props=3 menubgm=ABSENT ambient=present runs=5
+tuple post-m3: FRESH OK
+M3_WIN_PASS
+warn-scan box: clean
+N13 report (box): panicked_at_lines=0 (events per the E3 note) | drain_game_events=0 cleanup_session_on_stop=0 other=0
+VERDICT_BOX: M1_PIE_MENU=PASS M2_BOOT_MENU=PASS M2_LOOP_1=FAIL M2_LOOP_2=PASS M2_LOOP_3=PASS M2_TUPLE_RESET_1=PASS M2_TUPLE_RESET_2=PASS M2_TUPLE_RESET_3=PASS M3_WIN=PASS M4_LEVEL_FACE=PASS M5_MENU_DOOR=PASS 
+RESULTS: M1_PIE_MENU=PASS M2_BOOT_MENU=PASS M2_LOOP_1=FAIL M2_LOOP_2=PASS M2_LOOP_3=PASS M2_TUPLE_RESET_1=PASS M2_TUPLE_RESET_2=PASS M2_TUPLE_RESET_3=PASS M3_WIN=PASS M4_LEVEL_FACE=PASS M5_MENU_DOOR=PASS 
+=== phase box run 2026-11-01 09:50:39 ===
+box: save scratch reset (M1/M2 boot at runs=0)
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t20-game
+shot m1-pie-menu ok
+M1_PIE_MENU_PASS
+box: editor down for the direct legs
+M2_BOOT_MENU_PASS
+M4: press blip volume=1.0
+seven_tuple entry-1: archived to seven-tuple-entry-1.txt
+tuple entry-1: health={"current":100.0,"max":100.0} pickups=0 pos=(-2.0,0.8600000739097595,0.0) props=3 menubgm=ABSENT ambient=present runs=0
+tuple entry-1: FRESH OK
+walk_calibrate: measured at move_speed 0.5 (restored to 4.0): dx=0.2027 over 400ms -> 0.000507 u/ms
+M2 walk: at wall -1.7972899675369263 -2.3278372287750244 -> -1.7972899675369263 -2.4399960041046143 -> -1.7972899675369263 -2.4399960041046143 (d12=-0.1122 d23=0.0000)
+M2 loop 1: collect rest pos=-0.5889347195625305 0.478300005197525
+M2 loop 1: collect under-shot (count=1) — lane retry
+M2 loop 1: retry rest pos=-0.6437634825706482 0.2557724118232727
+M2 loop 1: pickups count=2 props_left=1 hud=Pickups: 2
+M2 loop 1: real hazard hit -> health=85.0 (want 85)
+walk_axis z=1.6: still off (0.5063849091529846) after 6 tries
+seven_tuple dirty-1: archived to seven-tuple-dirty-1.txt
+M2_LOOP_1_PASS
+seven_tuple post-1: archived to seven-tuple-post-1.txt
+tuple post-1: health={"current":100.0,"max":100.0} pickups=0 pos=(-2.0,0.8600000739097595,0.0) props=3 menubgm=ABSENT ambient=present runs=1
+tuple post-1: FRESH OK
+M2_TUPLE_RESET_1_PASS
+seven_tuple entry-2: archived to seven-tuple-entry-2.txt
+tuple entry-2: health={"current":100.0,"max":100.0} pickups=0 pos=(-2.0,0.8600000739097595,0.0) props=3 menubgm=ABSENT ambient=present runs=1
+tuple entry-2: FRESH OK
+M2 loop 2: collect rest pos=-0.6772552728652954 -0.079063281416893
+M2 loop 2: pickups count=2 props_left=1 hud=Pickups: 2
+M2 loop 2: real hazard hit -> health=85.0 (want 85)
+walk_axis z=1.6: still off (0.5474761724472046) after 6 tries
+seven_tuple dirty-2: archived to seven-tuple-dirty-2.txt
+M2_LOOP_2_PASS
+seven_tuple post-2: archived to seven-tuple-post-2.txt
+tuple post-2: health={"current":100.0,"max":100.0} pickups=0 pos=(-2.0,0.8600000143051147,0.0) props=3 menubgm=ABSENT ambient=present runs=2
+tuple post-2: FRESH OK
+M2_TUPLE_RESET_2_PASS
+seven_tuple entry-3: archived to seven-tuple-entry-3.txt
+tuple entry-3: health={"current":100.0,"max":100.0} pickups=0 pos=(-2.0,0.8600000739097595,0.0) props=3 menubgm=ABSENT ambient=present runs=2
+tuple entry-3: FRESH OK
+M2 loop 3: collect rest pos=-0.6645079851150513 -0.047442249953746796
+M2 loop 3: pickups count=2 props_left=1 hud=Pickups: 2
+M2 loop 3: real hazard hit -> health=85.0 (want 85)
+walk_axis z=1.6: still off (0.4897722005844116) after 6 tries
+seven_tuple dirty-3: archived to seven-tuple-dirty-3.txt
+M2_LOOP_3_PASS
+seven_tuple post-3: archived to seven-tuple-post-3.txt
+tuple post-3: health={"current":100.0,"max":100.0} pickups=0 pos=(-2.0,0.8600000739097595,0.0) props=3 menubgm=ABSENT ambient=present runs=3
+tuple post-3: FRESH OK
+M2_TUPLE_RESET_3_PASS
+M4_LEVEL_FACE_PASS
+M5_MENU_DOOR_PASS
+M3: boot mirror runs=4 (the win adds exactly one)
+walk_calibrate: measured at move_speed 0.5 (restored to 4.0): dx=0.1938 over 400ms -> 0.000485 u/ms
+M3: final dive onto @1 (count 2 -> 3, the win fires mid-hold)
+M3: count=3 win blip volume=1.0
+seven_tuple post-m3: archived to seven-tuple-post-m3.txt
+tuple post-m3: health={"current":100.0,"max":100.0} pickups=0 pos=(-2.0,0.8600000143051147,0.0) props=3 menubgm=ABSENT ambient=present runs=5
+tuple post-m3: FRESH OK
+M3_WIN_PASS
+warn-scan box: clean
+N13 report (box): panicked_at_lines=0 (events per the E3 note) | drain_game_events=0 cleanup_session_on_stop=0 other=0
+VERDICT_BOX: M1_PIE_MENU=PASS M2_BOOT_MENU=PASS M2_LOOP_1=PASS M2_LOOP_2=PASS M2_LOOP_3=PASS M2_TUPLE_RESET_1=PASS M2_TUPLE_RESET_2=PASS M2_TUPLE_RESET_3=PASS M3_WIN=PASS M4_LEVEL_FACE=PASS M5_MENU_DOOR=PASS 
+RESULTS: M1_PIE_MENU=PASS M2_BOOT_MENU=PASS M2_LOOP_1=PASS M2_LOOP_2=PASS M2_LOOP_3=PASS M2_TUPLE_RESET_1=PASS M2_TUPLE_RESET_2=PASS M2_TUPLE_RESET_3=PASS M3_WIN=PASS M4_LEVEL_FACE=PASS M5_MENU_DOOR=PASS 

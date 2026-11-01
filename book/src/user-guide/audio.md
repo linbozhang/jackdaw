@@ -92,6 +92,10 @@ editor, for the reason at the top of this chapter.
 | Button click | spawned by the game's code | `blip.wav`, `PlaybackSettings::DESPAWN`, `SfxBus` — one short entity per press that takes itself down when the sound ends |
 | Level drone | `assets/scene.bsn`, entity `#Ambient` | `ambient.wav`, `Loop`, `Linear(0.8)`, `spatial: true`, positioned at (6, 2, −4) |
 
+The blip pulls double duty as the win's fanfare: collect all three
+pickups and the same one-shot sounds once on the sfx bus, on the way
+to the end screen ([Game Flow](game-flow.md)).
+
 The menu theme and the level drone are scene entities, so their
 lifespan is the document's: the theme exists only while the menu does,
 the drone only while the level does — [Game Flow](game-flow.md)'s

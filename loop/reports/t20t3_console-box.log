@@ -1,0 +1,65 @@
+=== phase box run 2026-11-01 09:50:39 ===
+box: save scratch reset (M1/M2 boot at runs=0)
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t20-game
+shot m1-pie-menu ok
+M1_PIE_MENU_PASS
+box: editor down for the direct legs
+M2_BOOT_MENU_PASS
+M4: press blip volume=1.0
+seven_tuple entry-1: archived to seven-tuple-entry-1.txt
+tuple entry-1: health={"current":100.0,"max":100.0} pickups=0 pos=(-2.0,0.8600000739097595,0.0) props=3 menubgm=ABSENT ambient=present runs=0
+tuple entry-1: FRESH OK
+walk_calibrate: measured at move_speed 0.5 (restored to 4.0): dx=0.2027 over 400ms -> 0.000507 u/ms
+M2 walk: at wall -1.7972899675369263 -2.3278372287750244 -> -1.7972899675369263 -2.4399960041046143 -> -1.7972899675369263 -2.4399960041046143 (d12=-0.1122 d23=0.0000)
+M2 loop 1: collect rest pos=-0.5889347195625305 0.478300005197525
+M2 loop 1: collect under-shot (count=1) — lane retry
+M2 loop 1: retry rest pos=-0.6437634825706482 0.2557724118232727
+M2 loop 1: pickups count=2 props_left=1 hud=Pickups: 2
+M2 loop 1: real hazard hit -> health=85.0 (want 85)
+walk_axis z=1.6: still off (0.5063849091529846) after 6 tries
+seven_tuple dirty-1: archived to seven-tuple-dirty-1.txt
+M2_LOOP_1_PASS
+seven_tuple post-1: archived to seven-tuple-post-1.txt
+tuple post-1: health={"current":100.0,"max":100.0} pickups=0 pos=(-2.0,0.8600000739097595,0.0) props=3 menubgm=ABSENT ambient=present runs=1
+tuple post-1: FRESH OK
+M2_TUPLE_RESET_1_PASS
+seven_tuple entry-2: archived to seven-tuple-entry-2.txt
+tuple entry-2: health={"current":100.0,"max":100.0} pickups=0 pos=(-2.0,0.8600000739097595,0.0) props=3 menubgm=ABSENT ambient=present runs=1
+tuple entry-2: FRESH OK
+M2 loop 2: collect rest pos=-0.6772552728652954 -0.079063281416893
+M2 loop 2: pickups count=2 props_left=1 hud=Pickups: 2
+M2 loop 2: real hazard hit -> health=85.0 (want 85)
+walk_axis z=1.6: still off (0.5474761724472046) after 6 tries
+seven_tuple dirty-2: archived to seven-tuple-dirty-2.txt
+M2_LOOP_2_PASS
+seven_tuple post-2: archived to seven-tuple-post-2.txt
+tuple post-2: health={"current":100.0,"max":100.0} pickups=0 pos=(-2.0,0.8600000143051147,0.0) props=3 menubgm=ABSENT ambient=present runs=2
+tuple post-2: FRESH OK
+M2_TUPLE_RESET_2_PASS
+seven_tuple entry-3: archived to seven-tuple-entry-3.txt
+tuple entry-3: health={"current":100.0,"max":100.0} pickups=0 pos=(-2.0,0.8600000739097595,0.0) props=3 menubgm=ABSENT ambient=present runs=2
+tuple entry-3: FRESH OK
+M2 loop 3: collect rest pos=-0.6645079851150513 -0.047442249953746796
+M2 loop 3: pickups count=2 props_left=1 hud=Pickups: 2
+M2 loop 3: real hazard hit -> health=85.0 (want 85)
+walk_axis z=1.6: still off (0.4897722005844116) after 6 tries
+seven_tuple dirty-3: archived to seven-tuple-dirty-3.txt
+M2_LOOP_3_PASS
+seven_tuple post-3: archived to seven-tuple-post-3.txt
+tuple post-3: health={"current":100.0,"max":100.0} pickups=0 pos=(-2.0,0.8600000739097595,0.0) props=3 menubgm=ABSENT ambient=present runs=3
+tuple post-3: FRESH OK
+M2_TUPLE_RESET_3_PASS
+M4_LEVEL_FACE_PASS
+M5_MENU_DOOR_PASS
+M3: boot mirror runs=4 (the win adds exactly one)
+walk_calibrate: measured at move_speed 0.5 (restored to 4.0): dx=0.1938 over 400ms -> 0.000485 u/ms
+M3: final dive onto @1 (count 2 -> 3, the win fires mid-hold)
+M3: count=3 win blip volume=1.0
+seven_tuple post-m3: archived to seven-tuple-post-m3.txt
+tuple post-m3: health={"current":100.0,"max":100.0} pickups=0 pos=(-2.0,0.8600000143051147,0.0) props=3 menubgm=ABSENT ambient=present runs=5
+tuple post-m3: FRESH OK
+M3_WIN_PASS
+warn-scan box: clean
+N13 report (box): panicked_at_lines=0 (events per the E3 note) | drain_game_events=0 cleanup_session_on_stop=0 other=0
+VERDICT_BOX: M1_PIE_MENU=PASS M2_BOOT_MENU=PASS M2_LOOP_1=PASS M2_LOOP_2=PASS M2_LOOP_3=PASS M2_TUPLE_RESET_1=PASS M2_TUPLE_RESET_2=PASS M2_TUPLE_RESET_3=PASS M3_WIN=PASS M4_LEVEL_FACE=PASS M5_MENU_DOOR=PASS 
+RESULTS: M1_PIE_MENU=PASS M2_BOOT_MENU=PASS M2_LOOP_1=PASS M2_LOOP_2=PASS M2_LOOP_3=PASS M2_TUPLE_RESET_1=PASS M2_TUPLE_RESET_2=PASS M2_TUPLE_RESET_3=PASS M3_WIN=PASS M4_LEVEL_FACE=PASS M5_MENU_DOOR=PASS 

@@ -9,10 +9,10 @@
    Compiling walkdir v2.5.0
    Compiling httparse v1.10.1
    Compiling tokio v1.54.1
-   Compiling zune-jpeg v0.5.15
    Compiling notify v8.2.1
    Compiling bevy_utils v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_utils)
    Compiling bevy_tasks v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_tasks)
+   Compiling zune-jpeg v0.5.15
    Compiling http v1.5.0
    Compiling bevy_reflect v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_reflect)
    Compiling notify-debouncer-full v0.7.0
@@ -63,15 +63,15 @@
    Compiling bevy_light v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_light)
    Compiling bevy_sprite v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_sprite)
    Compiling bevy_input_focus v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_input_focus)
-   Compiling bevy_ui v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_ui)
    Compiling bevy_gltf v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_gltf)
+   Compiling bevy_ui v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_ui)
    Compiling bevy_winit v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_winit)
    Compiling bevy_core_pipeline v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_core_pipeline)
    Compiling bevy_ui_widgets v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_ui_widgets)
    Compiling bevy_sprite_render v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_sprite_render)
    Compiling bevy_pbr v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_pbr)
-   Compiling bevy_anti_alias v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_anti_alias)
    Compiling bevy_post_process v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_post_process)
+   Compiling bevy_anti_alias v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_anti_alias)
    Compiling bevy_ui_render v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_ui_render)
    Compiling bevy_feathers v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_feathers)
    Compiling bevy_dev_tools v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_dev_tools)

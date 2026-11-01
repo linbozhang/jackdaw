@@ -1,0 +1,39 @@
+df before gates:
+/dev/disk3s1s1   460Gi    12Gi    39Gi    24%    459k  408M    0%   /
+=== fmt START 2026-11-01 09:58:29 ===
+fmt EXIT=0 2026-11-01 09:58:32
+=== fmt END rc=0 2026-11-01 09:58:32 ===
+/dev/disk3s1s1   460Gi    12Gi    39Gi    24%    459k  408M    0%   /
+=== clippy_ws START 2026-11-01 09:58:32 ===
+clippy_ws EXIT=0 2026-11-01 09:58:56
+=== clippy_ws END rc=0 2026-11-01 09:58:56 ===
+/dev/disk3s1s1   460Gi    12Gi    39Gi    24%    459k  408M    0%   /
+=== clippy_phys START 2026-11-01 09:58:56 ===
+clippy_phys EXIT=0 2026-11-01 09:59:09
+=== clippy_phys END rc=0 2026-11-01 09:59:09 ===
+/dev/disk3s1s1   460Gi    12Gi    39Gi    24%    459k  408M    0%   /
+=== libtests START 2026-11-01 09:59:09 ===
+libtests EXIT=0 2026-11-01 10:02:23
+=== libtests END rc=0 2026-11-01 10:02:23 ===
+/dev/disk3s1s1   460Gi    12Gi    39Gi    24%    459k  404M    0%   /
+=== fast START 2026-11-01 10:02:23 ===
+fast EXIT=0 2026-11-01 10:03:48
+=== fast END rc=0 2026-11-01 10:03:48 ===
+/dev/disk3s1s1   460Gi    12Gi    39Gi    24%    459k  404M    0%   /
+=== integration START 2026-11-01 10:03:48 ===
+integration EXIT=0 2026-11-01 10:20:24
+=== integration END rc=0 2026-11-01 10:20:24 ===
+/dev/disk3s1s1   460Gi    12Gi    39Gi    24%    459k  406M    0%   /
+=== doctests START 2026-11-01 10:20:24 ===
+doctests EXIT=101 2026-11-01 10:20:40
+=== doctests END rc=101 2026-11-01 10:20:40 ===
+/dev/disk3s1s1   460Gi    12Gi    39Gi    24%    459k  406M    0%   /
+=== docs START 2026-11-01 10:20:40 ===
+docs EXIT=0 2026-11-01 10:21:19
+=== docs END rc=0 2026-11-01 10:21:19 ===
+/dev/disk3s1s1   460Gi    12Gi    39Gi    24%    459k  405M    0%   /
+=== scaffold_e2e START 2026-11-01 10:21:19 ===
+scaffold_e2e EXIT=0 2026-11-01 10:25:38
+=== scaffold_e2e END rc=0 2026-11-01 10:25:38 ===
+/dev/disk3s1s1   460Gi    12Gi    37Gi    24%    459k  391M    0%   /
+ALL_GATES_DONE 2026-11-01 10:25:38

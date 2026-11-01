@@ -88,8 +88,9 @@ value every frame. The two texts are `Text` bindings —
 the template's hazard sensors burn 15 a touch
 ([Physics](physics.md) has the collision-layer row that makes hazards
 touch the player only), without it the Interact key does. Hit zero and
-the flow moves to the end screen; Restart — that screen's button,
-after blood-out — re-enters the level.
+the flow moves to the end screen; a full pickup line — all three —
+gets there by winning instead (a blip, then the same screen). Restart —
+that screen's button, after blood-out — re-enters the level.
 
 One restart semantic worth knowing exactly: Restart resets the player
 (health to the config's number, back to the spawn point) through

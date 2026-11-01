@@ -171,3 +171,11 @@ powershell -ExecutionPolicy Bypass -File ...\r1-drive.ps1 -Drive Press -Repeat 5
 - **临时工程门槛**：`JACKDAW_SKIP_SETUP_CHECK=1` 不跳过「无 Cargo.toml/jackdaw.toml」的
   启动对话框；临时工程要齐 `Cargo.toml`+`jackdaw.toml`（fixture: tests/fixtures/definition_project），
   否则直接用 my-game（**不存盘策略**：跑前跑后 SHA256 校验 scene.bsn）。
+- **游戏窗按键注入必须心跳式 hold**（T20-T2，2026-11-01，macOS）：未聚焦的游戏窗跑
+  winit `reactive_low_power`（有事件才有帧）——按键按下后若无后续事件，帧停滞、系统不消费。
+  任何 hold 期间保持消息流（每拍一条=一帧，t20-live.sh `tap_key`/`walk_axis` 已固化）；
+  位置腿走 poll-driven 步进（先降 `move_speed` 到 0.5 再测量）。
+- **游戏 flow 断言走文档根标记**（T20-T2，EG8/A16 关联）：游戏侧 `State<GameFlow>` 未
+  反射注册，BRP 读/写 flow 通道死（`Unknown resource type`，红证 `t20t2_eg8_flow_state_red.log`）
+  ——flow 断言一律读 MenuRoot/HudRoot/GameOverRoot 标记（`world.query` 有无即可）；
+  通道开放归 A16（buglist），勿在 QA 脚本里重试 BRP flow 拼写。

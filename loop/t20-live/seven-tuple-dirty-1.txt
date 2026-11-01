@@ -40,3 +40,45 @@ dirty-1 props 0
 dirty-1 menubgm 
 dirty-1 ambient 
 dirty-1 runs {"jsonrpc":"2.0","id":18951,"result":{"value":{"paused":false,"runs_played":1,"unlock_note":""}}}
+dirty-1 health {"current":0.0,"max":100.0}
+dirty-1 pickups 1
+dirty-1 position {"rotation":[0.0,-0.0022733223158866167,0.0,0.9999974370002747],"scale":[1.0,1.0,1.0],"translation":[1.9739062786102295,0.8600000739097595,0.7053643465042114]}
+dirty-1 props 0
+dirty-1 menubgm 
+dirty-1 ambient 
+dirty-1 runs {"jsonrpc":"2.0","id":5131,"result":{"value":{"paused":false,"runs_played":1,"unlock_note":""}}}
+dirty-1 health {"current":0.0,"max":100.0}
+dirty-1 pickups 1
+dirty-1 position {"rotation":[0.0,-0.06447885185480118,0.0,0.9979190230369568],"scale":[1.0,1.0,1.0],"translation":[2.2608344554901123,0.8600000143051147,0.5165348649024963]}
+dirty-1 props 0
+dirty-1 menubgm 
+dirty-1 ambient 
+dirty-1 runs {"jsonrpc":"2.0","id":19748,"result":{"value":{"paused":false,"runs_played":5,"unlock_note":"Endless mode unlocked!"}}}
+dirty-1 health {"current":0.0,"max":100.0}
+dirty-1 pickups 1
+dirty-1 position {"rotation":[0.0,-0.06667520850896835,0.0,0.9977747201919556],"scale":[1.0,1.0,1.0],"translation":[2.187448024749756,0.8600000739097595,0.4694473445415497]}
+dirty-1 props 0
+dirty-1 menubgm 
+dirty-1 ambient 
+dirty-1 runs {"jsonrpc":"2.0","id":30566,"result":{"value":{"paused":false,"runs_played":1,"unlock_note":""}}}
+dirty-1 health {"current":0.0,"max":100.0}
+dirty-1 pickups 1
+dirty-1 position {"rotation":[0.0,-0.07176384329795837,0.0,0.9974216222763062],"scale":[1.0,1.0,1.0],"translation":[2.244513988494873,0.8600000143051147,0.4795511066913605]}
+dirty-1 props 0
+dirty-1 menubgm 
+dirty-1 ambient 
+dirty-1 runs {"jsonrpc":"2.0","id":29246,"result":{"value":{"paused":false,"runs_played":1,"unlock_note":""}}}
+dirty-1 health {"current":0.0,"max":100.0}
+dirty-1 pickups 1
+dirty-1 position {"rotation":[0.0,-0.06493894010782242,0.0,0.9978891611099243],"scale":[1.0,1.0,1.0],"translation":[2.1618261337280273,0.85999995470047,0.5216459631919861]}
+dirty-1 props 0
+dirty-1 menubgm 
+dirty-1 ambient 
+dirty-1 runs {"jsonrpc":"2.0","id":15763,"result":{"value":{"paused":false,"runs_played":1,"unlock_note":""}}}
+dirty-1 health {"current":0.0,"max":100.0}
+dirty-1 pickups 2
+dirty-1 position {"rotation":[0.0,-0.05756393447518349,0.0,0.9983417987823486],"scale":[1.0,1.0,1.0],"translation":[2.283618927001953,0.8600000143051147,0.5063849091529846]}
+dirty-1 props 0
+dirty-1 menubgm 
+dirty-1 ambient 
+dirty-1 runs {"jsonrpc":"2.0","id":2367,"result":{"value":{"paused":false,"runs_played":1,"unlock_note":""}}}
