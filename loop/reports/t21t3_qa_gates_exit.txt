@@ -1,0 +1,64 @@
+df before QA gates:
+/dev/disk3s1s1   460Gi    12Gi    95Gi    11%    459k  1.0G    0%   /
+RUST_BACKTRACE=<unset>
+=== fmt START 2026-11-01 20:45:15 ===
+fmt EXIT=0 2026-11-01 20:45:18
+=== fmt END rc=0 2026-11-01 20:45:18 ===
+/dev/disk3s1s1   460Gi    12Gi    95Gi    11%    459k  1.0G    0%   /
+=== libtests START 2026-11-01 20:45:18 ===
+libtests EXIT=0 2026-11-01 20:48:55
+=== libtests END rc=0 2026-11-01 20:48:55 ===
+/dev/disk3s1s1   460Gi    12Gi    95Gi    12%    459k  997M    0%   /
+=== fast START 2026-11-01 20:48:55 ===
+fast EXIT=0 2026-11-01 20:50:29
+=== fast END rc=0 2026-11-01 20:50:29 ===
+/dev/disk3s1s1   460Gi    12Gi    95Gi    12%    459k  997M    0%   /
+=== audio_gate START 2026-11-01 20:50:29 ===
+audio_gate EXIT=0 2026-11-01 20:52:07
+=== audio_gate END rc=0 2026-11-01 20:52:07 ===
+/dev/disk3s1s1   460Gi    12Gi    95Gi    12%    459k  994M    0%   /
+=== save_store START 2026-11-01 20:52:07 ===
+save_store EXIT=0 2026-11-01 20:52:20
+=== save_store END rc=0 2026-11-01 20:52:20 ===
+/dev/disk3s1s1   460Gi    12Gi    95Gi    12%    459k  994M    0%   /
+=== integration START 2026-11-01 20:52:20 ===
+integration EXIT=1 2026-11-01 21:20:34
+=== integration END rc=1 2026-11-01 21:20:34 ===
+/dev/disk3s1s1   460Gi    12Gi    94Gi    12%    459k  985M    0%   /
+=== docs START 2026-11-01 21:20:34 ===
+docs EXIT=0 2026-11-01 21:21:19
+=== docs END rc=0 2026-11-01 21:21:19 ===
+/dev/disk3s1s1   460Gi    12Gi    94Gi    12%    459k  984M    0%   /
+=== scaffold_e2e START 2026-11-01 21:21:19 ===
+scaffold_e2e EXIT=0 2026-11-01 21:25:35
+=== scaffold_e2e END rc=0 2026-11-01 21:25:35 ===
+/dev/disk3s1s1   460Gi    12Gi    93Gi    12%    459k  980M    0%   /
+ALL_GATES_DONE 2026-11-01 21:25:35
+df after QA gates:
+/dev/disk3s1s1   460Gi    12Gi    93Gi    12%    459k  980M    0%   /
+21582 /bin/zsh -c . '/Users/zhanglinbo/.zcode/cli/exec/shell-snapshots/snapshot-zsh-1793159358249-taj2hg.sh' 2>/dev/null || true
+. '/Users/zhanglinbo/.zcode/cli/exec/bash-startup/sess_subagent_agent_d2ce7c15-3a41-4c79-9d94-aa44ffd82930/embedded-search-startup-ece10396eb339e47.sh'
+cargo nextest run --profile ci -p jackdaw -E 'test(prefab_file_change_triggers_reload)' 2>&1 | tail -5
+__zcode_status=$?
+if [ "$__zcode_status" -eq 0 ]; then pwd -P > '/var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/zcode-ade60db0-0354-4f8e-8dc3-a76b9d54335f-cwd'; fi
+exit "$__zcode_status"
+21584 /Users/zhanglinbo/.cargo/bin/cargo-nextest nextest run --profile ci -p jackdaw -E test(prefab_file_change_triggers_reload)
+21595 /Users/zhanglinbo/workspace/jackdaw/target/debug/deps/jackdaw-967d33bc1f7e7211 --list --format terse
+21596 /Users/zhanglinbo/workspace/jackdaw/target/debug/deps/jackdaw-967d33bc1f7e7211 --list --format terse --ignored
+21597 /Users/zhanglinbo/workspace/jackdaw/target/debug/deps/asset_formats-bd0dd69dbeb709b7 --list --format terse
+21598 /Users/zhanglinbo/workspace/jackdaw/target/debug/deps/asset_formats-bd0dd69dbeb709b7 --list --format terse --ignored
+21599 /Users/zhanglinbo/workspace/jackdaw/target/debug/deps/asset_watch_reload-f8979a06107b4497 --list --format terse
+21600 /Users/zhanglinbo/workspace/jackdaw/target/debug/deps/asset_watch_reload-f8979a06107b4497 --list --format terse --ignored
+21601 /Users/zhanglinbo/workspace/jackdaw/target/debug/deps/audio_gate-2df795515812e04f --list --format terse
+21602 /Users/zhanglinbo/workspace/jackdaw/target/debug/deps/audio_gate-2df795515812e04f --list --format terse --ignored
+21603 /Users/zhanglinbo/workspace/jackdaw/target/debug/deps/bsn_game_run-bcfa6cd72efbfd13 --list --format terse
+21604 /Users/zhanglinbo/workspace/jackdaw/target/debug/deps/bsn_game_run-bcfa6cd72efbfd13 --list --format terse --ignored
+21605 /Users/zhanglinbo/workspace/jackdaw/target/debug/deps/component_shape_refresh-b58ab9a22443c4f8 --list --format terse
+21606 /Users/zhanglinbo/workspace/jackdaw/target/debug/deps/component_shape_refresh-b58ab9a22443c4f8 --list --format terse --ignored
+21607 /Users/zhanglinbo/workspace/jackdaw/target/debug/deps/controls-18cc86ef940a42c8 --list --format terse
+21608 /Users/zhanglinbo/workspace/jackdaw/target/debug/deps/controls-18cc86ef940a42c8 --list --format terse --ignored
+21609 /Users/zhanglinbo/workspace/jackdaw/target/debug/deps/dylib_linkage_identity-ee90fc42fb1cb660 --list --format terse
+21610 /Users/zhanglinbo/workspace/jackdaw/target/debug/deps/dylib_linkage_identity-ee90fc42fb1cb660 --list --format terse --ignored
+34855 zcode-cli HOME=/Users/zhanglinbo LOGNAME=zhanglinbo PATH=/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/pkg/env/global/bin:/usr/local/corplink/mdm/opt/corplink-mdm/bin:/Users/zhanglinbo/.cargo/bin:/Applications/ZCode.app/Contents/Resources/tools/bfs:/Applications/ZCode.app/Contents/Resources/tools/ripgrep:/Applications/ZCode.app/Contents/Resources/tools/ugrep
+34856 zcode-cli HOME=/Users/zhanglinbo LOGNAME=zhanglinbo PATH=/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/pkg/env/global/bin:/usr/local/corplink/mdm/opt/corplink-mdm/bin:/Users/zhanglinbo/.cargo/bin:/Applications/ZCode.app/Contents/Resources/tools/bfs:/Applications/ZCode.app/Contents/Resources/tools/ripgrep:/Applications/ZCode.app/Contents/Resources/tools/ugrep
+34863 zcode-node-repl-mcp HOME=/Users/zhanglinbo LOGNAME=zhanglinbo PATH=/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/pkg/env/global/bin:/usr/local/corplink/mdm/opt/corplink-mdm/bin:/Users/zhanglinbo/.cargo/bin:/Applications/ZCode.app/Contents/Resources/tools/bfs:/Applications/ZCode.app/Contents/Resources/tools/ripgrep:/Applications/ZCode.app/Contents/Resources/tools/ugrep

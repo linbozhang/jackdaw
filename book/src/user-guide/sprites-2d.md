@@ -184,8 +184,10 @@ panel is a faithful monitor for a 2D scene
 captured by the template's 3D camera and shows no 2D pass, so judge a 2D
 scene there by the game's own window (or by numbers over the live tree),
 not by the Game panel — the game window is the truth either way. Exports
-ship the whole `assets/` tree including atlas cards, and a staged build
-draws indexed tiles like a direct run.
+ship the whole `assets/` tree including atlas cards. (A staged build
+runs the indexed tiles — but the editor canvas currently draws the
+whole sheet for an authored-atlas sprite; see the atlas section above
+for the standing note.)
 
 Two wiring notes for the running side, stated as they are: the editor's
 live tree reads the template game's screens through the scenes' document

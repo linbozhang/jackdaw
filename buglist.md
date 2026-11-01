@@ -493,6 +493,7 @@
 - [ ] **A17. 编辑器画布对 Sprite Atlas wear 无 loader——渲染全图+ERROR（SP11，T21-T2 QA 三会话实证）**（2026-11-01 T21-T2 QA 发现；主控批准立账）
   场景文档直书 `texture_atlas: Some(TextureAtlas{layout:"content/sheet.bsn",index:2})` 后：游戏 direct/staged 窗口蓝 tile 正常渲染（6.222%/3.339%——但普查被壁纸主导，窗内重测 0.211/0.191），**编辑器画布渲染全图+asset-loader ERROR**（`content/sheet.bsn` 无 loader；三会话一致+QA 会话 5 行+画布截图放大亲读）——与 T21-T2 程序报告「解析零警告+画布 31×13 蓝 tile」相反（该宣称系壁纸主导假阳性+ATLAS_INDEX_PX 三拍字节相同）。
   修复方向：scene→Sprite Atlas handle 的 loader 缺面（`sheet.bsn` 为序列化 TextureAtlasLayout，需 scene 内 loader 或改持图片路径+运行时构建）；修复即 book 画布预览现状门升级。与 A16 同批触碰 sprite 域时顺手评估。
+  > 2026-11-01 票面精化（T21 终验 QA §六-5，主控落）：①现象面改写=**两侧同形**——编辑器画布与 direct/staged 游戏窗口均渲染完整六 tile 全图（QA 目视+shot 双侧亲读），单因「loader 缺面」被负证据闭合（卡在盘+零 loader ERROR 而全图依旧，editor 双 log 零命中亲算）；②机制注记=**双柄空间**（scene.bsn 路径柄 vs walk/catalog 卡，M10 证卡已进 store），正面柄观测仍缺=注记非定案；③修复面注意**编辑器/游戏两侧装载面不同**。
 
 - [ ] **A8. BSN apply 静默丢弃 crate 根 re-export 路径 + misleading remedy（AN8，T15-T2 真机首踩）**（2026-10-30 T15-T2 程序发现+QA 机制核实；主控批准立账）
   场景文档的图族组件必须写定义模块全路径（`…::graph::AnimationGraphRef`），crate 根 re-export 拼写被 `jackdaw_bsn::apply` 静默丢弃（无 warn、组件不落——手写场景/导出迁移场景易踩，fixture 已绕行）；且 `jackdaw_bsn::catalog` 的 remedy 文案（"rebuild the project"）对此误导。
