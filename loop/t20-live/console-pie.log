@@ -1,0 +1,32 @@
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t20-game
+M6: PIE boot mirror runs=11
+M6: the REAL POINTER moved the flow from 800 851
+M6_PIE_POINTER_PASS
+walk_calibrate: move_speed -> 0.5; dx=0.5216 over 400ms -> 0.001304 u/ms
+M6: count=2 win blip=MISSED (two dives: @1 then @-1)
+M6: count=2 (want 3)
+flow_wait: never reached GameOver (marker t20_game::GameOverRoot never appeared; flow_state now reads Level)
+M6: the flow never moved
+M6: GameOverRoot missing
+flow_wait: never reached Level (marker t20_game::HudRoot never appeared; flow_state now reads none)
+M6_PIE_WINLOOP_FAIL
+shot m6-pie-frame ok
+N13 report (pie): panicked_at_lines=7 (events per the E3 note) | drain_game_events=3 cleanup_session_on_stop=1 other=3
+N13 UNATTRIBUTED HITS:
+warn-scan pie: 14 hits:
+warn-scan pie | 46:thread 'main' (28995624) panicked at /rustc/b940084d7eb6a299eb4bfeb8e34901bc051e7ac4/library/alloc/src/vec/mod.rs:2258:13:
+warn-scan pie | 49:[2m2026-10-31T23:50:45.093978Z[0m [31mERROR[0m [2mbevy_ecs::error::handler[0m[2m:[0m Encountered an error in system `jackdaw::pie::drain_game_events`: Exclusive system panicked
+warn-scan pie | 52:thread 'main' (28995624) panicked at /rustc/b940084d7eb6a299eb4bfeb8e34901bc051e7ac4/library/alloc/src/vec/mod.rs:2258:13:
+warn-scan pie | 54:[2m2026-10-31T23:50:45.666340Z[0m [31mERROR[0m [2mbevy_ecs::error::handler[0m[2m:[0m Encountered an error in system `jackdaw::pie::drain_game_events`: Exclusive system panicked
+warn-scan pie | 58:thread 'main' (28995624) panicked at /rustc/b940084d7eb6a299eb4bfeb8e34901bc051e7ac4/library/alloc/src/vec/mod.rs:2258:13:
+warn-scan pie | 60:[2m2026-10-31T23:52:06.998170Z[0m [31mERROR[0m [2mbevy_ecs::error::handler[0m[2m:[0m Encountered an error in system `jackdaw::pie::drain_game_events`: Exclusive system panicked
+warn-scan pie | 63:thread 'main' (28995624) panicked at /rustc/b940084d7eb6a299eb4bfeb8e34901bc051e7ac4/library/alloc/src/vec/mod.rs:2258:13:
+warn-scan pie | 65:[2m2026-10-31T23:52:07.153388Z[0m [31mERROR[0m [2mbevy_ecs::error::handler[0m[2m:[0m Encountered an error in command `<<bevy_ecs::system::commands::entity_command::despawn::{{closure}} as bevy_ecs::system::commands::entity_command::EntityCommand>::with_entity::{{closure}} as bevy_ecs::system::commands::command::Command>::ignore_error::{{closure}}`: Command panicked
+warn-scan pie | 68:thread 'main' (28995624) panicked at /rustc/b940084d7eb6a299eb4bfeb8e34901bc051e7ac4/library/alloc/src/vec/mod.rs:2258:13:
+warn-scan pie | 70:[2m2026-10-31T23:52:07.908155Z[0m [31mERROR[0m [2mbevy_ecs::error::handler[0m[2m:[0m Encountered an error in system `jackdaw::pie::drain_game_events`: Exclusive system panicked
+warn-scan pie | 76:thread 'main' (28995624) panicked at /rustc/b940084d7eb6a299eb4bfeb8e34901bc051e7ac4/library/alloc/src/vec/mod.rs:2258:13:
+warn-scan pie | 78:[2m2026-10-31T23:52:38.492067Z[0m [31mERROR[0m [2mbevy_ecs::error::handler[0m[2m:[0m Encountered an error in system `jackdaw::pie::cleanup_session_on_stop`: Exclusive system panicked
+warn-scan pie | 81:thread 'main' (28995624) panicked at /rustc/b940084d7eb6a299eb4bfeb8e34901bc051e7ac4/library/alloc/src/vec/mod.rs:2258:13:
+warn-scan pie | 83:[2m2026-10-31T23:52:38.642526Z[0m [31mERROR[0m [2mbevy_ecs::error::handler[0m[2m:[0m Encountered an error in command `<<bevy_ecs::system::commands::entity_command::despawn::{{closure}} as bevy_ecs::system::commands::entity_command::EntityCommand>::with_entity::{{closure}} as bevy_ecs::system::commands::command::Command>::ignore_error::{{closure}}`: Command panicked
+VERDICT_PIE: M6_PIE_POINTER=PASS M6_PIE_WINLOOP=FAIL 
+RESULTS: M6_PIE_POINTER=PASS M6_PIE_WINLOOP=FAIL 

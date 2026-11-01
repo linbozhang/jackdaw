@@ -1,0 +1,18 @@
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t20-game
+M7: the constructor stayed the editor default (the play face is the judge)
+M7: the audio handle landed through the field-0 path set
+M7 doc: pickup_lines=1 audio_doc=
+shot m7-placed-inspector ok
+M7_PLACE_PASS
+shot m8-edited-menu ok
+M8: the HUD binding copy reads Orbs: 0 live
+M8_RESCREEN_PASS
+shot m9-config-card ok
+M9: live PlayerHealth={"current":50.0,"max":50.0} (want 50/50)
+M9_PARAMS_PASS
+M10: boot-into-gameover reads runs=8 (the end screen counts its own entry)
+M10_START_SCENE_PASS
+warn-scan config: clean
+N13 report (config): panicked_at_lines=0 (events per the E3 note) | drain_game_events=0 cleanup_session_on_stop=0 other=0
+VERDICT_CONFIG: M10_START_SCENE=PASS M7_PLACE=PASS M8_RESCREEN=PASS M9_PARAMS=PASS 
+RESULTS: M10_START_SCENE=PASS M7_PLACE=PASS M8_RESCREEN=PASS M9_PARAMS=PASS 

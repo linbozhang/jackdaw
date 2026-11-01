@@ -1,0 +1,11 @@
+/Users/zhanglinbo/workspace/jackdaw/loop/t20-live/t20-game-pure/.jackdaw-export
+/Users/zhanglinbo/workspace/jackdaw/loop/t20-live/t20-game-pure/assets/game.flow.json
+/Users/zhanglinbo/workspace/jackdaw/loop/t20-live/t20-game-pure/assets/gameover.bsn
+/Users/zhanglinbo/workspace/jackdaw/loop/t20-live/t20-game-pure/assets/hud.bsn
+/Users/zhanglinbo/workspace/jackdaw/loop/t20-live/t20-game-pure/assets/menu.bsn
+/Users/zhanglinbo/workspace/jackdaw/loop/t20-live/t20-game-pure/assets/scene.bsn
+/Users/zhanglinbo/workspace/jackdaw/loop/t20-live/t20-game-pure/assets/sounds/ambient.wav
+/Users/zhanglinbo/workspace/jackdaw/loop/t20-live/t20-game-pure/assets/sounds/bgm.wav
+/Users/zhanglinbo/workspace/jackdaw/loop/t20-live/t20-game-pure/assets/sounds/blip.wav
+/Users/zhanglinbo/workspace/jackdaw/loop/t20-live/t20-game-pure/export-manifest.json
+/Users/zhanglinbo/workspace/jackdaw/loop/t20-live/t20-game-pure/t20-game

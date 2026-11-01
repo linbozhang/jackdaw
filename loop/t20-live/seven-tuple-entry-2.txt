@@ -1,0 +1,21 @@
+entry-2 health {"current":100.0,"max":100.0}
+entry-2 pickups 0
+entry-2 position {"rotation":[0.0,0.0,0.0,1.0],"scale":[1.0,1.0,1.0],"translation":[-2.0,0.8600000143051147,0.0]}
+entry-2 props 3
+entry-2 menubgm 
+entry-2 ambient {"finished":false,"kind":"plain","paused":false,"position_secs":22.912925720214844,"volume":0.800000011920929}
+entry-2 runs {"jsonrpc":"2.0","id":21522,"result":{"value":{"paused":false,"runs_played":1,"unlock_note":""}}}
+entry-2 health {"current":100.0,"max":100.0}
+entry-2 pickups 0
+entry-2 position {"rotation":[0.0,0.0,0.0,1.0],"scale":[1.0,1.0,1.0],"translation":[-2.0,0.8600000143051147,0.0]}
+entry-2 props 3
+entry-2 menubgm 
+entry-2 ambient {"finished":false,"kind":"plain","paused":false,"position_secs":22.873016357421875,"volume":0.800000011920929}
+entry-2 runs {"jsonrpc":"2.0","id":5968,"result":{"value":{"paused":false,"runs_played":1,"unlock_note":""}}}
+entry-2 health {"current":100.0,"max":100.0}
+entry-2 pickups 0
+entry-2 position {"rotation":[0.0,0.0,0.0,1.0],"scale":[1.0,1.0,1.0],"translation":[-2.0,0.8600000143051147,0.0]}
+entry-2 props 3
+entry-2 menubgm 
+entry-2 ambient {"finished":false,"kind":"plain","paused":false,"position_secs":22.863039016723633,"volume":0.800000011920929}
+entry-2 runs {"jsonrpc":"2.0","id":11683,"result":{"value":{"paused":false,"runs_played":1,"unlock_note":""}}}

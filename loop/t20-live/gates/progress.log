@@ -1,0 +1,17 @@
+=== fmt ===
+fmt exit=0
+=== clippy workspace ===
+clippy_ws exit=0
+=== clippy physics dual ===
+clippy_phys exit=0
+=== libtests ===
+libtests exit=0
+=== audio_gate ===
+audio_gate exit=0
+=== save_store ===
+save_store exit=0
+=== AN2 animation leg ===
+an2 exit=0
+=== rebuild static-flavor bins ===
+rebuild exit=0
+ALL_GATES_DONE

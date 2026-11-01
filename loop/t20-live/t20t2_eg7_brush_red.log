@@ -1,0 +1,21 @@
+# EG7 red evidence: 2026-11-01 08:08:29
+# scene.bsn carries a brush Cube (jackdaw_geometry::Brush rows: 12)
+# level Pickup entity count after Start (want 4 = 3 code + the brush; the brush does not spawn):
+4
+# Name entities carrying the brush in the game world (want Cube, expect none):
+ResumeButton,MusicVolumeSlider,SfxVolumeRow,MusicVolumeRow,MasterVolumeRow,Hud,Root,PickupsText,HealthText,Audio Source,SfxVolumeLabel,MusicVolumeLabel,MasterVolumeLabel,PauseTitle,Ambient,SfxVolumeSlider,HudRoot,HealthFill,GameRoot,Empty,Sun,MasterVolumeSlider,ResumeCaption,hud,Cube,PauseScreen,HealthBar,LineGizmoRenderer,LineStripGizmoRenderer,LineJointGizmoRenderer
+# game log, unregistered-type line:
+[2m2026-11-01T00:08:24.060677Z[0m [33m WARN[0m [2mjackdaw_runtime[0m[2m:[0m embedded asset type 'bevy_camera::visibility::Visibility::Inherited' is not registered in this app; entities referencing it will fall back to a default handle
+[2m2026-11-01T00:08:24.060743Z[0m [33m WARN[0m [2mjackdaw_runtime[0m[2m:[0m embedded asset type 'bevy_camera::visibility::Visibility::Inherited' is not registered in this app; entities referencing it will fall back to a default handle
+
+# CORRECTION (same session, later): this red run REFUTED the EG7 hypothesis.
+# The brush Cube DID spawn in the standalone game (Pickup count 4, "Cube"
+# present in the Name query) even though its geometry types are unregistered
+# (the loader falls back on the mesh handle; the Pickup/Sensor components
+# still ride the entity). Config run B's count=3 had a different cause —
+# most plausibly the translation never landing on the brush (its Transform
+# stayed bare/identity; the "z: 0.8" doc assert was a false-positive grep
+# inside the 463-line brush block) combined with an un-isolated spawn
+# failure — and it is superseded by the passing Empty-based placement of
+# the final config run. EG7 is retracted as a defect; the T20 M7 leg keeps
+# the Empty form (a sensor pickup needs no mesh). Kept for the record.
