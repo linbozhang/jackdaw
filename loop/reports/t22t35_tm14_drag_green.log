@@ -1,0 +1,4 @@
+=== T3.5 TM14 flip verification, take 3 (host fix + deferred dispatch) ===
+before the drag: cells=0 history=2
+mid-drag modal=tilemap.stroke; after the release: cells=3 history=3 modal=null
+after one undo: cells=0 (the stroke's three cells)

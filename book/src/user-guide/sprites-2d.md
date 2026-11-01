@@ -175,6 +175,10 @@ scenes need no z bookkeeping). Both are recorded as open work; today z is
 the whole surface, and it satisfies the letter of authoring — it is just
 hand-run.
 
+The atlas is the one sheet-cutting surface — the Tilemap tool cuts the
+same way and paints with the cells; [Tilemaps in 2D](tilemaps-2d.md) is
+the whole 2D-level story.
+
 ## Playing and shipping
 
 Play, direct run and export all speak 2D. The **embedded** Play mode

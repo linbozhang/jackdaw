@@ -1,0 +1,12 @@
+    2026-11-01T22:40:45.213233Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.viewport_panel
+    2026-11-01T22:40:45.213267Z  INFO jackdaw_api_internal::lifecycle: Loading extension: jackdaw.test_input
+    2026-11-01T22:40:45.214931Z  WARN jackdaw_api_internal::keymap::apply: preset 'classic' has 10 chords claimed by more than one action: ["Delete (Press, Operators): clip.delete_keyframes, entity.delete, brush.delete_element", "Backspace (Press, Operators): clip.delete_keyframes, viewport.draw_brush.remove_last_vertex, brush.delete_element", "Home (Press, Operators): clip.timeline.jump_start, view.frame_all, viewport2d.frame", "Super+KeyC (Press, Operators): clip.copy_keyframes, entity.copy", "Super+KeyV (Press, Operators): clip.paste_keyframes, entity.paste", "Tab (Press, Operators): viewport.draw_brush.toggle_mode, brush.clip.cycle_mode", "Enter (Press, Operators): viewport.draw_brush.commit_polygon, brush.clip.apply", "KeyE (Press, Operators): tool.rotate, brush.mesh.extrude", "Escape (Press, Operators): brush.exit_edit_mode, selection.clear, brush.clip.clear, terrain.tool.exit_to_select", "Super+KeyB (Press, Operators): brush.mesh.edge_bevel, brush.mesh.vertex_bevel"]
+    2026-11-01T22:40:45.214949Z  INFO jackdaw::extension_lifecycle: applied keymap preset 'classic': 113 entries, 113 bindings, 0 user rows
+
+    thread 'sprite_ops::the_add_menu_shows_the_2d_group_only_with_a_2d_scene_open' (33520330) panicked at tests/operators/sprite_ops.rs:269:5:
+    assertion `left == right` failed
+      left: [("Sprite", "op:sprite.add"), ("Tilemap Layer", "op:tilemap.layer.add"), ("Empty 2D", "op:entity.add.empty")]
+     right: [("Sprite", "op:sprite.add"), ("Empty 2D", "op:entity.add.empty")]
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+error: test run failed

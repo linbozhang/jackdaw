@@ -126,3 +126,46 @@ T2 QA 交接硬项⑤（F5 面板 chrome 非主键 press、F6 空笔画空 undo 
    （本轮未触碰 buglist）。
 9. 本轮零 RUST_BACKTRACE；所有红态先落盘再修（TM14 红证独立成件；其余红=脚本口径
    迭代，按门禁日志覆盖归档契约处理，唯 TM14/TM15 的产品面红永在存档内）。
+
+---
+
+## 补：T3.5 小修轮（2026-11-02，合入前置；主控裁定：终验已覆盖矩阵面，余项 docs+机械修复）
+
+**四件全落 + 门禁全绿。** 分支同一（`loop/t22-tilemap`，T3.5 提交注明）；本轮**产品代码首次改动**=TM14 修复（+派单外的第二病灶，见下）。
+
+### 1. book 章补落 ✅
+
+`book/src/user-guide/tilemaps-2d.md` 新章（~150 行，house voice 对齐 sprites-2d.md）：2D 关卡制作导览（T 工具+调色板面板：sheet 陈列/格点选/`Tile N` 读数/highlight/brush 四钮/层行 Eye·P·S·T·激活/+ Add Layer——全部 UI 名现场核对源码防杜撰）、绘制/擦除/矩形+flood 填充（一笔=一 undo、Esc/右键取消、越界整笔拒）、图层与碰撞三态（P 装饰/S 地面墙/T 触发的运行时语义）、undo/保存重开、tilemap 模块与游戏侧教学块（三行为+census 反射注册对 A16/EG8 的对照注记）、**无工具链独立运行**（jd export staged 包内运行说明）、rect-vs-atlas 双柄空间注记（A17/TM5：「tile 渲染成整图=bug 非设置」）、规模边界注记（sheet=关卡，小关卡字面）、EG2 边界（关卡道具行为归游戏代码，编辑器authoring 网格）、30 秒清单。SUMMARY 挂目（Sprites in 2D 之后）+三交叉引用（sprites-2d 正向引新章、physics.md 新增「两栈分界」节、新章内引 game-flow）；全链接机查零缺失。
+
+### 2. TM14 🔴 修复 ✅（红绿+真机翻转验证）
+
+**两处病灶，主控裁的 ~3 行修法之外还藏着第二个：**
+1. **host 实体**（QA 评估的面）：`TileStrokeState.stage`（stage 节点实体）→ `host`（携带 `Viewport2dPanelHost` 的 panel content 实体），`fronted_stage_entity`→`fronted_host_entity`（查询改 `(Entity, &Viewport2dPanelHost)`）——stroke_cell 的 host 查找真机命中。
+2. **派发时序**（修完 1 后真机仍 0 格的实测逼出）：release 帧 `commands.queue` 的批算子调用在**同一 tick 的 invoke 内自动应用**——此刻 `ActiveModalOperator` 尚未拆除（finalize 在 invoke 返回后才跑）→ `can_act_on_entities` 见模态运行 → `tilemap.paint` 可用性拒绝 → `Ok(Cancelled)` 静默（dispatch_operator.rs:646 的 debug 级）。修法=**延迟一帧派发**：`PendingStrokeDispatch` 资源（release 帧落 Cells/Fill 意图），新 `apply_pending_stroke` Update 系统次帧应用（模态已退；若同帧尚在则顺延一帧）。flood 的 init 帧派发同路径同修。
+
+**红绿**：红证=`t22t3_tm14_stroke_red.log`（T3 轮已落盘）+ T3.5 两轮中间态实测（修 1 后 modal 清但 0 格；插桩 `T35PROBE release: visited=3 / dispatch: Ok(Cancelled)` 实锤时序病灶，插桩已移除）；绿=真机拖拽落格（下）+headless tilemap 8/8+operators 169/169+clippy 0。
+**真机翻转验证**（`t22t35_tm14_drag_green.log`）：press→3 moves→release：mid-drag modal=tilemap.stroke → release 后 **cells=3**、history+1（一笔=一条）、modal=null 干净退场 → 一次 undo cells=0。**M2 手势面翻转完成**——draw phase 恢复真实拖拽腿（STROKE_RELEASES/DRAW_DRAG_LANDS 两新腿）并全重跑 **13/13 PASS**（t22t35_live_draw.log）。
+
+### 3. 三个确定性门红修复 ✅（各 <15 行）
+
+| # | 修复 | 红证→绿证 |
+|---|---|---|
+| ① | `tilemap.stroke` 入 `UNBOUND_OPERATORS`（src/keybind_settings.rs，draw_brush_modal 同族） | `t22t35_unbound_red.log`（"no entry saying that is deliberate: [\"tilemap.stroke\"]"）→ keymap 50/50（t22t35_unbound_green.log/t22t35_gates_keymap.log） |
+| ② | 7 个 tilemap 实体参算子入 `ENTITY_PARAM_OPS`（tests/operators/authoring_ops.rs；全部 `false`=不食 selection——层缺省走调色板活动层，选择回填语义错误） | `t22t35_entityparam_addmenu_red.log`（left 恰缺 7 行实捕）→ operators 169/169 |
+| ③ | T21 add-menu 精确分类断言随「Tilemap Layer」行更新（tests/operators/sprite_ops.rs：三行序 Sprite/Tilemap Layer/Empty 2D） | 同上红 log（left==right 断言原文）→ 同绿 |
+
+**fast 重跑覆盖归档**：`t22t35_gates_fast.log` EXIT=0、lib **3047/3047**、全文零 `^error`/FAILED/Diff。受影响域终归档：tilemap stage **8/8**（t22t35_gates_tilemap.log）、keymap **50/50**、operators **169/169**。integration 按 A6 口径采信 T3 轮归档（本轮 diff：tilemap_palette 模态内+三个测试文件，与 integration 域零交集）。
+
+### 4. TM15/TM11 立票落 buglist ✅
+
+buglist.md 代理发现节尾追加两条（主控批准立账=T3.5 裁定）：**TM15**（redo 越存档点 dirty 不翻：现象/证据/修法=redo 后按深度+指纹重算 dirty，🟡 建议）；**TM11**（tilemap 工程开窗误报 editor does not include：机制=editor_has_module 缺 animation 式特判，修法=一行特判或 catalog 加 editor_builtin 位，🟡 建议）。其余 buglist/台账/roadmap 未动（按裁定）。
+
+### 5. 门禁 ✅
+
+fast EXIT=0（3047/3047 全文复核零红）+ 受影响域三族全绿（8/50/169）+ TM14 触碰面的 clippy `-p jackdaw -D warnings` 0。integration 采信归档（A6 口径）。
+
+### T3.5 遗留与说明
+
+- TM12（调色板空板门）、TM10（模板编译警告）按裁定**维持记档**未修（TM14 修复顺带消除了 TM12 对 live 腿的阻断——setup 的两-pick 解法保留为防御）。
+- 派单注：draw phase 的 STROKE_ARMS/STROKE_CANCEL_CLEARS 两腿随 TM14 修复被真实拖拽腿（STROKE_RELEASES/DRAW_DRAG_LANDS）取代——旧腿验证的是挂死态，新腿验证落格态。
+- TM14 修复插桩（T35PROBE info!）已全部移除，clippy -D warnings 干净为证。

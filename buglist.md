@@ -534,3 +534,15 @@
   修复方向：add 后首 set 应以「完整组件值」落文档而非仅 set 字段（T3 顺手修，QA 建议）。
   > 2026-10-28 更新（T11-T3）：**已修**（406d116b，T3 分支）——add 后首 set 以 schema 默认合并整组件落库；Windows 活证（t11t3-a-summary `N14_LIVE_SIBLING_ON_DISK=True`）+ Mac 复证（t11t3-a-mac-summary `N14_LIVE_SIBLING_ON_DISK=PASS`：move_speed 2.0 与 sibling jump_speed 4.5 同在盘上）。勾选留待 QA 复核。
   > 2026-10-28 勾选：QA 终验四重复核通过（代码审查+guards 测试亲跑 PASS+双机活证+盘上 .bak 时序证据，t11-final-qa.md §N14）——主控勾选。
+
+- [ ] **TM15. redo 越过存档点后脏旗不翻（存档指示说谎面，T03 族）**（2026-11-02 T22-T3 真机轮发现；主控批准立账——T3.5 裁定立票）
+  现象：undo 全部撤销至基线 → `scene.save`（dirty=false ✓，存档基线=空文档态）→ `history.redo` ×2（文档已现 3 个格实体≠盘上空场景）→ `jackdaw/history` 与 `jackdaw/status` 的 dirty 恒 false（重试 8s+ 不变），而 redo 栈/文档内容均真实变化（count 0→3 实测）。undo 侧旗面正常（撤销回存档点=clean 正确）。后果：redo 过存档点后编辑器显示「已保存」，实际盘上文档落后——存档指示与盘面不一致（数据本身不丢，Ctrl+S 可恢复）。
+  证据：`loop/reports/t22t3_live_undo.log` 尾段（history JSON 原文：dirty:false + redo 栈四条在案）+ t22-t3-report.md §三-M7。
+  修复方向：redo 路径与 execute 路径同face——每次 redo/undo 落定后按「当前深度 vs saved_undo_len + 文档指纹」重算 dirty（T03 全指纹口径）；或最少 redo 分支补 dirty 翻转。T03 族评估归并。
+  > 严重度建议 🟡（指示面，非数据面）。
+
+- [ ] **TM11. tilemap 模块工程开窗即误报 "editor does not include"（工具在册却报警告）**（2026-11-02 T22-T3 真机轮发现；主控批准立账——T3.5 裁定立票）
+  现象：任何启用 `tilemap = true` 的工程在编辑器打开即 WARN「This project uses the Tilemap module, which this editor does not include. Scenes keep those components, but they cannot be edited here.」——但 tilemap 作者面（Tilemap 工具/调色板/十算子族，`src/tilemap.rs`+`src/tilemap_palette.rs`）**编译进每个编辑器**，实际编辑能力完整（T22-T3 全矩阵真机绿为证）；警告文本与行为相反。机制：modules.json 的 tilemap 条目无 `extension` 位 → `editor_has_module()`（src/module_picker.rs:31）对 tilemap 落 false → `missing_modules` 误报。与 animation 的同形特判（module_picker.rs:43「tools compile into every editor」）缺席所致；物理/navmesh 走 extension 位不撞此路径。
+  影响：每轮 live 的 warn 扫描须按已知面排除该行（t22-live.sh 已注明排除）；用户侧误导（文本承诺「cannot be edited」而实际可编辑）。
+  修复方向：一行特判（`if id == "tilemap" { return true; }`，animation 同款+注释）或 catalog 加 `editor_builtin` 布尔位走通用路径。顺手票。
+  > 严重度建议 🟡（误导性告警，非功能缺口）。

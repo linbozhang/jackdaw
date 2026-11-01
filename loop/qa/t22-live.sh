@@ -1037,14 +1037,11 @@ palette() {
 }
 
 # ---- L2 phase: draw (M2 + M14's pixel half) -------------------------------------
-# TM14 (filed this round): the canvas stroke gesture hangs on the real
-# canvas — stroke_cell queries the Viewport2dPanelHost off the captured
-# STAGE entity, but the component lives on the panel content entity the
-# stage hangs from, so the modal never visits a cell and its off-stage
-# early-return precedes the release check (it holds until Esc). Every
-# canvas press here is therefore followed by a cancel, and the painting
-# legs drive the batch operators — the same dispatch the stroke's release
-# would make, and the MCP-first authoring path.
+# TM14 was fixed in T3.5 (the stroke now captures the panel-content entity
+# carrying Viewport2dPanelHost, and the finished stroke's batch dispatch is
+# deferred one frame so the modal retires before the nested call): the drag
+# gesture below is the live proof — press/move/release across canvas cells
+# lands them as one undo entry.
 
 draw() {
   local ok=true
@@ -1055,36 +1052,33 @@ draw() {
   op tilemap.tile.select '{"tile":4}' >/dev/null 2>&1; sleep 1
   settle_pixels 3
   shot draw-baseline viewport2d || ok=false
-  # The gesture face, one guarded probe: a canvas press arms the stroke and
-  # TM14 holds it; the cancel clears it and the editor lives. This is the
-  # live evidence of the arming face (the op name in the log) plus the
-  # filed hold.
-  op input.pointer '{"action":"press","x":8,"y":72,"space":"world"}' >/dev/null 2>&1
-  sleep 2
-  local armed cleared tries
-  armed=$(brp jackdaw/status '{}' 2>/dev/null | jq -r '.result.modal // ""')
-  for tries in 1 2 3; do
-    brp jackdaw/cancel '{}' >/dev/null 2>&1
-    sleep 3; wait_idle 60 >/dev/null
-    cleared=$(brp jackdaw/status '{}' 2>/dev/null | jq -r '.result.modal // "null"')
-    [ "$cleared" = "null" ] && break
-  done
-  [ "$armed" = "tilemap.stroke" ] && leg STROKE_ARMS true \
-    || { leg STROKE_ARMS false; ok=false; log "canvas press did not arm the stroke (modal='$armed')"; }
-  [ "$cleared" = "null" ] && leg STROKE_CANCEL_CLEARS true \
-    || { leg STROKE_CANCEL_CLEARS false; ok=false; log "the stroke modal survived cancel (modal='$cleared')"; }
-  # One stroke is one undo entry: the depth baseline comes from the session
-  # so far (the layer add), three strokes add exactly three, and one undo
-  # takes a whole stroke's three cells back.
-  local depth depth0
+  # The gesture face: one real drag across cells (0,2)-(2,2) — the press
+  # arms the stroke, the moves visit cells, the release stamps and the
+  # modal retires.
+  local depth0
   depth0=$(history_len)
-  op tilemap.paint '{"layer":"Ground","cells":"0,2;1,2;2,2","tile":4}' >/dev/null 2>&1
-  sleep 1; wait_idle 60 >/dev/null
+  op input.pointer '{"action":"press","x":8,"y":72,"space":"world"}' >/dev/null 2>&1
+  sleep 1
+  for x in 20 32 44 56 68 80 88; do
+    op input.pointer "{\"action\":\"move\",\"x\":$x,\"y\":72,\"space\":\"world\"}" >/dev/null 2>&1
+    sleep 0.4
+  done
+  op input.pointer '{"action":"release","x":88,"y":72,"space":"world"}' >/dev/null 2>&1
+  sleep 3; wait_idle 120 >/dev/null
+  local modal_cleared
+  modal_cleared=$(brp jackdaw/status '{}' 2>/dev/null | jq -r '.result.modal // "null"')
+  [ "$modal_cleared" = "null" ] && leg STROKE_RELEASES true \
+    || { leg STROKE_RELEASES false; ok=false; log "the stroke modal survived its release (modal='$modal_cleared')"; }
+  local count
+  count=$(cell_count)
+  [ "$count" = "3" ] && leg DRAW_DRAG_LANDS true \
+    || { leg DRAW_DRAG_LANDS false; ok=false; log "cells after the drag: $count (want 3)"; }
+  # Two more strokes through the batch door — cells in row 2, columns 5-7
+  # and 10-12. One operator call is one stroke is one undo entry.
   op tilemap.paint '{"layer":"Ground","cells":"5,2;6,2;7,2","tile":4}' >/dev/null 2>&1
   sleep 1; wait_idle 60 >/dev/null
   op tilemap.paint '{"layer":"Ground","cells":"10,2;11,2;12,2","tile":4}' >/dev/null 2>&1
   sleep 1; wait_idle 120 >/dev/null
-  local count
   count=$(cell_count)
   [ "$count" = "9" ] && leg DRAW_COUNT true \
     || { leg DRAW_COUNT false; ok=false; log "draw count: $count (want 9)"; }
@@ -1114,8 +1108,10 @@ draw() {
     || { leg DRAW_PX_TILE false; ok=false; }
   python3 -c "import sys; sys.exit(0 if sum(float(v) for v in '$green $blue $yellow $cyan $orange'.split()) < 0.05 else 1)" \
     && leg M14_CANVAS_RECT true || { leg M14_CANVAS_RECT false; ok=false; }
-  # One stroke is one undo entry: three strokes = exactly three new entries
-  # over the session baseline; one undo takes a whole stroke's cells back.
+  # One stroke is one undo entry: the depth baseline comes from the session
+  # so far (the layer add), the drag + two ops add exactly three, and one
+  # undo takes a whole stroke's cells back.
+  local depth
   depth=$(history_len)
   [ "$depth" = "$((depth0 + 3))" ] && leg DRAW_ONE_STROKE_UNDO true \
     || { leg DRAW_ONE_STROKE_UNDO false; ok=false; log "history depth after 3 strokes: $depth (want $((depth0 + 3)))"; }

@@ -194,6 +194,14 @@ visuals. If you ever want collider wireframes in the game's
 picture, add avian's `debug-plugin` feature to your game's avian
 dependency and rebuild.
 
+## Two stacks: this one, and the tile grid
+
+Everything here is the 3D physics stack (avian: rigid bodies, colliders,
+joints, sensors). A 2D tile level does not ride it — its ground, walls
+and triggers come from the tilemap module's tile-grid kernel, a separate
+2D collision stack. [Tilemaps in 2D](tilemaps-2d.md) has the layer modes
+that decide what stops a body and what fires.
+
 ## Two gravities, one number
 
 Two things called gravity exist and they are different things:
