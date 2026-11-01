@@ -1,0 +1,10 @@
+== targeted_watch START 18:00:42
+   Compiling jackdaw v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw)
+    Finished `test` profile [optimized + debuginfo] target(s) in 1.43s
+────────────
+ Nextest run ID d7291071-cd97-49fa-80f5-9b7d938507d8 with nextest profile: ci
+    Starting 1 test across 1 binary
+        PASS [   0.566s] (1/1) jackdaw::asset_watch_reload an_external_write_reloads_into_the_handle_references_hold
+────────────
+     Summary [   0.566s] 1 test run: 1 passed, 0 skipped
+== targeted_watch EXIT=0 END 18:00:45

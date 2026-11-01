@@ -1,0 +1,22 @@
+== targeted_ops START 18:00:17
+   Compiling jackdaw v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw)
+    Finished `test` profile [optimized + debuginfo] target(s) in 2.83s
+────────────
+ Nextest run ID 1ac35dfd-c965-4b07-9b14-b6b58b146a17 with nextest profile: ci
+    Starting 13 tests across 1 binary (156 tests skipped)
+        PASS [   1.485s] ( 1/13) jackdaw::operators sprite_ops::a_new_sprite_draws_above_the_scene_sprites
+        PASS [   2.264s] ( 2/13) jackdaw::operators sprite_ops::an_empty_in_a_3d_scene_stays_top_level
+        PASS [   2.884s] ( 3/13) jackdaw::operators sprite_ops::a_new_2d_scene_flags_the_menu_bar_for_a_rebuild
+        PASS [   2.936s] ( 4/13) jackdaw::operators sprite_ops::a_saved_and_reopened_sprite_keeps_its_image_name_and_listing
+        PASS [   2.007s] ( 5/13) jackdaw::operators sprite_ops::empty_2d_lands_under_the_scene_root_and_stays_listed
+        PASS [   1.640s] ( 6/13) jackdaw::operators sprite_ops::redo_puts_an_empty_2d_back_under_the_group_it_was_added_to
+        PASS [   1.464s] ( 7/13) jackdaw::operators sprite_ops::sprite_add_goes_beside_a_selected_entity_of_the_2d_scene
+        PASS [   1.700s] ( 8/13) jackdaw::operators sprite_ops::sprite_add_is_one_undo_entry_and_redo_brings_the_same_node_back
+        PASS [   2.584s] ( 9/13) jackdaw::operators sprite_ops::sprite_add_is_offered_on_a_2d_world_scene_only
+        PASS [   1.999s] (10/13) jackdaw::operators sprite_ops::sprite_add_stores_the_relative_path_position_and_stem_name
+        PASS [   1.644s] (11/13) jackdaw::operators sprite_ops::sprite_add_takes_an_explicit_name_and_parent
+        PASS [   1.327s] (12/13) jackdaw::operators sprite_ops::sprite_add_without_a_path_adds_a_placeholder_square
+        PASS [   1.541s] (13/13) jackdaw::operators sprite_ops::the_add_menu_shows_the_2d_group_only_with_a_2d_scene_open
+────────────
+     Summary [   7.062s] 13 tests run: 13 passed, 156 skipped
+== targeted_ops EXIT=0 END 18:00:30

@@ -1,0 +1,37 @@
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t21-sprite/t21-sprite
+QA: scene sha at start: efda9fc887356a150ee89b2a8995d10cdefc05a8a84b151a302aa724fb88af4a
+QA: Hero entity (fresh read): 4717v0
+QA: M3 view zoom=1.0 (ortho_scale=)
+QA: M3 Hero x before: 
+QA: M3 drag: Hero x  -> 
+QA_Q_M3_DRAG=FAIL
+QA: M3 arrows: Hero x  -> 
+QA_Q_M3_ARROWS=FAIL
+QA: M3 undo#1: x = 
+QA: M3 undo#2: x = 
+QA: M3 undo#3: x = 
+QA: M3 undo#4: x = 
+QA_Q_M3_UNDO=FAIL
+QA: GUIDES face on root 4735v1: {"horizontal":[],"vertical":[64.0]}
+QA_Q_GUIDES_ADD=PASS
+QA: TopSpr entity: 4927v1
+shot qa-m7-blue-top ok (viewport2d)
+QA: M7 blue-top: blue census 0.652%
+shot qa-m7-red-top ok (viewport2d)
+QA: M7 red-top: red 0.743% blue 0.652% (takes distinct: NO)
+QA_Q_M7_Z_FLIP_PX=FAIL
+QA: SP9 preset cells in DOM: 9 (0 with non-zero rect)
+QA_Q_SP9_CELLS_IN_DOM=PASS
+QA: SP9 Anchor before: [0.0,0.0]
+QA: SP9 cells clipped (0-rect) — attempting a Components panel scroll
+QA: SP9 after scroll attempt: 0 cells with non-zero rect
+QA_Q_SP9_PRESET_CLICK=FAIL
+QA: editor boot log asset-loader error lines: 4
+shot qa-atlas-canvas ok (viewport2d)
+QA: atlas canvas shot taken (see shot-qa-atlas-canvas.png)
+QA: M9 saved scene sha=efda9fc887356a150ee89b2a8995d10cdefc05a8a84b151a302aa724fb88af4a
+QA_Q_M9_BSN_TYPES=PASS
+QA: M9 Anchor after reopen: [0.0,0.0]
+QA_Q_M9_REOPEN=PASS
+QA_Q_M9_KIND_REOPENED=PASS
+QA: QA done: false

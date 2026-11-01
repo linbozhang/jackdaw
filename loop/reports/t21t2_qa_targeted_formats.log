@@ -1,0 +1,11 @@
+== targeted_formats START 18:00:39
+   Compiling jackdaw v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw)
+    Finished `test` profile [optimized + debuginfo] target(s) in 0.85s
+────────────
+ Nextest run ID b00c4b29-ee19-481b-a31d-e6c9034485cb with nextest profile: ci
+    Starting 2 tests across 1 binary
+        PASS [   0.028s] (1/2) jackdaw::asset_formats the_workspace_selection_teaches_the_jpeg_feature
+        PASS [   0.206s] (2/2) jackdaw::asset_formats a_jpg_the_import_ui_invites_decodes
+────────────
+     Summary [   0.206s] 2 tests run: 2 passed, 0 skipped
+== targeted_formats EXIT=0 END 18:00:42

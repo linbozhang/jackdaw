@@ -1,0 +1,18 @@
+== targeted_runtime START 18:00:45
+    Finished `test` profile [optimized + debuginfo] target(s) in 0.35s
+────────────
+ Nextest run ID 7ec5ce8e-7725-4a66-9eeb-130b15d8b37b with nextest profile: ci
+    Starting 10 tests across 1 binary (33 tests skipped)
+        PASS [   0.102s] ( 1/10) jackdaw_runtime asset_file_tests::a_scene_file_is_not_taken_for_an_asset
+        PASS [   0.102s] ( 2/10) jackdaw_runtime asset_file_tests::a_missing_assets_directory_is_not_an_error
+        PASS [   0.103s] ( 3/10) jackdaw_runtime asset_file_tests::an_asset_file_outranks_an_inline_catalog_entry_of_the_same_name
+        PASS [   0.103s] ( 4/10) jackdaw_runtime asset_file_tests::an_asset_file_answers_to_the_name_its_stem_gives_it
+        PASS [   0.103s] ( 5/10) jackdaw_runtime asset_file_tests::an_asset_file_in_any_folder_answers_to_its_path
+        PASS [   0.104s] ( 6/10) jackdaw_runtime asset_file_tests::a_file_naming_a_type_the_game_did_not_register_is_skipped
+        PASS [   0.104s] ( 7/10) jackdaw_runtime asset_file_tests::a_texture_atlas_layout_the_editor_saved_walks_into_the_game
+        PASS [   0.104s] ( 8/10) jackdaw_runtime asset_file_tests::an_asset_type_registered_without_its_reflection_is_skipped
+        PASS [   0.021s] ( 9/10) jackdaw_runtime asset_file_tests::an_asset_type_the_game_registered_is_loaded_into_its_store
+        PASS [   0.021s] (10/10) jackdaw_runtime asset_file_tests::two_files_of_one_stem_answer_by_path_and_neither_by_name
+────────────
+     Summary [   0.124s] 10 tests run: 10 passed, 33 skipped
+== targeted_runtime EXIT=0 END 18:00:46

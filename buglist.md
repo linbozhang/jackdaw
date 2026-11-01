@@ -490,6 +490,10 @@
   `State<GameFlow>` 未 `register_type_state`：BRP/flow 写通道死（红证 `t20t2_eg8_flow_state_red.log`），模板改走文档根标记读（有效替代，T2 M 系全绿承载）。`register_type_state` 一行可通——但 T20 守「零产品改动」定性未动，模板接入归下轮触碰模板时顺手（对照 T16-AU6 处置先例）。
   修复方向：模板 `register_type_state::<GameFlow>()` 一行+teaches 锚；A11（世界侧粘性）修复时顺路核 flow 通道联动。
 
+- [ ] **A17. 编辑器画布对 Sprite Atlas wear 无 loader——渲染全图+ERROR（SP11，T21-T2 QA 三会话实证）**（2026-11-01 T21-T2 QA 发现；主控批准立账）
+  场景文档直书 `texture_atlas: Some(TextureAtlas{layout:"content/sheet.bsn",index:2})` 后：游戏 direct/staged 窗口蓝 tile 正常渲染（6.222%/3.339%——但普查被壁纸主导，窗内重测 0.211/0.191），**编辑器画布渲染全图+asset-loader ERROR**（`content/sheet.bsn` 无 loader；三会话一致+QA 会话 5 行+画布截图放大亲读）——与 T21-T2 程序报告「解析零警告+画布 31×13 蓝 tile」相反（该宣称系壁纸主导假阳性+ATLAS_INDEX_PX 三拍字节相同）。
+  修复方向：scene→Sprite Atlas handle 的 loader 缺面（`sheet.bsn` 为序列化 TextureAtlasLayout，需 scene 内 loader 或改持图片路径+运行时构建）；修复即 book 画布预览现状门升级。与 A16 同批触碰 sprite 域时顺手评估。
+
 - [ ] **A8. BSN apply 静默丢弃 crate 根 re-export 路径 + misleading remedy（AN8，T15-T2 真机首踩）**（2026-10-30 T15-T2 程序发现+QA 机制核实；主控批准立账）
   场景文档的图族组件必须写定义模块全路径（`…::graph::AnimationGraphRef`），crate 根 re-export 拼写被 `jackdaw_bsn::apply` 静默丢弃（无 warn、组件不落——手写场景/导出迁移场景易踩，fixture 已绕行）；且 `jackdaw_bsn::catalog` 的 remedy 文案（"rebuild the project"）对此误导。
   修复方向：未知路径丢弃补 warn（对照 AN1 运行态 warn 形态，列可用类型面）；remedy 文案按真实成因改写。小票。
