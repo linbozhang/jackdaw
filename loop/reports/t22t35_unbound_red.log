@@ -1,0 +1,8 @@
+    2026-11-01T22:38:35.412819Z  INFO jackdaw::extension_lifecycle: applied keymap preset 'classic': 113 entries, 113 bindings, 0 user rows
+
+    thread 'keymap_user_overrides::every_operator_is_bound_or_listed_as_unbound' (33511741) panicked at tests/keymap/keymap_user_overrides.rs:285:5:
+    these operators have an input action, no chord, and no entry saying that is deliberate: ["tilemap.stroke"]
+    Give each one a chord with `ctx.bind_operator`, or add its id to `UNBOUND_OPERATORS` in src/keybind_settings.rs saying it is reached from its own surface instead.
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+error: test run failed

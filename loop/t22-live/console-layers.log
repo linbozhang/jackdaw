@@ -1,0 +1,23 @@
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t22-tilemap/t22-tilemap
+LAYER_ROUTING_PASS
+modes: ground=Solid trigger=Trigger
+MODE_SET_PASS
+shot-layers-visibleframe0: size=1064 631 md5=9c944932e578386f382228bec5628017
+shot-layers-visible: size=1064 631 md5=9c944932e578386f382228bec5628017
+shot-layers-hiddenframe0: size=1064 631 md5=450c1dfa1f55eb5c3d1400238d495838
+shot-layers-hidden: size=1064 631 md5=450c1dfa1f55eb5c3d1400238d495838
+shot-layers-againframe0: size=1064 631 md5=9c944932e578386f382228bec5628017
+shot-layers-again: size=1064 631 md5=9c944932e578386f382228bec5628017
+visibility census: shown=0.4433 hidden=0.1478 reshowed=0.4433 (the Hero also
+wears sheet red, so 'hidden' keeps a small share)
+VIS_PX_PASS
+ACTIVE_SWITCH_PASS
+shot-tm7-tintframe0: size=1064 631 md5=c471941ed1357d8d4c7cda554cef8b56
+shot-tm7-tint: size=1064 631 md5=c471941ed1357d8d4c7cda554cef8b56
+shot-tm7-offframe0: size=1064 631 md5=70450e93839e52c70dd6c76946ad5442
+shot-tm7-off: size=1064 631 md5=70450e93839e52c70dd6c76946ad5442
+TM7 tint census: tool-out=0.0191 tool-away=0.0000
+TM7_PX_PASS
+WARN_EDITOR_PASS
+EDITOR_ALIVE_PASS
+LAYERS done: ACTIVE_SWITCH=PASS EDITOR_ALIVE=PASS LAYER_ROUTING=PASS MODE_SET=PASS TM7_PX=PASS VIS_PX=PASS WARN_EDITOR=PASS 

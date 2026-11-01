@@ -1,0 +1,56 @@
+[2m2026-11-01T22:57:20.962984Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-11-01T22:57:21.018797Z[0m [32m INFO[0m [2mbevy_render::renderer[0m[2m:[0m AdapterInfo { name: "Apple M1 Pro", vendor: 0, device: 0, device_type: IntegratedGpu, device_pci_bus_id: "", driver: "", driver_info: "", backend: Metal, subgroup_min_size: 4, subgroup_max_size: 64, transient_saves_memory: Some(true), limit_bucket: None }
+[2m2026-11-01T22:57:21.225531Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw::test_input::plugin` of extension `jackdaw.test_input`
+[2m2026-11-01T22:57:21.225706Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw_physics::PhysicsEditorPlugin` of extension `jackdaw.physics`
+[2m2026-11-01T22:57:21.228366Z[0m [32m INFO[0m [2mbevy_pbr::cluster[0m[2m:[0m GPU clustering is supported on this device.
+[2m2026-11-01T22:57:21.228407Z[0m [32m INFO[0m [2mbevy_render::batching::gpu_preprocessing[0m[2m:[0m GPU preprocessing is fully supported on this device.
+[2m2026-11-01T22:57:21.258894Z[0m [32m INFO[0m [2mbevy_winit::system[0m[2m:[0m Creating new window jackdaw (71v0)
+[2m2026-11-01T22:57:21.425835Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.viewport_panel
+[2m2026-11-01T22:57:21.426182Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.animation_graph
+[2m2026-11-01T22:57:21.426221Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.multiplayer
+[2m2026-11-01T22:57:21.426240Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.inspector
+[2m2026-11-01T22:57:21.426271Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.physics
+[2m2026-11-01T22:57:21.426418Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.build_panel
+[2m2026-11-01T22:57:21.426431Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core
+[2m2026-11-01T22:57:21.428087Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.ui_palette
+[2m2026-11-01T22:57:21.428147Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.project_window
+[2m2026-11-01T22:57:21.428161Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core_windows
+[2m2026-11-01T22:57:21.428187Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.timeline
+[2m2026-11-01T22:57:21.428198Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.test_input
+[2m2026-11-01T22:57:21.428263Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.game_panel
+[2m2026-11-01T22:57:21.429844Z[0m [33m WARN[0m [2mjackdaw_api_internal::keymap::apply[0m[2m:[0m preset 'classic' has 10 chords claimed by more than one action: ["Home (Press, Operators): viewport2d.frame, clip.timeline.jump_start, view.frame_all", "Delete (Press, Operators): clip.delete_keyframes, entity.delete, brush.delete_element", "Backspace (Press, Operators): clip.delete_keyframes, viewport.draw_brush.remove_last_vertex, brush.delete_element", "Super+KeyC (Press, Operators): clip.copy_keyframes, entity.copy", "Super+KeyV (Press, Operators): clip.paste_keyframes, entity.paste", "Tab (Press, Operators): viewport.draw_brush.toggle_mode, brush.clip.cycle_mode", "Enter (Press, Operators): viewport.draw_brush.commit_polygon, brush.clip.apply", "KeyE (Press, Operators): tool.rotate, brush.mesh.extrude", "Escape (Press, Operators): brush.exit_edit_mode, selection.clear, brush.clip.clear, terrain.tool.exit_to_select", "Super+KeyB (Press, Operators): brush.mesh.edge_bevel, brush.mesh.vertex_bevel"]
+[2m2026-11-01T22:57:21.429881Z[0m [32m INFO[0m [2mjackdaw::extension_lifecycle[0m[2m:[0m applied keymap preset 'classic': 113 entries, 113 bindings, 0 user rows
+[2m2026-11-01T22:57:21.577549Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking /Users/zhanglinbo/workspace/loop-mac/t22-tilemap/t22-tilemap/assets recursively
+[2m2026-11-01T22:57:21.577668Z[0m [32m INFO[0m [2mjackdaw::asset_catalog[0m[2m:[0m No asset catalog found, starting with empty catalog
+[2m2026-11-01T22:57:21.678226Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: pre-building the game in the background for a fast first Play
+[2m2026-11-01T22:57:21.678974Z[0m [32m INFO[0m [2mjackdaw::material_browser[0m[2m:[0m update_material_browser_ui: rebuilding with 1 entries
+[2m2026-11-01T22:57:21.719049Z[0m [33m WARN[0m [2mjackdaw::project_modules[0m[2m:[0m This project uses the Tilemap module, which this editor does not include. Scenes keep those components, but they cannot be edited here.
+[2m2026-11-01T22:57:21.824177Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 4, typed 0, referencing 4)
+[2m2026-11-01T22:57:21.824364Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 0)
+[2m2026-11-01T22:57:21.993360Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking /Users/zhanglinbo/workspace/loop-mac/t22-tilemap/t22-tilemap/assets recursively
+[2m2026-11-01T22:57:22.018770Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 4, typed 0, referencing 4)
+[2m2026-11-01T22:57:22.018901Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 0)
+[2m2026-11-01T22:57:22.215388Z[0m [33m WARN[0m [2mjackdaw::pie[0m[2m:[0m warning: unused variable: `parent`
+[2m2026-11-01T22:57:41.430135Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: refreshed project types from schema (24 project components)
+[2m2026-11-01T22:57:41.443066Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking /Users/zhanglinbo/workspace/loop-mac/t22-tilemap/t22-tilemap/assets recursively
+[2m2026-11-01T22:57:41.452281Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 4, typed 0, referencing 4)
+[2m2026-11-01T22:57:41.452381Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 0)
+[2m2026-11-01T22:57:43.408575Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: scene.open
+[2m2026-11-01T22:57:43.411597Z[0m [32m INFO[0m [2mjackdaw::scene_io::load[0m[2m:[0m Scene loaded from /Users/zhanglinbo/workspace/loop-mac/t22-tilemap/t22-tilemap/assets/scene.bsn (3 entities, 0 embedded assets)
+[2m2026-11-01T22:57:47.425725Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: viewport.mode
+[2m2026-11-01T22:57:50.426603Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: tilemap.layer.add
+[2m2026-11-01T22:57:54.420629Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: tool.tilemap
+[2m2026-11-01T22:57:57.420582Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: tilemap.tile.select
+[2m2026-11-01T22:57:58.457397Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: tilemap.tile.select
+[2m2026-11-01T22:58:01.426772Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: viewport2d.zoom
+[2m2026-11-01T22:58:06.415586Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: input.pointer
+[2m2026-11-01T22:58:07.457556Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: input.pointer
+[2m2026-11-01T22:58:07.459932Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: tilemap.stroke
+[2m2026-11-01T22:58:07.989987Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: input.pointer
+[2m2026-11-01T22:58:08.524426Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: input.pointer
+[2m2026-11-01T22:58:09.050332Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: input.pointer
+[2m2026-11-01T22:58:09.582314Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: input.pointer
+[2m2026-11-01T22:58:10.116935Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: input.pointer
+[2m2026-11-01T22:58:10.642753Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: input.pointer
+[2m2026-11-01T22:58:11.180672Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: input.pointer
+[2m2026-11-01T22:58:17.427387Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: history.undo

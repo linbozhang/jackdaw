@@ -1,0 +1,32 @@
+=== xtask fast (T3.5 rerun) ===
+        PASS [   0.041s] (3020/3047) jackdaw_widgets_runtime tests::a_value_written_from_code_is_not_reported_as_an_edit
+        PASS [   0.028s] (3021/3047) jackdaw_widgets_runtime tests::the_value_is_registered_with_a_default
+        PASS [   0.032s] (3022/3047) jackdaw_widgets_runtime tests::an_idle_input_is_written_by_neither_side
+        PASS [   0.032s] (3023/3047) jackdaw_widgets_runtime tests::an_unauthored_checkbox_is_left_alone
+        PASS [   0.028s] (3024/3047) jd archive::tests::formats_follow_the_published_extension
+        PASS [   0.034s] (3025/3047) jd archive::tests::a_zip_unpacks_its_files
+        PASS [   0.037s] (3026/3047) jd archive::tests::a_gzipped_tarball_unpacks_under_its_single_folder
+        PASS [   0.026s] (3027/3047) jd editor_cli::tests::installs_are_grouped_by_bevy_line_with_main_first
+        PASS [   0.026s] (3028/3047) jd editor_cli::tests::newer_patches_and_nightlies_are_reported_for_installed_lines_only
+        PASS [   0.026s] (3029/3047) jd editors::tests::a_missing_line_names_the_install_command_unless_jd_ships_that_line
+        PASS [   0.026s] (3030/3047) jd editors::tests::an_unpinned_project_opens_with_the_default_editor
+        PASS [   0.028s] (3031/3047) jd editors::tests::a_pinned_project_prefers_its_install_over_the_editor_beside_jd
+        PASS [   0.024s] (3032/3047) jd editors::tests::names_that_could_leave_their_directory_are_refused
+        PASS [   0.023s] (3033/3047) jd editors::tests::version_lines_are_read_from_editor_output
+        PASS [   0.024s] (3034/3047) jd editors::tests::the_exact_editor_beside_jd_wins_over_an_older_install_of_its_line
+        PASS [   0.024s] (3035/3047) jd fetch::tests::windows_file_urls_drop_the_slash_before_the_drive
+        PASS [   0.025s] (3036/3047) jd fetch::tests::plain_http_is_refused_before_connecting
+        PASS [   0.031s] (3037/3047) jd self_update::tests::a_cargo_installed_jd_is_left_to_cargo
+        PASS [   0.024s] (3038/3047) jd self_update::tests::a_jd_beside_its_editor_or_sdk_stays_with_that_bundle
+        PASS [   0.024s] (3039/3047) jd self_update::tests::a_jd_inside_a_managed_install_names_that_install
+        PASS [   0.053s] (3040/3047) jd fetch::tests::file_urls_read_and_hash_local_files
+        PASS [   0.024s] (3041/3047) jd self_update::tests::a_standalone_release_jd_may_update_itself
+        PASS [   0.023s] (3042/3047) jd self_update::tests::development_and_prerelease_builds_are_not_replaced
+        PASS [   0.022s] (3043/3047) jd sign::tests::generated_keys_round_trip_through_pkcs8
+        PASS [   0.025s] (3044/3047) jd sign::tests::existing_publisher_key_reproduces_its_signature
+        PASS [   0.024s] (3045/3047) jd sign::tests::packed_bundles_verify_and_detect_tampering
+        PASS [   1.263s] (3046/3047) jackdaw_widgets_runtime tests::a_written_value_settles_once_the_pipeline_has_moved_the_caret
+        PASS [   1.328s] (3047/3047) jackdaw_widgets_runtime tests::a_keystroke_through_bevys_text_pipeline_reaches_the_value_and_settles
+────────────
+     Summary [  51.523s] 3047 tests run: 3047 passed, 0 skipped
+FAST_EXIT=0

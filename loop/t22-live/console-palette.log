@@ -1,0 +1,24 @@
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t22-tilemap/t22-tilemap
+Ground form (bsn): columns=16, rows=8
+LAYER_FORM_PASS
+PALETTE_PANEL_PASS
+sheet node: 12884897192
+sheet rect: [2092.0,332.0,672.0,336.0]
+SHEET_NODE_PASS
+palette pick: '8589928892' -> 'Tile 101'
+PALETTE_PICK_PASS
+TILE_SELECT_PASS
+shot-palette-panelframe0: size=3024 1898 md5=1af39bca1e21d07d66d8d14af0b3f732
+shot-palette-panel: size=3024 1898 md5=ecdb2e02e7d58596ebbeacd0acad8b98
+panel band (physical): 2092 332 2764 668
+panel chrome census: 66.4727; sheet orange census: 19.5547
+PALETTE_PX_PASS
+sheet colour 255,0,0 in the band: 0.1953
+sheet colour 0,255,0 in the band: 0.1767
+sheet colour 0,0,255 in the band: 0.1767
+sheet colour 255,255,0 in the band: 0.1767
+sheet colour 255,0,255 in the band: 0.1767
+sheet colour 0,255,255 in the band: 0.1767
+WARN_EDITOR_PASS
+EDITOR_ALIVE_PASS
+PALETTE done: EDITOR_ALIVE=PASS LAYER_FORM=PASS PALETTE_PANEL=PASS PALETTE_PICK=PASS PALETTE_PX=PASS SHEET_NODE=PASS TILE_SELECT=PASS WARN_EDITOR=PASS 

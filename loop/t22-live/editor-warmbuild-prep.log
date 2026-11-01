@@ -1,29 +1,24 @@
    Compiling jackdaw_scene_types v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_scene_types)
-   Compiling ring v0.17.14
-   Compiling jackdaw_package v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_package)
-   Compiling rustls v0.23.46
-   Compiling jackdaw_schema v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_schema)
+   Compiling jackdaw_project_build v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_project_build)
    Compiling jackdaw_feathers v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_feathers)
+   Compiling jackdaw_schema v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_schema)
    Compiling jackdaw_terrain v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_terrain)
    Compiling jackdaw_surface v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_surface)
    Compiling jackdaw_camera_rig v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_camera_rig)
    Compiling jackdaw_multiplayer v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_multiplayer)
-   Compiling jackdaw_project_build v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_project_build)
-   Compiling rustls-webpki v0.103.16
    Compiling jackdaw_jsn v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_jsn)
-   Compiling jackdaw_runtime v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_runtime)
    Compiling jackdaw_scaffold v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_scaffold)
+   Compiling jackdaw_runtime v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_runtime)
    Compiling jackdaw_panels v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_panels)
    Compiling jackdaw_api_internal v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_api_internal)
-   Compiling jackdaw_api v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_api)
    Compiling jackdaw_avian_integration v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/integrations/physics/jackdaw_avian_integration)
+   Compiling jackdaw_api v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_api)
    Compiling jackdaw_node_graph v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_node_graph)
-   Compiling jackdaw_physics v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/integrations/physics/jackdaw_physics)
    Compiling jackdaw_multiplayer_editor v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_multiplayer_editor)
+   Compiling jackdaw_physics v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/integrations/physics/jackdaw_physics)
    Compiling jackdaw_loader v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_loader)
    Compiling jackdaw_animation v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_animation)
-   Compiling ureq v2.12.1
    Compiling jackdaw_cli_internal v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_cli)
-   Compiling jackdaw v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw)
    Compiling jd v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jd)
-    Finished `dev` profile [optimized + debuginfo] target(s) in 2m 33s
+   Compiling jackdaw v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw)
+    Finished `dev` profile [optimized + debuginfo] target(s) in 53.69s

@@ -26,7 +26,10 @@ use bevy::{
     ui::UiScale,
 };
 use jackdaw_api::prelude::*;
-use jackdaw_api_internal::{lifecycle::OperatorAction, tools::ToolStatus};
+use jackdaw_api_internal::{
+    lifecycle::{ActiveModalQuery, OperatorAction},
+    tools::ToolStatus,
+};
 use jackdaw_feathers::{icons::Icon, tokens};
 use jackdaw_input::{ActionOf, Condition, bindings};
 use jackdaw_scene_types::{TileCollisionMode, TileGridCell, TilemapLayer};
@@ -50,6 +53,7 @@ const TRIGGER_TINT: Color = Color::srgba(0.0, 0.9, 0.9, 0.55);
 
 pub(crate) fn plugin(app: &mut App) {
     app.init_resource::<TileStrokeState>()
+        .init_resource::<PendingStrokeDispatch>()
         .add_systems(
             Update,
             (
@@ -61,6 +65,9 @@ pub(crate) fn plugin(app: &mut App) {
                 .chain()
                 .run_if(in_state(crate::AppState::Editor)),
         )
+        // The finished stroke's batch dispatch: runs after the stroke modal
+        // retired (see `PendingStrokeDispatch` for the ordering story).
+        .add_systems(Update, apply_pending_stroke)
         .add_systems(
             PostUpdate,
             draw_trigger_overlays.in_set(crate::JackdawDrawSystems),
@@ -714,13 +721,90 @@ fn on_brush_button_press(
 // the stroke
 // ---------------------------------------------------------------------------
 
-/// The stroke's state across frames: which layer and stage it captured, and
-/// which cells it visited.
+/// A finished stroke waiting to land: which batch operator applies it, for
+/// which layer, cutting which tile, over which cells.
+struct PendingStroke {
+    op: &'static str,
+    layer: Entity,
+    tile: u32,
+    cells: String,
+}
+
+/// A finished rect fill waiting to land.
+struct PendingFill {
+    layer: Entity,
+    tile: u32,
+    from: IVec2,
+    to: IVec2,
+}
+
+/// One stroke's batch dispatch, deferred by a frame. The modal's own last
+/// frame cannot call the batch operator: the frame the stroke returns
+/// `Finished`, the modal's `ActiveModalOperator` marker is only torn down
+/// moments later by the same tick, and a call made inside that window is
+/// refused as nested (`can_act_on_entities` sees the modal and stands the
+/// operator down — the whole stroke then lands nothing). The applier runs
+/// the next frame, once the modal has retired.
+#[derive(Resource, Default)]
+struct PendingStrokeDispatch(Option<StrokeDispatch>);
+
+/// Which batch operator a finished stroke lands, and with what.
+enum StrokeDispatch {
+    Cells(PendingStroke),
+    Fill(PendingFill),
+}
+
+/// Apply a finished stroke's batch dispatch, one frame after the modal
+/// retired.
+fn apply_pending_stroke(
+    mut pending: ResMut<PendingStrokeDispatch>,
+    active: ActiveModalQuery,
+    mut commands: Commands,
+) {
+    let Some(stroke) = pending.0.take() else {
+        return;
+    };
+    if active.is_modal_running() {
+        // Still retiring this frame; the next one lands it.
+        pending.0 = Some(stroke);
+        return;
+    }
+    match stroke {
+        StrokeDispatch::Cells(stroke) => {
+            commands.queue(move |world: &mut World| {
+                let _ = world
+                    .operator(stroke.op)
+                    .param("layer", stroke.layer)
+                    .param("tile", i64::from(stroke.tile))
+                    .param("cells", stroke.cells)
+                    .call();
+            });
+        }
+        StrokeDispatch::Fill(fill) => {
+            commands.queue(move |world: &mut World| {
+                let _ = world
+                    .operator(TilemapFillOp::ID)
+                    .param("layer", fill.layer)
+                    .param("tile", i64::from(fill.tile))
+                    .param("from", format!("{},{}", fill.from.x, fill.from.y))
+                    .param("to", format!("{},{}", fill.to.x, fill.to.y))
+                    .call();
+            });
+        }
+    }
+}
+
+/// The stroke's state across frames: which layer and panel host it captured,
+/// and which cells it visited.
 #[derive(Resource, Default)]
 struct TileStrokeState {
     initialized: bool,
     layer: Option<Entity>,
-    stage: Option<Entity>,
+    /// The panel content entity carrying the [`Viewport2dPanelHost`] — NOT
+    /// the stage node it points at; the host component lives on the panel,
+    /// and querying it on the stage answered nothing every frame (the
+    /// stroke held until cancel).
+    host: Option<Entity>,
     start: Option<IVec2>,
     visited: std::collections::HashSet<IVec2>,
 }
@@ -730,12 +814,12 @@ struct TileStrokeState {
 fn stroke_cell(
     state: &TileStrokeState,
     cursor: Vec2,
-    hosts: &Query<&Viewport2dPanelHost>,
+    hosts: &Query<(Entity, &Viewport2dPanelHost)>,
     stages: &Query<(&ComputedNode, &UiGlobalTransform), With<Scene2dViewport>>,
     layers: &Query<(&TilemapLayer, &GlobalTransform)>,
 ) -> Option<IVec2> {
     let layer = state.layer?;
-    let host = hosts.get(state.stage?).ok()?;
+    let (_, host) = hosts.get(state.host?).ok()?;
     let (computed, transform) = stages.get(host.stage).ok()?;
     let (point, inside) = stage_world_point(cursor, host, computed, transform);
     if !inside {
@@ -784,10 +868,10 @@ pub(crate) fn tilemap_stroke(
     vp: crate::viewport::ViewportCursor,
     mouse: Res<ButtonInput<MouseButton>>,
     modal_inputs: crate::modal_inputs::ModalInputs,
-    hosts: Query<&Viewport2dPanelHost>,
+    hosts: Query<(Entity, &Viewport2dPanelHost)>,
     stages: Query<(&ComputedNode, &UiGlobalTransform), With<Scene2dViewport>>,
     layers: Query<(&TilemapLayer, &GlobalTransform)>,
-    mut commands: Commands,
+    mut pending: ResMut<PendingStrokeDispatch>,
     mut tool_status: ResMut<ToolStatus>,
 ) -> Option<OperatorResult> {
     if !state.initialized {
@@ -795,7 +879,7 @@ pub(crate) fn tilemap_stroke(
         // toolbar or the palette button, where the cursor is over neither.
         state.initialized = true;
         state.layer = palette.active_layer;
-        state.stage = fronted_stage_entity(&hosts, &stages);
+        state.host = fronted_host_entity(&hosts, &stages);
         state.visited.clear();
         state.start = None;
         tool_status.0 = Some(stroke_hint(palette.brush).to_owned());
@@ -804,8 +888,14 @@ pub(crate) fn tilemap_stroke(
             if let Some(cell) = vp
                 .cursor()
                 .and_then(|cursor| stroke_cell(&state, cursor, &hosts, &stages, &layers))
+                && let Some(layer) = state.layer
             {
-                dispatch_flood(&mut commands, cell, palette.active_tile, state.layer);
+                pending.0 = Some(StrokeDispatch::Cells(PendingStroke {
+                    op: TilemapFloodOp::ID,
+                    layer,
+                    tile: palette.active_tile,
+                    cells: format!("{},{}", cell.x, cell.y),
+                }));
             }
             reset_stroke(&mut state, &mut tool_status);
             return Some(OperatorResult::Finished);
@@ -846,31 +936,33 @@ pub(crate) fn tilemap_stroke(
 
     let tile = palette.active_tile;
     match palette.brush {
-        TileBrush::Paint => dispatch_cells(
-            &mut commands,
-            TilemapPaintOp::ID,
-            &state.visited,
-            tile,
-            layer,
-        ),
-        TileBrush::Erase => dispatch_cells(
-            &mut commands,
-            TilemapEraseOp::ID,
-            &state.visited,
-            tile,
-            layer,
-        ),
+        TileBrush::Paint | TileBrush::Erase => {
+            let op = if palette.brush == TileBrush::Paint {
+                TilemapPaintOp::ID
+            } else {
+                TilemapEraseOp::ID
+            };
+            let cells = state
+                .visited
+                .iter()
+                .map(|cell| format!("{},{}", cell.x, cell.y))
+                .collect::<Vec<_>>()
+                .join(";");
+            pending.0 = Some(StrokeDispatch::Cells(PendingStroke {
+                op,
+                layer,
+                tile,
+                cells,
+            }));
+        }
         TileBrush::FillRect => {
             let start = state.start.unwrap_or(cell);
-            commands.queue(move |world: &mut World| {
-                let _ = world
-                    .operator(TilemapFillOp::ID)
-                    .param("layer", layer)
-                    .param("tile", i64::from(tile))
-                    .param("from", format!("{},{}", start.x, start.y))
-                    .param("to", format!("{},{}", cell.x, cell.y))
-                    .call();
-            });
+            pending.0 = Some(StrokeDispatch::Fill(PendingFill {
+                layer,
+                tile,
+                from: start,
+                to: cell,
+            }));
         }
         TileBrush::Flood => unreachable!("flood finishes on the press"),
     }
@@ -888,22 +980,23 @@ fn stroke_hint(brush: TileBrush) -> String {
     .to_owned()
 }
 
-/// The stage entity of whichever 2D panel the cursor is on, captured at
-/// stroke start.
-fn fronted_stage_entity(
-    hosts: &Query<&Viewport2dPanelHost>,
+/// The panel content entity (the one carrying the
+/// [`Viewport2dPanelHost`]) of whichever 2D panel the cursor is on,
+/// captured at stroke start.
+fn fronted_host_entity(
+    hosts: &Query<(Entity, &Viewport2dPanelHost)>,
     stages: &Query<(&ComputedNode, &UiGlobalTransform), With<Scene2dViewport>>,
 ) -> Option<Entity> {
     hosts
         .iter()
-        .find(|host| stages.contains(host.stage))
-        .map(|host| host.stage)
+        .find(|(_, host)| stages.contains(host.stage))
+        .map(|(entity, _)| entity)
 }
 
 fn reset_stroke(state: &mut TileStrokeState, tool_status: &mut ToolStatus) {
     state.initialized = false;
     state.layer = None;
-    state.stage = None;
+    state.host = None;
     state.start = None;
     state.visited.clear();
     tool_status.0 = None;
@@ -911,43 +1004,6 @@ fn reset_stroke(state: &mut TileStrokeState, tool_status: &mut ToolStatus) {
 
 fn cancel_stroke(mut state: ResMut<TileStrokeState>, mut tool_status: ResMut<ToolStatus>) {
     reset_stroke(&mut state, &mut tool_status);
-}
-
-fn dispatch_cells(
-    commands: &mut Commands,
-    op: &'static str,
-    cells: &std::collections::HashSet<IVec2>,
-    tile: u32,
-    layer: Entity,
-) {
-    let cells = cells
-        .iter()
-        .map(|cell| format!("{},{}", cell.x, cell.y))
-        .collect::<Vec<_>>()
-        .join(";");
-    commands.queue(move |world: &mut World| {
-        let _ = world
-            .operator(op)
-            .param("layer", layer)
-            .param("tile", i64::from(tile))
-            .param("cells", cells)
-            .call();
-    });
-}
-
-fn dispatch_flood(commands: &mut Commands, at: IVec2, tile: u32, layer: Option<Entity>) {
-    let Some(layer) = layer else {
-        return;
-    };
-    let at = format!("{},{}", at.x, at.y);
-    commands.queue(move |world: &mut World| {
-        let _ = world
-            .operator(TilemapFloodOp::ID)
-            .param("layer", layer)
-            .param("at", at)
-            .param("tile", i64::from(tile))
-            .call();
-    });
 }
 
 // ---------------------------------------------------------------------------

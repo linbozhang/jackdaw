@@ -1,0 +1,19 @@
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t22-tilemap/t22-tilemap
+UNDO_SEVEN_PASS
+DIRTY_AFTER_OPS_PASS
+after 7 ops: count=7
+UNDO_STEP1_PASS
+UNDO_DIRTY_HELD_PASS
+UNDO_MODE_PASS
+UNDO_FILL_PASS
+UNDO_ERASE_PASS
+UNDO_PAINT2_PASS
+UNDO_EMPTY_PASS
+UNDO_BASELINE_PASS
+DIRTY_AFTER_SAVE_PASS
+DIRTY_AFTER_REDO_FAIL
+dirty after 2 redos: false (history: {"jsonrpc":"2.0","id":13213,"result":{"dirty":false,"has_save_baseline":true,"redo":[{"label":"tilemap.erase"},{"label":"tilemap.fill"},{"label":"tilemap.layer.mode"},{"label":"tilemap.layer.visible"})
+after 2 redos: count=3
+REDO_STEP_PASS
+WARN_EDITOR_PASS
+EDITOR_ALIVE_PASS

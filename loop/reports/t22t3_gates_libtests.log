@@ -1,0 +1,8 @@
+=== libtests ===
+        PASS [   0.023s] (3044/3047) jd sign::tests::packed_bundles_verify_and_detect_tampering
+        PASS [   0.024s] (3045/3047) jd sign::tests::existing_publisher_key_reproduces_its_signature
+        PASS [   1.174s] (3046/3047) jackdaw_widgets_runtime tests::a_keystroke_through_bevys_text_pipeline_reaches_the_value_and_settles
+        PASS [   1.174s] (3047/3047) jackdaw_widgets_runtime tests::a_written_value_settles_once_the_pipeline_has_moved_the_caret
+────────────
+     Summary [  47.637s] 3047 tests run: 3047 passed, 0 skipped
+LIBTESTS_EXIT=0

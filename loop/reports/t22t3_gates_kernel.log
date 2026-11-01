@@ -1,0 +1,6 @@
+=== kernel ===
+        PASS [   0.070s] (10/11) jackdaw_tilemap_collision::player_probe_app the_ground_holds_a_falling_probe
+        PASS [   0.071s] (11/11) jackdaw_tilemap_collision::player_probe_app the_trigger_reports_a_crossing
+────────────
+     Summary [   0.083s] 11 tests run: 11 passed, 0 skipped
+KERNEL_EXIT=0

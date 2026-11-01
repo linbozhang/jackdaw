@@ -1,0 +1,24 @@
+export disk face: 107Gi free
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t22-tilemap/t22-tilemap
+export face: {"jsonrpc":"2.0","id":22988,"result":{"dist_dir":"/Users/zhanglinbo/workspace/loop-mac/t22-tilemap/t22-tilemap/.jackdaw/dist/release","files":10,"flow_warnings":[],"manifest":"/Users/zhanglinbo/workspace/loop-mac/t22-tilemap/t22-tilemap/.jackdaw/dist/release/export-manifest.json","outcome":"t22-tilemap","profile":"release","skipped":1,"started_at":1793565038,"state":"ready"}}
+EXPORT_OK_PASS
+EXPORT_BINARY_PASS
+EXPORT_SHEET_PASS
+EXPORT_SCENE_PASS
+EXPORT_FLOW_PASS
+EXPORT_MANIFEST_PASS
+manifest: /Users/zhanglinbo/workspace/loop-mac/t22-tilemap/t22-tilemap/.jackdaw/dist/release/export-manifest.json ({   "profile": "release",   "jackdaw": "0.21.0-dev", )
+STAGED_UP_PASS
+staged probe sample 1: x=96.0 y=76.0009994506836
+staged probe sample 2: x=96.0 y=76.0009994506836
+staged probe sample 3: x=96.0 y=76.0009994506836
+staged probe sample 4: x=96.0 y=76.0009994506836
+staged probe sample 5: x=96.0 y=76.0009994506836
+staged probe sample 6: x=96.0 y=76.0009994506836
+STAGED_GROUND_PASS
+staged wall probe: x=275.9989929199219 (blocked ~276, past = 300+)
+STAGED_WALL_PASS
+staged TriggerCensus: 0 true
+STAGED_TRIGGER_PASS
+WARN_STAGED_PASS
+EXPORT done: EXPORT_BINARY=PASS EXPORT_FLOW=PASS EXPORT_MANIFEST=PASS EXPORT_OK=PASS EXPORT_SCENE=PASS EXPORT_SHEET=PASS STAGED_GROUND=PASS STAGED_TRIGGER=PASS STAGED_UP=PASS STAGED_WALL=PASS WARN_STAGED=PASS 

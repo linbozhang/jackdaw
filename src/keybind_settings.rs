@@ -88,6 +88,7 @@ pub const UNBOUND_OPERATORS: &[&str] = &[
     "modifier.move_up",
     "modifier.remove",
     "modifier.toggle",
+    "tilemap.stroke",
     "tools.measure_distance",
     "tools.measure_distance.confirm",
     "transform.nudge_x_neg",

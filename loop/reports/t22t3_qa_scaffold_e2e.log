@@ -1,0 +1,109 @@
+   Compiling jackdaw v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw)
+    Finished `test` profile [optimized + debuginfo] target(s) in 2.70s
+────────────
+ Nextest run ID 6a2f0100-0b43-456f-9090-38e86fc37223 with nextest profile: ci
+    Starting 2 tests across 1 binary
+        SLOW [> 30.000s] (───) jackdaw::scaffold_e2e scaffold_tilemap_module_builds_the_probe
+        SLOW [> 30.000s] (───) jackdaw::scaffold_e2e scaffold_game_builds_and_exposes_component
+        SLOW [> 60.000s] (───) jackdaw::scaffold_e2e scaffold_game_builds_and_exposes_component
+        SLOW [> 60.000s] (───) jackdaw::scaffold_e2e scaffold_tilemap_module_builds_the_probe
+        SLOW [> 90.000s] (───) jackdaw::scaffold_e2e scaffold_tilemap_module_builds_the_probe
+        SLOW [> 90.000s] (───) jackdaw::scaffold_e2e scaffold_game_builds_and_exposes_component
+        SLOW [>120.000s] (───) jackdaw::scaffold_e2e scaffold_game_builds_and_exposes_component
+        SLOW [>120.000s] (───) jackdaw::scaffold_e2e scaffold_tilemap_module_builds_the_probe
+        SLOW [>150.000s] (───) jackdaw::scaffold_e2e scaffold_tilemap_module_builds_the_probe
+        SLOW [>150.000s] (───) jackdaw::scaffold_e2e scaffold_game_builds_and_exposes_component
+TRY 1 TRMNTG [>180.000s] (───) jackdaw::scaffold_e2e scaffold_game_builds_and_exposes_component
+TRY 1 TRMNTG [>180.000s] (───) jackdaw::scaffold_e2e scaffold_tilemap_module_builds_the_probe
+   TRY 1 TMT [ 180.034s] (───) jackdaw::scaffold_e2e scaffold_tilemap_module_builds_the_probe
+  stdout ───
+
+    running 1 test
+    test scaffold_tilemap_module_builds_the_probe has been running for over 60 seconds
+
+    (test timed out)
+
+   TRY 1 TMT [ 180.038s] (───) jackdaw::scaffold_e2e scaffold_game_builds_and_exposes_component
+  stdout ───
+
+    running 1 test
+    test scaffold_game_builds_and_exposes_component has been running for over 60 seconds
+
+    (test timed out)
+
+  TRY 2 SLOW [> 30.000s] (───) jackdaw::scaffold_e2e scaffold_tilemap_module_builds_the_probe
+  TRY 2 SLOW [> 30.000s] (───) jackdaw::scaffold_e2e scaffold_game_builds_and_exposes_component
+  TRY 2 SLOW [> 60.000s] (───) jackdaw::scaffold_e2e scaffold_tilemap_module_builds_the_probe
+  TRY 2 SLOW [> 60.000s] (───) jackdaw::scaffold_e2e scaffold_game_builds_and_exposes_component
+  TRY 2 SLOW [> 90.000s] (───) jackdaw::scaffold_e2e scaffold_tilemap_module_builds_the_probe
+  TRY 2 SLOW [> 90.000s] (───) jackdaw::scaffold_e2e scaffold_game_builds_and_exposes_component
+  TRY 2 SLOW [>120.000s] (───) jackdaw::scaffold_e2e scaffold_tilemap_module_builds_the_probe
+  TRY 2 SLOW [>120.000s] (───) jackdaw::scaffold_e2e scaffold_game_builds_and_exposes_component
+  TRY 2 SLOW [>150.000s] (───) jackdaw::scaffold_e2e scaffold_tilemap_module_builds_the_probe
+  TRY 2 SLOW [>150.000s] (───) jackdaw::scaffold_e2e scaffold_game_builds_and_exposes_component
+TRY 2 TRMNTG [>180.000s] (───) jackdaw::scaffold_e2e scaffold_tilemap_module_builds_the_probe
+TRY 2 TRMNTG [>180.000s] (───) jackdaw::scaffold_e2e scaffold_game_builds_and_exposes_component
+   TRY 2 TMT [ 180.025s] (───) jackdaw::scaffold_e2e scaffold_tilemap_module_builds_the_probe
+  stdout ───
+
+    running 1 test
+    test scaffold_tilemap_module_builds_the_probe has been running for over 60 seconds
+
+    (test timed out)
+
+   TRY 2 TMT [ 180.052s] (───) jackdaw::scaffold_e2e scaffold_game_builds_and_exposes_component
+  stdout ───
+
+    running 1 test
+    test scaffold_game_builds_and_exposes_component has been running for over 60 seconds
+
+    (test timed out)
+
+  TRY 3 SLOW [> 30.000s] (───) jackdaw::scaffold_e2e scaffold_tilemap_module_builds_the_probe
+  TRY 3 SLOW [> 30.000s] (───) jackdaw::scaffold_e2e scaffold_game_builds_and_exposes_component
+  TRY 3 SLOW [> 60.000s] (───) jackdaw::scaffold_e2e scaffold_tilemap_module_builds_the_probe
+  TRY 3 SLOW [> 60.000s] (───) jackdaw::scaffold_e2e scaffold_game_builds_and_exposes_component
+  TRY 3 SLOW [> 90.000s] (───) jackdaw::scaffold_e2e scaffold_tilemap_module_builds_the_probe
+  TRY 3 SLOW [> 90.000s] (───) jackdaw::scaffold_e2e scaffold_game_builds_and_exposes_component
+  TRY 3 SLOW [>120.000s] (───) jackdaw::scaffold_e2e scaffold_tilemap_module_builds_the_probe
+  TRY 3 SLOW [>120.000s] (───) jackdaw::scaffold_e2e scaffold_game_builds_and_exposes_component
+  TRY 3 SLOW [>150.000s] (───) jackdaw::scaffold_e2e scaffold_tilemap_module_builds_the_probe
+  TRY 3 SLOW [>150.000s] (───) jackdaw::scaffold_e2e scaffold_game_builds_and_exposes_component
+TRY 3 TRMNTG [>180.000s] (───) jackdaw::scaffold_e2e scaffold_tilemap_module_builds_the_probe
+   TRY 3 TMT [ 180.029s] (1/2) jackdaw::scaffold_e2e scaffold_tilemap_module_builds_the_probe
+  stdout ───
+
+    running 1 test
+    test scaffold_tilemap_module_builds_the_probe has been running for over 60 seconds
+
+    (test timed out)
+
+TRY 3 TRMNTG [>180.000s] (───) jackdaw::scaffold_e2e scaffold_game_builds_and_exposes_component
+   TRY 3 TMT [ 180.037s] (2/2) jackdaw::scaffold_e2e scaffold_game_builds_and_exposes_component
+  stdout ───
+
+    running 1 test
+    test scaffold_game_builds_and_exposes_component has been running for over 60 seconds
+
+    (test timed out)
+
+────────────
+     Summary [ 540.143s] 2 tests run: 0 passed, 2 timed out, 0 skipped
+   TRY 3 TMT [ 180.029s] (1/2) jackdaw::scaffold_e2e scaffold_tilemap_module_builds_the_probe
+  stdout ───
+
+    running 1 test
+    test scaffold_tilemap_module_builds_the_probe has been running for over 60 seconds
+
+    (test timed out)
+
+   TRY 3 TMT [ 180.037s] (2/2) jackdaw::scaffold_e2e scaffold_game_builds_and_exposes_component
+  stdout ───
+
+    running 1 test
+    test scaffold_game_builds_and_exposes_component has been running for over 60 seconds
+
+    (test timed out)
+
+error: test run failed
+E2E_EXIT=100
