@@ -1,0 +1,14 @@
+direct_run m13: game up
+M13_NUMERIC: Hero transform {"rotation":[0.0,0.0,0.0,1.0],"scale":[1.0,1.0,1.0],"translation":[0.0,0.0,0.0]}
+M13_NUMERIC: SheetSpr present under With<Sprite>
+M13_NUMERIC_PASS
+M13_CAM2D_PASS
+gshot m13-game-window ok (3024 1964)
+M13 game window hero-red census: 0.278%
+M13_WINDOW_PX_PASS
+M13_ATLAS: the document carries the worn atlas (TextureAtlas, index 2)
+gshot M13_ATLAS-window ok (3024 1964)
+M13_ATLAS: game-window blue tile census 6.222%
+M13_ATLAS_PASS
+WARN_SCAN game-direct: zero hits
+GAME done: M13_ATLAS=PASS M13_CAM2D=PASS M13_NUMERIC=PASS M13_WINDOW_PX=PASS 

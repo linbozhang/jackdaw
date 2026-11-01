@@ -1,0 +1,30 @@
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t21-sprite/t21-sprite
+L1 kind face: sprite.add answered in the opened scene (2D world scene recognised)
+L1_KIND_PASS
+shot probe-canvas-baseline ok (viewport2d)
+SP7: game-side Hero entity 771v0
+SP7 embedded numeric: With<Sprite> Hero rows = 0; Transform = {"rotation":[0.0,0.0,0.0,1.0],"scale":[1.0,1.0,1.0],"translation":[0.0,0.0,0.0]}
+SP7 sprite-face probe (structural): {"jsonrpc":"2.0","id":32538,"result":{"components":{},"errors":{"bevy_sprite::sprite::Sprite":{"code":-23402,"message":"type `bevy_platform::sync::Arc<bevy_asset::handle::StrongHandle>` did not register the `ReflectSerialize` or `ReflectSerializeWithRegistry` type data. For certain types, this may n
+SP7 embedded numeric (retry): rows=1 transform={"rotation":[0.0,0.0,0.0,1.0],"scale":[1.0,1.0,1.0],"translation":[0.0,0.0,0.0]}
+SP7_NUMERIC_PASS
+shot probe-pie-embedded ok (window)
+SP7 embedded: hero-red census in the Game-panel strip = 0.187% (window-wide 0.022%)
+shot probe-pie-windowed ok (window)
+SP7 windowed: hero-red census in the Game-panel strip = 0.000%
+gshot probe-pie-windowed-screen ok (3024 1964)
+SP7_EMBEDDED_PX_PASS
+SP7 verdict: the embedded streamed frame carries the 2D sprite — M14 keeps its pixel channel on the default (embedded) mode
+SP7_WINDOWED_PX_PASS
+SP7 windowed: the streamed strip shows no sprite — the FrameCaptureCamera (Camera3d) suspicion confirmed; windowed PIE 2D goes numeric (T19 decision-4 form), the game window is the truth
+SP7 temp-copy dirty marker: 5923v5
+SP7_TEMPCOPY_PASS
+SP7 temp-copy: current-scene-70604.bsn carries the Camera2d — the copy path cannot lose the 2D camera (FS half)
+shot probe-pie-tempcopy ok (window)
+SP7 temp-copy: hero-red census in the strip = 0.187%
+SP7_STOP_SHA_PASS
+WARN_SCAN probe-editor HITS:
+  thread 'main' (30753965) panicked at /rustc/b940084d7eb6a299eb4bfeb8e34901bc051e7ac4/library/alloc/src/vec/mod.rs:2258:13:
+  [2m2026-11-01T07:17:52.680556Z[0m [31mERROR[0m [2mbevy_ecs::error::handler[0m[2m:[0m Encountered an error in system `jackdaw::pie::drain_game_events`: Exclusive system panicked
+SP7 N13 count: 1 drain_game_events lines; editor status face: dead (alive)
+SP7_ALIVE_PASS
+PROBE done: L1_KIND=PASS SP7_ALIVE=PASS SP7_EMBEDDED_PX=PASS SP7_NUMERIC=PASS SP7_STOP_SHA=PASS SP7_TEMPCOPY=PASS SP7_WINDOWED_PX=PASS 

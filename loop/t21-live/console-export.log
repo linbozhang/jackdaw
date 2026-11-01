@@ -1,0 +1,17 @@
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t21-sprite/t21-sprite
+export_wait: run advanced (idle -> 1793524680) and is ready
+M15_EXPORT_PASS
+M15_SCENE_SHA_PASS
+M15_PACKAGE_PASS
+M15_STAGED_NUMERIC: Hero transform {"rotation":[0.0,0.0,0.0,1.0],"scale":[1.0,1.0,1.0],"translation":[0.0,0.0,0.0]}
+M15_STAGED_NUMERIC: SheetSpr present under With<Sprite>
+M15_STAGED_NUMERIC_PASS
+gshot m15-staged-window ok (3024 1964)
+M15 staged window hero-red census: 0.278%
+M15_STAGED_PX_PASS
+M15_STAGED_ATLAS: the document carries the worn atlas (TextureAtlas, index 2)
+gshot M15_STAGED_ATLAS-window ok (3024 1964)
+M15_STAGED_ATLAS: game-window blue tile census 3.339%
+M15_STAGED_ATLAS_PASS
+WARN_SCAN export-staged: zero hits
+EXPORT done: M15_EXPORT=PASS M15_PACKAGE=PASS M15_SCENE_SHA=PASS M15_STAGED_ATLAS=PASS M15_STAGED_NUMERIC=PASS M15_STAGED_PX=PASS 

@@ -290,3 +290,36 @@ than defects:
 
 Where to dig in: `loop/plans/t20-example-game.md` (the degree table
 and the M12/M13 isolation evidence).
+
+## Sprite draw-order surface (T21)
+
+A sprite's draw order is its `Transform.translation.z` (small z
+draws first); the editor exposes it through the Inspector's bare z
+field, the move gizmo, and the one rule that a newly added sprite
+lands one above the scene's highest sprite. What a 2D-heavy project
+will eventually want is thicker: a sorting panel that lists sprites
+by z with drag-to-reorder, and a Y-sort mode (siblings drawn by
+their y position, the standard for top-down character layers) --
+neither exists upstream either; the upstream sprite suite deferred
+ordering to its own issue. The z field satisfies the "editable"
+letter of the current acceptance; the panel and Y-sort are recorded
+here so they are not mistaken for defects.
+
+Where to dig in: `bevy_sprite_render`'s extraction (the sort key)
+and the editor's Add/transform surfaces (`src/sprite_ops.rs`,
+`src/sprite_gizmo.rs`).
+
+## The Add menu's 3D groups in a 2D scene (T21)
+
+The Add menu shows its 3D-furniture groups (3D Objects, Lights,
+Cameras, ...) in every scene, 2D world scenes included. Adding a
+Cube to a 2D scene does not error; the entity is real and the
+Inspector edits it, but the scene's Camera2d cannot draw it, so the
+canvas shows nothing and the confusion is the bug-shaped part. The
+upstream sprite work that added the 2D group deliberately left the
+3D groups alone. Hiding (or moving the 3D groups behind an
+"advanced" affordance) when a `Scene2dRoot` is open is the candidate
+shape, and belongs with whatever round next touches the Add menu.
+
+Where to dig in: `src/creation_taxonomy.rs` (the group collection
+and the `two_d()` group that already gates on the open scene).

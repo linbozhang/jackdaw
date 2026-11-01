@@ -2144,6 +2144,73 @@ mod asset_file_tests {
     }
 
     #[test]
+    fn a_texture_atlas_layout_the_editor_saved_walks_into_the_game() {
+        // M10 (T21, plan §0 fact 13's last open probe): the layout asset a
+        // sprite's `texture_atlas` names rides the same asset walk every
+        // project file rides. The writer side is the catalog serializer the
+        // editor's Sprite Atlas card saves through, so the file text is the
+        // authoring chain's own output, and `TextureAtlasPlugin`'s
+        // init_asset + register_asset_reflect stand in for the game side.
+        use bevy::asset::AssetApp as _;
+        use bevy::image::TextureAtlasLayout;
+
+        let mut app = runtime_app();
+        app.init_asset::<TextureAtlasLayout>();
+        app.register_asset_reflect::<TextureAtlasLayout>();
+        let type_path = <TextureAtlasLayout as TypePath>::type_path().to_string();
+
+        let layout =
+            TextureAtlasLayout::from_grid(bevy::math::UVec2::new(32, 16), 2, 3, None, None);
+        let handle = app
+            .world_mut()
+            .resource_mut::<Assets<TextureAtlasLayout>>()
+            .add(layout);
+        let body = jackdaw_bsn::serialize_assets_to_bsn(
+            app.world(),
+            &[jackdaw_bsn::CatalogAssetRef {
+                name: "sheet".to_string(),
+                type_id: std::any::TypeId::of::<TextureAtlasLayout>(),
+                asset_id: handle.id().untyped(),
+            }],
+        );
+        assert!(
+            body.contains(&type_path),
+            "the entry names its type: {body}"
+        );
+
+        let tmp = tempfile::tempdir().expect("tempdir");
+        write(
+            tmp.path(),
+            "content/sheet.bsn",
+            &jackdaw_bsn::with_asset_header(&type_path, &body),
+        );
+
+        load_walked_assets(app.world_mut(), tmp.path(), None);
+
+        let handle = app
+            .world()
+            .resource::<JackdawCatalog>()
+            .get("content/sheet.bsn")
+            .cloned()
+            .expect("the layout file is in the catalog");
+        let handle = handle
+            .try_typed::<TextureAtlasLayout>()
+            .expect("a layout handle");
+        let layout = app
+            .world()
+            .resource::<Assets<TextureAtlasLayout>>()
+            .get(&handle)
+            .expect("the walk loaded the layout into its store");
+        assert_eq!(layout.textures.len(), 6, "two columns by three rows");
+        assert_eq!(layout.size, bevy::math::UVec2::new(64, 48));
+        assert_eq!(
+            layout.textures[2].min,
+            bevy::math::UVec2::new(0, 16),
+            "the third frame opens the second row, frames running left to right"
+        );
+    }
+
+    #[test]
     fn a_file_naming_a_type_the_game_did_not_register_is_skipped() {
         let mut app = runtime_app();
         let tmp = tempfile::tempdir().expect("tempdir");
