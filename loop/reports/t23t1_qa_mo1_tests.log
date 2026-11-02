@@ -1,0 +1,13 @@
+   Compiling jackdaw v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw)
+    Finished `test` profile [optimized + debuginfo] target(s) in 12.04s
+     Running unittests src/lib.rs (target/debug/deps/jackdaw-967d33bc1f7e7211)
+
+running 5 tests
+test material_overrides::tests::a_sound_override_never_warns_even_when_judged_again ... ok
+test material_overrides::tests::a_stale_override_that_recovers_clears_its_report_and_speaks_again ... ok
+test material_overrides::tests::a_stale_override_warns_once_and_stays_quiet_while_it_lasts ... ok
+test material_overrides::tests::an_instance_stale_override_is_reported_too ... ok
+test material_overrides::tests::an_override_whose_material_file_is_gone_warns_once_and_stops_when_it_arrives ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 1234 filtered out; finished in 0.00s
+
