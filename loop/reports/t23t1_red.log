@@ -1,0 +1,26 @@
+# T23-T1 red-state run (before any fix), main=12c0f9f1, 2026-11-02 08:06
+# MO2 red: audit is blind to override paths (zero findings for a missing override path + missing GltfSource.path)
+# MO3 red: rename does not follow override paths (entries keep the old spelling)
+# MO4 probe green: pinning the expansion trap BEFORE the fix (the trap is live; flipping to warn-reject next)
+
+== MO2: cargo test --test guards an_override_path_that_names_no_file_is_a_missing_finding ==
+test reference_audit::an_override_path_that_names_no_file_is_a_missing_finding ... FAILED
+thread 'reference_audit::an_override_path_that_names_no_file_is_a_missing_finding' (33682848) panicked at tests/guards/reference_audit.rs:298:5:
+assertion `left == right` failed: the override entry naming no file is one finding: []
+  left: 0
+ right: 1
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 245 filtered out; finished in 1.86s
+
+== MO3: cargo test --test guards renaming_a_material_rewrites_the_overrides_holding_it_and_nothing_else ==
+[2m2026-11-02T00:06:09.918825Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking /var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/jackdaw-override-rewrite-jSUdiQ/assets recursively
+[2m2026-11-02T00:06:09.988440Z[0m [33m WARN[0m [2mjackdaw::pie[0m[2m:[0m PIE: cannot build /var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/jackdaw-override-rewrite-jSUdiQ: cargo could not read /var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/jackdaw-override-rewrite-jSUdiQ: error: could not find `Cargo.toml` in `/private/var/folders/s5/t8n72_212pndcg9prt7q9_wm0000gn/T/jackdaw-override-rewrite-jSUdiQ` or any parent directory
+test reference_rewrite::renaming_a_material_rewrites_the_overrides_holding_it_and_nothing_else ... FAILED
+---- reference_rewrite::renaming_a_material_rewrites_the_overrides_holding_it_and_nothing_else stdout ----
+thread 'reference_rewrite::renaming_a_material_rewrites_the_overrides_holding_it_and_nothing_else' (33683056) panicked at tests/guards/reference_rewrite.rs:298:5:
+the override's entry follows the file: #Sign
+    reference_rewrite::renaming_a_material_rewrites_the_overrides_holding_it_and_nothing_else
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 245 filtered out; finished in 1.89s
+
+== MO4 probe: cargo test --test stage overriding_an_unnamed_part_expands_to_every_named_material ==
+test material_overrides::overriding_an_unnamed_part_expands_to_every_named_material ... ok
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 571 filtered out; finished in 2.77s

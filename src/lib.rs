@@ -532,6 +532,7 @@ impl Plugin for EditorCorePlugin {
         .add_plugins(definition_assets::plugin)
         .add_plugins(asset_index::plugin)
         .add_plugins(asset_failures::plugin)
+        .add_plugins(material_overrides::plugin)
         .add_plugins(thumbnail::plugin)
         .add_plugins(boot_ops::plugin)
         .add_plugins(fps_overlay::plugin)

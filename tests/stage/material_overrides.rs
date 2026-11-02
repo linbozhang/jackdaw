@@ -220,6 +220,87 @@ fn applying_a_material_to_a_models_part_overrides_it_on_the_model_and_undo_takes
     );
 }
 
+/// T23 MO4: a part wearing an UNNAMED glTF material cannot be addressed by
+/// any override (the loader names nothing for it), so overriding it with
+/// `name=` empty is refused with the nameable list — where it used to expand
+/// silently to the model's every named material, one click retargeting the
+/// whole model.
+#[test]
+fn overriding_an_unnamed_part_is_refused_instead_of_expanding_to_the_model() {
+    let (mut app, _tmp, _scene, mossy) = editor_with_a_cliff();
+    let cliff = named(&mut app, "cliff").expect("the cliff");
+    let _ = a_part(&mut app, cliff, "Rock");
+    // A part the glTF loader gave no name: no `GltfMaterialName`.
+    let silent_own = app
+        .world_mut()
+        .resource_mut::<Assets<StandardMaterial>>()
+        .add(StandardMaterial::default());
+    let silent = app
+        .world_mut()
+        .spawn((
+            Mesh3d::default(),
+            MeshMaterial3d(silent_own.clone()),
+            ChildOf(cliff),
+        ))
+        .id();
+    settle(&mut app);
+    app.world_mut().resource_mut::<Selection>().entities = vec![silent];
+    settle(&mut app);
+
+    let result = app
+        .world_mut()
+        .operator("material.override")
+        .param("material", mossy)
+        .call()
+        .expect("the operator dispatched");
+    assert_eq!(
+        result,
+        OperatorResult::Cancelled,
+        "an unnamed part is refused, not expanded to the whole model"
+    );
+    assert!(
+        app.world().get::<MaterialOverrides>(cliff).is_none(),
+        "nothing was written"
+    );
+    assert_eq!(
+        WornMaterial::of(app.world(), silent),
+        Some(WornMaterial::Standard(silent_own)),
+        "the unnamed part itself is never dressed: no override can address it"
+    );
+    let warnings = app
+        .world()
+        .get_resource::<jackdaw_api_internal::operator::OperatorWarnings>()
+        .map(|warnings| warnings.0.to_vec())
+        .unwrap_or_default();
+    assert!(
+        warnings
+            .iter()
+            .any(|line| line.contains("wears an unnamed material") && line.contains("Rock")),
+        "the refusal lists the materials the model does name: {warnings:?}"
+    );
+
+    // The named parts keep their honest door: `name=` still overrides.
+    call(
+        &mut app,
+        "material.override",
+        &[
+            ("name", "Rock".into()),
+            ("material", "materials/mossy.bsn".into()),
+        ],
+    );
+    assert_eq!(
+        app.world()
+            .get::<MaterialOverrides>(cliff)
+            .map(|overrides| overrides.materials.clone()),
+        Some(
+            [("Rock".to_string(), "materials/mossy.bsn".to_string())]
+                .into_iter()
+                .collect()
+        ),
+        "the named material is still addressable by its name"
+    );
+}
+
 #[test]
 fn an_override_naming_no_material_is_refused() {
     let (mut app, _tmp, _scene, _) = editor_with_a_cliff();

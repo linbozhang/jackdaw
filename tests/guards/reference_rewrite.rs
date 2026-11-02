@@ -210,6 +210,120 @@ fn renaming_a_referenced_file_rewrites_its_referrers_and_nothing_else() {
     );
 }
 
+/// A scene with one Signpost, a placed model whose overrides reference the
+/// same material through both override layers, and one entry that names
+/// another material: the rewrite must follow the one and not the other (T23
+/// MO3).
+fn override_scene() -> String {
+    format!(
+        "#Sign\n{SIGNPOST} {{ board: \"materials/rust.material.bsn\", \
+         note: \"materials/rust.material.bsn\" }}\n\
+         \n\
+         #Cliff\n\
+         jackdaw_scene_types::types::GltfSource {{ path: \"models/cliff.glb\", scene_index: 0 }}\n\
+         jackdaw_scene_types::types::MaterialOverrides {{\n\
+         \x20\x20\x20\x20materials: map[\n\
+         \x20\x20\x20\x20\x20\x20\x20\x20(\"Rock\", \"materials/rust.material.bsn\"),\n\
+         \x20\x20\x20\x20\x20\x20\x20\x20(\"Moss\", \"materials/mossy.material.bsn\")\n\
+         \x20\x20\x20\x20]\n\
+         }}\n\
+         \n\
+         #Post\n\
+         jackdaw_scene_types::types::InstanceMaterialOverrides {{\n\
+         \x20\x20\x20\x20materials: map[\n\
+         \x20\x20\x20\x20\x20\x20\x20\x20(\"Trim\", \"materials/rust.material.bsn\")\n\
+         \x20\x20\x20\x20]\n\
+         }}\n"
+    )
+}
+
+/// An editor on a project holding the override scene above, nothing open:
+/// a rename follows the documents on disk through the referrers table.
+fn editor_with_override_scene() -> (App, tempfile::TempDir) {
+    let tmp = tempfile::Builder::new()
+        .prefix("jackdaw-override-rewrite-")
+        .tempdir()
+        .expect("temp dir");
+    write(tmp.path(), "materials/rust.material.bsn", &material(0.25));
+    write(
+        tmp.path(),
+        "materials/mossy.material.bsn",
+        &material(0.75).replace("#rust", "#mossy"),
+    );
+    write(tmp.path(), "zones/hedgerow.bsn", &override_scene());
+
+    let mut app = util::editor_test_app();
+    app.register_type::<Signpost>();
+    app.register_asset_reflect::<StandardMaterial>();
+    app.world_mut()
+        .insert_resource(jackdaw::project::ProjectRoot {
+            root: tmp.path().to_path_buf(),
+            config: default(),
+        });
+    app.world_mut()
+        .resource_mut::<NextState<jackdaw::AppState>>()
+        .set(jackdaw::AppState::Editor);
+    app.update();
+    jackdaw::asset_index::rescan_asset_index(app.world_mut());
+    (app, tmp)
+}
+
+/// Renaming a material a model's overrides reference rewrites the entries
+/// holding it, in both override layers — and leaves the entry that names
+/// another material, the plain string beside it (W10) and the model's own
+/// source path exactly as they were (T23 MO3).
+#[test]
+fn renaming_a_material_rewrites_the_overrides_holding_it_and_nothing_else() {
+    let (mut app, tmp) = editor_with_override_scene();
+    rescan(&mut app);
+
+    run_op_clause(
+        app.world_mut(),
+        "file.rename path=assets/materials/rust.material.bsn name=patinated.material.bsn",
+    )
+    .expect("the rename runs")
+    .assert_finished();
+
+    let rewritten = read(tmp.path(), "zones/hedgerow.bsn");
+    // The control: the typed handle field follows the file.
+    assert!(
+        rewritten.contains("materials/patinated.material.bsn"),
+        "the reference follows the file: {rewritten}"
+    );
+    assert!(
+        !rewritten.contains("board: \"materials/rust.material.bsn\""),
+        "the asset field leaves the old path behind: {rewritten}"
+    );
+    // The model layer's override entry follows too.
+    assert!(
+        rewritten.contains("(\"Rock\", \"materials/patinated.material.bsn\")"),
+        "the override's entry follows the file: {rewritten}"
+    );
+    assert!(
+        !rewritten.contains("(\"Rock\", \"materials/rust.material.bsn\")"),
+        "the override leaves the old path behind: {rewritten}"
+    );
+    // So does the instance layer's.
+    assert!(
+        rewritten.contains("(\"Trim\", \"materials/patinated.material.bsn\")"),
+        "the instance override's entry follows the file: {rewritten}"
+    );
+    // And nothing else moves: the entry naming another material, the plain
+    // string, the model source.
+    assert!(
+        rewritten.contains("(\"Moss\", \"materials/mossy.material.bsn\")"),
+        "an entry naming another file is left as it was: {rewritten}"
+    );
+    assert!(
+        rewritten.contains("note: \"materials/rust.material.bsn\""),
+        "a plain string spelling the old path is left as it was: {rewritten}"
+    );
+    assert!(
+        rewritten.contains("path: \"models/cliff.glb\""),
+        "the model's own source path is left as it was: {rewritten}"
+    );
+}
+
 // -------------------------------------------------------------- folder move --
 
 /// Renaming a folder rewrites the prefixed references in every document that

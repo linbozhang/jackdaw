@@ -92,12 +92,12 @@ pub(crate) fn spelled_references(world: &World, ast: &SceneBsnAst) -> Vec<String
                 // value at index zero, typed by the tuple's own field.
                 let held = tuple_held_type(&registry, &data.type_path, 0);
                 for value in &data.values {
-                    scan_value(&registry, held, value, &mut found);
+                    scan_value(&registry, held, false, value, &mut found);
                 }
             }
             BsnPatch::Template(_, Some(fields)) => {
                 for field in &fields.0 {
-                    scan_value(&registry, None, &field.value, &mut found);
+                    scan_value(&registry, None, false, &field.value, &mut found);
                 }
             }
             BsnPatch::Base(base) => bases.push(base.clone()),
@@ -126,7 +126,11 @@ fn scan_struct(
                 .map(bevy::reflect::NamedField::type_id),
             _ => None,
         };
-        scan_value(registry, field_type, &field.value, found);
+        // The overrides' material paths and a placed model's own source name
+        // files through plain strings (T23): found the same way a typed
+        // handle field is.
+        let force = crate::material_overrides::takes_string_path(&data.type_path, &field.name);
+        scan_value(registry, field_type, force, &field.value, found);
     }
 }
 
@@ -145,13 +149,16 @@ fn item_type(
 fn scan_value(
     registry: &bevy::reflect::TypeRegistry,
     field_type: Option<std::any::TypeId>,
+    force: bool,
     value: &BsnValue,
     found: &mut Vec<String>,
 ) {
     match value {
         BsnValue::String(reference) => {
-            let takes_path = field_type
-                .is_some_and(|type_id| crate::typed_values::takes_asset_path(registry, type_id));
+            let takes_path = force
+                || field_type.is_some_and(|type_id| {
+                    crate::typed_values::takes_asset_path(registry, type_id)
+                });
             if (takes_path || reference.starts_with('@'))
                 && !reference.is_empty()
                 && !found.contains(reference)
@@ -163,18 +170,18 @@ fn scan_value(
         BsnValue::TupleStruct(data) => {
             let held = tuple_held_type(registry, &data.type_path, 0);
             for value in &data.values {
-                scan_value(registry, held, value, found);
+                scan_value(registry, held, false, value, found);
             }
         }
         BsnValue::List(values) => {
             let item = field_type.and_then(|type_id| item_type(registry, type_id));
             for value in values {
-                scan_value(registry, item, value, found);
+                scan_value(registry, item, force, value, found);
             }
         }
         BsnValue::Map(pairs) => {
             for (_, value) in pairs {
-                scan_value(registry, field_type, value, found);
+                scan_value(registry, field_type, force, value, found);
             }
         }
         _ => {}
@@ -331,7 +338,9 @@ fn rewrite_struct(
         .map(bevy::reflect::TypeRegistration::type_info);
     // A prefab instance's source is a reference the same way a typed handle
     // field is, whatever the field's type — the save guard reads it the same
-    // way (asset_fields' IsA.source special case).
+    // way (asset_fields' IsA.source special case). So are the overrides'
+    // material paths and a placed model's own source (T23), or a rename
+    // would leave them pointing at a file that moved.
     let is_source = data.type_path == crate::scene_io::asset_fields::ISA_TYPE;
     for field in &mut data.fields.0 {
         let field_type = match info {
@@ -345,10 +354,12 @@ fn rewrite_struct(
         } else {
             field_type
         };
+        let force = (is_source && field.name == "source")
+            || crate::material_overrides::takes_string_path(&data.type_path, &field.name);
         rewrite_value(
             registry,
             held,
-            is_source && field.name == "source",
+            force,
             &mut field.value,
             moves,
             index,
@@ -360,7 +371,7 @@ fn rewrite_struct(
 fn rewrite_value(
     registry: &bevy::reflect::TypeRegistry,
     field_type: Option<std::any::TypeId>,
-    is_source: bool,
+    force: bool,
     value: &mut BsnValue,
     moves: &[ReferenceMove],
     index: &AssetIndex,
@@ -368,9 +379,11 @@ fn rewrite_value(
 ) {
     match value {
         BsnValue::String(reference) => {
-            let takes_path = field_type
-                .is_some_and(|type_id| crate::typed_values::takes_asset_path(registry, type_id));
-            if !takes_path && !is_source && !reference.starts_with('@') {
+            let takes_path = force
+                || field_type.is_some_and(|type_id| {
+                    crate::typed_values::takes_asset_path(registry, type_id)
+                });
+            if !takes_path && !reference.starts_with('@') {
                 return;
             }
             if let Some(now) = replacement(reference, moves, index) {
@@ -388,12 +401,12 @@ fn rewrite_value(
         BsnValue::List(values) => {
             let item = field_type.and_then(|type_id| item_type(registry, type_id));
             for value in values {
-                rewrite_value(registry, item, false, value, moves, index, replaced);
+                rewrite_value(registry, item, force, value, moves, index, replaced);
             }
         }
         BsnValue::Map(pairs) => {
             for (_, value) in pairs.iter_mut() {
-                rewrite_value(registry, field_type, false, value, moves, index, replaced);
+                rewrite_value(registry, field_type, force, value, moves, index, replaced);
             }
         }
         _ => {}

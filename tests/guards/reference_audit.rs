@@ -249,6 +249,94 @@ fn an_open_tabs_isa_source_is_judged_by_its_relative_spelling() {
     assert_eq!(isa[0].document, std::path::PathBuf::from("zones/one.bsn"));
 }
 
+/// T23 MO2: the paths a `MaterialOverrides` entry spells are references the
+/// same way a typed handle field is, so an entry naming no file the project
+/// holds is a Missing finding a caller can find and rebind — not a silent
+/// fall-back to the model's own material. A placed model's own `GltfSource`
+/// path is one too (the model file gone is discoverable, not silent).
+#[test]
+fn an_override_path_that_names_no_file_is_a_missing_finding() {
+    let tmp = tempfile::Builder::new()
+        .prefix("jackdaw-audit-overrides-")
+        .tempdir()
+        .expect("temp dir");
+    write(
+        tmp.path(),
+        "materials/rust.material.bsn",
+        "#rust\nbevy_pbr::pbr_material::StandardMaterial { metallic: 0.25 }\n",
+    );
+    write(
+        tmp.path(),
+        "zones/hedgerow.bsn",
+        "#Cliff\n\
+         jackdaw_scene_types::types::GltfSource { path: \"models/gone.glb\", scene_index: 0 }\n\
+         jackdaw_scene_types::types::MaterialOverrides {\n\
+         \x20\x20\x20\x20materials: map[\n\
+         \x20\x20\x20\x20\x20\x20\x20\x20(\"Rock\", \"materials/gone.material.bsn\"),\n\
+         \x20\x20\x20\x20\x20\x20\x20\x20(\"Moss\", \"materials/rust.material.bsn\")\n\
+         \x20\x20\x20\x20]\n\
+         }\n",
+    );
+    let mut app = util::editor_test_app();
+    app.world_mut()
+        .insert_resource(jackdaw::project::ProjectRoot {
+            root: tmp.path().to_path_buf(),
+            config: default(),
+        });
+    app.world_mut()
+        .resource_mut::<NextState<jackdaw::AppState>>()
+        .set(jackdaw::AppState::Editor);
+    app.update();
+    jackdaw::asset_index::rescan_asset_index(app.world_mut());
+
+    let findings = jackdaw::reference_audit::audit_references(app.world_mut());
+
+    let overrides: Vec<_> = findings
+        .iter()
+        .filter(|finding| finding.component == "MaterialOverrides")
+        .collect();
+    assert_eq!(
+        overrides.len(),
+        1,
+        "the override entry naming no file is one finding: {findings:?}"
+    );
+    assert_eq!(overrides[0].field, "materials");
+    assert_eq!(overrides[0].reference, "materials/gone.material.bsn");
+    assert_eq!(
+        overrides[0].kind,
+        jackdaw::reference_audit::FindingKind::Missing
+    );
+    assert_eq!(overrides[0].entity_name.as_deref(), Some("Cliff"));
+    assert_eq!(
+        overrides[0].document,
+        std::path::PathBuf::from("zones/hedgerow.bsn")
+    );
+
+    let model: Vec<_> = findings
+        .iter()
+        .filter(|finding| finding.component == "GltfSource")
+        .collect();
+    assert_eq!(
+        model.len(),
+        1,
+        "a placed model naming no model file is a finding too: {findings:?}"
+    );
+    assert_eq!(model[0].field, "path");
+    assert_eq!(model[0].reference, "models/gone.glb");
+    assert_eq!(
+        model[0].kind,
+        jackdaw::reference_audit::FindingKind::Missing
+    );
+
+    // The reference that resolves costs nothing.
+    assert!(
+        findings
+            .iter()
+            .all(|finding| finding.reference != "materials/rust.material.bsn"),
+        "a held material is no finding: {findings:?}"
+    );
+}
+
 /// The startup walk fills the index on its own — no test rescan asked for
 /// it. This is the guard that keeps the real-machine path (`OnEnter` the
 /// editor state, the async walk, the apply) from silently going dark while

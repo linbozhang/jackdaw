@@ -1,0 +1,8 @@
+    Finished `test` profile [optimized + debuginfo] target(s) in 0.29s
+────────────
+ Nextest run ID 6b04783b-8b5b-41bc-b6a4-f7fbf283ae24 with nextest profile: ci
+    Starting 2 tests across 1 binary (570 tests skipped)
+        PASS [   3.572s] (1/2) jackdaw::stage material_overrides::an_override_naming_no_material_is_refused
+        PASS [   4.033s] (2/2) jackdaw::stage material_overrides::overriding_an_unnamed_part_is_refused_instead_of_expanding_to_the_model
+────────────
+     Summary [   4.035s] 2 tests run: 2 passed, 570 skipped

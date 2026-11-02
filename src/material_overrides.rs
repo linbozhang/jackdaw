@@ -1,11 +1,14 @@
-//! Authoring the materials a placed model's parts wear in place of their own.
+//! Authoring the materials a placed model's parts wear in place of their own,
+//! and telling the author when an override stops being able to.
 
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, HashSet};
 
 use bevy::gltf::GltfMaterialName;
 use bevy::prelude::*;
 use jackdaw_api::prelude::*;
+use jackdaw_bsn::BsnProjectAssets;
 use jackdaw_commands::CommandHistory;
+use jackdaw_runtime::JackdawCatalog;
 use jackdaw_scene_types::{GltfSource, InstanceMaterialOverrides, MaterialOverrides};
 
 use crate::commands::EditorCommand;
@@ -13,9 +16,225 @@ use crate::selection::Selection;
 
 const MODEL_OVERRIDES_TYPE_PATH: &str = "jackdaw_scene_types::types::MaterialOverrides";
 const INSTANCE_OVERRIDES_TYPE_PATH: &str = "jackdaw_scene_types::types::InstanceMaterialOverrides";
+const GLTF_SOURCE_TYPE_PATH: &str = "jackdaw_scene_types::types::GltfSource";
+
+/// Whether a field of a component of `type_path` names an asset by path even
+/// though its type is a plain string: the two override types hold their
+/// references as the values of their `materials` map, and a placed model's
+/// own `GltfSource` names its model file. The audit's findings and the rename
+/// rewrite both read this list, the same way they read a prefab instance's
+/// `IsA.source` — one field being a reference whatever its type.
+pub(crate) fn takes_string_path(type_path: &str, field: &str) -> bool {
+    (matches!(
+        type_path,
+        MODEL_OVERRIDES_TYPE_PATH | INSTANCE_OVERRIDES_TYPE_PATH
+    ) && field == "materials")
+        || (type_path == GLTF_SOURCE_TYPE_PATH && field == "path")
+}
 
 pub(crate) fn add_to_extension(ctx: &mut ExtensionContext) {
     ctx.register_operator::<MaterialOverrideOp>();
+}
+
+/// The editor-side report of the failures an override can no longer hide.
+/// The twin of the runtime's `find_models_to_dress`: the same trigger set (an
+/// override changed or removed, a part arriving, the project reference tables
+/// moving), but read-only — instead of dressing the parts it compares each
+/// holder's entries against the names the parts under it wear and the
+/// materials the project resolves, and says once which entries fail. It lives
+/// on the editor side so the warnings stay out of a game process's log, and
+/// the status bar is editor chrome the runtime cannot reach; the audit's
+/// findings (`takes_string_path` feeds those too) are the discoverability
+/// half of the same story.
+pub(crate) fn plugin(app: &mut App) {
+    app.init_resource::<ReportedOverrides>().add_systems(
+        Update,
+        report_broken_overrides.run_if(in_state(crate::AppState::Editor)),
+    );
+}
+
+/// The override failures a report went out for during this session, keyed by
+/// the holder and the identity of the failure. One warning per failure,
+/// however many frames it lasts; a holder's locks clear themselves while it
+/// is being judged (an entry that fails no more is dropped), so a failure
+/// that comes back speaks again and an undo restoring a sound map stays
+/// quiet — the same rule `asset_failures` keeps for failed loads, with the
+/// lock changing shape instead of files.
+#[derive(Resource, Default)]
+pub struct ReportedOverrides(HashSet<(Entity, String)>);
+
+impl ReportedOverrides {
+    /// How many failures are on record. The tests count them, since a quiet
+    /// second report looks exactly like a loud one.
+    #[cfg(test)]
+    fn len(&self) -> usize {
+        self.0.len()
+    }
+}
+
+/// One failure an override entry suffers, computed per holder.
+struct BrokenEntry {
+    /// The override entry's material name.
+    key: String,
+    /// The material asset path the entry spells.
+    path: String,
+    /// No part under the holder wears this name any more: a GLB reimport
+    /// renamed or removed the material. The only other failure an entry can
+    /// suffer — the name worn but no material answering to the path — is
+    /// what's left when this is false.
+    stale_name: bool,
+}
+
+impl BrokenEntry {
+    /// What one report is filed under, so the same failure warns once: the
+    /// name when that is what broke, the file when the name still matches.
+    fn identity(&self) -> String {
+        if self.stale_name {
+            format!("name:{}", self.key)
+        } else {
+            format!("file:{}", self.path)
+        }
+    }
+
+    fn line(&self, who: &str) -> String {
+        if self.stale_name {
+            format!(
+                "material override: {who} overrides a material named '{}', which no part of it \
+                 wears any more -- its parts wear their own material until the name returns",
+                self.key
+            )
+        } else {
+            format!(
+                "material override: {who} overrides '{}' with '{}', which names no material the \
+                 project holds -- its parts wear their own material until it returns",
+                self.key, self.path
+            )
+        }
+    }
+}
+
+/// The failures the overrides on `holder` suffer: an entry whose material
+/// name no part under it wears, and an entry whose path names no material the
+/// project holds. The resolutions are the dressing's own
+/// (`material_of_reference`), so what reads as broken here is exactly what
+/// will not dress. A name that is gone is the failure reported; the health of
+/// its path is moot until the name returns.
+fn broken_entries(world: &World, holder: Entity) -> Vec<BrokenEntry> {
+    let mut materials: BTreeMap<String, String> = world
+        .get::<MaterialOverrides>(holder)
+        .map(|overrides| overrides.materials.clone())
+        .unwrap_or_default();
+    if let Some(overrides) = world.get::<InstanceMaterialOverrides>(holder) {
+        materials.extend(
+            overrides
+                .materials
+                .iter()
+                .map(|(key, path)| (key.clone(), path.clone())),
+        );
+    }
+    if materials.is_empty() {
+        return Vec::new();
+    }
+    let worn: HashSet<String> = model_material_names(world, holder).into_iter().collect();
+    materials
+        .iter()
+        .filter_map(|(key, path)| {
+            let stale_name = !worn.contains(key);
+            let unresolved_path =
+                !stale_name && jackdaw_runtime::material_of_reference(world, path).is_none();
+            (stale_name || unresolved_path).then_some(BrokenEntry {
+                key: key.clone(),
+                path: path.clone(),
+                stale_name,
+            })
+        })
+        .collect()
+}
+
+/// Compare every holder whose world just moved against the parts it holds,
+/// warning once per failing entry. The trigger set is `find_models_to_dress`'s
+/// (the runtime dressing); keep the two lists moving together.
+fn report_broken_overrides(
+    changed: Query<
+        Entity,
+        Or<(
+            Changed<MaterialOverrides>,
+            Changed<InstanceMaterialOverrides>,
+        )>,
+    >,
+    new_parts: Query<Entity, Added<GltfMaterialName>>,
+    holders: Query<Entity, Or<(With<MaterialOverrides>, With<InstanceMaterialOverrides>)>>,
+    parents: Query<&ChildOf>,
+    mut removed: RemovedComponents<MaterialOverrides>,
+    mut removed_instance: RemovedComponents<InstanceMaterialOverrides>,
+    project: Option<Res<BsnProjectAssets>>,
+    catalog: Option<Res<JackdawCatalog>>,
+    mut commands: Commands,
+) {
+    let mut examine: HashSet<Entity> = changed.iter().collect();
+    // A holder whose overrides left has nothing left to say; judging it
+    // clears the locks it held.
+    examine.extend(removed.read());
+    examine.extend(removed_instance.read());
+    // A part arriving can retire a stale entry's report (the name came
+    // back): every holder it hangs under is judged again.
+    for part in new_parts.iter() {
+        let mut at = Some(part);
+        while let Some(entity) = at {
+            if holders.contains(entity) {
+                examine.insert(entity);
+            }
+            at = parents.get(entity).ok().map(ChildOf::parent);
+        }
+    }
+    // The reference tables moved (files loaded, moved, healed): every
+    // holder's unresolved entries are judged again, and an entry whose file
+    // arrived stops being reported the same quiet way the dressing re-wears
+    // it.
+    if project.is_some_and(|project| project.is_changed())
+        || catalog.is_some_and(|catalog| catalog.is_changed())
+    {
+        examine.extend(holders.iter());
+    }
+    if examine.is_empty() {
+        return;
+    }
+    let examine: Vec<Entity> = examine.into_iter().collect();
+    commands.queue(move |world: &mut World| {
+        for holder in examine {
+            let entries = broken_entries(world, holder);
+            // This holder's locks clear themselves while it is judged: one
+            // that no longer names a current failure is dropped, so a
+            // failure that comes back speaks again, and an undo restoring
+            // the same map is quiet — the same entries judged, all on
+            // record.
+            let fresh: Vec<BrokenEntry> = {
+                let mut reported = world.resource_mut::<ReportedOverrides>();
+                reported.0.retain(|(entity, identity)| {
+                    *entity != holder || entries.iter().any(|entry| entry.identity() == *identity)
+                });
+                let mut fresh = Vec::new();
+                for entry in entries {
+                    if reported.0.insert((holder, entry.identity())) {
+                        fresh.push(entry);
+                    }
+                }
+                fresh
+            };
+            if fresh.is_empty() {
+                continue;
+            }
+            let who = world
+                .get::<Name>(holder)
+                .map(Name::as_str)
+                .unwrap_or("a model")
+                .to_string();
+            for entry in fresh {
+                warn!("{}", entry.line(&who));
+                crate::status_bar::notify_warn(world, entry.line(&who));
+            }
+        }
+    });
 }
 
 /// The placed model `entity` belongs to: itself, its nearest model ancestor, or the one model under it.
@@ -249,10 +468,30 @@ pub(crate) fn material_override(
     };
     let names = match params.as_str("name").filter(|name| !name.is_empty()) {
         Some(name) => vec![name.to_string()],
-        None if target != root => world
-            .get::<GltfMaterialName>(target)
-            .map(|name| vec![name.0.clone()])
-            .unwrap_or_else(|| model_material_names(world, root)),
+        None if target != root => match world.get::<GltfMaterialName>(target) {
+            // The part wears a named material: that one name.
+            Some(name) => vec![name.0.clone()],
+            // A part wearing an UNNAMED material can be addressed by no
+            // override (the loader names nothing for it). Refusing is the
+            // honest answer; expanding silently to the model's every named
+            // material let one click retarget the whole model (MO4).
+            None => {
+                let named = model_material_names(world, root);
+                if named.is_empty() {
+                    Vec::new() // falls to the no-named-materials refusal below
+                } else {
+                    warn_caller(
+                        world,
+                        format!(
+                            "{id}: that part wears an unnamed material, which no override can \
+                             address; name= one of the materials the model does name: {}",
+                            named.join(", ")
+                        ),
+                    );
+                    return OperatorResult::Cancelled;
+                }
+            }
+        },
         None => model_material_names(world, root),
     };
     if names.is_empty() {
@@ -284,4 +523,237 @@ pub(crate) fn material_override(
         history.execute(Box::new(command), world);
     });
     OperatorResult::Finished
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use bevy::ecs::system::RunSystemOnce as _;
+    use bevy::platform::collections::HashMap;
+
+    fn a_model(world: &mut World, parts: &[&str]) -> Entity {
+        let root = world.spawn_empty().id();
+        for name in parts {
+            world.spawn((GltfMaterialName((*name).to_string()), ChildOf(root)));
+        }
+        root
+    }
+
+    fn overrides(pairs: &[(&str, &str)]) -> MaterialOverrides {
+        MaterialOverrides {
+            materials: pairs
+                .iter()
+                .map(|(name, path)| (name.to_string(), path.to_string()))
+                .collect(),
+        }
+    }
+
+    /// The project resolves `path` to a held standard material.
+    fn holds(world: &mut World, path: &str) {
+        world.init_resource::<Assets<StandardMaterial>>();
+        let handle = world
+            .resource_mut::<Assets<StandardMaterial>>()
+            .add(StandardMaterial::default())
+            .clone()
+            .untyped();
+        world.insert_resource(BsnProjectAssets(HashMap::from_iter([(
+            path.to_string(),
+            handle,
+        )])));
+    }
+
+    fn run(world: &mut World) {
+        world
+            .run_system_once(report_broken_overrides)
+            .expect("the report ran");
+    }
+
+    fn notice(world: &mut World) -> String {
+        world
+            .resource::<crate::status_bar::StatusNotice>()
+            .text()
+            .to_string()
+    }
+
+    fn quiet(world: &mut World) {
+        *world.resource_mut::<crate::status_bar::StatusNotice>() = default();
+    }
+
+    /// A stale entry — a name no part wears any more — warns once on the
+    /// status bar and stays quiet while it lasts, however often the world
+    /// makes the report look again.
+    #[test]
+    fn a_stale_override_warns_once_and_stays_quiet_while_it_lasts() {
+        let mut world = World::new();
+        world.init_resource::<ReportedOverrides>();
+        world.init_resource::<crate::status_bar::StatusNotice>();
+        let root = a_model(&mut world, &["Rock"]);
+        world.entity_mut(root).insert(Name::new("Cliff"));
+        world
+            .entity_mut(root)
+            .insert(overrides(&[("Boulder", "materials/mossy.bsn")]));
+
+        run(&mut world);
+
+        assert_eq!(
+            world.resource::<ReportedOverrides>().len(),
+            1,
+            "the stale entry is on record"
+        );
+        let spoken = notice(&mut world);
+        assert!(
+            spoken.contains("material override")
+                && spoken.contains("Boulder")
+                && spoken.contains("Cliff"),
+            "the status bar names the holder and the failing name: {spoken}"
+        );
+
+        // The failure lasts (a reimport changed the overrides again, still
+        // stale): judged again, already reported, stays quiet.
+        quiet(&mut world);
+        world
+            .entity_mut(root)
+            .insert(overrides(&[("Boulder", "materials/mossy.bsn")]));
+        run(&mut world);
+        assert_eq!(world.resource::<ReportedOverrides>().len(), 1);
+        assert!(
+            !world
+                .resource::<crate::status_bar::StatusNotice>()
+                .is_active(),
+            "the same failure does not warn twice"
+        );
+    }
+
+    /// A stale entry whose name comes back clears its report (a part arrives
+    /// wearing the name again), and if the name goes once more it speaks
+    /// again rather than staying quiet for the rest of the session.
+    #[test]
+    fn a_stale_override_that_recovers_clears_its_report_and_speaks_again() {
+        let mut world = World::new();
+        world.init_resource::<ReportedOverrides>();
+        world.init_resource::<crate::status_bar::StatusNotice>();
+        holds(&mut world, "materials/mossy.bsn");
+        let root = a_model(&mut world, &["Rock"]);
+        world
+            .entity_mut(root)
+            .insert(overrides(&[("Boulder", "materials/mossy.bsn")]));
+        run(&mut world);
+        assert_eq!(world.resource::<ReportedOverrides>().len(), 1);
+
+        // The reimport brings the name back: a part arrives wearing it.
+        let part = world
+            .spawn((GltfMaterialName("Boulder".to_string()), ChildOf(root)))
+            .id();
+        run(&mut world);
+        assert_eq!(
+            world.resource::<ReportedOverrides>().len(),
+            0,
+            "the recovered entry's report clears itself"
+        );
+
+        // The name goes again (the part loses it, the overrides are judged
+        // once more): it speaks again.
+        world.entity_mut(part).remove::<GltfMaterialName>();
+        world
+            .entity_mut(root)
+            .insert(overrides(&[("Boulder", "materials/mossy.bsn")]));
+        run(&mut world);
+        assert_eq!(
+            world.resource::<ReportedOverrides>().len(),
+            1,
+            "a failure that came back speaks again"
+        );
+    }
+
+    /// A sound override — a name a part wears, a path the project resolves —
+    /// is judged and says nothing, however often: an undo restoring the same
+    /// map is not a false warning.
+    #[test]
+    fn a_sound_override_never_warns_even_when_judged_again() {
+        let mut world = World::new();
+        world.init_resource::<ReportedOverrides>();
+        world.init_resource::<crate::status_bar::StatusNotice>();
+        holds(&mut world, "materials/mossy.bsn");
+        let root = a_model(&mut world, &["Rock"]);
+        world
+            .entity_mut(root)
+            .insert(overrides(&[("Rock", "materials/mossy.bsn")]));
+
+        run(&mut world);
+        run(&mut world);
+
+        assert_eq!(world.resource::<ReportedOverrides>().len(), 0);
+        assert!(
+            !world
+                .resource::<crate::status_bar::StatusNotice>()
+                .is_active(),
+            "a sound override is quiet"
+        );
+    }
+
+    /// An entry whose name is worn but whose material file is gone warns
+    /// once, and stops on its own when the file arrives — the reference
+    /// tables moving is the same trigger the dressing re-wears on.
+    #[test]
+    fn an_override_whose_material_file_is_gone_warns_once_and_stops_when_it_arrives() {
+        let mut world = World::new();
+        world.init_resource::<ReportedOverrides>();
+        world.init_resource::<crate::status_bar::StatusNotice>();
+        let root = a_model(&mut world, &["Rock"]);
+        world
+            .entity_mut(root)
+            .insert(overrides(&[("Rock", "materials/late.bsn")]));
+
+        run(&mut world);
+
+        assert_eq!(world.resource::<ReportedOverrides>().len(), 1);
+        assert!(
+            notice(&mut world).contains("names no material the project holds"),
+            "the status bar names the unresolved path"
+        );
+
+        // The file arrives: the project resolves it, the report clears
+        // itself, and nothing speaks.
+        quiet(&mut world);
+        holds(&mut world, "materials/late.bsn");
+        run(&mut world);
+        assert_eq!(
+            world.resource::<ReportedOverrides>().len(),
+            0,
+            "the healed entry's report clears itself"
+        );
+        assert!(
+            !world
+                .resource::<crate::status_bar::StatusNotice>()
+                .is_active(),
+            "no warning for a healed entry"
+        );
+    }
+
+    /// An instance layer's stale entry is reported the same way the model
+    /// layer's is: one rule, whichever component holds the overrides.
+    #[test]
+    fn an_instance_stale_override_is_reported_too() {
+        let mut world = World::new();
+        world.init_resource::<ReportedOverrides>();
+        world.init_resource::<crate::status_bar::StatusNotice>();
+        let model = a_model(&mut world, &["Rock"]);
+        let instance = world
+            .spawn(InstanceMaterialOverrides {
+                materials: [("Gone".to_string(), "materials/mossy.bsn".to_string())]
+                    .into_iter()
+                    .collect(),
+            })
+            .add_child(model)
+            .id();
+        let _ = instance;
+
+        run(&mut world);
+
+        assert_eq!(
+            world.resource::<ReportedOverrides>().len(),
+            1,
+            "the instance's stale entry is on record"
+        );
+    }
 }
