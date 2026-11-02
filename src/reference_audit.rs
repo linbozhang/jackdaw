@@ -277,6 +277,9 @@ fn collect_entity(
                         .map(bevy::reflect::TypeRegistration::type_info);
                     // A prefab instance's source is a reference the same way
                     // a typed handle field is, whatever the field's type.
+                    // So are the overrides' material paths and a placed
+                    // model's own source: plain strings that name files, and
+                    // a project that loses them must say so (T23).
                     let is_source = data.type_path == crate::scene_io::asset_fields::ISA_TYPE;
                     for field in &data.fields.0 {
                         let field_type = match info {
@@ -287,7 +290,11 @@ fn collect_entity(
                         };
                         let takes_path = field_type.is_some_and(|type_id| {
                             crate::typed_values::takes_asset_path(registry, type_id)
-                        }) || (is_source && field.name == "source");
+                        }) || (is_source && field.name == "source")
+                            || crate::material_overrides::takes_string_path(
+                                &data.type_path,
+                                &field.name,
+                            );
                         for reference in strings_under(&field.value) {
                             if (takes_path || reference.starts_with('@')) && !reference.is_empty() {
                                 candidates.push(Candidate {

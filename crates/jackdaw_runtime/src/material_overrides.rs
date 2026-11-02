@@ -26,6 +26,10 @@ pub struct ModelMaterial(pub WornMaterial);
 
 type Overridden = Or<(With<MaterialOverrides>, With<InstanceMaterialOverrides>)>;
 
+/// The editor keeps a read-only twin of this trigger set
+/// (`jackdaw::material_overrides::report_broken_overrides`), reporting the
+/// entries that fail to dress instead of dressing them; when this list
+/// grows, grow that one with it.
 fn find_models_to_dress(
     mut commands: Commands,
     changed: Query<
