@@ -1,0 +1,5 @@
+MO9 red: asset.rebind over a MaterialOverrides map reference (doc=t23.bsn to=materials/wet2.bsn):
+live kit map after the rebind: {"Rock":"materials/wet.bsn"}
+audit findings after the rebind:
+{"count":1,"findings":[{"component":"MaterialOverrides","document":"t23.bsn","entity":"kit","field":"materials","kind":"Missing","reference":"materials/wet.bsn"}],"summary":"1 broken references in 1 documents (1 Missing)"}
+editor status text:

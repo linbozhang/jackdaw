@@ -1,0 +1,299 @@
+   Compiling bevy_dylib v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_dylib)
+   Compiling bevy v0.20.0 (/Users/zhanglinbo/workspace/bevy-fork-pinned)
+   Compiling jackdaw_geometry v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_geometry)
+   Compiling jackdaw_commands v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_commands)
+   Compiling jackdaw_input v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_input)
+   Compiling jackdaw_localization v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_localization)
+   Compiling jackdaw_bsn v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_bsn)
+   Compiling bevy_transform_interpolation v0.6.0
+   Compiling jackdaw_bind v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_bind)
+   Compiling jackdaw_widgets_runtime v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_widgets_runtime)
+   Compiling jackdaw_widgets v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_widgets)
+   Compiling jackdaw_scene_types v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_scene_types)
+   Compiling jackdaw_prefab v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_prefab)
+   Compiling avian3d v0.8.0
+   Compiling jackdaw_feathers v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_feathers)
+   Compiling jackdaw_terrain v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_terrain)
+   Compiling jackdaw_schema v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_schema)
+   Compiling jackdaw_camera_rig v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_camera_rig)
+   Compiling jackdaw_surface v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_surface)
+   Compiling jackdaw_project_build v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_project_build)
+   Compiling jackdaw_multiplayer v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_multiplayer)
+   Compiling jackdaw_panels v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_panels)
+   Compiling jackdaw_node_graph v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_node_graph)
+   Compiling jackdaw_api_internal v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_api_internal)
+   Compiling jackdaw_runtime v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_runtime)
+   Compiling jackdaw_avian_integration v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/integrations/physics/jackdaw_avian_integration)
+   Compiling jackdaw_animation_runtime v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_animation_runtime)
+   Compiling jackdaw_pie_protocol v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_pie_protocol)
+   Compiling jackdaw_animation v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_animation)
+   Compiling jackdaw_remote v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_remote)
+   Compiling jackdaw_loader v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_loader)
+   Compiling jackdaw_scaffold v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_scaffold)
+   Compiling jackdaw_jsn v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_jsn)
+   Compiling jackdaw_csg v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_csg)
+   Compiling jackdaw_uv v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_uv)
+   Compiling jackdaw_hull v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_hull)
+   Compiling jackdaw_select v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_select)
+   Compiling jackdaw_pick v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_pick)
+   Compiling bevy_window_chrome v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/bevy_window_chrome)
+   Compiling jackdaw_camera v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_camera)
+   Compiling jackdaw_dylib v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_dylib)
+   Compiling jackdaw_api v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_api)
+   Compiling jackdaw_multiplayer_editor v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_multiplayer_editor)
+   Compiling jackdaw_physics v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/integrations/physics/jackdaw_physics)
+   Compiling jackdaw v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw)
+   Compiling jackdaw_extension v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_extension)
+   Compiling test_fixture_extension v0.0.0 (/Users/zhanglinbo/workspace/jackdaw/tests/fixtures/test_fixture_extension)
+    Finished `test` profile [optimized + debuginfo] target(s) in 1m 30s
+────────────
+ Nextest run ID 7ecb2d09-9863-4df8-8cf4-0670028e537e with nextest profile: ci
+    Starting 246 tests across 1 binary
+        PASS [   2.213s] (  1/246) jackdaw::guards asset_lifecycle::an_unwritable_card_reports_and_stays_dirty
+        PASS [   3.625s] (  2/246) jackdaw::guards asset_lifecycle::a_dirty_card_writes_its_value_to_disk
+        PASS [   0.789s] (  3/246) jackdaw::guards atomic_writes::a_committed_conversion_carries_the_version_stamp
+        PASS [   4.434s] (  4/246) jackdaw::guards asset_lifecycle::a_saved_scene_stays_clean_when_an_asset_field_edits_the_shared_history
+        PASS [   5.834s] (  5/246) jackdaw::guards asset_lifecycle::an_asset_field_edit_does_not_dirty_the_scene_tab
+        PASS [   0.499s] (  6/246) jackdaw::guards atomic_writes::a_failed_conversion_keeps_the_old_bsn_and_the_source_in_place
+        PASS [   4.136s] (  7/246) jackdaw::guards asset_lifecycle::undoing_below_the_saved_baseline_still_marks_the_tab_dirty
+        PASS [   0.041s] (  8/246) jackdaw::guards atomic_writes::a_failed_prefab_save_keeps_the_old_file_byte_for_byte
+        PASS [   0.041s] (  9/246) jackdaw::guards atomic_writes::a_failed_project_config_save_keeps_the_old_file_byte_for_byte
+        PASS [   3.446s] ( 10/246) jackdaw::guards atomic_writes::a_damaged_project_json_is_backed_up_before_the_default_replaces_it
+        PASS [   4.065s] ( 11/246) jackdaw::guards atomic_writes::startup_sweeps_orphan_temp_files
+        PASS [   5.566s] ( 12/246) jackdaw::guards atomic_writes::a_resolved_save_as_closes_the_confirmed_tab
+        PASS [   7.507s] ( 13/246) jackdaw::guards atomic_writes::a_dismissed_save_as_leaves_the_tab_open_and_dirty
+        PASS [   5.599s] ( 14/246) jackdaw::guards atomic_writes::an_untitled_tabs_save_opens_save_as_instead_of_discarding
+        PASS [   2.570s] ( 15/246) jackdaw::guards batch_undo::a_batch_puts_terrain_heights_and_the_scene_back_together
+        PASS [   4.372s] ( 16/246) jackdaw::guards batch_undo::a_batch_that_stops_partway_keeps_the_calls_before_it_as_one_entry
+        PASS [   4.372s] ( 17/246) jackdaw::guards batch_undo::a_batch_undoes_as_one_and_redoes_as_one
+        PASS [   4.351s] ( 18/246) jackdaw::guards batch_undo::a_menu_dispatch_is_one_entry_that_undoes_and_redoes
+        PASS [   3.229s] ( 19/246) jackdaw::guards batch_undo::a_single_remote_call_is_one_entry_that_undoes_and_redoes
+        PASS [   3.344s] ( 20/246) jackdaw::guards batch_undo::each_path_outside_a_batch_pushes_what_it_always_has
+        PASS [   3.378s] ( 21/246) jackdaw::guards batch_undo::an_undo_after_a_batch_and_a_single_call_takes_the_single_call_first
+        PASS [   3.937s] ( 22/246) jackdaw::guards config_injection::the_editors_config_file_is_the_games_initial_resource
+        PASS [   5.320s] ( 23/246) jackdaw::guards config_injection::a_resource_panel_edit_never_reaches_the_game
+        PASS [   4.004s] ( 24/246) jackdaw::guards dirty_matrix::a_fresh_untitled_tab_starts_clean
+        PASS [   6.049s] ( 25/246) jackdaw::guards dirty_matrix::edit_then_save_is_clean
+        PASS [   6.049s] ( 26/246) jackdaw::guards dirty_matrix::duplicate_undone_takes_the_copy_and_the_dirty_flag
+        PASS [   8.024s] ( 27/246) jackdaw::guards dirty_matrix::dirty_state_survives_tab_switches_per_tab
+        PASS [   5.646s] ( 28/246) jackdaw::guards dirty_matrix::edit_then_undo_back_to_saved_is_clean
+        PASS [   6.355s] ( 29/246) jackdaw::guards dirty_matrix::edit_undo_redo_is_dirty
+        PASS [   6.355s] ( 30/246) jackdaw::guards dirty_matrix::modal_cancel::an_escaped_modal_gesture_leaves_no_entry_no_dirty_no_change
+        PASS [   6.352s] ( 31/246) jackdaw::guards dirty_matrix::numeric_entry_cancelled_with_escape_leaves_nothing
+        PASS [   6.390s] ( 32/246) jackdaw::guards dirty_matrix::one_edit_is_dirty
+        PASS [   6.594s] ( 33/246) jackdaw::guards dirty_matrix::open_then_nothing_is_clean
+        PASS [   6.595s] ( 34/246) jackdaw::guards dirty_matrix::resource_field_edit_undone_rolls_back_and_settles_clean
+        PASS [   6.594s] ( 35/246) jackdaw::guards dirty_matrix::save_then_undo_is_dirty_and_would_prompt
+        PASS [   6.381s] ( 36/246) jackdaw::guards dirty_matrix::save_undo_redo_is_clean
+        PASS [   2.187s] ( 37/246) jackdaw::guards editor_remote::a_batch_never_swallows_an_earlier_edit_when_history_trims
+        PASS [   3.607s] ( 38/246) jackdaw::guards editor_remote::a_batch_cancels_a_modal_it_started
+        PASS [   3.526s] ( 39/246) jackdaw::guards editor_remote::a_batch_of_calls_is_one_undo_entry
+        PASS [   2.756s] ( 40/246) jackdaw::guards editor_remote::a_batch_reports_the_call_that_failed
+        PASS [   2.624s] ( 41/246) jackdaw::guards editor_remote::a_call_adds_an_entity_that_the_tree_and_undo_both_see
+        PASS [   6.246s] ( 42/246) jackdaw::guards dirty_matrix::save_undo_then_a_different_edit_is_dirty
+        PASS [   2.680s] ( 43/246) jackdaw::guards editor_remote::a_call_reports_the_entity_it_spawned
+        PASS [   3.431s] ( 44/246) jackdaw::guards editor_remote::a_call_reports_only_the_entities_it_spawned_itself
+        PASS [   2.884s] ( 45/246) jackdaw::guards editor_remote::a_call_reports_what_the_operator_refused
+        PASS [   3.606s] ( 46/246) jackdaw::guards editor_remote::a_call_that_replaces_a_root_reports_only_the_one_it_added
+        PASS [   2.951s] ( 47/246) jackdaw::guards editor_remote::a_dropped_wait_does_not_shorten_the_next_one
+        PASS [   2.934s] ( 48/246) jackdaw::guards editor_remote::a_frame_wait_answers_only_after_its_frames
+        PASS [   2.914s] ( 49/246) jackdaw::guards editor_remote::a_pie_wait_answers_on_the_transition_rather_than_the_state_it_started_in
+        PASS [   2.901s] ( 50/246) jackdaw::guards editor_remote::a_pie_wait_gives_up_when_its_frames_run_out
+        PASS [   2.906s] ( 51/246) jackdaw::guards editor_remote::a_prefab_instance_call_reports_the_instance_it_added
+        PASS [   2.897s] ( 52/246) jackdaw::guards editor_remote::a_project_can_turn_the_surface_off
+        PASS [   2.923s] ( 53/246) jackdaw::guards editor_remote::a_queued_gesture_holds_idle_until_it_has_played
+        PASS [   2.928s] ( 54/246) jackdaw::guards editor_remote::a_screenshot_refuses_a_path_outside_the_project
+        PASS [   2.949s] ( 55/246) jackdaw::guards editor_remote::a_screenshot_resolves_once_the_capture_log_has_the_file
+        PASS [   2.971s] ( 56/246) jackdaw::guards editor_remote::applied_bsn_is_taken_back_by_one_undo
+        PASS [   2.967s] ( 57/246) jackdaw::guards editor_remote::applied_bsn_keeps_the_hierarchy_the_source_spells
+        PASS [   2.981s] ( 58/246) jackdaw::guards editor_remote::applied_bsn_lands_under_the_named_parent
+        PASS [   2.958s] ( 59/246) jackdaw::guards editor_remote::applied_bsn_spawns_every_root_in_the_source
+        PASS [   2.941s] ( 60/246) jackdaw::guards editor_remote::camera_state_answers_with_no_camera_rather_than_refusing
+        PASS [   2.953s] ( 61/246) jackdaw::guards editor_remote::cancel_ends_the_modal_holding_the_editor
+        PASS [   2.999s] ( 62/246) jackdaw::guards editor_remote::depth_zero_reports_roots_without_their_children
+        PASS [   3.030s] ( 63/246) jackdaw::guards editor_remote::every_call_in_a_batch_reports_its_own_spawn
+        PASS [   3.031s] ( 64/246) jackdaw::guards editor_remote::remote_hidden_operators_are_not_offered
+        PASS [   3.003s] ( 65/246) jackdaw::guards editor_remote::scene_open_refuses_a_file_outside_the_project
+        PASS [   2.938s] ( 66/246) jackdaw::guards editor_remote::status_answers_before_a_project_is_open
+        PASS [   2.904s] ( 67/246) jackdaw::guards editor_remote::the_asset_listing_reports_project_files_matching_the_glob
+        PASS [   2.938s] ( 68/246) jackdaw::guards editor_remote::the_editor_takes_its_endpoint_back_as_it_exits
+        PASS [   2.936s] ( 69/246) jackdaw::guards editor_remote::the_entity_view_reports_a_terrains_mask_palettes
+        PASS [   2.955s] ( 70/246) jackdaw::guards editor_remote::the_operator_list_carries_ids_and_parameter_schemas
+        PASS [   2.957s] ( 71/246) jackdaw::guards editor_remote::the_tree_hides_what_the_outliner_hides
+        PASS [   2.920s] ( 72/246) jackdaw::guards editor_remote::the_tree_refuses_a_panel_of_the_editors_own_chrome
+        PASS [   2.920s] ( 73/246) jackdaw::guards editor_remote::the_tree_starts_from_a_root_named_by_name_or_by_id
+        PASS [   2.904s] ( 74/246) jackdaw::guards editor_remote::the_tree_walks_a_ui_screen
+        PASS [   2.909s] ( 75/246) jackdaw::guards editor_remote::the_ui_methods_refuse_when_the_project_turns_the_surface_off
+        PASS [   2.905s] ( 76/246) jackdaw::guards editor_remote::ui_tree_reports_the_controls_the_screen_holds
+        PASS [   2.901s] ( 77/246) jackdaw::guards editor_remote::waiting_for_idle_does_not_block_on_a_modal
+        PASS [   2.905s] ( 78/246) jackdaw::guards editor_remote::waiting_for_idle_holds_while_a_model_is_still_coming_in
+        PASS [   2.900s] ( 79/246) jackdaw::guards editor_remote::waiting_for_idle_holds_while_a_model_is_still_queued_for_the_spawner
+        PASS [   2.936s] ( 80/246) jackdaw::guards editor_remote::waiting_for_idle_holds_while_lod_levels_are_still_coming_in
+        PASS [   2.942s] ( 81/246) jackdaw::guards editor_remote::warnings_do_not_carry_over_to_the_next_call
+        PASS [   2.681s] ( 82/246) jackdaw::guards feathers_composition::the_editor_brings_feathers_when_nothing_else_does
+        PASS [   2.711s] ( 83/246) jackdaw::guards feathers_composition::the_editor_builds_over_an_app_that_already_has_feathers
+        PASS [   2.719s] ( 84/246) jackdaw::guards feathers_composition::the_editor_builds_over_an_app_that_has_only_tab_navigation
+        PASS [   2.841s] ( 85/246) jackdaw::guards game_flow::a_broken_target_refuses_loudly_and_recovers
+        PASS [   3.054s] ( 86/246) jackdaw::guards game_flow::bindings_rewire_onto_the_freshly_spawned_scene
+        PASS [   0.038s] ( 87/246) jackdaw::guards game_flow_config::a_bsb_twin_counts_as_on_disk
+        PASS [   0.038s] ( 88/246) jackdaw::guards game_flow_config::a_healthy_flow_inspects_clean
+        PASS [   0.037s] ( 89/246) jackdaw::guards game_flow_config::no_flow_file_is_the_quiet_default
+        PASS [   0.037s] ( 90/246) jackdaw::guards game_flow_config::pie_temp_copy_paths_are_not_held_to_disk
+        PASS [   0.038s] ( 91/246) jackdaw::guards game_flow_config::the_matrix_of_broken_shapes_all_warn
+        PASS [   0.039s] ( 92/246) jackdaw::guards game_flow_config::the_runtime_reader_reaches_the_same_verdicts
+        PASS [   0.036s] ( 93/246) jackdaw::guards game_flow_config::the_write_helper_round_trips
+        PASS [   4.605s] ( 94/246) jackdaw::guards game_flow::a_switch_leaves_zero_residue_in_both_directions
+        PASS [   3.082s] ( 95/246) jackdaw::guards game_flow::five_round_trips_land_on_identical_counts
+        PASS [   3.420s] ( 96/246) jackdaw::guards game_flow::one_click_is_one_event_across_scene_reloads
+        PASS [   0.038s] ( 97/246) jackdaw::guards game_input::a_partial_file_merges_and_carries_its_deadzone
+        PASS [   2.478s] ( 98/246) jackdaw::guards game_flow_template::a_restart_lands_the_run_back_where_it_began
+        PASS [   0.038s] ( 99/246) jackdaw::guards game_input::bevy_input_types_survive_the_editors_value_model
+        PASS [   2.696s] (100/246) jackdaw::guards game_flow_template::the_flow_walks_the_three_documents_and_back_with_zero_residue
+        PASS [   4.607s] (101/246) jackdaw::guards game_flow_template::the_boot_state_follows_the_start_scene
+        PASS [   0.039s] (102/246) jackdaw::guards game_input::the_runtime_config_assets_reach_the_new_asset_list
+        PASS [   3.966s] (103/246) jackdaw::guards game_input::a_rebinding_file_drives_the_actions_it_names
+        PASS [   4.174s] (104/246) jackdaw::guards game_input::the_editors_writer_lands_the_same_form_the_game_reads
+        PASS [   2.499s] (105/246) jackdaw::guards game_ui::a_typoed_field_fails_loudly_and_a_fix_lands_quietly
+        PASS [   4.450s] (106/246) jackdaw::guards game_input::the_files_deadzone_reaches_the_engine_gamepad_settings
+        PASS [   2.885s] (107/246) jackdaw::guards game_ui::flipping_game_state_moves_the_screens
+        PASS [   4.349s] (108/246) jackdaw::guards game_ui::buttons_flip_state_only_through_the_observer
+        PASS [   4.379s] (109/246) jackdaw::guards game_ui::the_bar_follows_player_health_and_misses_it_loudly
+        PASS [   2.596s] (110/246) jackdaw::guards game_ui::the_player_only_moves_while_no_screen_owns_the_moment
+        PASS [   3.095s] (111/246) jackdaw::guards game_ui::the_hud_is_the_only_ui_and_it_loads_with_its_bindings_resolved
+        PASS [   6.540s] (112/246) jackdaw::guards game_ui::one_layout_holds_across_the_four_common_resolutions
+        PASS [   2.921s] (113/246) jackdaw::guards keyframe_undo::a_deleted_keyframe_stays_dead_through_a_document_undo
+        PASS [   3.247s] (114/246) jackdaw::guards keyframe_undo::the_delete_gate_accepts_a_focused_timeline
+        PASS [   3.912s] (115/246) jackdaw::guards keyframe_undo::delete_then_undo_restores_exactly_one_keyframe
+        PASS [   3.014s] (116/246) jackdaw::guards keyframe_undo::the_delete_keybind_is_one_entry_and_undoes_to_one_keyframe
+        PASS [   2.952s] (117/246) jackdaw::guards keyframe_undo::the_paste_keybind_is_one_entry_and_undoes_cleanly
+        PASS [   2.881s] (118/246) jackdaw::guards keyframe_undo::toggle_keyframe_is_one_entry_and_undoes
+        PASS [   3.928s] (119/246) jackdaw::guards numeric_transform_undo::a_numeric_move_of_brush_sub_elements_is_one_entry
+        PASS [   6.299s] (120/246) jackdaw::guards numeric_transform_undo::a_numeric_move_is_one_entry_undoes_and_reaches_the_document
+        PASS [   4.958s] (121/246) jackdaw::guards numeric_transform_undo::a_numeric_move_over_a_multi_selection_is_one_entry
+        PASS [   3.246s] (122/246) jackdaw::guards physics_triggers::a_falling_cube_settles_on_the_ground_without_tunneling
+        PASS [   6.124s] (123/246) jackdaw::guards numeric_transform_undo::a_numeric_move_survives_save_and_reload
+        PASS [   2.664s] (124/246) jackdaw::guards physics_triggers::non_interacting_layers_keep_contacts_away
+        PASS [   3.297s] (125/246) jackdaw::guards physics_triggers::the_bridge_runs_the_full_chain_over_the_engine
+        PASS [   2.487s] (126/246) jackdaw::guards physics_triggers::the_engine_sends_sensor_contacts_only_with_the_prerequisite
+        PASS [   7.573s] (127/246) jackdaw::guards play_current_scene::a_clean_named_scene_plays_its_file_even_in_copy_mode
+        PASS [   5.604s] (128/246) jackdaw::guards play_current_scene::all_prefab_tabs_refuse_the_play
+        PASS [   6.950s] (129/246) jackdaw::guards play_current_scene::a_dirty_named_scene_saves_before_playing
+        PASS [   6.373s] (130/246) jackdaw::guards play_current_scene::a_prefab_in_front_falls_back_to_the_scene_tab
+        PASS [   6.324s] (131/246) jackdaw::guards play_current_scene::ask_cancel_drops_the_play
+        PASS [   6.329s] (132/246) jackdaw::guards play_current_scene::an_unsaved_untitled_scene_plays_in_copy_mode
+        PASS [   6.328s] (133/246) jackdaw::guards play_current_scene::an_unsaved_untitled_scene_plays_in_save_mode_too
+        PASS [   7.690s] (134/246) jackdaw::guards play_current_scene::ask_holds_the_play_until_answered
+        PASS [   6.606s] (135/246) jackdaw::guards play_current_scene::ask_play_copy_leaves_disk_alone
+        PASS [   6.617s] (136/246) jackdaw::guards play_current_scene::ask_never_blocks_an_untitled_scene
+        PASS [   6.613s] (137/246) jackdaw::guards play_current_scene::background_unsaved_tabs_keep_their_state
+        PASS [   5.208s] (138/246) jackdaw::guards play_current_scene::reload_resolves_the_override_fresh_without_writing_disk
+        PASS [   2.870s] (139/246) jackdaw::guards player_controller::a_scene_rig_follows_only_through_the_runtime_plugin
+        PASS [   4.097s] (140/246) jackdaw::guards player_controller::a_jump_flies_the_parabola_and_lands_ready_again
+        PASS [   4.078s] (141/246) jackdaw::guards player_controller::look_motion_turns_the_camera_not_the_player
+        PASS [   5.408s] (142/246) jackdaw::guards play_current_scene::the_copy_policy_plays_a_temporary_copy_and_leaves_disk_alone
+        PASS [   4.385s] (143/246) jackdaw::guards player_controller::movement_covers_the_same_ground_at_two_frame_rates
+        PASS [   4.771s] (144/246) jackdaw::guards player_controller::the_sweep_stops_the_player_at_walls_and_slides_along_them
+        PASS [   6.376s] (145/246) jackdaw::guards record_counts::a_high_poly_sphere_add_undoes_and_redoes_as_one_user_entry
+        PASS [   8.980s] (146/246) jackdaw::guards record_counts::a_high_poly_sphere_survives_editor_save_and_load
+        PASS [   7.129s] (147/246) jackdaw::guards record_counts::a_reset_position_chord_is_one_user_entry
+        PASS [   5.516s] (148/246) jackdaw::guards record_counts::a_spawn_undoable_add_is_one_user_entry
+        PASS [   5.328s] (149/246) jackdaw::guards record_counts::an_add_menu_spawn_is_one_user_entry
+        PASS [   6.121s] (150/246) jackdaw::guards record_counts::component_remove_is_one_user_entry
+        PASS [   6.121s] (151/246) jackdaw::guards record_counts::dragging_an_inherited_child_out_is_one_clean_entry
+        PASS [   6.124s] (152/246) jackdaw::guards record_counts::component_add_is_one_user_entry
+        PASS [   6.167s] (153/246) jackdaw::guards record_counts::paste_components_is_one_user_entry
+        PASS [   5.915s] (154/246) jackdaw::guards record_counts::snapshot_backed_operators_keep_allows_undo
+        PASS [   5.915s] (155/246) jackdaw::guards record_counts::self_pushing_operators_declare_undo_transparent
+        PASS [   5.921s] (156/246) jackdaw::guards record_counts::the_extend_face_keybind_is_one_user_entry
+        PASS [   5.870s] (157/246) jackdaw::guards record_counts::the_history_probe_reports_the_stacks
+        PASS [   5.440s] (158/246) jackdaw::guards record_counts::the_join_keybind_is_one_user_entry
+        PASS [   5.440s] (159/246) jackdaw::guards record_counts::the_outliner_context_menu_duplicate_is_one_entry
+        PASS [   5.455s] (160/246) jackdaw::guards recovery::a_damaged_journal_is_skipped_and_kept
+        PASS [   5.432s] (161/246) jackdaw::guards recovery::a_leftover_session_holds_the_tab_restore
+        PASS [   5.144s] (162/246) jackdaw::guards recovery::dismiss_all_clears_every_session
+        PASS [   5.144s] (163/246) jackdaw::guards recovery::an_untitled_entry_restores_as_an_untitled_dirty_tab
+        PASS [   3.732s] (164/246) jackdaw::guards recovery::the_recovery_brp_summarizes_the_leftovers
+        PASS [   6.531s] (165/246) jackdaw::guards recovery::restore_opens_a_dirty_tab_and_writes_nothing
+        PASS [   6.128s] (166/246) jackdaw::guards reference_audit::a_loaded_scene_leaves_one_summary_warning
+        PASS [   4.719s] (167/246) jackdaw::guards reference_audit::an_override_path_that_names_no_file_is_a_missing_finding
+        PASS [   6.129s] (168/246) jackdaw::guards recovery::two_entries_are_spent_independently
+        PASS [   8.745s] (169/246) jackdaw::guards reference_audit::an_open_tabs_isa_source_is_judged_by_its_relative_spelling
+        PASS [   6.202s] (170/246) jackdaw::guards reference_audit::asset_missing_list_gathers_the_findings_headless
+        PASS [   6.203s] (171/246) jackdaw::guards reference_audit::the_startup_walk_fills_the_index_without_a_manual_rescan
+        PASS [   6.204s] (172/246) jackdaw::guards reference_audit::asset_audit_reports_and_fills_the_findings
+        PASS [   6.244s] (173/246) jackdaw::guards reference_rewrite::a_dirty_tab_journals_under_the_renamed_path
+        PASS [   6.493s] (174/246) jackdaw::guards reference_rewrite::a_rename_that_differs_only_in_case_lands
+        PASS [   6.502s] (175/246) jackdaw::guards reference_rewrite::a_rewritten_document_is_not_read_back_and_a_reimport_reloads_in_place
+        PASS [   6.531s] (176/246) jackdaw::guards reference_rewrite::a_forced_delete_that_would_close_the_last_tab_is_refused
+        PASS [   6.745s] (177/246) jackdaw::guards reference_rewrite::deleting_an_open_scene_is_refused_and_forced_close_removes_it
+        PASS [   6.264s] (178/246) jackdaw::guards reference_rewrite::dropping_a_file_already_in_the_assets_copies_nothing
+        PASS [   6.262s] (179/246) jackdaw::guards reference_rewrite::moving_a_file_rewrites_references_and_retargets_the_card
+        PASS [   4.369s] (180/246) jackdaw::guards reference_rewrite::renaming_a_folder_rewrites_prefixed_references_on_component_boundaries
+        PASS [   7.241s] (181/246) jackdaw::guards reference_rewrite::renaming_a_folder_retargets_a_tab_under_it_onto_the_same_tail
+        PASS [   6.086s] (182/246) jackdaw::guards reference_rewrite::renaming_a_material_rewrites_the_overrides_holding_it_and_nothing_else
+        PASS [   6.089s] (183/246) jackdaw::guards reference_rewrite::renaming_a_referenced_file_rewrites_its_referrers_and_nothing_else
+        PASS [   5.085s] (184/246) jackdaw::guards reference_rewrite::renaming_a_referenced_material_under_a_dirty_tab_keeps_it_dirty_and_in_step
+        PASS [   5.102s] (185/246) jackdaw::guards reference_rewrite::renaming_an_open_clean_scene_retargets_its_tab
+        PASS [   2.193s] (186/246) jackdaw::guards remote_debug_smoke::debug_windows_and_workspace_are_wired
+        PASS [   2.917s] (187/246) jackdaw::guards scaffolded_component_flow::a_first_field_set_after_add_authors_the_whole_component
+        PASS [   3.642s] (188/246) jackdaw::guards scaffolded_component_flow::a_colour_set_on_a_project_component_reads_back_as_a_colour
+        PASS [   4.340s] (189/246) jackdaw::guards scaffolded_component_flow::a_path_into_a_variant_sets_one_channel_of_a_project_component_field
+        PASS [   2.898s] (190/246) jackdaw::guards scaffolded_component_flow::a_scene_naming_project_components_loads_without_unresolved_types
+        PASS [   2.892s] (191/246) jackdaw::guards scaffolded_component_flow::a_type_absent_from_the_schema_is_still_reported
+        PASS [   2.895s] (192/246) jackdaw::guards scaffolded_component_flow::add_component_lands_on_entity_and_in_ast
+        PASS [   2.909s] (193/246) jackdaw::guards scaffolded_component_flow::add_marker_component_round_trips_through_ast
+        PASS [   2.943s] (194/246) jackdaw::guards scaffolded_component_flow::an_authored_variant_of_a_project_enum_is_not_unresolved
+        PASS [   2.948s] (195/246) jackdaw::guards scaffolded_component_flow::editor_hidden_marker_hides_component_in_real_app
+        PASS [   2.957s] (196/246) jackdaw::guards scaffolded_component_flow::inspector_field_edit_undoes_back_to_original
+        PASS [   2.951s] (197/246) jackdaw::guards scaffolded_component_flow::inspector_field_edit_updates_ecs_and_ast
+        PASS [   2.927s] (198/246) jackdaw::guards scaffolded_component_flow::project_components_survive_an_open_and_resave
+        PASS [   2.918s] (199/246) jackdaw::guards scaffolded_component_flow::removing_a_project_component_takes_its_patch_out_of_the_document
+        PASS [   2.913s] (200/246) jackdaw::guards scaffolded_component_flow::scaffolded_user_components_reach_picker
+        PASS [   2.913s] (201/246) jackdaw::guards scaffolded_component_flow::the_first_scene_of_a_session_loads_before_any_watcher_tick
+        PASS [   0.039s] (202/246) jackdaw::guards session_journal::a_damaged_journal_reads_as_none_and_stays_on_disk
+        PASS [   6.649s] (203/246) jackdaw::guards session_journal::a_clean_tab_journals_nothing
+        PASS [   7.375s] (204/246) jackdaw::guards session_journal::a_clean_exit_removes_the_session_directory
+        PASS [   5.919s] (205/246) jackdaw::guards session_journal::a_crashed_session_leaves_its_journal_behind
+        PASS [   6.569s] (206/246) jackdaw::guards session_journal::a_dirty_tab_journals_the_save_emitters_own_text
+        PASS [   2.168s] (207/246) jackdaw::guards session_journal::beginning_a_session_rotates_old_ones_beyond_five
+        PASS [   7.528s] (208/246) jackdaw::guards session_journal::a_successful_save_spends_the_entry_and_backups_the_old_file
+        PASS [   7.527s] (209/246) jackdaw::guards session_journal::the_journal_lives_under_the_overridden_config_dir
+        PASS [   7.008s] (210/246) jackdaw::guards stop_restore::a_save_before_play_spends_the_journal_entry
+        PASS [   5.490s] (211/246) jackdaw::guards stop_restore::stop_rebuilds_the_selection_over_the_new_entity_ids
+        PASS [   5.493s] (212/246) jackdaw::guards stop_restore::stop_clears_the_projection_and_restores_the_authored_names
+        PASS [  13.229s] (213/246) jackdaw::guards session_journal::the_journal_write_costs_no_more_than_five_milliseconds
+        PASS [   5.978s] (214/246) jackdaw::guards stop_restore::stop_touches_neither_document_nor_disk
+        PASS [   3.391s] (215/246) jackdaw::guards undo_history::a_field_edit_below_a_snapshot_entry_undoes_after_the_snapshot_is_undone
+        PASS [   3.887s] (216/246) jackdaw::guards undo_history::a_capture_that_starts_from_the_last_one_reads_what_a_whole_read_does
+        PASS [   2.873s] (217/246) jackdaw::guards undo_history::a_field_edit_on_a_multi_selection_is_one_entry_that_undoes_on_every_member
+        PASS [   3.018s] (218/246) jackdaw::guards undo_history::a_field_edit_on_a_multi_selection_undoes_to_the_exact_scene_text
+        PASS [   2.476s] (219/246) jackdaw::guards undo_history::a_move_above_a_snapshot_entry_redoes_after_the_snapshot_is_undone_and_redone
+        PASS [   2.709s] (220/246) jackdaw::guards undo_history::a_move_above_a_spawn_redoes_on_the_node_the_redo_spawns
+        PASS [   2.822s] (221/246) jackdaw::guards undo_history::a_move_below_a_snapshot_entry_undoes_after_the_snapshot_is_undone
+        PASS [   2.887s] (222/246) jackdaw::guards undo_history::a_move_undoes_after_switching_away_from_the_tab_and_back
+        PASS [   2.904s] (223/246) jackdaw::guards undo_history::a_move_undoes_and_redoes_while_nothing_respawns_the_scene
+        PASS [   2.909s] (224/246) jackdaw::guards undo_history::a_new_edit_after_an_undo_drops_what_could_be_redone
+        PASS [   2.895s] (225/246) jackdaw::guards undo_history::a_reparent_below_a_snapshot_entry_undoes_after_the_snapshot_is_undone
+        PASS [   3.649s] (226/246) jackdaw::guards undo_history::a_placed_prefab_instance_keeps_its_node_through_undo_and_redo
+        PASS [   3.226s] (227/246) jackdaw::guards undo_history::a_reparent_undoes_and_redoes_under_the_same_parent
+        PASS [   3.185s] (228/246) jackdaw::guards undo_history::a_reparent_undoes_into_the_sibling_slot_it_left
+        PASS [   2.502s] (229/246) jackdaw::guards undo_history::a_snapshot_entry_above_a_move_puts_back_the_scene_as_the_move_left_it
+        PASS [   4.361s] (230/246) jackdaw::guards undo_history::a_trimmed_history_still_undoes_every_entry_it_kept
+        PASS [   4.231s] (231/246) jackdaw::guards undo_history::an_edit_on_a_prefab_instance_redoes_after_the_spawn_is_undone_and_redone
+        PASS [   2.794s] (232/246) jackdaw::guards undo_history::an_undo_entry_costs_a_small_multiple_of_the_scene_text
+        PASS [   3.588s] (233/246) jackdaw::guards undo_history::an_edit_on_a_prefab_instance_undoes_and_redoes
+        PASS [   2.501s] (234/246) jackdaw::guards undo_history::an_undo_entry_holds_only_the_nodes_its_edit_changed
+        PASS [   2.492s] (235/246) jackdaw::guards undo_history::every_undo_and_redo_of_snapshot_entries_puts_back_the_exact_scene_text
+        PASS [   3.183s] (236/246) jackdaw::guards undo_history::every_undo_and_redo_of_mixed_entries_puts_back_the_exact_scene_text
+        PASS [   3.814s] (237/246) jackdaw::guards undo_history::moving_a_node_up_its_siblings_undoes_and_redoes
+        PASS [   3.267s] (238/246) jackdaw::guards undo_history::undoing_a_delete_of_several_selected_nodes_puts_back_the_exact_scene_text
+        PASS [   4.188s] (239/246) jackdaw::guards undo_history::opening_a_scene_names_its_prefab_instances_without_dirtying_the_tab
+        PASS [   3.475s] (240/246) jackdaw::guards undo_history::undoing_a_delete_of_several_selected_nodes_puts_them_back_in_order
+        PASS [   2.798s] (241/246) jackdaw::guards undo_history::undoing_and_redoing_a_snapshot_entry_keeps_each_outliner_row_where_it_was
+        PASS [   0.038s] (242/246) jackdaw::guards widget_purity::every_allowlist_entry_is_still_earning_its_place
+        PASS [   0.162s] (243/246) jackdaw::guards widget_purity::no_control_is_spawned_on_the_legacy_button
+        PASS [   2.157s] (244/246) jackdaw::guards undo_history::undoing_and_redoing_a_snapshot_entry_keeps_the_entities_it_did_not_touch
+        PASS [   2.859s] (245/246) jackdaw::guards undo_history::undoing_back_to_the_saved_scene_leaves_the_tab_clean
+        PASS [   2.010s] (246/246) jackdaw::guards user_config::an_editor_test_app_reads_and_writes_a_scratch_config_directory
+────────────
+     Summary [ 250.650s] 246 tests run: 246 passed, 0 skipped
