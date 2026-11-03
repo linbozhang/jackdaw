@@ -26,6 +26,11 @@
 # A9: reads retry through the flaky window; no RUST_BACKTRACE anywhere (the
 # T11-T3 wgpu SIGSEGV calibre). N13 rides every PIE leg: the census at the
 # end attributes panics by signature; panic noise is NOT a red-leg criterion.
+# QA-2 rework note: the R2 leg's document-before read once called its helper
+# as a variable (`"$scene_bsn_text"` — unbound under bash 3.2's set -u, the
+# expansion silently emptying) so the leg never actually read the document;
+# the offline judgment on the archived SHA pair stood in. T2 scripts: always
+# `$(scene_bsn_text)` — a helper name is not a variable.
 #
 # Usage: bash loop/qa/t25-red.sh [phase]   phase: prep|red|all
 set -u
@@ -352,7 +357,7 @@ red() {
 
   # ------------------------- LT-R2: the ui_input N11 refresh ----------------
   log "--- LT-R2: ui_input typed into the Inspector numeric rows ---"
-  local bsn_r2_before=$(sha_of "$scene_bsn_text")
+  local bsn_r2_before=$(sha_of "$(scene_bsn_text)")
   local gy_r2_before=$(game_translation_y "$game_bits")
   local inputs_y
   brp jackdaw/ui_tree '{"kind":"text_input"}' > "$OUTDIR/ltr2-inputs.json" 2>/dev/null

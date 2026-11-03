@@ -1,0 +1,10 @@
+Diff in /Users/zhanglinbo/workspace/jackdaw/src/remote_ops.rs:264:
+         let value_json = {
+             let registry = registry.read();
+             use bevy::reflect::serde::TypedReflectSerializer;
+-            let serializer = TypedReflectSerializer::new(new_transform.as_partial_reflect(), &registry);
++            let serializer =
++                TypedReflectSerializer::new(new_transform.as_partial_reflect(), &registry);
+             serde_json::to_value(&serializer).unwrap_or(serde_json::Value::Null)
+         };
+         if crate::inspector::reflect_fields::try_route_pie_live_field_edit(

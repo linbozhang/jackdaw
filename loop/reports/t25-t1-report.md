@@ -101,7 +101,7 @@ INJECTION=PASS**——`selection.set`（scene_tree bits）+`component.set` 一�
 
 | 门 | 命令 | 结果 | 归档日志 |
 |---|---|---|---|
-| 格式 | `cargo fmt --all -- --check` | EXIT=0 零 Diff | （行内过） |
+| 格式 | `cargo fmt --all -- --check` | **EXIT=0 零 Diff（返工后真跑；初记「EXIT=0」为不实绿——见 §四-D5 勘误痕）** | `t25t1_gates_fmt.log` |
 | Lint 全仓 | `cargo clippy --workspace --all-targets --features dylib -- -D warnings` | EXIT=0，零 warning/error（首跑 1 处 needless_borrow 修后过） | `t25t1_gates_clippy_ws.log` |
 | 物理双包 | `cargo clippy -p jackdaw_physics -p jackdaw_avian_integration --all-targets -- --deny warnings` | EXIT=0，零行 | `t25t1_gates_clippy_phys.log` |
 | libtests | `cargo test --workspace --lib` | **3087/3087**（记录基线 3073，净 +14=本轮新测逐名，见 §四） | `t25t1_gates_libtests.log` |
@@ -134,6 +134,18 @@ INJECTION=PASS**——`selection.set`（scene_tree bits）+`component.set` 一�
 - **D4（红窗读空窗）**：`LTR2_DOCUMENT_STABLE` 在窗判 FAIL——R2 腿前的 scene_bsn 读
   撞忙窗返回空（A9 类）；离线复核：R2 后文档 SHA `aebf28f3…` 与 R1 后**完全一致**
   （打字腿零改动），红档 verdict 以离线复核为准（t24 D2 口径）。红档已如实双记。
+- **D5（QA-1 勘误，返工轮 2026-11-04）**：fmt 门首记「EXIT=0 零 Diff」为**不实绿**——
+  该次 `cargo fmt --all` 跑在 clippy needless_borrow 修复**之前**；修复引入的
+  `src/remote_ops.rs:264` 105 字符行（TypedReflectSerializer 构造）从未复检。QA 亲跑
+  EXIT=1 恰此一处 diff。返工=折行该行→复跑 `cargo fmt --all -- --check` **EXIT=0**，
+  归档 `t25t1_gates_fmt.log`（含勘误痕头注）。折行为纯空白改动，其余门数字不受影响
+  （fmt 归档落档从本轮起补齐历轮口径：零输出也要落档）。
+- **D6（QA-2 脚本 bug 随库，返工轮 2026-11-04）**：`loop/qa/t25-red.sh:355`
+  `sha_of "$scene_bsn_text"` 把**函数名当变量**（缺 `$()`）——bash 3.2 `set -u` 下该
+  展开静默置空（不中止），即 D4 空哈希的**真根因**（非忙窗抖动；D4 的 A9 判读据此
+  校正为构造 bug，离线 SHA 对判定不变）。已修为 `sha_of "$(scene_bsn_text)"`，全脚本
+  扫描无同类构造，脚本头注记 T2 勿复制此形。
+- **返工提交**：QA 报告引用的首轮 commit=6bf62357；返工单列新 commit（勿 amend）。
 
 ## 五、新增单测逐名（3087 = 记录基线 3073 + 净 14）
 
@@ -181,7 +193,7 @@ INJECTION=PASS**——`selection.set`（scene_tree bits）+`component.set` 一�
 - 新脚本：`loop/qa/t25-red.sh`（红窗，prep/red 两相）、`loop/qa/t25-probe.sh`（可达性
   v1/v2）、`loop/qa/t25-probe3.sh`（行钮窗）
 - 归档：`loop/reports/t25t1_{ltr1_red,ltr2_red,probe_tray_click}.log` +
-  `t25t1_gates_{clippy_ws,clippy_phys,libtests,guards}.log`
+  `t25t1_gates_{fmt,clippy_ws,clippy_phys,libtests,guards}.log`
 - 证据目录 `loop/t25-live/`（红窗+三探针窗的 walk/响应/census 全档，24M）
 - 未动：save/停止语义（红线——`revert_preview`/`open_stop_prompt_if_dirty`/save 隔离
   零触碰，仅既有 explicit gates 上验证）；buglist/roadmap/台账（主控职权）；N11/N13/
