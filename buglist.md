@@ -552,3 +552,7 @@
 - [ ] **A18. book 微修两处（T23-T3 QA 建议，⚪ 随手票）**（2026-11-03 T23-T3 QA 发现；主控批准立账）
   ①asset-references.md:12 引用定义句在 MO2 落地后有例外——失效材质覆盖路径现已可发现（audit 四元组+日志/状态栏双嘴），定义句需一句扩展；②material-overrides.md rebind 括注「(or at once, on the tab the scene is open in)」对活世界过诺——两件第一手粘性证据反证（活世界粘旧路径待保存/重开才文档赢，见 A11 增补），建议改写为文档赢语义。
   修复方向：两处各一句话改写；与下一任务 book 触碰同批落（T20-T3 Errata 先例：勘误随轮落账）。
+
+- [ ] **A19. T24-T2 live finds 家族（DF-W1..W7，只记不修候裁）**（2026-11-03 T24-T2 真机轮发现；主控批准立账）
+  ①DF-W1 🟡 warn_on_load 仅 fresh-open——已开 tab 的 reread 路径静默（载入摘要嘴覆盖缺口）；②DF-W2 游戏侧 flow 载入丢字段零 warn（A16 域近亲）；③DF-W3 ⚪ (path,mtime) 锁写窗中间态双 key（重复告警窗口）；④DF-W4 ui_tree 走查重复发射子树（A7 工具域）；⑤DF-W5 drain_game_events panic（N13 家族同病灶）；⑥DF-W6 PIE 收尾悬空 ChildOf（A10/N13 PIE 域）；⑦DF-W7 PIE 后立即直启的游戏可失去 remote 面。
+  证据锚：loop/reports/t24-t2-report.md DF 节+`t24t2_*` 归档。修复方向：T3 book 轮裁定吸收面；④可并 A7 批次随手，⑤并 N13，⑦与 A10 同域。
