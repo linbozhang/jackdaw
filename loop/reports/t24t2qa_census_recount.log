@@ -1,0 +1,40 @@
+# T24-T2 QA census recount (independent, t24t2qa) — 2026-11-03, LC_ALL=C grep on the four final windows.
+# Pattern: ANSI-stripped lines carrying WARN/ERROR, minus the keymap preset noise (1 per window, the census's own exclusion).
+== editor-build-w1-83800-.log ==
+     1	2026-11-03T10:30:11.253282Z  WARN jackdaw::pie: warning: unused variable: `unused_variable`
+     2	2026-11-03T10:30:11.272476Z  WARN jackdaw::pie: warning: function `t24_live_warning` is never used
+     1	2026-11-03T10:29:47.498196Z ERROR jackdaw::pie: PIE: game build of t24-live failed, not launching Play #1: error[E0308]: mismatched types (src/lib.rs:2077:18)
+== editor-assets-w1-464-.log ==
+     1	2026-11-03T11:18:57.966068Z  WARN jackdaw_api_internal::operator: scene 't24a.bsn': 1 references name files the project does not hold (1 missing) — run asset.audit for the list
+     2	2026-11-03T11:18:58.965973Z  WARN jackdaw::material_overrides: material override: AuditEntity overrides a material named 'Rock', which no part of it wears any more -- its parts wear their own material until the name returns
+     3	2026-11-03T11:19:46.953704Z  WARN jackdaw::asset_failures: asset load failed: /Users/zhanglinbo/workspace/loop-mac/t24-debug/t24-live/assets/models/t24model.glb (Failed to load asset 'models/t24model.glb' with asset loader 'bevy_gltf::loader::GltfLoader': invalid glTF file: expected value at line 1 column 1
+     4	2026-11-03T11:21:33.952316Z  WARN jackdaw::asset_failures: asset load failed: /Users/zhanglinbo/workspace/loop-mac/t24-debug/t24-live/assets/models/t24model.glb (Failed to load asset 'models/t24model.glb' with asset loader 'bevy_gltf::loader::GltfLoader': invalid glTF file: expected value at line 1 column 1
+     1	2026-11-03T11:19:45.943426Z ERROR bevy_asset::server: Failed to load asset 'models/t24model.glb' with asset loader 'bevy_gltf::loader::GltfLoader': invalid glTF file: expected value at line 1 column 1
+     2	2026-11-03T11:19:50.958072Z ERROR bevy_asset::server: Failed to load asset 'models/t24model.glb' with asset loader 'bevy_gltf::loader::GltfLoader': invalid glTF file: expected value at line 1 column 1
+     3	2026-11-03T11:21:24.962646Z ERROR bevy_asset::server: Failed to load asset 'models/t24model.glb' with asset loader 'bevy_gltf::loader::GltfLoader': invalid glTF file: expected value at line 1 column 1
+     4	2026-11-03T11:21:32.945896Z ERROR bevy_asset::server: Failed to load asset 'models/t24model.glb' with asset loader 'bevy_gltf::loader::GltfLoader': invalid glTF file: expected value at line 1 column 1
+     5	2026-11-03T11:21:37.958365Z ERROR bevy_asset::server: Failed to load asset 'models/t24model.glb' with asset loader 'bevy_gltf::loader::GltfLoader': invalid glTF file: expected value at line 1 column 1
+== editor-bindings-w1-4776-.log ==
+     1	2026-11-03T11:30:31.499341Z  WARN jackdaw_bsn::apply: cannot apply 'some_game::GhostComponent' on entity #Ghost: type not in the registry; check the spelling against the project's registered components
+     2	2026-11-03T11:30:31.499506Z  WARN jackdaw_bsn::catalog: 1 type in this scene is in neither the editor's registry nor the project's extracted schema (some_game::GhostComponent). Rebuild the project if the type is new to it; if the scene spells a re-exported or renamed path, rewrite it to the definition module path the editor registers — the scene-problems list carries one row per occurrence.
+     3	2026-11-03T11:30:49.495282Z  WARN jackdaw_bsn::apply: unknown field 'nonexistent_field' on 'bevy_transform::components::transform::Transform' on entity #RedField; the scene-problems list carries the row
+     4	2026-11-03T11:31:07.497971Z  WARN jackdaw_bsn::apply: unknown field 'nonexistent_field' on 'bevy_transform::components::transform::Transform' on entity #DualEntity; the scene-problems list carries the row
+     5	2026-11-03T11:31:07.499231Z  WARN jackdaw_api_internal::operator: scene 't24b3.bsn': 1 references name files the project does not hold (1 missing) — run asset.audit for the list
+     6	2026-11-03T11:31:08.492212Z  WARN jackdaw::material_overrides: material override: DualEntity overrides a material named 'Rock', which no part of it wears any more -- its parts wear their own material until the name returns
+     7	2026-11-03T11:31:26.504410Z  WARN jackdaw_bsn::apply: cannot apply 'jackdaw_animation_runtime::AnimationGraphRef' on entity #RedEntity: that spelling is not registered — the project registers 'jackdaw_animation_runtime::graph::AnimationGraphRef'. A crate-root re-export is not a registered spelling; write the definition module path
+     8	2026-11-03T11:31:26.504504Z  WARN jackdaw_bsn::catalog: 1 type in this scene is in neither the editor's registry nor the project's extracted schema (jackdaw_animation_runtime::AnimationGraphRef). Rebuild the project if the type is new to it; if the scene spells a re-exported or renamed path, rewrite it to the definition module path the editor registers — the scene-problems list carries one row per occurrence.
+== editor-runtime-w1-17822-.log ==
+     1	2026-11-03T12:10:17.258661Z  WARN bevy_ecs::relationship: The bevy_ecs::hierarchy::ChildOf(4725v1) relationship on entity 4941v0 relates to an entity that does not exist. The invalid bevy_ecs::hierarchy::ChildOf relationship has been removed.
+     1	2026-11-03T12:10:41.216980Z ERROR bevy_ecs::error::handler: Encountered an error in system `jackdaw::pie::drain_game_events`: Exclusive system panicked
+== b4-game-direct.log (the game log, full vocabulary — the census counts only the designed hit) ==
+     1	2026-11-03T12:11:25.518976Z  WARN jackdaw_runtime: Skipped 1 asset files holding types this app has not registered: some_game::GhostComponent (1)
+     2	2026-11-03T12:11:25.561709Z  WARN jackdaw_runtime::config: no config asset at 'audio-config.bsn'; t24_live::GameAudioConfig starts at its default
+     3	2026-11-03T12:11:25.561788Z  WARN jackdaw_runtime::config: no config asset at 'input-actions.bsn'; jackdaw_runtime::game_input::GameInputConfig starts at its default
+     4	2026-11-03T12:11:25.562036Z  WARN jackdaw_runtime::config: no config asset at 'game-config.bsn'; t24_live::GameConfig starts at its default
+     5	2026-11-03T12:11:25.897113Z  WARN jackdaw_bind::evaluate: binding 0 on 794v0: no context for 't24_live::PickupCount.0'
+     6	2026-11-03T12:11:25.897162Z  WARN jackdaw_bind::evaluate: binding 0 on 793v0: no context for 't24_live::PlayerHealth.current'
+     7	2026-11-03T12:11:25.897181Z  WARN jackdaw_bind::evaluate: binding 0 on 791v0: no context for 't24_live::PlayerHealth.current'
+     8	2026-11-03T12:11:29.783107Z  WARN jackdaw_bsn::apply: unknown field 'nonexistent_field_direct' on 'bevy_transform::components::transform::Transform' on entity #B4Entity; the scene-problems list carries the row
+
+QA counts: build 3 (1 ERROR + 2 WARN) / assets 9 (4 WARN + 5 ERROR) / bindings 8 (8 WARN + 0 ERROR) / runtime 2 (1 WARN + 1 ERROR) = 22 editor hits; game log 8 WARN total (census enumerated 1).
+assets window 5 bevy_asset ERROR decomposition (verified against scene.open lines): watcher :11:19:45 + open :11:19:50 + open :11:21:24 + watcher :11:21:32 + open :11:21:37 = 3 opens + 2 watcher reloads, exactly the census attribution.
