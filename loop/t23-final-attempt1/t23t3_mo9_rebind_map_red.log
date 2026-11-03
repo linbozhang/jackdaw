@@ -1,0 +1,5 @@
+MO9 red: asset.rebind over a MaterialOverrides map reference (doc=t23.bsn to=materials/wet2.bsn):
+live kit map after the rebind: {"Rock":"materials/wet.bsn"}
+audit findings after the rebind:
+{"count":0,"findings":[],"summary":"no broken references"}
+editor status text:

@@ -1,0 +1,5 @@
+=== stage 13:08:24 ===
+        PASS [   2.496s] (571/572) jackdaw::stage world_guides::operator_guide_edits_undo_one_at_a_time
+        PASS [   1.605s] (572/572) jackdaw::stage world_guides::the_rulers_read_world_units_with_y_up
+────────────
+     Summary [ 556.128s] 572 tests run: 572 passed, 0 skipped

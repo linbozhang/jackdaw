@@ -1,0 +1,89 @@
+=== phase all run 2026-11-03 12:04:37 ===
+disk: 82Gi free
+PREP_OK fixture=/Users/zhanglinbo/workspace/loop-mac/t23-materials/t23-materials
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t23-materials/t23-materials pid=69039
+placed mesh parts wearing named materials: 6 (want 6)
+L1_PLACE_PARTS_PASS
+L1_MATERIALS_PASS
+wear paths (from wet.bsn/deep.bsn): layered=bevy_pbr::extended_material::ExtendedMaterial<bevy_pbr::pbr_material::StandardMaterial, jackdaw_surface::LayeredSurface> water=bevy_pbr::extended_material::ExtendedMaterial<bevy_pbr::pbr_material::StandardMaterial, jackdaw_surface::water::Water>
+L1 baseline: layered=0 water=0 (want 0/0 - nothing dressed yet)
+shot l1-before ok (viewport)
+L1: props override map now {"Rock":"materials/mossy.bsn"}
+L1: report lines after the healthy override: 0 (want 0)
+shot l1-after ok (viewport)
+L2: layered wears after Rock->wet: 2 (want 2: props RockA/RockB)
+L2: water wears after Rock->deep: 2 (want 2: props RockA/RockB)
+L2: water wears after Trim->deep: 1 (want 1: props TrimC)
+L2: layered wears after kit Rock->wet: 2 (want 2: KitA/KitB)
+L2: props map {"Rock":"materials/mossy.bsn","Trim":"materials/deep.bsn"} kit map {"Rock":"materials/wet.bsn"}
+shot l1-after ok (viewport)
+L1: viewport changed-percent after the dress faces: 2.467
+L1_DRESS_PASS
+L2_WEAR_FACES_PASS
+M11: 'material override:' lines through the undo round: 0 (want 0)
+M11_UNDO_PASS
+MO4: result=cancelled warnings=["material.override: that part wears an unnamed material, which no override can address; name= one of the materials the model does name: Rock, Trim"]
+MO4_REFUSAL_PASS
+L1_DOC_ON_DISK_PASS
+shot l1-saved ok (viewport)
+L1: after the reopen layered=2 water=1 (want 2/1 - still dressed)
+shot l1-reopen ok (viewport)
+L1: viewport changed-percent across the reopen: 0.054 (want < 1)
+L1_REOPEN_PASS
+M4: instance roots=1 map={"Trim":"materials/wet.bsn"}
+M4: after the instance override layered=1 (want 1) water=0 (want 0)
+M4: after the twin layered=1 (want 1) water=1 (want 1 - the twin follows the prefab)
+M4_PREFAB_INSTANCE_PASS
+warn scan (all): 19 hit(s) -> /Users/zhanglinbo/workspace/jackdaw/loop/t23-final/warn-scan-all.txt
+CHAINS done: L1_DOC_ON_DISK=PASS L1_DRESS=PASS L1_MATERIALS=PASS L1_PLACE_PARTS=PASS L1_REOPEN=PASS L2_WEAR_FACES=PASS M11_UNDO=PASS M4_PREFAB_INSTANCE=PASS MO4_REFUSAL=PASS 
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t23-materials/t23-materials pid=72323
+wear paths (from wet.bsn/deep.bsn): layered=bevy_pbr::extended_material::ExtendedMaterial<bevy_pbr::pbr_material::StandardMaterial, jackdaw_surface::LayeredSurface> water=bevy_pbr::extended_material::ExtendedMaterial<bevy_pbr::pbr_material::StandardMaterial, jackdaw_surface::water::Water>
+EXPORT: staged tree ready
+L1_EXPORT_PASS
+EXPORT: staged layered=2 water=1
+L1_STAGED_DRESS_PASS
+warn scan (all): 6 hit(s) -> /Users/zhanglinbo/workspace/jackdaw/loop/t23-final/warn-scan-all.txt
+EXPORT done: L1_DOC_ON_DISK=PASS L1_DRESS=PASS L1_EXPORT=PASS L1_MATERIALS=PASS L1_PLACE_PARTS=PASS L1_REOPEN=PASS L1_STAGED_DRESS=PASS L2_WEAR_FACES=PASS M11_UNDO=PASS M4_PREFAB_INSTANCE=PASS MO4_REFUSAL=PASS 
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t23-materials/t23-materials pid=77447
+wear paths (from wet.bsn/deep.bsn): layered=bevy_pbr::extended_material::ExtendedMaterial<bevy_pbr::pbr_material::StandardMaterial, jackdaw_surface::LayeredSurface> water=bevy_pbr::extended_material::ExtendedMaterial<bevy_pbr::pbr_material::StandardMaterial, jackdaw_surface::water::Water>
+M5: 'material override:' lines after the rm: 1
+M5: the status bar mouth shows the warning
+M5: audit findings for materials/wet.bsn: [{"component":"MaterialOverrides","document":"t23.bsn","entity":"kit","field":"materials","kind":"Missing","reference":"materials/wet.bsn"}]
+M5_MISSING_PASS
+M5_HEAL_PASS
+M5_SPEAKS_AGAIN_PASS
+M13: index-refusal lines=1 'material override:' delta=1 (want 1/1)
+M13_BROKEN_FILE_PASS
+MO9: the rebind left the document and the live world on the old path (map blind) - archived as the MO9 red
+M9_REBIND_MAP_BLIND_PASS
+M9: audit after the rebound doc reopened: total=0
+M9_REBIND_PASS
+warn scan (all): 16 hit(s) -> /Users/zhanglinbo/workspace/jackdaw/loop/t23-final/warn-scan-all.txt
+BROKEN done: L1_DOC_ON_DISK=PASS L1_DRESS=PASS L1_EXPORT=PASS L1_MATERIALS=PASS L1_PLACE_PARTS=PASS L1_REOPEN=PASS L1_STAGED_DRESS=PASS L2_WEAR_FACES=PASS M11_UNDO=PASS M13_BROKEN_FILE=PASS M4_PREFAB_INSTANCE=PASS M5_HEAL=PASS M5_MISSING=PASS M5_SPEAKS_AGAIN=PASS M9_REBIND=PASS M9_REBIND_MAP_BLIND=PASS MO4_REFUSAL=PASS 
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t23-materials/t23-materials pid=78434
+wear paths (from wet2.bsn/deep.bsn): layered=bevy_pbr::extended_material::ExtendedMaterial<bevy_pbr::pbr_material::StandardMaterial, jackdaw_surface::LayeredSurface> water=bevy_pbr::extended_material::ExtendedMaterial<bevy_pbr::pbr_material::StandardMaterial, jackdaw_surface::water::Water>
+M6: live face archived (props={"Rock":"materials/mossy.bsn","Trim":"materials/deep.bsn"} warns=+1 water=0)
+M6_LIVE_FACE_CHARACTERIZED_PASS
+M6: the document spells materials/deep2.bsn 1 time(s) (want 1: props Trim)
+M6_RENAME_PASS
+warn scan (all): 13 hit(s) -> /Users/zhanglinbo/workspace/jackdaw/loop/t23-final/warn-scan-all.txt
+RENAME done: L1_DOC_ON_DISK=PASS L1_DRESS=PASS L1_EXPORT=PASS L1_MATERIALS=PASS L1_PLACE_PARTS=PASS L1_REOPEN=PASS L1_STAGED_DRESS=PASS L2_WEAR_FACES=PASS M11_UNDO=PASS M13_BROKEN_FILE=PASS M4_PREFAB_INSTANCE=PASS M5_HEAL=PASS M5_MISSING=PASS M5_SPEAKS_AGAIN=PASS M6_LIVE_FACE_CHARACTERIZED=PASS M6_RENAME=PASS M9_REBIND=PASS M9_REBIND_MAP_BLIND=PASS MO4_REFUSAL=PASS 
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t23-materials/t23-materials pid=78977
+wear paths (from wet2.bsn/deep2.bsn): layered=bevy_pbr::extended_material::ExtendedMaterial<bevy_pbr::pbr_material::StandardMaterial, jackdaw_surface::LayeredSurface> water=bevy_pbr::extended_material::ExtendedMaterial<bevy_pbr::pbr_material::StandardMaterial, jackdaw_surface::water::Water>
+M13: fresh thumbnail 4040d21db47423ff-18e46e688d3c8fc9.png after the GLB rewrite
+shot l6-box ok (viewport)
+M7_REIMPORT_PASS
+M8: stale-key warns=1 line=[2m2026-11-03T04:26:03.925928Z[0m [33m WARN[0m [2mjackdaw::material_overrides[0m[2m:[0m material override: props overrides a material named 'Rock', which no part of it wears any more -- its parts wear their own material until the name returns
+M8_STALE_WARN_PASS
+M8_RECOVER_PASS
+M8_SPEAKS_AGAIN_PASS
+M8_FINAL_STATE_PASS
+warn scan (all): 11 hit(s) -> /Users/zhanglinbo/workspace/jackdaw/loop/t23-final/warn-scan-all.txt
+REIMPORT done: L1_DOC_ON_DISK=PASS L1_DRESS=PASS L1_EXPORT=PASS L1_MATERIALS=PASS L1_PLACE_PARTS=PASS L1_REOPEN=PASS L1_STAGED_DRESS=PASS L2_WEAR_FACES=PASS M11_UNDO=PASS M13_BROKEN_FILE=PASS M4_PREFAB_INSTANCE=PASS M5_HEAL=PASS M5_MISSING=PASS M5_SPEAKS_AGAIN=PASS M6_LIVE_FACE_CHARACTERIZED=PASS M6_RENAME=PASS M7_REIMPORT=PASS M8_FINAL_STATE=PASS M8_RECOVER=PASS M8_SPEAKS_AGAIN=PASS M8_STALE_WARN=PASS M9_REBIND=PASS M9_REBIND_MAP_BLIND=PASS MO4_REFUSAL=PASS 
+wear paths (from wet2.bsn/deep2.bsn): layered=bevy_pbr::extended_material::ExtendedMaterial<bevy_pbr::pbr_material::StandardMaterial, jackdaw_surface::LayeredSurface> water=bevy_pbr::extended_material::ExtendedMaterial<bevy_pbr::pbr_material::StandardMaterial, jackdaw_surface::water::Water>
+M10: broken package named=6 layered=2 water=0 (want 6/2/0)
+M10: 'material override:' lines in the game log: 0 (want 0 - the report is editor-only by design)
+M10_GAME_MISSING_PASS
+warn scan (all): 0 hit(s) -> /Users/zhanglinbo/workspace/jackdaw/loop/t23-final/warn-scan-all.txt
+GAMEBROKEN done: L1_DOC_ON_DISK=PASS L1_DRESS=PASS L1_EXPORT=PASS L1_MATERIALS=PASS L1_PLACE_PARTS=PASS L1_REOPEN=PASS L1_STAGED_DRESS=PASS L2_WEAR_FACES=PASS M10_GAME_MISSING=PASS M11_UNDO=PASS M13_BROKEN_FILE=PASS M4_PREFAB_INSTANCE=PASS M5_HEAL=PASS M5_MISSING=PASS M5_SPEAKS_AGAIN=PASS M6_LIVE_FACE_CHARACTERIZED=PASS M6_RENAME=PASS M7_REIMPORT=PASS M8_FINAL_STATE=PASS M8_RECOVER=PASS M8_SPEAKS_AGAIN=PASS M8_STALE_WARN=PASS M9_REBIND=PASS M9_REBIND_MAP_BLIND=PASS MO4_REFUSAL=PASS 
+ALL done

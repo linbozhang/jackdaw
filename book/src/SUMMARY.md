@@ -15,6 +15,7 @@
 - [Viewport Navigation](user-guide/viewport-navigation.md)
 - [Brushes](user-guide/brushes.md)
 - [Materials & Textures](user-guide/materials-textures.md)
+- [Material Overrides](user-guide/material-overrides.md)
 - [Terrain](user-guide/terrain.md)
 - [Physics](user-guide/physics.md)
 - [Scene Management](user-guide/scene-management.md)

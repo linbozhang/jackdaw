@@ -1,0 +1,5 @@
+=== operators scatter 13:17:47 ===
+        PASS [   3.184s] (17/18) jackdaw::operators scatter_ops::stored_placements_pointed_at_a_prefab_wear_what_it_wears_and_follow_its_changes
+        PASS [   2.628s] (18/18) jackdaw::operators scatter_ops::the_panels_import_placements_is_the_same_undo_entry_as_the_arguments
+────────────
+     Summary [  13.887s] 18 tests run: 18 passed, 151 skipped

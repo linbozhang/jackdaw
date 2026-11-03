@@ -1,0 +1,1 @@
+[2m2026-11-03T04:50:19.725624Z[0m [33m WARN[0m [2mjackdaw::material_overrides[0m[2m:[0m material override: props overrides a material named 'Rock', which no part of it wears any more -- its parts wear their own material until the name returns

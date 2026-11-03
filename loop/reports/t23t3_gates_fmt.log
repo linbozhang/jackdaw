@@ -1,0 +1,5 @@
+=== gates run 2026-11-03 12:54:11 on 8bf20864; RUST_BACKTRACE unset ===
+--- fmt:
+FMT_EXIT=0
+--- re-check after the test-only collapsible_if fix (13:18:42, 8bf20864):
+FMT_EXIT=0

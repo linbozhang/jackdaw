@@ -1,0 +1,22 @@
+=== clippy physics dual 12:56:29 ===
+   Compiling jackdaw_env v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_env)
+    Checking jackdaw_fuzzy v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_fuzzy)
+    Checking jackdaw_runtime v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_runtime)
+   Compiling jackdaw_package v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_package)
+   Compiling jackdaw_project_build v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_project_build)
+    Checking jackdaw_material v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_material)
+    Checking jackdaw_feathers v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_feathers)
+    Checking jackdaw_releases v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_releases)
+    Checking jackdaw_scaffold v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_scaffold)
+    Checking jackdaw_avian_integration v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/integrations/physics/jackdaw_avian_integration)
+    Checking jackdaw_panels v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_panels)
+    Checking jackdaw_node_graph v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_node_graph)
+    Checking jackdaw_api_internal v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_api_internal)
+    Checking jackdaw_animation v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_animation)
+    Checking jackdaw_api v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_api)
+    Checking jackdaw_loader v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_loader)
+    Checking jackdaw_physics v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/integrations/physics/jackdaw_physics)
+    Checking jackdaw_multiplayer_editor v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_multiplayer_editor)
+    Checking jackdaw v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw)
+    Finished `dev` profile [optimized + debuginfo] target(s) in 31.73s
+CLIPPY_PHYS_EXIT=0
