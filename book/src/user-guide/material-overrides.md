@@ -99,7 +99,9 @@ One transient to know about: **the warnings you see in the first
 moments after opening a scene are spawn-timing, and clear
 themselves** — the report can look before all the model's parts have
 arrived, and once they do, the locks clear and nothing repeats. A
-warning that stays is a real one.
+warning that stays is a real one. The board these findings land on,
+and every other mouth the editor speaks trouble through, is mapped in
+[Debugging Errors](debugging-errors.md).
 
 An entry that is broken on purpose (you no longer want it) is yours to
 remove: `material.override` with `material=""` clears the named entry.
@@ -109,9 +111,10 @@ remove: `material.override` with `material=""` clears the named entry.
 The audit's **Missing References** list (see
 [Asset References](asset-references.md)) offers **Rebind** on an
 override path exactly as on any other reference: the map entry is
-rewritten to the file you pick, the tab turns dirty, and the parts
-follow on the next save (or at once, on the tab the scene is open in).
-Rebind covers the override maps on both layers.
+rewritten to the file you pick, the tab turns dirty, and the rewritten
+document wins on the next save and reopen — until then a live world
+keeps wearing the old path. Rebind covers the override maps on both
+layers.
 
 ## The 30-second tour
 

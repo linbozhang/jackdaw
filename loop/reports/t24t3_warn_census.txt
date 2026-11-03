@@ -1,0 +1,82 @@
+# T24-T3 warn census — the four final windows of the full-chain rerun (one `all` run,
+# windows editor-all-w{1,2,3,4}-28925-.log = build/assets/bindings/runtime), full
+# vocabulary (WARN|ERROR minus the keymap preset noise, one per window, the T2
+# calibre), every hit attributed. Comparison base: loop/reports/t24t2_warn_census.txt.
+# QD1 calibre applied (the T24-T2 QA finding): the direct-run game's own log enters
+# the census with its FULL vocabulary — its startup-inherent face is attributed as
+# such instead of being left out of the table.
+
+== build window (editor-all-w1-28925-.log) — 3 hits (T2: 3, same shape) ==
+  1. ERROR jackdaw::pie: 'PIE: game build of t24-live failed, not launching Play #1:
+     error[E0308]: mismatched types (src/lib.rs:2077:18)' — C1's designed trigger
+     (the one-line template breakage); the error!+notify_error mouth.
+  2-3. WARN jackdaw::pie: 'warning: unused variable: unused_variable' / 'warning:
+     function t24_live_warning is never used' — C4's designed warning-only build
+     (rustc warnings forwarded by the PIE log channel).
+
+== assets window (editor-all-w2-28925-.log) — 9 hits (T2: 9, same shape, 3+2 split re-verified line by line) ==
+  1. WARN operator: "scene 't24a.bsn': 1 references name files the project does not
+     hold (1 missing) — run asset.audit for the list" — A1's designed warn_on_load
+     mouth (the external mv, fresh-open path).
+  2. WARN material_overrides: 'AuditEntity overrides a material named Rock, which no
+     part of it wears any more' — fixture-inherent: the A1 fixture carries
+     MaterialOverrides on a meshless entity, the T23 MO1 stale-key face, correct per
+     its semantics.
+  3-9. ERROR bevy_asset::server 'Failed to load asset models/t24model.glb' x5
+     (13:00:08.996 watcher / 13:00:13.999 scene.open / 13:01:48.065 scene.open /
+     13:01:56.048 watcher / 13:02:01.063 scene.open — exactly 3 opens + 2 watcher
+     reloads, each within 1s of its OPERATOR: scene.open or its index-walk line) +
+     WARN asset_failures 'asset load failed' x2 (13:00:10.003 first (path,mtime) key
+     / 13:01:57.056 the new-mtime key) — A4's designed breakage: the ERROR face is
+     bevy's own per-attempt line, the WARN face is the T18 once-per-key mouth.
+
+== bindings window (editor-all-w3-28925-.log) — 8 hits (T2: 8, same shape, same order) ==
+  1. WARN apply: 'cannot apply some_game::GhostComponent ... type not in the registry'
+     — B1's designed bare warn.
+  2. WARN catalog: the UnresolvedTypes remedy naming the type — B1's designed remedy
+     (the reload said nothing: the unchanged-remedy lock held).
+  3. WARN apply: "unknown field ... on entity #RedField; the scene-problems list
+     carries the row" — B2's designed structured warn (DF-R3's green side).
+  4. WARN apply: "unknown field ... on entity #DualEntity; the scene-problems list
+     carries the row" — B3's designed binding row.
+  5. WARN operator: "scene 't24b3.bsn': 1 references name files ..." — B3's fixture
+     deliberately carries a broken reference; the same warn_on_load mouth as A1.
+  6. WARN material_overrides: 'DualEntity overrides Rock, which no part wears' —
+     fixture-inherent, as in the assets window.
+  7. WARN apply: "cannot apply jackdaw_animation_runtime::AnimationGraphRef ... the
+     project registers '...graph::AnimationGraphRef'. A crate-root re-export is not a
+     registered spelling" — B5's designed guided warn (DF-R2's green side).
+  8. WARN catalog: the remedy naming both honest moves — B5's designed remedy; the
+     misleading single-cause rebuild line: 0 hits in the window.
+
+== runtime window (editor-all-w4-28925-.log) — 1 hit (T2: 2; the delta is DF-W5's absence, see note) ==
+  1. WARN bevy_ecs::relationship: 'ChildOf(4724v1) relationship on entity 4659v1
+     relates to an entity that does not exist' — DF-W6, the PIE session's entity
+     churn leaving one dangling-relationship warn at teardown (T2 final window: the
+     same one line; reproduced same-shape).
+  NOTE (DF-W5): T2's runtime window carried one ERROR 'drain_game_events: Exclusive
+  system panicked'; this rerun's runtime window has none. DF-W5 is the intermittent
+  N13-family panic (T2: final window x1 + abandoned collision windows x4 — the QD2
+  corrected count); zero here is the same live find staying intermittent, not a
+  regression or a fix — buglist A19 (5) keeps the record.
+
+== game log (b4-game-direct.log) — 6 hits, full vocabulary per the QD1 calibre (T2's file: 8) ==
+  1. WARN jackdaw_bsn::apply: "unknown field 'nonexistent_field_direct' on
+     'bevy_transform::...Transform' on entity #B4Entity; the scene-problems list
+     carries the row" — B4's designed direct-run trigger via the game BRP's
+     apply_bsn; the one game-log hit the T2 census counted.
+  2-6. STARTUP-INHERENT (the template game booting, not T24 mouths, charged to no
+     cell): GhostComponent skip x1 ('Skipped 1 asset files holding types this app
+     has not registered') + config defaults x3 ('no config asset at game-config /
+     input-actions / audio-config ... starts at its default') + terrain x1 ('no
+     active Camera3d, so terrain has no viewer').
+  DELTA vs T2's game log (8 hits: 1 designed + GhostComponent 1 + config 3 + bind
+  no-context 3): this boot has no 'bind ... no context' lines (T2 x3) and gains one
+  terrain no-Camera3d line. Both sides are the standalone game's own startup faces;
+  the composition varies with boot order/timing, the designed mouth is byte-for-byte
+  the same line.
+
+TOTAL: 21 editor-window hits + 6 game-log hits (1 designed + 5 startup-inherent);
+every hit attributed per the QD1 calibre; zero unattributed warns. The only
+editor-window delta vs T2 is DF-W5's intermittent absence; every designed mouth
+spoke exactly once per its trigger.

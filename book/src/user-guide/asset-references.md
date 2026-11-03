@@ -14,7 +14,11 @@ them), or when the component marks it with `@AssetRef`. A prefab instance's
 `IsA.source` is a reference the same way. Older documents may spell a bare
 name (`@rust`) — the editor resolves it to the one file whose stem carries
 that name, and two files sharing a stem make it ambiguous, which is why
-paths are preferred.
+paths are preferred. The paths inside a `MaterialOverrides` or
+`InstanceMaterialOverrides` map are references too, and the audit walks
+them with everything else: a broken override shows up as a `Missing` row
+naming the component's `materials` field
+([Material Overrides](material-overrides.md)).
 
 ## Rename and move follow through
 
@@ -60,7 +64,9 @@ The **Missing References** list puts those findings on screen. Each row can
 rewritten to the chosen file, and the tab turns dirty until its own save —
 **Locate** (bring the document forward with the entity selected), **Show**
 (open the folder in the file manager) or **Copy** the reference. A document
-that is not open says so on its Rebind; open it first.
+that is not open says so on its Rebind; open it first. The list is one
+of the editor's five trouble mouths — [Debugging
+Errors](debugging-errors.md) maps them all.
 
 ## Renaming outside the editor
 

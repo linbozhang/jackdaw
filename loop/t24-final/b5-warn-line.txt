@@ -1,0 +1,1 @@
+[2m2026-11-03T13:04:46.181611Z[0m [33m WARN[0m [2mjackdaw_bsn::apply[0m[2m:[0m cannot apply 'jackdaw_animation_runtime::AnimationGraphRef' on entity #RedEntity: that spelling is not registered — the project registers 'jackdaw_animation_runtime::graph::AnimationGraphRef'. A crate-root re-export is not a registered spelling; write the definition module path

@@ -157,7 +157,10 @@ or break it a different way — and it speaks again if it still
 fails. There is no lock to clear when a file recovers: a
 recovered file raises no failure at all, and the next successful
 load simply follows the fix. For images on the plain path, the
-plate picks the restored picture up like any other rewrite.
+plate picks the restored picture up like any other rewrite. These
+failures also land as rows on the Scene Problems board, beside
+every other kind of trouble — [Debugging
+Errors](debugging-errors.md) is the map of all five mouths.
 
 Two edges to the picture, stated as they are:
 

@@ -75,7 +75,9 @@ A9 高发窗腿带 budget/jackdaw/wait 重试窗；A14 未前置（三色经远�
 - **DF-W4（工具面）**：`jackdaw/ui_tree` 走查对同一子树**重复发射**（同实体 id 在多个
   walk root 下重现 x2-x6）——原始文本计数膨胀，脚本侧被迫按唯一文本/汇总行计数。
 - **DF-W5（N13 家族，buglist 在档）**：`drain_game_events` "Exclusive system
-  panicked"——游戏连接推日志事件时触发（终窗 1 次；弃置的碰撞窗 2 次）。N13 现状
+  panicked"——游戏连接推日志事件时触发（终窗 1 次；弃置的碰撞窗 2 次**〔勘误
+  2026-11-03 T24-T3：实为 4 条——editor-runtime-w1-6515 ×1 + 11469 ×2 + 14561
+  ×1，QA QD2 亲数；原「2 次」计数不准，现象判定与 N13 归票不变〕**）。N13 现状
   观察，T1 红窗（Play 失败未连游戏）不可能出现故无基线对照。
 - **DF-W6（PIE 收尾面）**：bevy_ecs relationship WARN「ChildOf(...) relates to an
   entity that does not exist」——PIE 会话实体churn后遗留悬空关系（终窗 1 次）。

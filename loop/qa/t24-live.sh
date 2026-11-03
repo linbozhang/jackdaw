@@ -79,6 +79,14 @@
 # unaddressable node. RUST_BACKTRACE is never set. The warn census rides
 # mark_log/log_lines_since offset diffs (the MO8 calibre) and every hit
 # is attributed phase by phase — zero unexpected warns is the target.
+# Census calibre note (the T24-T2 QA QD1 finding, landed at T3): the
+# direct-run game's own log (b4-game-direct.log) carries the template
+# game's startup-inherent face (in the T2 window: GhostComponent skip,
+# config defaults, bind no-context — 7 of its 8 warns). Those lines are
+# the game booting, not designed mouths: the census attribution counts
+# the one designed mouth among them and charges the startup face to no
+# cell, but the game log enters the census with its full vocabulary so
+# "every hit attributed" is true of that file too.
 #
 # Phases (each boots and cleans its own editor; run one per invocation,
 # or `all`):

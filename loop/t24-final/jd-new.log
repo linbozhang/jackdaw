@@ -1,0 +1,10 @@
+jd new: created /Users/zhanglinbo/workspace/loop-mac/t24-debug/t24-live
+  modules: Physics
+  scaffolded 15 files
+  checking dependencies resolve...
+
+note: this jackdaw runs from the checkout at /Users/zhanglinbo/workspace/jackdaw, so the new project depends on its crates by path. That Cargo.toml is local to this machine; switch those back to versions before sharing it.
+
+Next:
+  jd open /Users/zhanglinbo/workspace/loop-mac/t24-debug/t24-live
+or `cargo run` in that directory to play standalone.
