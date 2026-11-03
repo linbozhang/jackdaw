@@ -448,7 +448,7 @@
   修复方向：路径断言 canonicalize 比较、平台预算校准、键位映射平台表。归「Mac 基线清理」账。
   > 2026-10-28 勾选：f7f57ab7 修复——深挖反转：7 红中 **5 项实为产品缺陷**（Y8 tab retarget 在 Mac 从未生效=canonical 比较形态／indexed_path 断链告警在 Mac 零警告／journal emit 被 autofs `/home` stat 拖到 70ms×N 次（5ms 预算未动，修后 0.62-1.0ms）／project_window observe 生命周期缺护航 11 处换 `observe_if_alive`），仅 #6 双侧 canonicalize（测试侧）+#9 `select_all_gesture` 平台键（helper）为环境侧；QA PASS a3a4-mac-baseline-qa.md，**Mac integration 基线全绿 5331/5331**（T10a 5303/5303 后新基线）。⚪ 遗留：`canonical_prefab_path` FS 行走通用性能面；lod_group flaky 首见观察（TRY2 过，零复发数据，暂不立账）。
 
-- [ ] **A5. pie_log 窗口上限溢出静默丢弃（与帧排空溢出的明报不对称）**（2026-10-28 T12-T2 QA 回流③建议开票；主控批准立账）
+- [x] **A5. pie_log 窗口上限溢出静默丢弃（与帧排空溢出的明报不对称）** ✅（2026-11-03 T24-T1 顺手收口（票注原文「下轮触碰 pie_log 时顺手」兑现）：窗口溢出自计数 warn「the one-second window overflowed; N line(s) were dropped」每窗恰一次（pie_log.rs:193-203/245-264，与帧排空明报对称）；单测+T24-T2/T3 真机 census 归因活体；T24-T3 QA 复核文案逐字，结票。）（2026-10-28 T12-T2 QA 回流③建议开票；主控批准立账）
   `crates/jackdaw_runtime/src/pie_log.rs`（T12-T2 引入）：节流层每秒窗口上限（32 条/秒）溢出时静默丢弃，而每帧 512 条排空溢出有明报——同一转发层两种溢出语义不对称；唯一性错误恰逢窗口满时可能被丢（低概率、低危，但日志即 T12 的验收面）。
   修复方向：窗口溢出补一条自身计数 warn（或尾条替换+计数标注，形态与帧排空对齐）。小票，下轮触碰 pie_log 时顺手。
 
@@ -497,7 +497,7 @@
   修复方向：scene→Sprite Atlas handle 的 loader 缺面（`sheet.bsn` 为序列化 TextureAtlasLayout，需 scene 内 loader 或改持图片路径+运行时构建）；修复即 book 画布预览现状门升级。与 A16 同批触碰 sprite 域时顺手评估。
   > 2026-11-01 票面精化（T21 终验 QA §六-5，主控落）：①现象面改写=**两侧同形**——编辑器画布与 direct/staged 游戏窗口均渲染完整六 tile 全图（QA 目视+shot 双侧亲读），单因「loader 缺面」被负证据闭合（卡在盘+零 loader ERROR 而全图依旧，editor 双 log 零命中亲算）；②机制注记=**双柄空间**（scene.bsn 路径柄 vs walk/catalog 卡，M10 证卡已进 store），正面柄观测仍缺=注记非定案；③修复面注意**编辑器/游戏两侧装载面不同**。
 
-- [ ] **A8. BSN apply 静默丢弃 crate 根 re-export 路径 + misleading remedy（AN8，T15-T2 真机首踩）**（2026-10-30 T15-T2 程序发现+QA 机制核实；主控批准立账）
+- [x] **A8. BSN apply 静默丢弃 crate 根 re-export 路径 + misleading remedy（AN8，T15-T2 真机首踩）** ✅（2026-11-03 T24-T1 顺手吸收（T23 MO9 先例）：unknown-type warn 三处收敛 report_unknown_type+注册表同尾段定义拼写指引（apply.rs:344-361 tail-match）+unresolved_remedy 双因诚实版+无 :: 裸名静默闭合+组件维持不落语义明确；红绿对照 DF-R2/T24-T2 B5 五要件真机翻绿（误导行终窗 0 次）；T24-T3 QA 复核零技术错误，结票。）（2026-10-30 T15-T2 程序发现+QA 机制核实；主控批准立账）
   场景文档的图族组件必须写定义模块全路径（`…::graph::AnimationGraphRef`），crate 根 re-export 拼写被 `jackdaw_bsn::apply` 静默丢弃（无 warn、组件不落——手写场景/导出迁移场景易踩，fixture 已绕行）；且 `jackdaw_bsn::catalog` 的 remedy 文案（"rebuild the project"）对此误导。
   修复方向：未知路径丢弃补 warn（对照 AN1 运行态 warn 形态，列可用类型面）；remedy 文案按真实成因改写。小票。
 
@@ -549,10 +549,11 @@
   修复方向：一行特判（`if id == "tilemap" { return true; }`，animation 同款+注释）或 catalog 加 `editor_builtin` 布尔位走通用路径。顺手票。
   > 严重度建议 🟡（误导性告警，非功能缺口）。
 
-- [ ] **A18. book 微修两处（T23-T3 QA 建议，⚪ 随手票）**（2026-11-03 T23-T3 QA 发现；主控批准立账）
+- [x] **A18. book 微修两处（T23-T3 QA 建议，⚪ 随手票）** ✅（2026-11-03 T24-T3 落：asset-references.md 定义段补 MO2 例外句+material-overrides.md rebind 括注改文档赢语义；T24-T3 QA 复核「既不过诺也不欠诺」与 A11 两面第一手证据一致，结票。）（2026-11-03 T23-T3 QA 发现；主控批准立账）
   ①asset-references.md:12 引用定义句在 MO2 落地后有例外——失效材质覆盖路径现已可发现（audit 四元组+日志/状态栏双嘴），定义句需一句扩展；②material-overrides.md rebind 括注「(or at once, on the tab the scene is open in)」对活世界过诺——两件第一手粘性证据反证（活世界粘旧路径待保存/重开才文档赢，见 A11 增补），建议改写为文档赢语义。
   修复方向：两处各一句话改写；与下一任务 book 触碰同批落（T20-T3 Errata 先例：勘误随轮落账）。
 
 - [ ] **A19. T24-T2 live finds 家族（DF-W1..W7，只记不修候裁）**（2026-11-03 T24-T2 真机轮发现；主控批准立账）
   ①DF-W1 🟡 warn_on_load 仅 fresh-open——已开 tab 的 reread 路径静默（载入摘要嘴覆盖缺口）；②DF-W2 🟡 游戏侧 flow 载入丢字段零 warn（A16 域近亲；T24-T2 QA QD3：按旁证级采信不补腿）；③DF-W3 ⚪ (path,mtime) 锁写窗中间态双 key（重复告警窗口）；④DF-W4 ⚪ ui_tree 走查重复发射子树（A7 工具域）；⑤DF-W5 🟡 drain_game_events panic（N13 家族同病灶）；⑥DF-W6 ⚪ PIE 收尾悬空 ChildOf（A10/N13 PIE 域）；⑦DF-W7 🟡 PIE 后立即直启的游戏可失去 remote 面。（严重度为主控 2026-11-03 依 QA QD4 补注。）
   证据锚：loop/reports/t24-t2-report.md DF 节+`t24t2_*` 归档。修复方向：T3 book 轮裁定吸收面；④可并 A7 批次随手，⑤并 N13，⑦与 A10 同域。
+  > 2026-11-03 主控收官裁定（T24-T3 QA 建议）：④并 A7 批次、⑤并 N13、⑦A10 域（维持票面并法）；DF-W1 下轮触碰 operators/external_watch 时顺手（warn_on_load reread 调用面）；DF-W3 维持记档不单开票。DF-W1/W3 产品修复未启动，吸收面如上。
