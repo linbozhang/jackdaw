@@ -1,0 +1,25 @@
+# DF-R2 red evidence (A8/W1) - pre-fix build, main a63fcb84 (loop/t24-debug base)
+# Archived from the live window loop/t24-red/ (loop/qa/t24-red.sh phase dfr23), 2026-11-03.
+# Fixture scene assets/t24r2.bsn: AnimationGraphRef spelled by its crate-root re-export
+# (jackdaw_animation_runtime::AnimationGraphRef; the editor registers the definition path
+# jackdaw_animation_runtime::graph::AnimationGraphRef). Full evidence:
+# loop/t24-red/{walk-dfr2.json,editor-dfr23-final.log}.
+
+== leg verdicts ==
+DFR2_CRYPTIC_WARN_IN_CONSOLE=PASS (1 bare 'type not in the registry' line(s), no guidance, no registered spelling named)
+DFR2_MISLEADING_REMEDY_IN_CONSOLE=PASS (1 'rebuild the project' line(s) - a rebuild cannot fix a wrong path)
+DFR2_COMPONENT_ABSENT=PASS (BRP world.query: 0 entities hold the registered AnimationGraphRef path; 17 hold Transform - RedEntity spawned, the component did not land)
+DFR2_AUDIT_ZERO_ROWS=PASS (jackdaw/audit findings: 0)
+DFR2_LIST_SAYS_NOTHING=PASS (Missing References walk answers 'no broken references')
+
+== editor console, the only mouths (editor-dfr23-final.log) ==
+[2m2026-11-03T07:01:12.078489Z[0m [33m WARN[0m [2mjackdaw_bsn::apply[0m[2m:[0m cannot apply 'jackdaw_animation_runtime::AnimationGraphRef': type not in the registry
+[2m2026-11-03T07:01:12.078522Z[0m [33m WARN[0m [2mjackdaw_bsn::catalog[0m[2m:[0m 1 type in this scene is in neither the editor's registry nor the project's extracted schema (jackdaw_animation_runtime::AnimationGraphRef); rebuild the project so the editor picks up its types.
+
+== note (T15-T2 QA calibration) ==
+buglist A8 says 'no warn'; QA's T15 read (loop/reports/t15-t2-qa.md) already showed the
+warn DOES fire - the silence is the missing STRUCTURED face: the warn names no registered
+spelling, the remedy misleads, and no panel row exists. This archive confirms that
+corrected reading on main a63fcb84. The fix shapes the warn (names the registered face),
+rewrites the remedy, and lands a structured row; the component stays unapplied either way
+(B5's 'component handling semantics made explicit').

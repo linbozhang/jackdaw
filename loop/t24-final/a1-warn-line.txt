@@ -1,0 +1,1 @@
+[2m2026-11-03T12:59:21.014978Z[0m [33m WARN[0m [2mjackdaw_api_internal::operator[0m[2m:[0m scene 't24a.bsn': 1 references name files the project does not hold (1 missing) — run asset.audit for the list

@@ -1,0 +1,10 @@
+T24-T2 green side of DF-R3 (W1) — final bindings window, editor log loop/t24-live/editor-bindings-w1-4776-.log
+Red side: loop/reports/t24t1_dfr3_red.log — the unknown-field warn as the log's only mouth, the panel answering 'no broken references', the field name absent from the walk.
+
+Structured warn (b2-warn-line.txt):
+82Z  WARN jackdaw_bsn::apply: unknown field 'nonexistent_field' on 'bevy_transform::components::transform::Transform' on entity #RedField; the scene-problems list carries the row
+
+Panel row (walk-b2.json):
+"text":"RedField · bevy_transform::components::transform::Transform.nonexistent_field (unknown field)"
+
+Board sections in walk-b2.json: 'Binding problems' header present; Locate/Copy actions on the row; Rebind correctly not rendered.

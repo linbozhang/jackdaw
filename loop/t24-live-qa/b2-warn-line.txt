@@ -1,0 +1,1 @@
+[2m2026-11-03T12:42:43.144663Z[0m [33m WARN[0m [2mjackdaw_bsn::apply[0m[2m:[0m unknown field 'nonexistent_field' on 'bevy_transform::components::transform::Transform' on entity #RedField; the scene-problems list carries the row

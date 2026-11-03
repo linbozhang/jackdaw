@@ -161,7 +161,9 @@ profile, stages the executable beside a copy of the whole asset tree
 (the folder your `jackdaw.toml` names with `assets_dir`, `assets/` by
 default), and opens the folder when it finishes. The footer shows the
 same compiling progress a Play build does; a failure lands in the Build
-panel with the compiler output.
+panel with the compiler output — whose strip pins the first error's
+file, line and column, with a row that opens your editor exactly there
+([Debugging Errors](debugging-errors.md) is the thirty-second tour).
 
 The same export is on the terminal, with a say in what and where:
 

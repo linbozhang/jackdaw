@@ -1,15 +1,20 @@
-//! The Missing References list: what the audit found, one row per broken
-//! reference, each a rebind away from whole.
+//! The scene-problems list: what the audit found about references, one row
+//! per broken one, each a rebind away from whole — and, beside it, the
+//! binding problems the last load recorded, one row per wrong field or type
+//! spelling, with the entity a Locate away.
 //!
-//! A row names the document, the entity, the component and field holding the
-//! reference, and the reference as spelled. Its buttons rebind through the
-//! picker (writing the reference into the open tab's own document, so the
-//! change is an edit like any other — the tab turns dirty, nothing reaches a
-//! file until its own save), open the document's folder in the desktop's
-//! file manager, copy the reference, or bring the document forward with the
-//! entity selected. A document with no tab of its own is not rewritten from
-//! here — the row's rebind answers with the advice to open it first (the
-//! first-version boundary the plan set).
+//! A reference row names the document, the entity, the component and field
+//! holding the reference, and the reference as spelled. Its buttons rebind
+//! through the picker (writing the reference into the open tab's own
+//! document, so the change is an edit like any other — the tab turns dirty,
+//! nothing reaches a file until its own save), open the document's folder in
+//! the desktop's file manager, copy the reference, or bring the document
+//! forward with the entity selected. A document with no tab of its own is
+//! not rewritten from here — the row's rebind answers with the advice to
+//! open it first (the first-version boundary the plan set). A binding row
+//! names the entity, the component, and the field when there is one; its
+//! buttons select the entity and copy the spelling (no Rebind: a type or
+//! field spelling is not rewritten through a file picker).
 
 use std::path::Path;
 
@@ -44,6 +49,21 @@ pub enum MissingAction {
     Locate,
 }
 
+/// What one binding row's button does. A binding problem has no reference to
+/// rebind or file to show — the row's moves are selecting its entity and
+/// copying the spelling that needs rewriting.
+#[derive(Component, Clone)]
+pub struct BindingButton {
+    pub action: BindingAction,
+    pub issue: jackdaw_bsn::BindingIssue,
+}
+
+#[derive(Clone, Copy, PartialEq, Eq)]
+pub enum BindingAction {
+    Locate,
+    Copy,
+}
+
 /// The picker a row's Rebind opened, so its choice reaches the row that
 /// asked.
 #[derive(Component)]
@@ -57,24 +77,44 @@ pub(crate) fn plugin(app: &mut App) {
     // The row buttons observe their own clicks where they are spawned; the
     // rebind picker's select system registers through its PickerProps.
     app.add_observer(on_missing_button_click)
+        .add_observer(on_binding_button_click)
+        .add_observer(on_load_failure_button_click)
         .add_observer(on_close_list_click);
 }
 
 /// Bring the audit's findings up as the list: nothing to show says so in the
 /// status bar, anything to show gets the dialog. The findings are gathered
-/// fresh, so the list never disagrees with the project.
+/// fresh, so the list never disagrees with the project; the binding rows ride
+/// beside them (the last load's structured record), making the panel the
+/// scene-problems list decision 4(a) named — two sections, one board.
 pub fn open_missing_list(world: &mut World) {
     let findings = crate::reference_audit::audit_references(world);
-    let count = findings.len();
     world.insert_resource(crate::reference_audit::AuditFindings(findings.clone()));
-    if count == 0 {
+    let bindings: Vec<jackdaw_bsn::BindingIssue> = world
+        .get_resource::<jackdaw_bsn::BindingIssues>()
+        .map(|issues| issues.rows().to_vec())
+        .unwrap_or_default();
+    let failures: Vec<crate::asset_failures::LoadFailureRow> = world
+        .get_resource::<crate::asset_failures::WarnedFailures>()
+        .map(|warned| warned.rows().to_vec())
+        .unwrap_or_default();
+    if findings.is_empty() && bindings.is_empty() && failures.is_empty() {
         crate::status_bar::notify_info(world, "no broken references");
         return;
     }
-    spawn_missing_list(world, &findings);
+    spawn_missing_list(world, &findings, &bindings, &failures);
 }
 
-fn spawn_missing_list(world: &mut World, findings: &[AuditFinding]) {
+/// How many rows one section renders before "... and N more" — the dialog
+/// stays a dialog, the session keeps the rest.
+const MAX_ROWS_PER_SECTION: usize = 12;
+
+fn spawn_missing_list(
+    world: &mut World,
+    findings: &[AuditFinding],
+    bindings: &[jackdaw_bsn::BindingIssue],
+    failures: &[crate::asset_failures::LoadFailureRow],
+) {
     let Some(editor_font) = world.get_resource::<EditorFont>().map(|f| f.0.clone()) else {
         // Headless: the findings resource is what tests and tooling assert
         // against, the UI never spawns.
@@ -116,7 +156,7 @@ fn spawn_missing_list(world: &mut World, findings: &[AuditFinding]) {
         ))
         .id();
     world.spawn((
-        Text::new("Missing References"),
+        Text::new("Scene Problems"),
         TextFont {
             font: editor_font.clone().into(),
             font_size: tokens::TEXT_SIZE_LG,
@@ -125,8 +165,20 @@ fn spawn_missing_list(world: &mut World, findings: &[AuditFinding]) {
         TextColor(tokens::TEXT_PRIMARY),
         ChildOf(card),
     ));
+    let summary = match (findings.len(), bindings.len(), failures.len()) {
+        (0, 0, n) => format!(
+            "no broken references; {n} load failure{} on the board",
+            plural_s(n)
+        ),
+        (_f, b, l) => format!(
+            "{}; {b} binding problem{}, {l} load failure{}",
+            crate::reference_audit::summarize(findings),
+            plural_s(b),
+            plural_s(l),
+        ),
+    };
     world.spawn((
-        Text::new(crate::reference_audit::summarize(findings)),
+        Text::new(summary),
         TextFont {
             font: editor_font.clone().into(),
             font_size: tokens::TEXT_SIZE_SM,
@@ -135,8 +187,23 @@ fn spawn_missing_list(world: &mut World, findings: &[AuditFinding]) {
         TextColor(tokens::TEXT_SECONDARY),
         ChildOf(card),
     ));
-    for finding in findings {
-        spawn_finding_row(world, card, editor_font.clone(), finding);
+    if !findings.is_empty() {
+        spawn_section_header(world, card, editor_font.clone(), "Broken references");
+        for finding in findings {
+            spawn_finding_row(world, card, editor_font.clone(), finding);
+        }
+    }
+    if !bindings.is_empty() {
+        spawn_section_header(world, card, editor_font.clone(), "Binding problems");
+        for issue in bindings.iter().take(MAX_ROWS_PER_SECTION) {
+            spawn_binding_row(world, card, editor_font.clone(), issue);
+        }
+    }
+    if !failures.is_empty() {
+        spawn_section_header(world, card, editor_font.clone(), "Asset load failures");
+        for row in failures.iter().take(MAX_ROWS_PER_SECTION) {
+            spawn_load_failure_row(world, card, editor_font.clone(), row);
+        }
     }
     let close = spawn_text_button(
         world,
@@ -147,6 +214,255 @@ fn spawn_missing_list(world: &mut World, findings: &[AuditFinding]) {
         tokens::TOOLBAR_BG,
     );
     world.entity_mut(close).observe(on_close_list_click);
+}
+
+fn plural_s(n: usize) -> &'static str {
+    if n == 1 { "" } else { "s" }
+}
+
+/// A section title between the summary and its rows.
+fn spawn_section_header(world: &mut World, parent: Entity, font: Handle<Font>, title: &str) {
+    world.spawn((
+        Text::new(title.to_string()),
+        TextFont {
+            font: font.into(),
+            font_size: tokens::TEXT_SIZE,
+            ..Default::default()
+        },
+        TextColor(tokens::TEXT_PRIMARY),
+        ChildOf(parent),
+    ));
+}
+
+/// One binding row: the four-tuple face the audit rows spell, in the error
+/// color, with the moves a binding problem has — select its entity, copy the
+/// spelling that needs rewriting. No Rebind: a type or field spelling is not
+/// rewritten through the picker.
+fn spawn_binding_row(
+    world: &mut World,
+    parent: Entity,
+    font: Handle<Font>,
+    issue: &jackdaw_bsn::BindingIssue,
+) {
+    let row = world
+        .spawn((
+            Node {
+                flex_direction: FlexDirection::Row,
+                align_items: AlignItems::Center,
+                column_gap: Val::Px(8.0),
+                ..Default::default()
+            },
+            ChildOf(parent),
+        ))
+        .id();
+    world.spawn((
+        Text::new(issue.line()),
+        TextFont {
+            font: font.clone().into(),
+            font_size: tokens::TEXT_SIZE_SM,
+            ..Default::default()
+        },
+        TextColor(tokens::TEXT_ERROR),
+        Node {
+            flex_grow: 1.0,
+            min_width: Val::Px(0.0),
+            overflow: Overflow::clip(),
+            ..Default::default()
+        },
+        ChildOf(row),
+    ));
+    if issue.entity.is_some() {
+        let button = spawn_text_button(
+            world,
+            row,
+            font.clone(),
+            "Locate",
+            BindingButton {
+                action: BindingAction::Locate,
+                issue: issue.clone(),
+            },
+            tokens::TOOLBAR_BG,
+        );
+        world.entity_mut(button).observe(on_binding_button_click);
+    }
+    let button = spawn_text_button(
+        world,
+        row,
+        font,
+        "Copy",
+        BindingButton {
+            action: BindingAction::Copy,
+            issue: issue.clone(),
+        },
+        tokens::TOOLBAR_BG,
+    );
+    world.entity_mut(button).observe(on_binding_button_click);
+}
+
+/// What one load-failure row's button does: reveal the file's folder, or
+/// copy the path (the moves a broken file has).
+#[derive(Component, Clone)]
+pub struct LoadFailureButton {
+    pub action: LoadFailureAction,
+    pub row: crate::asset_failures::LoadFailureRow,
+}
+
+#[derive(Clone, Copy, PartialEq, Eq)]
+pub enum LoadFailureAction {
+    Show,
+    Copy,
+}
+
+/// The load-failure row's button, answered.
+fn on_load_failure_button_click(
+    trigger: On<PointerClick>,
+    buttons: Query<&LoadFailureButton>,
+    mut commands: Commands,
+) {
+    let Ok(button) = buttons.get(trigger.event_target()) else {
+        return;
+    };
+    let button = button.clone();
+    commands.queue(move |world: &mut World| match button.action {
+        LoadFailureAction::Show => show_load_failure(world, &button.row),
+        LoadFailureAction::Copy => copy_load_failure(world, &button.row),
+    });
+}
+
+/// The folder holding the failed file, in the desktop's file manager.
+fn show_load_failure(world: &mut World, row: &crate::asset_failures::LoadFailureRow) {
+    let folder = row
+        .file
+        .parent()
+        .map(Path::to_path_buf)
+        .unwrap_or_else(|| row.file.clone());
+    if let Err(err) = crate::project_window::open_with_desktop(&folder) {
+        crate::status_bar::notify_warn(
+            world,
+            format!("{} cannot be opened: {err}", folder.display()),
+        );
+    }
+}
+
+/// The failed file's path, on the clipboard.
+fn copy_load_failure(world: &mut World, row: &crate::asset_failures::LoadFailureRow) {
+    if let Some(mut clipboard) = world.get_resource_mut::<Clipboard>() {
+        let spelled = row.file.to_string_lossy().into_owned();
+        let _ = clipboard.set_text(spelled.clone());
+        crate::status_bar::notify_info(world, format!("copied {spelled}"));
+    }
+}
+
+/// One load-failure row: the file the engine could not read and why, with
+/// Show (its folder) and Copy (its path).
+fn spawn_load_failure_row(
+    world: &mut World,
+    parent: Entity,
+    font: Handle<Font>,
+    row: &crate::asset_failures::LoadFailureRow,
+) {
+    let holder = world
+        .spawn((
+            Node {
+                flex_direction: FlexDirection::Row,
+                align_items: AlignItems::Center,
+                column_gap: Val::Px(8.0),
+                ..Default::default()
+            },
+            ChildOf(parent),
+        ))
+        .id();
+    world.spawn((
+        Text::new(format!(
+            "{} failed to load ({})",
+            row.file.display(),
+            row.error
+        )),
+        TextFont {
+            font: font.clone().into(),
+            font_size: tokens::TEXT_SIZE_SM,
+            ..Default::default()
+        },
+        TextColor(tokens::TEXT_WARNING),
+        Node {
+            flex_grow: 1.0,
+            min_width: Val::Px(0.0),
+            overflow: Overflow::clip(),
+            ..Default::default()
+        },
+        ChildOf(holder),
+    ));
+    for (label, action) in [
+        ("Show", LoadFailureAction::Show),
+        ("Copy", LoadFailureAction::Copy),
+    ] {
+        let button = spawn_text_button(
+            world,
+            holder,
+            font.clone(),
+            label,
+            LoadFailureButton {
+                action,
+                row: row.clone(),
+            },
+            tokens::TOOLBAR_BG,
+        );
+        world
+            .entity_mut(button)
+            .observe(on_load_failure_button_click);
+    }
+}
+
+/// The binding row's button, answered.
+fn on_binding_button_click(
+    trigger: On<PointerClick>,
+    buttons: Query<&BindingButton>,
+    mut commands: Commands,
+) {
+    let Ok(button) = buttons.get(trigger.event_target()) else {
+        return;
+    };
+    let button = button.clone();
+    commands.queue(move |world: &mut World| match button.action {
+        BindingAction::Locate => locate_binding(world, &button.issue),
+        BindingAction::Copy => copy_binding(world, &button.issue),
+    });
+}
+
+/// Select the entity a binding row names, the way a reference row's Locate
+/// selects the holder of a broken reference.
+fn locate_binding(world: &mut World, issue: &jackdaw_bsn::BindingIssue) {
+    let Some(named) = issue.entity.as_deref() else {
+        return;
+    };
+    let mut named_query = world.query_filtered::<Entity, With<Name>>();
+    let hit = named_query.iter(world).find(|entity| {
+        world
+            .get::<Name>(*entity)
+            .is_some_and(|name| name.as_str() == named)
+    });
+    match hit {
+        Some(entity) => {
+            crate::selection::select_only(world, entity);
+            crate::status_bar::notify_info(world, format!("selected {named}"));
+        }
+        None => {
+            crate::status_bar::notify_warn(world, format!("{named} is not in the open scene"));
+        }
+    }
+}
+
+/// The binding row's component and field, on the clipboard — the spelling a
+/// document author needs to search for.
+fn copy_binding(world: &mut World, issue: &jackdaw_bsn::BindingIssue) {
+    let spelled = match &issue.field {
+        Some(field) => format!("{}.{}", issue.component, field),
+        None => issue.component.clone(),
+    };
+    if let Some(mut clipboard) = world.get_resource_mut::<Clipboard>() {
+        let _ = clipboard.set_text(spelled.clone());
+        crate::status_bar::notify_info(world, format!("copied {spelled}"));
+    }
 }
 
 fn spawn_finding_row(

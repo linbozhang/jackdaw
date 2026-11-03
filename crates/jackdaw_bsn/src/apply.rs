@@ -155,13 +155,17 @@ impl UnresolvedTypes {
 }
 
 /// The line a load reports when a type resolved to nothing: what is missing,
-/// and the rebuild that would supply it.
+/// and the two honest moves — a rebuild for a type the project genuinely
+/// grew, a spelling fix for a path the registry answers under another name.
+/// The old copy advised a rebuild alone, which a wrong path survives (A8).
 fn unresolved_remedy(types: &std::collections::BTreeSet<String>) -> String {
     let plural = if types.len() == 1 { "" } else { "s" };
     format!(
         "{} type{plural} in this scene {} in neither the editor's registry nor \
-         the project's extracted schema ({}); rebuild the project so the editor \
-         picks up its types.",
+         the project's extracted schema ({}). Rebuild the project if the type \
+         is new to it; if the scene spells a re-exported or renamed path, \
+         rewrite it to the definition module path the editor registers — the \
+         scene-problems list carries one row per occurrence.",
         types.len(),
         if types.len() == 1 { "is" } else { "are" },
         types
@@ -185,6 +189,200 @@ fn note_unapplied(world: &mut World, type_path: &str) -> bool {
         unresolved.types.insert(type_path.to_string());
     }
     false
+}
+
+/// What kind of binding wrongness one row names.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum BindingIssueKind {
+    /// A field the component does not declare.
+    UnknownField,
+    /// A type path no registration answers.
+    UnknownType,
+}
+
+impl BindingIssueKind {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::UnknownField => "unknown field",
+            Self::UnknownType => "unknown type",
+        }
+    }
+}
+
+/// One binding problem a load named: the entity, the component, and — for an
+/// unknown field — the field. Everything the scene-problems list needs to
+/// point back at the document's author, without the log alone.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct BindingIssue {
+    /// The `#Name` the document spells, when it does.
+    pub entity: Option<String>,
+    pub component: String,
+    pub field: Option<String>,
+    pub kind: BindingIssueKind,
+}
+
+impl BindingIssue {
+    /// The identity the one-shot lock keys: the same on-site speaks once, a
+    /// changed one speaks again.
+    fn identity(&self) -> String {
+        format!(
+            "{}|{}|{}|{}",
+            self.entity.as_deref().unwrap_or(""),
+            self.component,
+            self.field.as_deref().unwrap_or(""),
+            self.kind.as_str(),
+        )
+    }
+
+    /// One line a person reads in the list, the shape the audit's rows use.
+    pub fn line(&self) -> String {
+        let entity = self.entity.as_deref().unwrap_or("<unnamed>");
+        match &self.field {
+            Some(field) => format!(
+                "{entity} · {}.{} ({})",
+                self.component,
+                field,
+                self.kind.as_str()
+            ),
+            None => format!("{entity} · {} ({})", self.component, self.kind.as_str()),
+        }
+    }
+}
+
+/// The binding problems the last load named, beside [`UnresolvedTypes`] (which
+/// keeps the load-level summary): one row per wrong binding, the face the
+/// scene-problems list renders and the one-shot lock guards. Rows describe the
+/// current scene (cleared per load); what was already spoken stays reported, so
+/// an unchanged problem is quiet across the reloads an undo restore causes.
+#[derive(Resource, Default, Debug)]
+pub struct BindingIssues {
+    rows: Vec<BindingIssue>,
+    reported: std::collections::BTreeSet<String>,
+}
+
+impl BindingIssues {
+    /// The rows, in the order the load found them.
+    pub fn rows(&self) -> &[BindingIssue] {
+        &self.rows
+    }
+
+    /// Forget the previous scene's rows, keeping what was reported (the same
+    /// rule [`UnresolvedTypes::start_scene`] applies to the remedy).
+    pub fn start_scene(&mut self) {
+        self.rows.clear();
+    }
+
+    /// Record one row; answer whether this identity speaks (first sighting).
+    /// The row list itself is identity-deduped, so the same wrong field that
+    /// two patches carry is one row.
+    pub fn record(&mut self, issue: BindingIssue) -> bool {
+        let identity = issue.identity();
+        if !self.rows.iter().any(|row| row.identity() == identity) {
+            self.rows.push(issue);
+        }
+        self.reported.insert(identity)
+    }
+
+    /// How many rows are on record; the tests read it to tell "one row for
+    /// two sightings" from "nothing landed".
+    #[cfg(test)]
+    fn len(&self) -> usize {
+        self.rows.len()
+    }
+}
+
+/// Record a binding problem on the resource and answer whether it should
+/// speak (first sighting of the identity). Without the resource — the game
+/// runtime before its plugin joins — every sighting speaks, the way the
+/// plain warns always did.
+fn record_binding_issue(world: &mut World, issue: BindingIssue) -> bool {
+    if let Some(mut issues) = world.get_resource_mut::<BindingIssues>() {
+        issues.record(issue)
+    } else {
+        true
+    }
+}
+
+/// What the entity calls itself, for a message about a patch of its own.
+/// The loader inserts `#Name` patches before the component ones, so a warn
+/// about a component can name its holder even when the document spells the
+/// name after it.
+fn entity_label(world: &World, entity: Entity) -> String {
+    world
+        .get::<Name>(entity)
+        .map(|name| format!("#{}", name.as_str()))
+        .unwrap_or_else(|| "<unnamed>".to_string())
+}
+
+/// The spellings the registry answers with that the document's does not: the
+/// definitions whose type path ends in the same segment the document named
+/// (`game::Gizmo` spelled, `game::graph::Gizmo` registered — the crate-root
+/// re-export face, A8). At most three, so the warn stays a pointer, not a dump.
+fn registered_tail_matches(world: &World, type_path: &str) -> Vec<String> {
+    let Some(tail) = type_path.rsplit("::").next() else {
+        return Vec::new();
+    };
+    let registry = world.resource::<AppTypeRegistry>();
+    let reg = registry.read();
+    let mut matches = Vec::new();
+    for registration in reg.iter() {
+        let path = registration.type_info().type_path();
+        if path != type_path && path.rsplit("::").next() == Some(tail) {
+            matches.push(path.to_string());
+            if matches.len() >= 3 {
+                break;
+            }
+        }
+    }
+    matches
+}
+
+/// The warn a dropped type patch speaks: what the document spelled, who it
+/// was for, and — when the registry holds a spelling that ends the same way —
+/// what the project actually registers. The remedy's rebuild line does not
+/// belong here and does not appear here (A8).
+fn unknown_type_message(type_path: &str, label: &str, matches: &[String]) -> String {
+    match matches {
+        [] => format!(
+            "cannot apply '{type_path}' on entity {label}: type not in the registry; \
+             check the spelling against the project's registered components"
+        ),
+        [only] => format!(
+            "cannot apply '{type_path}' on entity {label}: that spelling is not \
+             registered — the project registers '{only}'. A crate-root re-export is \
+             not a registered spelling; write the definition module path"
+        ),
+        many => format!(
+            "cannot apply '{type_path}' on entity {label}: that spelling is not \
+             registered — the project registers {} (write the definition module path)",
+            many.join(", "),
+        ),
+    }
+}
+
+/// A type path no registration answers: record the row, speak once per
+/// identity, and guide at the registered spellings when there are any.
+/// Handles the [`DocumentOnlyTypes`] quiet-through itself, the way the warn
+/// sites did before the structured face existed.
+fn report_unknown_type(world: &mut World, entity: Entity, type_path: &str) {
+    if note_unapplied(world, type_path) {
+        return;
+    }
+    let label = entity_label(world, entity);
+    let matches = registered_tail_matches(world, type_path);
+    let issue = BindingIssue {
+        entity: if label == "<unnamed>" {
+            None
+        } else {
+            Some(label.trim_start_matches('#').to_string())
+        },
+        component: type_path.to_string(),
+        field: None,
+        kind: BindingIssueKind::UnknownType,
+    };
+    if record_binding_issue(world, issue) {
+        log::warn!("{}", unknown_type_message(type_path, &label, &matches));
+    }
 }
 
 /// Spawn ECS entities from the [`SceneBsnAst`] resource, linking them back to
@@ -332,6 +530,15 @@ pub fn apply_ast_to_ecs(world: &mut World, entity: Entity) {
         );
     }
 
+    // Names go in before the component patches, so a warn a later patch
+    // raises can name its holder even when the document spells the #Name
+    // after the component it flags.
+    for patch in &patch_data {
+        if let BsnPatch::Name(name) = patch {
+            world.entity_mut(entity).insert(Name::new(name.clone()));
+        }
+    }
+
     for patch in patch_data {
         match patch {
             BsnPatch::Name(name) => {
@@ -397,9 +604,7 @@ fn apply_type_patch(world: &mut World, entity: Entity, type_path: &str) {
         let variant_name = &type_path[last_sep + 2..];
 
         let Some(registration) = reg.get_with_type_path(enum_path) else {
-            if !note_unapplied(world, type_path) {
-                log::warn!("cannot apply '{type_path}': type not in the registry");
-            }
+            report_unknown_type(world, entity, type_path);
             return;
         };
         let Some(reflect_default) = registration.data::<ReflectDefault>() else {
@@ -423,6 +628,10 @@ fn apply_type_patch(world: &mut World, entity: Entity, type_path: &str) {
             value.as_partial_reflect(),
             &reg,
         );
+    } else {
+        // A bare name with no `::` is not a registration either; it used to
+        // fall out of this arm in silence.
+        report_unknown_type(world, entity, type_path);
     }
 }
 
@@ -539,7 +748,28 @@ fn apply_struct_patch(world: &mut World, entity: Entity, data: &BsnStructData) {
                 if let Some(target) = s.field_mut(&field.name) {
                     merge_bsn_value_into_reflect(target, &field.value, &reg, assets_ctx.as_ref());
                 } else {
-                    log::warn!("unknown field '{}' on '{}'", field.name, data.type_path);
+                    // The structured face first (once per on-site), then the
+                    // warn, so the log line and the scene-problems row name
+                    // the same holder (W1: the log alone was the whole face).
+                    let label = entity_label(world, entity);
+                    let issue = BindingIssue {
+                        entity: if label == "<unnamed>" {
+                            None
+                        } else {
+                            Some(label.trim_start_matches('#').to_string())
+                        },
+                        component: data.type_path.clone(),
+                        field: Some(field.name.clone()),
+                        kind: BindingIssueKind::UnknownField,
+                    };
+                    if record_binding_issue(world, issue) {
+                        log::warn!(
+                            "unknown field '{}' on '{}' on entity {label}; \
+                             the scene-problems list carries the row",
+                            field.name,
+                            data.type_path,
+                        );
+                    }
                 }
             }
         }
@@ -558,12 +788,7 @@ fn apply_struct_patch(world: &mut World, entity: Entity, data: &BsnStructData) {
         let variant_name = &data.type_path[last_sep + 2..];
 
         let Some(registration) = reg.get_with_type_path(enum_path) else {
-            if !note_unapplied(world, &data.type_path) {
-                log::warn!(
-                    "cannot apply '{}': type not in the registry",
-                    data.type_path
-                );
-            }
+            report_unknown_type(world, entity, &data.type_path);
             return;
         };
         let Some(reflect_default) = registration.data::<ReflectDefault>() else {
@@ -653,6 +878,10 @@ fn apply_struct_patch(world: &mut World, entity: Entity, data: &BsnStructData) {
             value.as_partial_reflect(),
             &reg,
         );
+    } else {
+        // A bare name with no `::` answers no registration; it used to fall
+        // out of this arm in silence.
+        report_unknown_type(world, entity, &data.type_path);
     }
 }
 
@@ -782,12 +1011,7 @@ fn apply_tuple_struct_patch(world: &mut World, entity: Entity, data: &BsnTupleSt
         if apply_tuple_variant_patch(world, entity, data, &reg, assets_ctx.as_ref()) {
             return;
         }
-        if !note_unapplied(world, &data.type_path) {
-            log::warn!(
-                "cannot apply '{}': type not in the registry",
-                data.type_path
-            );
-        }
+        report_unknown_type(world, entity, &data.type_path);
         return;
     };
     let Some(reflect_component) = registration.data::<ReflectComponent>() else {
@@ -2010,13 +2234,26 @@ mod document_only_tests {
         assert!(!note_unapplied(&mut world, "mygame::Health"));
     }
 
+    /// The remedy names both honest moves: the rebuild for a type the
+    /// project grew, the spelling rewrite for a path the registry answers
+    /// under another name. The old copy advised a rebuild alone, which a
+    /// wrong path (the crate-root re-export spelling, A8) survives — a
+    /// rebuild after a rebuild leaves the scene exactly as broken.
     #[test]
-    fn the_remedy_names_what_is_missing_and_the_rebuild() {
+    fn the_remedy_names_both_honest_moves() {
         let mut types = UnresolvedTypes::default();
         types.types.insert("mygame::Ghost".to_string());
         let remedy = types.take_remedy().expect("a missing type earns a remedy");
         assert!(remedy.contains("mygame::Ghost"), "{remedy}");
-        assert!(remedy.contains("rebuild the project"), "{remedy}");
+        assert!(
+            remedy.contains("Rebuild the project if the type is new to it"),
+            "{remedy}"
+        );
+        assert!(remedy.contains("definition module path"), "{remedy}");
+        assert!(
+            !remedy.contains("rebuild the project so the editor picks up its types"),
+            "the old single-cause line, which misled on a wrong path, is gone: {remedy}"
+        );
         assert!(
             remedy.starts_with("1 type in this scene is in neither"),
             "one missing type reads singular: {remedy}",
@@ -3049,5 +3286,203 @@ mod apply_value_tests {
         let holder = world.get::<PropMapHolder>(entity).expect("holder applied");
         assert_eq!(holder.props.get("hp"), Some(&Prop::Number(7.0)));
         assert_eq!(holder.props.get("alive"), Some(&Prop::Flag(true)));
+    }
+}
+
+#[cfg(test)]
+mod binding_issue_tests {
+    use super::*;
+    use crate::{BsnField, BsnStructFields};
+    use bevy::reflect::Reflect;
+    use std::collections::BTreeSet;
+
+    /// A project component the way the registry holds it: under its
+    /// definition module path, the spelling a crate-root re-export does not
+    /// produce.
+    #[derive(Component, Reflect, Default, Clone)]
+    #[reflect(Component, Default)]
+    struct Gizmo {
+        power: f32,
+    }
+
+    fn gizmo_path() -> String {
+        format!(
+            "{}::Gizmo",
+            std::any::type_name::<Gizmo>()
+                .strip_suffix("::Gizmo")
+                .expect("the tail"),
+        )
+    }
+
+    fn world_with_gizmo() -> World {
+        let mut world = World::new();
+        let registry = AppTypeRegistry::default();
+        registry.write().register::<Gizmo>();
+        world.insert_resource(registry);
+        world.init_resource::<BindingIssues>();
+        world
+    }
+
+    fn fields(names: &[&str]) -> BsnStructFields {
+        BsnStructFields(
+            names
+                .iter()
+                .map(|name| BsnField {
+                    name: (*name).to_string(),
+                    value: BsnValue::Float(5.0),
+                })
+                .collect(),
+        )
+    }
+
+    /// The unknown field a load names lands as one structured row carrying
+    /// the entity, the component and the field (W1: the log alone was the
+    /// whole face), and the same on-site again stays exactly one row.
+    #[test]
+    fn an_unknown_field_is_recorded_once_with_its_entity() {
+        let mut world = world_with_gizmo();
+        let entity = world.spawn(Name::new("Red")).id();
+        let data = BsnStructData {
+            type_path: gizmo_path(),
+            fields: fields(&["nonexistent_field"]),
+        };
+
+        apply_struct_patch(&mut world, entity, &data);
+
+        let issues = world.resource::<BindingIssues>();
+        assert_eq!(issues.len(), 1, "one row: {issues:?}");
+        let row = &issues.rows()[0];
+        assert_eq!(row.entity.as_deref(), Some("Red"));
+        assert_eq!(row.component, gizmo_path());
+        assert_eq!(row.field.as_deref(), Some("nonexistent_field"));
+        assert_eq!(row.kind, BindingIssueKind::UnknownField);
+        assert!(
+            row.line().contains("Red") && row.line().ends_with("(unknown field)"),
+            "the row reads like the audit's do: {}",
+            row.line()
+        );
+
+        // The same on-site again — a reload, a second apply — is still one
+        // row, and speaks nothing new (the lock the panel relies on).
+        apply_struct_patch(&mut world, entity, &data);
+        assert_eq!(
+            world.resource::<BindingIssues>().len(),
+            1,
+            "the same on-site is one row"
+        );
+        assert!(
+            !world.resource_mut::<BindingIssues>().record(BindingIssue {
+                entity: Some("Red".to_string()),
+                component: gizmo_path(),
+                field: Some("nonexistent_field".to_string()),
+                kind: BindingIssueKind::UnknownField,
+            }),
+            "recording the identical on-site is not a new speaking"
+        );
+    }
+
+    /// The A8 face: a type path the registry answers under another spelling
+    /// (the crate-root re-export shape) is recorded as its own row, and the
+    /// message points at the registered definition instead of advising a
+    /// rebuild a wrong path would survive anyway.
+    #[test]
+    fn a_re_export_spelling_is_reported_with_the_registered_face() {
+        let mut world = world_with_gizmo();
+        let entity = world.spawn(Name::new("Red")).id();
+        let data = BsnStructData {
+            type_path: "game::Gizmo".to_string(),
+            fields: fields(&[]),
+        };
+
+        apply_struct_patch(&mut world, entity, &data);
+
+        let issues = world.resource::<BindingIssues>();
+        assert_eq!(issues.len(), 1, "the drop is a row: {issues:?}");
+        let row = &issues.rows()[0];
+        assert_eq!(row.kind, BindingIssueKind::UnknownType);
+        assert_eq!(row.entity.as_deref(), Some("Red"));
+        assert_eq!(row.component, "game::Gizmo");
+
+        let matches = registered_tail_matches(&world, "game::Gizmo");
+        assert_eq!(
+            matches,
+            vec![gizmo_path()],
+            "the tail match names the definition"
+        );
+        let message = unknown_type_message("game::Gizmo", "#Red", &matches);
+        assert!(
+            message.contains("the project registers '") && message.contains(&gizmo_path()),
+            "the message names the registered face: {message}"
+        );
+        assert!(
+            !message.contains("rebuild"),
+            "the rebuild advice does not belong on a wrong path: {message}"
+        );
+        let remedy = unresolved_remedy(&BTreeSet::from(["game::Gizmo".to_string()]));
+        assert!(
+            remedy.contains("Rebuild the project if the type is new to it")
+                && remedy.contains("definition module path"),
+            "the remedy splits the two honest moves: {remedy}"
+        );
+        assert!(
+            !remedy.contains("; rebuild the project so the editor picks up its types"),
+            "the old single-cause line is gone: {remedy}"
+        );
+    }
+
+    /// A reload forgets the rows but keeps the speaking: the same problem
+    /// re-records its row (the list always describes the loaded scene) and
+    /// stays quiet; a changed on-site speaks again.
+    #[test]
+    fn a_reload_relists_rows_but_speaks_only_for_a_change() {
+        let mut world = World::new();
+        world.init_resource::<BindingIssues>();
+        let issue = BindingIssue {
+            entity: Some("Red".to_string()),
+            component: "game::Gizmo".to_string(),
+            field: None,
+            kind: BindingIssueKind::UnknownType,
+        };
+        assert!(world.resource_mut::<BindingIssues>().record(issue.clone()));
+
+        world.resource_mut::<BindingIssues>().start_scene();
+        assert_eq!(world.resource::<BindingIssues>().rows().len(), 0);
+        assert!(
+            !world.resource_mut::<BindingIssues>().record(issue.clone()),
+            "an unchanged problem across a reload stays quiet"
+        );
+        assert_eq!(world.resource::<BindingIssues>().rows().len(), 1);
+
+        let changed = BindingIssue {
+            field: Some("power".to_string()),
+            ..issue
+        };
+        assert!(
+            world.resource_mut::<BindingIssues>().record(changed),
+            "a different on-site speaks"
+        );
+    }
+
+    /// The no-`::` shape — a bare name — is a drop too, and was a silent one
+    /// before the arms reported it.
+    #[test]
+    fn a_bare_unknown_name_is_reported() {
+        let mut world = world_with_gizmo();
+        let entity = world.spawn_empty().id();
+        let data = BsnStructData {
+            type_path: "Gizmo".to_string(),
+            fields: fields(&[]),
+        };
+
+        apply_struct_patch(&mut world, entity, &data);
+
+        let issues = world.resource::<BindingIssues>();
+        assert_eq!(issues.len(), 1, "the bare name is a row: {issues:?}");
+        assert_eq!(issues.rows()[0].component, "Gizmo");
+        assert_eq!(
+            issues.rows()[0].entity,
+            None,
+            "an unnamed entity reads as none, not as a made-up name"
+        );
     }
 }

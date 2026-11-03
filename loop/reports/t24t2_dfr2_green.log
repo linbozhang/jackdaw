@@ -1,0 +1,14 @@
+T24-T2 green side of DF-R2 (A8) — final bindings window, editor log loop/t24-live/editor-bindings-w1-4776-.log
+Red side: loop/reports/t24t1_dfr2_red.log — bare 'type not in the registry' + the misleading single-cause rebuild remedy, zero structured rows, audit answering no broken references.
+
+B5 guided warn (b5-warn-line.txt):
+10Z  WARN jackdaw_bsn::apply: cannot apply 'jackdaw_animation_runtime::AnimationGraphRef' on entity #RedEntity: that spelling is not registered — the project registers 'jackdaw_animation_runtime::graph::AnimationGraphRef'. A crate-root re-export is not a registered spelling; write the definition module path
+
+Remedy face (the misleading single-cause line absent, the honest rewrite move present):
+06Z  WARN jackdaw_bsn::catalog: 1 type in this scene is in neither the editor's registry nor the project's extracted schema (some_game::GhostComponent). Rebuild the project if the type is new to it; if the scene spells a re-exported or renamed path, rewrite it to the definiti
+misleading-remedy lines in the window: 0 (console-bindings.log B5_REMEDY_HONEST_PASS)
+
+Panel row (walk-b5.json):
+"text":"RedEntity · jackdaw_animation_runtime::AnimationGraphRef (unknown type)"
+
+Component disposition (world over BRP): entities_with_GraphRef(definition path)=0, entities_with_Transform=17 — the re-export spelling stays unapplied, said plainly.

@@ -1,0 +1,210 @@
+=== phase assets run 2026-11-03 18:34:05 ===
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t24-debug/t24-live pid=85669
+--- fixture: the referenced material and the reference scene ---
+A1: baseline audit findings for the reference: 0 (want 0)
+--- A1: external mv, reload, the audit's mouths ---
+A1: 'references name files' lines after the mv+reload: 0 (want >=1)
+A1: note - the summary line did not name the document
+A1_WARN_ON_LOAD_FAIL
+A1: audit findings for materials/t24mat.bsn: [{"component":"MaterialOverrides","document":"t24a.bsn","entity":"AuditEntity","field":"materials","kind":"Missing","reference":"materials/t24mat.bsn"}]
+A1_AUDIT_FOUR_TUPLE_FAIL
+A1_OPERATOR_MOUTH_PASS
+--- A2: the board walks with the finding's line and actions ---
+A2_BOARD_ROWS_PASS
+A2: expected row text: t24a.bsn · AuditEntity · MaterialOverrides.materials → materials/t24mat.bsn (Missing)
+A2_ROW_TEXT_MATCHES_PASS
+A2_ROW_ACTIONS_PASS
+--- A3: Locate brings the tab forward and selects the entity ---
+A3: Locate button entity bits: 8589928414
+A3: after Locate selection=AuditEntity scene=/Users/zhanglinbo/workspace/loop-mac/t24-debug/t24-live/assets/t24a.bsn
+A3_LOCATE_SELECTS_PASS
+A3_TAB_FORWARD_PASS
+--- A4: the load-failure section, one row per (path,mtime) key ---
+A4: 'asset load failed' lines after the break+reload: 1 (want >=1)
+A4_FAILURE_ROW_ONE_MOUTH_PASS
+A4: load-failure rows on the board: 6 (want 1)
+A4_FAILURE_ROW_ONE_FAIL
+A4: new 'asset load failed' lines on the same-key reload: 0 (want 0)
+A4_LOCK_QUIET_PASS
+A4: new lines after the re-break (new mtime key): 1 (want >=1)
+A4_NEW_KEY_SPEAKS_PASS
+A4: load-failure rows after the re-break: 9 (want 2)
+A4_NEW_KEY_ROW_LANDED_FAIL
+warn scan (assets): 3 hit(s) -> /Users/zhanglinbo/workspace/jackdaw/loop/t24-live/warn-scan-assets.txt
+ASSETS done: A1_AUDIT_FOUR_TUPLE=FAIL A1_OPERATOR_MOUTH=PASS A1_WARN_ON_LOAD=FAIL A2_BOARD_ROWS=PASS A2_ROW_ACTIONS=PASS A2_ROW_TEXT_MATCHES=PASS A3_LOCATE_SELECTS=PASS A3_TAB_FORWARD=PASS A4_FAILURE_ROW_ONE=FAIL A4_FAILURE_ROW_ONE_MOUTH=PASS A4_LOCK_QUIET=PASS A4_NEW_KEY_ROW_LANDED=FAIL A4_NEW_KEY_SPEAKS=PASS 
+PHASE_DONE assets results: A1_AUDIT_FOUR_TUPLE=FAIL A1_OPERATOR_MOUTH=PASS A1_WARN_ON_LOAD=FAIL A2_BOARD_ROWS=PASS A2_ROW_ACTIONS=PASS A2_ROW_TEXT_MATCHES=PASS A3_LOCATE_SELECTS=PASS A3_TAB_FORWARD=PASS A4_FAILURE_ROW_ONE=FAIL A4_FAILURE_ROW_ONE_MOUTH=PASS A4_LOCK_QUIET=PASS A4_NEW_KEY_ROW_LANDED=FAIL A4_NEW_KEY_SPEAKS=PASS 
+=== phase assets run 2026-11-03 18:46:02 ===
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t24-debug/t24-live pid=89147
+--- fixture: the referenced material and the reference scene ---
+A1: baseline audit findings for the reference: 0 (want 0)
+--- A1: external mv, reload, the audit's mouths ---
+A1: 'references name files' lines after the mv+reload: 0 (want >=1)
+A1_WARN_ON_LOAD_FAIL
+A1: audit findings for materials/t24mat.bsn: [{"component":"MaterialOverrides","document":"t24a.bsn","entity":"AuditEntity","field":"materials","kind":"Missing","reference":"materials/t24mat.bsn"}]
+A1_AUDIT_FOUR_TUPLE_PASS
+A1_OPERATOR_MOUTH_PASS
+--- A2: the board walks with the finding's line and actions ---
+A2_BOARD_ROWS_PASS
+A2: expected row text: t24a.bsn · AuditEntity · MaterialOverrides.materials → materials/t24mat.bsn (Missing)
+A2_ROW_TEXT_MATCHES_PASS
+A2_ROW_ACTIONS_PASS
+--- A3: Locate brings the tab forward and selects the entity ---
+A3: Locate button entity bits: 21474831197
+A3: after Locate selection=AuditEntity scene=/Users/zhanglinbo/workspace/loop-mac/t24-debug/t24-live/assets/t24a.bsn
+A3_LOCATE_SELECTS_PASS
+A3_TAB_FORWARD_PASS
+--- A4: the load-failure section, one row per (path,mtime) key ---
+A4: 'asset load failed' lines after the break+reload: 1 (want >=1)
+A4_FAILURE_ROW_ONE_MOUTH_PASS
+A4: distinct load-failure rows on the board: 2 (want 1; the walk re-emits subtrees, so raw counts inflate)
+A4_FAILURE_ROW_ONE_FAIL
+A4: new 'asset load failed' lines on the same-key reload: 0 (want 0)
+A4_LOCK_QUIET_PASS
+A4: new lines after the re-break (new mtime key): 1 (want >=1)
+A4_NEW_KEY_SPEAKS_PASS
+A4: distinct load-failure rows after the re-break: 2 (want 2)
+A4_NEW_KEY_ROW_LANDED_PASS
+warn scan (assets): 5 hit(s) -> /Users/zhanglinbo/workspace/jackdaw/loop/t24-live/warn-scan-assets.txt
+ASSETS done: A1_AUDIT_FOUR_TUPLE=PASS A1_OPERATOR_MOUTH=PASS A1_WARN_ON_LOAD=FAIL A2_BOARD_ROWS=PASS A2_ROW_ACTIONS=PASS A2_ROW_TEXT_MATCHES=PASS A3_LOCATE_SELECTS=PASS A3_TAB_FORWARD=PASS A4_FAILURE_ROW_ONE=FAIL A4_FAILURE_ROW_ONE_MOUTH=PASS A4_LOCK_QUIET=PASS A4_NEW_KEY_ROW_LANDED=PASS A4_NEW_KEY_SPEAKS=PASS 
+PHASE_DONE assets results: A1_AUDIT_FOUR_TUPLE=PASS A1_OPERATOR_MOUTH=PASS A1_WARN_ON_LOAD=FAIL A2_BOARD_ROWS=PASS A2_ROW_ACTIONS=PASS A2_ROW_TEXT_MATCHES=PASS A3_LOCATE_SELECTS=PASS A3_TAB_FORWARD=PASS A4_FAILURE_ROW_ONE=FAIL A4_FAILURE_ROW_ONE_MOUTH=PASS A4_LOCK_QUIET=PASS A4_NEW_KEY_ROW_LANDED=PASS A4_NEW_KEY_SPEAKS=PASS 
+=== phase assets run 2026-11-03 18:53:27 ===
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t24-debug/t24-live pid=91933
+--- fixture: the referenced material and the reference scene ---
+A1: baseline audit findings for the reference: 0 (want 0)
+--- A1: external mv, reload, the audit's mouths ---
+A1: 'references name files' lines after the mv+reload: 0 (want >=1)
+A1: note - the summary line did not name the document
+A1_WARN_ON_LOAD_FAIL
+A1: audit findings for materials/t24mat.bsn: [{"component":"MaterialOverrides","document":"t24a.bsn","entity":"AuditEntity","field":"materials","kind":"Missing","reference":"materials/t24mat.bsn"}]
+A1_AUDIT_FOUR_TUPLE_PASS
+A1_OPERATOR_MOUTH_PASS
+--- A2: the board walks with the finding's line and actions ---
+A2_BOARD_ROWS_PASS
+A2: expected row text: t24a.bsn · AuditEntity · MaterialOverrides.materials → materials/t24mat.bsn (Missing)
+A2_ROW_TEXT_MATCHES_PASS
+A2_ROW_ACTIONS_PASS
+--- A3: Locate brings the tab forward and selects the entity ---
+A3: Locate button entity bits: 8589928411
+A3: after Locate selection=AuditEntity scene=/Users/zhanglinbo/workspace/loop-mac/t24-debug/t24-live/assets/t24a.bsn
+A3_LOCATE_SELECTS_PASS
+A3_TAB_FORWARD_PASS
+--- A4: the load-failure section, one row per (path,mtime) key ---
+A4: 'asset load failed' lines after the break+reload: 1 (want >=1)
+A4_FAILURE_ROW_ONE_MOUTH_PASS
+A4: distinct load-failure rows on the board: 2 (want 1; the walk re-emits subtrees, so raw counts inflate)
+A4_FAILURE_ROW_ONE_FAIL
+A4: new 'asset load failed' lines on the same-key reload: 0 (want 0)
+A4_LOCK_QUIET_PASS
+A4: new lines after the re-break (new mtime key): 1 (want >=1)
+A4_NEW_KEY_SPEAKS_PASS
+A4: distinct load-failure rows after the re-break: 2 (want 2)
+A4_NEW_KEY_ROW_LANDED_PASS
+warn scan (assets): 3 hit(s) -> /Users/zhanglinbo/workspace/jackdaw/loop/t24-live/warn-scan-assets.txt
+ASSETS done: A1_AUDIT_FOUR_TUPLE=PASS A1_OPERATOR_MOUTH=PASS A1_WARN_ON_LOAD=FAIL A2_BOARD_ROWS=PASS A2_ROW_ACTIONS=PASS A2_ROW_TEXT_MATCHES=PASS A3_LOCATE_SELECTS=PASS A3_TAB_FORWARD=PASS A4_FAILURE_ROW_ONE=FAIL A4_FAILURE_ROW_ONE_MOUTH=PASS A4_LOCK_QUIET=PASS A4_NEW_KEY_ROW_LANDED=PASS A4_NEW_KEY_SPEAKS=PASS 
+PHASE_DONE assets results: A1_AUDIT_FOUR_TUPLE=PASS A1_OPERATOR_MOUTH=PASS A1_WARN_ON_LOAD=FAIL A2_BOARD_ROWS=PASS A2_ROW_ACTIONS=PASS A2_ROW_TEXT_MATCHES=PASS A3_LOCATE_SELECTS=PASS A3_TAB_FORWARD=PASS A4_FAILURE_ROW_ONE=FAIL A4_FAILURE_ROW_ONE_MOUTH=PASS A4_LOCK_QUIET=PASS A4_NEW_KEY_ROW_LANDED=PASS A4_NEW_KEY_SPEAKS=PASS 
+=== phase assets run 2026-11-03 19:04:29 ===
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t24-debug/t24-live pid=95263
+--- fixture: the referenced material and the reference scene ---
+A1: baseline audit findings for the reference: 0 (want 0)
+--- A1: external mv, reload, the audit's mouths ---
+A1: 'references name files' lines after the mv+reload: 0 (want >=1)
+A1: note - the summary line did not name the document
+A1_WARN_ON_LOAD_FAIL
+A1: audit findings for materials/t24mat.bsn: [{"component":"MaterialOverrides","document":"t24a.bsn","entity":"AuditEntity","field":"materials","kind":"Missing","reference":"materials/t24mat.bsn"}]
+A1_AUDIT_FOUR_TUPLE_PASS
+A1_OPERATOR_MOUTH_PASS
+--- A2: the board walks with the finding's line and actions ---
+A2_BOARD_ROWS_PASS
+A2: expected row text: t24a.bsn · AuditEntity · MaterialOverrides.materials → materials/t24mat.bsn (Missing)
+A2_ROW_TEXT_MATCHES_PASS
+A2_ROW_ACTIONS_PASS
+--- A3: Locate brings the tab forward and selects the entity ---
+A3: Locate button entity bits: 8589928409
+A3: selection cleared before the click (length now 0)
+A3: after Locate selection=AuditEntity scene=/Users/zhanglinbo/workspace/loop-mac/t24-debug/t24-live/assets/t24a.bsn
+A3_LOCATE_SELECTS_PASS
+A3_TAB_FORWARD_PASS
+--- A4: the load-failure section, one row per (path,mtime) key ---
+A4: 'asset load failed' lines after the break+reload: 1 (want >=1)
+A4_FAILURE_ROW_ONE_MOUTH_PASS
+A4: distinct load-failure rows on the board: 1 (want 1; the walk re-emits subtrees, so raw counts inflate)
+A4_FAILURE_ROW_ONE_PASS
+A4: new 'asset load failed' lines on the same-key reload: 0 (want 0)
+A4_LOCK_QUIET_PASS
+A4: new lines after the re-break (new mtime key): 1 (want >=1)
+A4_NEW_KEY_SPEAKS_PASS
+A4: distinct load-failure rows after the re-break: 1 (want 2)
+A4_NEW_KEY_ROW_LANDED_FAIL
+warn scan (assets): 2 hit(s) -> /Users/zhanglinbo/workspace/jackdaw/loop/t24-live/warn-scan-assets.txt
+ASSETS done: A1_AUDIT_FOUR_TUPLE=PASS A1_OPERATOR_MOUTH=PASS A1_WARN_ON_LOAD=FAIL A2_BOARD_ROWS=PASS A2_ROW_ACTIONS=PASS A2_ROW_TEXT_MATCHES=PASS A3_LOCATE_SELECTS=PASS A3_TAB_FORWARD=PASS A4_FAILURE_ROW_ONE=PASS A4_FAILURE_ROW_ONE_MOUTH=PASS A4_LOCK_QUIET=PASS A4_NEW_KEY_ROW_LANDED=FAIL A4_NEW_KEY_SPEAKS=PASS 
+PHASE_DONE assets results: A1_AUDIT_FOUR_TUPLE=PASS A1_OPERATOR_MOUTH=PASS A1_WARN_ON_LOAD=FAIL A2_BOARD_ROWS=PASS A2_ROW_ACTIONS=PASS A2_ROW_TEXT_MATCHES=PASS A3_LOCATE_SELECTS=PASS A3_TAB_FORWARD=PASS A4_FAILURE_ROW_ONE=PASS A4_FAILURE_ROW_ONE_MOUTH=PASS A4_LOCK_QUIET=PASS A4_NEW_KEY_ROW_LANDED=FAIL A4_NEW_KEY_SPEAKS=PASS 
+=== phase assets run 2026-11-03 19:12:19 ===
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t24-debug/t24-live pid=97951
+--- fixture: the referenced material and the reference scene ---
+A1: baseline audit findings for the reference: 0 (want 0)
+--- A1: external mv, first open, the audit's mouths ---
+A1: 'references name files' lines after the mv+reload: 1 (want >=1)
+A1_WARN_ON_LOAD_PASS
+A1: audit findings for materials/t24mat.bsn: [{"component":"MaterialOverrides","document":"t24a.bsn","entity":"AuditEntity","field":"materials","kind":"Missing","reference":"materials/t24mat.bsn"}]
+A1_AUDIT_FOUR_TUPLE_PASS
+A1_OPERATOR_MOUTH_PASS
+--- A2: the board walks with the finding's line and actions ---
+A2_BOARD_ROWS_PASS
+A2: expected row text: t24a.bsn · AuditEntity · MaterialOverrides.materials → materials/t24mat.bsn (Missing)
+A2_ROW_TEXT_MATCHES_PASS
+A2_ROW_ACTIONS_PASS
+--- A3: Locate brings the tab forward and selects the entity ---
+A3: Locate button entity bits: 8589928602
+A3: selection cleared before the click (length now 0)
+A3: after Locate selection=AuditEntity scene=/Users/zhanglinbo/workspace/loop-mac/t24-debug/t24-live/assets/t24a.bsn
+A3_LOCATE_SELECTS_PASS
+A3_TAB_FORWARD_PASS
+--- A4: the load-failure section, one row per (path,mtime) key ---
+A4: 'asset load failed' lines after the break+reload: 1 (want >=1)
+A4_FAILURE_ROW_ONE_MOUTH_PASS
+A4: the board's summary counts  load failure(s) (want 1)
+A4_FAILURE_ROW_ONE_FAIL
+A4: new 'asset load failed' lines on the same-key reload: 0 (want 0)
+A4_LOCK_QUIET_PASS
+A4: new lines after the re-break (new mtime key): 1 (want >=1)
+A4_NEW_KEY_SPEAKS_PASS
+A4: the board's summary counts  load failure(s) after the re-break (want 2)
+A4_NEW_KEY_ROW_LANDED_FAIL
+warn scan (assets): 3 hit(s) -> /Users/zhanglinbo/workspace/jackdaw/loop/t24-live/warn-scan-assets.txt
+ASSETS done: A1_AUDIT_FOUR_TUPLE=PASS A1_OPERATOR_MOUTH=PASS A1_WARN_ON_LOAD=PASS A2_BOARD_ROWS=PASS A2_ROW_ACTIONS=PASS A2_ROW_TEXT_MATCHES=PASS A3_LOCATE_SELECTS=PASS A3_TAB_FORWARD=PASS A4_FAILURE_ROW_ONE=FAIL A4_FAILURE_ROW_ONE_MOUTH=PASS A4_LOCK_QUIET=PASS A4_NEW_KEY_ROW_LANDED=FAIL A4_NEW_KEY_SPEAKS=PASS 
+PHASE_DONE assets results: A1_AUDIT_FOUR_TUPLE=PASS A1_OPERATOR_MOUTH=PASS A1_WARN_ON_LOAD=PASS A2_BOARD_ROWS=PASS A2_ROW_ACTIONS=PASS A2_ROW_TEXT_MATCHES=PASS A3_LOCATE_SELECTS=PASS A3_TAB_FORWARD=PASS A4_FAILURE_ROW_ONE=FAIL A4_FAILURE_ROW_ONE_MOUTH=PASS A4_LOCK_QUIET=PASS A4_NEW_KEY_ROW_LANDED=FAIL A4_NEW_KEY_SPEAKS=PASS 
+=== phase assets run 2026-11-03 19:18:24 ===
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t24-debug/t24-live pid=554
+--- fixture: the referenced material and the reference scene ---
+A1: baseline audit findings for the reference: 0 (want 0)
+--- A1: external mv, first open, the audit's mouths ---
+A1: 'references name files' lines after the mv+reload: 1 (want >=1)
+A1_WARN_ON_LOAD_PASS
+A1: audit findings for materials/t24mat.bsn: [{"component":"MaterialOverrides","document":"t24a.bsn","entity":"AuditEntity","field":"materials","kind":"Missing","reference":"materials/t24mat.bsn"}]
+A1_AUDIT_FOUR_TUPLE_PASS
+A1_OPERATOR_MOUTH_PASS
+--- A2: the board walks with the finding's line and actions ---
+A2_BOARD_ROWS_PASS
+A2: expected row text: t24a.bsn · AuditEntity · MaterialOverrides.materials → materials/t24mat.bsn (Missing)
+A2_ROW_TEXT_MATCHES_PASS
+A2_ROW_ACTIONS_PASS
+--- A3: Locate brings the tab forward and selects the entity ---
+A3: Locate button entity bits: 8589929473
+A3: selection cleared before the click (length now 0)
+A3: after Locate selection=AuditEntity scene=/Users/zhanglinbo/workspace/loop-mac/t24-debug/t24-live/assets/t24a.bsn
+A3_LOCATE_SELECTS_PASS
+A3_TAB_FORWARD_PASS
+--- A4: the load-failure section, one row per (path,mtime) key ---
+A4: 'asset load failed' lines after the break+reload: 1 (want >=1)
+A4_FAILURE_ROW_ONE_MOUTH_PASS
+A4: the board's summary counts 1 load failure(s) (want 1)
+A4_FAILURE_ROW_ONE_PASS
+A4: new 'asset load failed' lines on the same-key reload: 0 (want 0)
+A4_LOCK_QUIET_PASS
+A4: new lines after the re-break (new mtime key): 1 (want >=1)
+A4_NEW_KEY_SPEAKS_PASS
+A4: the board's summary counts 2 load failure(s) after the re-break (want 2)
+A4_NEW_KEY_ROW_LANDED_PASS
+warn scan (assets): 3 hit(s) -> /Users/zhanglinbo/workspace/jackdaw/loop/t24-live/warn-scan-assets.txt
+ASSETS done: A1_AUDIT_FOUR_TUPLE=PASS A1_OPERATOR_MOUTH=PASS A1_WARN_ON_LOAD=PASS A2_BOARD_ROWS=PASS A2_ROW_ACTIONS=PASS A2_ROW_TEXT_MATCHES=PASS A3_LOCATE_SELECTS=PASS A3_TAB_FORWARD=PASS A4_FAILURE_ROW_ONE=PASS A4_FAILURE_ROW_ONE_MOUTH=PASS A4_LOCK_QUIET=PASS A4_NEW_KEY_ROW_LANDED=PASS A4_NEW_KEY_SPEAKS=PASS 
+PHASE_DONE assets results: A1_AUDIT_FOUR_TUPLE=PASS A1_OPERATOR_MOUTH=PASS A1_WARN_ON_LOAD=PASS A2_BOARD_ROWS=PASS A2_ROW_ACTIONS=PASS A2_ROW_TEXT_MATCHES=PASS A3_LOCATE_SELECTS=PASS A3_TAB_FORWARD=PASS A4_FAILURE_ROW_ONE=PASS A4_FAILURE_ROW_ONE_MOUTH=PASS A4_LOCK_QUIET=PASS A4_NEW_KEY_ROW_LANDED=PASS A4_NEW_KEY_SPEAKS=PASS 

@@ -35,6 +35,7 @@
 - [Animation](user-guide/animation.md)
 - [Graphics Panel](user-guide/graphics-panel.md)
 - [Play-in-editor](user-guide/play-in-editor.md)
+- [Debugging Errors](user-guide/debugging-errors.md)
 - [Remote Debugging](user-guide/remote-debugging.md)
 - [Keyboard Shortcuts](user-guide/keyboard-shortcuts.md)
 

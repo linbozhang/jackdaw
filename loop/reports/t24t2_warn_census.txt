@@ -1,0 +1,30 @@
+# T24-T2 warn census — the four final windows (build run 5, assets run 6, bindings run 2, runtime run 4),
+# full vocabulary (WARN|ERROR minus the keymap preset noise), every hit attributed.
+# The designed triggers' mouths are the acceptance faces; zero unexpected warns beyond the two recorded observations.
+
+== build window (editor-build-w1-83800-.log) — 3 hits ==
+  1. ERROR jackdaw::pie: 'PIE: game build of t24-live failed ... error[E0308] (src/lib.rs:2077:18)' — C1's designed trigger (the one-line template breakage); the error!+notify_error mouth.
+  2-3. WARN jackdaw::pie: 'warning: unused variable' / 'warning: function t24_live_warning is never used' — C4's designed warning-only build (rustc warnings forwarded by the PIE log channel).
+
+== assets window (editor-assets-w1-464-.log) — 9 hits ==
+  1. WARN operator: "scene 't24a.bsn': 1 references name files the project does not hold" — A1's designed warn_on_load mouth (the external mv).
+  2. WARN material_overrides: 'AuditEntity overrides a material named Rock, which no part of it wears' — fixture-inherent: the A1 fixture carries MaterialOverrides on a meshless entity, the T23 MO1 stale-key face, correct per its semantics (one hit, one t24a load).
+  3-9. ERROR bevy_asset::server 'Failed to load asset models/t24model.glb' x5 + WARN asset_failures 'asset load failed' x2 — A4's designed breakage: the ERROR face is bevy's own per-attempt line (three scene.opens + two watcher reloads), the WARN face is the T18 once-per-(path,mtime) mouth (break + re-break, one per key).
+
+== bindings window (editor-bindings-w1-4776-.log) — 8 hits ==
+  1. WARN apply: 'cannot apply some_game::GhostComponent ... type not in the registry' — B1's designed bare warn.
+  2. WARN catalog: the UnresolvedTypes remedy naming the type — B1's designed remedy (reload said nothing: the unchanged-remedy lock held).
+  3. WARN apply: "unknown field ... on entity #RedField; the scene-problems list carries the row" — B2's designed structured warn (DF-R3's green side).
+  4. WARN apply: "unknown field ... on entity #DualEntity; the scene-problems list carries the row" — B3's designed binding row.
+  5. WARN operator: "scene 't24b3.bsn': 1 references name files ..." — B3's fixture deliberately carries a broken reference; the same warn_on_load mouth as A1.
+  6. WARN material_overrides: 'DualEntity overrides Rock, which no part wears' — fixture-inherent, as in the assets window.
+  7. WARN apply: "cannot apply jackdaw_animation_runtime::AnimationGraphRef ... the project registers 'graph::AnimationGraphRef'. A crate-root re-export is not a registered spelling" — B5's designed guided warn (DF-R2's green side).
+  8. WARN catalog: the remedy naming both honest moves — B5's designed remedy; the misleading single-cause rebuild line: 0 hits in the window.
+
+== runtime window (editor-runtime-w1-17822-.log) — 2 hits ==
+  1. WARN jackdaw_bsn::apply (in the GAME's own log, loop/t24-live/b4-game-direct.log): "unknown field 'nonexistent_field_direct' on entity #B4Entity" — B4's designed direct-run trigger via the game BRP's apply_bsn.
+  2. ERROR bevy_ecs::error::handler: 'Encountered an error in system jackdaw::pie::drain_game_events: Exclusive system panicked' — UNEXPECTED, recorded as a live find (DF-W5, the N13 family): fires when a connected game pushes log events. One hit in this window; two in the discarded collision window.
+     + WARN bevy_ecs::relationship: 'ChildOf(...) relates to an entity that does not exist' — UNEXPECTED, recorded (DF-W6): a dangling relationship left by the PIE session's entity churn at stop.
+  The PIE half's six game-side apply_bsn warns rode StateEvent::Log into the editor's Game panel — their face is walk-b4-folded.json / walk-b4-expanded.json, not this log.
+
+TOTAL: 22 editor-window hits + 1 game-log hit; every hit attributed; zero unattributed warns.

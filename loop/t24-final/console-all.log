@@ -1,0 +1,105 @@
+=== phase all run 2026-11-03 20:54:13 ===
+disk: 47Gi free
+PREP_OK fixture=/Users/zhanglinbo/workspace/loop-mac/t24-debug/t24-live
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t24-debug/t24-live pid=29148
+--- warm build (fills .jackdaw/target so the play legs stay short) ---
+WARM_BUILD_OK
+--- C1/C2/C3: break one template line, fail the Play build ---
+C1_FOOTER_FAILED_PASS
+C1: jackdaw/status pie=failed (want failed)
+C1_PIE_STATUS_FAILED_PASS
+C1: 'PIE: game build of' error lines in the log: 1 (want >=1)
+C1_ERROR_MOUTH_LOG_PASS
+C2: first arrow in the visible walk: src/lib.rs:2077:18
+C2_PANEL_ARROWS_PASS
+C2_PANEL_FAILED_FACE_PASS
+C2_PANEL_AUTOFOCUSED_PASS
+C3_SUMMARY_PINNED_PASS
+C3: Open button entity bits: 4294962542
+C3_ROWS_WITH_OPEN_PASS
+C3_OPEN_CLICK_LANDED_PASS
+C3_LANDING_STATUS_TEXT_PASS
+C3_CURSOR_LAUNCHED_PASS
+C3: cursor processes before=0 after=2; landing walk archived
+C3_CURSOR_CLEANED_PASS
+--- C4: a warning-only build stays Ready and readable ---
+C4_STATE_NOT_FAILED_PASS
+C4_WARNING_IN_PANEL_PASS
+C4: warning arrow in the panel log: src/lib.rs:2077:9
+warn scan (all): 3 hit(s) -> /Users/zhanglinbo/workspace/jackdaw/loop/t24-final/warn-scan-all.txt
+BUILD done: C1_ERROR_MOUTH_LOG=PASS C1_FOOTER_FAILED=PASS C1_PIE_STATUS_FAILED=PASS C2_PANEL_ARROWS=PASS C2_PANEL_AUTOFOCUSED=PASS C2_PANEL_FAILED_FACE=PASS C3_CURSOR_CLEANED=PASS C3_CURSOR_LAUNCHED=PASS C3_LANDING_STATUS_TEXT=PASS C3_OPEN_CLICK_LANDED=PASS C3_ROWS_WITH_OPEN=PASS C3_SUMMARY_PINNED=PASS C4_STATE_NOT_FAILED=PASS C4_WARNING_IN_PANEL=PASS 
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t24-debug/t24-live pid=32322
+--- fixture: the referenced material and the reference scene ---
+A1: baseline audit findings for the reference: 0 (want 0)
+--- A1: external mv, first open, the audit's mouths ---
+A1: 'references name files' lines after the mv+reload: 1 (want >=1)
+A1_WARN_ON_LOAD_PASS
+A1: audit findings for materials/t24mat.bsn: [{"component":"MaterialOverrides","document":"t24a.bsn","entity":"AuditEntity","field":"materials","kind":"Missing","reference":"materials/t24mat.bsn"}]
+A1_AUDIT_FOUR_TUPLE_PASS
+A1_OPERATOR_MOUTH_PASS
+--- A2: the board walks with the finding's line and actions ---
+A2_BOARD_ROWS_PASS
+A2: expected row text: t24a.bsn · AuditEntity · MaterialOverrides.materials → materials/t24mat.bsn (Missing)
+A2_ROW_TEXT_MATCHES_PASS
+A2_ROW_ACTIONS_PASS
+--- A3: Locate brings the tab forward and selects the entity ---
+A3: Locate button entity bits: 12884895824
+A3: selection cleared before the click (length now 0)
+A3: after Locate selection=AuditEntity scene=/Users/zhanglinbo/workspace/loop-mac/t24-debug/t24-live/assets/t24a.bsn
+A3_LOCATE_SELECTS_PASS
+A3_TAB_FORWARD_PASS
+--- A4: the load-failure section, one row per (path,mtime) key ---
+A4: 'asset load failed' lines after the break+reload: 1 (want >=1)
+A4_FAILURE_ROW_ONE_MOUTH_PASS
+A4: the board's summary counts 1 load failure(s) (want 1)
+A4_FAILURE_ROW_ONE_PASS
+A4: new 'asset load failed' lines on the same-key reload: 0 (want 0)
+A4_LOCK_QUIET_PASS
+A4: new lines after the re-break (new mtime key): 1 (want >=1)
+A4_NEW_KEY_SPEAKS_PASS
+A4: the board's summary counts 2 load failure(s) after the re-break (want 2)
+A4_NEW_KEY_ROW_LANDED_PASS
+warn scan (all): 3 hit(s) -> /Users/zhanglinbo/workspace/jackdaw/loop/t24-final/warn-scan-all.txt
+ASSETS done: A1_AUDIT_FOUR_TUPLE=PASS A1_OPERATOR_MOUTH=PASS A1_WARN_ON_LOAD=PASS A2_BOARD_ROWS=PASS A2_ROW_ACTIONS=PASS A2_ROW_TEXT_MATCHES=PASS A3_LOCATE_SELECTS=PASS A3_TAB_FORWARD=PASS A4_FAILURE_ROW_ONE=PASS A4_FAILURE_ROW_ONE_MOUTH=PASS A4_LOCK_QUIET=PASS A4_NEW_KEY_ROW_LANDED=PASS A4_NEW_KEY_SPEAKS=PASS C1_ERROR_MOUTH_LOG=PASS C1_FOOTER_FAILED=PASS C1_PIE_STATUS_FAILED=PASS C2_PANEL_ARROWS=PASS C2_PANEL_AUTOFOCUSED=PASS C2_PANEL_FAILED_FACE=PASS C3_CURSOR_CLEANED=PASS C3_CURSOR_LAUNCHED=PASS C3_LANDING_STATUS_TEXT=PASS C3_OPEN_CLICK_LANDED=PASS C3_ROWS_WITH_OPEN=PASS C3_SUMMARY_PINNED=PASS C4_STATE_NOT_FAILED=PASS C4_WARNING_IN_PANEL=PASS 
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t24-debug/t24-live pid=34171
+--- B1: an unknown component, the remedy line once ---
+B1: remedy lines after the first load: 1 (want >=1)
+B1_REMEDY_ONCE_PASS
+B1: remedy lines after the same-document reload: 0 (want 0)
+B1_RELOAD_QUIET_PASS
+--- B2: an unknown field, the structured row (DF-R3 flipped) ---
+B2: 'unknown field' lines after the load: 1; line: [2m2026-11-03T13:04:09.157382Z[0m [33m WARN[0m [2mjackdaw_bsn::apply[0m[2m:[0m unknown field 'nonexistent_field' on 'bevy_transform::components::transform::Transform' on entity #RedField; the scene-problems list carries the row
+B2_STRUCTURED_ROW_PASS
+B2_PANEL_ROW_GREEN_PASS
+B2_PANEL_ROW_GREEN_PASS
+B2: green side vs DF-R3 (loop/reports/t24t1_dfr3_red.log: the field name was absent from the panel) archived in walk-b2.json
+--- B3: both sections on one board ---
+B3: audit findings scoped to t24b3.bsn: 1 (want 1)
+B3_BOTH_SECTIONS_PASS
+--- B5: the re-export spelling (DF-R2 flipped) ---
+B5: guided warns=1 misleading-remedy lines=0; line: [2m2026-11-03T13:04:46.181611Z[0m [33m WARN[0m [2mjackdaw_bsn::apply[0m[2m:[0m cannot apply 'jackdaw_animation_runtime::AnimationGraphRef' on entity #RedEntity: that spelling is not registered — the project registers 'jackdaw_animation_runtime::graph::AnimationGraphRef'. A crate-root re-export is not a registered spelling; write the definition module path
+B5_GUIDED_WARN_PASS
+B5_REMEDY_HONEST_PASS
+B5_REMEDY_HONEST_PASS
+B5_PANEL_ROW_PASS
+B5: world after the load: entities_with_GraphRef(def path)=0 entities_with_Transform=17
+B5_COMPONENT_UNAPPLIED_PASS
+warn scan (all): 6 hit(s) -> /Users/zhanglinbo/workspace/jackdaw/loop/t24-final/warn-scan-all.txt
+BINDINGS done: A1_AUDIT_FOUR_TUPLE=PASS A1_OPERATOR_MOUTH=PASS A1_WARN_ON_LOAD=PASS A2_BOARD_ROWS=PASS A2_ROW_ACTIONS=PASS A2_ROW_TEXT_MATCHES=PASS A3_LOCATE_SELECTS=PASS A3_TAB_FORWARD=PASS A4_FAILURE_ROW_ONE=PASS A4_FAILURE_ROW_ONE_MOUTH=PASS A4_LOCK_QUIET=PASS A4_NEW_KEY_ROW_LANDED=PASS A4_NEW_KEY_SPEAKS=PASS B1_RELOAD_QUIET=PASS B1_REMEDY_ONCE=PASS B2_PANEL_ROW_GREEN=PASS B2_PANEL_ROW_GREEN=PASS B2_STRUCTURED_ROW=PASS B3_BOTH_SECTIONS=PASS B5_COMPONENT_UNAPPLIED=PASS B5_GUIDED_WARN=PASS B5_PANEL_ROW=PASS B5_REMEDY_HONEST=PASS B5_REMEDY_HONEST=PASS C1_ERROR_MOUTH_LOG=PASS C1_FOOTER_FAILED=PASS C1_PIE_STATUS_FAILED=PASS C2_PANEL_ARROWS=PASS C2_PANEL_AUTOFOCUSED=PASS C2_PANEL_FAILED_FACE=PASS C3_CURSOR_CLEANED=PASS C3_CURSOR_LAUNCHED=PASS C3_LANDING_STATUS_TEXT=PASS C3_OPEN_CLICK_LANDED=PASS C3_ROWS_WITH_OPEN=PASS C3_SUMMARY_PINNED=PASS C4_STATE_NOT_FAILED=PASS C4_WARNING_IN_PANEL=PASS 
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t24-debug/t24-live pid=35008
+--- B4 PIE half: the focused game's log strip ---
+B4: game running; waiting for the game BRP on 15702
+B4_STRIP_FOUR_FACE_PASS
+B4: strip entity bits: 4294963141
+B4_EXPAND_FULL_LIST_PASS
+--- B4 direct-run half: the standalone game's own log face ---
+B4: no PIE-built binary found; cargo build as its own window (the editor is already down)
+B4: direct run of /Users/zhanglinbo/workspace/loop-mac/t24-debug/t24-live/t24-live (copied beside assets/)
+B4: the standalone game answers its BRP
+B4: 'unknown field' lines in the standalone game's log: 1 (want >=1)
+B4_DIRECT_LOG_FACE_PASS
+B4: standalone world: entities_with_Transform=10 (archived; the component lands minus the field)
+warn scan (all): 1 hit(s) -> /Users/zhanglinbo/workspace/jackdaw/loop/t24-final/warn-scan-all.txt
+RUNTIME done: A1_AUDIT_FOUR_TUPLE=PASS A1_OPERATOR_MOUTH=PASS A1_WARN_ON_LOAD=PASS A2_BOARD_ROWS=PASS A2_ROW_ACTIONS=PASS A2_ROW_TEXT_MATCHES=PASS A3_LOCATE_SELECTS=PASS A3_TAB_FORWARD=PASS A4_FAILURE_ROW_ONE=PASS A4_FAILURE_ROW_ONE_MOUTH=PASS A4_LOCK_QUIET=PASS A4_NEW_KEY_ROW_LANDED=PASS A4_NEW_KEY_SPEAKS=PASS B1_RELOAD_QUIET=PASS B1_REMEDY_ONCE=PASS B2_PANEL_ROW_GREEN=PASS B2_PANEL_ROW_GREEN=PASS B2_STRUCTURED_ROW=PASS B3_BOTH_SECTIONS=PASS B4_DIRECT_LOG_FACE=PASS B4_EXPAND_FULL_LIST=PASS B4_STRIP_FOUR_FACE=PASS B5_COMPONENT_UNAPPLIED=PASS B5_GUIDED_WARN=PASS B5_PANEL_ROW=PASS B5_REMEDY_HONEST=PASS B5_REMEDY_HONEST=PASS C1_ERROR_MOUTH_LOG=PASS C1_FOOTER_FAILED=PASS C1_PIE_STATUS_FAILED=PASS C2_PANEL_ARROWS=PASS C2_PANEL_AUTOFOCUSED=PASS C2_PANEL_FAILED_FACE=PASS C3_CURSOR_CLEANED=PASS C3_CURSOR_LAUNCHED=PASS C3_LANDING_STATUS_TEXT=PASS C3_OPEN_CLICK_LANDED=PASS C3_ROWS_WITH_OPEN=PASS C3_SUMMARY_PINNED=PASS C4_STATE_NOT_FAILED=PASS C4_WARNING_IN_PANEL=PASS 
+ALL done
+PHASE_DONE all results: A1_AUDIT_FOUR_TUPLE=PASS A1_OPERATOR_MOUTH=PASS A1_WARN_ON_LOAD=PASS A2_BOARD_ROWS=PASS A2_ROW_ACTIONS=PASS A2_ROW_TEXT_MATCHES=PASS A3_LOCATE_SELECTS=PASS A3_TAB_FORWARD=PASS A4_FAILURE_ROW_ONE=PASS A4_FAILURE_ROW_ONE_MOUTH=PASS A4_LOCK_QUIET=PASS A4_NEW_KEY_ROW_LANDED=PASS A4_NEW_KEY_SPEAKS=PASS B1_RELOAD_QUIET=PASS B1_REMEDY_ONCE=PASS B2_PANEL_ROW_GREEN=PASS B2_PANEL_ROW_GREEN=PASS B2_STRUCTURED_ROW=PASS B3_BOTH_SECTIONS=PASS B4_DIRECT_LOG_FACE=PASS B4_EXPAND_FULL_LIST=PASS B4_STRIP_FOUR_FACE=PASS B5_COMPONENT_UNAPPLIED=PASS B5_GUIDED_WARN=PASS B5_PANEL_ROW=PASS B5_REMEDY_HONEST=PASS B5_REMEDY_HONEST=PASS C1_ERROR_MOUTH_LOG=PASS C1_FOOTER_FAILED=PASS C1_PIE_STATUS_FAILED=PASS C2_PANEL_ARROWS=PASS C2_PANEL_AUTOFOCUSED=PASS C2_PANEL_FAILED_FACE=PASS C3_CURSOR_CLEANED=PASS C3_CURSOR_LAUNCHED=PASS C3_LANDING_STATUS_TEXT=PASS C3_OPEN_CLICK_LANDED=PASS C3_ROWS_WITH_OPEN=PASS C3_SUMMARY_PINNED=PASS C4_STATE_NOT_FAILED=PASS C4_WARNING_IN_PANEL=PASS 

@@ -379,3 +379,64 @@ fn the_startup_walk_fills_the_index_without_a_manual_rescan() {
         "the startup walk indexed the material on its own"
     );
 }
+
+/// A binding problem the load recorded opens the list even when no reference
+/// is broken — the binding section rides the same board (T24, decision 4(a)).
+/// Before the structured face existed this exact on-site answered "no broken
+/// references" while the console alone named the wrong field (the DF-R3 red).
+#[test]
+fn a_binding_problem_opens_the_list_references_alone_left_closed() {
+    let mut app = util::editor_test_app();
+    // No project and no scene: zero broken references.
+    app.world_mut()
+        .resource_mut::<jackdaw_bsn::BindingIssues>()
+        .record(jackdaw_bsn::BindingIssue {
+            entity: Some("Red".to_string()),
+            component: "game::Gizmo".to_string(),
+            field: Some("nonexistent_field".to_string()),
+            kind: jackdaw_bsn::BindingIssueKind::UnknownField,
+        });
+
+    run_op_clause(app.world_mut(), "asset.missing_list")
+        .expect("the list runs")
+        .assert_finished();
+
+    let findings = app
+        .world()
+        .get_resource::<jackdaw::reference_audit::AuditFindings>()
+        .map(|findings| findings.0.clone())
+        .expect("the findings are kept");
+    assert!(findings.is_empty(), "no reference is broken: {findings:?}");
+    let notice = app
+        .world()
+        .get_resource::<jackdaw::status_bar::StatusNotice>()
+        .map(|notice| notice.text().to_string());
+    assert!(
+        !notice
+            .clone()
+            .is_some_and(|text| text == "no broken references"),
+        "a binding problem opens the list; the quiet answer is the red face: {notice:?}"
+    );
+}
+
+/// With nothing wrong on either face the list still answers quietly, the
+/// status bar's "no broken references" (the empty state the binding rows
+/// must not hijack).
+#[test]
+fn with_nothing_to_show_the_list_answers_quietly() {
+    let mut app = util::editor_test_app();
+
+    run_op_clause(app.world_mut(), "asset.missing_list")
+        .expect("the list runs")
+        .assert_finished();
+
+    let notice = app
+        .world()
+        .get_resource::<jackdaw::status_bar::StatusNotice>()
+        .expect("the status notice is set");
+    assert_eq!(
+        notice.text(),
+        "no broken references",
+        "the empty state keeps its quiet answer"
+    );
+}

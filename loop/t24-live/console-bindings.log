@@ -1,0 +1,55 @@
+=== phase bindings run 2026-11-03 19:24:09 ===
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t24-debug/t24-live pid=2917
+--- B1: an unknown component, the remedy line once ---
+B1: remedy lines after the first load: 1 (want >=1)
+B1_REMEDY_ONCE_PASS
+B1: remedy lines after the same-document reload: 0 (want 0)
+B1_RELOAD_QUIET_PASS
+--- B2: an unknown field, the structured row (DF-R3 flipped) ---
+B2: 'unknown field' lines after the load: 1; line: [2m2026-11-03T11:24:53.376378Z[0m [33m WARN[0m [2mjackdaw_bsn::apply[0m[2m:[0m unknown field 'nonexistent_field' on 'bevy_transform::components::transform::Transform' on entity #RedField; the scene-problems list carries the row
+B2_STRUCTURED_ROW_PASS
+B2_PANEL_ROW_GREEN_PASS
+B2_PANEL_ROW_GREEN_PASS
+B2: green side vs DF-R3 (loop/reports/t24t1_dfr3_red.log: the field name was absent from the panel) archived in walk-b2.json
+--- B3: both sections on one board ---
+B3: the reference row is missing
+B3: audit count with both problems in the document: 2 (want 1)
+B3_BOTH_SECTIONS_FAIL
+--- B5: the re-export spelling (DF-R2 flipped) ---
+B5: guided warns=1 misleading-remedy lines=0; line: [2m2026-11-03T11:25:30.383971Z[0m [33m WARN[0m [2mjackdaw_bsn::apply[0m[2m:[0m cannot apply 'jackdaw_animation_runtime::AnimationGraphRef' on entity #RedEntity: that spelling is not registered — the project registers 'jackdaw_animation_runtime::graph::AnimationGraphRef'. A crate-root re-export is not a registered spelling; write the definition module path
+B5_GUIDED_WARN_PASS
+B5_REMEDY_HONEST_PASS
+B5_REMEDY_HONEST_PASS
+B5_PANEL_ROW_PASS
+B5: world after the load: entities_with_GraphRef(def path)=0 entities_with_Transform=17
+B5_COMPONENT_UNAPPLIED_PASS
+warn scan (bindings): 6 hit(s) -> /Users/zhanglinbo/workspace/jackdaw/loop/t24-live/warn-scan-bindings.txt
+BINDINGS done: B1_RELOAD_QUIET=PASS B1_REMEDY_ONCE=PASS B2_PANEL_ROW_GREEN=PASS B2_PANEL_ROW_GREEN=PASS B2_STRUCTURED_ROW=PASS B3_BOTH_SECTIONS=FAIL B5_COMPONENT_UNAPPLIED=PASS B5_GUIDED_WARN=PASS B5_PANEL_ROW=PASS B5_REMEDY_HONEST=PASS B5_REMEDY_HONEST=PASS 
+PHASE_DONE bindings results: B1_RELOAD_QUIET=PASS B1_REMEDY_ONCE=PASS B2_PANEL_ROW_GREEN=PASS B2_PANEL_ROW_GREEN=PASS B2_STRUCTURED_ROW=PASS B3_BOTH_SECTIONS=FAIL B5_COMPONENT_UNAPPLIED=PASS B5_GUIDED_WARN=PASS B5_PANEL_ROW=PASS B5_REMEDY_HONEST=PASS B5_REMEDY_HONEST=PASS 
+=== phase bindings run 2026-11-03 19:30:07 ===
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t24-debug/t24-live pid=4844
+--- B1: an unknown component, the remedy line once ---
+B1: remedy lines after the first load: 1 (want >=1)
+B1_REMEDY_ONCE_PASS
+B1: remedy lines after the same-document reload: 0 (want 0)
+B1_RELOAD_QUIET_PASS
+--- B2: an unknown field, the structured row (DF-R3 flipped) ---
+B2: 'unknown field' lines after the load: 1; line: [2m2026-11-03T11:30:49.495282Z[0m [33m WARN[0m [2mjackdaw_bsn::apply[0m[2m:[0m unknown field 'nonexistent_field' on 'bevy_transform::components::transform::Transform' on entity #RedField; the scene-problems list carries the row
+B2_STRUCTURED_ROW_PASS
+B2_PANEL_ROW_GREEN_PASS
+B2_PANEL_ROW_GREEN_PASS
+B2: green side vs DF-R3 (loop/reports/t24t1_dfr3_red.log: the field name was absent from the panel) archived in walk-b2.json
+--- B3: both sections on one board ---
+B3: audit findings scoped to t24b3.bsn: 1 (want 1)
+B3_BOTH_SECTIONS_PASS
+--- B5: the re-export spelling (DF-R2 flipped) ---
+B5: guided warns=1 misleading-remedy lines=0; line: [2m2026-11-03T11:31:26.504410Z[0m [33m WARN[0m [2mjackdaw_bsn::apply[0m[2m:[0m cannot apply 'jackdaw_animation_runtime::AnimationGraphRef' on entity #RedEntity: that spelling is not registered — the project registers 'jackdaw_animation_runtime::graph::AnimationGraphRef'. A crate-root re-export is not a registered spelling; write the definition module path
+B5_GUIDED_WARN_PASS
+B5_REMEDY_HONEST_PASS
+B5_REMEDY_HONEST_PASS
+B5_PANEL_ROW_PASS
+B5: world after the load: entities_with_GraphRef(def path)=0 entities_with_Transform=17
+B5_COMPONENT_UNAPPLIED_PASS
+warn scan (bindings): 6 hit(s) -> /Users/zhanglinbo/workspace/jackdaw/loop/t24-live/warn-scan-bindings.txt
+BINDINGS done: B1_RELOAD_QUIET=PASS B1_REMEDY_ONCE=PASS B2_PANEL_ROW_GREEN=PASS B2_PANEL_ROW_GREEN=PASS B2_STRUCTURED_ROW=PASS B3_BOTH_SECTIONS=PASS B5_COMPONENT_UNAPPLIED=PASS B5_GUIDED_WARN=PASS B5_PANEL_ROW=PASS B5_REMEDY_HONEST=PASS B5_REMEDY_HONEST=PASS 
+PHASE_DONE bindings results: B1_RELOAD_QUIET=PASS B1_REMEDY_ONCE=PASS B2_PANEL_ROW_GREEN=PASS B2_PANEL_ROW_GREEN=PASS B2_STRUCTURED_ROW=PASS B3_BOTH_SECTIONS=PASS B5_COMPONENT_UNAPPLIED=PASS B5_GUIDED_WARN=PASS B5_PANEL_ROW=PASS B5_REMEDY_HONEST=PASS B5_REMEDY_HONEST=PASS 
