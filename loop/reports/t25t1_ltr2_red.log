@@ -1,0 +1,17 @@
+# LT-R2 red evidence (LT3/N11 live refresh) - pre-fix build, main 050b4813, same window
+# as t25t1_ltr1_red.log (loop/qa/t25-red.sh phase red, 2026-11-03). Pure archive leg,
+# zero fix expected: the N11 tooling-gap ruling re-confirmed on this build.
+# Trigger: the Inspector card up on the projected Spinner (selection via scene_tree);
+# jackdaw/ui_input typed '2.5' + Enter-commit into six numeric rows of the Inspector
+# column (x>1050, y>150 at 1600x1000, top to bottom), each followed by a settle and a
+# read of jackdaw/pie live_edits and the game-side Transform.
+# Evidence: loop/t25-live/{ltr2-inputs.json,ltr2-candidates.txt,ltr2-input-response-*.json,console-red.log}.
+
+== verdicts ==
+LTR2_ROWS_REACHED=PASS (6 numeric rows typed, entities 4294962905/17179864543/8589929828/8589929596/8589929562/8589929577)
+LTR2_NO_COMMIT=PASS (a commit anywhere: 0 - every row read live_edits=0 immediately after its typing; the typed value never reached the field commit path)
+LTR2_GAME_VALUE_UNCHANGED=PASS (game Transform.translation.y held 1.0 through all six rows)
+LTR2_DOCUMENT_STABLE=PASS offline (the in-window before-read hit an empty BRP answer in the busy window and mis-judged FAIL; the after-document SHA aebf28f3... equals the post-R1 document exactly, so the typing leg changed nothing - the A9 read-window flake, judged on the archived pair per the t24 D2 calibre)
+
+== N11 ticket face, refreshed: ui_input does not commit on the numeric rows of this build ==
+live edit production still has no synthetic surface pre-fix; the T25 injection surface is the LT2 fix (component.set routed live)

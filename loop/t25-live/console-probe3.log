@@ -1,0 +1,48 @@
+=== probe3 run 2026-11-03 23:08:04 ===
+EDITOR_READY pid=88090
+--- play (warm) ---
+SPINNER_GAME_BITS=769v0 disk_y_baseline=3.0
+--- cycle R3: entry -> stop -> Review -> row Revert ---
+entry made: game_y=2.5 (the route streamed 2.5)
+Review clicked
+P3_HANDOFF_TRAY_PASS
+Revert button bits: none
+P3_ROW_REVERT_FAIL
+after row Revert: live_edits=1 game_y= (want 0 / back to the authored baseline)
+P3_ROW_REVERT_SETTLED_FAIL
+game_y= vs authored doc y=3.0 (the Revert streamed the baseline back)
+P3_ROW_REVERT_STREAMED_BASELINE_FAIL
+--- cycle S3: entry -> stop -> Review -> row Save ---
+Review clicked
+Save button bits: none
+P3_ROW_SAVE_FAIL
+after row Save: live_edits=1 doc 6c31e72332bfbd88005e3bf447655413c0eaaffbd081b28149f7b2ec78e79f98 -> 6c31e72332bfbd88005e3bf447655413c0eaaffbd081b28149f7b2ec78e79f98 undo 0 (want 0 / changed / +1)
+P3_ROW_SAVE_SETTLED_FAIL
+P3_ROW_SAVE_AUTHORED_FAIL
+P3_ROW_SAVE_UNDO_FAIL
+CENSUS: error-handler panics=1 swap_remove-signature=1 (N13 family, attributed)
+PROBE3 done: P3_HANDOFF_TRAY=PASS P3_ROW_REVERT=FAIL P3_ROW_REVERT_SETTLED=FAIL P3_ROW_REVERT_STREAMED_BASELINE=FAIL P3_ROW_SAVE=FAIL P3_ROW_SAVE_AUTHORED=FAIL P3_ROW_SAVE_SETTLED=FAIL P3_ROW_SAVE_UNDO=FAIL 
+=== probe3 run 2026-11-03 23:12:42 ===
+EDITOR_READY pid=90015
+--- play (warm) ---
+SPINNER_GAME_BITS=769v0 disk_y_baseline=3.0
+--- cycle R3: entry -> stop -> Review -> row Revert ---
+entry made: game_y=2.5 (the route streamed 2.5)
+Review clicked
+P3_HANDOFF_TRAY_PASS
+Revert button bits: 12884897162
+P3_ROW_REVERT_PASS
+after row Revert: live_edits=0 game_y= (want 0 / back to the authored baseline)
+P3_ROW_REVERT_SETTLED_PASS
+game_y= vs authored doc y=3.0 (the Revert streamed the baseline back)
+P3_ROW_REVERT_STREAMED_BASELINE_FAIL
+--- cycle S3: entry -> stop -> Review -> row Save ---
+Review clicked
+Save button bits: 8589929761
+P3_ROW_SAVE_PASS
+after row Save: live_edits=0 doc 6c31e72332bfbd88005e3bf447655413c0eaaffbd081b28149f7b2ec78e79f98 -> 2750fdafec49db8fdec21d82631f4c5b3ff68ec6a4cd32f2cceb011c2e3315c0 undo 1 (want 0 / changed / +1)
+P3_ROW_SAVE_SETTLED_PASS
+P3_ROW_SAVE_AUTHORED_PASS
+P3_ROW_SAVE_UNDO_PASS
+CENSUS: error-handler panics=5 swap_remove-signature=7 (N13 family, attributed)
+PROBE3 done: P3_HANDOFF_TRAY=PASS P3_ROW_REVERT=PASS P3_ROW_REVERT_SETTLED=PASS P3_ROW_REVERT_STREAMED_BASELINE=FAIL P3_ROW_SAVE=PASS P3_ROW_SAVE_AUTHORED=PASS P3_ROW_SAVE_SETTLED=PASS P3_ROW_SAVE_UNDO=PASS 

@@ -1432,6 +1432,7 @@ mod tests {
                 baseline: None,
                 live_value: serde_json::json!(50.0),
                 label: "player / Health.current".to_string(),
+                kind: crate::live_edits::LiveEditKind::Field,
             },
         ));
         log

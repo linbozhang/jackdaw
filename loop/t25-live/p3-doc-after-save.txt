@@ -1,0 +1,10 @@
+#Spinner
+jackdaw_scene_types::node_id::SceneNodeId(7001)
+bevy_transform::components::transform::Transform {
+    translation: glam::Vec3 {
+        x: 0.0,
+        y: 5.0,
+        z: 0.0,
+    },
+}
+
