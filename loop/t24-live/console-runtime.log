@@ -1,0 +1,57 @@
+=== phase runtime run 2026-11-03 19:35:52 ===
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t24-debug/t24-live pid=6594
+--- B4 PIE half: the focused game's log strip ---
+B4: game running; waiting for the game BRP on 15702
+B4_STRIP_FOUR_FACE_PASS
+B4: strip entity bits: none
+B4: the strip node was not addressable; the expand leg judges false
+B4_EXPAND_FULL_LIST_FAIL
+--- B4 direct-run half: the standalone game's own log face ---
+B4: no PIE-built binary found; cargo build as its own window
+B4: direct run of /Users/zhanglinbo/workspace/loop-mac/t24-debug/t24-live/target/debug/t24-live
+B4: the standalone game never answered its BRP
+B4_DIRECT_LOG_FACE_FAIL
+PHASE_DONE runtime results: B4_DIRECT_LOG_FACE=FAIL B4_EXPAND_FULL_LIST=FAIL B4_STRIP_FOUR_FACE=PASS 
+=== phase runtime run 2026-11-03 19:47:11 ===
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t24-debug/t24-live pid=11540
+--- B4 PIE half: the focused game's log strip ---
+B4: game running; waiting for the game BRP on 15702
+B4_STRIP_FOUR_FACE_PASS
+B4: strip entity bits: 4294963142
+B4_EXPAND_FULL_LIST_PASS
+--- B4 direct-run half: the standalone game's own log face ---
+B4: no PIE-built binary found; cargo build as its own window (the editor is already down)
+B4: direct run of /Users/zhanglinbo/workspace/loop-mac/t24-debug/t24-live/t24-live (copied beside assets/)
+B4: the standalone game never answered its BRP
+B4_DIRECT_LOG_FACE_FAIL
+PHASE_DONE runtime results: B4_DIRECT_LOG_FACE=FAIL B4_EXPAND_FULL_LIST=PASS B4_STRIP_FOUR_FACE=PASS 
+=== phase runtime run 2026-11-03 19:58:01 ===
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t24-debug/t24-live pid=14631
+--- B4 PIE half: the focused game's log strip ---
+B4: game running; waiting for the game BRP on 15702
+B4_STRIP_FOUR_FACE_PASS
+B4: strip entity bits: 4294963142
+B4_EXPAND_FULL_LIST_PASS
+--- B4 direct-run half: the standalone game's own log face ---
+B4: no PIE-built binary found; cargo build as its own window (the editor is already down)
+B4: direct run of /Users/zhanglinbo/workspace/loop-mac/t24-debug/t24-live/t24-live (copied beside assets/)
+B4: the standalone game never answered its BRP
+B4_DIRECT_LOG_FACE_FAIL
+PHASE_DONE runtime results: B4_DIRECT_LOG_FACE=FAIL B4_EXPAND_FULL_LIST=PASS B4_STRIP_FOUR_FACE=PASS 
+=== phase runtime run 2026-11-03 20:09:43 ===
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t24-debug/t24-live pid=17903
+--- B4 PIE half: the focused game's log strip ---
+B4: game running; waiting for the game BRP on 15702
+B4_STRIP_FOUR_FACE_PASS
+B4: strip entity bits: 4294963142
+B4_EXPAND_FULL_LIST_PASS
+--- B4 direct-run half: the standalone game's own log face ---
+B4: no PIE-built binary found; cargo build as its own window (the editor is already down)
+B4: direct run of /Users/zhanglinbo/workspace/loop-mac/t24-debug/t24-live/t24-live (copied beside assets/)
+B4: the standalone game answers its BRP
+B4: 'unknown field' lines in the standalone game's log: 1 (want >=1)
+B4_DIRECT_LOG_FACE_PASS
+B4: standalone world: entities_with_Transform=33 (archived; the component lands minus the field)
+warn scan (runtime): 1 hit(s) -> /Users/zhanglinbo/workspace/jackdaw/loop/t24-live/warn-scan-runtime.txt
+RUNTIME done: B4_DIRECT_LOG_FACE=PASS B4_EXPAND_FULL_LIST=PASS B4_STRIP_FOUR_FACE=PASS 
+PHASE_DONE runtime results: B4_DIRECT_LOG_FACE=PASS B4_EXPAND_FULL_LIST=PASS B4_STRIP_FOUR_FACE=PASS 

@@ -1,0 +1,1 @@
+[2m2026-11-03T12:11:29.783107Z[0m [33m WARN[0m [2mjackdaw_bsn::apply[0m[2m:[0m unknown field 'nonexistent_field_direct' on 'bevy_transform::components::transform::Transform' on entity #B4Entity; the scene-problems list carries the row

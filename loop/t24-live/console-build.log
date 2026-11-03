@@ -1,0 +1,74 @@
+=== phase build run 2026-11-03 17:35:55 ===
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t24-debug/t24-live pid=67869
+--- warm build (fills .jackdaw/target so the play legs stay short) ---
+WARM_BUILD_OK
+--- C1/C2/C3: break one template line, fail the Play build ---
+C1_FOOTER_FAILED_PASS
+C1: jackdaw/status pie=failed (want failed)
+C1_PIE_STATUS_FAILED_PASS
+C1: 'PIE: game build of' error lines in the log: 1 (want >=1)
+C1_ERROR_MOUTH_LOG_PASS
+C2: first arrow in the visible walk: src/lib.rs:2077:18
+C2_PANEL_ARROWS_PASS
+C2_PANEL_FAILED_FACE_PASS
+C2_PANEL_AUTOFOCUSED_PASS
+C3_SUMMARY_PINNED_PASS
+C3: Open button entity bits: none
+C3_ROWS_WITH_OPEN_FAIL
+C3: no Open button to click; the click legs judge false
+C3_OPEN_CLICK_LANDED_FAIL
+C3_LANDING_STATUS_TEXT_FAIL
+C3_CURSOR_LAUNCHED_FAIL
+C3_CURSOR_CLEANED_PASS
+--- C4: a warning-only build stays Ready and readable ---
+C4_STATE_NOT_FAILED_PASS
+C4_WARNING_IN_PANEL_PASS
+C4: warning arrow in the panel log: src/lib.rs:2077:9
+warn scan (build): 3 hit(s) -> /Users/zhanglinbo/workspace/jackdaw/loop/t24-live/warn-scan-build.txt
+BUILD done: C1_ERROR_MOUTH_LOG=PASS C1_FOOTER_FAILED=PASS C1_PIE_STATUS_FAILED=PASS C2_PANEL_ARROWS=PASS C2_PANEL_AUTOFOCUSED=PASS C2_PANEL_FAILED_FACE=PASS C3_CURSOR_CLEANED=PASS C3_CURSOR_LAUNCHED=FAIL C3_LANDING_STATUS_TEXT=FAIL C3_OPEN_CLICK_LANDED=FAIL C3_ROWS_WITH_OPEN=FAIL C3_SUMMARY_PINNED=PASS C4_STATE_NOT_FAILED=PASS C4_WARNING_IN_PANEL=PASS 
+PHASE_DONE build results: C1_ERROR_MOUTH_LOG=PASS C1_FOOTER_FAILED=PASS C1_PIE_STATUS_FAILED=PASS C2_PANEL_ARROWS=PASS C2_PANEL_AUTOFOCUSED=PASS C2_PANEL_FAILED_FACE=PASS C3_CURSOR_CLEANED=PASS C3_CURSOR_LAUNCHED=FAIL C3_LANDING_STATUS_TEXT=FAIL C3_OPEN_CLICK_LANDED=FAIL C3_ROWS_WITH_OPEN=FAIL C3_SUMMARY_PINNED=PASS C4_STATE_NOT_FAILED=PASS C4_WARNING_IN_PANEL=PASS 
+=== phase build run 2026-11-03 17:42:26 ===
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t24-debug/t24-live pid=71406
+--- warm build (fills .jackdaw/target so the play legs stay short) ---
+WARM_BUILD_OK
+--- C1/C2/C3: break one template line, fail the Play build ---
+C1: the play build never failed (budget out)
+C1_BUILD_FAILED_FAIL
+PHASE_DONE build results: C1_BUILD_FAILED=FAIL 
+=== phase build run 2026-11-03 17:59:38 ===
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t24-debug/t24-live pid=75932
+--- warm build (fills .jackdaw/target so the play legs stay short) ---
+=== phase build run 2026-11-03 18:15:49 ===
+restored the template from the previous run's pristine copy before the warm build
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t24-debug/t24-live pid=80101
+--- warm build (fills .jackdaw/target so the play legs stay short) ---
+=== phase build run 2026-11-03 18:28:40 ===
+restored the template from the previous run's pristine copy before the warm build
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t24-debug/t24-live pid=83874
+--- warm build (fills .jackdaw/target so the play legs stay short) ---
+WARM_BUILD_OK
+--- C1/C2/C3: break one template line, fail the Play build ---
+C1_FOOTER_FAILED_PASS
+C1: jackdaw/status pie=failed (want failed)
+C1_PIE_STATUS_FAILED_PASS
+C1: 'PIE: game build of' error lines in the log: 1 (want >=1)
+C1_ERROR_MOUTH_LOG_PASS
+C2: first arrow in the visible walk: src/lib.rs:2077:18
+C2_PANEL_ARROWS_PASS
+C2_PANEL_FAILED_FACE_PASS
+C2_PANEL_AUTOFOCUSED_PASS
+C3_SUMMARY_PINNED_PASS
+C3: Open button entity bits: 4294962531
+C3_ROWS_WITH_OPEN_PASS
+C3_OPEN_CLICK_LANDED_PASS
+C3_LANDING_STATUS_TEXT_PASS
+C3_CURSOR_LAUNCHED_PASS
+C3: cursor processes before=0 after=2; landing walk archived
+C3_CURSOR_CLEANED_PASS
+--- C4: a warning-only build stays Ready and readable ---
+C4_STATE_NOT_FAILED_PASS
+C4_WARNING_IN_PANEL_PASS
+C4: warning arrow in the panel log: src/lib.rs:2077:9
+warn scan (build): 3 hit(s) -> /Users/zhanglinbo/workspace/jackdaw/loop/t24-live/warn-scan-build.txt
+BUILD done: C1_ERROR_MOUTH_LOG=PASS C1_FOOTER_FAILED=PASS C1_PIE_STATUS_FAILED=PASS C2_PANEL_ARROWS=PASS C2_PANEL_AUTOFOCUSED=PASS C2_PANEL_FAILED_FACE=PASS C3_CURSOR_CLEANED=PASS C3_CURSOR_LAUNCHED=PASS C3_LANDING_STATUS_TEXT=PASS C3_OPEN_CLICK_LANDED=PASS C3_ROWS_WITH_OPEN=PASS C3_SUMMARY_PINNED=PASS C4_STATE_NOT_FAILED=PASS C4_WARNING_IN_PANEL=PASS 
+PHASE_DONE build results: C1_ERROR_MOUTH_LOG=PASS C1_FOOTER_FAILED=PASS C1_PIE_STATUS_FAILED=PASS C2_PANEL_ARROWS=PASS C2_PANEL_AUTOFOCUSED=PASS C2_PANEL_FAILED_FACE=PASS C3_CURSOR_CLEANED=PASS C3_CURSOR_LAUNCHED=PASS C3_LANDING_STATUS_TEXT=PASS C3_OPEN_CLICK_LANDED=PASS C3_ROWS_WITH_OPEN=PASS C3_SUMMARY_PINNED=PASS C4_STATE_NOT_FAILED=PASS C4_WARNING_IN_PANEL=PASS 

@@ -1,0 +1,18 @@
+T24-T2 green side of DF-R1 (W2) — final build window, editor log loop/t24-live/editor-build-w1-83800-.log
+Red side: loop/t24-red/walk-dfr1.json — 20 arrow lines on the panel, zero action labels, the log as the only face.
+
+C1 three mouths:
+2026-11-03T10:29:47.498196Z ERROR jackdaw::pie: PIE: game build of t24-live failed, not launching Play #1: error[E0308]: mismatched types (src/lib.rs:2077:18)
+footer+panel face: walk-c1.json carries 'Build failed - ' and '--> src/lib.rs:2077:18'; jackdaw/status pie=failed (console-build.log C1_PIE_STATUS_FAILED_PASS)
+
+C2/C3 structured strip (the rows the red walk never had):
+  x4: --> src/lib.rs:2077:18
+  x1: 4 errors · first: src/lib.rs:2077:18
+  x6: Open
+
+C3 landing (c3-click-response.json + walk-c3-landing.json):
+{"clicked":true,"target":"Open","at":[1483.0,22.5]}
+opened cursor at src/lib.rs:2077:18
+cursor processes after the click: launched; killed after the leg (C3_CURSOR_CLEANED_PASS)
+
+C4 warning-only build: walk-c4.json carries 'Project built', 'warning: unused variable', the warning arrow '--> src/lib.rs:2077:9'; no 'Build failed' anywhere in the walk.

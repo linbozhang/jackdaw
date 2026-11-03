@@ -1,0 +1,1 @@
+[2m2026-11-03T11:19:46.953704Z[0m [33m WARN[0m [2mjackdaw::asset_failures[0m[2m:[0m asset load failed: /Users/zhanglinbo/workspace/loop-mac/t24-debug/t24-live/assets/models/t24model.glb (Failed to load asset 'models/t24model.glb' with asset loader 'bevy_gltf::loader::GltfLoader': invalid glTF file: expected value at line 1 column 1

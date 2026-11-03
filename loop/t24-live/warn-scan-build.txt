@@ -1,0 +1,3 @@
+[2m2026-11-03T10:29:47.498196Z[0m [31mERROR[0m [2mjackdaw::pie[0m[2m:[0m PIE: game build of t24-live failed, not launching Play #1: error[E0308]: mismatched types (src/lib.rs:2077:18)
+[2m2026-11-03T10:30:11.253282Z[0m [33m WARN[0m [2mjackdaw::pie[0m[2m:[0m warning: unused variable: `unused_variable`
+[2m2026-11-03T10:30:11.272476Z[0m [33m WARN[0m [2mjackdaw::pie[0m[2m:[0m warning: function `t24_live_warning` is never used

@@ -1,0 +1,2074 @@
+//! t24-live: gameplay shared between `cargo run` and the
+//! editor's Play button.
+//!
+//! Scene content (entities, components, positions) lives in
+//! `assets/*.bsn` files authored in the editor. Game behaviour
+//! (systems, observers, resources) lives in [`GamePlugin`].
+//!
+//! # Try it
+//!
+//! 1. Open this project in jackdaw.
+//! 2. Outliner: click `Add Entity` and pick `Cube`.
+//! 3. Components panel: click `Add Component` and pick `SpinningCube`.
+//!    Set `speed` to `1.5`.
+//! 4. `File > Save`, then click Play: the menu comes up first — click
+//!    **Start** and the cube spins in the level.
+//! 5. `cargo run` launches the same game without the editor.
+//!
+//! # Adding your own components
+//!
+//! Write a component anywhere in this library (any module, not
+//! `main.rs`), deriving `Component, Reflect, Default` with
+//! `#[reflect(Component, Default)]`, like `SpinningCube` below. After you
+//! save, click Rebuild in jackdaw (or run `jd build`) and it
+//! appears in `Add Component`. No registration code is needed.
+//!
+//! # Tuning parameters (game-wide, saved as an asset)
+//!
+//! `GameConfig` below is the other half of the pattern: a *Resource*
+//! whole systems read (`falling_cubes` uses `gravity` and
+//! `move_speed`) whose value comes from an asset file,
+//! `assets/game-config.bsn`. To change the tuning:
+//!
+//! 1. In jackdaw, `Project window > New Asset...` and pick
+//!    `GameConfig` (after one Rebuild) — the editor creates
+//!    `game-config.bsn` and opens its card.
+//! 2. Edit `move_speed` (say `2.5`), `Save`.
+//! 3. Play: the falling cube falls and spins by the file's numbers.
+//!    `cargo run` and an exported build read the same file.
+//!
+//! Until that file exists the game runs on the `Default` values — a
+//! missing config is not an error. Per-entity numbers (one cube's
+//! `speed`) stay as components; game-wide numbers (gravity, move
+//! speed, player health) belong in a config like this.
+//!
+//! # Input actions
+//!
+//! The same pattern drives input: `InputActionsPlugin` evaluates the
+//! built-in actions (Move / Look / Jump / Interact / Pause — WASD and
+//! the left stick, mouse and the right stick, Space / South, E / East,
+//! Escape / Start) into the `GameActions` resource every frame; systems
+//! read named actions instead of polling raw keys. To rebind, author
+//! `assets/input-actions.bsn` the same way as the tuning config (the
+//! plugin below wires the file; without it, the built-in table runs).
+//!
+//! In the editor's Play, click the game image to capture input and
+//! Shift+Esc to give it back — a plain Esc is forwarded to the game
+//! (that is why Pause can be Escape).
+//!
+//! # Physics & triggers
+//!
+//! The physics module (on by default) adds avian: things fall, land
+//! and stay on colliders. Three pieces worth knowing:
+//!
+//! * **Colliders**: add an `AvianCollider` component to any entity
+//!   (the editor's physics category) and pick a shape. A collider
+//!   with no rigid body stands still as a wall or floor; a
+//!   `RigidBody: Dynamic` one falls and lands — never through a
+//!   floor. The falling cube and the pickups below are the examples.
+//! * **Triggers**: an entity that is a collider *and* carries
+//!   `Sensor` detects overlaps without blocking anything (the editor
+//!   draws sensors with a cyan outline). Each frame,
+//!   `TriggerEvents` lists every sensor that started or stopped
+//!   touching something: `enters()` for pickup-style "got it",
+//!   `exits()` for "left the area". The plugin wires the
+//!   `CollisionEventsEnabled` prerequisite avian asks for — author
+//!   the `Sensor`, nothing else. `collect_pickups` below is the
+//!   whole pattern: the player walks into a pickup, it despawns and
+//!   the count goes up — only the player's touch counts, so a cube
+//!   settling onto a pickup leaves it alone; collect all three and
+//!   the run is won — the flow moves to the game-over screen, the
+//!   same move that ends a lost run, so the end screen's Restart
+//!   starts the next one.
+//! * **Collision layers**: a `CollisionLayers` component (fields
+//!   `memberships` and `filters`, one bit per layer) decides who
+//!   interacts with whom — a contact only exists when each side's
+//!   memberships meet a layer the other side filters in. A common
+//!   table: layer 1 the player and the world, layer 2 pickups,
+//!   layer 3 hazards. Give hazards `memberships 0b100,
+//!   filters 0b001` (hazard hits player only) and the player
+//!   `0b001, 0b111` (hits everything) — pickups and hazards never
+//!   interact with each other, so a drifting hazard cannot collect
+//!   the pickups for the player. `spawn_hazards` below authors
+//!   exactly that hazard row; the template player needs nothing
+//!   (an entity without the component is on layer 1 with every
+//!   filter, which is the table's player row already).
+//!
+//! The triggers feed more than pickups: `collect_pickups` counts and
+//! `hazard_damage` burns health — same shape, different marker and
+//! different reaction, and both read the one `TriggerEvents` the
+//! bridge fills.
+//!
+//! Two gravities exist and they are different things:
+//! `GameConfig.gravity` (the config asset above) is the author's
+//! number, and at startup `apply_gravity_from_config` copies it
+//! into the physics engine's `Gravity` resource — the one the
+//! simulation actually uses. Editing the config file changes the
+//! next launch; changing the `Gravity` resource in the editor's
+//! Resources panel changes it for the running session.
+//!
+//! # Player controller
+//!
+//! The player the template spawns at (-2, 1, 0) is a real, if
+//! minimal, character controller:
+//!
+//! * **Tuning is a component.** `PlayerController { move_speed,
+//!   jump_speed }` lives on the player entity: select it and edit
+//!   the numbers in the Components panel (per-entity numbers are
+//!   components; game-wide numbers are the config above — the same
+//!   split as one cube's `speed` vs the config's `move_speed`).
+//! * **Movement is camera-relative.** W walks away from the camera
+//!   wherever it looks; the body turns smoothly to face the way it
+//!   moves. The one source of truth for "which way is forward" is
+//!   the camera's `CameraLook.yaw`.
+//! * **The camera is a child.** A `CameraRig` parented under the
+//!   player is the whole follow-camera setup: `JackdawCameraRigPlugin`
+//!   (wired in `GamePlugin` below) activates a lone rig by itself and
+//!   drives it around its parent every frame. Author a second rig
+//!   only together with an `ActiveCameraRig` component — with two
+//!   rigs none self-activates; the game must choose.
+//! * **Look has two channels that agree.** The `Look` action writes
+//!   the rig's `CameraLook` every frame (`look_into_camera` below);
+//!   while the right mouse button is held the rig's own mouse-look
+//!   owns the turn instead — the bridge yields those frames so the
+//!   two never double-write.
+//! * **Jump and collision come from the physics module** (on by
+//!   default): gravity — the very same `GameConfig.gravity` number
+//!   the engine got — integrates onto the player's velocity, a short
+//!   downward cast says when the feet are on the ground, and avian's
+//!   `move_and_slide` sweeps the capsule so the player slides along
+//!   walls instead of through them (walk into the stage walls to see
+//!   it: head-on you stop, diagonally you slide). Without the physics
+//!   module the player still walks, camera-relative and
+//!   frame-rate-independent, but does not jump or collide.
+//! * **A hand-placed player needs the full set.** `move_player`
+//!   queries five components together, so an entity authored in the
+//!   editor only moves when it carries `PlayerMarker`,
+//!   `PlayerController`, a zero `PlayerVelocity`, a Kinematic
+//!   `RigidBody`, and an `AvianCollider` (a capsule of radius 0.35
+//!   and height 1.0 matches the template's). Parent a `CameraRig`
+//!   under it and the game plays your level.
+//!
+//! # Game flow
+//!
+//! A game is more than one world: a menu to start from, the level to
+//! play, an end screen when the run is over. The template ships all
+//! three as real scene documents — `assets/menu.bsn`, `assets/scene.bsn`,
+//! `assets/gameover.bsn` — and only one of them is in the world at a
+//! time:
+//!
+//! * **States drive the worlds.** `GameFlow` below is a `States` enum
+//!   (`Menu` / `Level` / `GameOver`). Each state's `OnEnter` shows its
+//!   document by re-binding one scene root's handle — the runtime's
+//!   whole switch primitive is that one insert, and the old scene's
+//!   entities (its UI roots included) are gone before the new document
+//!   spawns. Nothing accumulates across a menu → level → game over →
+//!   menu loop.
+//! * **Where a run begins is data.** `assets/game.flow.json` names the
+//!   scene a standalone run starts from (`start_scene`) and lists the
+//!   scenes that make up the game. The game boots into whatever it
+//!   names: the menu document as the menu, the game-over document as
+//!   the end screen, any other scene as a world to play. A broken or
+//!   mis-pointed file warns and falls back — it never refuses to start.
+//!   The editor validates the file, the Project window's right-click
+//!   **Set as Startup Scene** writes it, and an export ships it.
+//! * **What survives a switch is decided on purpose.** The player and
+//!   everything your code spawns (health, counters, resources) belong
+//!   to no scene document, so a switch leaves them alone — the player's
+//!   entity id is one and the same from Start to Restart. Scene content
+//!   (pickups, hazards, the hud) belongs to its world and dies with it.
+//!   What crosses gets put back in shape instead: `reset_run` runs on
+//!   every entry into the level, so Restart is just a switch to `Level`.
+//! * **Each world brings its own camera.** The level's camera is the
+//!   rig under the player; the menu and game-over documents get a
+//!   state-scoped `Camera2d` (`DespawnOnExit` removes it with the
+//!   state) — a UI document shown alone has nothing to render it
+//!   otherwise, and the screen stays empty.
+//! * **The editor's two Play buttons stay distinct.** Play runs the
+//!   game from its flow-configured start scene; the scene-tab Play
+//!   swaps the editor's own scene in as the world the game boots into,
+//!   and the flow state follows it (that boot is the level).
+//!
+//! # Game audio
+//!
+//! Three sounds ship with the template, so audio works before you have
+//! added a single file of your own: the menu's BGM (`menu.bsn`'s
+//! `MenuBgm` entity), a click each screen button acknowledges itself with
+//! (`press_sound` below), and the level's spatial drone (`scene.bsn`'s
+//! `Ambient`, panned against the `SpatialListener` the player's camera
+//! carries). Each is one entity carrying a `bevy_audio` component pair:
+//! an `AudioPlayer("sounds/…")` naming a file and a `PlaybackSettings`
+//! choosing loop/one-shot, volume and (for the drone) `spatial`. Note
+//! bevy's spatial audio is left-right panning by distance, not HRTF.
+//! The blip pulls double duty as the win's fanfare: `collect_pickups`
+//! sounds it once on the sfx bus as the third pickup lands, right
+//! before the flow moves to the end screen.
+//!
+//! The three-way mix — master, music, sfx — is the same config-asset
+//! pattern as the tuning above: `GameAudioConfig` below, authored as
+//! `assets/audio-config.bsn` through New Asset, with `MusicBus` /
+//! `SfxBus` markers deciding which bus an entity rides. The engine only
+//! reads `GlobalVolume` when it creates a sink and never follows a
+//! change, so the template's `apply_audio_mix` builds each sink's real
+//! volume as `base × bus × master` and re-applies it when the config
+//! changes — a mid-run edit reaches sounds that are already playing.
+//! While a sound plays, its entity grows a `SoundLive` component (the
+//! `mirror_sound_live` system writes the sink's live numbers into it
+//! every frame), which is what the Resources panel and a BRP query can
+//! read — sinks themselves are not reflected.
+//!
+//! # Game UI
+//!
+//! `assets/hud.bsn` is a UI scene: the same kind of document as
+//! `scene.bsn`, authored on the editor's 2D canvas (`Add` menu, `UI`
+//! group — panels, labels, buttons, progress bars) with each widget's
+//! `Bindings` component wiring it to the game. It is the level's own
+//! overlay — the template spawns it when the level is current and takes
+//! it away when the level ends — and its two screens show and hide
+//! themselves:
+//!
+//! * **Screens follow state.** The pause screen's `Visibility` is bound
+//!   to `GameState.paused` (the resource below). Flipping the bool is
+//!   the whole mechanism — overlays inside one world are data, not
+//!   switches; the worlds themselves are the flow above.
+//! * **Buttons say which one was pressed.** Every button carries an
+//!   `Action` binding that sends `ScreenPressed` with `button` set to
+//!   its literal (`"resume"` here; the menu and game-over documents
+//!   send `"start"`, `"restart"` and `"menu"`); the
+//!   `on_screen_pressed` observer turns those into flow moves. The
+//!   Pause *action* (Escape) lands on the same bool through
+//!   `handle_pause_action`, so the key and the button agree.
+//! * **The bar and the texts read the player.** The health bar's
+//!   `Progress.value` is bound to `PlayerHealth.current` and `.max`
+//!   through the registered `ratio` function, and the texts are
+//!   `Text` bindings on the same components. Bindings can only call
+//!   functions the game registers — that is what the
+//!   `register_function` lines below are for. `wire_hud` is the
+//!   other half: it puts a `BindContext(player)` on the document's
+//!   `HudRoot` once it spawns, which is what `PlayerHealth...`
+//!   resolves against.
+//!
+//! Edit `hud.bsn` in the editor, `Save`, and the running game picks
+//! it up like `scene.bsn`. Layout discipline for your own screens:
+//! percent and flex for anything position-like (the pause overlay
+//! stretches to 100% of the window, the HUD hugs the top-left corner),
+//! pixels only for sizes and padding — that is what keeps the screens
+//! correct from 800x600 up to 2560x1440. One editor edge to know:
+//! Play with a UI scene tab focused swaps the 3D scene for that UI
+//! alone (it previews the canvas); play from the 3D scene tab to run
+//! the game.
+//!
+//! # Saving progress and settings
+//!
+//! A run ends, the player drags a volume slider, and none of it is
+//! lost: the template persists a small player profile — `GameSave`
+//! below — through the runtime's `SavePlugin`, in one line:
+//!
+//! ```ignore
+//! app.add_plugins(SavePlugin::<GameSave>::new(env!("CARGO_PKG_NAME")));
+//! ```
+//!
+//! The file is `save.json` under the user's own data directory
+//! (`~/Library/Application Support/<game-id>/` on macOS) — which is
+//! what "separate from the scene files" means: scenes and configs are
+//! project assets, the save belongs to the player, and an exported
+//! build neither carries it nor overwrites it.
+//!
+//! The save is a second layer over the configs above: a config asset
+//! is the authored default the game ships with, the save is what the
+//! player changed. `apply_saved_audio` and `apply_saved_input` wait
+//! until the authored configs have landed, then put the saved values
+//! back over them; the `save_*_changes` watchers beside them persist
+//! every later change — a slider drag, a BRP edit — the same frame,
+//! so there is no save call to forget. A run ends at the game-over
+//! screen and `count_run_over` counts it; the third run unlocks
+//! `"endless"`; the menu's `Runs:` line reads a mirror of the save in
+//! `GameState` (bindings resolve resources, and the save itself is
+//! plain JSON you can open and read).
+//!
+//! The store guards itself: a missing file is a quiet first run, a
+//! damaged one is renamed to `save.json.corrupt-<millis>` and the
+//! game carries on, and a save from another version is never
+//! overwritten — the runtime's `SaveStore` docs hold the details.
+
+
+use bevy::audio::Volume;
+use bevy::feathers::controls::FeathersSlider;
+use bevy::prelude::*;
+use bevy::scene::bsn;
+use bevy::ui_widgets::{SliderValue, ValueChange};
+use jackdaw_runtime::prelude::*;
+use serde::{Deserialize, Serialize};
+
+/// Your game's Bevy plugin. `main.rs` adds this for both `cargo run`
+/// and the editor's Play button (same binary).
+#[derive(Default)]
+pub struct GamePlugin;
+
+impl Plugin for GamePlugin {
+    fn build(&self, app: &mut App) {
+        // The boot scene, read once: the editor's Play override, then
+        // the project's `game.flow.json`, then the template's menu. The
+        // same string maps to the initial `GameFlow` state below and is
+        // loaded by `spawn_scene`, so the state machine and the first
+        // document can never disagree.
+        let start = jackdaw_runtime::pie_scene_or(&jackdaw_runtime::flow::start_scene_or(
+            MENU_SCENE,
+        ));
+        app.insert_resource(BootScene(start.clone()))
+            .init_state::<GameFlow>()
+            // Inserting the boot state runs its `OnEnter` on the first
+            // frame — the game is born in the right world, not switched
+            // into it later.
+            .insert_state(boot_state(&start))
+            // `spawn_hud` in the Update watcher, never before the main
+            // root: the editor's Play swaps whichever scene root landed
+            // at the LOWEST entity index, and a hud root below the game
+            // root means Play swaps the hud document instead of the
+            // world (T12-T2 caught this live; the flow re-spawns the hud
+            // per level entry, so the ordering is pinned here every
+            // time, not just at startup).
+            .add_systems(Startup, spawn_scene)
+            .add_systems(Update, spin_cubes)
+            // One line per config type: register it as an asset (so the
+            // editor offers it in New Asset) and load `game-config.bsn`
+            // as the starting value of the `GameConfig` resource.
+            .init_asset::<GameConfig>()
+            .register_asset_reflect::<GameConfig>()
+            .add_plugins(ConfigPlugin::<GameConfig>::default())
+            // Audio (see "Game audio" above): the three-way mix config, the
+            // systems that build and refresh each sink's real volume, and
+            // the mirror that makes playing sounds inspectable.
+            .init_asset::<GameAudioConfig>()
+            .register_asset_reflect::<GameAudioConfig>()
+            .add_plugins(ConfigPlugin::<GameAudioConfig>::new("audio-config.bsn"))
+            // `AudioPlayer` is generic, and the reflect derive's automatic
+            // registration skips generic types: without this one line the
+            // scene loader cannot name the component a scene authored.
+            .register_type::<AudioPlayer<AudioSource>>()
+            // The pause screen's sliders emit this; generic for the same
+            // reason, so a BRP client can fire it by name (L leg discipline:
+            // drive the real event, not a stand-in).
+            .register_type::<ValueChange<f32>>()
+            // The sliders themselves attach from code (`attach_volume_sliders`
+            // below); feathers types are not in the reflect auto-inventory,
+            // so this line is what lets a BRP client name the widget.
+            .register_type::<FeathersSlider>()
+            // The slider's bar is a `BackgroundGradient` on the widget
+            // root, and a scene component's pieces apply through the type
+            // registry: a type the registry cannot name is dropped from
+            // the widget (its bar then never paints). These are the
+            // gradient's face and payload.
+            .register_type::<bevy::ui::BackgroundGradient>()
+            .register_type::<bevy::ui::Gradient>()
+            .register_type::<bevy::ui::ColorStop>()
+            .register_type::<bevy::ui::InterpolationColorSpace>()
+            // The scene gives the slider its bones (track, thumb, digits);
+            // the feathers runtime dresses them: theme observers, the
+            // embedded fonts the digits read, and the control style systems
+            // that fill the bar and move the thumb with the value. Without
+            // it the widget spawns and works but draws nothing. Coexists
+            // with the widgets runtime's own theme (its finish runs last
+            // by design).
+            .add_plugins(bevy::feathers::FeathersPlugins)
+            .add_systems(
+                Update,
+                // Chained: a fresh sink gets the mix before the mirror reads
+                // it — tuple order alone is not execution order.
+                (apply_audio_mix, apply_audio_mix_to_new_sinks, mirror_sound_live).chain(),
+            )
+            // Saving (see "Saving progress and settings" above): the
+            // player's profile in `save.json` under the user data
+            // directory. The plugin loads the file, inserts the store
+            // and registers it for reflection; the systems below are
+            // the whole integration.
+            .add_plugins(SavePlugin::<GameSave>::new(env!("CARGO_PKG_NAME")))
+            .add_observer(on_volume_changed)
+            .add_systems(
+                Update,
+                // The saved values stand over the authored defaults: each
+                // system waits until the authored config has landed (its
+                // loader despawned — that is the readiness gate both check),
+                // then the bridge applies the save over it once, and the
+                // watcher arms on the landing frame — skipping it, so an
+                // authored injection is never persisted as a player change.
+                // Every change after that frame (a slider drag, a BRP edit)
+                // lands in the save the same frame.
+                (apply_saved_audio, save_audio_changes)
+                    .after(jackdaw_runtime::apply_config_defaults::<GameAudioConfig>),
+            )
+            .add_systems(
+                Update,
+                (apply_saved_input, save_input_changes)
+                    .after(jackdaw_runtime::apply_config_defaults::<GameInputConfig>),
+            )
+            .add_systems(Update, (attach_volume_sliders, sync_volume_sliders, mirror_save_display))
+            .add_systems(OnEnter(GameFlow::Level), spawn_falling_cube)
+            .add_systems(Update, falling_cubes)
+            // Input: the built-in five actions evaluate every frame; the
+            // `input-actions.bsn` asset (same New Asset flow) overrides
+            // bindings and deadzones when the game registers the type.
+            .init_asset::<GameInputConfig>()
+            .register_asset_reflect::<GameInputConfig>()
+            .add_plugins(InputActionsPlugin)
+            .add_plugins(ConfigPlugin::<GameInputConfig>::new(
+                "input-actions.bsn",
+            ))
+            // The player spawns once — on the first entry into the level
+            // — and then crosses every switch untouched (see
+            // `spawn_player`; `reset_run` puts its numbers back).
+            .add_systems(OnEnter(GameFlow::Level), (spawn_player, reset_run).chain())
+            .add_systems(Update, (move_player, look_into_camera))
+            // The camera rig driver: activates the rig under the player
+            // and follows it every frame (see "Player controller" above).
+            .add_plugins(JackdawCameraRigPlugin)
+            // Game flow (see "Game flow" above): the per-state document
+            // swaps and cameras, the level-scoped hud, the observer the
+            // flow documents' buttons feed, and the systems that move
+            // the state. Types (`GameFlow`, `GameState`, `PlayerHealth`,
+            // `ScreenPressed`) need no registration — the `Reflect`
+            // derives announce them the same way they reach the editor's
+            // Add Component list; the via functions are the one binding
+            // piece a game registers by hand.
+            .init_resource::<GameState>()
+            .register_function(ratio)
+            .register_function(is_zero)
+            .register_function(not)
+            .add_observer(on_screen_pressed)
+            .add_systems(OnEnter(GameFlow::Menu), enter_menu)
+            .add_systems(OnEnter(GameFlow::Level), enter_level)
+            .add_systems(OnEnter(GameFlow::GameOver), (enter_game_over, count_run_over))
+            .add_systems(Update, spawn_hud_while_level)
+            .add_systems(
+                Update,
+                // Chained: the player spawns with a zeroed `PlayerHealth`,
+                // and an `update_game_over` that ran first would read
+                // current <= 0 on frame one and boot the game straight
+                // into game over (T12-T2 caught this live in PIE).
+                (wire_hud, (apply_health_from_config, update_game_over).chain()),
+            )
+            // The pause flip owns the frame: a Pause press never also
+            // moves the player, whichever way the bool lands. Registered
+            // HERE and only here — adding it twice (tuple + edge) runs
+            // the toggle twice per press and Escape never pauses
+            // (T12-T2 caught this live).
+            .add_systems(Update, handle_pause_action.before(move_player));
+        // Physics & triggers (the docs at the top walk the pattern):
+        // the bridge turns sensor contacts into `TriggerEvents` —
+        // `collect_pickups` and `hazard_damage` read it — and
+        // `apply_gravity_from_config` hands the config's gravity
+        // number to the engine. The props are level scenery:
+        // spawned on entry, gone on exit, back fresh on the next
+        // one.
+        app.add_plugins(jackdaw_avian_integration::TriggerPlugin)
+            .add_systems(OnEnter(GameFlow::Level), reset_run_counters)
+            .add_systems(
+                OnEnter(GameFlow::Level),
+                (spawn_stage, spawn_pickups, spawn_walls, spawn_hazards),
+            )
+            .add_systems(Update, (collect_pickups, hazard_damage, apply_gravity_from_config));
+    }
+}
+
+/// Spawn the one scene root the flow re-binds: `JackdawSceneRoot` is
+/// the runtime's switch primitive, and re-inserting it with a new
+/// handle is a whole world swap (the old document's entities despawn,
+/// the new one spawns when it loads). The handle is the boot scene —
+/// `game.flow.json`'s `start_scene` unless the editor's Play put one of
+/// its own there — the same string `boot_state` mapped the initial
+/// state from. One root for all three worlds: the flow moves the
+/// document under it, and the root itself (and this marker) is the
+/// stable thing across every switch.
+fn spawn_scene(
+    mut commands: Commands,
+    boot: Res<BootScene>,
+    asset_server: Res<AssetServer>,
+) {
+    commands.spawn((
+        Name::new("GameRoot"),
+        GameRoot,
+        JackdawSceneRoot(asset_server.load(boot.0.clone())),
+    ));
+}
+
+/// Spin-rate in radians per second. Attach it in the Components panel; the
+/// editor sees this component with no registration code because Bevy's
+/// `reflect_auto_register` picks up the `Reflect` derive. `Default` +
+/// `#[reflect(Default)]` let the editor add it and the game reconstruct
+/// it with sensible starting values.
+#[derive(Component, Reflect, Default)]
+#[reflect(Component, Default, @EditorCategory::new("Actor"))]
+pub struct SpinningCube {
+    pub speed: f32,
+}
+
+fn spin_cubes(time: Res<Time>, mut cubes: Query<(&SpinningCube, &mut Transform)>) {
+    let dt = time.delta_secs();
+    for (cube, mut transform) in &mut cubes {
+        transform.rotate_y(cube.speed * dt);
+    }
+}
+
+/// Game-wide tuning parameters. Both an `Asset` (the editor authors
+/// `game-config.bsn` files of it) and a `Resource` (systems read it),
+/// so the value can be edited in the editor, saved to disk, and loaded
+/// back as the starting value in every run — see "Tuning parameters"
+/// above. `player_health` is the run's starting health:
+/// `apply_health_from_config` hands it to the player's `PlayerHealth`
+/// component when the file loads — the config is the author's intent,
+/// the component is the live state after that.
+#[derive(Asset, Resource, Reflect, Clone)]
+#[reflect(Resource, Default, @EditorCategory::new("Game Config"))]
+pub struct GameConfig {
+    /// The health a run starts at, handed to the player's
+    /// `PlayerHealth` (see "Game UI" above).
+    pub player_health: f32,
+    /// Multiplies how fast things move and spin.
+    pub move_speed: f32,
+    /// Downward acceleration, in units per second squared.
+    pub gravity: f32,
+}
+
+impl Default for GameConfig {
+    /// Sensible numbers a game runs on before anyone has authored
+    /// `game-config.bsn` — a missing config is not an error.
+    fn default() -> Self {
+        Self {
+            player_health: 100.0,
+            move_speed: 1.0,
+            gravity: -9.81,
+        }
+    }
+}
+
+// ---- Game audio: the three-way mix and the live mirror ----------------
+
+/// Game-wide audio levels, the config-asset pattern again: author
+/// `assets/audio-config.bsn` through New Asset (or edit the file), and
+/// `apply_audio_mix` rebuilds every sink's real volume from it — live, in
+/// the editor's Play and in an exported build alike. Until the file exists
+/// the game runs on the `Default` (everything full).
+#[derive(Asset, Resource, Reflect, Clone)]
+#[reflect(Resource, Default, @EditorCategory::new("Game Config"))]
+pub struct GameAudioConfig {
+    /// Multiplies every sound in the game.
+    pub master: f32,
+    /// Multiplies every sound whose entity carries a `MusicBus`.
+    pub music: f32,
+    /// Multiplies every sound whose entity carries an `SfxBus`.
+    pub sfx: f32,
+}
+
+impl Default for GameAudioConfig {
+    fn default() -> Self {
+        Self {
+            master: 1.0,
+            music: 1.0,
+            sfx: 1.0,
+        }
+    }
+}
+
+/// Routes an entity's sound onto the music bus. A component the editor can
+/// add and a scene can author; `apply_audio_mix` reads it as a factor of
+/// `GameAudioConfig.music`.
+#[derive(Component, Reflect, Default)]
+#[reflect(Component, Default, @EditorCategory::new("Audio"))]
+pub struct MusicBus;
+
+/// Routes an entity's sound onto the sfx bus, same shape as [`MusicBus`].
+#[derive(Component, Reflect, Default)]
+#[reflect(Component, Default, @EditorCategory::new("Audio"))]
+pub struct SfxBus;
+
+/// What one sink actually plays at, right now. bevy's `AudioSink` and
+/// `SpatialAudioSink` are not reflected, so nothing outside the process can
+/// read them; this mirror is the inspectable surface — `mirror_sound_live`
+/// writes the sink's live numbers into it every frame, and the Resources
+/// panel (or a BRP query) reads it like any component.
+#[derive(Component, Reflect, Clone, Default)]
+#[reflect(Component, Default, @EditorCategory::new("Audio"))]
+pub struct SoundLive {
+    /// Which bus the sound rides: `"music"`, `"sfx"`, or `"plain"`.
+    pub kind: String,
+    /// The mixed volume the sink plays at (linear scale).
+    pub volume: f32,
+    /// Whether the sink is paused.
+    pub paused: bool,
+    /// Whether the sink has nothing left to play (a one-shot that ended).
+    pub finished: bool,
+    /// How far into the clip the sink is, in seconds.
+    pub position_secs: f32,
+}
+
+/// A sink's real volume: its authored base times its bus times the master.
+/// The engine reads `GlobalVolume` exactly once, when it creates the sink,
+/// and never follows a change — which is why the mix lives here rather
+/// than in `GlobalVolume`.
+fn mix_volume(base: f32, music: bool, sfx: bool, config: &GameAudioConfig) -> f32 {
+    let bus = if music {
+        config.music
+    } else if sfx {
+        config.sfx
+    } else {
+        1.0
+    };
+    base * bus * config.master
+}
+
+/// Re-apply the mix to every sink when the config changes — this is the
+/// half the engine leaves undone ("Changing GlobalVolume does not affect
+/// already playing audio"): a mid-run edit reaches sounds that are
+/// already playing. Runs as a no-op unless the resource changed.
+fn apply_audio_mix(
+    config: Res<GameAudioConfig>,
+    plain: Query<
+        (
+            &PlaybackSettings,
+            Option<&MusicBus>,
+            Option<&SfxBus>,
+            &mut AudioSink,
+        ),
+        Without<SpatialAudioSink>,
+    >,
+    spatial: Query<
+        (
+            &PlaybackSettings,
+            Option<&MusicBus>,
+            Option<&SfxBus>,
+            &mut SpatialAudioSink,
+        ),
+        Without<AudioSink>,
+    >,
+) {
+    if !config.is_changed() {
+        return;
+    }
+    for (settings, music, sfx, mut sink) in plain {
+        let volume = mix_volume(
+            settings.volume.to_linear(),
+            music.is_some(),
+            sfx.is_some(),
+            &config,
+        );
+        sink.set_volume(Volume::Linear(volume));
+    }
+    for (settings, music, sfx, mut sink) in spatial {
+        let volume = mix_volume(
+            settings.volume.to_linear(),
+            music.is_some(),
+            sfx.is_some(),
+            &config,
+        );
+        sink.set_volume(Volume::Linear(volume));
+    }
+}
+
+/// Write the mix onto each sink the frame it appears: the engine built it
+/// from the authored base alone (times `GlobalVolume`, which the template
+/// does not use), so a new sink on a bus starts at the wrong level until
+/// this runs.
+fn apply_audio_mix_to_new_sinks(
+    config: Res<GameAudioConfig>,
+    plain: Query<
+        (
+            &PlaybackSettings,
+            Option<&MusicBus>,
+            Option<&SfxBus>,
+            &mut AudioSink,
+        ),
+        (Added<AudioSink>, Without<SpatialAudioSink>),
+    >,
+    spatial: Query<
+        (
+            &PlaybackSettings,
+            Option<&MusicBus>,
+            Option<&SfxBus>,
+            &mut SpatialAudioSink,
+        ),
+        Added<SpatialAudioSink>,
+    >,
+) {
+    for (settings, music, sfx, mut sink) in plain {
+        let volume = mix_volume(
+            settings.volume.to_linear(),
+            music.is_some(),
+            sfx.is_some(),
+            &config,
+        );
+        sink.set_volume(Volume::Linear(volume));
+    }
+    for (settings, music, sfx, mut sink) in spatial {
+        let volume = mix_volume(
+            settings.volume.to_linear(),
+            music.is_some(),
+            sfx.is_some(),
+            &config,
+        );
+        sink.set_volume(Volume::Linear(volume));
+    }
+}
+
+/// Keep [`SoundLive`] true. Every entity playing a sound grows one (this
+/// system inserts it the first frame it sees the sink), and from then on it
+/// carries the sink's live numbers — the one reflected surface for audio a
+/// game, the editor or a BRP query can read.
+fn mirror_sound_live(
+    mut commands: Commands,
+    plain: Query<
+        (
+            Entity,
+            &AudioSink,
+            Option<&MusicBus>,
+            Option<&SfxBus>,
+        ),
+        Without<SpatialAudioSink>,
+    >,
+    spatial: Query<
+        (
+            Entity,
+            &SpatialAudioSink,
+            Option<&MusicBus>,
+            Option<&SfxBus>,
+        ),
+        Without<AudioSink>,
+    >,
+    mut live: Query<&mut SoundLive>,
+) {
+    let mut update =
+        |entity: Entity,
+         kind: &str,
+         volume: f32,
+         paused: bool,
+         finished: bool,
+         position: f32| {
+            let value = SoundLive {
+                kind: kind.to_string(),
+                volume,
+                paused,
+                finished,
+                position_secs: position,
+            };
+            match live.get_mut(entity) {
+                Ok(mut slot) => *slot = value,
+                Err(_) => {
+                    commands.entity(entity).insert(value);
+                }
+            }
+        };
+    for (entity, sink, music, sfx) in plain {
+        let kind = if music.is_some() {
+            "music"
+        } else if sfx.is_some() {
+            "sfx"
+        } else {
+            "plain"
+        };
+        update(
+            entity,
+            kind,
+            sink.volume().to_linear(),
+            sink.is_paused(),
+            sink.empty(),
+            sink.position().as_secs_f32(),
+        );
+    }
+    for (entity, sink, music, sfx) in spatial {
+        let kind = if music.is_some() {
+            "music"
+        } else if sfx.is_some() {
+            "sfx"
+        } else {
+            "plain"
+        };
+        update(
+            entity,
+            kind,
+            sink.volume().to_linear(),
+            sink.is_paused(),
+            sink.empty(),
+            sink.position().as_secs_f32(),
+        );
+    }
+}
+
+// ---- Game save: the player's layer ------------------------------------
+// The persisted half of progress, unlocks and settings. The runtime's
+// `SaveStore` owns the file, the version guard and the three-state
+// fallback; the systems below are the whole game-side integration: two
+// bridges that restore the saved settings over the authored defaults,
+// two watchers that persist the player's changes, the run counter, and
+// the pause screen's volume sliders (attached from code, see
+// `attach_volume_sliders`).
+
+/// What this game saves. Plain serde JSON inside the runtime's
+/// envelope (`save.json` under the user data directory). Extend it
+/// freely: the runtime versions the envelope, and a save whose
+/// `profile` no longer fits this type is treated like a damaged one —
+/// backed up, defaults in, the game runs.
+#[derive(Reflect, Clone, Default, Serialize, Deserialize)]
+#[reflect(Default)]
+pub struct GameSave {
+    /// How many runs have ended (a run ends at the game-over screen).
+    pub progress: GameProgress,
+    /// Things the player has unlocked; `"endless"` lands here on the
+    /// third finished run (`count_run_over`).
+    pub unlocks: Vec<String>,
+    /// The player's audio mix, when they have changed it. `None` — the
+    /// fresh first run — keeps the authored `audio-config.bsn` values
+    /// (or the defaults).
+    pub audio: Option<AudioPrefs>,
+    /// The player's rebound actions, when they have changed them.
+    /// Restored through the same union merge `input-actions.bsn` gets,
+    /// so actions the save omits keep their authored bindings.
+    pub input: Option<Vec<jackdaw_runtime::GameActionDef>>,
+}
+
+/// The run counter and whatever else a real game would add (score,
+/// checkpoints). The template keeps the one number the menu shows.
+#[derive(Reflect, Clone, Default, Serialize, Deserialize)]
+#[reflect(Default)]
+pub struct GameProgress {
+    /// Finished runs, counted at every game-over.
+    pub runs_played: u32,
+}
+
+/// The player's audio mix as the save holds it — the same three knobs
+/// `GameAudioConfig` authors, minus the asset plumbing.
+#[derive(Reflect, Clone, Debug, Default, PartialEq, Serialize, Deserialize)]
+#[reflect(Default)]
+pub struct AudioPrefs {
+    pub master: f32,
+    pub music: f32,
+    pub sfx: f32,
+}
+
+impl AudioPrefs {
+    fn from_config(config: &GameAudioConfig) -> Self {
+        Self {
+            master: config.master,
+            music: config.music,
+            sfx: config.sfx,
+        }
+    }
+
+    fn apply_to(&self, config: &mut GameAudioConfig) {
+        config.master = self.master;
+        config.music = self.music;
+        config.sfx = self.sfx;
+    }
+}
+
+/// How many finished runs unlock [`UNLOCK_ENDLESS`].
+const UNLOCK_ENDLESS_AFTER: u32 = 3;
+
+/// The unlock `count_run_over` grants: example data, a string in the
+/// save's `unlocks` list.
+const UNLOCK_ENDLESS: &str = "endless";
+
+/// Put the saved mix over the authored one, once, after the authored
+/// config has landed — a `ConfigLoader` still in flight means
+/// `apply_config_defaults` may yet inject the asset's values and would
+/// wash the save back out. No saved mix (`None`) is the common first
+/// run: the authored values simply stand.
+fn apply_saved_audio(
+    loaders: Query<(), With<ConfigLoader<GameAudioConfig>>>,
+    mut config: ResMut<GameAudioConfig>,
+    save: Res<SaveStore<GameSave>>,
+    mut armed: Local<bool>,
+) {
+    if *armed || !loaders.is_empty() {
+        return;
+    }
+    if let Some(prefs) = save.profile.audio.as_ref() {
+        prefs.apply_to(&mut config);
+    }
+    *armed = true;
+}
+
+/// Persist the player's mix. Armed on the frame the authored config
+/// lands — skipping that frame is what keeps the *authored* injection
+/// from being persisted as a player change, and what keeps a first run
+/// that never touched a slider from leaving a `save.json` behind at
+/// all. Every change after that frame lands in the save the same frame
+/// (`get_mut` marks the store dirty; the runtime's flush writes it).
+fn save_audio_changes(
+    config: Res<GameAudioConfig>,
+    loaders: Query<(), With<ConfigLoader<GameAudioConfig>>>,
+    mut save: ResMut<SaveStore<GameSave>>,
+    mut armed: Local<bool>,
+) {
+    if !*armed {
+        if loaders.is_empty() {
+            *armed = true;
+        }
+        return;
+    }
+    if !config.is_changed() {
+        return;
+    }
+    let prefs = save
+        .get_mut()
+        .audio
+        .get_or_insert_with(AudioPrefs::default);
+    *prefs = AudioPrefs::from_config(&config);
+}
+
+/// Put the saved rebinds over the authored table, once, after the
+/// authored input config has landed — the same union merge
+/// `input-actions.bsn` gets: saved entries win by name, everything the
+/// save omits keeps its authored (or built-in) binding.
+fn apply_saved_input(
+    loaders: Query<(), With<ConfigLoader<GameInputConfig>>>,
+    mut config: ResMut<GameInputConfig>,
+    save: Res<SaveStore<GameSave>>,
+    mut armed: Local<bool>,
+) {
+    if *armed || !loaders.is_empty() {
+        return;
+    }
+    if let Some(saved) = save.profile.input.as_ref() {
+        config.actions = jackdaw_runtime::merge_actions(&config.actions, saved);
+    }
+    *armed = true;
+}
+
+/// Persist the player's action table. Armed like the audio watcher:
+/// the authored injection frame is skipped, so a first run without any
+/// rebind writes nothing.
+fn save_input_changes(
+    config: Res<GameInputConfig>,
+    loaders: Query<(), With<ConfigLoader<GameInputConfig>>>,
+    mut save: ResMut<SaveStore<GameSave>>,
+    mut armed: Local<bool>,
+) {
+    if !*armed {
+        if loaders.is_empty() {
+            *armed = true;
+        }
+        return;
+    }
+    if !config.is_changed() {
+        return;
+    }
+    save.get_mut().input = Some(config.actions.clone());
+}
+
+/// A run ends at the game-over screen: count it, and grant `"endless"`
+/// on the third. `get_mut` marks the store dirty, and the runtime's
+/// flush writes the file on the same frame — no save call to forget.
+fn count_run_over(mut save: ResMut<SaveStore<GameSave>>) {
+    let profile = save.get_mut();
+    profile.progress.runs_played += 1;
+    if profile.progress.runs_played >= UNLOCK_ENDLESS_AFTER
+        && !profile
+            .unlocks
+            .iter()
+            .any(|unlock| unlock == UNLOCK_ENDLESS)
+    {
+        profile.unlocks.push(UNLOCK_ENDLESS.to_string());
+    }
+}
+
+/// The save's display mirror (see `GameState`): runs and the unlock
+/// note copied across on every frame they differ. A restart lands here
+/// too — the file loads before the first update, so the menu shows the
+/// restored numbers at once.
+fn mirror_save_display(save: Res<SaveStore<GameSave>>, mut state: ResMut<GameState>) {
+    let runs = save.profile.progress.runs_played;
+    let note = if save
+        .profile
+        .unlocks
+        .iter()
+        .any(|unlock| unlock == UNLOCK_ENDLESS)
+    {
+        "Endless mode unlocked!"
+    } else {
+        ""
+    };
+    if state.runs_played != runs {
+        state.runs_played = runs;
+    }
+    if state.unlock_note != note {
+        state.unlock_note = note.to_string();
+    }
+}
+
+/// Marks the pause screen's master-volume row (authored in hud.bsn),
+/// the attach point [`attach_volume_sliders`] hangs the slider on — and
+/// (once the slider is attached) the marker the observer and the sync
+/// find the widget by. Music and sfx repeat the shape.
+#[derive(Component, Reflect, Default)]
+#[reflect(Component, Default)]
+pub struct MasterVolumeSlider;
+
+/// The music-volume slider's marker, same shape as [`MasterVolumeSlider`].
+#[derive(Component, Reflect, Default)]
+#[reflect(Component, Default)]
+pub struct MusicVolumeSlider;
+
+/// The sfx-volume slider's marker, same shape as [`MasterVolumeSlider`].
+#[derive(Component, Reflect, Default)]
+#[reflect(Component, Default)]
+pub struct SfxVolumeSlider;
+
+/// Attach the three sliders to the pause screen's authored rows. A
+/// `FeathersSlider` is a *scene component*: the widget is a small scene
+/// (track, thumb, digits) that only comes into the world through the
+/// scene API — spawned as a bare component line in a document it would
+/// sit dead, its scene never built. `spawn_scene` is the whole
+/// attachment: the scene grows under the authored row, beside its
+/// label, and the marker rides the widget so the observer and the sync
+/// below keep pointing at it. `Added` re-fires for every fresh hud the
+/// flow spawns, so each entry into the level re-attaches itself.
+fn attach_volume_sliders(
+    mut commands: Commands,
+    // `Without<SliderValue>`: the marker rides the attached widget too (it
+    // is how the observer and the sync know which knob spoke), and without
+    // the exclusion the widget itself would re-match this query on the next
+    // frame — each slider spawning another slider under it, forever.
+    masters: Query<Entity, (Added<MasterVolumeSlider>, Without<SliderValue>)>,
+    musics: Query<Entity, (Added<MusicVolumeSlider>, Without<SliderValue>)>,
+    sfxs: Query<Entity, (Added<SfxVolumeSlider>, Without<SliderValue>)>,
+) {
+    for entity in &masters {
+        commands
+            .spawn_scene(bsn! { @FeathersSlider })
+            .insert((MasterVolumeSlider, ChildOf(entity)));
+    }
+    for entity in &musics {
+        commands
+            .spawn_scene(bsn! { @FeathersSlider })
+            .insert((MusicVolumeSlider, ChildOf(entity)));
+    }
+    for entity in &sfxs {
+        commands
+            .spawn_scene(bsn! { @FeathersSlider })
+            .insert((SfxVolumeSlider, ChildOf(entity)));
+    }
+}
+
+/// The pause screen's volume sliders write the mix: the widget emits
+/// `ValueChange<f32>`, this observer tells which slider spoke (its
+/// marker) and moves that knob of `GameAudioConfig` — the one resource
+/// `apply_audio_mix` and the save watcher both read. An observer is
+/// the whole bridge: a binding can read a resource but not write one.
+fn on_volume_changed(
+    change: On<ValueChange<f32>>,
+    masters: Query<(), With<MasterVolumeSlider>>,
+    musics: Query<(), With<MusicVolumeSlider>>,
+    sfxs: Query<(), With<SfxVolumeSlider>>,
+    mut config: ResMut<GameAudioConfig>,
+) {
+    if masters.contains(change.source) {
+        config.master = change.value;
+    } else if musics.contains(change.source) {
+        config.music = change.value;
+    } else if sfxs.contains(change.source) {
+        config.sfx = change.value;
+    }
+}
+
+/// Point the sliders back at the mix. The widget's value is
+/// external-state it never reads from the game, so everything that
+/// moves `GameAudioConfig` — the saved restore at startup, a BRP edit,
+/// an authored change — lands in the slider position here. No change
+/// detection gate on purpose: the sliders spawn when the level starts,
+/// long after the startup restore moved the config, and a spawned
+/// slider must pick that value up anyway. `SliderValue` is immutable,
+/// so a sync is a re-insert; the equality guard keeps a drag from
+/// feeding back on itself.
+fn sync_volume_sliders(
+    mut commands: Commands,
+    config: Res<GameAudioConfig>,
+    masters: Query<(Entity, &SliderValue), With<MasterVolumeSlider>>,
+    musics: Query<(Entity, &SliderValue), With<MusicVolumeSlider>>,
+    sfxs: Query<(Entity, &SliderValue), With<SfxVolumeSlider>>,
+) {
+    for (entity, value) in &masters {
+        if (value.0 - config.master).abs() > 1e-5 {
+            commands.entity(entity).insert(SliderValue(config.master));
+        }
+    }
+    for (entity, value) in &musics {
+        if (value.0 - config.music).abs() > 1e-5 {
+            commands.entity(entity).insert(SliderValue(config.music));
+        }
+    }
+    for (entity, value) in &sfxs {
+        if (value.0 - config.sfx).abs() > 1e-5 {
+            commands.entity(entity).insert(SliderValue(config.sfx));
+        }
+    }
+}
+
+/// A cube the config drives, spawned so there is something to watch:
+/// it falls under gravity and spins at its component's `speed`
+/// scaled by `GameConfig::move_speed` — the per-entity number and
+/// the game-wide number working together.
+///
+/// With the physics module (the default) the fall is the engine's:
+/// the cube is a dynamic body with its own collider, dropped onto
+/// the stage `spawn_stage` lays below it, so it lands and stays.
+/// The spin stays the game's own — a system, not a force.
+#[derive(Component, Reflect, Default)]
+#[reflect(Component, Default, @EditorCategory::new("Actor"))]
+pub struct FallingCube {
+    pub speed: f32,
+}
+
+fn spawn_falling_cube(
+    mut commands: Commands,
+    mut meshes: ResMut<Assets<Mesh>>,
+    mut materials: ResMut<Assets<StandardMaterial>>,
+) {
+    // No `SpinningCube` here: two systems rotating one entity stack
+    // their rates, which reads as the config having no effect. The
+    // falling cube's spin belongs to `move_speed` alone, so one value
+    // changes one behavior.
+    // The cube is level scenery: spawned with the level, gone with it
+    // (`DespawnOnExit`), back fresh the next time the level starts.
+    commands.spawn((
+        FallingCube { speed: 1.0 },
+        Mesh3d(meshes.add(Cuboid::new(0.6, 0.6, 0.6))),
+        MeshMaterial3d(materials.add(StandardMaterial {
+            base_color: Color::srgb(0.9, 0.9, 0.9),
+            ..default()
+        })),
+        Transform::from_xyz(0.0, 3.0, 0.0),
+        DespawnOnExit(GameFlow::Level),
+        avian3d::prelude::RigidBody::Dynamic,
+        jackdaw_avian_integration::AvianCollider(
+            avian3d::prelude::ColliderConstructor::Cuboid {
+                x_length: 0.6,
+                y_length: 0.6,
+                z_length: 0.6,
+            },
+        ),
+    ));
+}
+
+fn falling_cubes(
+    time: Res<Time>,
+    config: Res<GameConfig>,
+    mut cubes: Query<(&FallingCube, &mut Transform)>,
+) {
+    let dt = time.delta_secs();
+    for (cube, mut transform) in &mut cubes {
+        transform.rotate_y(cube.speed * config.move_speed * dt);
+    }
+}
+
+/// Marks the entity the five input actions drive. The template spawns
+/// one complete; the full set a hand-authored player needs is listed
+/// under "Player controller" above (with physics: five components,
+/// two without). Its camera is a rig parented under it — or an
+/// `ActiveCameraRig` when another rig already exists.
+#[derive(Component, Reflect, Default)]
+#[reflect(Component, Default, @EditorCategory::new("Actor"))]
+pub struct PlayerMarker;
+
+/// The author's half of the player: the tuning the Components panel
+/// edits and the scene saves. Per-entity numbers belong on the entity,
+/// game-wide numbers in `GameConfig` — the same split as `SpinningCube`'s
+/// `speed` against the config's `move_speed`.
+#[derive(Component, Reflect)]
+#[reflect(Component, Default, @EditorCategory::new("Actor"))]
+pub struct PlayerController {
+    /// Ground speed, metres per second.
+    pub move_speed: f32,
+    /// Launch speed of a jump, metres per second (straight up).
+    pub jump_speed: f32,
+}
+
+impl Default for PlayerController {
+    fn default() -> Self {
+        Self {
+            move_speed: 4.0,
+            jump_speed: 4.5,
+        }
+    }
+}
+
+/// The player: spawned once, on the first entry into the level, and
+/// never again. It is code-spawned and part of no scene document, so
+/// every switch the flow makes leaves it alone — its entity id is one
+/// and the same from Start through game over to Restart (the run's
+/// container, not the run). What changes is its numbers, and
+/// `reset_run` (right after this on every level entry) is what puts
+/// them back.
+fn spawn_player(
+    mut commands: Commands,
+    mut meshes: ResMut<Assets<Mesh>>,
+    mut materials: ResMut<Assets<StandardMaterial>>,
+    existing: Query<(), With<PlayerMarker>>,
+) {
+    if !existing.is_empty() {
+        return;
+    }
+    // The visible body. The capsule matches the collider below, so what
+    // you see is what collides. `PlayerHealth` is what the hud reads:
+    // it starts at the `Default` and `apply_health_from_config` (below)
+    // hands the config's `player_health` over as soon as it loads.
+    let player = commands
+        .spawn((
+            PlayerMarker,
+            PlayerController::default(),
+            PlayerHealth::default(),
+            Mesh3d(meshes.add(Capsule3d::new(0.35, 1.0))),
+            MeshMaterial3d(materials.add(StandardMaterial {
+                base_color: Color::srgb(0.25, 0.55, 0.9),
+                ..default()
+            })),
+            Transform::from_translation(PLAYER_SPAWN),
+        avian3d::prelude::RigidBody::Kinematic,
+        jackdaw_avian_integration::AvianCollider(
+            avian3d::prelude::ColliderConstructor::Capsule {
+                radius: 0.35,
+                height: 1.0,
+            },
+        ),
+        PlayerVelocity(Vec3::ZERO),
+        PickupCount(0),
+        ))
+        .id();
+    // The follow camera: a rig parented to the player. Parenting is the
+    // whole setup — the plugin above activates a lone rig by itself and
+    // drives it around its parent every frame. The `SpatialListener` rides
+    // the same entity: spatial sounds (like the level's `Ambient` drone)
+    // pan and fade against wherever the player is.
+    commands.spawn((SpatialListener::default(), CameraRig::default(), ChildOf(player)));
+}
+
+/// The horizontal direction the Move action asks for this frame, in
+/// world space but relative to the camera: rotate the stick/WASD input
+/// by the camera's yaw so W is always "away from the camera", then
+/// clamp to unit length so diagonals are not faster.
+fn move_direction(move_input: Vec2, camera_yaw: f32) -> Vec3 {
+    let forward = Quat::from_rotation_y(camera_yaw) * -Vec3::Z;
+    let right = Quat::from_rotation_y(camera_yaw) * Vec3::X;
+    let mut direction = right * move_input.x + forward * move_input.y;
+    direction.y = 0.0;
+    if direction.length_squared() > 1.0 {
+        direction = direction.normalize();
+    }
+    direction
+}
+
+/// How quickly the body turns to face where it walks: the fraction of
+/// the turn to take scales with this, so the turn takes roughly a
+/// tenth of a second at any frame rate.
+const PLAYER_TURN_RATE: f32 = 12.0;
+
+/// Turn `transform` to face `direction` smoothly — the body runs to
+/// face where it walks instead of snapping. Skipped when there is no
+/// movement this frame.
+fn face_movement_direction(direction: Vec3, dt: f32, transform: &mut Transform) {
+    let horizontal = Vec3::new(direction.x, 0.0, direction.z);
+    if horizontal.length_squared() < 1e-6 {
+        return;
+    }
+    let facing = horizontal.normalize();
+    // `-Z` faces the rotation's "forward"; solve for the yaw that puts
+    // it along `facing`.
+    let target = Quat::from_rotation_y((-facing.x).atan2(-facing.z));
+    let turn = (PLAYER_TURN_RATE * dt).clamp(0.0, 1.0);
+    transform.rotation = transform.rotation.slerp(target, turn);
+}
+
+/// The Look action drives the rig's orientation: mouse (and right
+/// stick) motion becomes `CameraLook` yaw and pitch — the same state
+/// the rig's own right-mouse-drag channel writes. While that button is
+/// held the bridge yields, so the two channels never double-write the
+/// same turn.
+fn look_into_camera(
+    actions: Res<GameActions>,
+    mouse: Option<Res<ButtonInput<MouseButton>>>,
+    mut rigs: Query<(&CameraRig, &mut CameraLook)>,
+) {
+    if mouse
+        .as_deref()
+        .is_some_and(|buttons| buttons.pressed(MouseButton::Right))
+    {
+        return;
+    }
+    let look = actions.value("Look");
+    if look == Vec2::ZERO {
+        return;
+    }
+    for (rig, mut camera) in &mut rigs {
+        camera.yaw -= look.x * rig.sensitivity;
+        camera.pitch = match rig.mode {
+            // Third person: look down increases the pitch, bounded to
+            // stay above the horizon.
+            CameraMode::ThirdPerson => {
+                (camera.pitch + look.y * rig.sensitivity).clamp(0.05, 1.4)
+            }
+            // First person: look up increases the pitch, bounded to
+            // stay short of straight up/down.
+            CameraMode::FirstPerson => {
+                (camera.pitch - look.y * rig.sensitivity).clamp(-1.4, 1.4)
+            }
+        };
+    }
+}
+
+// ---- Game flow: three worlds, one state machine ----------------------
+// The states, the document each one shows, the cameras that render the
+// ones without a rig, and the systems that move between them. The
+// documents themselves are data — open `menu.bsn`, `scene.bsn` or
+// `gameover.bsn` in the editor to restyle or rewire them.
+
+/// The scene documents the flow moves between, spelled once: the boot
+/// fallback, the state mapping and the per-state swaps all name the
+/// same three files.
+const MENU_SCENE: &str = "menu.bsn";
+const LEVEL_SCENE: &str = "scene.bsn";
+const GAME_OVER_SCENE: &str = "gameover.bsn";
+/// The level's overlay (see "Game UI" below) — not a world of its own,
+/// so it is not in the flow file's rotation; it lives and dies with
+/// `LEVEL_SCENE`.
+const HUD_SCENE: &str = "hud.bsn";
+
+/// The scene the game boots into, read once in `GamePlugin::build`:
+/// the same string maps to the initial [`GameFlow`] state (through
+/// [`boot_state`]) and is loaded by [`spawn_scene`], so the state
+/// machine and the first document can never disagree (that mismatch is
+/// exactly what a Play-Current launch would otherwise produce).
+#[derive(Resource)]
+struct BootScene(String);
+
+/// Which world the game is in. The `States` derive makes it bevy's
+/// state machine: `OnEnter`/`OnExit` schedules run per state and
+/// `DespawnOnExit(GameFlow::Menu)` removes an entity when `Menu` ends.
+/// The worlds are mutually exclusive by construction — the flow re-binds
+/// one scene root per state — and the hud's bindings deliberately do
+/// not read this enum: bindings resolve resource and component paths,
+/// so the one bool they do read lives in [`GameState`] next door.
+/// States for worlds, bools for binding data.
+#[derive(States, Debug, Clone, Copy, PartialEq, Eq, Hash, Default)]
+pub enum GameFlow {
+    /// The start screen: the `menu.bsn` document and its own camera.
+    #[default]
+    Menu,
+    /// The playable world: `scene.bsn`, the player, the hud.
+    Level,
+    /// The end screen: the `gameover.bsn` document and its own camera.
+    GameOver,
+}
+
+/// The boot mapping: the menu document boots as the menu, the
+/// game-over document as the end screen, and any other start scene —
+/// including the editor's own scene on a Play-Current launch — as a
+/// world to play.
+fn boot_state(start: &str) -> GameFlow {
+    match start {
+        MENU_SCENE => GameFlow::Menu,
+        GAME_OVER_SCENE => GameFlow::GameOver,
+        _ => GameFlow::Level,
+    }
+}
+
+/// Marks the scene root the flow moves the worlds under. Three
+/// documents pass through this root one at a time; the root entity and
+/// its `Name` are the one stable thing across a switch.
+#[derive(Component, Reflect, Default)]
+#[reflect(Component, Default)]
+pub struct GameRoot;
+
+/// The menu document's own marker, authored on its root in
+/// `menu.bsn` — the hook anything that wants to find the menu looks
+/// for (the editor's Play view, a BRP query, your own systems). The
+/// `Default` here is load-bearing: the document's bare marker line
+/// applies through `ReflectDefault`.
+#[derive(Component, Reflect, Default)]
+#[reflect(Component, Default)]
+pub struct MenuRoot;
+
+/// The game-over document's marker, same shape as [`MenuRoot`].
+#[derive(Component, Reflect, Default)]
+#[reflect(Component, Default)]
+pub struct GameOverRoot;
+
+/// Show the menu: re-bind the game root to the menu document, and
+/// raise the UI camera that renders it, scoped to this state.
+///
+/// A switch is one handle insert: the runtime despawns the old
+/// document's members and spawns the new one when it loads, so there is
+/// nothing here to clean up by hand. And the very first `OnEnter` —
+/// the boot state's — runs before `Startup` has spawned the root: there
+/// is nothing to re-bind, and the root already boots on the document
+/// the state was mapped from (they read the same `BootScene`).
+fn enter_menu(
+    mut commands: Commands,
+    roots: Query<Entity, With<GameRoot>>,
+    server: Res<AssetServer>,
+) {
+    if let Ok(root) = roots.single() {
+        commands
+            .entity(root)
+            .insert(JackdawSceneRoot(server.load(MENU_SCENE)));
+    }
+    // A UI document shown alone has no camera to render it (the level's
+    // camera is the rig under the player), so each UI world brings its
+    // own: 2D, marked as the UI camera, ordered above the rig's 3D one,
+    // and removed with the state — `DespawnOnExit` is the whole
+    // lifecycle.
+    commands.spawn((
+        Name::new("MenuUiCamera"),
+        Camera2d,
+        IsDefaultUiCamera,
+        Camera {
+            order: 1,
+            ..default()
+        },
+        DespawnOnExit(GameFlow::Menu),
+    ));
+}
+
+/// Show the level: re-bind the game root to the level document. The
+/// hud follows in the Update watcher below, the player and its rig
+/// spawn once beside the root, and the level's props arrive with their
+/// own `DespawnOnExit(GameFlow::Level)` — see the physics section.
+fn enter_level(
+    mut commands: Commands,
+    roots: Query<Entity, With<GameRoot>>,
+    server: Res<AssetServer>,
+) {
+    if let Ok(root) = roots.single() {
+        commands
+            .entity(root)
+            .insert(JackdawSceneRoot(server.load(LEVEL_SCENE)));
+    }
+}
+
+/// Show the end screen: the game-over document and its camera, the
+/// same shape as the menu.
+fn enter_game_over(
+    mut commands: Commands,
+    roots: Query<Entity, With<GameRoot>>,
+    server: Res<AssetServer>,
+) {
+    if let Ok(root) = roots.single() {
+        commands
+            .entity(root)
+            .insert(JackdawSceneRoot(server.load(GAME_OVER_SCENE)));
+    }
+    commands.spawn((
+        Name::new("GameOverUiCamera"),
+        Camera2d,
+        IsDefaultUiCamera,
+        Camera {
+            order: 1,
+            ..default()
+        },
+        DespawnOnExit(GameFlow::GameOver),
+    ));
+}
+
+/// The level's HUD: spawned when the level becomes current, scoped to
+/// it (`DespawnOnExit`), back fresh on the next entry. A watcher in
+/// `Update` rather than an `OnEnter` spawn on purpose: the hud root
+/// must land at a HIGHER entity index than the game root, or the
+/// editor's Play would swap the hud document instead of the world —
+/// and a boot into `Level` (Play-Current, or a flow file that names a
+/// level) enters the state before `Startup` spawns the main root. This
+/// way the ordering holds on every entry, not just the first.
+fn spawn_hud_while_level(
+    mut commands: Commands,
+    server: Res<AssetServer>,
+    flow: Res<State<GameFlow>>,
+    mut live: Local<bool>,
+) {
+    let live_now = flow.get() == &GameFlow::Level;
+    if live_now && !*live {
+        commands.spawn((
+            JackdawSceneRoot(server.load(HUD_SCENE)),
+            DespawnOnExit(GameFlow::Level),
+        ));
+    }
+    *live = live_now;
+}
+
+/// Which screen is up inside the level. The hud's bindings read this
+/// resource: the pause screen's `Visibility` is bound to the bool, so
+/// flipping it is the whole show/hide mechanism. The worlds are
+/// `GameFlow`'s to make; overlays inside one world are bools like this.
+/// The other two fields are the save's display mirror (see
+/// `mirror_save_display`): bindings resolve resources, so the menu and
+/// game-over documents read the run counter here rather than naming
+/// the generic save store in a document.
+#[derive(Resource, Reflect, Default)]
+#[reflect(Resource, Default)]
+pub struct GameState {
+    pub paused: bool,
+    /// How many runs the save says have ended.
+    pub runs_played: u32,
+    /// The unlock line the menu shows; empty until `"endless"` is in
+    /// the save's `unlocks`.
+    pub unlock_note: String,
+}
+
+/// What a flow or hud button says. The button's `Action` binding in
+/// `menu.bsn`, `hud.bsn` or `gameover.bsn` sends this with `button`
+/// filled from its literal (`"start"`, `"resume"`, `"restart"`,
+/// `"menu"`) — one event for every screen's buttons: the payload, not
+/// the type, says what was pressed.
+#[derive(Event, Reflect, Clone, Default)]
+#[reflect(Event, Default)]
+pub struct ScreenPressed {
+    pub button: String,
+}
+
+/// The health the hud reads, live on the player. The component is the
+/// run's state; `GameConfig.player_health` is the author's starting
+/// number for it — `apply_health_from_config` below hands one to the
+/// other. Same split as the falling cube's `speed` (component, live)
+/// against the config's `move_speed` (asset, author intent).
+#[derive(Component, Reflect, Default)]
+#[reflect(Component, Default, @EditorCategory::new("Actor"))]
+pub struct PlayerHealth {
+    pub current: f32,
+    pub max: f32,
+}
+
+/// How much one hit takes off, wherever it comes from (the hazard
+/// sensors with the physics module, the Interact key without).
+const PLAYER_DAMAGE: f32 = 15.0;
+
+/// Where a run begins — the first entry and every reset both use it,
+/// so a restart lands exactly where the game started.
+const PLAYER_SPAWN: Vec3 = Vec3::new(-2.0, 1.0, 0.0);
+
+/// current/max -> 0..1 for the health bar's fill. Registered in
+/// `GamePlugin` above: a binding's `via` can only call functions the
+/// game has registered, and this one turns two component fields into
+/// the one number a bar wants.
+fn ratio(current: f32, max: f32) -> f32 {
+    (current / max).clamp(0.0, 1.0)
+}
+
+/// Boolean not, for bindings that show a thing while a flag is false.
+/// Registered like `ratio`.
+fn not(value: bool) -> bool {
+    !value
+}
+
+/// Zero means the run is over — registered like `ratio` (the
+/// `is_zero`-bound veil in `hud_scenario` is the pattern; this game
+/// ends its runs through `GameFlow` instead and keeps the function
+/// here as the other half of the pair your own bindings reach for).
+fn is_zero(value: f32) -> bool {
+    value == 0.0
+}
+
+/// The marker the hud document itself carries, so the game can tell
+/// the UI root from everything else it spawns. The `Default` here is
+/// load-bearing: the document's bare `HudRoot` line applies through
+/// `ReflectDefault`.
+#[derive(Component, Reflect, Default)]
+#[reflect(Component, Default)]
+pub struct HudRoot;
+
+/// Point the hud at the player: once the document spawns, its root
+/// gets a `BindContext(player)` and every binding inside resolves the
+/// player's components (the health below, the pickup counter the
+/// physics module adds) against that entity. This insert is the whole
+/// wiring — nothing else needs to know the UI exists. `Added` re-fires
+/// for every fresh hud the flow spawns, so each entry into the level
+/// re-wires itself.
+fn wire_hud(
+    mut commands: Commands,
+    hud_roots: Query<Entity, Added<HudRoot>>,
+    players: Query<Entity, With<PlayerMarker>>,
+) {
+    let (Ok(root), Ok(player)) = (hud_roots.single(), players.single()) else {
+        return;
+    };
+    commands.entity(root).insert(BindContext(player));
+}
+
+/// What the flow documents' buttons do. The bindings send
+/// `ScreenPressed`; this observer is the whole behavior — Start and
+/// Restart both move the flow to the level (Restart's reset is
+/// `reset_run`, which runs on every entry into the level — switching
+/// IS the reset), Menu goes back to the start screen, Resume drops the
+/// pause veil. Every acknowledged press also sounds the button blip
+/// (`press_sound` below).
+fn on_screen_pressed(
+    press: On<ScreenPressed>,
+    mut flow: ResMut<NextState<GameFlow>>,
+    mut state: ResMut<GameState>,
+    mut commands: Commands,
+    server: Res<AssetServer>,
+) {
+    match press.event().button.as_str() {
+        // Start and Restart both move the flow to the level: the run's
+        // numbers come back through `reset_run` on the entry, so
+        // Restart needs nothing of its own.
+        "start" | "restart" => {
+            press_sound(&mut commands, &server);
+            flow.set(GameFlow::Level);
+        }
+        "menu" => {
+            press_sound(&mut commands, &server);
+            flow.set(GameFlow::Menu);
+        }
+        "resume" => {
+            press_sound(&mut commands, &server);
+            state.paused = false;
+        }
+        _ => {}
+    }
+}
+
+/// The file the screen buttons acknowledge a press with.
+const BLIP_SOUND: &str = "sounds/blip.wav";
+
+/// One-shot feedback for a screen press: a short entity that plays
+/// `blip.wav` on the sfx bus and takes itself down when the sound ends —
+/// `PlaybackSettings::DESPAWN` is the whole lifecycle, and the entity's
+/// brief life is the "stop" behavior a one-shot wants.
+fn press_sound(commands: &mut Commands, server: &AssetServer) {
+    // The turbofish is load-bearing: `AudioPlayer`'s generic has a default,
+    // but inference will not apply it in an expression.
+    commands.spawn((
+        AudioPlayer::<AudioSource>(server.load(BLIP_SOUND)),
+        PlaybackSettings::DESPAWN,
+        SfxBus,
+    ));
+}
+
+/// The run's numbers come back on every entry into the level — the
+/// first one and every Restart both land here, so the end screen's
+/// Restart button needs no reset logic of its own. Full health comes
+/// straight from the config (the author's number, the same one
+/// `apply_health_from_config` hands over on load), and the player goes
+/// back to the spawn point. The player itself is not respawned: it
+/// crossed the switch untouched (`spawn_player` runs once). Chained
+/// right after `spawn_player` on purpose: a freshly spawned player
+/// carries a zeroed health, and this is what fills it before any
+/// game-over check can read it.
+fn reset_run(
+    config: Res<GameConfig>,
+    mut players: Query<(&mut PlayerHealth, &mut Transform), With<PlayerMarker>>,
+) {
+    for (mut health, mut transform) in &mut players {
+        health.max = config.player_health;
+        health.current = config.player_health;
+        *transform = Transform::from_translation(PLAYER_SPAWN);
+    }
+}
+
+/// The Pause action stops being a log line: Escape (or Start) flips
+/// `paused` and the pause screen's visibility follows — and it belongs
+/// to the level: on the menu or the end screen a screen already owns
+/// the moment, so only a current `Level` answers. The Resume button
+/// lands on the same bool through `on_screen_pressed` — one piece of
+/// state, two doors in.
+fn handle_pause_action(
+    actions: Res<GameActions>,
+    flow: Res<State<GameFlow>>,
+    mut state: ResMut<GameState>,
+) {
+    if actions.just_pressed("Pause") && flow.get() == &GameFlow::Level {
+        state.paused = !state.paused;
+    }
+}
+
+/// The config hands its `player_health` to the component the run
+/// actually reads: the config is the author's starting number, the
+/// component is live state (damage moves it; the config does not
+/// follow back). Runs on config change, so the file's first load and
+/// an editor mid-run edit both carry — the same shape as gravity.
+fn apply_health_from_config(
+    config: Res<GameConfig>,
+    mut players: Query<&mut PlayerHealth, With<PlayerMarker>>,
+) {
+    if !config.is_changed() {
+        return;
+    }
+    for mut health in &mut players {
+        health.max = config.player_health;
+        health.current = config.player_health;
+    }
+}
+
+/// Damage lands here (the hazard sensors below, or the Interact key
+/// when a game has no physics module). Clamped at zero; the game-over
+/// check is what reacts.
+fn take_damage(health: &mut PlayerHealth, amount: f32) {
+    health.current = (health.current - amount).max(0.0);
+}
+
+/// Blood out ends the run: the flow moves to the game-over world, and
+/// its `OnEnter` swaps the document and raises the end screen's
+/// camera. Only a current `Level` can end — a player on the menu or
+/// the end screen is not in a run.
+fn update_game_over(
+    flow: Res<State<GameFlow>>,
+    mut next: ResMut<NextState<GameFlow>>,
+    mut state: ResMut<GameState>,
+    players: Query<&PlayerHealth, With<PlayerMarker>>,
+) {
+    if flow.get() != &GameFlow::Level {
+        return;
+    }
+    for health in &players {
+        if health.current <= 0.0 {
+            state.paused = false;
+            next.set(GameFlow::GameOver);
+            break;
+        }
+    }
+}
+/// The player's velocity, in metres per second. `move_player` owns it
+/// entirely — gravity adds to it, the ground and walls take from it,
+/// a jump sets it — so it is runtime state, not an author knob (edit
+/// `PlayerController` above to tune how the player moves).
+#[derive(Component, Reflect, Default)]
+#[reflect(Component, Default, @EditorCategory::new("Actor"))]
+pub struct PlayerVelocity(pub Vec3);
+
+/// Everything the five actions do to the player, in one system:
+///
+/// * `Move` becomes a target horizontal velocity relative to the
+///   camera (see `move_direction`);
+/// * gravity — the same `GameConfig.gravity` the engine itself got
+///   from `apply_gravity_from_config` — integrates onto the vertical
+///   axis every frame, grounded or not;
+/// * `Jump`, just-pressed and only when a short downward cast finds
+///   ground that is not too steep, launches at `jump_speed`;
+/// * `move_and_slide` then sweeps the capsule for the frame's
+///   distance: as far as the way is clear, sliding along whatever is
+///   in the way, and back out of anything already penetrated — that
+///   sweep is the "collides with walls" half of a controller, and it
+///   hands back the position and the leftover (slid) velocity.
+///
+/// None of it runs outside a run: the flow's `Level` state is the
+/// world gate and `paused` the freeze inside it — the same two checks
+/// the no-physics form makes, against the same state the hud reads.
+fn move_player(
+    actions: Res<GameActions>,
+    flow: Res<State<GameFlow>>,
+    state: Res<GameState>,
+    config: Res<GameConfig>,
+    time: Res<Time>,
+    move_and_slide: avian3d::prelude::MoveAndSlide,
+    mut players: Query<
+        (
+            Entity,
+            &PlayerController,
+            &avian3d::prelude::Collider,
+            &mut PlayerVelocity,
+            &mut Transform,
+        ),
+        With<PlayerMarker>,
+    >,
+    look: Query<&CameraLook>,
+) {
+    if flow.get() != &GameFlow::Level || state.paused {
+        return;
+    }
+    use avian3d::math::{ToF32Precision, ToRealPrecision};
+    let dt = time.delta_secs();
+    let camera_yaw = look.single().map(|camera| camera.yaw).unwrap_or(0.0);
+    let direction = move_direction(actions.value("Move"), camera_yaw);
+    for (entity, controller, collider, mut velocity, mut transform) in &mut players {
+        velocity.0.x = direction.x * controller.move_speed;
+        velocity.0.z = direction.z * controller.move_speed;
+        velocity.0.y += config.gravity * dt;
+        // Exclude the player's own collider from its queries, or the
+        // first sweep hits the player.
+        let filter =
+            avian3d::prelude::SpatialQueryFilter::from_excluded_entities([entity]);
+        // A short cast straight down from the resting capsule finds the
+        // ground (a hit whose surface is not too steep); skin width
+        // keeps the resting capsule a hair above it, so the 0.1 m cast
+        // is enough.
+        let grounded = move_and_slide
+            .spatial_query
+            .cast_shape(
+                collider,
+                transform.translation.real(),
+                transform.rotation,
+                Dir3::NEG_Y,
+                &avian3d::prelude::ShapeCastConfig::from_max_distance(0.1),
+                &filter,
+            )
+            .is_some_and(|hit| hit.normal1.y > 0.7);
+        if grounded && actions.just_pressed("Jump") {
+            velocity.0.y = controller.jump_speed;
+        }
+        let output = move_and_slide.move_and_slide(
+            collider,
+            transform.translation.real(),
+            transform.rotation,
+            velocity.0.real(),
+            time.delta(),
+            &avian3d::prelude::MoveAndSlideConfig::default(),
+            &filter,
+            // Per-hit handling (footsteps, events) would go here; the
+            // default accepts every hit and slides.
+            |_| avian3d::prelude::MoveAndSlideHitResponse::Accept,
+        );
+        transform.translation = output.position.f32();
+        velocity.0 = output.projected_velocity;
+        face_movement_direction(direction, dt, &mut transform);
+    }
+    if actions.just_pressed("Interact") {
+        info!("Interact!");
+    }
+}
+// ---- Physics & triggers: the pickup demo -------------------------
+// The stage, the pickups and the systems above them. Everything a
+// game needs to copy: spawn a `Sensor` collider, read `TriggerEvents`.
+// Every prop below is level scenery — spawned on entering the level,
+// `DespawnOnExit` takes it when the level ends, and the next entry
+// starts from a fresh set.
+
+/// A thing to walk over and collect: a small glowing sensor cube.
+#[derive(Component, Reflect, Default)]
+#[reflect(Component, Default, @EditorCategory::new("Actor"))]
+pub struct Pickup;
+
+/// How many pickups the player holds, carried by the player entity
+/// (a component, so the editor's Play view and an exported build can
+/// both see the count move).
+#[derive(Component, Reflect, Default)]
+#[reflect(Component, Default, @EditorCategory::new("Actor"))]
+pub struct PickupCount(pub u32);
+
+/// The floor everything stands on: one big static collider.
+fn spawn_stage(
+    mut commands: Commands,
+    mut meshes: ResMut<Assets<Mesh>>,
+    mut materials: ResMut<Assets<StandardMaterial>>,
+) {
+    commands.spawn((
+        Mesh3d(meshes.add(Cuboid::new(20.0, 1.0, 20.0))),
+        MeshMaterial3d(materials.add(StandardMaterial {
+            base_color: Color::srgb(0.15, 0.15, 0.18),
+            ..default()
+        })),
+        Transform::from_xyz(0.0, -0.5, 0.0),
+        DespawnOnExit(GameFlow::Level),
+        jackdaw_avian_integration::AvianCollider(
+            avian3d::prelude::ColliderConstructor::Cuboid {
+                x_length: 20.0,
+                y_length: 1.0,
+                z_length: 20.0,
+            },
+        ),
+    ));
+}
+
+/// Three pickups in a line between the player and the falling cube.
+/// (`reset_run_counters` puts the count back when the level starts
+/// over; the props themselves come back through `DespawnOnExit` and
+/// the level-entry spawns.)
+fn spawn_pickups(
+    mut commands: Commands,
+    mut meshes: ResMut<Assets<Mesh>>,
+    mut materials: ResMut<Assets<StandardMaterial>>,
+) {
+    spawn_pickup_line(&mut commands, &mut meshes, &mut materials);
+}
+
+/// The pickup cubes themselves, one line of three. Its own function so
+/// a restart lays the line down again after the run despawned it.
+fn spawn_pickup_line(
+    commands: &mut Commands,
+    meshes: &mut Assets<Mesh>,
+    materials: &mut Assets<StandardMaterial>,
+) {
+    for i in 0..3 {
+        commands.spawn((
+            Pickup,
+            Mesh3d(meshes.add(Cuboid::new(0.3, 0.3, 0.3))),
+            MeshMaterial3d(materials.add(StandardMaterial {
+                base_color: Color::srgb(0.1, 0.7, 0.2),
+                emissive: LinearRgba::rgb(0.1, 1.6, 0.3),
+                ..default()
+            })),
+            Transform::from_xyz(-1.0 + i as f32, 0.5, 0.0),
+            DespawnOnExit(GameFlow::Level),
+            jackdaw_avian_integration::AvianCollider(
+                avian3d::prelude::ColliderConstructor::Sphere {
+                    radius: 0.35,
+                },
+            ),
+            // The trigger: detects, does not block. The bridge adds
+            // the event prerequisite avian asks for.
+            avian3d::prelude::Sensor,
+        ));
+    }
+}
+
+/// Two walls at right angles on the stage: something solid to walk
+/// into. `move_player`'s sweep does the rest — walk at the north wall
+/// (ahead of the spawn) head-on and stop; walk at it diagonally and
+/// slide along it. Static, like the stage: a collider with no rigid
+/// body stands still.
+fn spawn_walls(
+    mut commands: Commands,
+    mut meshes: ResMut<Assets<Mesh>>,
+    mut materials: ResMut<Assets<StandardMaterial>>,
+) {
+    let wall = materials.add(StandardMaterial {
+        base_color: Color::srgb(0.45, 0.4, 0.35),
+        ..default()
+    });
+    for (x, z, x_length, z_length) in [(0.0, -3.0, 12.0, 0.4), (-4.0, 0.0, 0.4, 8.0)] {
+        commands.spawn((
+            Mesh3d(meshes.add(Cuboid::new(x_length, 1.5, z_length))),
+            MeshMaterial3d(wall.clone()),
+            Transform::from_xyz(x, 0.75, z),
+            DespawnOnExit(GameFlow::Level),
+            jackdaw_avian_integration::AvianCollider(
+                avian3d::prelude::ColliderConstructor::Cuboid {
+                    x_length,
+                    y_length: 1.5,
+                    z_length,
+                },
+            ),
+        ));
+    }
+}
+
+/// The pickup pattern itself: when the *player* starts touching a
+/// `Pickup`, the pickup goes away and the count goes up; the third
+/// one wins the run — the flow moves to the game-over screen, the
+/// very move blood-out makes, so the end screen and its Restart are
+/// the win's way out too. The other side of the contact is checked
+/// on purpose — a prop merely settling onto a pickup (the falling
+/// cube landing on one) must not collect it. Swap `Pickup` for your
+/// own marker and this is a coin, a key, a landmine — whatever a
+/// walk-over should do.
+fn collect_pickups(
+    triggers: Res<TriggerEvents>,
+    pickups: Query<(), With<Pickup>>,
+    mut players: Query<&mut PickupCount, With<PlayerMarker>>,
+    mut flow: ResMut<NextState<GameFlow>>,
+    mut commands: Commands,
+    server: Res<AssetServer>,
+) {
+    let mut collected = 0u32;
+    for contact in triggers.enters() {
+        if pickups.contains(contact.trigger) && players.contains(contact.other) {
+            commands.entity(contact.trigger).despawn();
+            collected += 1;
+        }
+    }
+    if collected == 0 {
+        return;
+    }
+    let Ok(mut count) = players.single_mut() else {
+        return;
+    };
+    count.0 += collected;
+    if count.0 >= 3 {
+        info!("Level clear! All {} pickups collected.", count.0);
+        // The win acknowledges itself with the button blip: the same
+        // one-shot `press_sound` sends, riding the sfx bus and taking
+        // itself down when it ends.
+        commands.spawn((
+            AudioPlayer::<AudioSource>(server.load(BLIP_SOUND)),
+            PlaybackSettings::DESPAWN,
+            SfxBus,
+        ));
+        flow.set(GameFlow::GameOver);
+    }
+}
+
+/// Hand the config's gravity number to the engine: `GameConfig` is
+/// the saved author's truth, the engine's `Gravity` resource is what
+/// the simulation reads. Runs whenever the config changes, so a
+/// re-load mid-run (the editor's config panel) carries over too.
+fn apply_gravity_from_config(
+    config: Res<GameConfig>,
+    mut gravity: ResMut<avian3d::prelude::Gravity>,
+) {
+    if config.is_changed() {
+        gravity.0 = Vec3::new(0.0, config.gravity, 0.0);
+    }
+}
+
+/// A thing that hurts to touch: a glowing red sensor on the walk
+/// line. Carries the collision-layer row the docs' table gives
+/// hazards (member of layer 3, filtered against layer 1), so its
+/// contacts exist with the player and nothing else — the pickups and
+/// walls it passes never feel it.
+#[derive(Component, Reflect, Default)]
+#[reflect(Component, Default, @EditorCategory::new("Actor"))]
+pub struct Hazard;
+
+fn spawn_hazards(
+    mut commands: Commands,
+    mut meshes: ResMut<Assets<Mesh>>,
+    mut materials: ResMut<Assets<StandardMaterial>>,
+) {
+    commands.spawn((
+        Hazard,
+        Mesh3d(meshes.add(Cuboid::new(0.4, 0.4, 0.4))),
+        MeshMaterial3d(materials.add(StandardMaterial {
+            base_color: Color::srgb(0.8, 0.1, 0.1),
+            emissive: LinearRgba::rgb(1.2, 0.1, 0.1),
+            ..default()
+        })),
+        Transform::from_xyz(2.0, 0.5, 0.0),
+        DespawnOnExit(GameFlow::Level),
+        jackdaw_avian_integration::AvianCollider(
+            avian3d::prelude::ColliderConstructor::Sphere {
+                radius: 0.35,
+            },
+        ),
+        avian3d::prelude::Sensor,
+        // The docs' hazard row, live: `memberships 0b100, filters
+        // 0b001` — hazard hits the player only.
+        avian3d::prelude::CollisionLayers::new(
+            avian3d::prelude::LayerMask(0b100),
+            avian3d::prelude::LayerMask(0b001),
+        ),
+    ));
+}
+
+/// The hazard pattern, the other half of `collect_pickups`: when the
+/// *player* starts touching a `Hazard`, health drops (`take_damage`,
+/// in the game-flow section above) and the hud's bar follows the
+/// component. `enters()` fires when the overlap starts, not every
+/// frame — walk out and back in to take it again. Nothing fires outside
+/// a run: the same `GameFlow`/`paused` gate as the movement system.
+fn hazard_damage(
+    triggers: Res<TriggerEvents>,
+    flow: Res<State<GameFlow>>,
+    state: Res<GameState>,
+    hazards: Query<(), With<Hazard>>,
+    mut players: Query<&mut PlayerHealth, With<PlayerMarker>>,
+) {
+    if flow.get() != &GameFlow::Level || state.paused {
+        return;
+    }
+    for contact in triggers.enters() {
+        if hazards.contains(contact.trigger) && players.contains(contact.other) {
+            if let Ok(mut health) = players.single_mut() {
+                take_damage(&mut health, PLAYER_DAMAGE);
+            }
+        }
+    }
+}
+
+/// The counter half of a restart: the level entry despawned nothing of
+/// the player's — the player crossed the switch — so the run's numbers
+/// are put back here instead. (The health and the spawn point are the
+/// game-flow section's `reset_run`; this is the pickup-and-velocity
+/// half, which only exists with the physics module.) Runs on every
+/// entry into the level, so Restart is just a switch to `Level`.
+fn reset_run_counters(
+    mut players: Query<(&mut PickupCount, &mut PlayerVelocity), With<PlayerMarker>>,
+) {
+    for (mut count, mut velocity) in &mut players {
+        count.0 = 0;
+        velocity.0 = Vec3::ZERO;
+    }
+}
