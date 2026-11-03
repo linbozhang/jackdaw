@@ -1,0 +1,19 @@
+# DF-R1 red evidence (W2) - pre-fix build, main a63fcb84 (loop/t24-debug base)
+# Archived from the live window loop/t24-red/ (loop/qa/t24-red.sh phase dfr1), 2026-11-03.
+# Fixture: jd-new game t24-red; one type error appended to the game template (src/lib.rs);
+# pie.play_current -> Play build fails. Full evidence: loop/t24-red/{walk-dfr1.json,editor-dfr1-final.log}.
+
+== leg verdicts (re-verified offline against the archived walk; the in-window
+   DFR1_LOG_FULL_TEXT_ON_PANEL leg mis-grepped the '-->' needle as an option) ==
+DFR1_LOG_FULL_TEXT_ON_PANEL=PASS (arrow lines in walk: 20)
+DFR1_FAILED_STATUS_RENDERED=PASS ('Build failed' in walk: yes)
+DFR1_BUILD_FAILED_LATCH=PASS (PIE failure lines in editor log: 1)
+DFR1_ARROW_LINES_PRESENT=20 (first: --> src/lib.rs:2077:18)
+DFR1_ACTION_LABELS_IN_WALK=none
+DFR1_ROW_ACTIONS=zero (the log rides one scrolling text node; no per-row action face exists)
+
+== editor log, the failure latch ==
+PIE: game build of t24-red failed, not launching Play #1: error[E0308]: mismatched types (src/lib.rs:2077:18)
+
+== walk excerpt: the arrow text is on the panel ==
+bug/t24-red/.jackdaw/target/game\nerror[E0308]: mismatched types\n    --> src/lib.rs:2077:18\n     |\n2077 |     let x: i32 = \"five

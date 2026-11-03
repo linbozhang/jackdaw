@@ -1,0 +1,19 @@
+# Decision 3 probe: external editor CLI protocols (T1 first step, 2026-11-03).
+# Table order is the probe order; first executable on PATH wins (src/build_diagnostics.rs EDITOR_PROBES).
+
+code -> NOT FOUND
+code-insiders -> NOT FOUND
+vscodium -> NOT FOUND
+cursor -> /usr/local/bin/cursor
+windsurf -> NOT FOUND
+zed -> /opt/homebrew/bin/zed
+
+cursor --help:
+  -g --goto <file:line[:character]>          Open a file at the path on the
+cursor --version: 3.18.9
+zed --version: Zed 1.26.2 – /Applications/Zed.app
+
+Verdict: no VS Code CLI (code) on PATH; Cursor 3.18.9 answers with -g --goto <file:line[:character]>
+(the VS Code protocol, decision 3(c) primary); Zed 1.26.2 answers with positional path:line:column.
+Decision 3(c) line-jump is available on this machine; fallback 3(a) folder reveal stands for machines
+where the table finds nothing. On this machine the probe resolves to cursor (--goto).

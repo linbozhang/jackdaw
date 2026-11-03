@@ -142,6 +142,11 @@ struct PieLogForwarder {
     window_start: Option<Instant>,
     sent_this_window: u32,
     recent: HashMap<(String, String), Instant>,
+    /// Whether the open window has already carried its overflow line: one
+    /// summary per window, not one per dropped line (A5 — the per-frame
+    /// drain's overflow speaks, the window's overflow spoke only in silence,
+    /// and the asymmetry hid exactly the lines a person needed).
+    overflow_reported: bool,
 }
 
 impl PieLogForwarder {
@@ -154,15 +159,19 @@ impl PieLogForwarder {
             self.window_start = None;
             self.sent_this_window = 0;
             self.recent.clear();
+            self.overflow_reported = false;
         }
     }
 
     /// The lines that pass the throttle, in order. A line repeating within
     /// [`DEDUP_WINDOW`] is dropped; once [`MAX_PER_WINDOW`] lines have gone
-    /// through the current window everything else waits for the next one.
+    /// through the current window everything else waits for the next one —
+    /// and the first drop in a window appends one line of its own, counting
+    /// what the window left behind (the drain overflow's own shape).
     fn admit(&mut self, lines: Vec<PieLogLine>, now: Instant) -> Vec<PieLogLine> {
         self.roll_if_expired(now);
         let mut passed = Vec::new();
+        let mut window_dropped = 0u32;
         for line in lines {
             let key = (line.level.clone(), line.message.clone());
             if self
@@ -173,12 +182,24 @@ impl PieLogForwarder {
                 continue;
             }
             if self.sent_this_window >= MAX_PER_WINDOW {
+                window_dropped += 1;
                 continue;
             }
             self.window_start.get_or_insert(now);
             self.sent_this_window += 1;
             self.recent.insert(key, now);
             passed.push(line);
+        }
+        if window_dropped > 0 && !self.overflow_reported {
+            self.overflow_reported = true;
+            let plural = if window_dropped == 1 { "" } else { "s" };
+            passed.push(PieLogLine {
+                level: "warn".to_owned(),
+                message: format!(
+                    "jackdaw_runtime::pie_log: the one-second window overflowed; \
+                     {window_dropped} line{plural} were dropped until it rolls"
+                ),
+            });
         }
         passed
     }
@@ -315,11 +336,69 @@ mod tests {
         );
         assert_eq!(
             fresh.len(),
-            MAX_PER_WINDOW as usize - 1,
-            "the window carries at most {MAX_PER_WINDOW} including the first"
+            MAX_PER_WINDOW as usize,
+            "the window carries at most {MAX_PER_WINDOW}, the last being its \
+             overflow line: {fresh:?}"
+        );
+        assert!(
+            fresh[fresh.len() - 1].message.contains("window overflowed"),
+            "the overflow is counted: {:?}",
+            fresh[fresh.len() - 1]
         );
         let rolled = forwarder.admit(vec![line(999)], now + Duration::from_secs(2));
         assert_eq!(rolled.len(), 1, "a new window admits again");
+    }
+
+    /// The window's own overflow speaks once per window, counting the lines
+    /// it left behind (A5: the per-frame drain's overflow had a voice, the
+    /// window's was a silence) — and a saturated window does not repeat the
+    /// summary on every further call.
+    #[test]
+    fn a_window_overflow_counts_its_drops_once_per_window() {
+        let mut forwarder = PieLogForwarder::default();
+        let now = Instant::now();
+        let line = |n: u32| PieLogLine {
+            level: "warn".to_owned(),
+            message: format!("line {n}"),
+        };
+        // Fill the window to its cap.
+        let first = forwarder.admit((0..MAX_PER_WINDOW).map(line).collect(), now);
+        assert_eq!(
+            first.len() as u32,
+            MAX_PER_WINDOW,
+            "a fitting batch carries no overflow line"
+        );
+        // Overrun it: the dropped lines earn one counting line.
+        let dropped = 7;
+        let over = forwarder.admit(
+            (100..100 + dropped).map(line).collect(),
+            now + Duration::from_millis(300),
+        );
+        assert_eq!(
+            over.len(),
+            1,
+            "only the summary comes through a saturated window: {over:?}"
+        );
+        assert!(
+            over[0].message.contains(&dropped.to_string())
+                && over[0].message.contains("window overflowed"),
+            "the summary counts the drops: {}",
+            over[0].message
+        );
+        // Still the same window: no second summary.
+        let again = forwarder.admit(
+            (200..203).map(line).collect(),
+            now + Duration::from_millis(600),
+        );
+        assert!(again.is_empty(), "the summary spoke once: {again:?}");
+        // A new window admits and reports nothing stale.
+        let rolled = forwarder.admit(vec![line(999)], now + Duration::from_secs(2));
+        assert_eq!(rolled.len(), 1);
+        assert!(
+            !rolled[0].message.contains("window overflowed"),
+            "the fresh window carries only its own line: {:?}",
+            rolled[0]
+        );
     }
 
     #[test]

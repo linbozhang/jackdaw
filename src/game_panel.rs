@@ -75,9 +75,18 @@ pub struct GamePlayInputButton;
 /// How many recent game log lines the strip under the frame shows.
 const LOG_ROWS: usize = 4;
 
+/// How tall the strip grows when it expands into the full list (W4: the
+/// buffer keeps [`PIE_GAME_LOG_CAP`] lines and four of them were all a
+/// person could see).
+const EXPANDED_MAX_HEIGHT: Val = Val::Percent(45.0);
+
 /// Marker on the recent-game-log strip at the bottom of the panel.
 #[derive(Component)]
 pub struct GamePanelLogStrip;
+
+/// Marker on the strip while it is expanded into the full scrollable list.
+#[derive(Component)]
+struct GameLogExpanded;
 
 /// Marker on one log row, numbered from the top of the strip.
 #[derive(Component, Clone, Copy, Debug, PartialEq, Eq)]
@@ -247,6 +256,8 @@ pub fn game_panel_content() -> impl Bundle {
 /// The recent-game-log strip: the newest [`LOG_ROWS`] lines the focused game
 /// logged, each in its notice tier's color (warn speaks in the warning color,
 /// an error in the error color). Hidden until the game has said something.
+/// A click expands it into the full scrollable list the buffer holds (W4)
+/// and a second click folds it back.
 fn game_log_strip() -> impl Bundle {
     (
         GamePanelLogStrip,
@@ -259,8 +270,30 @@ fn game_log_strip() -> impl Bundle {
             display: Display::None,
             ..Default::default()
         },
+        jackdaw_feathers::tooltip::Tooltip::title(
+            "The focused game's log. Click to expand the full list; click again to fold.",
+        ),
+        observe(|_: On<PointerClick>, mut commands: Commands| {
+            commands.queue(|world: &mut World| toggle_game_log_expansion(world));
+        }),
         children![log_row(0), log_row(1), log_row(2), log_row(3),],
     )
+}
+
+/// Fold or unfold the strip. Expanded, the strip becomes the scrollable list
+/// the whole [`PIE_GAME_LOG_CAP`] buffer rides; folded, the newest four lines
+/// again. Pure consumer: the T12 channel's two ends are untouched.
+fn toggle_game_log_expansion(world: &mut World) {
+    let mut strip = world.query_filtered::<Entity, With<GamePanelLogStrip>>();
+    let Some(strip) = strip.iter(world).next() else {
+        return;
+    };
+    let mut entity = world.entity_mut(strip);
+    if entity.contains::<GameLogExpanded>() {
+        entity.remove::<GameLogExpanded>();
+    } else {
+        entity.insert(GameLogExpanded);
+    }
 }
 
 /// One row of the log strip: a clipped text line in the secondary color
@@ -620,13 +653,19 @@ fn update_game_panel_chips(
     }
 }
 
-/// Write the newest log lines into the strip: row `i` shows entry
-/// `len - LOG_ROWS + i`, in the entry's notice-tier color. The strip stays
-/// hidden until the game has said something.
+/// Write the log lines into the strip, folded or expanded. Folded, row `i`
+/// shows entry `len - LOG_ROWS + i`, in the entry's notice-tier color, and
+/// the strip stays the newest-four face. Expanded (the [`GameLogExpanded`]
+/// marker the strip's click toggles), the strip grows a scroll cap and one
+/// row per buffered line — the whole [`PIE_GAME_LOG_CAP`] window, oldest
+/// first, pinned to the newest. The strip stays hidden until the game has
+/// said something.
 fn sync_game_panel_log(
     log: Option<Res<crate::pie_game_log::PieGameLog>>,
-    mut strip: Query<&mut Node, With<GamePanelLogStrip>>,
+    mut strips: Query<(Entity, &mut Node, Has<GameLogExpanded>), With<GamePanelLogStrip>>,
+    row_entities: Query<Entity, (With<GameLogRow>, Without<GamePanelLogStrip>)>,
     mut rows: Query<(&GameLogRow, &mut Text, &mut TextColor), Without<GamePanelLogStrip>>,
+    mut commands: Commands,
 ) {
     let Some(log) = log else {
         return;
@@ -634,10 +673,62 @@ fn sync_game_panel_log(
     let entries: Vec<_> = log.entries().collect();
     let show = !entries.is_empty();
     let display = if show { Display::Flex } else { Display::None };
-    for mut node in &mut strip {
-        if node.display != display {
-            node.display = display;
+    let Ok((strip, mut node, expanded)) = strips.single_mut() else {
+        return;
+    };
+    if node.display != display {
+        node.display = display;
+    }
+    let grown = expanded && show;
+    let desired_max = if grown {
+        EXPANDED_MAX_HEIGHT
+    } else {
+        Val::Auto
+    };
+    if node.max_height != desired_max {
+        node.max_height = desired_max;
+    }
+    let desired_rows = if grown { entries.len() } else { LOG_ROWS };
+    if row_entities.iter().count() != desired_rows {
+        for entity in &row_entities {
+            commands.entity(entity).despawn();
         }
+        for index in 0..desired_rows {
+            commands.spawn((log_row(index), ChildOf(strip)));
+        }
+        if grown {
+            // The list just rebuilt from the buffer's start; pin it to the
+            // newest line the way a terminal does.
+            commands
+                .entity(strip)
+                .insert(ScrollPosition(Vec2::new(0.0, f32::MAX)));
+        } else {
+            commands.entity(strip).remove::<ScrollPosition>();
+        }
+        // The rows the commands spawn fill in on the next pass.
+        return;
+    }
+    if grown {
+        for (row, mut text, mut color) in &mut rows {
+            let entry = entries.get(row.0);
+            match entry {
+                Some(entry) => {
+                    if text.0 != entry.message {
+                        text.0 = entry.message.clone();
+                    }
+                    let tinted = entry.color();
+                    if color.0 != tinted {
+                        color.0 = tinted;
+                    }
+                }
+                None => {
+                    if !text.0.is_empty() {
+                        text.0 = String::new();
+                    }
+                }
+            }
+        }
+        return;
     }
     let first = entries.len().saturating_sub(LOG_ROWS);
     // Fewer entries than rows: the lines sit at the bottom of the strip
@@ -772,6 +863,73 @@ mod tests {
             Some(Vec2::new(600.0, 0.0))
         );
         assert_eq!(panel_to_stream(Vec2::ZERO, Vec2::ZERO, stream), None);
+    }
+
+    /// The strip's click toggles the expansion marker on the strip itself,
+    /// folding whatever it was (W4's pure consumer face).
+    #[test]
+    fn the_strip_click_toggles_the_expansion() {
+        let mut world = World::new();
+        let strip = world.spawn((GamePanelLogStrip, Node::default())).id();
+        toggle_game_log_expansion(&mut world);
+        assert!(
+            world.get::<GameLogExpanded>(strip).is_some(),
+            "one click expands the strip"
+        );
+        toggle_game_log_expansion(&mut world);
+        assert!(
+            world.get::<GameLogExpanded>(strip).is_none(),
+            "a second click folds it"
+        );
+    }
+
+    /// Expanded, the strip renders the whole buffer — a hundred lines, oldest
+    /// first, in their tier colors — not the newest four (W4: ninety-six of
+    /// the buffer's hundred lines were unreachable before).
+    #[test]
+    fn the_expanded_strip_reaches_every_buffered_line() {
+        use crate::pie_game_log::{PIE_GAME_LOG_CAP, PieGameLog};
+
+        let mut world = World::new();
+        world.init_resource::<PieGameLog>();
+        let strip = world
+            .spawn((GamePanelLogStrip, Node::default()))
+            .insert(GameLogExpanded)
+            .id();
+        {
+            let mut log = world.resource_mut::<PieGameLog>();
+            for n in 0..PIE_GAME_LOG_CAP + 20 {
+                log.push("info", format!("line {n}"));
+            }
+        }
+        world.run_system_cached(sync_game_panel_log).unwrap();
+        world.run_system_cached(sync_game_panel_log).unwrap();
+        let texts: Vec<(usize, String)> = world
+            .query::<(&GameLogRow, &Text)>()
+            .iter(&world)
+            .map(|(row, text)| (row.0, text.0.clone()))
+            .collect();
+        assert_eq!(
+            texts.len(),
+            PIE_GAME_LOG_CAP,
+            "one row per buffered line, not four: {}",
+            texts.len()
+        );
+        let mut sorted = texts.clone();
+        sorted.sort_by_key(|(index, _)| *index);
+        assert_eq!(sorted[0].1, "line 20", "the buffer's oldest survivor leads");
+        assert_eq!(
+            sorted[PIE_GAME_LOG_CAP - 1].1,
+            format!("line {}", PIE_GAME_LOG_CAP + 19),
+            "the newest line is last"
+        );
+        // And the strip grew its scroll cap.
+        let node = world.get::<Node>(strip).unwrap();
+        assert_eq!(node.max_height, EXPANDED_MAX_HEIGHT);
+        assert!(
+            world.get::<ScrollPosition>(strip).is_some(),
+            "the expanded strip carries a scroll position"
+        );
     }
 
     #[test]

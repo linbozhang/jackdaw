@@ -1,0 +1,28 @@
+disk: 75Gi free
+PREP_OK fixture=/Users/zhanglinbo/workspace/loop-mac/t24-debug/t24-red
+EDITOR_READY window=1 prebuild=0
+--- DF-R1 warm build (first build fills .jackdaw/target) ---
+--- DF-R1 break the template and fail the Play build ---
+DFR1_BUILD_FAILED_LATCH_PASS
+DFR1_LOG_FULL_TEXT_ON_PANEL_FAIL
+DFR1_FAILED_STATUS_RENDERED_PASS
+DFR1_ACTION_LABELS_IN_WALK none
+DFR1_ARROW_LINES_PRESENT 20
+DFR1 evidence: walk-dfr1.json + editor-dfr1-final.log
+EDITOR_READY window=2 prebuild=0
+--- DF-R2 open the re-export-path scene ---
+DFR2_CRYPTIC_WARN_IN_CONSOLE_PASS
+DFR2_MISLEADING_REMEDY_IN_CONSOLE_PASS
+DFR2 console: cryptic_warns=1 remedy_lines=1
+DFR2 world: entities_with_transform=17 entities_with_graphref=0 (RedEntity must hold Transform and no GraphRef)
+DFR2_COMPONENT_ABSENT_PASS
+DFR2 audit findings for the re-export scene: 0
+DFR2_AUDIT_ZERO_ROWS_PASS
+DFR2_LIST_SAYS_NOTHING_PASS
+--- DF-R3 open the unknown-field scene ---
+DFR3_LOG_ONLY_WARN_PASS
+DFR3 console: unknown_field_warns=1
+DFR3_PANEL_ZERO_ROWS_PASS
+DFR3_FIELD_NAME_IN_PANEL_FAIL
+DFR23 evidence: walk-dfr2.json walk-dfr3.json editor-dfr23-final.log
+PHASE_DONE all results: DFR1_BUILD_FAILED_LATCH=PASS DFR1_FAILED_STATUS_RENDERED=PASS DFR1_LOG_FULL_TEXT_ON_PANEL=FAIL DFR2_AUDIT_ZERO_ROWS=PASS DFR2_COMPONENT_ABSENT=PASS DFR2_CRYPTIC_WARN_IN_CONSOLE=PASS DFR2_LIST_SAYS_NOTHING=PASS DFR2_MISLEADING_REMEDY_IN_CONSOLE=PASS DFR3_FIELD_NAME_IN_PANEL=FAIL DFR3_LOG_ONLY_WARN=PASS DFR3_PANEL_ZERO_ROWS=PASS 

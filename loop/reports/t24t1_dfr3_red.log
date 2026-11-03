@@ -1,0 +1,12 @@
+# DF-R3 red evidence (W1) - pre-fix build, main a63fcb84 (loop/t24-debug base)
+# Archived from the live window loop/t24-red/ (loop/qa/t24-red.sh phase dfr23), 2026-11-03.
+# Fixture scene assets/t24r3.bsn: a registered Transform carrying a field it does not
+# declare. Full evidence: loop/t24-red/{walk-dfr3.json,editor-dfr23-final.log}.
+
+== leg verdicts ==
+DFR3_LOG_ONLY_WARN=PASS (1 'unknown field' line(s) in the editor console - the log is the only mouth
+DFR3_PANEL_ZERO_ROWS=PASS (the Missing References walk answers 'no broken references')
+DFR3_FIELD_NAME_ABSENT_FROM_PANEL=PASS (the field the console named appears nowhere in the walk)
+
+== editor console, the only mouth (editor-dfr23-final.log) ==
+[2m2026-11-03T07:01:24.217115Z[0m [33m WARN[0m [2mjackdaw_bsn::apply[0m[2m:[0m unknown field 'nonexistent_field' on 'bevy_transform::components::transform::Transform'

@@ -9,7 +9,8 @@
 //! old value), so the author had no way to tell the write had not landed.
 //! This module is the listener: one warning per failed path on the status bar
 //! and in the log, naming the file, the reason, and what the editor is doing
-//! about it.
+//! about it — and, since the scene-problems list grew a load-failure section
+//! (W3), a row that stays on the board instead of burning with the notice.
 //!
 //! The rule is once per *(path, mtime)*, the same key the thumbnail failures
 //! use: the same broken file warns once no matter how many load attempts
@@ -27,22 +28,52 @@ use bevy::prelude::*;
 
 use crate::project::ProjectRoot;
 
-/// The (path, mtime) pairs a failure was reported for during this session.
+/// One load failure the session has spoken of: the file on disk, the asset
+/// path it loaded under, and the engine's reason. The row is the panel face
+/// of the once-per-*(path, mtime)* lock (W3: the status-bar notice was the
+/// only face, and it burned after one line).
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct LoadFailureRow {
+    pub file: PathBuf,
+    pub named: String,
+    pub error: String,
+}
+
+/// The (path, mtime) pairs a failure was reported for during this session,
+/// with the rows those reports left behind for the scene-problems list.
 #[derive(Resource, Default)]
-pub struct WarnedFailures(HashSet<(PathBuf, Option<SystemTime>)>);
+pub struct WarnedFailures {
+    reported: HashSet<(PathBuf, Option<SystemTime>)>,
+    rows: Vec<LoadFailureRow>,
+}
 
 impl WarnedFailures {
     /// Whether a failure of the file at `path`, as it stands on disk now
     /// (`mtime`), has been reported already.
     pub fn is_reported(&self, path: &Path, mtime: Option<SystemTime>) -> bool {
-        self.0.contains(&(path.to_path_buf(), mtime))
+        self.reported.contains(&(path.to_path_buf(), mtime))
+    }
+
+    /// The failure rows, oldest first — the list the panel renders.
+    pub fn rows(&self) -> &[LoadFailureRow] {
+        &self.rows
+    }
+
+    /// Lock one failure in and keep its row. Answers whether this key is
+    /// new (the caller speaks).
+    fn insert(&mut self, file: PathBuf, mtime: Option<SystemTime>, row: LoadFailureRow) -> bool {
+        if !self.reported.insert((file, mtime)) {
+            return false;
+        }
+        self.rows.push(row);
+        true
     }
 
     /// How many distinct failures are on record. The tests count them, since
     /// a quiet second report looks exactly like a loud one.
     #[cfg(test)]
     fn len(&self) -> usize {
-        self.0.len()
+        self.reported.len()
     }
 }
 
@@ -73,7 +104,17 @@ fn report_failed_loads(
         let mtime = std::fs::metadata(&file)
             .and_then(|meta| meta.modified())
             .ok();
-        if !warned.0.insert((file.clone(), mtime)) {
+        let named = failure.path.path().to_string_lossy().into_owned();
+        let error = failure.error.to_string();
+        if !warned.insert(
+            file.clone(),
+            mtime,
+            LoadFailureRow {
+                file: file.clone(),
+                named: named.clone(),
+                error: error.clone(),
+            },
+        ) {
             continue;
         }
         warn!(
@@ -81,7 +122,6 @@ fn report_failed_loads(
             file.display(),
             failure.error
         );
-        let named = failure.path.path().to_string_lossy().into_owned();
         commands.queue(move |world: &mut World| {
             crate::status_bar::notify_warn(
                 world,
@@ -157,6 +197,12 @@ mod tests {
             "the status bar names the file and what the editor does"
         );
         assert_eq!(warned.len(), 1);
+        // The row the panel renders: the file, the asset path, the reason.
+        let rows = world.resource::<WarnedFailures>().rows();
+        assert_eq!(rows.len(), 1, "one failure, one row: {rows:?}");
+        assert_eq!(rows[0].file, file);
+        assert_eq!(rows[0].named, "broken.png");
+        assert!(!rows[0].error.is_empty());
 
         // The same broken file, failing again (a retried load, another
         // dependent asking for it): already reported, stays quiet.
@@ -165,6 +211,11 @@ mod tests {
             world.resource::<WarnedFailures>().len(),
             1,
             "the same file at the same mtime is not reported twice"
+        );
+        assert_eq!(
+            world.resource::<WarnedFailures>().rows().len(),
+            1,
+            "the quiet repeat adds no row either"
         );
 
         // The file is rewritten -- fixed or broken differently, the editor

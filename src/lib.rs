@@ -23,6 +23,7 @@ pub mod boot_ops;
 pub mod brush;
 pub mod brush_drag_ops;
 pub mod brush_element_ops;
+pub mod build_diagnostics;
 pub mod build_panel;
 pub mod build_status;
 pub mod builtin_extensions;
@@ -532,6 +533,7 @@ impl Plugin for EditorCorePlugin {
         .add_plugins(definition_assets::plugin)
         .add_plugins(asset_index::plugin)
         .add_plugins(asset_failures::plugin)
+        .add_plugins(build_diagnostics::plugin)
         .add_plugins(material_overrides::plugin)
         .add_plugins(thumbnail::plugin)
         .add_plugins(boot_ops::plugin)

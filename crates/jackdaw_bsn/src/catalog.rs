@@ -209,6 +209,9 @@ pub fn load_bsn_scene(world: &mut World, text: &str) -> Result<LoadedBsnScene, B
     if let Some(mut unresolved) = world.get_resource_mut::<crate::UnresolvedTypes>() {
         unresolved.start_scene();
     }
+    if let Some(mut issues) = world.get_resource_mut::<crate::BindingIssues>() {
+        issues.start_scene();
+    }
     let entities = crate::spawn_from_ast(world);
     crate::apply_dirty_ast_patches(world);
     report_unresolved_types(world);
