@@ -469,6 +469,7 @@
 - [ ] **A11. 资产 rebind 只改文档层，活世界组件不随 AST 重绑定同步（newtype 组件世界侧粘性）**（2026-10-31 T18-T2.5 第三轮真机暴露；主控批准立账，独立小任务）
   `rewrite_ast_reference` 补 TupleStruct 臂+截断拼写放宽（c41f112f）后：rebind 确实重写 open tab 的 AST（重绑后 audit=0，open-tab 遮蔽生效），**但 `scene.save` 从活世界发射**——newtype 组件（如 Song 的 AudioPlayer）仍持旧柄（`jackdaw/scene_bsn` 现场读仍旧路径）→ 文件回写旧路径、audit 回 1。即 rebind 对活分支的更新（`resync_entity_from_ast` 重应用）对 newtype 组件不生效；IsA 域有世界侧更新先例可对照。M14 半格红随本票留档：`t18t25_ar11-docs-audit-{missing,after-rebind}.json`+`t18t25_editor-docs-1.log`（复验前先 prep 归零——该轮 blip.wav 系上轮遗留缺失态）。
   修复方向：rebind 活分支同步活组件（对照 IsA 先例）或保存采纳重写后 AST；涉及 scene_io/apply 语义。matcher 层（c41f112f）保持有效。
+  > 2026-11-03 T23 增补刻画（覆盖域两面在案）：①改名面——活世界 map 粘旧路径+水面 give-back+1 条 unresolved warn，重开后文档赢（`t23t2_rename_sticky.log`）；②save 面——save 发射重写后文档（wet2）重开穿新+audit 归零（T23 终窗 M9 GREEN）。域差=Map 值引用经 MO9 Map 臂可走文档赢，原票主形态 newtype 组件仍 open。
 
 - [ ] **A12. 经 Basis/BC7 重载过的图片，GPU 消费面停止跟随同 AssetId 后续重载（AR9，渲染提取/GPU 重建侧）**（2026-10-31 T18-T2 真机发现+T2.5 判别探针定位；主控批准立账）
   texture.import 落 `.meta` 的图片：首次加载走 Basis/BC7 处理后，同路径外写→引擎 `Reloaded` 真触发（offset 计数无歧义）+读取层字节新鲜（T2.5 AR10 修复后单测 5 钉死）→**但板面/视口 GPU 面冻结于首载内容**（crop 像素逐字节恒等，判别探针三件归档）。plain→plain（无 meta）重载跟随正常=AR10 修复不涉此。M9 板面恢复半格红归本票（teal 判别色+双不等判据已钉）。
@@ -546,3 +547,7 @@
   影响：每轮 live 的 warn 扫描须按已知面排除该行（t22-live.sh 已注明排除）；用户侧误导（文本承诺「cannot be edited」而实际可编辑）。
   修复方向：一行特判（`if id == "tilemap" { return true; }`，animation 同款+注释）或 catalog 加 `editor_builtin` 布尔位走通用路径。顺手票。
   > 严重度建议 🟡（误导性告警，非功能缺口）。
+
+- [ ] **A18. book 微修两处（T23-T3 QA 建议，⚪ 随手票）**（2026-11-03 T23-T3 QA 发现；主控批准立账）
+  ①asset-references.md:12 引用定义句在 MO2 落地后有例外——失效材质覆盖路径现已可发现（audit 四元组+日志/状态栏双嘴），定义句需一句扩展；②material-overrides.md rebind 括注「(or at once, on the tab the scene is open in)」对活世界过诺——两件第一手粘性证据反证（活世界粘旧路径待保存/重开才文档赢，见 A11 增补），建议改写为文档赢语义。
+  修复方向：两处各一句话改写；与下一任务 book 触碰同批落（T20-T3 Errata 先例：勘误随轮落账）。
