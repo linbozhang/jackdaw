@@ -557,3 +557,7 @@
   ①DF-W1 🟡 warn_on_load 仅 fresh-open——已开 tab 的 reread 路径静默（载入摘要嘴覆盖缺口）；②DF-W2 🟡 游戏侧 flow 载入丢字段零 warn（A16 域近亲；T24-T2 QA QD3：按旁证级采信不补腿）；③DF-W3 ⚪ (path,mtime) 锁写窗中间态双 key（重复告警窗口）；④DF-W4 ⚪ ui_tree 走查重复发射子树（A7 工具域）；⑤DF-W5 🟡 drain_game_events panic（N13 家族同病灶）；⑥DF-W6 ⚪ PIE 收尾悬空 ChildOf（A10/N13 PIE 域）；⑦DF-W7 🟡 PIE 后立即直启的游戏可失去 remote 面。（严重度为主控 2026-11-03 依 QA QD4 补注。）
   证据锚：loop/reports/t24-t2-report.md DF 节+`t24t2_*` 归档。修复方向：T3 book 轮裁定吸收面；④可并 A7 批次随手，⑤并 N13，⑦与 A10 同域。
   > 2026-11-03 主控收官裁定（T24-T3 QA 建议）：④并 A7 批次、⑤并 N13、⑦A10 域（维持票面并法）；DF-W1 下轮触碰 operators/external_watch 时顺手（warn_on_load reread 调用面）；DF-W3 维持记档不单开票。DF-W1/W3 产品修复未启动，吸收面如上。
+
+- [ ] **LT8. Live Changes badge 点击不展开托盘（⚪，T25-T1 探针发现，只记不修）**（2026-11-03 T25-T1 可达性探针三窗实证；主控批准立账）
+  hierarchy 头部 badge click `clicked:true` 但不 spawn 托盘面板（live_edits_ui.rs badge 观察器无展开行为）；托盘开行现成路线=停止→StopPrompt「Review」键交接（即 C4 链本体，零产品改动）。
+  修复方向（候裁）：badge click 补托盘 spawn（一行级观察器）或 book 注记「badge 是计数器，开托盘走 Review/结构树」；T25-T3 book 轮顺手裁定。
