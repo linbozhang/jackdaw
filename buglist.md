@@ -455,6 +455,7 @@
 - [ ] **A6（🔴 升级立项，2026-10-28 T13 终验）. prefab watcher 满载 flaky + 门禁磁盘高压家族**（2026-10-28 T12 终验 QA 建票；T13-T3 三连红+stash 二分定案+QA 四腿闭合链后升级）
   `prefab_file_change_triggers_reload`：T12 终验首红（隔离绿）→T13-T3 **三轮连续同红**（watcher 3s 预算 8-13s）→QA 四腿闭合：本树隔离单测 3/3 绿（~2s）/本树全 prefab 二进制 2 次红（88/1）/**git worktree 干净 main（3fe6aa7d）同红 88/1 同签名 prefab_lifecycle.rs:714**/diff 18 文件与 watcher 域零交集——**存量基建票非产品缺陷**（Windows T10a 全绿=无此负载形态）。触发器=二进制内 89 件并行对 3s FSEvents 预算的挤压；**磁盘高压为加重因子**（T13 终验 scaffold_e2e 首跑 ENOSPC 数据卷 100%，清 46GB 后 PASS——scaffold_e2e 临时目录泄漏 46GB/17GB 实测，并账同一「磁盘高压伤门禁」家族）。
   修复方向（立项后定）：watcher 预算平台校准或测试域串行化；scaffold_e2e 临时目录清理钩子。处置前 integration 该件按「已定案环境票」口径放行。
+  > 2026-11-03 并账（T24-T1 D6，QA 复核成立）：stage 集群红基线两轮互证——T24-T1 修后 10 红 ⊆ stash 修前基线 11 红（差集 a_typed_name 基线独红；基线日志全仓 Compiling 开头=真重建），10 腿隔离 `--exact --test-threads=1` 全绿（QA 抽三簇各一亲跑绿）。归档 `loop/reports/t24t1_stage.log`+`t24t1_stage_baseline_prefix.log`。stage 域满载红与 prefab watcher 同族（并行挤压+磁盘高压加重），处置前按「已定案环境票」口径放行。
 
 - [ ] **A7. t14 真机驱动脚本工具债（对话框提交+字段行定位族 5 腿+陈旧 grep）**（2026-10-29 T14 终验回流；主控批准立账——MCP 优先原则：修工具不硬耗）
   `loop/qa/t14-live.sh` 五腿（L2_REVERT_FIELD/L3_SAVE_AS_VARIANT·PREFAB/L3_UNBUNDLE/L8_PACK）收敛在「对话框提交+字段行定位」脚本驱动缺口（语义面 headless 锚全数在档零缺口，t14-final-qa.md §七）；另 all 模式 warn/N13 扫描 grep 引用陈旧分相文件名（:799-803/:898-903 应随 `$PHASE` 改 `editor-$PHASE.log`——T14 终轮 N13 实为 1 条被记 0）。
