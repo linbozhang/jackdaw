@@ -66,8 +66,12 @@
 #              one-shot lock, heal restores the wear silently, re-break
 #              speaks again; M13 breaks the water file's bytes (asset load
 #              failed + give-back + re-wear); then the rebind chain:
-#              rebind wet -> a copied wet2, the A11 live-world stickiness
-#              face is archived, save, audit clean, reopen wears wet2.
+#              rebind wet -> a copied wet2, the MO9 face is judged on the
+#              document (a pre-fix build leaves the audit naming the
+#              finding and archives the map-blind red; the T3 Map arm
+#              quiets the audit and archives the green, with the live
+#              holder's spelling recorded as the A11 face), the tab saves
+#              through its own door, audit clean, reopen wears wet2.
 #   rename     L5/M6: file.rename the held water material -> the document's
 #              override entry follows (MO3 green), the live face is
 #              characterized (sticky or not, archived), save, audit clean,
@@ -91,7 +95,11 @@ FIXROOT=/Users/zhanglinbo/workspace/loop-mac/t23-materials
 PROJECT="$FIXROOT/t23-materials"
 PORT=15703
 GAME_PORT=15702
-OUTDIR="$REPO/loop/t23-live"
+# The T3 rerun (13-cell final matrix) sets T23_OUTDIR=$REPO/loop/t23-final and
+# T23_REPORT_TAG=t23t3, so its evidence lands beside — never on top of — the
+# T2 archive this script's defaults reproduce.
+OUTDIR="${T23_OUTDIR:-$REPO/loop/t23-live}"
+REPORT_TAG="${T23_REPORT_TAG:-t23t2}"
 TOOLCHAIN_LIB=/Users/zhanglinbo/.rustup/toolchains/1.99.0-aarch64-apple-darwin/lib/rustlib/aarch64-apple-darwin/lib
 GAMEBIN="t23-materials"
 STAGED="$PROJECT/.jackdaw/dist/release"
@@ -1034,38 +1042,52 @@ broken() {
     op asset.rebind "{\"document\":\"$doc\",\"component\":\"$comp9\",\"field\":\"materials\",\"reference\":\"materials/wet.bsn\",\"to\":\"materials/wet2.bsn\"}" >/dev/null 2>&1
     sleep 2; wait_idle 120 >/dev/null
     walk; cp "$OUTDIR/walk-$PHASE.json" /tmp/walk-mo9.json 2>/dev/null || true
-    # The rebind face on a Map reference: whatever happened, archive the live
-    # map, the audit and the document. The live probe found the repair leg
-    # answering "the document no longer holds that reference" — the audit
-    # FINDS the override reference (the MO2 pickup) but the rebind's rewrite
-    # only walks String/List field values, and a materials MAP is neither
-    # (new defect candidate MO9, recorded not fixed). The red is archived.
-    local live_map
+    # The rebind face on a Map reference, judged on the DOCUMENT side: the
+    # T2 red was the audit still naming the finding after the rebind (the
+    # rewrite could not see a materials map). T3 closed that with a Map arm
+    # in rewrite_ast_reference; the audit going quiet right after the rebind
+    # is the blind spot closed. The live holder's spelling is the A11 face
+    # the T2 red had shadowed — recorded, not judged (A11 is its own ticket;
+    # the reopen below is where the document wins either way). REPORT_TAG
+    # keeps one run's evidence off the other's.
+    local live_map live_wear audit_count
     live_map=$(override_map "$kit_id")
-    { echo "MO9 red: asset.rebind over a MaterialOverrides map reference (doc=$doc to=materials/wet2.bsn):"
-      echo "live kit map after the rebind: $live_map"
-      echo "audit findings after the rebind:"
-      audit_json
-      echo "editor status text:"
-      grep -i "no longer holds that reference\|rebound to" "$EDITOR_LOG" 2>/dev/null | tail -2
-    } > "$REPO/loop/reports/t23t2_mo9_rebind_map_red.log" 2>/dev/null
-    cp /tmp/walk-mo9.json "$REPO/loop/reports/t23t2_mo9_status_walk.json" 2>/dev/null || true
-    if [ "$live_map" = '{"Rock":"materials/wet.bsn"}' ]; then
-      log "MO9: the rebind left the document and the live world on the old path (map blind) - archived as the MO9 red"
-      leg M9_REBIND_MAP_BLIND true
-    elif [ "$live_map" = '{"Rock":"materials/wet2.bsn"}' ]; then
-      log "MO9: the rebind rewrote the map reference (the blind spot is not there in this build)"
-      leg M9_REBIND_MAP_BLIND false
+    live_wear=$(qcount "[\"$LAYERED\"]")
+    audit_count=$(audit_json | jq '.count // (.findings | length) // 0' 2>/dev/null)
+    if [ "$audit_count" = "0" ]; then
+      { echo "MO9 green: asset.rebind over a MaterialOverrides map reference (doc=$doc to=materials/wet2.bsn):"
+        echo "audit findings after the rebind: $audit_count (the map entry was rewritten - the blind spot is closed)"
+        echo "live kit map after the rebind: $live_map (wet2 = the live holder followed without a reopen; wet = the A11 face: the live world keeps its spelling until the tab's own save/reopen)"
+        echo "layered wears after the rebind, before any reopen: $live_wear (2 = the live world re-wore the rebound path; 0 = the A11 sticky face, the reopen dresses)"
+        echo "editor status text:"
+        grep -i "no longer holds that reference\|rebound to" "$EDITOR_LOG" 2>/dev/null | tail -2
+      } > "$REPO/loop/reports/${REPORT_TAG}_mo9_rebind_map_green.log" 2>/dev/null
+      cp /tmp/walk-mo9.json "$REPO/loop/reports/${REPORT_TAG}_mo9_status_walk.json" 2>/dev/null || true
+      log "MO9: the rebind rewrote the map entry (audit clean; live map=$live_map live wears=$live_wear - the A11 face, archived ${REPORT_TAG}_mo9_rebind_map_green.log)"
+      leg M9_REBIND_MAP_GREEN true
     else
-      log "MO9: unexpected live map $live_map"
-      leg M9_REBIND_MAP_BLIND false
+      { echo "MO9 red: asset.rebind over a MaterialOverrides map reference (doc=$doc to=materials/wet2.bsn):"
+        echo "live kit map after the rebind: $live_map"
+        echo "audit findings after the rebind: $audit_count (still naming the reference - the rewrite cannot see the map)"
+        echo "audit findings after the rebind:"
+        audit_json
+        echo "editor status text:"
+        grep -i "no longer holds that reference\|rebound to" "$EDITOR_LOG" 2>/dev/null | tail -2
+      } > "$REPO/loop/reports/${REPORT_TAG}_mo9_rebind_map_red.log" 2>/dev/null
+      cp /tmp/walk-mo9.json "$REPO/loop/reports/${REPORT_TAG}_mo9_status_walk.json" 2>/dev/null || true
+      log "MO9: the rebind left the finding on the board (map blind) - archived as the MO9 red"
+      leg M9_REBIND_MAP_BLIND true
     fi
-    # The A11 question (does a document-side repair reach the live world) is
-    # shadowed here by MO9: the rebind cannot touch a map reference at all.
-    # The repair chain continues by the document's own door: the file is
-    # rebound externally (the same write a save of a rewritten document would
-    # make), the scene reopens, and the audit comes back clean.
-    python3 - "$SCENE" << 'PYT'
+    # The repair lands as an edit: the rebind dirtied the tab, and the file
+    # learns of it at the tab's own save. Save through the editor's own door
+    # first; the T2 external rewrite stays as the fallback for a file the
+    # save did not reach (a rebind over a tab that was not the finding's
+    # document). Then the reopen: the rebound path is what the world wears
+    # and the audit is clean.
+    op scene.save '{}' >/dev/null 2>&1
+    sleep 2; wait_idle 180 >/dev/null
+    if ! grep -q "materials/wet2.bsn" "$SCENE"; then
+      python3 - "$SCENE" << 'PYT'
 import sys
 path = sys.argv[1]
 text = open(path, encoding="utf-8").read()
@@ -1074,7 +1096,8 @@ text = text.replace("materials/wet.bsn", "materials/wet2.bsn")
 open(path, "w", encoding="utf-8").write(text)
 print(f"external rebind: {n} reference(s) rewritten in place")
 PYT
-    sleep 4   # the watcher sees the external edit; the reopen re-reads anyway
+      sleep 4   # the watcher sees the external edit; the reopen re-reads anyway
+    fi
     open_scene "assets/t23.bsn"
     sleep 2; wait_idle 180 >/dev/null
     budget 60 [ "$(qcount "[\"$GLTFNAME\"]")" -ge 6 ]
@@ -1128,7 +1151,7 @@ rename() {
     echo "new 'material override:' lines: $dwarn"
     echo "water wear count (was 1): $(qcount "[\"$WATER\"]")"
     grep "material override:" "$EDITOR_LOG" | tail -3
-  } > "$REPO/loop/reports/t23t2_rename_sticky.log" 2>/dev/null
+  } > "$REPO/loop/reports/${REPORT_TAG}_rename_sticky.log" 2>/dev/null
   log "M6: live face archived (props=$live_props warns=+$dwarn water=$(qcount "[\"$WATER\"]"))"
   leg M6_LIVE_FACE_CHARACTERIZED true
   # MO3's green: the document follows.

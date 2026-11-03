@@ -1,0 +1,80 @@
+[2m2026-11-02T04:32:26.020186Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-11-02T04:32:26.084412Z[0m [32m INFO[0m [2mbevy_render::renderer[0m[2m:[0m AdapterInfo { name: "Apple M1 Pro", vendor: 0, device: 0, device_type: IntegratedGpu, device_pci_bus_id: "", driver: "", driver_info: "", backend: Metal, subgroup_min_size: 4, subgroup_max_size: 64, transient_saves_memory: Some(true), limit_bucket: None }
+[2m2026-11-02T04:32:26.315134Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw::test_input::plugin` of extension `jackdaw.test_input`
+[2m2026-11-02T04:32:26.315302Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw_physics::PhysicsEditorPlugin` of extension `jackdaw.physics`
+[2m2026-11-02T04:32:26.318190Z[0m [32m INFO[0m [2mbevy_pbr::cluster[0m[2m:[0m GPU clustering is supported on this device.
+[2m2026-11-02T04:32:26.318219Z[0m [32m INFO[0m [2mbevy_render::batching::gpu_preprocessing[0m[2m:[0m GPU preprocessing is fully supported on this device.
+[2m2026-11-02T04:32:26.345805Z[0m [32m INFO[0m [2mbevy_winit::system[0m[2m:[0m Creating new window jackdaw (71v0)
+[2m2026-11-02T04:32:26.511656Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.game_panel
+[2m2026-11-02T04:32:26.511852Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.timeline
+[2m2026-11-02T04:32:26.511870Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.viewport_panel
+[2m2026-11-02T04:32:26.512051Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.animation_graph
+[2m2026-11-02T04:32:26.512070Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.multiplayer
+[2m2026-11-02T04:32:26.512090Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.physics
+[2m2026-11-02T04:32:26.512195Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core
+[2m2026-11-02T04:32:26.513997Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core_windows
+[2m2026-11-02T04:32:26.514065Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.ui_palette
+[2m2026-11-02T04:32:26.514123Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.test_input
+[2m2026-11-02T04:32:26.514144Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.inspector
+[2m2026-11-02T04:32:26.514168Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.build_panel
+[2m2026-11-02T04:32:26.514180Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.project_window
+[2m2026-11-02T04:32:26.515958Z[0m [33m WARN[0m [2mjackdaw_api_internal::keymap::apply[0m[2m:[0m preset 'classic' has 10 chords claimed by more than one action: ["Home (Press, Operators): viewport2d.frame, clip.timeline.jump_start, view.frame_all", "Delete (Press, Operators): clip.delete_keyframes, entity.delete, brush.delete_element", "Backspace (Press, Operators): clip.delete_keyframes, viewport.draw_brush.remove_last_vertex, brush.delete_element", "Super+KeyC (Press, Operators): clip.copy_keyframes, entity.copy", "Super+KeyV (Press, Operators): clip.paste_keyframes, entity.paste", "Tab (Press, Operators): viewport.draw_brush.toggle_mode, brush.clip.cycle_mode", "Enter (Press, Operators): viewport.draw_brush.commit_polygon, brush.clip.apply", "KeyE (Press, Operators): tool.rotate, brush.mesh.extrude", "Escape (Press, Operators): brush.exit_edit_mode, selection.clear, brush.clip.clear, terrain.tool.exit_to_select", "Super+KeyB (Press, Operators): brush.mesh.edge_bevel, brush.mesh.vertex_bevel"]
+[2m2026-11-02T04:32:26.516030Z[0m [32m INFO[0m [2mjackdaw::extension_lifecycle[0m[2m:[0m applied keymap preset 'classic': 113 entries, 113 bindings, 0 user rows
+[2m2026-11-02T04:32:26.672720Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking /Users/zhanglinbo/workspace/loop-mac/t23-materials/t23-materials/assets recursively
+[2m2026-11-02T04:32:26.672816Z[0m [32m INFO[0m [2mjackdaw::asset_catalog[0m[2m:[0m No asset catalog found, starting with empty catalog
+[2m2026-11-02T04:32:26.711536Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: pre-build disabled; the first Play will compile the game
+[2m2026-11-02T04:32:26.712653Z[0m [32m INFO[0m [2mjackdaw::material_browser[0m[2m:[0m update_material_browser_ui: rebuilding with 1 entries
+[2m2026-11-02T04:32:26.851059Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 11, typed 5, referencing 6)
+[2m2026-11-02T04:32:26.851627Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m Indexed 4 asset files
+[2m2026-11-02T04:32:27.023815Z[0m [32m INFO[0m [2mjackdaw::material_browser[0m[2m:[0m update_material_browser_ui: rebuilding with 2 entries
+[2m2026-11-02T04:32:27.023886Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking /Users/zhanglinbo/workspace/loop-mac/t23-materials/t23-materials/assets recursively
+[2m2026-11-02T04:32:27.047777Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 11, typed 5, referencing 6)
+[2m2026-11-02T04:32:27.047925Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 0)
+[2m2026-11-02T04:32:27.066776Z[0m [33m WARN[0m [2mjackdaw::material_overrides[0m[2m:[0m material override: kit overrides a material named 'Rock', which no part of it wears any more -- its parts wear their own material until the name returns
+[2m2026-11-02T04:32:27.066813Z[0m [33m WARN[0m [2mjackdaw::material_overrides[0m[2m:[0m material override: props overrides a material named 'Rock', which no part of it wears any more -- its parts wear their own material until the name returns
+[2m2026-11-02T04:32:27.066819Z[0m [33m WARN[0m [2mjackdaw::material_overrides[0m[2m:[0m material override: props overrides a material named 'Trim', which no part of it wears any more -- its parts wear their own material until the name returns
+[2m2026-11-02T04:32:27.128921Z[0m [33m WARN[0m [2mjackdaw::material_overrides[0m[2m:[0m material override: kit overrides a material named 'Rock', which no part of it wears any more -- its parts wear their own material until the name returns
+[2m2026-11-02T04:32:27.128951Z[0m [33m WARN[0m [2mjackdaw::material_overrides[0m[2m:[0m material override: props overrides a material named 'Rock', which no part of it wears any more -- its parts wear their own material until the name returns
+[2m2026-11-02T04:32:27.128956Z[0m [33m WARN[0m [2mjackdaw::material_overrides[0m[2m:[0m material override: props overrides a material named 'Trim', which no part of it wears any more -- its parts wear their own material until the name returns
+[2m2026-11-02T04:32:39.512182Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: scene.open
+[2m2026-11-02T04:32:39.514812Z[0m [32m INFO[0m [2mjackdaw::scene_io::load[0m[2m:[0m Scene loaded from /Users/zhanglinbo/workspace/loop-mac/t23-materials/t23-materials/assets/t23.bsn (5 entities, 0 embedded assets)
+[2m2026-11-02T04:32:40.494768Z[0m [33m WARN[0m [2mjackdaw::material_overrides[0m[2m:[0m material override: props overrides a material named 'Rock', which no part of it wears any more -- its parts wear their own material until the name returns
+[2m2026-11-02T04:32:40.494845Z[0m [33m WARN[0m [2mjackdaw::material_overrides[0m[2m:[0m material override: props overrides a material named 'Trim', which no part of it wears any more -- its parts wear their own material until the name returns
+[2m2026-11-02T04:32:40.494876Z[0m [33m WARN[0m [2mjackdaw::material_overrides[0m[2m:[0m material override: kit overrides a material named 'Rock', which no part of it wears any more -- its parts wear their own material until the name returns
+[2m2026-11-02T04:32:53.512417Z[0m [33m WARN[0m [2mbevy_remote::builtin_methods[0m[2m:[0m Failed to serialize component `bevy_pbr::mesh_material::MeshMaterial3d<bevy_pbr::extended_material::ExtendedMaterial<bevy_pbr::pbr_material::StandardMaterial, jackdaw_surface::LayeredSurface>>` for entity 4582v1
+[2m2026-11-02T04:32:54.488138Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking /Users/zhanglinbo/workspace/loop-mac/t23-materials/t23-materials/assets recursively
+[2m2026-11-02T04:32:55.493462Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 10, typed 4, referencing 6)
+[2m2026-11-02T04:32:55.493819Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 1, reloaded 0)
+[2m2026-11-02T04:32:56.497576Z[0m [33m WARN[0m [2mjackdaw::material_overrides[0m[2m:[0m material override: kit overrides 'Rock' with 'materials/wet.bsn', which names no material the project holds -- its parts wear their own material until it returns
+[2m2026-11-02T04:32:57.496935Z[0m [33m WARN[0m [2mbevy_ecs::relationship[0m[2m:[0m The bevy_ecs::hierarchy::ChildOf(4459v1) relationship on entity 4965v0 relates to an entity that does not exist. The invalid bevy_ecs::hierarchy::ChildOf relationship has been removed.
+[2m2026-11-02T04:33:06.492817Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking /Users/zhanglinbo/workspace/loop-mac/t23-materials/t23-materials/assets recursively
+[2m2026-11-02T04:33:07.493246Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 11, typed 5, referencing 6)
+[2m2026-11-02T04:33:07.493912Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m Indexed 1 asset files
+[2m2026-11-02T04:33:09.499858Z[0m [33m WARN[0m [2mbevy_ecs::relationship[0m[2m:[0m The bevy_ecs::hierarchy::ChildOf(4952v1) relationship on entity 4414v2 relates to an entity that does not exist. The invalid bevy_ecs::hierarchy::ChildOf relationship has been removed.
+[2m2026-11-02T04:33:12.486633Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking /Users/zhanglinbo/workspace/loop-mac/t23-materials/t23-materials/assets recursively
+[2m2026-11-02T04:33:13.495729Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 10, typed 4, referencing 6)
+[2m2026-11-02T04:33:13.496104Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 1, reloaded 0)
+[2m2026-11-02T04:33:14.499137Z[0m [33m WARN[0m [2mjackdaw::material_overrides[0m[2m:[0m material override: kit overrides 'Rock' with 'materials/wet.bsn', which names no material the project holds -- its parts wear their own material until it returns
+[2m2026-11-02T04:33:15.498582Z[0m [33m WARN[0m [2mbevy_ecs::relationship[0m[2m:[0m The bevy_ecs::hierarchy::ChildOf(4685v2) relationship on entity 4586v3 relates to an entity that does not exist. The invalid bevy_ecs::hierarchy::ChildOf relationship has been removed.
+[2m2026-11-02T04:33:17.495643Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking /Users/zhanglinbo/workspace/loop-mac/t23-materials/t23-materials/assets recursively
+[2m2026-11-02T04:33:18.504195Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 10, typed 3, referencing 6)
+[2m2026-11-02T04:33:18.504344Z[0m [33m WARN[0m [2mjackdaw::asset_index[0m[2m:[0m materials/deep.bsn no longer holds a type this project knows
+[2m2026-11-02T04:33:18.504590Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 1, reloaded 0)
+[2m2026-11-02T04:33:19.494552Z[0m [33m WARN[0m [2mjackdaw::material_overrides[0m[2m:[0m material override: props overrides 'Trim' with 'materials/deep.bsn', which names no material the project holds -- its parts wear their own material until it returns
+[2m2026-11-02T04:33:23.492777Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking /Users/zhanglinbo/workspace/loop-mac/t23-materials/t23-materials/assets recursively
+[2m2026-11-02T04:33:24.496678Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 10, typed 4, referencing 6)
+[2m2026-11-02T04:33:24.497502Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m Indexed 1 asset files
+[2m2026-11-02T04:33:29.495476Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking /Users/zhanglinbo/workspace/loop-mac/t23-materials/t23-materials/assets recursively
+[2m2026-11-02T04:33:30.492546Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 10, typed 4, referencing 6)
+[2m2026-11-02T04:33:30.493150Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 1)
+[2m2026-11-02T04:33:34.503537Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: asset.rebind
+[2m2026-11-02T04:33:41.495290Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking /Users/zhanglinbo/workspace/loop-mac/t23-materials/t23-materials/assets recursively
+[2m2026-11-02T04:33:42.498866Z[0m [32m INFO[0m [2mjackdaw::scenes::external_watch[0m[2m:[0m /Users/zhanglinbo/workspace/loop-mac/t23-materials/t23-materials/assets/t23.bsn changed on disk; offering a reload
+[2m2026-11-02T04:33:42.500468Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 10, typed 4, referencing 6)
+[2m2026-11-02T04:33:42.500809Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 0)
+[2m2026-11-02T04:33:45.502285Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: scene.open
+[2m2026-11-02T04:33:45.505446Z[0m [32m INFO[0m [2mjackdaw::scene_io::load[0m[2m:[0m Scene loaded from /Users/zhanglinbo/workspace/loop-mac/t23-materials/t23-materials/assets/t23.bsn (5 entities, 0 embedded assets)
+[2m2026-11-02T04:33:46.495604Z[0m [33m WARN[0m [2mjackdaw::material_overrides[0m[2m:[0m material override: props overrides a material named 'Rock', which no part of it wears any more -- its parts wear their own material until the name returns
+[2m2026-11-02T04:33:46.495709Z[0m [33m WARN[0m [2mjackdaw::material_overrides[0m[2m:[0m material override: props overrides a material named 'Trim', which no part of it wears any more -- its parts wear their own material until the name returns
+[2m2026-11-02T04:33:46.495726Z[0m [33m WARN[0m [2mjackdaw::material_overrides[0m[2m:[0m material override: kit overrides a material named 'Rock', which no part of it wears any more -- its parts wear their own material until the name returns
+[2m2026-11-02T04:33:51.506684Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: dialog.answer

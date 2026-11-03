@@ -1,0 +1,7 @@
+M6 live face after file.rename deep.bsn -> deep2.bsn (doc rewrite pending save):
+live props map: {"Rock":"materials/mossy.bsn","Trim":"materials/deep.bsn"}
+new 'material override:' lines: 1
+water wear count (was 1): 0
+[2m2026-11-03T04:48:50.095055Z[0m [33m WARN[0m [2mjackdaw::material_overrides[0m[2m:[0m material override: props overrides a material named 'Trim', which no part of it wears any more -- its parts wear their own material until the name returns
+[2m2026-11-03T04:48:50.095071Z[0m [33m WARN[0m [2mjackdaw::material_overrides[0m[2m:[0m material override: kit overrides a material named 'Rock', which no part of it wears any more -- its parts wear their own material until the name returns
+[2m2026-11-03T04:49:05.098404Z[0m [33m WARN[0m [2mjackdaw::material_overrides[0m[2m:[0m material override: props overrides 'Trim' with 'materials/deep.bsn', which names no material the project holds -- its parts wear their own material until it returns

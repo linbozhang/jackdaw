@@ -1,0 +1,1 @@
+[2m2026-11-02T06:00:56.474200Z[0m [33m WARN[0m [2mjackdaw::material_overrides[0m[2m:[0m material override: kit overrides 'Rock' with 'materials/wet.bsn', which names no material the project holds -- its parts wear their own material until it returns

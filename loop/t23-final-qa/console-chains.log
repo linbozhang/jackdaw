@@ -1,0 +1,36 @@
+=== phase chains run 2026-11-03 13:50:36 ===
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t23-materials/t23-materials pid=53865
+placed mesh parts wearing named materials: 6 (want 6)
+L1_PLACE_PARTS_PASS
+L1_MATERIALS_PASS
+wear paths (from wet.bsn/deep.bsn): layered=bevy_pbr::extended_material::ExtendedMaterial<bevy_pbr::pbr_material::StandardMaterial, jackdaw_surface::LayeredSurface> water=bevy_pbr::extended_material::ExtendedMaterial<bevy_pbr::pbr_material::StandardMaterial, jackdaw_surface::water::Water>
+L1 baseline: layered=0 water=0 (want 0/0 - nothing dressed yet)
+shot l1-before ok (viewport)
+L1: props override map now {"Rock":"materials/mossy.bsn"}
+L1: report lines after the healthy override: 0 (want 0)
+shot l1-after ok (viewport)
+L2: layered wears after Rock->wet: 2 (want 2: props RockA/RockB)
+L2: water wears after Rock->deep: 2 (want 2: props RockA/RockB)
+L2: water wears after Trim->deep: 1 (want 1: props TrimC)
+L2: layered wears after kit Rock->wet: 2 (want 2: KitA/KitB)
+L2: props map {"Rock":"materials/mossy.bsn","Trim":"materials/deep.bsn"} kit map {"Rock":"materials/wet.bsn"}
+shot l1-after ok (viewport)
+L1: viewport changed-percent after the dress faces: 2.464
+L1_DRESS_PASS
+L2_WEAR_FACES_PASS
+M11: 'material override:' lines through the undo round: 0 (want 0)
+M11_UNDO_PASS
+MO4: result=cancelled warnings=["material.override: that part wears an unnamed material, which no override can address; name= one of the materials the model does name: Rock, Trim"]
+MO4_REFUSAL_PASS
+L1_DOC_ON_DISK_PASS
+shot l1-saved ok (viewport)
+L1: after the reopen layered=2 water=1 (want 2/1 - still dressed)
+shot l1-reopen ok (viewport)
+L1: viewport changed-percent across the reopen: 0.054 (want < 1)
+L1_REOPEN_PASS
+M4: instance roots=1 map={"Trim":"materials/wet.bsn"}
+M4: after the instance override layered=1 (want 1) water=0 (want 0)
+M4: after the twin layered=1 (want 1) water=1 (want 1 - the twin follows the prefab)
+M4_PREFAB_INSTANCE_PASS
+warn scan (chains): 19 hit(s) -> /Users/zhanglinbo/workspace/jackdaw/loop/t23-final-qa/warn-scan-chains.txt
+CHAINS done: L1_DOC_ON_DISK=PASS L1_DRESS=PASS L1_MATERIALS=PASS L1_PLACE_PARTS=PASS L1_REOPEN=PASS L2_WEAR_FACES=PASS M11_UNDO=PASS M4_PREFAB_INSTANCE=PASS MO4_REFUSAL=PASS 

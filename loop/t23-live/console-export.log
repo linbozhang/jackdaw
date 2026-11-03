@@ -1,0 +1,9 @@
+=== phase export run 2026-11-02 12:05:48 ===
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t23-materials/t23-materials pid=54508
+wear paths: layered=bevy_pbr::extended_material::ExtendedMaterial<bevy_pbr::pbr_material::StandardMaterial, jackdaw_surface::LayeredSurface> water=bevy_pbr::extended_material::ExtendedMaterial<bevy_pbr::pbr_material::StandardMaterial, jackdaw_surface::water::Water>
+EXPORT: staged tree ready
+L1_EXPORT_PASS
+EXPORT: staged layered=2 water=1
+L1_STAGED_DRESS_PASS
+warn scan (export): 6 hit(s) -> /Users/zhanglinbo/workspace/jackdaw/loop/t23-live/warn-scan-export.txt
+EXPORT done: L1_EXPORT=PASS L1_STAGED_DRESS=PASS 

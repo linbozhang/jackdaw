@@ -1,0 +1,5 @@
+=== guards 13:02:03 ===
+        PASS [   2.994s] (245/246) jackdaw::guards undo_history::undoing_back_to_the_saved_scene_leaves_the_tab_clean
+        PASS [   2.077s] (246/246) jackdaw::guards user_config::an_editor_test_app_reads_and_writes_a_scratch_config_directory
+────────────
+     Summary [ 258.434s] 246 tests run: 246 passed, 0 skipped

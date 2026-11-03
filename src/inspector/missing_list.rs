@@ -592,6 +592,24 @@ fn rewrite_ast_reference(
                                     }
                                 }
                             }
+                            // A materials map — the entries the audit picks
+                            // up on the two override layers (`MaterialOverrides`
+                            // / `InstanceMaterialOverrides`, T23) — holds its
+                            // references as the map's values, one per material
+                            // name. The same depth rule as the list arm: the
+                            // strings that are values directly, and only them
+                            // — never a key (a material name is not a path)
+                            // and never a string nested inside a value.
+                            BsnValue::Map(entries) => {
+                                for (_, value) in entries.iter_mut() {
+                                    if let BsnValue::String(spelling) = value
+                                        && spelling == &finding.reference
+                                    {
+                                        *spelling = chosen.to_string();
+                                        replaced = true;
+                                    }
+                                }
+                            }
                             _ => {}
                         }
                     }
@@ -688,7 +706,7 @@ fn locate(world: &mut World, finding: &AuditFinding) {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use jackdaw_bsn::BsnPatch;
+    use jackdaw_bsn::{BsnPatch, BsnValue};
 
     /// The finding a tuple-struct reference produces, built the way the
     /// audit actually builds it: the component is the patch's own
@@ -829,5 +847,189 @@ mod tests {
                 }
             }
         }
+    }
+
+    /// The materials map of an override layer, spelled the way a save
+    /// writes it, and the finding the audit builds for one of its values
+    /// (the component by its short name, the field `materials`, the
+    /// reference as the value spells it).
+    const OVERRIDE_SCENE: &str = "#props\n\
+         jackdaw_scene_types::types::GltfSource {\n\
+         path: \"models/props.glb\",\n\
+         scene_index: 0,\n\
+         }\n\
+         jackdaw_scene_types::types::MaterialOverrides {\n\
+         materials: map[\n\
+         (\"Rock\", \"materials/mossy.bsn\"),\n\
+         (\"Trim\", \"materials/deep.bsn\")\n\
+         ],\n\
+         }\n";
+
+    fn override_finding(entity: &str, reference: &str) -> AuditFinding {
+        AuditFinding {
+            document: Path::new("t23.bsn").to_path_buf(),
+            entity_name: Some(entity.to_string()),
+            component: "MaterialOverrides".to_string(),
+            field: "materials".to_string(),
+            reference: reference.to_string(),
+            kind: FindingKind::Missing,
+        }
+    }
+
+    /// The materials map an override layer holds, read back off the AST as
+    /// `(key, value)` spelling pairs. Entries whose halves are not plain
+    /// strings are skipped — the reader only witnesses the strings.
+    fn override_map_of(ast: &jackdaw_bsn::SceneBsnAst, entity: &str) -> Vec<(String, String)> {
+        let mut walk: Vec<Entity> = ast.roots.clone();
+        while let Some(node) = walk.pop() {
+            walk.extend(ast.get_children_ast(node));
+            if ast.get_name(node) != Some(entity) {
+                continue;
+            }
+            for patch_entity in ast
+                .get_patches(node)
+                .cloned()
+                .map(|patches| patches.0)
+                .unwrap_or_default()
+            {
+                if let Some(BsnPatch::Struct(data)) = ast.world.get::<BsnPatch>(patch_entity) {
+                    if !data.type_path.ends_with("MaterialOverrides") {
+                        continue;
+                    }
+                    for field in &data.fields.0 {
+                        if field.name != "materials" {
+                            continue;
+                        }
+                        if let BsnValue::Map(entries) = &field.value {
+                            return entries
+                                .iter()
+                                .filter_map(|(key, value)| match (key, value) {
+                                    (BsnValue::String(key), BsnValue::String(value)) => {
+                                        Some((key.clone(), value.clone()))
+                                    }
+                                    _ => None,
+                                })
+                                .collect();
+                        }
+                    }
+                }
+            }
+        }
+        Vec::new()
+    }
+
+    /// The map values the audit picks up on an override layer rebind. Before
+    /// the `Map` arm the matcher fell through and the rebind answered "the
+    /// document no longer holds that reference" for the very finding it had
+    /// just reported (MO9's red, the T2 live matrix).
+    #[test]
+    fn an_override_map_reference_rebinds() {
+        let mut ast = jackdaw_bsn::parse_bsn_text(OVERRIDE_SCENE).expect("the scene parses");
+        let finding = override_finding("props", "materials/deep.bsn");
+
+        let replaced = rewrite_ast_reference(&mut ast, &finding, "materials/deep2.bsn");
+
+        assert!(
+            replaced,
+            "the override-map finding the audit names rewrites"
+        );
+        assert_eq!(
+            override_map_of(&ast, "props"),
+            vec![
+                ("Rock".to_string(), "materials/mossy.bsn".to_string()),
+                ("Trim".to_string(), "materials/deep2.bsn".to_string()),
+            ],
+            "only the entry naming the file moved; its siblings stay"
+        );
+        // The model's own source — a reference of its own on the same
+        // entity — was never the finding's field, and stays.
+        let mut walk: Vec<Entity> = ast.roots.clone();
+        while let Some(node) = walk.pop() {
+            walk.extend(ast.get_children_ast(node));
+            for patch_entity in ast
+                .get_patches(node)
+                .cloned()
+                .map(|patches| patches.0)
+                .unwrap_or_default()
+            {
+                if let Some(BsnPatch::Struct(data)) = ast.world.get::<BsnPatch>(patch_entity)
+                    && data.type_path.ends_with("GltfSource")
+                {
+                    assert_eq!(
+                        data.fields.0[0].value,
+                        BsnValue::String("models/props.glb".to_string()),
+                        "a sibling component's reference stays untouched"
+                    );
+                }
+            }
+        }
+    }
+
+    /// Every entry naming the broken file moves, together; a key that
+    /// happens to spell the path is a material name, not a reference, and
+    /// never moves; and a value that only nests the spelling keeps it.
+    #[test]
+    fn an_override_map_rebind_moves_values_only() {
+        let text = "#kit\n\
+             jackdaw_scene_types::types::MaterialOverrides {\n\
+             materials: map[\n\
+             (\"A\", \"materials/gone.bsn\"),\n\
+             (\"B\", \"materials/gone.bsn\"),\n\
+             (\"materials/gone.bsn\", \"materials/kept.bsn\")\n\
+             ],\n\
+             }\n";
+        let mut ast = jackdaw_bsn::parse_bsn_text(text).expect("the scene parses");
+        let finding = override_finding("kit", "materials/gone.bsn");
+
+        let replaced = rewrite_ast_reference(&mut ast, &finding, "materials/back.bsn");
+
+        assert!(replaced, "the entries naming the file rewrite");
+        assert_eq!(
+            override_map_of(&ast, "kit"),
+            vec![
+                ("A".to_string(), "materials/back.bsn".to_string()),
+                ("B".to_string(), "materials/back.bsn".to_string()),
+                (
+                    "materials/gone.bsn".to_string(),
+                    "materials/kept.bsn".to_string()
+                ),
+            ],
+            "both holders moved; the key that spells the path stays a name"
+        );
+    }
+
+    /// A finding naming another component, or another field, leaves the
+    /// override map alone: the arm matches by the patch's type path and the
+    /// field's name, not by the reference alone.
+    #[test]
+    fn an_override_map_rebind_stays_on_its_own_component_and_field() {
+        let mut ast = jackdaw_bsn::parse_bsn_text(OVERRIDE_SCENE).expect("the scene parses");
+
+        let mut finding = override_finding("props", "materials/deep.bsn");
+        finding.component = "InstanceMaterialOverrides".to_string();
+        let replaced = rewrite_ast_reference(&mut ast, &finding, "materials/deep2.bsn");
+        assert!(
+            !replaced,
+            "another layer's finding does not rewrite the map"
+        );
+        assert_eq!(
+            override_map_of(&ast, "props"),
+            vec![
+                ("Rock".to_string(), "materials/mossy.bsn".to_string()),
+                ("Trim".to_string(), "materials/deep.bsn".to_string()),
+            ],
+            "the map is untouched by another layer's finding"
+        );
+
+        let mut ast = jackdaw_bsn::parse_bsn_text(OVERRIDE_SCENE).expect("the scene parses");
+        let finding = override_finding("props", "materials/nobody-holds-this.bsn");
+        let replaced = rewrite_ast_reference(&mut ast, &finding, "materials/deep2.bsn");
+        assert!(!replaced, "a reference no value spells does not rewrite");
+        assert!(
+            override_map_of(&ast, "props")
+                .iter()
+                .all(|(_, value)| value != "materials/deep2.bsn"),
+            "the chosen path landed nowhere"
+        );
     }
 }

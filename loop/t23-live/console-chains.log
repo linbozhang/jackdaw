@@ -1,0 +1,215 @@
+=== phase chains run 2026-11-02 10:39:30 ===
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t23-materials/t23-materials pid=27858
+placed parts with named materials: 0 (want >= 8)
+L1: placement incomplete (parts=0 props=5440v0 kit=5210v2)
+L1_PLACE_PARTS_FAIL
+L1_MATERIALS_PASS
+wear paths: layered=bevy_pbr::extended_material::ExtendedMaterial<bevy_pbr::pbr_material::StandardMaterial, jackdaw_surface::LayeredSurface> water=bevy_pbr::extended_material::ExtendedMaterial<bevy_pbr::pbr_material::StandardMaterial, jackdaw_surface::water::Water>
+shot l1-before ok (viewport)
+L1: material.override returned {
+  "entities": [],
+  "id": "material.override",
+  "result": "finished",
+  "warnings": []
+}
+L1: props override map now 
+L1: RockA wear= RockB wear=
+L1: the Rock parts carry no ModelMaterial backup
+shot l1-after ok (viewport)
+L1: viewport changed-percent after the dress: 0.000
+L1: the viewport did not visibly change
+L1_DRESS_FAIL
+M11: the kit override never landed
+M11: the undo left a map behind
+M11: 'material override:' lines through the undo round: 0 (want 0)
+M11: the redo did not re-dress KitA
+M11_UNDO_FAIL
+L2: RockA did not swap to the layered wear
+L2: RockA did not swap to the water wear
+L2: RockA did not come back to the standard wear
+L2: TrimC did not swap to the water wear
+L2: KitA did not swap to the layered wear
+L2: props map  kit map 
+L2_WEAR_FACES_FAIL
+MO4: result={
+  "entities": [],
+  "id": "material.override",
+  "result": "cancelled",
+  "warnings": [
+    "material.override: that part wears an unnamed material, which no override can address; name= one of the materials the model does name: Rock, Trim"
+  ]
+} warnings=[]
+MO4_REFUSAL_FAIL
+L1_DOC_ON_DISK_PASS
+shot l1-saved ok (viewport)
+L1: the props map did not survive the reopen
+L1: the kit map did not survive the reopen
+L1: 5112v21 lost its dress across the reopen
+L1: 5473v25 lost its dress across the reopen
+L1: 5017v15 lost its dress across the reopen
+L1: 5660v21 lost its dress across the reopen
+L1: 6201v15 lost its dress across the reopen
+shot l1-reopen ok (viewport)
+L1: viewport changed-percent across the reopen: 0.000 (want < 1)
+L1_REOPEN_FAIL
+M4: the packed instance's RockA is not dressed
+M4: TrimC ids before=[] after= (packed=null spawned=)
+M4_PREFAB_INSTANCE_FAIL
+warn scan (chains): 15 hit(s) -> /Users/zhanglinbo/workspace/jackdaw/loop/t23-live/warn-scan-chains.txt
+CHAINS done: L1_DOC_ON_DISK=PASS L1_DRESS=FAIL L1_MATERIALS=PASS L1_PLACE_PARTS=FAIL L1_REOPEN=FAIL L2_WEAR_FACES=FAIL M11_UNDO=FAIL M4_PREFAB_INSTANCE=FAIL MO4_REFUSAL=FAIL 
+=== phase chains run 2026-11-02 11:12:28 ===
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t23-materials/t23-materials pid=37228
+placed mesh parts wearing named materials: 6 (want 6)
+L1_PLACE_PARTS_PASS
+L1_MATERIALS_PASS
+wear paths: layered=bevy_pbr::extended_material::ExtendedMaterial<bevy_pbr::pbr_material::StandardMaterial, jackdaw_surface::LayeredSurface> water=bevy_pbr::extended_material::ExtendedMaterial<bevy_pbr::pbr_material::StandardMaterial, jackdaw_surface::water::Water>
+L1 baseline: layered=0 water=0 (want 0/0 - nothing dressed yet)
+L1: props override map now {"Rock":"materials/mossy.bsn"}
+L1: report lines after the healthy override: 0 (want 0)
+shot l1-before ok (viewport)
+L2: layered wears after Rock->wet: 2 (want 2: props RockA/RockB)
+L2: water wears after Rock->deep: 2 (want 2: props RockA/RockB)
+L2: water wears after Trim->deep: 1 (want 1: props TrimC)
+L2: layered wears after kit Rock->wet: 2 (want 2: KitA/KitB)
+L2: props map {"Rock":"materials/mossy.bsn","Trim":"materials/deep.bsn"} kit map {"Rock":"materials/wet.bsn"}
+shot l1-after ok (viewport)
+L1: viewport changed-percent after the dress faces: 0.000
+L1: the viewport did not visibly change
+L1_DRESS_FAIL
+L2_WEAR_FACES_PASS
+M11: 'material override:' lines through the undo round: 0 (want 0)
+M11_UNDO_PASS
+MO4: result=cancelled warnings=["material.override: that part wears an unnamed material, which no override can address; name= one of the materials the model does name: Rock, Trim"]
+MO4_REFUSAL_PASS
+L1_DOC_ON_DISK_PASS
+shot l1-saved ok (viewport)
+L1: after the reopen layered=2 water=1 (want 2/1 - still dressed)
+shot l1-reopen ok (viewport)
+L1: viewport changed-percent across the reopen: 0.000 (want < 1)
+L1_REOPEN_PASS
+M4: TrimC ids before=["5295v12"] after=["5295v12","4758v14"] (packed=5295v12 spawned=4758v14)
+M4: instance roots=1 first=5496v14 map={"Trim":"materials/wet.bsn"}
+M4: after the instance override layered=1 (want 1) water=1 (want 1)
+M4_PREFAB_INSTANCE_PASS
+warn scan (chains): 19 hit(s) -> /Users/zhanglinbo/workspace/jackdaw/loop/t23-live/warn-scan-chains.txt
+CHAINS done: L1_DOC_ON_DISK=PASS L1_DRESS=FAIL L1_MATERIALS=PASS L1_PLACE_PARTS=PASS L1_REOPEN=PASS L2_WEAR_FACES=PASS M11_UNDO=PASS M4_PREFAB_INSTANCE=PASS MO4_REFUSAL=PASS 
+=== phase chains run 2026-11-02 11:35:35 ===
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t23-materials/t23-materials pid=43596
+placed mesh parts wearing named materials: 6 (want 6)
+L1_PLACE_PARTS_PASS
+L1_MATERIALS_PASS
+wear paths: layered=bevy_pbr::extended_material::ExtendedMaterial<bevy_pbr::pbr_material::StandardMaterial, jackdaw_surface::LayeredSurface> water=bevy_pbr::extended_material::ExtendedMaterial<bevy_pbr::pbr_material::StandardMaterial, jackdaw_surface::water::Water>
+L1 baseline: layered=0 water=0 (want 0/0 - nothing dressed yet)
+shot l1-before ok (viewport)
+L1: props override map now {"Rock":"materials/mossy.bsn"}
+L1: report lines after the healthy override: 0 (want 0)
+shot l1-after ok (viewport)
+L2: layered wears after Rock->wet: 2 (want 2: props RockA/RockB)
+L2: water wears after Rock->deep: 2 (want 2: props RockA/RockB)
+L2: water wears after Trim->deep: 1 (want 1: props TrimC)
+L2: layered wears after kit Rock->wet: 2 (want 2: KitA/KitB)
+L2: props map {"Rock":"materials/mossy.bsn","Trim":"materials/deep.bsn"} kit map {"Rock":"materials/wet.bsn"}
+shot l1-after ok (viewport)
+L1: viewport changed-percent after the dress faces: 2.466
+L1_DRESS_PASS
+L2_WEAR_FACES_PASS
+M11: 'material override:' lines through the undo round: 0 (want 0)
+M11_UNDO_PASS
+MO4: result=cancelled warnings=["material.override: that part wears an unnamed material, which no override can address; name= one of the materials the model does name: Rock, Trim"]
+MO4_REFUSAL_PASS
+L1_DOC_ON_DISK_PASS
+shot l1-saved ok (viewport)
+L1: after the reopen layered=2 water=1 (want 2/1 - still dressed)
+shot l1-reopen ok (viewport)
+L1: viewport changed-percent across the reopen: 0.096 (want < 1)
+L1_REOPEN_PASS
+M4: instance roots=0 map=
+M4: instance-layer holders = 0 (want 1)
+M4: the instance layer did not take the override
+M4: after the instance override layered=0 (want 1) water=1 (want 0)
+M4: the instance layer's win is not on the layered face
+M4: the water face stayed under the instance's wet override
+M4: after the twin layered=0 (want 1) water=2 (want 1 - the twin follows the prefab)
+M4: the packed instance lost its layered win
+M4: the twin does not follow the prefab's model layer
+M4_PREFAB_INSTANCE_FAIL
+warn scan (chains): 20 hit(s) -> /Users/zhanglinbo/workspace/jackdaw/loop/t23-live/warn-scan-chains.txt
+CHAINS done: L1_DOC_ON_DISK=PASS L1_DRESS=PASS L1_MATERIALS=PASS L1_PLACE_PARTS=PASS L1_REOPEN=PASS L2_WEAR_FACES=PASS M11_UNDO=PASS M4_PREFAB_INSTANCE=FAIL MO4_REFUSAL=PASS 
+=== phase chains run 2026-11-02 11:46:32 ===
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t23-materials/t23-materials pid=47363
+placed mesh parts wearing named materials: 12 (want 6)
+L1_PLACE_PARTS_PASS
+L1_MATERIALS_PASS
+wear paths: layered=bevy_pbr::extended_material::ExtendedMaterial<bevy_pbr::pbr_material::StandardMaterial, jackdaw_surface::LayeredSurface> water=bevy_pbr::extended_material::ExtendedMaterial<bevy_pbr::pbr_material::StandardMaterial, jackdaw_surface::water::Water>
+L1 baseline: layered=2 water=1 (want 0/0 - nothing dressed yet)
+shot l1-before ok (viewport)
+L1: material.override returned cancelled
+L1: props override map now {"Rock":"materials/mossy.bsn","Trim":"materials/deep.bsn"}
+L1: report lines after the healthy override: 0 (want 0)
+shot l1-after ok (viewport)
+L2: layered wears after Rock->wet: 2 (want 2: props RockA/RockB)
+L2: water wears after Rock->deep: 1 (want 2: props RockA/RockB)
+L2: the layered wear stayed under the water override
+L2: the water wear stayed under the mossy override
+L2: water wears after Trim->deep: 1 (want 1: props TrimC)
+L2: layered wears after kit Rock->wet: 2 (want 2: KitA/KitB)
+L2: props map {"Rock":"materials/mossy.bsn","Trim":"materials/deep.bsn"} kit map {"Rock":"materials/wet.bsn"}
+shot l1-after ok (viewport)
+L1: viewport changed-percent after the dress faces: 0.288
+L1: the viewport did not visibly change
+L1_DRESS_FAIL
+L2_WEAR_FACES_FAIL
+M11: the kit override never landed
+M11: 'material override:' lines through the undo round: 0 (want 0)
+M11: the redo did not restore the entry
+M11_UNDO_FAIL
+MO4: result=cancelled warnings=["material.override: `entity` was not set: `PlainD` names no entity in this scene, or more than one","material.override: 5561v0 is not a placed model or one of its parts"]
+MO4_REFUSAL_FAIL
+L1_DOC_ON_DISK_PASS
+shot l1-saved ok (viewport)
+L1: after the reopen layered=2 water=1 (want 2/1 - still dressed)
+shot l1-reopen ok (viewport)
+L1: viewport changed-percent across the reopen: 1.058 (want < 1)
+L1_REOPEN_FAIL
+M4: instance roots=1 map={"Trim":"materials/wet.bsn"}
+M4: after the instance override layered=1 (want 1) water=0 (want 0)
+M4: after the twin layered=1 (want 1) water=1 (want 1 - the twin follows the prefab)
+M4_PREFAB_INSTANCE_PASS
+warn scan (chains): 32 hit(s) -> /Users/zhanglinbo/workspace/jackdaw/loop/t23-live/warn-scan-chains.txt
+CHAINS done: L1_DOC_ON_DISK=PASS L1_DRESS=FAIL L1_MATERIALS=PASS L1_PLACE_PARTS=PASS L1_REOPEN=FAIL L2_WEAR_FACES=FAIL M11_UNDO=FAIL M4_PREFAB_INSTANCE=PASS MO4_REFUSAL=FAIL 
+=== phase chains run 2026-11-02 11:56:04 ===
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t23-materials/t23-materials pid=50925
+placed mesh parts wearing named materials: 6 (want 6)
+L1_PLACE_PARTS_PASS
+L1_MATERIALS_PASS
+wear paths: layered=bevy_pbr::extended_material::ExtendedMaterial<bevy_pbr::pbr_material::StandardMaterial, jackdaw_surface::LayeredSurface> water=bevy_pbr::extended_material::ExtendedMaterial<bevy_pbr::pbr_material::StandardMaterial, jackdaw_surface::water::Water>
+L1 baseline: layered=0 water=0 (want 0/0 - nothing dressed yet)
+shot l1-before ok (viewport)
+L1: props override map now {"Rock":"materials/mossy.bsn"}
+L1: report lines after the healthy override: 0 (want 0)
+shot l1-after ok (viewport)
+L2: layered wears after Rock->wet: 2 (want 2: props RockA/RockB)
+L2: water wears after Rock->deep: 2 (want 2: props RockA/RockB)
+L2: water wears after Trim->deep: 1 (want 1: props TrimC)
+L2: layered wears after kit Rock->wet: 2 (want 2: KitA/KitB)
+L2: props map {"Rock":"materials/mossy.bsn","Trim":"materials/deep.bsn"} kit map {"Rock":"materials/wet.bsn"}
+shot l1-after ok (viewport)
+L1: viewport changed-percent after the dress faces: 2.469
+L1_DRESS_PASS
+L2_WEAR_FACES_PASS
+M11: 'material override:' lines through the undo round: 0 (want 0)
+M11_UNDO_PASS
+MO4: result=cancelled warnings=["material.override: that part wears an unnamed material, which no override can address; name= one of the materials the model does name: Rock, Trim"]
+MO4_REFUSAL_PASS
+L1_DOC_ON_DISK_PASS
+shot l1-saved ok (viewport)
+L1: after the reopen layered=2 water=1 (want 2/1 - still dressed)
+shot l1-reopen ok (viewport)
+L1: viewport changed-percent across the reopen: 0.067 (want < 1)
+L1_REOPEN_PASS
+M4: instance roots=1 map={"Trim":"materials/wet.bsn"}
+M4: after the instance override layered=1 (want 1) water=0 (want 0)
+M4: after the twin layered=1 (want 1) water=1 (want 1 - the twin follows the prefab)
+M4_PREFAB_INSTANCE_PASS
+warn scan (chains): 19 hit(s) -> /Users/zhanglinbo/workspace/jackdaw/loop/t23-live/warn-scan-chains.txt
+CHAINS done: L1_DOC_ON_DISK=PASS L1_DRESS=PASS L1_MATERIALS=PASS L1_PLACE_PARTS=PASS L1_REOPEN=PASS L2_WEAR_FACES=PASS M11_UNDO=PASS M4_PREFAB_INSTANCE=PASS MO4_REFUSAL=PASS 

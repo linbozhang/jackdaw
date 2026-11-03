@@ -1,0 +1,38 @@
+T23-T3 QD1 red evidence: the M8 stale-key face on the PRE-FIX build
+build: 12c0f9f143e87e28fca664791b585c67f30fe5a1 (main before T23-T1; no report system, no audit/rewrite pickup)
+run: 2026-11-03 11:58:40; RUST_BACKTRACE unset; fixture /Users/zhanglinbo/workspace/loop-mac/t23t3-red/project
+
+--- what the leg did
+  place props.glb (materials Rock/Trim + one unnamed), override Rock -> materials/deep.bsn
+  (the WATER face: its wear/give-back is a component-presence fact BRP can read),
+  then rewrite the GLB with the key renamed Rock -> Stone (watcher reimport).
+
+--- verdict lines (leg_* = PASS means the RED face holds)
+LEG RED_PLACE_PASS
+LEG RED_DRESS_PASS
+LEG RED_DRESS_VISIBLE_PASS
+LEG RED_RELOAD_PASS
+LEG RED_SILENT_LOG_PASS
+LEG RED_SILENT_GIVEBACK_PASS
+LEG RED_SILENT_AUDIT_PASS
+LEG RED_SILENT_STATUS_PASS
+LEG RED_ENTRY_STAYS_PASS
+LEG RED_SILENT_REVERT_PASS
+
+--- the silence, quantified
+  'material override:' new lines through the rename: 0 (the report surface does not exist in this build)
+  'no part of it wears any more' new lines: 0 (the message does not exist in this build)
+  audit findings after the rename: 0 -> {"count":0,"findings":[],"summary":"no broken references"} (the override path is invisible to the audit: MO2 unfixed)
+  status-bar walk contains 'material override': no
+
+--- the silent loss itself
+  water-face wears before the rename: 2, after: 0 (the overridden parts gave back with no announcement)
+  override map after the rename (entry stays, nothing cleans it): {"Rock":"materials/deep.bsn"}
+  mesh-part names after the rename: Mesh.Stone,Mesh.Trim (the key the entry names no longer matches any part)
+  pixdiff undressed->dressed: 1.018 pct (the dress was visibly on)
+  pixdiff dressed->after-rename: 1.018 pct (the parts visibly wore their own material back)
+
+--- full-log warn scan (material override:|material\.override:|holds no material|asset load failed|no longer holds a type this project knows|UnresolvedTypes|cannot-apply|references name files|panicked|no part of it wears)
+[2m2026-11-03T03:57:55.417656Z[0m [32m INFO[0m [2mjackdaw::boot_ops[0m[2m:[0m JACKDAW_RUN_OP: material.override: `entity` = 5262v0 (props), from name=props
+
+--- red leg archived before leaving the detached build (red-state discipline)

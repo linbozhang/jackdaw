@@ -117,7 +117,11 @@ Map 引用，粘性无从谈起——如实记档（`t23t2_a11_sticky.log` 已�
   挂 GltfMaterialName）。全部为脚本口径修正，产品行为零改动。
 - **D4（范围）散布腿未跑真机**：M4 的散布条目带回覆盖（scatter_ops）按方案「抽查一
   腿」以 headless 在库证据兑现（`tests/operators/scatter_ops.rs:455-482` 等三件，
-  门禁 stage 全绿含之）；预制体 pack+实例层赢+跟随三面已真机。deviation 记档。
+  在 **operators 档**——T2 门链（guards+stage）不含该档，QA 亲跑
+  `cargo nextest --profile ci -p jackdaw --test operators scatter_ops` =
+  **18/18**（归档 `t23t2_qa_scatter.log`））；预制体 pack+实例层赢+跟随三面已真机。
+  deviation 记档。（T23-T3 更正：本条原括注「门禁 stage 全绿含之」不实——
+  scatter_ops 在 `tests/operators/` 档，按 T2 QA §六-D4/QD2 更例如实改写。）
 - **D5（预算）Foliage 面记档不跑**：按方案 §二 M2 口径（四穿面取三）。
 
 ## 五、M12 warn 扫描归因（词表 `material override:|material.override:|holds no

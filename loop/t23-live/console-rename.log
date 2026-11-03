@@ -1,0 +1,9 @@
+=== phase rename run 2026-11-02 12:37:48 ===
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t23-materials/t23-materials pid=65854
+wear paths: layered= water=bevy_pbr::extended_material::ExtendedMaterial<bevy_pbr::pbr_material::StandardMaterial, jackdaw_surface::water::Water>
+M6: live face archived (props={"Rock":"materials/mossy.bsn","Trim":"materials/deep.bsn"} warns=+1 water=0)
+M6_LIVE_FACE_CHARACTERIZED_PASS
+M6: the document spells materials/deep2.bsn 1 time(s) (want 1: props Trim)
+M6_RENAME_PASS
+warn scan (rename): 13 hit(s) -> /Users/zhanglinbo/workspace/jackdaw/loop/t23-live/warn-scan-rename.txt
+RENAME done: M6_LIVE_FACE_CHARACTERIZED=PASS M6_RENAME=PASS 

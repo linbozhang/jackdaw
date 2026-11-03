@@ -1,0 +1,1 @@
+{"jsonrpc":"2.0","id":25470,"result":{"entities":[],"id":"material.override","result":"cancelled","warnings":["material.override: that part wears an unnamed material, which no override can address; name= one of the materials the model does name: Rock, Trim"]}}

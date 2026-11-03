@@ -1,0 +1,7 @@
+=== phase gamebroken run 2026-11-02 12:54:51 ===
+wear paths (from wet2.bsn/deep2.bsn): layered=bevy_pbr::extended_material::ExtendedMaterial<bevy_pbr::pbr_material::StandardMaterial, jackdaw_surface::LayeredSurface> water=bevy_pbr::extended_material::ExtendedMaterial<bevy_pbr::pbr_material::StandardMaterial, jackdaw_surface::water::Water>
+M10: broken package named=6 layered=2 water=0 (want 6/2/0)
+M10: 'material override:' lines in the game log: 0 (want 0 - the report is editor-only by design)
+M10_GAME_MISSING_PASS
+warn scan (gamebroken): 0 hit(s) -> /Users/zhanglinbo/workspace/jackdaw/loop/t23-live/warn-scan-gamebroken.txt
+GAMEBROKEN done: M10_GAME_MISSING=PASS 

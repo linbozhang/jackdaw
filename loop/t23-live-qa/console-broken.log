@@ -1,0 +1,17 @@
+=== phase broken run 2026-11-02 14:00:18 ===
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t23-materials/t23-materials pid=34468
+wear paths (from wet.bsn/deep.bsn): layered=bevy_pbr::extended_material::ExtendedMaterial<bevy_pbr::pbr_material::StandardMaterial, jackdaw_surface::LayeredSurface> water=bevy_pbr::extended_material::ExtendedMaterial<bevy_pbr::pbr_material::StandardMaterial, jackdaw_surface::water::Water>
+M5: 'material override:' lines after the rm: 1
+M5: the status bar mouth shows the warning
+M5: audit findings for materials/wet.bsn: [{"component":"MaterialOverrides","document":"t23.bsn","entity":"kit","field":"materials","kind":"Missing","reference":"materials/wet.bsn"}]
+M5_MISSING_PASS
+M5_HEAL_PASS
+M5_SPEAKS_AGAIN_PASS
+M13: index-refusal lines=1 'material override:' delta=1 (want 1/1)
+M13_BROKEN_FILE_PASS
+MO9: the rebind left the document and the live world on the old path (map blind) - archived as the MO9 red
+M9_REBIND_MAP_BLIND_PASS
+M9: audit after the rebound doc reopened: total=0
+M9_REBIND_PASS
+warn scan (broken): 13 hit(s) -> /Users/zhanglinbo/workspace/jackdaw/loop/t23-live-qa/warn-scan-broken.txt
+BROKEN done: M13_BROKEN_FILE=PASS M5_HEAL=PASS M5_MISSING=PASS M5_SPEAKS_AGAIN=PASS M9_REBIND=PASS M9_REBIND_MAP_BLIND=PASS 

@@ -1,0 +1,5 @@
+MO9 green: asset.rebind over a MaterialOverrides map reference (doc=t23.bsn to=materials/wet2.bsn):
+audit findings after the rebind: 0 (the map entry was rewritten - the blind spot is closed)
+live kit map after the rebind: {"Rock":"materials/wet.bsn"} (wet2 = the live holder followed without a reopen; wet = the A11 face: the live world keeps its spelling until the tab's own save/reopen)
+layered wears after the rebind, before any reopen: 0 (2 = the live world re-wore the rebound path; 0 = the A11 sticky face, the reopen dresses)
+editor status text:
