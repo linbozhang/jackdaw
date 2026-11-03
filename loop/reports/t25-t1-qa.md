@@ -274,3 +274,26 @@ stop→Review（C4 链本体），零产品改动。建议只记不修，候 T25
 
 **VERDICT: FAIL（单点阻塞=QA-1；修复路径机械——一行 rustfmt 折行+fmt 重跑归档+
 报告门禁表一行修订；实质复核五项全过，修复后 QA 抽验 fmt 一门即放行 T2 真机矩阵轮 13 格）**
+
+## 十、复验结论（2026-11-04，返工提交 `c52288d4`，未 amend——6bf62357 原样在案）
+
+按放行路径两件抽验，**全过**：
+
+1. **QA-1 fmt 门** ✅：`cargo fmt --all -- --check` 在 c52288d4 树亲跑 **EXIT=0**
+   零输出（QA 补充归档 `t25t1qa_fmt_recheck.log`，零字节=历轮 fmt 通过口径）；
+   归档 `t25t1_gates_fmt.log` 在档且含勘误痕头注（stale green 来龙去脉：
+   首跑先于 clippy needless_borrow 修复、105 字符行此后从未复检、`FMT_CHECK_EXIT=0`）；
+   `git diff 6bf62357..c52288d4 -- src/remote_ops.rs` 恰一处=该行折为两行，
+   tokens 完全一致纯空白改动、零语义（返工提交产品侧唯一触碰即此，其余门数字
+   不受影响）。程序报告 §三 fmt 行已改为如实绿+D5 勘误痕，归档清单补 fmt。
+2. **QA-2 脚本修复** ✅：`t25-red.sh` 修复行 `local bsn_r2_before=$(sha_of
+   "$(scene_bsn_text)")`（:360，复读 ：404 同正形）+头注五行「a helper name is
+   not a variable」T2 告诫；三脚本（t25-red/probe/probe3）以「已定义函数名被
+   `"$name"` 引号变量展开」为模式的全量扫描（python 逐函数精确匹配、排除注释行）
+   **零同类构造**。程序报告 §四-D6 已按 QA-2 校正 D4 根因归因（构造 bug 非 A9
+   忙窗；离线 SHA 对判定不变）。
+
+其余面维持首轮复核结论不变（diff 面/两窄口/红证真身/D1-D3/门禁数字/T2 交接/LT8 建议）。
+勘误痕保留：QA-1/QA-2/D4 原文与 §五 表不动，复验另立本节。
+
+**VERDICT: PASS——放行 T2 真机矩阵轮 13 格。**
