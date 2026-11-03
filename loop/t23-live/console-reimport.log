@@ -1,0 +1,32 @@
+=== phase reimport run 2026-11-02 12:43:14 ===
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t23-materials/t23-materials pid=67340
+wear paths: layered= water=
+M7: no Reloaded line after the first write (A6 family missed event); re-triggering once
+M7: named parts never reached 8 (saw 7)
+M7: the new part BoxE was not dressed by the surviving override
+M13: no new thumbnail after the GLB rewrite
+shot l6-box ok (viewport)
+M7_REIMPORT_FAIL
+M8: stale-key warns=1 line=[2m2026-11-02T04:45:15.067014Z[0m [33m WARN[0m [2mjackdaw::material_overrides[0m[2m:[0m material override: props overrides a material named 'Rock', which no part of it wears any more -- its parts wear their own material until the name returns
+M8: kit wrongly undressed by props' reimport
+M8_STALE_WARN_FAIL
+M8: the recovery did not re-dress the water face
+M8_RECOVER_FAIL
+M8_SPEAKS_AGAIN_PASS
+REIMPORT: note - the fixture left without its water face
+M8_FINAL_STATE_PASS
+warn scan (reimport): 11 hit(s) -> /Users/zhanglinbo/workspace/jackdaw/loop/t23-live/warn-scan-reimport.txt
+REIMPORT done: M7_REIMPORT=FAIL M8_FINAL_STATE=PASS M8_RECOVER=FAIL M8_SPEAKS_AGAIN=PASS M8_STALE_WARN=FAIL 
+=== phase reimport run 2026-11-02 12:49:39 ===
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t23-materials/t23-materials pid=69774
+wear paths (from wet2.bsn/deep2.bsn): layered=bevy_pbr::extended_material::ExtendedMaterial<bevy_pbr::pbr_material::StandardMaterial, jackdaw_surface::LayeredSurface> water=bevy_pbr::extended_material::ExtendedMaterial<bevy_pbr::pbr_material::StandardMaterial, jackdaw_surface::water::Water>
+M13: fresh thumbnail 4040d21db47423ff-18e42127d87997fd.png after the GLB rewrite
+shot l6-box ok (viewport)
+M7_REIMPORT_PASS
+M8: stale-key warns=1 line=[2m2026-11-02T04:50:24.596305Z[0m [33m WARN[0m [2mjackdaw::material_overrides[0m[2m:[0m material override: props overrides a material named 'Rock', which no part of it wears any more -- its parts wear their own material until the name returns
+M8_STALE_WARN_PASS
+M8_RECOVER_PASS
+M8_SPEAKS_AGAIN_PASS
+M8_FINAL_STATE_PASS
+warn scan (reimport): 11 hit(s) -> /Users/zhanglinbo/workspace/jackdaw/loop/t23-live/warn-scan-reimport.txt
+REIMPORT done: M7_REIMPORT=PASS M8_FINAL_STATE=PASS M8_RECOVER=PASS M8_SPEAKS_AGAIN=PASS M8_STALE_WARN=PASS 

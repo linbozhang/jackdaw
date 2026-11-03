@@ -1,0 +1,21 @@
+=== phase prep run 2026-11-02 10:38:25 ===
+disk: 79Gi free
+PREP_FAIL no project (  Reason: tried: '/usr/local/lib/libstd-614bb9b33bbc23af.dylib' (no such file), '/usr/lib/libstd-614bb9b33bbc23af.dylib' (no such file, not in dyld cache)
+loop/qa/t23-live.sh: line 535: 27405 Abort trap: 6           ./target/debug/jd new t23-materials --path "$FIXROOT" --no-git)
+=== phase prep run 2026-11-02 10:38:36 ===
+disk: 79Gi free
+PREP_FAIL no project (  Expected in:     <237719D2-93E5-391F-BD1C-679F11613D1E> /Users/zhanglinbo/workspace/jackdaw/target/debug/deps/libbevy_dylib.dylib
+loop/qa/t23-live.sh: line 535: 27502 Abort trap: 6           DYLD_LIBRARY_PATH="$TOOLCHAIN_LIB" ./target/debug/jd new t23-materials --path "$FIXROOT" --no-git)
+=== phase prep run 2026-11-02 10:39:12 ===
+disk: 79Gi free
+PREP_OK fixture=/Users/zhanglinbo/workspace/loop-mac/t23-materials/t23-materials
+=== phase prep run 2026-11-02 11:12:07 ===
+=== phase prep run 2026-11-02 11:12:17 ===
+disk: 79Gi free
+PREP_OK fixture=/Users/zhanglinbo/workspace/loop-mac/t23-materials/t23-materials
+=== phase prep run 2026-11-02 11:35:28 ===
+disk: 79Gi free
+PREP_OK fixture=/Users/zhanglinbo/workspace/loop-mac/t23-materials/t23-materials
+=== phase prep run 2026-11-02 11:55:57 ===
+disk: 79Gi free
+PREP_OK fixture=/Users/zhanglinbo/workspace/loop-mac/t23-materials/t23-materials

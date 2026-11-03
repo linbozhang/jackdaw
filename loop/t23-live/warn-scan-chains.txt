@@ -1,0 +1,19 @@
+[2m2026-11-02T03:59:11.143972Z[0m [32m INFO[0m [2mjackdaw::boot_ops[0m[2m:[0m JACKDAW_RUN_OP: material.override: `entity` = 5311v0 (props), from name=props
+[2m2026-11-02T03:59:20.121561Z[0m [32m INFO[0m [2mjackdaw::boot_ops[0m[2m:[0m JACKDAW_RUN_OP: material.override: `entity` = 5311v0 (props), from name=props
+[2m2026-11-02T03:59:25.135240Z[0m [32m INFO[0m [2mjackdaw::boot_ops[0m[2m:[0m JACKDAW_RUN_OP: material.override: `entity` = 5311v0 (props), from name=props
+[2m2026-11-02T03:59:31.123565Z[0m [32m INFO[0m [2mjackdaw::boot_ops[0m[2m:[0m JACKDAW_RUN_OP: material.override: `entity` = 5311v0 (props), from name=props
+[2m2026-11-02T03:59:36.125465Z[0m [32m INFO[0m [2mjackdaw::boot_ops[0m[2m:[0m JACKDAW_RUN_OP: material.override: `entity` = 5311v0 (props), from name=props
+[2m2026-11-02T03:59:41.128992Z[0m [32m INFO[0m [2mjackdaw::boot_ops[0m[2m:[0m JACKDAW_RUN_OP: material.override: `entity` = 5102v2 (kit), from name=kit
+[2m2026-11-02T04:00:01.127634Z[0m [32m INFO[0m [2mjackdaw::boot_ops[0m[2m:[0m JACKDAW_RUN_OP: material.override: `entity` = 5102v2 (kit), from name=kit
+[2m2026-11-02T04:00:20.127226Z[0m [32m INFO[0m [2mjackdaw::boot_ops[0m[2m:[0m JACKDAW_RUN_OP: material.override: `entity` = 5355v1 (PlainD), from name=PlainD
+[2m2026-11-02T04:00:20.127470Z[0m [33m WARN[0m [2mjackdaw_api_internal::operator[0m[2m:[0m material.override: that part wears an unnamed material, which no override can address; name= one of the materials the model does name: Rock, Trim
+[2m2026-11-02T04:00:34.115523Z[0m [33m WARN[0m [2mjackdaw::material_overrides[0m[2m:[0m material override: kit overrides a material named 'Rock', which no part of it wears any more -- its parts wear their own material until the name returns
+[2m2026-11-02T04:00:34.115665Z[0m [33m WARN[0m [2mjackdaw::material_overrides[0m[2m:[0m material override: props overrides a material named 'Rock', which no part of it wears any more -- its parts wear their own material until the name returns
+[2m2026-11-02T04:00:34.115725Z[0m [33m WARN[0m [2mjackdaw::material_overrides[0m[2m:[0m material override: props overrides a material named 'Trim', which no part of it wears any more -- its parts wear their own material until the name returns
+[2m2026-11-02T04:03:17.121352Z[0m [32m INFO[0m [2mjackdaw::boot_ops[0m[2m:[0m JACKDAW_RUN_OP: material.override: `entity` = 6040v17 (props), from name=props
+[2m2026-11-02T04:03:18.159206Z[0m [32m INFO[0m [2mjackdaw::boot_ops[0m[2m:[0m JACKDAW_RUN_OP: material.override: `entity` = 6040v17 (props), from name=props
+[2m2026-11-02T04:03:23.147226Z[0m [33m WARN[0m [2mjackdaw::material_overrides[0m[2m:[0m material override: props overrides a material named 'Rock', which no part of it wears any more -- its parts wear their own material until the name returns
+[2m2026-11-02T04:03:23.147245Z[0m [33m WARN[0m [2mjackdaw::material_overrides[0m[2m:[0m material override: props overrides a material named 'Trim', which no part of it wears any more -- its parts wear their own material until the name returns
+[2m2026-11-02T04:03:30.132212Z[0m [32m INFO[0m [2mjackdaw::boot_ops[0m[2m:[0m JACKDAW_RUN_OP: material.override: `entity` = 5338v7 (TrimC), from name=TrimC
+[2m2026-11-02T04:03:38.151717Z[0m [33m WARN[0m [2mjackdaw::material_overrides[0m[2m:[0m material override: props overrides a material named 'Rock', which no part of it wears any more -- its parts wear their own material until the name returns
+[2m2026-11-02T04:03:38.151779Z[0m [33m WARN[0m [2mjackdaw::material_overrides[0m[2m:[0m material override: props overrides a material named 'Trim', which no part of it wears any more -- its parts wear their own material until the name returns
