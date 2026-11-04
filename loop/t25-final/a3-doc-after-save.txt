@@ -1,0 +1,51 @@
+#Root
+jackdaw_scene_types::node_id::SceneNodeId(7001)
+bevy_transform::components::transform::Transform
+bevy_camera::visibility::Visibility::Visible
+bevy_light::directional_light::DirectionalLight {
+    color: bevy_color::color::Color::LinearRgba(bevy_color::linear_rgba::LinearRgba { red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0 }),
+    illuminance: 8000.0,
+    shadow_maps_enabled: false,
+    contact_shadows_enabled: false,
+    soft_shadow_size: core::option::Option::None,
+    affects_lightmapped_mesh_diffuse: true,
+    shadow_depth_bias: 0.019999999552965164,
+    shadow_normal_bias: 1.7999999523162842,
+}
+bevy_ecs::hierarchy::Children [
+    #Sun
+    jackdaw_scene_types::node_id::SceneNodeId(7002)
+    bevy_light::directional_light::DirectionalLight
+    bevy_transform::components::transform::Transform {
+        translation: glam::Vec3 {
+            x: 0.0,
+            y: 8.0,
+            z: 0.0,
+        },
+        rotation: glam::Quat {
+            x: -0.4226183,
+            y: 0.0,
+            z: 0.0,
+            w: 0.9063078,
+        },
+    }
+    bevy_camera::visibility::Visibility::Visible
+    --
+    #Ambient
+    jackdaw_scene_types::node_id::SceneNodeId(7003)
+    bevy_audio::audio::AudioPlayer<bevy_audio::audio_source::AudioSource>("sounds/ambient.wav")
+    bevy_audio::audio::PlaybackSettings {
+        mode: bevy_audio::audio::PlaybackMode::Loop,
+        volume: bevy_audio::volume::Volume::Linear(0.8),
+        spatial: true,
+    }
+    bevy_transform::components::transform::Transform {
+        translation: glam::Vec3 {
+            x: 6.0,
+            y: 2.0,
+            z: -4.0,
+        },
+    }
+    bevy_camera::visibility::Visibility::Visible
+]
+

@@ -373,10 +373,107 @@ Scene tab at any time without disturbing the running game's frame.
 
 ## The stop prompt and live changes
 
-An edit made to a live entity (the Components panel over a projected
-entity in Live view) does not touch the document; it goes to the game
-and is remembered in the **Live Changes** tray. When Play stops with
-changes pending, a prompt offers **Apply All** (each pending edit
-becomes a real document edit — one undo entry for the batch), or
-**Discard** (nothing reaches the document). See the tray for one-at-a-time
-save and revert.
+An edit made to a projected entity in the **Live** tree goes to the
+running game and is recorded in the **Live Changes** tray; it does not
+change the authored scene document by itself. The tray is the review
+surface: each row shows the recorded baseline and current live value as
+`baseline -> live`, alongside per-edit **Save** and **Revert** actions.
+For example, `0.0 -> 3.5` means the field was 0.0 when first edited and is
+now 3.5 in the running game. The Inspector's live-edit marker identifies
+tracked fields, and the hierarchy's Live Changes badge is a **count**, not
+a tray button. Clicking the badge does not open the tray.
+
+While the game is running, **Revert** sends the recorded baseline back to
+the game and removes that field entry. **Save** writes the tracked value
+to the authored scene document. **Apply All** writes the pending changes
+together as one undoable batch; **Discard All** clears the pending-change
+ledger without writing those values to the document or changing the
+currently running game. The live value remains until it changes or the
+session ends; stopping restores the authored preview. For a pending change
+when Play stops, the prompt offers three choices:
+
+- **Apply All** writes the pending changes to the scene document.
+- **Discard** clears them without applying them to the document.
+- **Review** closes the prompt and hands the changes to the Live Changes
+  tray for individual triage. If Play is started again while the prompt is
+  open, review is handed off to the tray as well.
+
+To open the tray through the supported review flow, stop Play with pending
+changes and choose **Review**. After stopping, there is no running entity
+to receive a field-level Revert: that action can warn and leave its entry
+pending. Save the entry, use Apply All, or discard it instead. This differs
+from Revert during Play, when the baseline can still be streamed to the
+game.
+
+### What live editing includes
+
+The runtime-edit surface has a **finite, built-in boundary**, not a
+user-configurable component whitelist. Three existing filters determine
+what can be reached and retained:
+
+1. The game streams entities with a `Transform`, excluding selected
+   derived-face and frame-capture camera entities. Entities outside that
+   stream cannot be selected or edited through this live route.
+2. The editor's projection omits selected camera and other skipped
+   components when it mirrors the game into the editing world.
+3. Scene saving applies its existing component skip rules, and resource
+   entities are excluded from Inspector live-field routing.
+
+These are implementation filters, not a project setting where you can
+choose an arbitrary list of editable components. The exact components
+available also depend on what the game exposes and the editor can reflect.
+
+Runtime component **add** and **remove** operations are streamed and
+tracked as structural rows. Their row **Save** action is available to
+retain the structural change in the authored scene; **Revert** is disabled
+for these rows. Use Save or Apply All to keep the change, or Discard to
+leave it out of the scene. This is the current structural-edit boundary;
+it is not a field-level baseline that can be reverted during Play.
+
+### Saving runtime changes deliberately
+
+A live edit is **not an automatic save**. It first changes the running
+game and enters the review ledger. Tray **Save**, **Apply All**, and the
+stop prompt's **Apply All** apply reviewed values to the authored scene
+document; they do not by themselves write the scene file to disk. Save the
+scene explicitly (for example, with **Ctrl+S**) after applying changes.
+The Inspector's **Save to Scene** action is a separate explicit gate for
+copying an entity's live component values into the scene:
+
+- **Path A — authored projection:** saving an authored entity copies its
+  live overlay onto the corresponding scene node as one undoable change.
+- **Path B — runtime-only entity:** saving an ephemeral entity promotes
+  it to a new scene node. In v1 this promotion is **not undoable**; use a
+  disposable scene or save a backup before promoting an entity you may
+  need to remove. Save the scene file explicitly afterward.
+
+Path B stores authored, meaningful component values rather than a raw
+snapshot of the running physics world. Avian relationship data tied to
+one runtime session and per-frame or derived physics state are excluded;
+authored values such as Transform, rigid-body type, collider shape, and
+physics configuration remain eligible for saving. This filter is not a
+user-editable whitelist.
+
+A long editor session with repeated Play/stop cycles can encounter a
+stale Live projection binding (LT9, still an open limitation). If a live
+edit does not appear to reach the running game, stop and restart the
+session or editor before continuing; this is a workaround, not a claim
+that the limitation has been fixed. On macOS, a known PIE panic
+signature may also appear in logs even when the editor remains available.
+Treat it as diagnostic noise rather than a save signal: runtime changes
+still require one of the explicit gates above.
+
+### A 30-second check
+
+Use a disposable scene for this quick check:
+
+1. In Play, edit an authored field. Confirm its `baseline -> live` row in
+   the tray, choose **Apply All**, save the scene file, reopen it, and Play
+   again to verify the saved value reaches the game.
+2. Repeat with a different field and choose **Discard** instead. Confirm
+   the authored document remains unchanged for that edit.
+3. Add and remove a runtime component. Confirm each appears as a
+   structural row with **Save** available and **Revert** disabled.
+4. Select a runtime-only entity and use **Save to Scene**. Confirm it is
+   promoted, remember that Path B is not undoable in v1, and explicitly
+   save the scene file if you want to keep the new node.
