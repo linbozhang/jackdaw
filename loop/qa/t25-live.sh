@@ -60,9 +60,20 @@
 #       writes no live value to disk.
 #   D2  Save to Scene both paths: Path A (authored Sun selected) lands the
 #       whole-component overlay (scale/rotation carried) as ONE undo group;
-#       Path B (ephemeral player selected) registers a new document node,
-#       undo depth UNCHANGED (the LT5 v1-not-undoable note, asserted live),
-#       and save -> reload -> replay finds the player in the game.
+#       Path B (ephemeral player selected) registers a new document node with
+#       authored pose/body/collider configuration, excludes Avian's
+#       session-local relationship bits and per-frame physics state, leaves
+#       undo depth UNCHANGED (the LT5 v1-not-undoable note), and survives
+#       save -> reload -> replay with the player in the game.
+#
+# LT10 assertion evolution: T2's first six T2.5 logs retain the old positive
+# D2_PROMOTE_INTERNALS_LAND label. In that script revision `ColliderOf` being
+# present was called PASS; after the promote filter removed it, the old grep
+# printed FAIL even though d2b-doc contained the authored components and no
+# relationship bits. That label is stale, not a product red. The current
+# D2_PROMOTE_INTERNALS_EXCLUDED leg passes only when forbidden relationship
+# bits are absent; the paired per-frame and semantic-component legs prevent
+# absence from being mistaken for an empty/broken promoted node.
 #
 # T1 handoff notes, executed: the ancestor-climbing button resolver (the
 # tray row wraps the label in a flex holder); click_label's kind=button
@@ -1546,6 +1557,7 @@ PYT
   brp jackdaw/selection.set "{\"entities\":[$PLAYER_BITS]}" > "$OUTDIR/d2-selection-player.json" 2>/dev/null
   sleep 1
   local eph_b undo_b doc_len_b
+  local d2_runtime_state_re='avian3d::(physics_transform::(transform::)?(Position|Rotation|PreSolveDeltaPosition|PreSolveDeltaRotation)|dynamics::(integrator::VelocityIntegrationData|rigid_body::(LinearVelocity|AngularVelocity|sleeping::(Sleeping|SleepTimer)|forces::AccumulatedLocalAcceleration|mass_properties::components::computed::Computed(Mass|AngularInertia|CenterOfMass)|mass_properties::components::collider::ColliderMassProperties))|collision::collider::(ColliderAabb|EnlargedAabb|collider_transform::ColliderTransform))([ (]|$)'
   eph_b=$(ephemeral_count)
   undo_b=$(history_depth)
   walk "$OUTDIR/walk-d2b.json"
@@ -1560,11 +1572,31 @@ PYT
   { [ -n "$eph_b" ] && [ -n "$eph_b_post" ] && [ "$eph_b_post" = "$((eph_b - 1))" ]; } \
     && leg D2_PATHB_EPHEMERAL_DROPPED true || leg D2_PATHB_EPHEMERAL_DROPPED false
   [ "$undo_b_post" = "$undo_b" ] && leg D2_PATHB_NOT_UNDOABLE true || leg D2_PATHB_NOT_UNDOABLE false
-  # the promoted node's patches hold the registered (engine) components only —
-  # the editor registry lacks the project types — so the node's marker is the
-  # player's own collider shape, not a PlayerHealth patch
+  # The editor registry lacks project-specific game types, so the player
+  # marker is its authored AvianCollider capsule rather than PlayerHealth.
   grep -qF "ColliderConstructor::Capsule" "$OUTDIR/d2b-doc.txt" && leg D2_PATHB_NODE_IN_DOC true || leg D2_PATHB_NODE_IN_DOC false
-  grep -qF "ColliderOf" "$OUTDIR/d2b-doc.txt" && leg D2_PROMOTE_INTERNALS_LAND true || leg D2_PROMOTE_INTERNALS_LAND false
+  if grep -qF "bevy_transform::components::transform::Transform" "$OUTDIR/d2b-doc.txt" \
+    && grep -qF "avian3d::dynamics::rigid_body::RigidBody::Kinematic" "$OUTDIR/d2b-doc.txt" \
+    && grep -qF "ColliderDensity" "$OUTDIR/d2b-doc.txt" \
+    && grep -qF "ColliderAabbMargin" "$OUTDIR/d2b-doc.txt" \
+    && grep -qF "CollisionLayers" "$OUTDIR/d2b-doc.txt" \
+    && grep -qF "SleepThreshold" "$OUTDIR/d2b-doc.txt" \
+    && grep -qF "jackdaw_avian_integration::AvianCollider" "$OUTDIR/d2b-doc.txt" \
+    && grep -qF "ColliderConstructor::Capsule" "$OUTDIR/d2b-doc.txt"; then
+    leg D2_PROMOTE_SEMANTIC_COMPONENTS true
+  else
+    leg D2_PROMOTE_SEMANTIC_COMPONENTS false
+  fi
+  if grep -Eq 'ColliderOf|RigidBodyColliders' "$OUTDIR/d2b-doc.txt"; then
+    leg D2_PROMOTE_INTERNALS_EXCLUDED false
+  else
+    leg D2_PROMOTE_INTERNALS_EXCLUDED true
+  fi
+  if grep -Eq "$d2_runtime_state_re" "$OUTDIR/d2b-doc.txt"; then
+    leg D2_PROMOTE_PER_FRAME_EXCLUDED false
+  else
+    leg D2_PROMOTE_PER_FRAME_EXCLUDED true
+  fi
   stop_and_wait
   walk "$OUTDIR/walk-prompt-d2.json"
   walk_has "live edit not saved to scene" "$OUTDIR/walk-prompt-d2.json" && log "note: a leftover entry raised the prompt; Discard cleans it" || true
@@ -1573,7 +1605,27 @@ PYT
   log "--- D2 closing chain: save -> reload -> replay -> the player is in the game ---"
   op scene.save >/dev/null 2>&1
   sleep 1; wait_idle 120 >/dev/null
-  grep -qF "ColliderConstructor::Capsule" "$PROJECT/assets/scene.bsn" && leg D2_DISK_HAS_PLAYER true || leg D2_DISK_HAS_PLAYER false
+  if grep -qF "ColliderConstructor::Capsule" "$PROJECT/assets/scene.bsn" \
+    && grep -qF "bevy_transform::components::transform::Transform" "$PROJECT/assets/scene.bsn" \
+    && grep -qF "avian3d::dynamics::rigid_body::RigidBody::Kinematic" "$PROJECT/assets/scene.bsn" \
+    && grep -qF "ColliderDensity" "$PROJECT/assets/scene.bsn" \
+    && grep -qF "ColliderAabbMargin" "$PROJECT/assets/scene.bsn" \
+    && grep -qF "CollisionLayers" "$PROJECT/assets/scene.bsn" \
+    && grep -qF "SleepThreshold" "$PROJECT/assets/scene.bsn"; then
+    leg D2_DISK_HAS_PLAYER true
+  else
+    leg D2_DISK_HAS_PLAYER false
+  fi
+  if grep -Eq 'ColliderOf|RigidBodyColliders' "$PROJECT/assets/scene.bsn"; then
+    leg D2_DISK_PROMOTE_INTERNALS_EXCLUDED false
+  else
+    leg D2_DISK_PROMOTE_INTERNALS_EXCLUDED true
+  fi
+  if grep -Eq "$d2_runtime_state_re" "$PROJECT/assets/scene.bsn"; then
+    leg D2_DISK_PER_FRAME_EXCLUDED false
+  else
+    leg D2_DISK_PER_FRAME_EXCLUDED true
+  fi
   op scene.open '{"path":"assets/scene.bsn","reload":true}' >/dev/null 2>&1
   sleep 2; wait_idle 300 >/dev/null; sleep 1; dismiss_dialog
   play_and_wait || log "note: the D2 replay lagged"
@@ -1589,6 +1641,15 @@ PYT
   [ "${players_d2:-0}" -ge 1 ] && leg D2_REPLAY_PLAYER_IN_GAME true || leg D2_REPLAY_PLAYER_IN_GAME false
   [ -n "$phealth_d2" ] && leg D2_REPLAY_HEALTH_PRESENT true || leg D2_REPLAY_HEALTH_PRESENT false
   awk "BEGIN{exit !($suny_d2 > 6.4 && $suny_d2 < 6.6)}" 2>/dev/null && leg D2_REPLAY_SUN_Y true || leg D2_REPLAY_SUN_Y false
+  # LT10 is the failed relationship apply/construct panic. The generic
+  # "Entity has no BSN representation" warning is not this panic (the
+  # Path A overlay can emit it) and remains visible in the editor log.
+  # N13 swap_remove panics are census noise and remain separately attributed.
+  if grep -Eq "create an instance of .*ColliderOf|create an instance of .*RigidBodyColliders|does not fit bevy_ecs::entity::Entity" "$EDITOR_LOG"; then
+    leg D2_NO_LT10_LOAD_PANIC false
+  else
+    leg D2_NO_LT10_LOAD_PANIC true
+  fi
   stop_and_wait
 
   kill_editor

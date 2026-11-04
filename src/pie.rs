@@ -1582,19 +1582,206 @@ fn promote_authored_overlay(world: &mut World, preview: Entity, bits: u64) {
 /// Path B: preview entity has no AST node (game-spawned runtime entity).
 /// Mint a stable node id for it, drop the ephemeral marker, and register it
 /// in the live BSN document, which captures its reflected components as a
-/// new authored node. Not undoable in v1.
+/// new authored node — minus the runtime-only components
+/// [`register_promoted_entity_in_ast`] filters out. Not undoable in v1.
 pub(crate) fn promote_ephemeral_to_authored(world: &mut World, preview: Entity, bits: u64) {
     use crate::pie_projection::PieEphemeral;
 
     let node_id = jackdaw_scene_types::SceneNodeId::next();
     world.entity_mut(preview).remove::<PieEphemeral>();
     world.entity_mut(preview).insert(node_id);
-    crate::scene_io::register_entity_in_ast(world, preview);
+    register_promoted_entity_in_ast(world, preview);
 
     info!(
         "save to scene: promoted ephemeral {preview:?} (bits {bits:x}) to new authored node {}",
         node_id.0
     );
+}
+
+/// Specific runtime-only physics paths a promoted entity may carry. These
+/// are exact rather than module-prefix rules so adding an authored component
+/// beside an Avian helper type cannot silently broaden the promote filter.
+/// A path that no longer names anything skips nothing, as with the save
+/// side's exact-path lists.
+const PROMOTE_PER_FRAME_PATHS: &[&str] = &[
+    // The physics-side mirror of `Transform`; the authored pose remains the
+    // Bevy `Transform` and is captured normally. Avian's reflected type paths
+    // include the `transform` module; the short re-export paths are retained
+    // for registries that canonicalize the public re-export.
+    "avian3d::physics_transform::Position",
+    "avian3d::physics_transform::Rotation",
+    "avian3d::physics_transform::PreSolveDeltaPosition",
+    "avian3d::physics_transform::PreSolveDeltaRotation",
+    "avian3d::physics_transform::transform::Position",
+    "avian3d::physics_transform::transform::Rotation",
+    "avian3d::physics_transform::transform::PreSolveDeltaPosition",
+    "avian3d::physics_transform::transform::PreSolveDeltaRotation",
+    // The integrator's per-timestep working set.
+    "avian3d::dynamics::integrator::VelocityIntegrationData",
+    // Broad-phase output recomputed from the collider every step, and its
+    // margin-expanded twin the culling pass derives from it.
+    "avian3d::collision::collider::ColliderAabb",
+    "avian3d::collision::collider::EnlargedAabb",
+    // The collider's physics-schedule pose, rewritten from `Transform`
+    // every step (a distinct copy, not the authored one).
+    "avian3d::collision::collider::collider_transform::ColliderTransform",
+    // Velocity is the frame's reading, not a fact about the entity.
+    "avian3d::dynamics::rigid_body::LinearVelocity",
+    "avian3d::dynamics::rigid_body::AngularVelocity",
+    // Sleep bookkeeping moves every step the body is awake.
+    "avian3d::dynamics::rigid_body::sleeping::Sleeping",
+    "avian3d::dynamics::rigid_body::sleeping::SleepTimer",
+    // Per-step force accumulator the solver drains.
+    "avian3d::dynamics::rigid_body::forces::AccumulatedLocalAcceleration",
+    // Mass properties derived from the collider's shape at insert and
+    // recomputed whenever it changes; a saved copy freezes one derivation
+    // while the collider it came from is saved alongside it.
+    "avian3d::dynamics::rigid_body::mass_properties::components::computed::ComputedMass",
+    "avian3d::dynamics::rigid_body::mass_properties::components::computed::ComputedAngularInertia",
+    "avian3d::dynamics::rigid_body::mass_properties::components::computed::ComputedCenterOfMass",
+    "avian3d::dynamics::rigid_body::mass_properties::components::collider::ColliderMassProperties",
+];
+
+/// Relationship component paths whose Entity bits are session-local and
+/// rebuilt by Avian's hierarchy relationship hooks. Keep this list
+/// intentionally narrow: an unrelated game-authored component may also
+/// contain Entity, and should not be filtered merely because its reflected
+/// shape does. Type paths avoid adding Avian as a direct editor dependency;
+/// the reflection check verifies these exact types still contain Entity.
+const PROMOTE_SESSION_RELATIONSHIP_PATHS: &[&str] = &[
+    "avian3d::collision::collider::collider_hierarchy::ColliderOf",
+    "avian3d::collision::collider::collider_hierarchy::RigidBodyColliders",
+];
+
+fn is_promote_session_relationship(registration: &bevy::reflect::TypeRegistration) -> bool {
+    let type_path = registration.type_info().type_path_table().path();
+    PROMOTE_SESSION_RELATIONSHIP_PATHS.contains(&type_path)
+        && type_tree_holds_entity(registration.type_info(), 0)
+}
+
+/// Whether a component a runtime entity wears must not land in the document
+/// when it is promoted (LT10). Everything the save side skips stays skipped
+/// ([`crate::scene_io::should_skip_component`]); on top of that, this
+/// promote-only capture excludes two documented runtime classes:
+///
+/// 1. Avian's `ColliderOf` / `RigidBodyColliders` relationship pair. Their
+///    reflected Entity references are current-world bits; Avian derives the
+///    pair from the hierarchy when the session starts. The type-tree check
+///    confirms the exact known relationship types still carry Entity.
+/// 2. The per-frame physics internals above, identified by Avian type paths.
+///
+/// This does not blanket-skip every component with Entity in its type tree:
+/// application components outside the Avian relationship pair retain the
+/// shared save policy unless their own path is explicitly listed.
+fn promote_capture_skips_component(registration: &bevy::reflect::TypeRegistration) -> bool {
+    let type_path = registration.type_info().type_path_table().path();
+    crate::scene_io::should_skip_component(type_path)
+        || is_promote_session_relationship(registration)
+        || PROMOTE_PER_FRAME_PATHS.contains(&type_path)
+}
+
+/// Whether the reflected fields of a type, or a direct item/key/value of a
+/// reflected container, contain `bevy_ecs::entity::Entity`. Struct, tuple,
+/// and enum fields recurse; List/Array/Set/Map metadata exposes only the
+/// immediate container types, so those items are leaf-checked. This suffices
+/// for Avian's `ColliderOf { body: Entity }` and
+/// `RigidBodyColliders(Vec<Entity>)` shapes. Depth-capped for recursive fields.
+fn type_tree_holds_entity(info: &'static bevy::reflect::TypeInfo, depth: usize) -> bool {
+    if depth > 8 {
+        return false;
+    }
+    // Entity itself, however its reflect shape projects (opaque or struct).
+    if info.ty().is::<Entity>() {
+        return true;
+    }
+    match info {
+        bevy::reflect::TypeInfo::Struct(info) => info
+            .iter()
+            .any(|field| field_holds_entity(field.type_info(), depth)),
+        bevy::reflect::TypeInfo::TupleStruct(info) => info
+            .iter()
+            .any(|field| field_holds_entity(field.type_info(), depth)),
+        bevy::reflect::TypeInfo::Tuple(info) => info
+            .iter()
+            .any(|field| field_holds_entity(field.type_info(), depth)),
+        // Container items are leaf-checked: a relationship target sits one
+        // step in (`Vec<Entity>`, `HashMap<Name, Entity>`), not behind
+        // further containers.
+        bevy::reflect::TypeInfo::List(info) => info.item_ty().is::<Entity>(),
+        bevy::reflect::TypeInfo::Array(info) => info.item_ty().is::<Entity>(),
+        bevy::reflect::TypeInfo::Set(info) => info.value_ty().is::<Entity>(),
+        bevy::reflect::TypeInfo::Map(info) => {
+            info.key_ty().is::<Entity>() || info.value_ty().is::<Entity>()
+        }
+        bevy::reflect::TypeInfo::Enum(info) => info.iter().any(|variant| match variant {
+            bevy::reflect::enums::VariantInfo::Struct(fields) => fields
+                .iter()
+                .any(|field| field_holds_entity(field.type_info(), depth)),
+            bevy::reflect::enums::VariantInfo::Tuple(fields) => fields
+                .iter()
+                .any(|field| field_holds_entity(field.type_info(), depth)),
+            bevy::reflect::enums::VariantInfo::Unit(_) => false,
+        }),
+        // Any other opaque leaf (a Vec3, a handle, a plain f32) is not a
+        // reference into the session.
+        bevy::reflect::TypeInfo::Opaque(_) => false,
+    }
+}
+
+fn field_holds_entity(field: Option<&'static bevy::reflect::TypeInfo>, depth: usize) -> bool {
+    field.is_some_and(|info| type_tree_holds_entity(info, depth + 1))
+}
+
+/// Register a just-promoted entity in the live scene document, mirroring
+/// [`crate::scene_io::register_entity_in_ast`] (node creation, parent
+/// linking, per-component patch upsert) with the promote capture filter:
+/// [`promote_capture_skips_component`] decides what lands. The shared
+/// registration stays untouched — it serves load and editor-side spawning,
+/// whose entities never wear runtime physics state.
+fn register_promoted_entity_in_ast(world: &mut World, entity: Entity) {
+    use bevy::ecs::reflect::AppTypeRegistry;
+
+    // Same guards as the shared registration: a dead entity has nothing to
+    // read, and an entity already in the document is not re-registered.
+    if world.get_entity(entity).is_err() {
+        return;
+    }
+    let Some(doc) = world.get_resource::<jackdaw_bsn::SceneBsnAst>() else {
+        return;
+    };
+    if doc.ast_for(entity).is_some() {
+        return;
+    }
+    if world
+        .get::<jackdaw_scene_types::SceneNodeId>(entity)
+        .is_none()
+        && let Ok(mut entity_mut) = world.get_entity_mut(entity)
+    {
+        entity_mut.insert(jackdaw_scene_types::SceneNodeId::next());
+    }
+    let doc = world.resource::<jackdaw_bsn::SceneBsnAst>();
+    let parent = world
+        .get::<ChildOf>(entity)
+        .map(ChildOf::parent)
+        .filter(|p| doc.ast_for(*p).is_some());
+    jackdaw_bsn::create_entity_in_ast(world, entity, parent);
+
+    let registry = world.resource::<AppTypeRegistry>().clone();
+    let skip_ids = crate::scene_io::doc_skip_type_ids();
+    let values: Vec<Box<dyn bevy::reflect::PartialReflect>> = {
+        let reg = registry.read();
+        let entity_ref = world.entity(entity);
+        reg.iter()
+            .filter(|registration| !skip_ids.contains(&registration.type_id()))
+            .filter(|registration| !promote_capture_skips_component(registration))
+            .filter_map(|registration| registration.data::<ReflectComponent>())
+            .filter_map(|reflect_component| reflect_component.reflect(entity_ref))
+            .filter_map(|value| value.to_dynamic().ok())
+            .collect()
+    };
+    for value in values {
+        crate::commands::sync_component_to_bsn_doc(world, entity, &*value);
+    }
 }
 
 /// Drive every instance forward each frame: advance finished builds
@@ -3904,6 +4091,284 @@ mod graceful_stop_tests {
         assert_eq!(
             *app.world().resource::<State<PlayState>>().get(),
             PlayState::Stopped
+        );
+    }
+}
+
+#[cfg(test)]
+mod promote_capture_tests {
+    use super::*;
+    use avian3d::prelude::*;
+    use bevy::reflect::TypeRegistry;
+
+    fn promote_world() -> World {
+        let mut world = World::new();
+        world.init_resource::<AppTypeRegistry>();
+        world.init_resource::<jackdaw_bsn::SceneBsnAst>();
+        {
+            let registry = world.resource::<AppTypeRegistry>().clone();
+            let mut registry = registry.write();
+            registry.register::<Transform>();
+            registry.register::<ColliderOf>();
+            registry.register::<RigidBodyColliders>();
+            registry.register::<RigidBody>();
+            registry.register::<LinearVelocity>();
+            registry.register::<SleepTimer>();
+            registry.register::<Position>();
+            registry.register::<Rotation>();
+            registry.register::<ColliderDensity>();
+            registry.register::<CustomVelocityIntegration>();
+            registry.register::<CustomPositionIntegration>();
+            registry.register::<jackdaw_avian_integration::AvianCollider>();
+        }
+        world
+    }
+
+    fn node_type_paths(world: &World, entity: Entity) -> Vec<String> {
+        let ast = world.resource::<jackdaw_bsn::SceneBsnAst>();
+        let node = ast
+            .ast_for(entity)
+            .unwrap_or_else(|| panic!("the promoted entity has a document node"));
+        ast.component_type_paths(node)
+    }
+
+    /// The relationship internals (LT10 class 1) stay off the promoted node:
+    /// the collider's `ColliderOf { body }` and the body's
+    /// `RigidBodyColliders` both name this session's bits, which resolve to
+    /// nothing — and reflect-construct to a panic — on the next load.
+    #[test]
+    fn promoted_relationship_internals_do_not_land_in_the_document() {
+        let mut world = promote_world();
+
+        let body = world
+            .spawn((
+                crate::pie_projection::PieEphemeral,
+                Transform::from_xyz(-2.0, 0.86, 0.0),
+                RigidBody::Kinematic,
+                GlobalTransform::default(),
+            ))
+            .id();
+        // Inserting the relationship points the collider's `body` at the
+        // body and auto-populates the body's `RigidBodyColliders` mirror —
+        // through deferred commands, so the queue flushes here. Avian's own
+        // hook also wants a GlobalTransform on both ends before it links.
+        let collider = world
+            .spawn((
+                Transform::default(),
+                GlobalTransform::default(),
+                ColliderOf { body },
+            ))
+            .id();
+        world.flush();
+        assert!(
+            world.get::<RigidBodyColliders>(body).is_some(),
+            "the relationship target mirror is on the body"
+        );
+
+        promote_ephemeral_to_authored(&mut world, body, 0x4637);
+        promote_ephemeral_to_authored(&mut world, collider, 0x4638);
+
+        let body_paths = node_type_paths(&world, body);
+        assert!(
+            body_paths.iter().any(|p| p == Transform::type_path()),
+            "the authored pose lands"
+        );
+        assert!(
+            body_paths.iter().any(|p| p.contains("RigidBody::")),
+            "the semantic rigid-body type lands"
+        );
+        assert!(
+            !body_paths.iter().any(|p| p.contains("RigidBodyColliders")),
+            "the collider-bits list does not land"
+        );
+
+        let collider_paths = node_type_paths(&world, collider);
+        assert!(
+            collider_paths.iter().any(|p| p == Transform::type_path()),
+            "the collider's pose lands"
+        );
+        assert!(
+            !collider_paths.iter().any(|p| p.contains("ColliderOf")),
+            "the body-bits relationship does not land"
+        );
+    }
+
+    /// The per-frame physics mirrors (LT10 class 2) stay off the promoted
+    /// node: velocity, sleep bookkeeping and the physics-side transform
+    /// copies are one frame's readings the next session rebuilds.
+    #[test]
+    fn promoted_per_frame_physics_mirrors_do_not_land_in_the_document() {
+        let mut world = promote_world();
+
+        let player = world
+            .spawn((
+                crate::pie_projection::PieEphemeral,
+                Transform::from_xyz(-2.0, 0.86, 0.0),
+                LinearVelocity(Vec3::new(3.0, -1.0, 0.0)),
+                SleepTimer(0.5),
+                Position(Vec3::new(-2.0, 0.86, 0.0)),
+                Rotation(Quat::IDENTITY),
+            ))
+            .id();
+
+        promote_ephemeral_to_authored(&mut world, player, 0x4637);
+
+        let paths = node_type_paths(&world, player);
+        assert!(
+            paths.iter().any(|p| p == Transform::type_path()),
+            "the authored pose lands"
+        );
+        assert!(
+            !paths.iter().any(|p| p.contains("LinearVelocity")),
+            "the velocity snapshot does not land"
+        );
+        assert!(
+            !paths.iter().any(|p| p.contains("SleepTimer")),
+            "the sleep timer does not land"
+        );
+        for type_path in [
+            Position::type_path(),
+            Rotation::type_path(),
+            "avian3d::physics_transform::transform::Position",
+            "avian3d::physics_transform::transform::Rotation",
+            "avian3d::physics_transform::transform::PreSolveDeltaPosition",
+            "avian3d::physics_transform::transform::PreSolveDeltaRotation",
+        ] {
+            assert!(
+                PROMOTE_PER_FRAME_PATHS.contains(&type_path),
+                "the reflected physics-transform path {type_path} is explicitly filtered"
+            );
+            assert!(
+                !paths.iter().any(|path| path == type_path),
+                "the physics-transform mirror {type_path} does not land"
+            );
+        }
+    }
+
+    /// Everything genuinely semantic on the promoted entity lands whole:
+    /// the authored pose, the engine component a game would author, and a
+    /// plain game component with no runtime-only state.
+    #[test]
+    fn promoted_semantic_components_all_land_in_the_document() {
+        let mut world = promote_world();
+
+        // A physics config component is the stand-in for game-authored data:
+        // plain values, not session state, exactly what a promoted entity
+        // keeps. (A local test component cannot play this part — its type
+        // path starts with `jackdaw::`, which the save policy skips.)
+        let player = world
+            .spawn((
+                crate::pie_projection::PieEphemeral,
+                Transform::from_xyz(-2.0, 0.86, 0.0),
+                RigidBody::Kinematic,
+                ColliderDensity(1.0),
+                CustomVelocityIntegration,
+                CustomPositionIntegration,
+                jackdaw_avian_integration::AvianCollider(ColliderConstructor::Capsule {
+                    radius: 0.35,
+                    height: 1.0,
+                }),
+            ))
+            .id();
+
+        promote_ephemeral_to_authored(&mut world, player, 0x4637);
+
+        let paths = node_type_paths(&world, player);
+        assert!(
+            paths.iter().any(|p| p == Transform::type_path()),
+            "the pose lands"
+        );
+        assert!(
+            paths.iter().any(|p| p.contains("RigidBody::")),
+            "the rigid-body type lands"
+        );
+        assert!(
+            paths.iter().any(|p| p.contains("ColliderDensity")),
+            "the plain config component lands"
+        );
+        assert!(
+            paths
+                .iter()
+                .any(|p| p.contains("CustomVelocityIntegration")),
+            "the semantic integrator marker is not caught by a module-wide skip"
+        );
+        assert!(
+            paths
+                .iter()
+                .any(|p| p.contains("CustomPositionIntegration")),
+            "the semantic position-integrator marker is not caught by a module-wide skip"
+        );
+        assert!(
+            paths
+                .iter()
+                .any(|p| p.contains("jackdaw_avian_integration::AvianCollider")),
+            "the authored capsule shape wrapper lands"
+        );
+    }
+
+    /// The reflection walk recognizes direct Entity fields and the one-level
+    /// containers used by Avian's relationship target. Only `ColliderOf` and
+    /// `RigidBodyColliders` are eligible for the promote relationship filter;
+    /// an unrelated reflected Entity field is not a blanket skip.
+    #[test]
+    fn the_entity_walk_is_scoped_to_known_avian_relationships() {
+        #[derive(Reflect)]
+        struct Named {
+            target: Entity,
+        }
+        #[derive(Reflect)]
+        struct Listed(Vec<Entity>);
+        #[derive(Reflect)]
+        struct Optional {
+            maybe: Option<Entity>,
+        }
+        #[derive(Reflect)]
+        struct Enummed {
+            choice: Choice,
+        }
+        #[derive(Reflect)]
+        enum Choice {
+            Go { target: Entity },
+            Wait,
+        }
+        #[derive(Reflect)]
+        struct Plain {
+            amount: f32,
+            label: String,
+            spot: Vec3,
+        }
+
+        let mut registry = TypeRegistry::default();
+        registry.register::<Named>();
+        registry.register::<Listed>();
+        registry.register::<Optional>();
+        registry.register::<Enummed>();
+        registry.register::<Plain>();
+        registry.register::<ColliderOf>();
+        registry.register::<RigidBodyColliders>();
+
+        let holds = |t: &str| {
+            type_tree_holds_entity(registry.get_with_type_path(t).unwrap().type_info(), 0)
+        };
+        assert!(holds(Named::type_path()), "a named Entity field is caught");
+        assert!(holds(Listed::type_path()), "an Entity list is caught");
+        assert!(holds(Optional::type_path()), "an optional Entity is caught");
+        assert!(holds(Enummed::type_path()), "a variant's Entity is caught");
+        assert!(!holds(Plain::type_path()), "plain data is not");
+
+        let is_session_relationship =
+            |t: &str| is_promote_session_relationship(registry.get_with_type_path(t).unwrap());
+        assert!(
+            is_session_relationship(ColliderOf::type_path()),
+            "ColliderOf's reflected Entity field is a session relationship"
+        );
+        assert!(
+            is_session_relationship(RigidBodyColliders::type_path()),
+            "RigidBodyColliders' reflected Vec<Entity> is a session relationship"
+        );
+        assert!(
+            !is_session_relationship(Named::type_path()),
+            "unrelated Entity-bearing authored types are not broadly filtered"
         );
     }
 }

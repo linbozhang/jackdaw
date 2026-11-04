@@ -1,0 +1,35 @@
+   Compiling jackdaw_env v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_env)
+    Checking jackdaw_fuzzy v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_fuzzy)
+   Compiling jackdaw_package v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_package)
+    Checking jackdaw_material v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_material)
+    Checking jackdaw_feathers v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_feathers)
+    Checking jackdaw_project_build v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_project_build)
+    Checking jackdaw_releases v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_releases)
+    Checking jackdaw_scaffold v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_scaffold)
+    Checking jackdaw_panels v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_panels)
+    Checking jackdaw_node_graph v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_node_graph)
+    Checking jackdaw_api_internal v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_api_internal)
+    Checking jackdaw_animation v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_animation)
+    Checking jackdaw_api v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_api)
+    Checking jackdaw_loader v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_loader)
+    Checking jackdaw_physics v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/integrations/physics/jackdaw_physics)
+    Checking jackdaw_multiplayer_editor v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw/crates/jackdaw_multiplayer_editor)
+    Checking jackdaw v0.21.0-dev (/Users/zhanglinbo/workspace/jackdaw)
+error[E0433]: cannot find module or crate `avian3d` in this scope
+    --> src/pie.rs:1645:35
+     |
+1645 |         == std::any::TypeId::of::<avian3d::prelude::ColliderOf>()
+     |                                   ^^^^^^^ use of unresolved module or unlinked crate `avian3d`
+     |
+     = help: if you wanted to use a crate named `avian3d`, use `cargo add avian3d` to add it to your `Cargo.toml`
+
+error[E0433]: cannot find module or crate `avian3d` in this scope
+    --> src/pie.rs:1646:61
+     |
+1646 |         || registration.type_id() == std::any::TypeId::of::<avian3d::prelude::RigidBodyColliders>();
+     |                                                             ^^^^^^^ use of unresolved module or unlinked crate `avian3d`
+     |
+     = help: if you wanted to use a crate named `avian3d`, use `cargo add avian3d` to add it to your `Cargo.toml`
+
+For more information about this error, try `rustc --explain E0433`.
+error: could not compile `jackdaw` (lib) due to 2 previous errors

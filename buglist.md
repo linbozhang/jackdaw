@@ -562,9 +562,9 @@
   hierarchy 头部 badge click `clicked:true` 但不 spawn 托盘面板（live_edits_ui.rs badge 观察器无展开行为）；托盘开行现成路线=停止→StopPrompt「Review」键交接（即 C4 链本体，零产品改动）。
   修复方向（候裁）：badge click 补托盘 spawn（一行级观察器）或 book 注记「badge 是计数器，开托盘走 Review/结构树」；T25-T3 book 轮顺手裁定。
 
-- [ ] **LT10 🔴 Path B 提携（promote_ephemeral_to_authored/Inspector 头部 Save to Scene）把 avian 关系内件与逐帧字段落盘——下次加载非确定 panic**（2026-11-04 T25-T2 真机 D2 格发现；主控批准立账）
-  Path B 提携运行时实体（player 带 avian 物理件）时全组件捕获未剔 `ColliderOf { body: 本会话 bits }` 等关系内件与逐帧字段（position/velocity 快照）——落盘文档下次加载非确定 panic（exit 101，三次复跑两崩一过）。与 LT5（Path B 不可撤销）同域同路径。证据：`loop/t25-live/` editor-live-w2.log+d2b-doc.txt+`loop/reports/t25t2_live_legs.log` D2 段。
-  修复方向：promote 捕获面对齐 save 侧 should_skip_component+剔除逐帧字段表（T22-T3.5 TM14 先例：同型真机挂死修复+复跑翻绿）。
+- [x] **LT10 🔴 Path B 提携（promote_ephemeral_to_authored/Inspector 头部 Save to Scene）把 avian 关系内件与逐帧字段落盘——下次加载非确定 panic**（2026-11-04 T25-T2 真机 D2 格发现；T25-T2.5 已修复）
+  原症状：Path B 提携运行时实体（player 带 avian 物理件）时全组件捕获未剔 `ColliderOf { body: 本会话 bits }` 等关系内件与逐帧字段（position/velocity 快照）——落盘文档下次加载非确定 panic（exit 101，原始三次复跑两崩一过）。原始红证保留：`loop/t25-live/editor-live-w2.log`、`loop/reports/t25t2_live_legs.log` D2 段。
+  修复：仅在 promote 捕获面复用 save-side `should_skip_component`，另按确切 Avian 关系 type path + 反射 Entity 树跳过 `ColliderOf`/`RigidBodyColliders`，并按确切 Avian type paths 排除 physics-transform 镜像、积分器/速度/睡眠/力累积与派生质量内件；常规 `Transform`、`RigidBody`、`AvianCollider` 形状、`ColliderDensity` 等保留。新红绿+三次独立 D2 重开证据见 `loop/reports/t25-t25-report.md` 和 `loop/t25-live/t25t25_run9/`–`t25t25_run11/`。
 - [ ] **LT9 🟡 长会话投影陈旧绑定——component.set 自第 4 个 play 会话起静默落 authored 路径**（2026-11-04 T25-T2 真机发现；主控批准立账）
   `entity_for_stable_id` 应答死亡实体：authored 预览实体 3→13 膨胀，live 路由反查 miss 后 component.set 静默直写文档（文档被改而游戏不知情——LT2 修复前的三重静默在长会话形态复现）。诊断三轮隔离探针在档（t25t2 归档）。
   修复方向（候裁）：五窗结构自守已证（T2 矩阵按此跑通）+`ROUTE_FALL_THROUGH` 护栏（undo→重启→重试）；修复面在投影反查的死亡实体判定。
