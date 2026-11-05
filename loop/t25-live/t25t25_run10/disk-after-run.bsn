@@ -1,0 +1,31 @@
+// Starter scene. Authored by the jackdaw editor; safe to edit by hand.
+// The game's camera is the CameraRig its code parents under the player;
+// to author a fixed camera instead, use Add Entity > Scene Camera.
+
+#Root
+jackdaw_scene_types::node_id::SceneNodeId(7001)
+bevy_transform::components::transform::Transform
+bevy_camera::visibility::Visibility::Visible
+bevy_ecs::hierarchy::Children [
+    #Sun
+    jackdaw_scene_types::node_id::SceneNodeId(7002)
+    bevy_light::directional_light::DirectionalLight
+    bevy_transform::components::transform::Transform {
+        translation: glam::Vec3 { x: 0.0, y: 8.0, z: 0.0 },
+        rotation: glam::Quat { x: -0.4226183, y: 0.0, z: 0.0, w: 0.9063078 },
+    }
+    bevy_camera::visibility::Visibility::Visible
+    --
+    #Ambient
+    jackdaw_scene_types::node_id::SceneNodeId(7003)
+    bevy_audio::audio::AudioPlayer<bevy_audio::audio_source::AudioSource>("sounds/ambient.wav")
+    bevy_audio::audio::PlaybackSettings {
+        mode: bevy_audio::audio::PlaybackMode::Loop,
+        volume: bevy_audio::volume::Volume::Linear(0.8),
+        spatial: true,
+    }
+    bevy_transform::components::transform::Transform {
+        translation: glam::Vec3 { x: 6.0, y: 2.0, z: -4.0 },
+    }
+    bevy_camera::visibility::Visibility::Visible
+]

@@ -1,0 +1,4 @@
+--- /Users/zhanglinbo/workspace/jackdaw/loop/t25-final-c-retry/editor-live-w1.log panics=0 swap_remove=0 ---
+--- /Users/zhanglinbo/workspace/jackdaw/loop/t25-final-c-retry/editor-live-w2.log panics=1 swap_remove=1 ---
+swap_remove index (is 0) should be < len (is 0)
+[2m2026-11-04T10:54:33.961310Z[0m [31mERROR[0m [2mbevy_ecs::error::handler[0m[2m:[0m Encountered an error in system `jackdaw::pie::drain_game_events`: Exclusive system panicked

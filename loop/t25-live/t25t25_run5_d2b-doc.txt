@@ -1,0 +1,90 @@
+bevy_ecs::hierarchy::Children [
+    #Root
+    jackdaw_scene_types::node_id::SceneNodeId(7001)
+    bevy_transform::components::transform::Transform
+    bevy_camera::visibility::Visibility::Visible
+    bevy_ecs::hierarchy::Children [
+        #Sun
+        jackdaw_scene_types::node_id::SceneNodeId(7002)
+        bevy_light::directional_light::DirectionalLight {
+            color: bevy_color::color::Color::LinearRgba(bevy_color::linear_rgba::LinearRgba { red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0 }),
+            illuminance: 10000.0,
+            shadow_maps_enabled: false,
+            contact_shadows_enabled: false,
+            soft_shadow_size: core::option::Option::None,
+            affects_lightmapped_mesh_diffuse: true,
+            shadow_depth_bias: 0.019999999552965164,
+            shadow_normal_bias: 1.7999999523162842,
+        }
+        bevy_transform::components::transform::Transform {
+            translation: glam::Vec3 {
+                x: 0.0,
+                y: 6.5,
+                z: 0.0,
+            },
+            rotation: glam::Quat {
+                x: -0.4226182997226715,
+                y: 0.0,
+                z: 0.0,
+                w: 0.9063078165054321,
+            },
+            scale: glam::Vec3 {
+                x: 1.0,
+                y: 1.0,
+                z: 1.0,
+            },
+        }
+        bevy_camera::visibility::Visibility::Visible
+        bevy_light::cascade::CascadeShadowConfig {
+            bounds: [
+                10.0,
+                24.662120819091797,
+                60.822021484375,
+                149.99998474121094,
+            ],
+            overlap_proportion: 0.20000000298023224,
+            minimum_distance: 0.10000000149011612,
+        }
+        --
+        #Ambient
+        jackdaw_scene_types::node_id::SceneNodeId(7003)
+        bevy_audio::audio::AudioPlayer<bevy_audio::audio_source::AudioSource>("sounds/ambient.wav")
+        bevy_audio::audio::PlaybackSettings {
+            mode: bevy_audio::audio::PlaybackMode::Loop,
+            volume: bevy_audio::volume::Volume::Linear(0.8),
+            spatial: true,
+        }
+        bevy_transform::components::transform::Transform {
+            translation: glam::Vec3 {
+                x: 6.0,
+                y: 2.0,
+                z: -4.0,
+            },
+        }
+        bevy_camera::visibility::Visibility::Visible
+    ]
+    --
+    avian3d::dynamics::rigid_body::RigidBody::Kinematic
+    jackdaw_scene_types::node_id::SceneNodeId(538128037176040929)
+    avian3d::collision::collider::ColliderAabbMargin(0.05000000074505806)
+    avian3d::collision::collider::layers::CollisionLayers {
+        memberships: avian3d::collision::collider::layers::LayerMask(1),
+        filters: avian3d::collision::collider::layers::LayerMask(4294967295),
+    }
+    avian3d::dynamics::rigid_body::mass_properties::components::collider::ColliderDensity(1.0)
+    avian3d::dynamics::rigid_body::sleeping::SleepThreshold {
+        linear: 0.15000000596046448,
+        angular: 0.15000000596046448,
+    }
+    avian3d::collision::collider::backend::ColliderMarker
+    bevy_camera::visibility::Visibility::Inherited
+    bevy_transform::components::transform::Transform {
+        translation: glam::Vec3 {
+            x: -2.0,
+            y: 0.8600000739097595,
+            z: 0.0,
+        },
+    }
+    jackdaw_avian_integration::AvianCollider(avian3d::collision::collider::constructor::ColliderConstructor::Capsule { radius: 0.3499999940395355, height: 1.0 })
+]
+

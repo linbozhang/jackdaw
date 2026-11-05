@@ -1,0 +1,155 @@
+[2m2026-11-03T20:19:36.623412Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-11-03T20:19:36.670848Z[0m [32m INFO[0m [2mbevy_render::renderer[0m[2m:[0m AdapterInfo { name: "Apple M1 Pro", vendor: 0, device: 0, device_type: IntegratedGpu, device_pci_bus_id: "", driver: "", driver_info: "", backend: Metal, subgroup_min_size: 4, subgroup_max_size: 64, transient_saves_memory: Some(true), limit_bucket: None }
+[2m2026-11-03T20:19:36.860366Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw::test_input::plugin` of extension `jackdaw.test_input`
+[2m2026-11-03T20:19:36.860525Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw_physics::PhysicsEditorPlugin` of extension `jackdaw.physics`
+[2m2026-11-03T20:19:36.862988Z[0m [32m INFO[0m [2mbevy_pbr::cluster[0m[2m:[0m GPU clustering is supported on this device.
+[2m2026-11-03T20:19:36.863028Z[0m [32m INFO[0m [2mbevy_render::batching::gpu_preprocessing[0m[2m:[0m GPU preprocessing is fully supported on this device.
+[2m2026-11-03T20:19:36.886893Z[0m [32m INFO[0m [2mbevy_winit::system[0m[2m:[0m Creating new window jackdaw (71v0)
+[2m2026-11-03T20:19:37.036061Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core_windows
+[2m2026-11-03T20:19:37.036304Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.test_input
+[2m2026-11-03T20:19:37.036357Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.build_panel
+[2m2026-11-03T20:19:37.036369Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.game_panel
+[2m2026-11-03T20:19:37.036379Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.inspector
+[2m2026-11-03T20:19:37.036407Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.viewport_panel
+[2m2026-11-03T20:19:37.036557Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.timeline
+[2m2026-11-03T20:19:37.036569Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core
+[2m2026-11-03T20:19:37.038134Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.ui_palette
+[2m2026-11-03T20:19:37.038196Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.project_window
+[2m2026-11-03T20:19:37.038208Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.animation_graph
+[2m2026-11-03T20:19:37.038220Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.multiplayer
+[2m2026-11-03T20:19:37.038238Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.physics
+[2m2026-11-03T20:19:37.039854Z[0m [33m WARN[0m [2mjackdaw_api_internal::keymap::apply[0m[2m:[0m preset 'classic' has 10 chords claimed by more than one action: ["Home (Press, Operators): viewport2d.frame, clip.timeline.jump_start, view.frame_all", "Delete (Press, Operators): clip.delete_keyframes, entity.delete, brush.delete_element", "Backspace (Press, Operators): clip.delete_keyframes, viewport.draw_brush.remove_last_vertex, brush.delete_element", "Super+KeyC (Press, Operators): clip.copy_keyframes, entity.copy", "Super+KeyV (Press, Operators): clip.paste_keyframes, entity.paste", "Tab (Press, Operators): viewport.draw_brush.toggle_mode, brush.clip.cycle_mode", "Enter (Press, Operators): viewport.draw_brush.commit_polygon, brush.clip.apply", "KeyE (Press, Operators): tool.rotate, brush.mesh.extrude", "Escape (Press, Operators): brush.exit_edit_mode, selection.clear, brush.clip.clear, terrain.tool.exit_to_select", "Super+KeyB (Press, Operators): brush.mesh.edge_bevel, brush.mesh.vertex_bevel"]
+[2m2026-11-03T20:19:37.039903Z[0m [32m INFO[0m [2mjackdaw::extension_lifecycle[0m[2m:[0m applied keymap preset 'classic': 113 entries, 113 bindings, 0 user rows
+[2m2026-11-03T20:19:37.188123Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking /Users/zhanglinbo/workspace/loop-mac/t25-live-tuning/t25-live/assets recursively
+[2m2026-11-03T20:19:37.188235Z[0m [32m INFO[0m [2mjackdaw::asset_catalog[0m[2m:[0m No asset catalog found, starting with empty catalog
+[2m2026-11-03T20:19:37.226047Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: pre-build disabled; the first Play will compile the game
+[2m2026-11-03T20:19:37.227674Z[0m [32m INFO[0m [2mjackdaw::material_browser[0m[2m:[0m update_material_browser_ui: rebuilding with 1 entries
+[2m2026-11-03T20:19:37.361881Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 5, typed 1, referencing 4)
+[2m2026-11-03T20:19:37.362014Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 0)
+[2m2026-11-03T20:19:37.532645Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking /Users/zhanglinbo/workspace/loop-mac/t25-live-tuning/t25-live/assets recursively
+[2m2026-11-03T20:19:37.553048Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 5, typed 1, referencing 4)
+[2m2026-11-03T20:19:37.553176Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 0)
+[2m2026-11-03T20:19:51.035066Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: scene.open
+[2m2026-11-03T20:19:51.038381Z[0m [32m INFO[0m [2mjackdaw::scene_io::load[0m[2m:[0m Scene loaded from /Users/zhanglinbo/workspace/loop-mac/t25-live-tuning/t25-live/assets/scene.bsn (3 entities, 0 embedded assets)
+[2m2026-11-03T20:19:57.028549Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: scene.save
+[2m2026-11-03T20:19:57.034932Z[0m [32m INFO[0m [2mjackdaw::scene_io::save[0m[2m:[0m Scene saved to /Users/zhanglinbo/workspace/loop-mac/t25-live-tuning/t25-live/assets/scene.bsn
+[2m2026-11-03T20:19:57.035022Z[0m [32m INFO[0m [2mjackdaw::scene_io::session_journal[0m[2m:[0m session journal: /Users/zhanglinbo/workspace/loop-mac/t25-live-tuning/t25-live/assets/scene.bsn reached disk; dropping its entry
+[2m2026-11-03T20:19:58.016586Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking /Users/zhanglinbo/workspace/loop-mac/t25-live-tuning/t25-live/assets recursively
+[2m2026-11-03T20:19:59.019109Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 5, typed 1, referencing 4)
+[2m2026-11-03T20:19:59.019445Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 0)
+[2m2026-11-03T20:20:00.093978Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: pie.play_current
+[2m2026-11-03T20:20:00.134886Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: building the game for Play #1
+[2m2026-11-03T20:20:01.015376Z[0m [33m WARN[0m [2mbevy_ecs::relationship[0m[2m:[0m The bevy_ecs::hierarchy::ChildOf(4594v1) relationship on entity 4412v1 relates to an entity that does not exist. The invalid bevy_ecs::hierarchy::ChildOf relationship has been removed.
+[2m2026-11-03T20:20:01.033482Z[0m [33m WARN[0m [2mbevy_ecs::relationship[0m[2m:[0m The bevy_ecs::hierarchy::ChildOf(4818v0) relationship on entity 4867v0 relates to an entity that does not exist. The invalid bevy_ecs::hierarchy::ChildOf relationship has been removed.
+[2m2026-11-03T20:20:01.033533Z[0m [33m WARN[0m [2mbevy_ecs::relationship[0m[2m:[0m The bevy_ecs::hierarchy::ChildOf(4839v0) relationship on entity 4868v0 relates to an entity that does not exist. The invalid bevy_ecs::hierarchy::ChildOf relationship has been removed.
+[2m2026-11-03T20:20:20.041229Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 launched, awaiting connection
+[2m2026-11-03T20:20:20.041367Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 launched with scene override 'scene.bsn' (the editor's scene)
+[2m2026-11-03T20:20:20.047751Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: refreshed project types from schema (23 project components)
+[2m2026-11-03T20:20:20.057009Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking /Users/zhanglinbo/workspace/loop-mac/t25-live-tuning/t25-live/assets recursively
+[2m2026-11-03T20:20:20.070687Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 5, typed 1, referencing 4)
+[2m2026-11-03T20:20:20.070820Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 0)
+[2m2026-11-03T20:20:21.000527Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 connected
+
+thread 'main' (36879121) panicked at /rustc/b940084d7eb6a299eb4bfeb8e34901bc051e7ac4/library/alloc/src/vec/mod.rs:2258:13:
+swap_remove index (is 0) should be < len (is 0)
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+[2m2026-11-03T20:20:23.149729Z[0m [31mERROR[0m [2mbevy_ecs::error::handler[0m[2m:[0m Encountered an error in system `jackdaw::pie::drain_game_events`: Exclusive system panicked
+
+[2m2026-11-03T20:20:29.349490Z[0m [32m INFO[0m [2mjackdaw::boot_ops[0m[2m:[0m JACKDAW_RUN_OP: component.set: `entity` = 4761v0 (Sun), by id
+[2m2026-11-03T20:20:29.349557Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: component.set
+[2m2026-11-03T20:20:33.136027Z[0m [32m INFO[0m [2mjackdaw::commands[0m[2m:[0m Authored override for previously derived component 'bevy_light::cascade::CascadeShadowConfig'
+[2m2026-11-03T20:20:33.136192Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m save to scene: promoted runtime values into node 7002
+[2m2026-11-03T20:20:35.151539Z[0m [33m WARN[0m [2mjackdaw::scene_io::save[0m[2m:[0m keeping the asset reference 'sounds/ambient.wav', which this project does not resolve
+[2m2026-11-03T20:20:36.105777Z[0m [33m WARN[0m [2mjackdaw::scene_io::save[0m[2m:[0m keeping the asset reference 'sounds/ambient.wav', which this project does not resolve
+[2m2026-11-03T20:20:37.330369Z[0m [33m WARN[0m [2mjackdaw_bsn::document::from_reflect[0m[2m:[0m value of type 'bevy_ecs::entity::Entity' has no BSN representation; storing its Debug form as a string
+[2m2026-11-03T20:20:37.330459Z[0m [33m WARN[0m [2mjackdaw_bsn::document::from_reflect[0m[2m:[0m value of type 'bevy_ecs::entity::Entity' has no BSN representation; storing its Debug form as a string
+[2m2026-11-03T20:20:37.363573Z[0m [33m WARN[0m [2mjackdaw_bsn::document::from_reflect[0m[2m:[0m value of type 'bevy_ecs::entity::Entity' has no BSN representation; storing its Debug form as a string
+[2m2026-11-03T20:20:37.363642Z[0m [33m WARN[0m [2mjackdaw_bsn::document::from_reflect[0m[2m:[0m value of type 'bevy_ecs::entity::Entity' has no BSN representation; storing its Debug form as a string
+[2m2026-11-03T20:20:37.397939Z[0m [33m WARN[0m [2mjackdaw_bsn::document::from_reflect[0m[2m:[0m value of type 'bevy_ecs::entity::Entity' has no BSN representation; storing its Debug form as a string
+[2m2026-11-03T20:20:37.398010Z[0m [33m WARN[0m [2mjackdaw_bsn::document::from_reflect[0m[2m:[0m value of type 'bevy_ecs::entity::Entity' has no BSN representation; storing its Debug form as a string
+[2m2026-11-03T20:20:37.433191Z[0m [33m WARN[0m [2mjackdaw_bsn::document::from_reflect[0m[2m:[0m value of type 'bevy_ecs::entity::Entity' has no BSN representation; storing its Debug form as a string
+[2m2026-11-03T20:20:37.433254Z[0m [33m WARN[0m [2mjackdaw_bsn::document::from_reflect[0m[2m:[0m value of type 'bevy_ecs::entity::Entity' has no BSN representation; storing its Debug form as a string
+[2m2026-11-03T20:20:37.469453Z[0m [33m WARN[0m [2mjackdaw_bsn::document::from_reflect[0m[2m:[0m value of type 'bevy_ecs::entity::Entity' has no BSN representation; storing its Debug form as a string
+[2m2026-11-03T20:20:37.469520Z[0m [33m WARN[0m [2mjackdaw_bsn::document::from_reflect[0m[2m:[0m value of type 'bevy_ecs::entity::Entity' has no BSN representation; storing its Debug form as a string
+[2m2026-11-03T20:20:37.499120Z[0m [33m WARN[0m [2mjackdaw_bsn::document::from_reflect[0m[2m:[0m value of type 'bevy_ecs::entity::Entity' has no BSN representation; storing its Debug form as a string
+[2m2026-11-03T20:20:37.499195Z[0m [33m WARN[0m [2mjackdaw_bsn::document::from_reflect[0m[2m:[0m value of type 'bevy_ecs::entity::Entity' has no BSN representation; storing its Debug form as a string
+[2m2026-11-03T20:20:37.533621Z[0m [33m WARN[0m [2mjackdaw_bsn::document::from_reflect[0m[2m:[0m value of type 'bevy_ecs::entity::Entity' has no BSN representation; storing its Debug form as a string
+[2m2026-11-03T20:20:37.533691Z[0m [33m WARN[0m [2mjackdaw_bsn::document::from_reflect[0m[2m:[0m value of type 'bevy_ecs::entity::Entity' has no BSN representation; storing its Debug form as a string
+[2m2026-11-03T20:20:37.562042Z[0m [33m WARN[0m [2mjackdaw_bsn::document::from_reflect[0m[2m:[0m value of type 'bevy_ecs::entity::Entity' has no BSN representation; storing its Debug form as a string
+[2m2026-11-03T20:20:37.562113Z[0m [33m WARN[0m [2mjackdaw_bsn::document::from_reflect[0m[2m:[0m value of type 'bevy_ecs::entity::Entity' has no BSN representation; storing its Debug form as a string
+[2m2026-11-03T20:20:39.723922Z[0m [33m WARN[0m [2mjackdaw_bsn::document::from_reflect[0m[2m:[0m value of type 'bevy_ecs::entity::Entity' has no BSN representation; storing its Debug form as a string
+[2m2026-11-03T20:20:39.723975Z[0m [33m WARN[0m [2mjackdaw_bsn::document::from_reflect[0m[2m:[0m value of type 'bevy_ecs::entity::Entity' has no BSN representation; storing its Debug form as a string
+[2m2026-11-03T20:20:39.723989Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m save to scene: promoted ephemeral 4637v2 (bits fffffd0d) to new authored node 6368824110483345097
+[2m2026-11-03T20:20:42.639533Z[0m [33m WARN[0m [2mjackdaw::scene_io::save[0m[2m:[0m keeping the asset reference 'sounds/ambient.wav', which this project does not resolve
+[2m2026-11-03T20:20:42.764136Z[0m [33m WARN[0m [2mjackdaw::scene_io::save[0m[2m:[0m keeping the asset reference 'sounds/ambient.wav', which this project does not resolve
+[2m2026-11-03T20:20:42.764328Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: pie.stop
+[2m2026-11-03T20:20:42.764368Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 asked to stop; exiting on its own for 2s
+[2m2026-11-03T20:20:42.892387Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 exited
+
+thread 'main' (36879121) panicked at /rustc/b940084d7eb6a299eb4bfeb8e34901bc051e7ac4/library/alloc/src/vec/mod.rs:2258:13:
+swap_remove index (is 0) should be < len (is 0)
+[2m2026-11-03T20:20:42.972659Z[0m [31mERROR[0m [2mbevy_ecs::error::handler[0m[2m:[0m Encountered an error in system `jackdaw::pie::cleanup_session_on_stop`: Exclusive system panicked
+
+
+thread 'main' (36879121) panicked at /rustc/b940084d7eb6a299eb4bfeb8e34901bc051e7ac4/library/alloc/src/vec/mod.rs:2258:13:
+swap_remove index (is 0) should be < len (is 0)
+[2m2026-11-03T20:20:43.036089Z[0m [31mERROR[0m [2mbevy_ecs::error::handler[0m[2m:[0m Encountered an error in command `<<bevy_ecs::system::commands::entity_command::despawn::{{closure}} as bevy_ecs::system::commands::entity_command::EntityCommand>::with_entity::{{closure}} as bevy_ecs::system::commands::command::Command>::ignore_error::{{closure}}`: Command panicked
+
+[2m2026-11-03T20:20:49.152817Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: pie.live_edits_discard_all
+[2m2026-11-03T20:20:51.047600Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: scene.save
+[2m2026-11-03T20:20:51.048501Z[0m [33m WARN[0m [2mjackdaw::scene_io::save[0m[2m:[0m keeping the asset reference 'sounds/ambient.wav', which this project does not resolve
+[2m2026-11-03T20:20:51.054590Z[0m [32m INFO[0m [2mjackdaw::scene_io::save[0m[2m:[0m Scene saved to /Users/zhanglinbo/workspace/loop-mac/t25-live-tuning/t25-live/assets/scene.bsn
+[2m2026-11-03T20:20:51.054640Z[0m [32m INFO[0m [2mjackdaw::scene_io::session_journal[0m[2m:[0m session journal: /Users/zhanglinbo/workspace/loop-mac/t25-live-tuning/t25-live/assets/scene.bsn reached disk; dropping its entry
+[2m2026-11-03T20:20:52.012806Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking /Users/zhanglinbo/workspace/loop-mac/t25-live-tuning/t25-live/assets recursively
+[2m2026-11-03T20:20:53.023228Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 5, typed 1, referencing 4)
+[2m2026-11-03T20:20:53.023538Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 0)
+[2m2026-11-03T20:20:54.117138Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: scene.open
+[2m2026-11-03T20:20:54.120564Z[0m [33m WARN[0m [2mjackdaw_bsn::apply[0m[2m:[0m alloc::vec::Vec<bevy_ecs::entity::Entity>[0]: does not fit bevy_ecs::entity::Entity; dropping it
+
+thread 'main' (36879121) panicked at /Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_ecs/src/reflect/mod.rs:140:13:
+Couldn't create an instance of `avian3d::collision::collider::collider_hierarchy::ColliderOf` using the reflected `FromReflect`, `Default` or `FromWorld` traits. Are you perhaps missing a `#[reflect(Default)]` or `#[reflect(FromWorld)]`?
+[2m2026-11-03T20:20:54.140332Z[0m [31mERROR[0m [2mbevy_ecs::error::handler[0m[2m:[0m Encountered an error in command `<jackdaw::scenes::operators::scene_open::{{closure}} as bevy_ecs::system::commands::command::Command>::handle_error::{{closure}}`: Command panicked
+
+[2m2026-11-03T20:20:55.022792Z[0m [33m WARN[0m [2mbevy_ecs::relationship[0m[2m:[0m The bevy_ecs::hierarchy::ChildOf(7311v3) relationship on entity 4932v1 relates to an entity that does not exist. The invalid bevy_ecs::hierarchy::ChildOf relationship has been removed.
+[2m2026-11-03T20:20:55.056618Z[0m [33m WARN[0m [2mbevy_ecs::relationship[0m[2m:[0m The bevy_ecs::hierarchy::ChildOf(5257v9) relationship on entity 7585v4 relates to an entity that does not exist. The invalid bevy_ecs::hierarchy::ChildOf relationship has been removed.
+[2m2026-11-03T20:20:55.056686Z[0m [33m WARN[0m [2mbevy_ecs::relationship[0m[2m:[0m The bevy_ecs::hierarchy::ChildOf(4417v4) relationship on entity 7586v4 relates to an entity that does not exist. The invalid bevy_ecs::hierarchy::ChildOf relationship has been removed.
+[2m2026-11-03T20:21:00.031288Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: pie.play_current
+[2m2026-11-03T20:21:00.038062Z[0m [32m INFO[0m [2mjackdaw::scene_io::save[0m[2m:[0m Scene saved to /Users/zhanglinbo/workspace/loop-mac/t25-live-tuning/t25-live/assets/scene.bsn
+[2m2026-11-03T20:21:00.038139Z[0m [32m INFO[0m [2mjackdaw::scene_io::session_journal[0m[2m:[0m session journal: /Users/zhanglinbo/workspace/loop-mac/t25-live-tuning/t25-live/assets/scene.bsn reached disk; dropping its entry
+[2m2026-11-03T20:21:00.100128Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: building the game for Play #1
+[2m2026-11-03T20:21:01.015452Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking /Users/zhanglinbo/workspace/loop-mac/t25-live-tuning/t25-live/assets recursively
+[2m2026-11-03T20:21:02.015549Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 5, typed 1, referencing 4)
+[2m2026-11-03T20:21:02.015659Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 0)
+[2m2026-11-03T20:21:04.018121Z[0m [33m WARN[0m [2mbevy_ecs::relationship[0m[2m:[0m The bevy_ecs::hierarchy::ChildOf(9164v2) relationship on entity 7594v4 relates to an entity that does not exist. The invalid bevy_ecs::hierarchy::ChildOf relationship has been removed.
+[2m2026-11-03T20:21:04.035920Z[0m [33m WARN[0m [2mbevy_ecs::relationship[0m[2m:[0m The bevy_ecs::hierarchy::ChildOf(5225v9) relationship on entity 6807v4 relates to an entity that does not exist. The invalid bevy_ecs::hierarchy::ChildOf relationship has been removed.
+[2m2026-11-03T20:21:04.035965Z[0m [33m WARN[0m [2mbevy_ecs::relationship[0m[2m:[0m The bevy_ecs::hierarchy::ChildOf(6836v4) relationship on entity 6833v4 relates to an entity that does not exist. The invalid bevy_ecs::hierarchy::ChildOf relationship has been removed.
+[2m2026-11-03T20:21:20.023250Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 launched, awaiting connection
+[2m2026-11-03T20:21:20.023297Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 launched with scene override 'scene.bsn' (the editor's scene)
+[2m2026-11-03T20:21:21.001385Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 connected
+[2m2026-11-03T20:21:22.011230Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: refreshed project types from schema (23 project components)
+[2m2026-11-03T20:21:23.008177Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking /Users/zhanglinbo/workspace/loop-mac/t25-live-tuning/t25-live/assets recursively
+[2m2026-11-03T20:21:24.010172Z[0m [31mERROR[0m [2mjackdaw::pie[0m[2m:[0m PIE: Play #1 exited with exit status: 101
+[2m2026-11-03T20:21:24.010210Z[0m [31mERROR[0m [2mjackdaw::pie[0m[2m:[0m PIE: game stderr tail:
+\x1b[2m2026-11-03T20:21:20.049590Z\x1b[0m \x1b[32m INFO\x1b[0m \x1b[2mbevy_diagnostic::system_information_diagnostics_plugin::internal\x1b[0m\x1b[2m:\x1b[0m SystemInfo { os: "macOS 26.6.2 Tahoe", kernel: "25.6.0", cpu: "Apple M1 Pro", core_count: "8", memory: "16.0 GiB" }
+\x1b[2m2026-11-03T20:21:20.051052Z\x1b[0m \x1b[32m INFO\x1b[0m \x1b[2mbevy_app::terminal_ctrl_c_handler\x1b[0m\x1b[2m:\x1b[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+\x1b[2m2026-11-03T20:21:20.068431Z\x1b[0m \x1b[32m INFO\x1b[0m \x1b[2mbevy_render::renderer\x1b[0m\x1b[2m:\x1b[0m AdapterInfo { name: "Apple M1 Pro", vendor: 0, device: 0, device_type: IntegratedGpu, device_pci_bus_id: "", driver: "", driver_info: "", backend: Metal, subgroup_min_size: 4, subgroup_max_size: 64, transient_saves_memory: Some(true), limit_bucket: None }
+\x1b[2m2026-11-03T20:21:20.288036Z\x1b[0m \x1b[32m INFO\x1b[0m \x1b[2mbevy_pbr::cluster\x1b[0m\x1b[2m:\x1b[0m GPU clustering is supported on this device.
+\x1b[2m2026-11-03T20:21:20.288142Z\x1b[0m \x1b[32m INFO\x1b[0m \x1b[2mbevy_render::batching::gpu_preprocessing\x1b[0m\x1b[2m:\x1b[0m GPU preprocessing is fully supported on this device.
+\x1b[2m2026-11-03T20:21:20.332439Z\x1b[0m \x1b[32m INFO\x1b[0m \x1b[2mjackdaw_runtime\x1b[0m\x1b[2m:\x1b[0m No catalog at /Users/zhanglinbo/workspace/loop-mac/t25-live-tuning/t25-live/assets/catalog.bsn, skipping catalog load
+\x1b[2m2026-11-03T20:21:20.377353Z\x1b[0m \x1b[33m WARN\x1b[0m \x1b[2mjackdaw_runtime::config\x1b[0m\x1b[2m:\x1b[0m no config asset at 'audio-config.bsn'; t25_live::GameAudioConfig starts at its default
+\x1b[2m2026-11-03T20:21:20.377352Z\x1b[0m \x1b[33m WARN\x1b[0m \x1b[2mjackdaw_runtime::config\x1b[0m\x1b[2m:\x1b[0m no config asset at 'input-actions.bsn'; jackdaw_runtime::game_input::GameInputConfig starts at its default
+\x1b[2m2026-11-03T20:21:20.377394Z\x1b[0m \x1b[33m WARN\x1b[0m \x1b[2mjackdaw_runtime::config\x1b[0m\x1b[2m:\x1b[0m no config asset at 'game-config.bsn'; t25_live::GameConfig starts at its default
+\x1b[2m2026-11-03T20:21:20.391124Z\x1b[0m \x1b[32m INFO\x1b[0m \x1b[2mjackdaw_runtime\x1b[0m\x1b[2m:\x1b[0m PIE: playing the editor's scene 'scene.bsn' in place of 'scene.bsn'
+\x1b[2m2026-11-03T20:21:20.403903Z\x1b[0m \x1b[33m WARN\x1b[0m \x1b[2mjackdaw_bsn::apply\x1b[0m\x1b[2m:\x1b[0m alloc::vec::Vec<bevy_ecs::entity::Entity>[0]: does not fit bevy_ecs::entity::Entity; dropping it
+
+thread 'main' (36884079) panicked at /Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_ecs/src/reflect/mod.rs:140:13:
+Couldn't create an instance of `avian3d::collision::collider::collider_hierarchy::ColliderOf` using the reflected `FromReflect`, `Default` or `FromWorld` traits. Are you perhaps missing a `#[reflect(Default)]` or `#[reflect(FromWorld)]`?
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+[2m2026-11-03T20:21:24.011446Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 5, typed 1, referencing 4)
+[2m2026-11-03T20:21:24.011513Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 0)
+[2m2026-11-03T20:21:25.015713Z[0m [33m WARN[0m [2mjackdaw_bsn::apply[0m[2m:[0m alloc::vec::Vec<bevy_ecs::entity::Entity>[0]: does not fit bevy_ecs::entity::Entity; dropping it
+
+thread 'main' (36879121) panicked at /Users/zhanglinbo/workspace/bevy-fork-pinned/crates/bevy_ecs/src/reflect/mod.rs:140:13:
+Couldn't create an instance of `avian3d::collision::collider::collider_hierarchy::ColliderOf` using the reflected `FromReflect`, `Default` or `FromWorld` traits. Are you perhaps missing a `#[reflect(Default)]` or `#[reflect(FromWorld)]`?
+[2m2026-11-03T20:21:25.078027Z[0m [31mERROR[0m [2mbevy_ecs::error::handler[0m[2m:[0m Encountered an error in system `jackdaw::pie::cleanup_session_on_stop`: Exclusive system panicked
+

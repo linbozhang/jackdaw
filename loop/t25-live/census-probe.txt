@@ -1,0 +1,6 @@
+swap_remove index (is 0) should be < len (is 0)
+[2m2026-11-03T15:02:04.550017Z[0m [31mERROR[0m [2mbevy_ecs::error::handler[0m[2m:[0m Encountered an error in system `jackdaw::pie::drain_game_events`: Exclusive system panicked
+swap_remove index (is 0) should be < len (is 0)
+[2m2026-11-03T15:03:04.479296Z[0m [31mERROR[0m [2mbevy_ecs::error::handler[0m[2m:[0m Encountered an error in system `jackdaw::pie::drain_game_events`: Exclusive system panicked
+swap_remove index (is 0) should be < len (is 0)
+[2m2026-11-03T15:03:50.482376Z[0m [31mERROR[0m [2mbevy_ecs::error::handler[0m[2m:[0m Encountered an error in system `jackdaw::pie::drain_game_events`: Exclusive system panicked

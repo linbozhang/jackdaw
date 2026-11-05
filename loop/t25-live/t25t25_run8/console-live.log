@@ -1,0 +1,6 @@
+=== phase live run 2026-11-04 11:40:14 build=c86b5034 ===
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t25-live-tuning/t25-live pid=88549 (recovery modal clear)
+--- warm build (the game binary the PIE legs reuse) ---
+WARM_BUILD_OK
+=== WINDOW E: D2 — Path A (authored overlay, one undo group) and Path B (ephemeral promote, no undo) ===
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t25-live-tuning/t25-live pid=88966 (recovery modal clear)

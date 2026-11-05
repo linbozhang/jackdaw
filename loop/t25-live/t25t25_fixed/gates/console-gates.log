@@ -1,0 +1,9 @@
+=== phase gates run 2026-11-04 11:50:09 build=c86b5034 ===
+gates: disk 22Gi; RUST_BACKTRACE=<unset>
+fmt EXIT=0 (zero output is the passing calibre; archived)
+clippy ws EXIT=0 (28 lines)
+clippy physics EXIT=0 (18 lines)
+libtests EXIT=0 (3091 passed)
+guards EXIT=0 (248 passed)
+GATES done
+PHASE_DONE gates results: 

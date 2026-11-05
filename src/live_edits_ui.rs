@@ -20,9 +20,9 @@ use jackdaw_feathers::tokens;
 use crate::{
     AppState,
     live_edits::{
-        LiveEditAction, LiveEditKey, LiveEditLog, PieLiveEditRevertOp, PieLiveEditSaveOp,
-        PieLiveEditsApplyAllOp, PieLiveEditsDiscardAllOp, truncate_json_for_display,
-        truncate_json_to,
+        LiveEditAction, LiveEditKey, LiveEditKind, LiveEditLog, PieLiveEditRevertOp,
+        PieLiveEditSaveOp, PieLiveEditsApplyAllOp, PieLiveEditsDiscardAllOp,
+        truncate_json_for_display, truncate_json_to,
     },
     pie_mirror::PieViewMode,
     pie_projection::PieProjection,
@@ -78,12 +78,15 @@ struct RowState {
 
 /// Classify one tray row. `resolves` is whether
 /// [`crate::live_edits::resolve_entry_entity`] finds an entity for the
-/// entry.
-fn tray_row_state(resolves: bool) -> RowState {
+/// entry. Structural entries (a runtime component add/remove) have no field
+/// baseline to send back, so Revert stays disabled however fresh the row is
+/// — Save authors or drops the whole component patch instead.
+fn tray_row_state(resolves: bool, kind: LiveEditKind) -> RowState {
+    let structural = kind != LiveEditKind::Field;
     RowState {
         stale: !resolves,
         save_enabled: resolves,
-        revert_enabled: resolves,
+        revert_enabled: resolves && !structural,
     }
 }
 
@@ -217,7 +220,7 @@ fn rebuild_tray(
     for (key, entry) in &log.entries {
         let resolves =
             crate::live_edits::resolve_entry_entity(&ast, &projection, key, entry).is_some();
-        let state = tray_row_state(resolves);
+        let state = tray_row_state(resolves, entry.kind);
         spawn_tray_row(&mut commands, tray, key, entry, state);
     }
 
@@ -503,7 +506,7 @@ fn rebuild_stop_prompt(
     for (key, entry) in &log.entries {
         let resolves =
             crate::live_edits::resolve_entry_entity(&ast, &projection, key, entry).is_some();
-        let state = tray_row_state(resolves);
+        let state = tray_row_state(resolves, entry.kind);
         if state.stale {
             stale_count += 1;
         }
@@ -626,7 +629,7 @@ mod tests {
 
     #[test]
     fn resolving_rows_enable_both_actions() {
-        let state = tray_row_state(true);
+        let state = tray_row_state(true, LiveEditKind::Field);
         assert!(!state.stale);
         assert!(state.save_enabled);
         assert!(state.revert_enabled);
@@ -634,7 +637,38 @@ mod tests {
 
     #[test]
     fn stale_rows_disable_both_actions() {
-        let state = tray_row_state(false);
+        let state = tray_row_state(false, LiveEditKind::Field);
+        assert!(state.stale);
+        assert!(!state.save_enabled);
+        assert!(!state.revert_enabled);
+    }
+
+    #[test]
+    fn structural_rows_keep_save_and_disable_revert() {
+        let added = tray_row_state(true, LiveEditKind::ComponentAdded);
+        assert!(
+            added.save_enabled,
+            "an added component saves as the whole patch"
+        );
+        assert!(
+            !added.revert_enabled,
+            "an added component has no baseline to revert to"
+        );
+
+        let removed = tray_row_state(true, LiveEditKind::ComponentRemoved);
+        assert!(
+            removed.save_enabled,
+            "a removed component saves as a patch drop"
+        );
+        assert!(
+            !removed.revert_enabled,
+            "a removed component cannot be reverted"
+        );
+    }
+
+    #[test]
+    fn stale_structural_rows_disable_everything() {
+        let state = tray_row_state(false, LiveEditKind::ComponentAdded);
         assert!(state.stale);
         assert!(!state.save_enabled);
         assert!(!state.revert_enabled);
@@ -665,6 +699,7 @@ mod tests {
                 baseline: None,
                 live_value: serde_json::json!(50.0),
                 label: "player / Health.current".to_string(),
+                kind: LiveEditKind::Field,
             },
         ));
         log

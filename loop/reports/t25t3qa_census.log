@@ -1,0 +1,9 @@
+loop/t25-final/editor-live-w1.log: error-handler-panics=3 swap_remove=4 LT10-signatures=0
+loop/t25-final/editor-live-w2.log: error-handler-panics=2 swap_remove=2 LT10-signatures=0
+loop/t25-final/editor-live-w3.log: error-handler-panics=4 swap_remove=5 LT10-signatures=0
+loop/t25-final/editor-live-w4.log: error-handler-panics=1 swap_remove=1 LT10-signatures=0
+loop/t25-final/editor-live-w5.log: error-handler-panics=4 swap_remove=6 LT10-signatures=0
+loop/t25-final: totals error-handler-panics=14 swap_remove=18 LT10-signatures=0
+loop/t25-final-c-retry/editor-live-w1.log: error-handler-panics=0 swap_remove=0 LT10-signatures=0
+loop/t25-final-c-retry/editor-live-w2.log: error-handler-panics=1 swap_remove=1 LT10-signatures=0
+loop/t25-final-c-retry: totals error-handler-panics=1 swap_remove=1 LT10-signatures=0

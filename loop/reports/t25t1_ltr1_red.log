@@ -1,0 +1,28 @@
+# LT-R1 red evidence (LT2) - pre-fix build, main 050b4813 (loop/t25-live-tuning base;
+# the only commit on top of b9bc6e4e is the T25 plan, docs-only). Archived from the live
+# window loop/t25-live/ (loop/qa/t25-red.sh phase red), 2026-11-03.
+# Fixture: jd-new game t25-live with jackdaw_remote injected (game BRP 15702); scene
+# assets/t25-red.bsn: #Spinner + SceneNodeId(7001) + Transform{translation y: 1.0}.
+# Editor BRP 15703; PIE Play #1 connected; view switched to Live; the projected Spinner
+# selected via jackdaw/scene_tree (bits 4294962901); then one component.set of
+# translation.y=2.5. Full evidence: loop/t25-live/{editor-red.log,ltr1-component-set-response.json,
+# ltr1-game-transform.json,t25-red.bsn.before,t25-red.bsn.after-document,console-red.log}.
+# RUST_BACKTRACE unset all window; census: 0 error-handler panics, 0 swap_remove hits (N13 quiet this window).
+
+== verdicts (script PASS; SHA cross-checked offline against the archived document pair) ==
+LTR1_GAME_UP=PASS (pie running; instance stage live; game BRP answers)
+LTR1_PROJECTION_SELECTED=PASS (scene_tree Live view holds the projected Spinner)
+LTR1_LEDGER_CLEAN_BEFORE=PASS (jackdaw/pie live_edits=0 before the edit)
+LTR1_DOCUMENT_SILENTLY_AUTHORED=PASS
+  document SHA256: 134099b4cd80ef202aa28aeeaf4bc57b56f5b343caf1fbf622a780ba38adb2a7 -> aebf28f351c5f36b89dee7d4c641f982863954a589b32487fbbd88362afbcd77
+  diff t25-red.bsn.before vs t25-red.bsn.after-document: 'y: 1.0' -> 'y: 2.5' (the one field, authored; header comment normalized away)
+LTR1_GAME_VALUE_UNCHANGED=PASS (game BRP world.get_components Transform.translation: [0.0, 1.0, 0.0] after the edit; y held 1.0)
+LTR1_LEDGER_COUNT_ZERO=PASS (jackdaw/pie live_edits=0 after the edit - the route bypassed the ledger)
+LTR1_DISK_UNTOUCHED=PASS (disk file SHA256 f7fa8f24... unchanged - the silent authoring is in the in-memory document only)
+LTR1_HISTORY_ENTRY_PUSHED=PASS (jackdaw/history undo_len 0 -> 1 - an authored undo entry exists for an edit the game never saw)
+
+== the operator believed it succeeded ==
+{"jsonrpc":"2.0","id":23488,"result":{"entities":[],"id":"component.set","result":"finished","warnings":[]}}
+
+== triple silence, one line: the document moved, the game and the ledger did not ==
+component.set translation.y=2.5 -> document +1 authored field, game y=1.0 (unchanged), live_edits=0, disk identical, undo depth +1

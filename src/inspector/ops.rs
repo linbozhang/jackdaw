@@ -216,6 +216,17 @@ pub(crate) fn component_add(
                         .and_then(|o| o.get(&type_path).cloned())
                 })
                 .unwrap_or(serde_json::Value::Null);
+            // The add enters the ledger as a structural entry, so the stop
+            // prompt and the tray know a component was added at runtime and
+            // Save can author the whole component patch.
+            crate::live_edits::record_live_structural_edit(
+                world,
+                entity,
+                bits,
+                &type_path,
+                crate::live_edits::LiveEditKind::ComponentAdded,
+                value.clone(),
+            );
             crate::pie::send_control_to_focused(
                 world,
                 jackdaw_pie_protocol::ControlEvent::AddComponent {
@@ -300,8 +311,17 @@ pub(crate) fn component_remove(
     let entity = params.as_entity("entity")?;
     let type_path = params.as_str("type_path").map(str::to_string)?;
     commands.queue(move |world: &mut World| {
-        // Live mode: stream the removal to the running game.
+        // Live mode: stream the removal to the running game, and enter it in
+        // the ledger as a structural entry (Save drops the authored patch).
         if let Some(bits) = pie_live_target_bits(world, entity) {
+            crate::live_edits::record_live_structural_edit(
+                world,
+                entity,
+                bits,
+                &type_path,
+                crate::live_edits::LiveEditKind::ComponentRemoved,
+                serde_json::Value::Null,
+            );
             crate::pie::send_control_to_focused(
                 world,
                 jackdaw_pie_protocol::ControlEvent::RemoveComponent {

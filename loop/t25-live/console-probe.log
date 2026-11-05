@@ -1,0 +1,104 @@
+=== probe run 2026-11-03 22:50:57 build=050b4813-dirty ===
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t25-live-tuning/t25-live pid=81578
+--- warm build + play ---
+switched to Live view
+SPINNER_GAME_BITS=769v0
+--- entry 1: badge shows, tray opens by the badge click, per-entry Revert ---
+PROBE_INJECTION_PASS
+PROBE_BADGE_PASS
+badge click response: {"jsonrpc":"2.0","id":12762,"result":{"at":[251.25,84.5],"clicked":true,"target":{"entity":4294963339,"kind":"button","operator":null,"text":"1 edit"}}}
+PROBE_BADGE_CLICK_PASS
+PROBE_TRAY_ROW_FAIL
+PROBE_TRAY_DIFF_TEXT_FAIL
+Revert button bits: none
+PROBE_ROW_REVERT_FAIL
+after Revert: live_edits=1 game_y=2.5 (want 0 / 1)
+PROBE_ROW_REVERT_LANDED_FAIL
+PROBE_ROW_REVERT_STREAMED_FAIL
+--- entry 2: per-entry Save authors the document ---
+Save button bits: none
+PROBE_ROW_SAVE_FAIL
+after Save: live_edits=1 doc 134099b4cd80ef202aa28aeeaf4bc57b56f5b343caf1fbf622a780ba38adb2a7 -> 134099b4cd80ef202aa28aeeaf4bc57b56f5b343caf1fbf622a780ba38adb2a7 undo 0 (want 0 / changed / +1)
+PROBE_ROW_SAVE_SETTLED_FAIL
+PROBE_ROW_SAVE_AUTHORED_FAIL
+PROBE_ROW_SAVE_UNDO_FAIL
+--- entry 3: stop prompt Apply All ---
+PROBE_PROMPT_TITLE_PASS
+prompt click response: {"jsonrpc":"2.0","id":2530,"result":{"at":[971.25,499.5],"clicked":true,"target":{"entity":12884896712,"kind":"button","operator":null,"text":"Apply All"}}}
+PROBE_PROMPT_APPLY_ALL_CLICK_PASS
+after Apply All: live_edits=0 doc 134099b4cd80ef202aa28aeeaf4bc57b56f5b343caf1fbf622a780ba38adb2a7 -> 6c31e72332bfbd88005e3bf447655413c0eaaffbd081b28149f7b2ec78e79f98 (want 0 / changed)
+PROBE_PROMPT_APPLY_ALL_SETTLED_PASS
+PROBE_PROMPT_APPLY_ALL_AUTHORED_PASS
+PROBE_PROMPT_CLOSED_PASS
+--- entry 4: stop prompt Discard ---
+prompt click response: {"jsonrpc":"2.0","id":8404,"error":{"code":-32602,"message":"2 candidates; pass \"index\" to pick one (0 is the first)","data":{"candidates":[{"entity":4294962866,"kind":"node","rect":[1013.0,946.0,288.0,112.0],"text":"Discard"},{"entity":17179863940,"kind":"button","rect":[1655.0,955.0,272.0,88.0],"text":"Discard"}]}}}
+PROBE_PROMPT_DISCARD_CLICK_FAIL
+after Discard: live_edits=1 doc 6c31e72332bfbd88005e3bf447655413c0eaaffbd081b28149f7b2ec78e79f98 -> 6c31e72332bfbd88005e3bf447655413c0eaaffbd081b28149f7b2ec78e79f98 undo 1 (want 0 / identical / same)
+PROBE_PROMPT_DISCARD_SETTLED_FAIL
+PROBE_PROMPT_DISCARD_PRESERVES_DOC_PASS
+PROBE_PROMPT_DISCARD_NO_UNDO_PASS
+--- entry 5: stop prompt Review hands off; tray footer Apply All ---
+prompt click response: {"jsonrpc":"2.0","id":26552,"result":{"at":[535.75,499.5],"clicked":true,"target":{"entity":25769798546,"kind":"button","operator":null,"text":"Review"}}}
+PROBE_PROMPT_REVIEW_CLICK_PASS
+PROBE_REVIEW_HANDOFF_TRAY_FAIL
+PROBE_FOOTER_BUTTONS_PRESENT_PASS
+footer click response: {"jsonrpc":"2.0","id":25586,"result":{"at":[241.25,230.0],"clicked":true,"target":{"entity":51539602527,"kind":"button","operator":null,"text":"Apply All"}}}
+PROBE_FOOTER_APPLY_ALL_CLICK_PASS
+after footer Apply All: live_edits=1 doc 6c31e72332bfbd88005e3bf447655413c0eaaffbd081b28149f7b2ec78e79f98 -> 6c31e72332bfbd88005e3bf447655413c0eaaffbd081b28149f7b2ec78e79f98 (want 0 / changed)
+PROBE_FOOTER_APPLY_ALL_SETTLED_FAIL
+PROBE_FOOTER_APPLY_ALL_AUTHORED_FAIL
+CENSUS: error-handler panics=4 swap_remove-signature=5 (N13 family, attributed)
+PROBE done: PROBE_BADGE=PASS PROBE_BADGE_CLICK=PASS PROBE_FOOTER_APPLY_ALL_AUTHORED=FAIL PROBE_FOOTER_APPLY_ALL_CLICK=PASS PROBE_FOOTER_APPLY_ALL_SETTLED=FAIL PROBE_FOOTER_BUTTONS_PRESENT=PASS PROBE_INJECTION=PASS PROBE_PROMPT_APPLY_ALL_AUTHORED=PASS PROBE_PROMPT_APPLY_ALL_CLICK=PASS PROBE_PROMPT_APPLY_ALL_SETTLED=PASS PROBE_PROMPT_CLOSED=PASS PROBE_PROMPT_DISCARD_CLICK=FAIL PROBE_PROMPT_DISCARD_NO_UNDO=PASS PROBE_PROMPT_DISCARD_PRESERVES_DOC=PASS PROBE_PROMPT_DISCARD_SETTLED=FAIL PROBE_PROMPT_REVIEW_CLICK=PASS PROBE_PROMPT_TITLE=PASS PROBE_REVIEW_HANDOFF_TRAY=FAIL PROBE_ROW_REVERT=FAIL PROBE_ROW_REVERT_LANDED=FAIL PROBE_ROW_REVERT_STREAMED=FAIL PROBE_ROW_SAVE=FAIL PROBE_ROW_SAVE_AUTHORED=FAIL PROBE_ROW_SAVE_SETTLED=FAIL PROBE_ROW_SAVE_UNDO=FAIL PROBE_TRAY_DIFF_TEXT=FAIL PROBE_TRAY_ROW=FAIL 
+=== probe run 2026-11-03 23:01:06 ===
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t25-live-tuning/t25-live pid=85114 (recovery modal clear)
+--- warm build + play ---
+switched to Live view
+SPINNER_GAME_BITS=769v0
+--- cycle R: badge opens the tray; per-entry Revert streams the baseline back ---
+PROBE_INJECTION_PASS
+PROBE_BADGE_PASS
+click '1 edit': {"entity":4294963339,"kind":"button","operator":null,"text":"1 edit"}
+PROBE_BADGE_CLICK_PASS
+PROBE_BADGE_OPENS_TRAY_FAIL
+PROBE_TRAY_ROW_FAIL
+PROBE_TRAY_DIFF_TEXT_FAIL
+Revert button bits: none
+PROBE_ROW_REVERT_FAIL
+after Revert: live_edits=1 game_y=2.5 (want 0 / 1)
+PROBE_ROW_REVERT_SETTLED_FAIL
+PROBE_ROW_REVERT_STREAMED_FAIL
+--- cycle S: per-entry Save authors the document ---
+click '1 edit': {"entity":4294963339,"kind":"button","operator":null,"text":"1 edit"}
+Save button bits: none
+PROBE_ROW_SAVE_FAIL
+after Save: live_edits=1 doc 6c31e72332bfbd88005e3bf447655413c0eaaffbd081b28149f7b2ec78e79f98 -> 6c31e72332bfbd88005e3bf447655413c0eaaffbd081b28149f7b2ec78e79f98 undo 0 (want 0 / changed / +1)
+PROBE_ROW_SAVE_SETTLED_FAIL
+PROBE_ROW_SAVE_AUTHORED_FAIL
+PROBE_ROW_SAVE_UNDO_FAIL
+--- cycle A: stop prompt Apply All ---
+PROBE_PROMPT_TITLE_PASS
+click 'Apply All': {"entity":8589929690,"kind":"button","operator":null,"text":"Apply All"}
+PROBE_PROMPT_APPLY_ALL_PASS
+after Apply All: live_edits=0 doc 6c31e72332bfbd88005e3bf447655413c0eaaffbd081b28149f7b2ec78e79f98 -> 6c31e72332bfbd88005e3bf447655413c0eaaffbd081b28149f7b2ec78e79f98 (want 0 / changed)
+PROBE_PROMPT_APPLY_ALL_SETTLED_PASS
+PROBE_PROMPT_APPLY_ALL_AUTHORED_FAIL
+PROBE_PROMPT_CLOSED_PASS
+--- cycle D: stop prompt Discard ---
+click 'Discard': {"entity":30064766261,"kind":"button","operator":null,"text":"Discard"}
+PROBE_PROMPT_DISCARD_PASS
+after Discard: live_edits=0 doc 6c31e72332bfbd88005e3bf447655413c0eaaffbd081b28149f7b2ec78e79f98 -> 6c31e72332bfbd88005e3bf447655413c0eaaffbd081b28149f7b2ec78e79f98 undo 1 (want 0 / identical / same)
+PROBE_PROMPT_DISCARD_SETTLED_PASS
+PROBE_PROMPT_DISCARD_PRESERVES_DOC_PASS
+PROBE_PROMPT_DISCARD_NO_UNDO_PASS
+--- cycle V: stop prompt Review hands off; tray footer Apply All ---
+click 'Review': {"entity":42949667825,"kind":"button","operator":null,"text":"Review"}
+PROBE_PROMPT_REVIEW_PASS
+PROBE_REVIEW_HANDOFF_TRAY_PASS
+PROBE_FOOTER_BUTTONS_PRESENT_PASS
+click 'Apply All': {"entity":47244635051,"kind":"button","operator":null,"text":"Apply All"}
+PROBE_FOOTER_APPLY_ALL_PASS
+after footer Apply All: live_edits=0 doc 6c31e72332bfbd88005e3bf447655413c0eaaffbd081b28149f7b2ec78e79f98 -> fa0be353e5cac92ef52e7ded716816ee063772d1ca6f6cb53e8bcae07c821d2e (want 0 / changed)
+PROBE_FOOTER_APPLY_ALL_SETTLED_PASS
+PROBE_FOOTER_APPLY_ALL_AUTHORED_PASS
+CENSUS: error-handler panics=3 swap_remove-signature=3 (N13 family, attributed)
+PROBE done: PROBE_BADGE=PASS PROBE_BADGE_CLICK=PASS PROBE_BADGE_OPENS_TRAY=FAIL PROBE_FOOTER_APPLY_ALL=PASS PROBE_FOOTER_APPLY_ALL_AUTHORED=PASS PROBE_FOOTER_APPLY_ALL_SETTLED=PASS PROBE_FOOTER_BUTTONS_PRESENT=PASS PROBE_INJECTION=PASS PROBE_PROMPT_APPLY_ALL=PASS PROBE_PROMPT_APPLY_ALL_AUTHORED=FAIL PROBE_PROMPT_APPLY_ALL_SETTLED=PASS PROBE_PROMPT_CLOSED=PASS PROBE_PROMPT_DISCARD=PASS PROBE_PROMPT_DISCARD_NO_UNDO=PASS PROBE_PROMPT_DISCARD_PRESERVES_DOC=PASS PROBE_PROMPT_DISCARD_SETTLED=PASS PROBE_PROMPT_REVIEW=PASS PROBE_PROMPT_TITLE=PASS PROBE_REVIEW_HANDOFF_TRAY=PASS PROBE_ROW_REVERT=FAIL PROBE_ROW_REVERT_SETTLED=FAIL PROBE_ROW_REVERT_STREAMED=FAIL PROBE_ROW_SAVE=FAIL PROBE_ROW_SAVE_AUTHORED=FAIL PROBE_ROW_SAVE_SETTLED=FAIL PROBE_ROW_SAVE_UNDO=FAIL PROBE_TRAY_DIFF_TEXT=FAIL PROBE_TRAY_ROW=FAIL 

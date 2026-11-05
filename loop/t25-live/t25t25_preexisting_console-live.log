@@ -1,0 +1,1139 @@
+=== phase live run 2026-11-04 02:39:58 build=bd65fef9 ===
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t25-live-tuning/t25-live pid=91503 (recovery modal clear)
+--- warm build (the game binary the PIE legs reuse) ---
+WARM_BUILD_OK
+=== CYCLE 1: A1 — the routed live edit, its dot, the ledger, and the game-driven negative half ===
+session up: {"authored":3,"entities":34,"ephemeral":31}
+switched to Live view
+ROOT_PREVIEW_BITS=4294962535 SUN_PREVIEW_BITS=4294962534 projection={"authored":3,"entities":34,"ephemeral":31}
+A1_AUTHORED_MAPPED_PASS
+A1_PROJECTION_ROOT_PASS
+GAME_ROOT_BITS=769v0 GAME_SUN_BITS=770v0
+baselines: game_x=0.0 edits=0 doc=b358999a15bf6897694efc0575bcb3b7014f35fab7de7eb53904d1a4c324ac01 disk=ba2c68177ea1dee19c6e8e2049e88c1bdbd53c66a8c8a02f0a86a6d810484686 undo=0 dot-nodes=0 (want 0 / 0 / stable / stable / stable / chrome-only)
+A1_LEDGER_CLEAN_BEFORE_PASS
+--- A1: component.set Root translation.x=2.0 (the routed injection) ---
+after the edit: game_x=2.0 edits=1
+A1_GAME_STREAMED_PASS
+A1_LEDGER_ONE_PASS
+dot nodes beside the field labels: 0 -> 0 (want +1 with the wrapper up)
+A1_DOT_ON_FIELD_ROW_FAIL
+LTR1_GREEN_DOCUMENT_UNCHANGED_PASS
+LTR1_GREEN_DISK_UNCHANGED_PASS
+LTR1_GREEN_NO_UNDO_PASS
+--- A1 negative half: the game-driven hazard damage must not enter the ledger ---
+player entity: 754v0
+health before the walk: 100.0  pos: x=-2.0 z=0.0
+at the dive start: x=2.1512510776519775 z=1.2950053215026855
+health after the dive: 100.0 -> 85.0
+A1_NEG_GAME_CHANGED_PASS
+hurt route: walk
+A1_NEG_LEDGER_UNCHANGED_PASS
+--- stop with 1 pending edit: the prompt rises (C1 evidence, cycle 1) ---
+C1_PROMPT_TITLE_PASS
+C1_LEDGER_UNMOVED_PASS
+--- Review hands off to the tray; the tray rides the replay (the C4 opening route) ---
+click 'Review': {"entity":8589929663,"kind":"button","operator":null,"text":"Review"}
+A2_TRAY_OPENED_PASS
+A2_TRAY_DIFF_INITIAL_PASS
+session up: {"authored":13,"entities":34,"ephemeral":21}
+switched to Live view
+cycle-2 bits: ROOT=4294962535 SUN=4294962534 GAME_ROOT=769v0 GAME_SUN=770v0
+A2_TRAY_SURVIVES_REPLAY_PASS
+=== CYCLE 2: A2 re-edits, A4 structural add/remove, A3 whole-component save, B1/B2/B3 ===
+A2_REEDIT_COUNT_STILL_ONE_PASS
+A2_TRAY_LIVE_SIDE_UPDATED_PASS
+A2_SECOND_ENTITY_COUNT_TWO_PASS
+A2_SECOND_ROW_PASS
+A2_SECOND_ROW_DIFF_PASS
+--- A4: component.add DirectionalLight on Root (structural entry) ---
+after add: game Root DirectionalLight={"affects_lightmapped_mesh_diffuse":true,"color":{"LinearRgba":{"alpha":1.0,"blu edits=3 (want present / 3)
+A4_ADD_STREAMED_PASS
+A4_ADD_LEDGERED_PASS
+--- A3: a field edit on the runtime-added (unauthored) component ---
+A3_FIELD_ENTRY_PASS
+A3_GAME_VALUE_PASS
+A3_BASELINE_NOT_AUTHORED_PASS
+A3_ROW_LABEL_PASS
+--- A4: component.remove DirectionalLight on Sun (authored patch baseline) ---
+A4_REMOVE_STREAMED_PASS
+A4_REMOVE_LEDGERED_PASS
+--- tray row states: the structural rows carry Save enabled and Revert disabled:true ---
+B1_TRAY_ROWS_PASS
+B1_DIFF_CELLS_PASS
+B1_BADGE_TEXT_PASS
+B1_BADGE_COUNT_FACE_PASS
+A4_STRUCTURAL_REVERT_DISABLED_PASS
+A4_STRUCTURAL_SAVE_ENABLED_PASS
+--- B1: the tooltip attempt (hover popover; the synthetic surface has no hover) ---
+B1_TOOLTIP_WALKED_FAIL
+note: the tooltip popover is hover-spawned (A14 family); the diff cell carries the values this leg judges
+--- A3: the per-entry Save lands the WHOLE component patch (in the play window) ---
+after the A3 Save: edits 5 -> 4 undo 0 -> 1 patch_fields=20 (want 4 / +1 / >1)
+A3_SAVE_SETTLED_PASS
+A3_SAVE_ONE_UNDO_PASS
+A3_WHOLE_COMPONENT_PATCH_PASS
+A3_PATCH_CARRIES_LIVE_PASS
+--- A4: the removal row's Save drops the authored patch ---
+after the removal Save: edits -> 3 undo 1 -> 2
+A4_REMOVE_SAVE_SETTLED_PASS
+A4_REMOVE_SAVE_ONE_UNDO_PASS
+A4_PATCH_DROPPED_PASS
+--- B2: per-entry Revert streams the baseline back into the RUNNING game ---
+Revert button bits: 25769798002; game_x before=3.5 dots=0
+B2_REVERT_CLICKED_PASS
+after the Revert: game_x 3.5 -> 0.0 edits=2 dot nodes 0 -> 0 (want 3.5 -> 0.0 / 2 / down 1)
+B2_GAME_BASELINE_STREAMED_PASS
+B2_COUNT_DECREMENTED_PASS
+B2_DOT_GONE_FAIL
+--- B3: per-entry Save authors the field with exactly one undo entry ---
+B3_SAVE_CLICKED_PASS
+after the B3 Save: edits 3 -> 2 undo 2 -> 3 (want 2 / +1)
+B3_COUNT_DECREMENTED_PASS
+B3_ONE_UNDO_ENTRY_PASS
+B3_DOCUMENT_AUTHORED_PASS
+WINDOW A done (A1/A2/A3/A4/B1/B2/B3 + C1-in-motion archived)
+=== WINDOW B: C2 — the Apply All five-point iron chain in a fresh session ===
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t25-live-tuning/t25-live pid=96259 (recovery modal clear)
+session up: {"authored":3,"entities":34,"ephemeral":31}
+switched to Live view
+C1_PROMPT_TITLE_TWO_PASS
+C1_LEDGER_UNMOVED_TWO_PASS
+--- C2 point 1: Apply All (the prompt key; the tray is not up in this window, so the label is unambiguous) ---
+click 'Apply All': {"entity":8589929006,"kind":"button","operator":null,"text":"Apply All"}
+C2_APPLY_CLICKED_PASS
+after Apply All: edits -> 0 undo 0 -> 1 doc changed=yes
+C2_APPLY_SETTLED_PASS
+C2_DOCUMENT_CHANGED_PASS
+C2_ONE_UNDO_GROUP_PASS
+C2_FIELDS_AUTHORED_PASS
+--- C2 point 2-3: save -> reload ---
+C2_SAVE_WROTE_DISK_PASS
+C2_RELOAD_KEEPS_PASS
+--- C2 points 4-5: replay; the game-side values equal the saved ones ---
+session up: {"authored":3,"entities":34,"ephemeral":31}
+switched to Live view
+after replay: game Root x=4.5 (want 4.5) game Sun z=6.0 (want 6.0) — the applied pair read back through save+reload+replay
+C2_GAME_ROOT_X_PASS
+C2_GAME_SUN_Z_PASS
+WINDOW B done
+=== WINDOW C: C3 — Discard preserves the document byte for byte ===
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t25-live-tuning/t25-live pid=97905 (recovery modal clear)
+session up: {"authored":3,"entities":34,"ephemeral":31}
+switched to Live view
+C3 entry made: edits=1 (want 1)
+C3_PROMPT_UP_PASS
+click 'Discard': {"entity":12884896798,"kind":"button","operator":null,"text":"Discard"}
+C3_DISCARD_CLICKED_PASS
+after Discard: doc same=yes disk same=yes undo 0 -> 0 edits -> 0
+C3_DOCUMENT_IDENTICAL_PASS
+C3_DISK_IDENTICAL_PASS
+C3_UNTOUCHED_UNDO_PASS
+C3_COUNT_ZERO_PASS
+C3_PROMPT_CLOSED_PASS
+=== WINDOW C (cont): C4 — Review opens the tray; per-row triage empties the ledger ===
+session up: {"authored":13,"entities":34,"ephemeral":21}
+switched to Live view
+C4 entries made: edits=2 (want 2)
+C4_PROMPT_UP_PASS
+click 'Review': {"entity":21474831229,"kind":"button","operator":null,"text":"Review"}
+C4_REVIEW_CLICKED_PASS
+C4_HANDOFF_TRAY_PASS
+after the row Revert: edits=1 (want 1; the streaming half is the stop-window's quiet-drop semantics — the T1 D3 lesson)
+C4_TRIAGE_REVERT_PASS
+after the row Save: edits=0 undo 0 -> 1 (want 0 / +1)
+C4_TRIAGE_SAVE_PASS
+C4_SAVE_ONE_UNDO_PASS
+C4_SELF_HEALED_PASS
+WINDOW C done
+=== WINDOW D: D1 — a stop with a pending edit leaves document, disk and ephemerals alone ===
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t25-live-tuning/t25-live pid=99746 (recovery modal clear)
+session up: {"authored":3,"entities":34,"ephemeral":31}
+switched to Live view
+D1 entry made: edits=1 (want 1)
+D1_PROMPT_UP_PASS
+after the stop: doc same=yes disk same=yes ephemeral=28 (want yes / yes / 0)
+D1_DOCUMENT_IDENTICAL_PASS
+D1_DISK_IDENTICAL_PASS
+D1_EPHEMERAL_ZERO_FAIL
+--- D1: a save issued with the prompt still up writes no live value ---
+D1_SAVE_NO_LIVE_VALUE_PASS
+D1_SAVE_DOC_UNCHANGED_PASS
+click 'Discard': {"entity":8589929565,"kind":"button","operator":null,"text":"Discard"}
+WINDOW D done
+=== WINDOW E: D2 — Path A (authored overlay, one undo group) and Path B (ephemeral promote, no undo) ===
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t25-live-tuning/t25-live pid=800 (recovery modal clear)
+session up: {"authored":3,"entities":34,"ephemeral":31}
+switched to Live view
+Save to Scene button bits: 4294963052
+D2_PATHA_CLICKED_PASS
+Path A: undo 0 -> 1 transform_keywords=3 (want +1 exactly; >=3 = the whole component landed)
+D2_PATHA_ONE_UNDO_PASS
+D2_PATHA_WHOLE_COMPONENT_PASS
+D2_PATHA_LIVE_VALUE_PASS
+--- Path B: the ephemeral player promotes to a new document node ---
+note: no tree row carries PlayerHealth/PickupCount — the tree's component lists:
+player preview bits: none
+D2_PLAYER_SELECTED_FACE_FAIL
+Path B: ephemeral 31 -> 31 undo 1 -> 1 (want -1 / unchanged — the LT5 v1 note)
+D2_PATHB_EPHEMERAL_DROPPED_FAIL
+D2_PATHB_NOT_UNDOABLE_PASS
+D2_PATHB_NODE_IN_DOC_FAIL
+note: a leftover entry raised the prompt; Discard cleans it
+click 'Discard': {"entity":25769798523,"kind":"button","operator":null,"text":"Discard"}
+--- D2 closing chain: save -> reload -> replay -> the player is in the game ---
+D2_DISK_HAS_PLAYER_FAIL
+session up: {"authored":13,"entities":34,"ephemeral":21}
+switched to Live view
+after the replay: players=1 health.current=100.0 game Sun y=6.5 (want >=1 / coherent / 6.5)
+D2_REPLAY_PLAYER_IN_GAME_PASS
+D2_REPLAY_HEALTH_PRESENT_PASS
+D2_REPLAY_SUN_Y_PASS
+WINDOW E done
+--- epilogue: restore the pristine scene.bsn ---
+pristine scene restored on disk
+CENSUS: error-handler panics=18 swap_remove-signature=25 across 5 windows (N13 family, attributed; ~5-6/cycle is the baseline)
+WARN-SHAPES: SetComponent|AddComponent=0 unknown-field=0 field-write-skipped=0 (the green run expects zeros — the game-side failure mouths never spoke)
+LIVE done: A1_AUTHORED_MAPPED=PASS A1_DOT_ON_FIELD_ROW=FAIL A1_GAME_STREAMED=PASS A1_LEDGER_CLEAN_BEFORE=PASS A1_LEDGER_ONE=PASS A1_NEG_GAME_CHANGED=PASS A1_NEG_LEDGER_UNCHANGED=PASS A1_PROJECTION_ROOT=PASS A2_REEDIT_COUNT_STILL_ONE=PASS A2_SECOND_ENTITY_COUNT_TWO=PASS A2_SECOND_ROW=PASS A2_SECOND_ROW_DIFF=PASS A2_TRAY_DIFF_INITIAL=PASS A2_TRAY_LIVE_SIDE_UPDATED=PASS A2_TRAY_OPENED=PASS A2_TRAY_SURVIVES_REPLAY=PASS A3_BASELINE_NOT_AUTHORED=PASS A3_FIELD_ENTRY=PASS A3_GAME_VALUE=PASS A3_PATCH_CARRIES_LIVE=PASS A3_ROW_LABEL=PASS A3_SAVE_ONE_UNDO=PASS A3_SAVE_SETTLED=PASS A3_WHOLE_COMPONENT_PATCH=PASS A4_ADD_LEDGERED=PASS A4_ADD_STREAMED=PASS A4_PATCH_DROPPED=PASS A4_REMOVE_LEDGERED=PASS A4_REMOVE_SAVE_ONE_UNDO=PASS A4_REMOVE_SAVE_SETTLED=PASS A4_REMOVE_STREAMED=PASS A4_STRUCTURAL_REVERT_DISABLED=PASS A4_STRUCTURAL_SAVE_ENABLED=PASS B1_BADGE_COUNT_FACE=PASS B1_BADGE_TEXT=PASS B1_DIFF_CELLS=PASS B1_TOOLTIP_WALKED=FAIL B1_TRAY_ROWS=PASS B2_COUNT_DECREMENTED=PASS B2_DOT_GONE=FAIL B2_GAME_BASELINE_STREAMED=PASS B2_REVERT_CLICKED=PASS B3_COUNT_DECREMENTED=PASS B3_DOCUMENT_AUTHORED=PASS B3_ONE_UNDO_ENTRY=PASS B3_SAVE_CLICKED=PASS C1_LEDGER_UNMOVED=PASS C1_LEDGER_UNMOVED_TWO=PASS C1_PROMPT_TITLE=PASS C1_PROMPT_TITLE_TWO=PASS C2_APPLY_CLICKED=PASS C2_APPLY_SETTLED=PASS C2_DOCUMENT_CHANGED=PASS C2_FIELDS_AUTHORED=PASS C2_GAME_ROOT_X=PASS C2_GAME_SUN_Z=PASS C2_ONE_UNDO_GROUP=PASS C2_RELOAD_KEEPS=PASS C2_SAVE_WROTE_DISK=PASS C3_COUNT_ZERO=PASS C3_DISCARD_CLICKED=PASS C3_DISK_IDENTICAL=PASS C3_DOCUMENT_IDENTICAL=PASS C3_PROMPT_CLOSED=PASS C3_PROMPT_UP=PASS C3_UNTOUCHED_UNDO=PASS C4_HANDOFF_TRAY=PASS C4_PROMPT_UP=PASS C4_REVIEW_CLICKED=PASS C4_SAVE_ONE_UNDO=PASS C4_SELF_HEALED=PASS C4_TRIAGE_REVERT=PASS C4_TRIAGE_SAVE=PASS D1_DISK_IDENTICAL=PASS D1_DOCUMENT_IDENTICAL=PASS D1_EPHEMERAL_ZERO=FAIL D1_PROMPT_UP=PASS D1_SAVE_DOC_UNCHANGED=PASS D1_SAVE_NO_LIVE_VALUE=PASS D2_DISK_HAS_PLAYER=FAIL D2_PATHA_CLICKED=PASS D2_PATHA_LIVE_VALUE=PASS D2_PATHA_ONE_UNDO=PASS D2_PATHA_WHOLE_COMPONENT=PASS D2_PATHB_EPHEMERAL_DROPPED=FAIL D2_PATHB_NODE_IN_DOC=FAIL D2_PATHB_NOT_UNDOABLE=PASS D2_PLAYER_SELECTED_FACE=FAIL D2_REPLAY_HEALTH_PRESENT=PASS D2_REPLAY_PLAYER_IN_GAME=PASS D2_REPLAY_SUN_Y=PASS LTR1_GREEN_DISK_UNCHANGED=PASS LTR1_GREEN_DOCUMENT_UNCHANGED=PASS LTR1_GREEN_NO_UNDO=PASS 
+PHASE_DONE live results: A1_AUTHORED_MAPPED=PASS A1_DOT_ON_FIELD_ROW=FAIL A1_GAME_STREAMED=PASS A1_LEDGER_CLEAN_BEFORE=PASS A1_LEDGER_ONE=PASS A1_NEG_GAME_CHANGED=PASS A1_NEG_LEDGER_UNCHANGED=PASS A1_PROJECTION_ROOT=PASS A2_REEDIT_COUNT_STILL_ONE=PASS A2_SECOND_ENTITY_COUNT_TWO=PASS A2_SECOND_ROW=PASS A2_SECOND_ROW_DIFF=PASS A2_TRAY_DIFF_INITIAL=PASS A2_TRAY_LIVE_SIDE_UPDATED=PASS A2_TRAY_OPENED=PASS A2_TRAY_SURVIVES_REPLAY=PASS A3_BASELINE_NOT_AUTHORED=PASS A3_FIELD_ENTRY=PASS A3_GAME_VALUE=PASS A3_PATCH_CARRIES_LIVE=PASS A3_ROW_LABEL=PASS A3_SAVE_ONE_UNDO=PASS A3_SAVE_SETTLED=PASS A3_WHOLE_COMPONENT_PATCH=PASS A4_ADD_LEDGERED=PASS A4_ADD_STREAMED=PASS A4_PATCH_DROPPED=PASS A4_REMOVE_LEDGERED=PASS A4_REMOVE_SAVE_ONE_UNDO=PASS A4_REMOVE_SAVE_SETTLED=PASS A4_REMOVE_STREAMED=PASS A4_STRUCTURAL_REVERT_DISABLED=PASS A4_STRUCTURAL_SAVE_ENABLED=PASS B1_BADGE_COUNT_FACE=PASS B1_BADGE_TEXT=PASS B1_DIFF_CELLS=PASS B1_TOOLTIP_WALKED=FAIL B1_TRAY_ROWS=PASS B2_COUNT_DECREMENTED=PASS B2_DOT_GONE=FAIL B2_GAME_BASELINE_STREAMED=PASS B2_REVERT_CLICKED=PASS B3_COUNT_DECREMENTED=PASS B3_DOCUMENT_AUTHORED=PASS B3_ONE_UNDO_ENTRY=PASS B3_SAVE_CLICKED=PASS C1_LEDGER_UNMOVED=PASS C1_LEDGER_UNMOVED_TWO=PASS C1_PROMPT_TITLE=PASS C1_PROMPT_TITLE_TWO=PASS C2_APPLY_CLICKED=PASS C2_APPLY_SETTLED=PASS C2_DOCUMENT_CHANGED=PASS C2_FIELDS_AUTHORED=PASS C2_GAME_ROOT_X=PASS C2_GAME_SUN_Z=PASS C2_ONE_UNDO_GROUP=PASS C2_RELOAD_KEEPS=PASS C2_SAVE_WROTE_DISK=PASS C3_COUNT_ZERO=PASS C3_DISCARD_CLICKED=PASS C3_DISK_IDENTICAL=PASS C3_DOCUMENT_IDENTICAL=PASS C3_PROMPT_CLOSED=PASS C3_PROMPT_UP=PASS C3_UNTOUCHED_UNDO=PASS C4_HANDOFF_TRAY=PASS C4_PROMPT_UP=PASS C4_REVIEW_CLICKED=PASS C4_SAVE_ONE_UNDO=PASS C4_SELF_HEALED=PASS C4_TRIAGE_REVERT=PASS C4_TRIAGE_SAVE=PASS D1_DISK_IDENTICAL=PASS D1_DOCUMENT_IDENTICAL=PASS D1_EPHEMERAL_ZERO=FAIL D1_PROMPT_UP=PASS D1_SAVE_DOC_UNCHANGED=PASS D1_SAVE_NO_LIVE_VALUE=PASS D2_DISK_HAS_PLAYER=FAIL D2_PATHA_CLICKED=PASS D2_PATHA_LIVE_VALUE=PASS D2_PATHA_ONE_UNDO=PASS D2_PATHA_WHOLE_COMPONENT=PASS D2_PATHB_EPHEMERAL_DROPPED=FAIL D2_PATHB_NODE_IN_DOC=FAIL D2_PATHB_NOT_UNDOABLE=PASS D2_PLAYER_SELECTED_FACE=FAIL D2_REPLAY_HEALTH_PRESENT=PASS D2_REPLAY_PLAYER_IN_GAME=PASS D2_REPLAY_SUN_Y=PASS LTR1_GREEN_DISK_UNCHANGED=PASS LTR1_GREEN_DOCUMENT_UNCHANGED=PASS LTR1_GREEN_NO_UNDO=PASS 
+=== phase live run 2026-11-04 03:00:23 build=bd65fef9 ===
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t25-live-tuning/t25-live pid=4530 (recovery modal clear)
+--- warm build (the game binary the PIE legs reuse) ---
+WARM_BUILD_OK
+=== CYCLE 1: A1 — the routed live edit, its dot, the ledger, and the game-driven negative half ===
+session up: {"authored":3,"entities":34,"ephemeral":31}
+switched to Live view
+ROOT_PREVIEW_BITS=4294962535 SUN_PREVIEW_BITS=4294962534 projection={"authored":3,"entities":34,"ephemeral":31}
+A1_AUTHORED_MAPPED_PASS
+A1_PROJECTION_ROOT_PASS
+GAME_ROOT_BITS=769v0 GAME_SUN_BITS=770v0
+baselines: game_x=0.0 edits=0 doc=b358999a15bf6897694efc0575bcb3b7014f35fab7de7eb53904d1a4c324ac01 disk=ba2c68177ea1dee19c6e8e2049e88c1bdbd53c66a8c8a02f0a86a6d810484686 undo=0 dot-nodes=6 (want 0 / 0 / stable / stable / stable / chrome-only)
+A1_LEDGER_CLEAN_BEFORE_PASS
+--- A1: component.set Root translation.x=2.0 (the routed injection) ---
+after the edit: game_x=2.0 edits=1
+A1_GAME_STREAMED_PASS
+A1_LEDGER_ONE_PASS
+dot nodes beside the field labels: 6 -> 7 (want +1 with the wrapper up)
+A1_DOT_ON_FIELD_ROW_PASS
+LTR1_GREEN_DOCUMENT_UNCHANGED_PASS
+LTR1_GREEN_DISK_UNCHANGED_PASS
+LTR1_GREEN_NO_UNDO_PASS
+--- A1 negative half: the game-driven hazard damage must not enter the ledger ---
+player entity: 754v0
+health before the walk: 100.0  pos: x=-2.0 z=0.0
+at the dive start: x=2.1432085037231445 z=1.3108869791030884
+health after the dive: 100.0 -> 85.0
+A1_NEG_GAME_CHANGED_PASS
+hurt route: walk
+A1_NEG_LEDGER_UNCHANGED_PASS
+--- stop with 1 pending edit: the prompt rises (C1 evidence, cycle 1) ---
+C1_PROMPT_TITLE_PASS
+C1_LEDGER_UNMOVED_PASS
+--- Review hands off to the tray; the tray rides the replay (the C4 opening route) ---
+click 'Review': {"entity":21474831812,"kind":"button","operator":null,"text":"Review"}
+A2_TRAY_OPENED_PASS
+A2_TRAY_DIFF_INITIAL_PASS
+session up: {"authored":13,"entities":34,"ephemeral":21}
+switched to Live view
+cycle-2 bits: ROOT=4294962535 SUN=4294962534 GAME_ROOT=769v0 GAME_SUN=770v0
+A2_TRAY_SURVIVES_REPLAY_PASS
+=== CYCLE 2: A2 re-edits, A4 structural add/remove, A3 whole-component save, B1/B2/B3 ===
+A2_REEDIT_COUNT_STILL_ONE_PASS
+A2_TRAY_LIVE_SIDE_UPDATED_PASS
+A2_SECOND_ENTITY_COUNT_TWO_PASS
+A2_SECOND_ROW_PASS
+A2_SECOND_ROW_DIFF_PASS
+--- A4: component.add DirectionalLight on Root (structural entry) ---
+after add: game Root DirectionalLight={"affects_lightmapped_mesh_diffuse":true,"color":{"LinearRgba":{"alpha":1.0,"blu edits=3 (want present / 3)
+A4_ADD_STREAMED_PASS
+A4_ADD_LEDGERED_PASS
+--- A3: a field edit on the runtime-added (unauthored) component ---
+A3_FIELD_ENTRY_PASS
+A3_GAME_VALUE_PASS
+A3_BASELINE_NOT_AUTHORED_PASS
+A3_ROW_LABEL_PASS
+--- A4: component.remove DirectionalLight on Sun (authored patch baseline) ---
+A4_REMOVE_STREAMED_PASS
+A4_REMOVE_LEDGERED_PASS
+--- tray row states: the structural rows carry Save enabled and Revert disabled:true ---
+B1_TRAY_ROWS_PASS
+B1_DIFF_CELLS_PASS
+B1_BADGE_TEXT_PASS
+B1_BADGE_COUNT_FACE_PASS
+A4_STRUCTURAL_REVERT_DISABLED_PASS
+A4_STRUCTURAL_SAVE_ENABLED_PASS
+--- B1: the tooltip attempt (hover popover; the synthetic surface has no hover) ---
+B1_TOOLTIP_WALKED_FAIL
+note: the tooltip popover is hover-spawned (A14 family); the diff cell carries the values this leg judges
+--- A3: the per-entry Save lands the WHOLE component patch (in the play window) ---
+after the A3 Save: edits 5 -> 4 undo 0 -> 1 patch_fields=20 (want 4 / +1 / >1)
+A3_SAVE_SETTLED_PASS
+A3_SAVE_ONE_UNDO_PASS
+A3_WHOLE_COMPONENT_PATCH_PASS
+A3_PATCH_CARRIES_LIVE_PASS
+--- A4: the removal row's Save drops the authored patch ---
+after the removal Save: edits -> 3 undo 1 -> 2
+A4_REMOVE_SAVE_SETTLED_PASS
+A4_REMOVE_SAVE_ONE_UNDO_PASS
+A4_PATCH_DROPPED_PASS
+--- B2: per-entry Revert streams the baseline back into the RUNNING game ---
+Revert button bits: 38654700355; game_x before=3.5 dots=7
+B2_REVERT_CLICKED_PASS
+after the Revert: game_x 3.5 -> 0.0 edits=2 dot nodes 7 -> 6 (want 3.5 -> 0.0 / 2 / down 1)
+B2_GAME_BASELINE_STREAMED_PASS
+B2_COUNT_DECREMENTED_PASS
+B2_DOT_GONE_PASS
+--- B3: per-entry Save authors the field with exactly one undo entry ---
+B3_SAVE_CLICKED_PASS
+after the B3 Save: edits 3 -> 2 undo 2 -> 3 (want 2 / +1)
+B3_COUNT_DECREMENTED_PASS
+B3_ONE_UNDO_ENTRY_PASS
+B3_DOCUMENT_AUTHORED_PASS
+WINDOW A done (A1/A2/A3/A4/B1/B2/B3 + C1-in-motion archived)
+=== WINDOW B: C2 — the Apply All five-point iron chain in a fresh session ===
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t25-live-tuning/t25-live pid=9164 (recovery modal clear)
+session up: {"authored":3,"entities":34,"ephemeral":31}
+switched to Live view
+C1_PROMPT_TITLE_TWO_PASS
+C1_LEDGER_UNMOVED_TWO_PASS
+--- C2 point 1: Apply All (the prompt key; the tray is not up in this window, so the label is unambiguous) ---
+click 'Apply All': {"entity":8589929006,"kind":"button","operator":null,"text":"Apply All"}
+C2_APPLY_CLICKED_PASS
+after Apply All: edits -> 0 undo 0 -> 1 doc changed=yes
+C2_APPLY_SETTLED_PASS
+C2_DOCUMENT_CHANGED_PASS
+C2_ONE_UNDO_GROUP_PASS
+C2_FIELDS_AUTHORED_PASS
+--- C2 point 2-3: save -> reload ---
+C2_SAVE_WROTE_DISK_PASS
+C2_RELOAD_KEEPS_PASS
+--- C2 points 4-5: replay; the game-side values equal the saved ones ---
+session up: {"authored":3,"entities":34,"ephemeral":31}
+switched to Live view
+after replay: game Root x=4.5 (want 4.5) game Sun z=6.0 (want 6.0) — the applied pair read back through save+reload+replay
+C2_GAME_ROOT_X_PASS
+C2_GAME_SUN_Z_PASS
+WINDOW B done
+=== WINDOW C: C3 — Discard preserves the document byte for byte ===
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t25-live-tuning/t25-live pid=10741 (recovery modal clear)
+session up: {"authored":3,"entities":34,"ephemeral":31}
+switched to Live view
+C3 entry made: edits=1 (want 1)
+C3_PROMPT_UP_PASS
+click 'Discard': {"entity":8589929211,"kind":"button","operator":null,"text":"Discard"}
+C3_DISCARD_CLICKED_PASS
+after Discard: doc same=yes disk same=yes undo 0 -> 0 edits -> 0
+C3_DOCUMENT_IDENTICAL_PASS
+C3_DISK_IDENTICAL_PASS
+C3_UNTOUCHED_UNDO_PASS
+C3_COUNT_ZERO_PASS
+C3_PROMPT_CLOSED_PASS
+=== WINDOW C (cont): C4 — Review opens the tray; per-row triage empties the ledger ===
+session up: {"authored":3,"entities":34,"ephemeral":31}
+switched to Live view
+C4 entries made: edits=2 (want 2)
+C4_PROMPT_UP_PASS
+click 'Review': {"entity":8589928927,"kind":"button","operator":null,"text":"Review"}
+C4_REVIEW_CLICKED_PASS
+C4_HANDOFF_TRAY_PASS
+after the row Revert: edits=2 (want 1; the streaming half is the stop-window's quiet-drop semantics — the T1 D3 lesson)
+C4_TRIAGE_REVERT_FAIL
+after the row Save: edits=1 undo 0 -> 1 (want 0 / +1)
+C4_TRIAGE_SAVE_FAIL
+C4_SAVE_ONE_UNDO_PASS
+C4_SELF_HEALED_FAIL
+WINDOW C done
+=== WINDOW D: D1 — a stop with a pending edit leaves document, disk and ephemerals alone ===
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t25-live-tuning/t25-live pid=12500 (recovery modal clear)
+session up: {"authored":3,"entities":34,"ephemeral":31}
+switched to Live view
+D1 entry made: edits=1 (want 1)
+D1_PROMPT_UP_PASS
+after the stop: doc same=yes disk same=yes ephemeral=0 (want yes / yes / 0)
+D1_DOCUMENT_IDENTICAL_PASS
+D1_DISK_IDENTICAL_PASS
+D1_EPHEMERAL_ZERO_PASS
+--- D1: a save issued with the prompt still up writes no live value ---
+D1_SAVE_NO_LIVE_VALUE_PASS
+D1_SAVE_DOC_UNCHANGED_PASS
+click 'Discard': {"entity":8589929211,"kind":"button","operator":null,"text":"Discard"}
+WINDOW D done
+=== WINDOW E: D2 — Path A (authored overlay, one undo group) and Path B (ephemeral promote, no undo) ===
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t25-live-tuning/t25-live pid=13370 (recovery modal clear)
+session up: {"authored":3,"entities":34,"ephemeral":31}
+switched to Live view
+Save to Scene button bits: 4294963053
+D2_PATHA_CLICKED_PASS
+Path A: undo 0 -> 1 transform_keywords=3 (want +1 exactly; >=3 = the whole component landed)
+D2_PATHA_ONE_UNDO_PASS
+D2_PATHA_WHOLE_COMPONENT_PASS
+D2_PATHA_LIVE_VALUE_PASS
+--- Path B: the ephemeral player promotes to a new document node ---
+  candidate 12884897310: translation: glam::Vec3A { x: 0.0
+  candidate 12884897248: translation: glam::Vec3A { x: 2.0
+  candidate 12884897247: translation: glam::Vec3A { x: -1.0
+  candidate 12884897246: translation: glam::Vec3A { x: 1.0
+  candidate 12884897251: translation: glam::Vec3A { x: 0.0
+  candidate 12884897249: translation: glam::Vec3A { x: 0.0
+  candidate 8589929788: translation: glam::Vec3A { x: -4.0
+  candidate 12884897252: translation: glam::Vec3A { x: -2.0
+player preview bits:   candidate 12884897310: translation: glam::Vec3A { x: 0.0
+  candidate 12884897248: translation: glam::Vec3A { x: 2.0
+  candidate 12884897247: translation: glam::Vec3A { x: -1.0
+  candidate 12884897246: translation: glam::Vec3A { x: 1.0
+  candidate 12884897251: translation: glam::Vec3A { x: 0.0
+  candidate 12884897249: translation: glam::Vec3A { x: 0.0
+  candidate 8589929788: translation: glam::Vec3A { x: -4.0
+  candidate 12884897252: translation: glam::Vec3A { x: -2.0
+12884897252
+D2_PLAYER_SELECTED_FACE_PASS
+Path B: ephemeral 31 -> 31 undo 1 -> 1 (want -1 / unchanged — the LT5 v1 note)
+D2_PATHB_EPHEMERAL_DROPPED_FAIL
+D2_PATHB_NOT_UNDOABLE_PASS
+D2_PATHB_NODE_IN_DOC_FAIL
+note: a leftover entry raised the prompt; Discard cleans it
+click 'Discard': {"entity":25769798523,"kind":"button","operator":null,"text":"Discard"}
+--- D2 closing chain: save -> reload -> replay -> the player is in the game ---
+D2_DISK_HAS_PLAYER_FAIL
+session up: {"authored":13,"entities":34,"ephemeral":21}
+switched to Live view
+after the replay: players=1 health.current=100.0 game Sun y=6.5 (want >=1 / coherent / 6.5)
+D2_REPLAY_PLAYER_IN_GAME_PASS
+D2_REPLAY_HEALTH_PRESENT_PASS
+D2_REPLAY_SUN_Y_PASS
+WINDOW E done
+--- epilogue: restore the pristine scene.bsn ---
+pristine scene restored on disk
+CENSUS: error-handler panics=13 swap_remove-signature=16 across 5 windows (N13 family, attributed; ~5-6/cycle is the baseline)
+WARN-SHAPES: SetComponent|AddComponent=0 unknown-field=0 field-write-skipped=0 (the green run expects zeros — the game-side failure mouths never spoke)
+LIVE done: A1_AUTHORED_MAPPED=PASS A1_DOT_ON_FIELD_ROW=PASS A1_GAME_STREAMED=PASS A1_LEDGER_CLEAN_BEFORE=PASS A1_LEDGER_ONE=PASS A1_NEG_GAME_CHANGED=PASS A1_NEG_LEDGER_UNCHANGED=PASS A1_PROJECTION_ROOT=PASS A2_REEDIT_COUNT_STILL_ONE=PASS A2_SECOND_ENTITY_COUNT_TWO=PASS A2_SECOND_ROW=PASS A2_SECOND_ROW_DIFF=PASS A2_TRAY_DIFF_INITIAL=PASS A2_TRAY_LIVE_SIDE_UPDATED=PASS A2_TRAY_OPENED=PASS A2_TRAY_SURVIVES_REPLAY=PASS A3_BASELINE_NOT_AUTHORED=PASS A3_FIELD_ENTRY=PASS A3_GAME_VALUE=PASS A3_PATCH_CARRIES_LIVE=PASS A3_ROW_LABEL=PASS A3_SAVE_ONE_UNDO=PASS A3_SAVE_SETTLED=PASS A3_WHOLE_COMPONENT_PATCH=PASS A4_ADD_LEDGERED=PASS A4_ADD_STREAMED=PASS A4_PATCH_DROPPED=PASS A4_REMOVE_LEDGERED=PASS A4_REMOVE_SAVE_ONE_UNDO=PASS A4_REMOVE_SAVE_SETTLED=PASS A4_REMOVE_STREAMED=PASS A4_STRUCTURAL_REVERT_DISABLED=PASS A4_STRUCTURAL_SAVE_ENABLED=PASS B1_BADGE_COUNT_FACE=PASS B1_BADGE_TEXT=PASS B1_DIFF_CELLS=PASS B1_TOOLTIP_WALKED=FAIL B1_TRAY_ROWS=PASS B2_COUNT_DECREMENTED=PASS B2_DOT_GONE=PASS B2_GAME_BASELINE_STREAMED=PASS B2_REVERT_CLICKED=PASS B3_COUNT_DECREMENTED=PASS B3_DOCUMENT_AUTHORED=PASS B3_ONE_UNDO_ENTRY=PASS B3_SAVE_CLICKED=PASS C1_LEDGER_UNMOVED=PASS C1_LEDGER_UNMOVED_TWO=PASS C1_PROMPT_TITLE=PASS C1_PROMPT_TITLE_TWO=PASS C2_APPLY_CLICKED=PASS C2_APPLY_SETTLED=PASS C2_DOCUMENT_CHANGED=PASS C2_FIELDS_AUTHORED=PASS C2_GAME_ROOT_X=PASS C2_GAME_SUN_Z=PASS C2_ONE_UNDO_GROUP=PASS C2_RELOAD_KEEPS=PASS C2_SAVE_WROTE_DISK=PASS C3_COUNT_ZERO=PASS C3_DISCARD_CLICKED=PASS C3_DISK_IDENTICAL=PASS C3_DOCUMENT_IDENTICAL=PASS C3_PROMPT_CLOSED=PASS C3_PROMPT_UP=PASS C3_UNTOUCHED_UNDO=PASS C4_HANDOFF_TRAY=PASS C4_PROMPT_UP=PASS C4_REVIEW_CLICKED=PASS C4_SAVE_ONE_UNDO=PASS C4_SELF_HEALED=FAIL C4_TRIAGE_REVERT=FAIL C4_TRIAGE_SAVE=FAIL D1_DISK_IDENTICAL=PASS D1_DOCUMENT_IDENTICAL=PASS D1_EPHEMERAL_ZERO=PASS D1_PROMPT_UP=PASS D1_SAVE_DOC_UNCHANGED=PASS D1_SAVE_NO_LIVE_VALUE=PASS D2_DISK_HAS_PLAYER=FAIL D2_PATHA_CLICKED=PASS D2_PATHA_LIVE_VALUE=PASS D2_PATHA_ONE_UNDO=PASS D2_PATHA_WHOLE_COMPONENT=PASS D2_PATHB_EPHEMERAL_DROPPED=FAIL D2_PATHB_NODE_IN_DOC=FAIL D2_PATHB_NOT_UNDOABLE=PASS D2_PLAYER_SELECTED_FACE=PASS D2_REPLAY_HEALTH_PRESENT=PASS D2_REPLAY_PLAYER_IN_GAME=PASS D2_REPLAY_SUN_Y=PASS LTR1_GREEN_DISK_UNCHANGED=PASS LTR1_GREEN_DOCUMENT_UNCHANGED=PASS LTR1_GREEN_NO_UNDO=PASS 
+PHASE_DONE live results: A1_AUTHORED_MAPPED=PASS A1_DOT_ON_FIELD_ROW=PASS A1_GAME_STREAMED=PASS A1_LEDGER_CLEAN_BEFORE=PASS A1_LEDGER_ONE=PASS A1_NEG_GAME_CHANGED=PASS A1_NEG_LEDGER_UNCHANGED=PASS A1_PROJECTION_ROOT=PASS A2_REEDIT_COUNT_STILL_ONE=PASS A2_SECOND_ENTITY_COUNT_TWO=PASS A2_SECOND_ROW=PASS A2_SECOND_ROW_DIFF=PASS A2_TRAY_DIFF_INITIAL=PASS A2_TRAY_LIVE_SIDE_UPDATED=PASS A2_TRAY_OPENED=PASS A2_TRAY_SURVIVES_REPLAY=PASS A3_BASELINE_NOT_AUTHORED=PASS A3_FIELD_ENTRY=PASS A3_GAME_VALUE=PASS A3_PATCH_CARRIES_LIVE=PASS A3_ROW_LABEL=PASS A3_SAVE_ONE_UNDO=PASS A3_SAVE_SETTLED=PASS A3_WHOLE_COMPONENT_PATCH=PASS A4_ADD_LEDGERED=PASS A4_ADD_STREAMED=PASS A4_PATCH_DROPPED=PASS A4_REMOVE_LEDGERED=PASS A4_REMOVE_SAVE_ONE_UNDO=PASS A4_REMOVE_SAVE_SETTLED=PASS A4_REMOVE_STREAMED=PASS A4_STRUCTURAL_REVERT_DISABLED=PASS A4_STRUCTURAL_SAVE_ENABLED=PASS B1_BADGE_COUNT_FACE=PASS B1_BADGE_TEXT=PASS B1_DIFF_CELLS=PASS B1_TOOLTIP_WALKED=FAIL B1_TRAY_ROWS=PASS B2_COUNT_DECREMENTED=PASS B2_DOT_GONE=PASS B2_GAME_BASELINE_STREAMED=PASS B2_REVERT_CLICKED=PASS B3_COUNT_DECREMENTED=PASS B3_DOCUMENT_AUTHORED=PASS B3_ONE_UNDO_ENTRY=PASS B3_SAVE_CLICKED=PASS C1_LEDGER_UNMOVED=PASS C1_LEDGER_UNMOVED_TWO=PASS C1_PROMPT_TITLE=PASS C1_PROMPT_TITLE_TWO=PASS C2_APPLY_CLICKED=PASS C2_APPLY_SETTLED=PASS C2_DOCUMENT_CHANGED=PASS C2_FIELDS_AUTHORED=PASS C2_GAME_ROOT_X=PASS C2_GAME_SUN_Z=PASS C2_ONE_UNDO_GROUP=PASS C2_RELOAD_KEEPS=PASS C2_SAVE_WROTE_DISK=PASS C3_COUNT_ZERO=PASS C3_DISCARD_CLICKED=PASS C3_DISK_IDENTICAL=PASS C3_DOCUMENT_IDENTICAL=PASS C3_PROMPT_CLOSED=PASS C3_PROMPT_UP=PASS C3_UNTOUCHED_UNDO=PASS C4_HANDOFF_TRAY=PASS C4_PROMPT_UP=PASS C4_REVIEW_CLICKED=PASS C4_SAVE_ONE_UNDO=PASS C4_SELF_HEALED=FAIL C4_TRIAGE_REVERT=FAIL C4_TRIAGE_SAVE=FAIL D1_DISK_IDENTICAL=PASS D1_DOCUMENT_IDENTICAL=PASS D1_EPHEMERAL_ZERO=PASS D1_PROMPT_UP=PASS D1_SAVE_DOC_UNCHANGED=PASS D1_SAVE_NO_LIVE_VALUE=PASS D2_DISK_HAS_PLAYER=FAIL D2_PATHA_CLICKED=PASS D2_PATHA_LIVE_VALUE=PASS D2_PATHA_ONE_UNDO=PASS D2_PATHA_WHOLE_COMPONENT=PASS D2_PATHB_EPHEMERAL_DROPPED=FAIL D2_PATHB_NODE_IN_DOC=FAIL D2_PATHB_NOT_UNDOABLE=PASS D2_PLAYER_SELECTED_FACE=PASS D2_REPLAY_HEALTH_PRESENT=PASS D2_REPLAY_PLAYER_IN_GAME=PASS D2_REPLAY_SUN_Y=PASS LTR1_GREEN_DISK_UNCHANGED=PASS LTR1_GREEN_DOCUMENT_UNCHANGED=PASS LTR1_GREEN_NO_UNDO=PASS 
+=== phase live run 2026-11-04 03:18:55 build=bd65fef9 ===
+=== phase live run 2026-11-04 03:18:58 build=bd65fef9 ===
+EDITOR_BOOT_FAIL
+EDITOR_BOOT_FAIL: pid mismatch ( vs 17043)
+=== phase live run 2026-11-04 03:29:06 build=bd65fef9 ===
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t25-live-tuning/t25-live pid=19266 (recovery modal clear)
+--- warm build (the game binary the PIE legs reuse) ---
+WARM_BUILD_OK
+=== CYCLE 1: A1 — the routed live edit, its dot, the ledger, and the game-driven negative half ===
+session up: {"authored":3,"entities":34,"ephemeral":31}
+switched to Live view
+ROOT_PREVIEW_BITS=4294962535 SUN_PREVIEW_BITS=4294962534 projection={"authored":3,"entities":34,"ephemeral":31}
+A1_AUTHORED_MAPPED_PASS
+A1_PROJECTION_ROOT_PASS
+GAME_ROOT_BITS=769v0 GAME_SUN_BITS=770v0
+baselines: game_x=0.0 edits=0 doc=b358999a15bf6897694efc0575bcb3b7014f35fab7de7eb53904d1a4c324ac01 disk=ba2c68177ea1dee19c6e8e2049e88c1bdbd53c66a8c8a02f0a86a6d810484686 undo=0 dot-nodes=6 (want 0 / 0 / stable / stable / stable / chrome-only)
+A1_LEDGER_CLEAN_BEFORE_PASS
+--- A1: component.set Root translation.x=2.0 (the routed injection) ---
+after the edit: game_x=2.0 edits=1
+A1_GAME_STREAMED_PASS
+A1_LEDGER_ONE_PASS
+dot nodes beside the field labels: 6 -> 7 (want +1 with the wrapper up)
+A1_DOT_ON_FIELD_ROW_PASS
+LTR1_GREEN_DOCUMENT_UNCHANGED_PASS
+LTR1_GREEN_DISK_UNCHANGED_PASS
+LTR1_GREEN_NO_UNDO_PASS
+--- A1 negative half: the game-driven hazard damage must not enter the ledger ---
+player entity: 754v0
+health before the walk: 100.0  pos: x=-2.0 z=0.0
+at the dive start: x=2.1548893451690674 z=1.2962814569473267
+health after the dive: 100.0 -> 85.0
+A1_NEG_GAME_CHANGED_PASS
+hurt route: walk
+A1_NEG_LEDGER_UNCHANGED_PASS
+--- stop with 1 pending edit: the prompt rises (C1 evidence, cycle 1) ---
+C1_PROMPT_TITLE_PASS
+C1_LEDGER_UNMOVED_PASS
+--- Review hands off to the tray; the tray rides the replay (the C4 opening route) ---
+click 'Review': {"entity":21474831812,"kind":"button","operator":null,"text":"Review"}
+A2_TRAY_OPENED_PASS
+A2_TRAY_DIFF_INITIAL_PASS
+session up: {"authored":13,"entities":34,"ephemeral":21}
+switched to Live view
+cycle-2 bits: ROOT=4294962535 SUN=4294962534 GAME_ROOT=769v0 GAME_SUN=770v0
+A2_TRAY_SURVIVES_REPLAY_PASS
+=== CYCLE 2: A2 re-edits, A4 structural add/remove, A3 whole-component save, B1/B2/B3 ===
+A2_REEDIT_COUNT_STILL_ONE_PASS
+A2_TRAY_LIVE_SIDE_UPDATED_PASS
+A2_SECOND_ENTITY_COUNT_TWO_PASS
+A2_SECOND_ROW_PASS
+A2_SECOND_ROW_DIFF_PASS
+--- A4: component.add DirectionalLight on Root (structural entry) ---
+after add: game Root DirectionalLight={"affects_lightmapped_mesh_diffuse":true,"color":{"LinearRgba":{"alpha":1.0,"blu edits=3 (want present / 3)
+A4_ADD_STREAMED_PASS
+A4_ADD_LEDGERED_PASS
+--- A3: a field edit on the runtime-added (unauthored) component ---
+A3_FIELD_ENTRY_PASS
+A3_GAME_VALUE_PASS
+A3_BASELINE_NOT_AUTHORED_PASS
+A3_ROW_LABEL_PASS
+--- A4: component.remove DirectionalLight on Sun (authored patch baseline) ---
+A4_REMOVE_STREAMED_PASS
+A4_REMOVE_LEDGERED_PASS
+--- tray row states: the structural rows carry Save enabled and Revert disabled:true ---
+B1_TRAY_ROWS_PASS
+B1_DIFF_CELLS_PASS
+B1_BADGE_TEXT_PASS
+B1_BADGE_COUNT_FACE_PASS
+A4_STRUCTURAL_REVERT_DISABLED_PASS
+A4_STRUCTURAL_SAVE_ENABLED_PASS
+--- B1: the tooltip attempt (hover popover; the synthetic surface has no hover) ---
+B1_TOOLTIP_WALKED_FAIL
+note: the tooltip popover is hover-spawned (A14 family); the diff cell carries the values this leg judges
+--- A3: the per-entry Save lands the WHOLE component patch (in the play window) ---
+after the A3 Save: edits 5 -> 4 undo 0 -> 1 patch_fields=20 (want 4 / +1 / >1)
+A3_SAVE_SETTLED_PASS
+A3_SAVE_ONE_UNDO_PASS
+A3_WHOLE_COMPONENT_PATCH_PASS
+A3_PATCH_CARRIES_LIVE_PASS
+--- A4: the removal row's Save drops the authored patch ---
+after the removal Save: edits -> 3 undo 1 -> 2
+A4_REMOVE_SAVE_SETTLED_PASS
+A4_REMOVE_SAVE_ONE_UNDO_PASS
+A4_PATCH_DROPPED_PASS
+--- B2: per-entry Revert streams the baseline back into the RUNNING game ---
+Revert button bits: 25769798241; game_x before=3.5 dots=7
+B2_REVERT_CLICKED_PASS
+after the Revert: game_x 3.5 -> 0.0 edits=2 dot nodes 7 -> 6 (want 3.5 -> 0.0 / 2 / down 1)
+B2_GAME_BASELINE_STREAMED_PASS
+B2_COUNT_DECREMENTED_PASS
+B2_DOT_GONE_PASS
+--- B3: per-entry Save authors the field with exactly one undo entry ---
+B3_SAVE_CLICKED_PASS
+after the B3 Save: edits 3 -> 2 undo 2 -> 3 (want 2 / +1)
+B3_COUNT_DECREMENTED_PASS
+B3_ONE_UNDO_ENTRY_PASS
+B3_DOCUMENT_AUTHORED_PASS
+WINDOW A done (A1/A2/A3/A4/B1/B2/B3 + C1-in-motion archived)
+=== WINDOW B: C2 — the Apply All five-point iron chain in a fresh session ===
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t25-live-tuning/t25-live pid=23966 (recovery modal clear)
+session up: {"authored":3,"entities":34,"ephemeral":31}
+switched to Live view
+C1_PROMPT_TITLE_TWO_PASS
+C1_LEDGER_UNMOVED_TWO_PASS
+--- C2 point 1: Apply All (the prompt key; the tray is not up in this window, so the label is unambiguous) ---
+click 'Apply All': {"entity":8589929334,"kind":"button","operator":null,"text":"Apply All"}
+C2_APPLY_CLICKED_PASS
+after Apply All: edits -> 0 undo 0 -> 1 doc changed=yes
+C2_APPLY_SETTLED_PASS
+C2_DOCUMENT_CHANGED_PASS
+C2_ONE_UNDO_GROUP_PASS
+C2_FIELDS_AUTHORED_PASS
+--- C2 point 2-3: save -> reload ---
+C2_SAVE_WROTE_DISK_PASS
+C2_RELOAD_KEEPS_PASS
+--- C2 points 4-5: replay; the game-side values equal the saved ones ---
+session up: {"authored":13,"entities":34,"ephemeral":21}
+switched to Live view
+after replay: game Root x=4.5 (want 4.5) game Sun z=6.0 (want 6.0) — the applied pair read back through save+reload+replay
+C2_GAME_ROOT_X_PASS
+C2_GAME_SUN_Z_PASS
+WINDOW B done
+=== WINDOW C: C3 — Discard preserves the document byte for byte ===
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t25-live-tuning/t25-live pid=25633 (recovery modal clear)
+session up: {"authored":3,"entities":34,"ephemeral":31}
+switched to Live view
+C3 entry made: edits=1 (want 1)
+C3_PROMPT_UP_PASS
+click 'Discard': {"entity":8589929211,"kind":"button","operator":null,"text":"Discard"}
+C3_DISCARD_CLICKED_PASS
+after Discard: doc same=yes disk same=yes undo 0 -> 0 edits -> 0
+C3_DOCUMENT_IDENTICAL_PASS
+C3_DISK_IDENTICAL_PASS
+C3_UNTOUCHED_UNDO_PASS
+C3_COUNT_ZERO_PASS
+C3_PROMPT_CLOSED_PASS
+=== WINDOW C (cont): C4 — Review opens the tray; per-row triage empties the ledger ===
+session up: {"authored":3,"entities":34,"ephemeral":31}
+switched to Live view
+C4 entries made: edits=2 (want 2)
+C4_PROMPT_UP_PASS
+click 'Review': {"entity":8589928927,"kind":"button","operator":null,"text":"Review"}
+C4_REVIEW_CLICKED_PASS
+C4_HANDOFF_TRAY_PASS
+C4_REVERT_KEEPS_ENTRY_PASS
+after the row Revert (post-stop): edits=2 (the designed keep + warn)
+after the row Saves: edits=0 undo 0 -> 2 (want 0 / +2 — one entry per Save)
+C4_TRIAGE_SAVES_EMPTY_PASS
+C4_TRIAGE_SAVE_FAIL
+C4_SAVE_TWO_UNDOS_PASS
+C4_SELF_HEALED_PASS
+WINDOW C done
+=== WINDOW D: D1 — a stop with a pending edit leaves document, disk and ephemerals alone ===
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t25-live-tuning/t25-live pid=27320 (recovery modal clear)
+session up: {"authored":3,"entities":34,"ephemeral":31}
+switched to Live view
+D1 entry made: edits=1 (want 1)
+D1_PROMPT_UP_PASS
+after the stop: doc same=yes disk same=yes ephemeral=0 (want yes / yes / 0)
+D1_DOCUMENT_IDENTICAL_PASS
+D1_DISK_IDENTICAL_PASS
+D1_EPHEMERAL_ZERO_PASS
+--- D1: a save issued with the prompt still up writes no live value ---
+D1_SAVE_NO_LIVE_VALUE_PASS
+D1_SAVE_DOC_UNCHANGED_PASS
+click 'Discard': {"entity":8589929211,"kind":"button","operator":null,"text":"Discard"}
+WINDOW D done
+=== WINDOW E: D2 — Path A (authored overlay, one undo group) and Path B (ephemeral promote, no undo) ===
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t25-live-tuning/t25-live pid=28314 (recovery modal clear)
+session up: {"authored":3,"entities":34,"ephemeral":31}
+switched to Live view
+Save to Scene button bits: 4294963052
+D2_PATHA_CLICKED_PASS
+Path A: undo 0 -> 1 transform_keywords=3 (want +1 exactly; >=3 = the whole component landed)
+D2_PATHA_ONE_UNDO_PASS
+D2_PATHA_WHOLE_COMPONENT_PASS
+D2_PATHA_LIVE_VALUE_PASS
+--- Path B: the ephemeral player promotes to a new document node ---
+  candidate 12884897310: translation: glam::Vec3A { x: 0.0
+  candidate 12884897248: translation: glam::Vec3A { x: 2.0
+  candidate 12884897247: translation: glam::Vec3A { x: -1.0
+  candidate 12884897246: translation: glam::Vec3A { x: 1.0
+  candidate 12884897251: translation: glam::Vec3A { x: 0.0
+  candidate 12884897249: translation: glam::Vec3A { x: 0.0
+  candidate 8589929788: translation: glam::Vec3A { x: -4.0
+  candidate 12884897252: translation: glam::Vec3A { x: -2.0
+player preview bits:   candidate 12884897310: translation: glam::Vec3A { x: 0.0
+  candidate 12884897248: translation: glam::Vec3A { x: 2.0
+  candidate 12884897247: translation: glam::Vec3A { x: -1.0
+  candidate 12884897246: translation: glam::Vec3A { x: 1.0
+  candidate 12884897251: translation: glam::Vec3A { x: 0.0
+  candidate 12884897249: translation: glam::Vec3A { x: 0.0
+  candidate 8589929788: translation: glam::Vec3A { x: -4.0
+  candidate 12884897252: translation: glam::Vec3A { x: -2.0
+12884897252
+D2_PLAYER_SELECTED_FACE_PASS
+Path B: ephemeral 31 -> 31 undo 1 -> 1 (want -1 / unchanged — the LT5 v1 note)
+D2_PATHB_EPHEMERAL_DROPPED_FAIL
+D2_PATHB_NOT_UNDOABLE_PASS
+D2_PATHB_NODE_IN_DOC_FAIL
+note: a leftover entry raised the prompt; Discard cleans it
+click 'Discard': {"entity":8589929688,"kind":"button","operator":null,"text":"Discard"}
+--- D2 closing chain: save -> reload -> replay -> the player is in the game ---
+D2_DISK_HAS_PLAYER_FAIL
+session up: {"authored":3,"entities":34,"ephemeral":31}
+switched to Live view
+after the replay: players=1 health.current=100.0 game Sun y=6.5 (want >=1 / coherent / 6.5)
+D2_REPLAY_PLAYER_IN_GAME_PASS
+D2_REPLAY_HEALTH_PRESENT_PASS
+D2_REPLAY_SUN_Y_PASS
+WINDOW E done
+--- epilogue: restore the pristine scene.bsn ---
+pristine scene restored on disk
+CENSUS: error-handler panics=10 swap_remove-signature=13 across 5 windows (N13 family, attributed; ~5-6/cycle is the baseline)
+WARN-SHAPES: SetComponent|AddComponent=0 unknown-field=0 field-write-skipped=0 (the green run expects zeros — the game-side failure mouths never spoke)
+LIVE done: A1_AUTHORED_MAPPED=PASS A1_DOT_ON_FIELD_ROW=PASS A1_GAME_STREAMED=PASS A1_LEDGER_CLEAN_BEFORE=PASS A1_LEDGER_ONE=PASS A1_NEG_GAME_CHANGED=PASS A1_NEG_LEDGER_UNCHANGED=PASS A1_PROJECTION_ROOT=PASS A2_REEDIT_COUNT_STILL_ONE=PASS A2_SECOND_ENTITY_COUNT_TWO=PASS A2_SECOND_ROW=PASS A2_SECOND_ROW_DIFF=PASS A2_TRAY_DIFF_INITIAL=PASS A2_TRAY_LIVE_SIDE_UPDATED=PASS A2_TRAY_OPENED=PASS A2_TRAY_SURVIVES_REPLAY=PASS A3_BASELINE_NOT_AUTHORED=PASS A3_FIELD_ENTRY=PASS A3_GAME_VALUE=PASS A3_PATCH_CARRIES_LIVE=PASS A3_ROW_LABEL=PASS A3_SAVE_ONE_UNDO=PASS A3_SAVE_SETTLED=PASS A3_WHOLE_COMPONENT_PATCH=PASS A4_ADD_LEDGERED=PASS A4_ADD_STREAMED=PASS A4_PATCH_DROPPED=PASS A4_REMOVE_LEDGERED=PASS A4_REMOVE_SAVE_ONE_UNDO=PASS A4_REMOVE_SAVE_SETTLED=PASS A4_REMOVE_STREAMED=PASS A4_STRUCTURAL_REVERT_DISABLED=PASS A4_STRUCTURAL_SAVE_ENABLED=PASS B1_BADGE_COUNT_FACE=PASS B1_BADGE_TEXT=PASS B1_DIFF_CELLS=PASS B1_TOOLTIP_WALKED=FAIL B1_TRAY_ROWS=PASS B2_COUNT_DECREMENTED=PASS B2_DOT_GONE=PASS B2_GAME_BASELINE_STREAMED=PASS B2_REVERT_CLICKED=PASS B3_COUNT_DECREMENTED=PASS B3_DOCUMENT_AUTHORED=PASS B3_ONE_UNDO_ENTRY=PASS B3_SAVE_CLICKED=PASS C1_LEDGER_UNMOVED=PASS C1_LEDGER_UNMOVED_TWO=PASS C1_PROMPT_TITLE=PASS C1_PROMPT_TITLE_TWO=PASS C2_APPLY_CLICKED=PASS C2_APPLY_SETTLED=PASS C2_DOCUMENT_CHANGED=PASS C2_FIELDS_AUTHORED=PASS C2_GAME_ROOT_X=PASS C2_GAME_SUN_Z=PASS C2_ONE_UNDO_GROUP=PASS C2_RELOAD_KEEPS=PASS C2_SAVE_WROTE_DISK=PASS C3_COUNT_ZERO=PASS C3_DISCARD_CLICKED=PASS C3_DISK_IDENTICAL=PASS C3_DOCUMENT_IDENTICAL=PASS C3_PROMPT_CLOSED=PASS C3_PROMPT_UP=PASS C3_UNTOUCHED_UNDO=PASS C4_HANDOFF_TRAY=PASS C4_PROMPT_UP=PASS C4_REVERT_KEEPS_ENTRY=PASS C4_REVIEW_CLICKED=PASS C4_SAVE_TWO_UNDOS=PASS C4_SELF_HEALED=PASS C4_TRIAGE_SAVE=FAIL C4_TRIAGE_SAVES_EMPTY=PASS D1_DISK_IDENTICAL=PASS D1_DOCUMENT_IDENTICAL=PASS D1_EPHEMERAL_ZERO=PASS D1_PROMPT_UP=PASS D1_SAVE_DOC_UNCHANGED=PASS D1_SAVE_NO_LIVE_VALUE=PASS D2_DISK_HAS_PLAYER=FAIL D2_PATHA_CLICKED=PASS D2_PATHA_LIVE_VALUE=PASS D2_PATHA_ONE_UNDO=PASS D2_PATHA_WHOLE_COMPONENT=PASS D2_PATHB_EPHEMERAL_DROPPED=FAIL D2_PATHB_NODE_IN_DOC=FAIL D2_PATHB_NOT_UNDOABLE=PASS D2_PLAYER_SELECTED_FACE=PASS D2_REPLAY_HEALTH_PRESENT=PASS D2_REPLAY_PLAYER_IN_GAME=PASS D2_REPLAY_SUN_Y=PASS LTR1_GREEN_DISK_UNCHANGED=PASS LTR1_GREEN_DOCUMENT_UNCHANGED=PASS LTR1_GREEN_NO_UNDO=PASS 
+PHASE_DONE live results: A1_AUTHORED_MAPPED=PASS A1_DOT_ON_FIELD_ROW=PASS A1_GAME_STREAMED=PASS A1_LEDGER_CLEAN_BEFORE=PASS A1_LEDGER_ONE=PASS A1_NEG_GAME_CHANGED=PASS A1_NEG_LEDGER_UNCHANGED=PASS A1_PROJECTION_ROOT=PASS A2_REEDIT_COUNT_STILL_ONE=PASS A2_SECOND_ENTITY_COUNT_TWO=PASS A2_SECOND_ROW=PASS A2_SECOND_ROW_DIFF=PASS A2_TRAY_DIFF_INITIAL=PASS A2_TRAY_LIVE_SIDE_UPDATED=PASS A2_TRAY_OPENED=PASS A2_TRAY_SURVIVES_REPLAY=PASS A3_BASELINE_NOT_AUTHORED=PASS A3_FIELD_ENTRY=PASS A3_GAME_VALUE=PASS A3_PATCH_CARRIES_LIVE=PASS A3_ROW_LABEL=PASS A3_SAVE_ONE_UNDO=PASS A3_SAVE_SETTLED=PASS A3_WHOLE_COMPONENT_PATCH=PASS A4_ADD_LEDGERED=PASS A4_ADD_STREAMED=PASS A4_PATCH_DROPPED=PASS A4_REMOVE_LEDGERED=PASS A4_REMOVE_SAVE_ONE_UNDO=PASS A4_REMOVE_SAVE_SETTLED=PASS A4_REMOVE_STREAMED=PASS A4_STRUCTURAL_REVERT_DISABLED=PASS A4_STRUCTURAL_SAVE_ENABLED=PASS B1_BADGE_COUNT_FACE=PASS B1_BADGE_TEXT=PASS B1_DIFF_CELLS=PASS B1_TOOLTIP_WALKED=FAIL B1_TRAY_ROWS=PASS B2_COUNT_DECREMENTED=PASS B2_DOT_GONE=PASS B2_GAME_BASELINE_STREAMED=PASS B2_REVERT_CLICKED=PASS B3_COUNT_DECREMENTED=PASS B3_DOCUMENT_AUTHORED=PASS B3_ONE_UNDO_ENTRY=PASS B3_SAVE_CLICKED=PASS C1_LEDGER_UNMOVED=PASS C1_LEDGER_UNMOVED_TWO=PASS C1_PROMPT_TITLE=PASS C1_PROMPT_TITLE_TWO=PASS C2_APPLY_CLICKED=PASS C2_APPLY_SETTLED=PASS C2_DOCUMENT_CHANGED=PASS C2_FIELDS_AUTHORED=PASS C2_GAME_ROOT_X=PASS C2_GAME_SUN_Z=PASS C2_ONE_UNDO_GROUP=PASS C2_RELOAD_KEEPS=PASS C2_SAVE_WROTE_DISK=PASS C3_COUNT_ZERO=PASS C3_DISCARD_CLICKED=PASS C3_DISK_IDENTICAL=PASS C3_DOCUMENT_IDENTICAL=PASS C3_PROMPT_CLOSED=PASS C3_PROMPT_UP=PASS C3_UNTOUCHED_UNDO=PASS C4_HANDOFF_TRAY=PASS C4_PROMPT_UP=PASS C4_REVERT_KEEPS_ENTRY=PASS C4_REVIEW_CLICKED=PASS C4_SAVE_TWO_UNDOS=PASS C4_SELF_HEALED=PASS C4_TRIAGE_SAVE=FAIL C4_TRIAGE_SAVES_EMPTY=PASS D1_DISK_IDENTICAL=PASS D1_DOCUMENT_IDENTICAL=PASS D1_EPHEMERAL_ZERO=PASS D1_PROMPT_UP=PASS D1_SAVE_DOC_UNCHANGED=PASS D1_SAVE_NO_LIVE_VALUE=PASS D2_DISK_HAS_PLAYER=FAIL D2_PATHA_CLICKED=PASS D2_PATHA_LIVE_VALUE=PASS D2_PATHA_ONE_UNDO=PASS D2_PATHA_WHOLE_COMPONENT=PASS D2_PATHB_EPHEMERAL_DROPPED=FAIL D2_PATHB_NODE_IN_DOC=FAIL D2_PATHB_NOT_UNDOABLE=PASS D2_PLAYER_SELECTED_FACE=PASS D2_REPLAY_HEALTH_PRESENT=PASS D2_REPLAY_PLAYER_IN_GAME=PASS D2_REPLAY_SUN_Y=PASS LTR1_GREEN_DISK_UNCHANGED=PASS LTR1_GREEN_DOCUMENT_UNCHANGED=PASS LTR1_GREEN_NO_UNDO=PASS 
+=== phase live run 2026-11-04 03:46:47 build=bd65fef9 ===
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t25-live-tuning/t25-live pid=31461 (recovery modal clear)
+--- warm build (the game binary the PIE legs reuse) ---
+WARM_BUILD_OK
+=== CYCLE 1: A1 — the routed live edit, its dot, the ledger, and the game-driven negative half ===
+session up: {"authored":3,"entities":34,"ephemeral":31}
+switched to Live view
+ROOT_PREVIEW_BITS=4294962535 SUN_PREVIEW_BITS=4294962534 projection={"authored":3,"entities":34,"ephemeral":31}
+A1_AUTHORED_MAPPED_PASS
+A1_PROJECTION_ROOT_PASS
+GAME_ROOT_BITS=769v0 GAME_SUN_BITS=770v0
+baselines: game_x=0.0 edits=0 doc=b358999a15bf6897694efc0575bcb3b7014f35fab7de7eb53904d1a4c324ac01 disk=ba2c68177ea1dee19c6e8e2049e88c1bdbd53c66a8c8a02f0a86a6d810484686 undo=0 dot-nodes=6 (want 0 / 0 / stable / stable / stable / chrome-only)
+A1_LEDGER_CLEAN_BEFORE_PASS
+--- A1: component.set Root translation.x=2.0 (the routed injection) ---
+after the edit: game_x=2.0 edits=1
+A1_GAME_STREAMED_PASS
+A1_LEDGER_ONE_PASS
+dot nodes beside the field labels: 6 -> 7 (want +1 with the wrapper up)
+A1_DOT_ON_FIELD_ROW_PASS
+LTR1_GREEN_DOCUMENT_UNCHANGED_PASS
+LTR1_GREEN_DISK_UNCHANGED_PASS
+LTR1_GREEN_NO_UNDO_PASS
+--- A1 negative half: the game-driven hazard damage must not enter the ledger ---
+player entity: 754v0
+health before the walk: 100.0  pos: x=-2.0 z=0.0
+at the dive start: x=2.188655376434326 z=1.288130283355713
+health after the dive: 100.0 -> 85.0
+A1_NEG_GAME_CHANGED_PASS
+hurt route: walk
+A1_NEG_LEDGER_UNCHANGED_PASS
+--- stop with 1 pending edit: the prompt rises (C1 evidence, cycle 1) ---
+C1_PROMPT_TITLE_PASS
+C1_LEDGER_UNMOVED_PASS
+--- Review hands off to the tray; the tray rides the replay (the C4 opening route) ---
+click 'Review': {"entity":21474831812,"kind":"button","operator":null,"text":"Review"}
+A2_TRAY_OPENED_PASS
+A2_TRAY_DIFF_INITIAL_PASS
+session up: {"authored":13,"entities":34,"ephemeral":21}
+switched to Live view
+cycle-2 bits: ROOT=4294962535 SUN=4294962534 GAME_ROOT=769v0 GAME_SUN=770v0
+A2_TRAY_SURVIVES_REPLAY_PASS
+=== CYCLE 2: A2 re-edits, A4 structural add/remove, A3 whole-component save, B1/B2/B3 ===
+A2_REEDIT_COUNT_STILL_ONE_PASS
+A2_TRAY_LIVE_SIDE_UPDATED_PASS
+A2_SECOND_ENTITY_COUNT_TWO_PASS
+A2_SECOND_ROW_PASS
+A2_SECOND_ROW_DIFF_PASS
+--- A4: component.add DirectionalLight on Root (structural entry) ---
+after add: game Root DirectionalLight={"affects_lightmapped_mesh_diffuse":true,"color":{"LinearRgba":{"alpha":1.0,"blu edits=3 (want present / 3)
+A4_ADD_STREAMED_PASS
+A4_ADD_LEDGERED_PASS
+--- A3: a field edit on the runtime-added (unauthored) component ---
+A3_FIELD_ENTRY_PASS
+A3_GAME_VALUE_PASS
+A3_BASELINE_NOT_AUTHORED_PASS
+A3_ROW_LABEL_PASS
+--- A4: component.remove DirectionalLight on Sun (authored patch baseline) ---
+A4_REMOVE_STREAMED_PASS
+A4_REMOVE_LEDGERED_PASS
+--- tray row states: the structural rows carry Save enabled and Revert disabled:true ---
+B1_TRAY_ROWS_PASS
+B1_DIFF_CELLS_PASS
+B1_BADGE_TEXT_PASS
+B1_BADGE_COUNT_FACE_PASS
+A4_STRUCTURAL_REVERT_DISABLED_PASS
+A4_STRUCTURAL_SAVE_ENABLED_PASS
+--- B1: the tooltip attempt (hover popover; the synthetic surface has no hover) ---
+B1_TOOLTIP_WALKED_FAIL
+note: the tooltip popover is hover-spawned (A14 family); the diff cell carries the values this leg judges
+--- A3: the per-entry Save lands the WHOLE component patch (in the play window) ---
+after the A3 Save: edits 5 -> 4 undo 0 -> 1 patch_fields=20 (want 4 / +1 / >1)
+A3_SAVE_SETTLED_PASS
+A3_SAVE_ONE_UNDO_PASS
+A3_WHOLE_COMPONENT_PATCH_PASS
+A3_PATCH_CARRIES_LIVE_PASS
+--- A4: the removal row's Save drops the authored patch ---
+after the removal Save: edits -> 3 undo 1 -> 2
+A4_REMOVE_SAVE_SETTLED_PASS
+A4_REMOVE_SAVE_ONE_UNDO_PASS
+A4_PATCH_DROPPED_PASS
+--- B2: per-entry Revert streams the baseline back into the RUNNING game ---
+Revert button bits: 47244634851; game_x before=3.5 dots=7
+B2_REVERT_CLICKED_PASS
+after the Revert: game_x 3.5 -> 0.0 edits=2 dot nodes 7 -> 6 (want 3.5 -> 0.0 / 2 / down 1)
+B2_GAME_BASELINE_STREAMED_PASS
+B2_COUNT_DECREMENTED_PASS
+B2_DOT_GONE_PASS
+--- B3: per-entry Save authors the field with exactly one undo entry ---
+B3_SAVE_CLICKED_PASS
+after the B3 Save: edits 3 -> 2 undo 2 -> 3 (want 2 / +1)
+B3_COUNT_DECREMENTED_PASS
+B3_ONE_UNDO_ENTRY_PASS
+B3_DOCUMENT_AUTHORED_PASS
+WINDOW A done (A1/A2/A3/A4/B1/B2/B3 + C1-in-motion archived)
+=== WINDOW B: C2 — the Apply All five-point iron chain in a fresh session ===
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t25-live-tuning/t25-live pid=36426 (recovery modal clear)
+session up: {"authored":3,"entities":34,"ephemeral":31}
+switched to Live view
+C1_PROMPT_TITLE_TWO_PASS
+C1_LEDGER_UNMOVED_TWO_PASS
+--- C2 point 1: Apply All (the prompt key; the tray is not up in this window, so the label is unambiguous) ---
+click 'Apply All': {"entity":8589929006,"kind":"button","operator":null,"text":"Apply All"}
+C2_APPLY_CLICKED_PASS
+after Apply All: edits -> 0 undo 0 -> 1 doc changed=yes
+C2_APPLY_SETTLED_PASS
+C2_DOCUMENT_CHANGED_PASS
+C2_ONE_UNDO_GROUP_PASS
+C2_FIELDS_AUTHORED_PASS
+--- C2 point 2-3: save -> reload ---
+C2_SAVE_WROTE_DISK_PASS
+C2_RELOAD_KEEPS_PASS
+--- C2 points 4-5: replay; the game-side values equal the saved ones ---
+session up: {"authored":3,"entities":34,"ephemeral":31}
+switched to Live view
+after replay: game Root x=4.5 (want 4.5) game Sun z=6.0 (want 6.0) — the applied pair read back through save+reload+replay
+C2_GAME_ROOT_X_PASS
+C2_GAME_SUN_Z_PASS
+WINDOW B done
+=== WINDOW C: C3 — Discard preserves the document byte for byte ===
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t25-live-tuning/t25-live pid=38101 (recovery modal clear)
+session up: {"authored":3,"entities":34,"ephemeral":31}
+switched to Live view
+C3 entry made: edits=1 (want 1)
+C3_PROMPT_UP_PASS
+click 'Discard': {"entity":8589929211,"kind":"button","operator":null,"text":"Discard"}
+C3_DISCARD_CLICKED_PASS
+after Discard: doc same=yes disk same=yes undo 0 -> 0 edits -> 0
+C3_DOCUMENT_IDENTICAL_PASS
+C3_DISK_IDENTICAL_PASS
+C3_UNTOUCHED_UNDO_PASS
+C3_COUNT_ZERO_PASS
+C3_PROMPT_CLOSED_PASS
+=== WINDOW C (cont): C4 — Review opens the tray; per-row triage empties the ledger ===
+session up: {"authored":3,"entities":34,"ephemeral":31}
+switched to Live view
+C4 entries made: edits=2 (want 2)
+C4_PROMPT_UP_PASS
+click 'Review': {"entity":34359733813,"kind":"button","operator":null,"text":"Review"}
+C4_REVIEW_CLICKED_PASS
+C4_HANDOFF_TRAY_PASS
+C4_REVERT_KEEPS_ENTRY_PASS
+after the row Revert (post-stop): edits=2 (the designed keep + warn)
+after the row Saves: edits=0 undo 0 -> 2 (want 0 / +2 — one entry per Save)
+C4_TRIAGE_SAVES_EMPTY_PASS
+C4_TRIAGE_SAVE_PASS
+C4_SAVE_TWO_UNDOS_PASS
+C4_SELF_HEALED_PASS
+WINDOW C done
+=== WINDOW D: D1 — a stop with a pending edit leaves document, disk and ephemerals alone ===
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t25-live-tuning/t25-live pid=39785 (recovery modal clear)
+session up: {"authored":3,"entities":34,"ephemeral":31}
+switched to Live view
+D1 entry made: edits=1 (want 1)
+D1_PROMPT_UP_PASS
+after the stop: doc same=yes disk same=yes ephemeral=0 (want yes / yes / 0)
+D1_DOCUMENT_IDENTICAL_PASS
+D1_DISK_IDENTICAL_PASS
+D1_EPHEMERAL_ZERO_PASS
+--- D1: a save issued with the prompt still up writes no live value ---
+D1_SAVE_NO_LIVE_VALUE_PASS
+D1_SAVE_DOC_UNCHANGED_PASS
+click 'Discard': {"entity":8589929211,"kind":"button","operator":null,"text":"Discard"}
+WINDOW D done
+=== WINDOW E: D2 — Path A (authored overlay, one undo group) and Path B (ephemeral promote, no undo) ===
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t25-live-tuning/t25-live pid=40682 (recovery modal clear)
+session up: {"authored":3,"entities":34,"ephemeral":31}
+switched to Live view
+Save to Scene button bits: 4294963052
+D2_PATHA_CLICKED_PASS
+Path A: undo 0 -> 1 transform_keywords=3 (want +1 exactly; >=3 = the whole component landed)
+D2_PATHA_ONE_UNDO_PASS
+D2_PATHA_WHOLE_COMPONENT_PASS
+D2_PATHA_LIVE_VALUE_PASS
+--- Path B: the ephemeral player promotes to a new document node ---
+player preview bits: 12884897252
+D2_PLAYER_SELECTED_FACE_PASS
+Path B: ephemeral 31 -> 30 undo 1 -> 1 (want -1 / unchanged — the LT5 v1 note)
+D2_PATHB_EPHEMERAL_DROPPED_PASS
+D2_PATHB_NOT_UNDOABLE_PASS
+D2_PATHB_NODE_IN_DOC_FAIL
+note: a leftover entry raised the prompt; Discard cleans it
+click 'Discard': {"entity":12884893005,"kind":"button","operator":null,"text":"Discard"}
+--- D2 closing chain: save -> reload -> replay -> the player is in the game ---
+D2_DISK_HAS_PLAYER_FAIL
+note: the game BRP did not answer within budget
+the instance stage never read live
+note: the D2 replay lagged
+switched to Live view
+after the replay: players= health.current= game Sun y= (want >=1 / coherent / 6.5)
+D2_REPLAY_PLAYER_IN_GAME_FAIL
+D2_REPLAY_HEALTH_PRESENT_FAIL
+D2_REPLAY_SUN_Y_FAIL
+WINDOW E done
+--- epilogue: restore the pristine scene.bsn ---
+pristine scene restored on disk
+CENSUS: error-handler panics=11 swap_remove-signature=15 across 5 windows (N13 family, attributed; ~5-6/cycle is the baseline)
+WARN-SHAPES: SetComponent|AddComponent=0 unknown-field=0 field-write-skipped=0 (the green run expects zeros — the game-side failure mouths never spoke)
+LIVE done: A1_AUTHORED_MAPPED=PASS A1_DOT_ON_FIELD_ROW=PASS A1_GAME_STREAMED=PASS A1_LEDGER_CLEAN_BEFORE=PASS A1_LEDGER_ONE=PASS A1_NEG_GAME_CHANGED=PASS A1_NEG_LEDGER_UNCHANGED=PASS A1_PROJECTION_ROOT=PASS A2_REEDIT_COUNT_STILL_ONE=PASS A2_SECOND_ENTITY_COUNT_TWO=PASS A2_SECOND_ROW=PASS A2_SECOND_ROW_DIFF=PASS A2_TRAY_DIFF_INITIAL=PASS A2_TRAY_LIVE_SIDE_UPDATED=PASS A2_TRAY_OPENED=PASS A2_TRAY_SURVIVES_REPLAY=PASS A3_BASELINE_NOT_AUTHORED=PASS A3_FIELD_ENTRY=PASS A3_GAME_VALUE=PASS A3_PATCH_CARRIES_LIVE=PASS A3_ROW_LABEL=PASS A3_SAVE_ONE_UNDO=PASS A3_SAVE_SETTLED=PASS A3_WHOLE_COMPONENT_PATCH=PASS A4_ADD_LEDGERED=PASS A4_ADD_STREAMED=PASS A4_PATCH_DROPPED=PASS A4_REMOVE_LEDGERED=PASS A4_REMOVE_SAVE_ONE_UNDO=PASS A4_REMOVE_SAVE_SETTLED=PASS A4_REMOVE_STREAMED=PASS A4_STRUCTURAL_REVERT_DISABLED=PASS A4_STRUCTURAL_SAVE_ENABLED=PASS B1_BADGE_COUNT_FACE=PASS B1_BADGE_TEXT=PASS B1_DIFF_CELLS=PASS B1_TOOLTIP_WALKED=FAIL B1_TRAY_ROWS=PASS B2_COUNT_DECREMENTED=PASS B2_DOT_GONE=PASS B2_GAME_BASELINE_STREAMED=PASS B2_REVERT_CLICKED=PASS B3_COUNT_DECREMENTED=PASS B3_DOCUMENT_AUTHORED=PASS B3_ONE_UNDO_ENTRY=PASS B3_SAVE_CLICKED=PASS C1_LEDGER_UNMOVED=PASS C1_LEDGER_UNMOVED_TWO=PASS C1_PROMPT_TITLE=PASS C1_PROMPT_TITLE_TWO=PASS C2_APPLY_CLICKED=PASS C2_APPLY_SETTLED=PASS C2_DOCUMENT_CHANGED=PASS C2_FIELDS_AUTHORED=PASS C2_GAME_ROOT_X=PASS C2_GAME_SUN_Z=PASS C2_ONE_UNDO_GROUP=PASS C2_RELOAD_KEEPS=PASS C2_SAVE_WROTE_DISK=PASS C3_COUNT_ZERO=PASS C3_DISCARD_CLICKED=PASS C3_DISK_IDENTICAL=PASS C3_DOCUMENT_IDENTICAL=PASS C3_PROMPT_CLOSED=PASS C3_PROMPT_UP=PASS C3_UNTOUCHED_UNDO=PASS C4_HANDOFF_TRAY=PASS C4_PROMPT_UP=PASS C4_REVERT_KEEPS_ENTRY=PASS C4_REVIEW_CLICKED=PASS C4_SAVE_TWO_UNDOS=PASS C4_SELF_HEALED=PASS C4_TRIAGE_SAVE=PASS C4_TRIAGE_SAVES_EMPTY=PASS D1_DISK_IDENTICAL=PASS D1_DOCUMENT_IDENTICAL=PASS D1_EPHEMERAL_ZERO=PASS D1_PROMPT_UP=PASS D1_SAVE_DOC_UNCHANGED=PASS D1_SAVE_NO_LIVE_VALUE=PASS D2_DISK_HAS_PLAYER=FAIL D2_PATHA_CLICKED=PASS D2_PATHA_LIVE_VALUE=PASS D2_PATHA_ONE_UNDO=PASS D2_PATHA_WHOLE_COMPONENT=PASS D2_PATHB_EPHEMERAL_DROPPED=PASS D2_PATHB_NODE_IN_DOC=FAIL D2_PATHB_NOT_UNDOABLE=PASS D2_PLAYER_SELECTED_FACE=PASS D2_REPLAY_HEALTH_PRESENT=FAIL D2_REPLAY_PLAYER_IN_GAME=FAIL D2_REPLAY_SUN_Y=FAIL LTR1_GREEN_DISK_UNCHANGED=PASS LTR1_GREEN_DOCUMENT_UNCHANGED=PASS LTR1_GREEN_NO_UNDO=PASS 
+PHASE_DONE live results: A1_AUTHORED_MAPPED=PASS A1_DOT_ON_FIELD_ROW=PASS A1_GAME_STREAMED=PASS A1_LEDGER_CLEAN_BEFORE=PASS A1_LEDGER_ONE=PASS A1_NEG_GAME_CHANGED=PASS A1_NEG_LEDGER_UNCHANGED=PASS A1_PROJECTION_ROOT=PASS A2_REEDIT_COUNT_STILL_ONE=PASS A2_SECOND_ENTITY_COUNT_TWO=PASS A2_SECOND_ROW=PASS A2_SECOND_ROW_DIFF=PASS A2_TRAY_DIFF_INITIAL=PASS A2_TRAY_LIVE_SIDE_UPDATED=PASS A2_TRAY_OPENED=PASS A2_TRAY_SURVIVES_REPLAY=PASS A3_BASELINE_NOT_AUTHORED=PASS A3_FIELD_ENTRY=PASS A3_GAME_VALUE=PASS A3_PATCH_CARRIES_LIVE=PASS A3_ROW_LABEL=PASS A3_SAVE_ONE_UNDO=PASS A3_SAVE_SETTLED=PASS A3_WHOLE_COMPONENT_PATCH=PASS A4_ADD_LEDGERED=PASS A4_ADD_STREAMED=PASS A4_PATCH_DROPPED=PASS A4_REMOVE_LEDGERED=PASS A4_REMOVE_SAVE_ONE_UNDO=PASS A4_REMOVE_SAVE_SETTLED=PASS A4_REMOVE_STREAMED=PASS A4_STRUCTURAL_REVERT_DISABLED=PASS A4_STRUCTURAL_SAVE_ENABLED=PASS B1_BADGE_COUNT_FACE=PASS B1_BADGE_TEXT=PASS B1_DIFF_CELLS=PASS B1_TOOLTIP_WALKED=FAIL B1_TRAY_ROWS=PASS B2_COUNT_DECREMENTED=PASS B2_DOT_GONE=PASS B2_GAME_BASELINE_STREAMED=PASS B2_REVERT_CLICKED=PASS B3_COUNT_DECREMENTED=PASS B3_DOCUMENT_AUTHORED=PASS B3_ONE_UNDO_ENTRY=PASS B3_SAVE_CLICKED=PASS C1_LEDGER_UNMOVED=PASS C1_LEDGER_UNMOVED_TWO=PASS C1_PROMPT_TITLE=PASS C1_PROMPT_TITLE_TWO=PASS C2_APPLY_CLICKED=PASS C2_APPLY_SETTLED=PASS C2_DOCUMENT_CHANGED=PASS C2_FIELDS_AUTHORED=PASS C2_GAME_ROOT_X=PASS C2_GAME_SUN_Z=PASS C2_ONE_UNDO_GROUP=PASS C2_RELOAD_KEEPS=PASS C2_SAVE_WROTE_DISK=PASS C3_COUNT_ZERO=PASS C3_DISCARD_CLICKED=PASS C3_DISK_IDENTICAL=PASS C3_DOCUMENT_IDENTICAL=PASS C3_PROMPT_CLOSED=PASS C3_PROMPT_UP=PASS C3_UNTOUCHED_UNDO=PASS C4_HANDOFF_TRAY=PASS C4_PROMPT_UP=PASS C4_REVERT_KEEPS_ENTRY=PASS C4_REVIEW_CLICKED=PASS C4_SAVE_TWO_UNDOS=PASS C4_SELF_HEALED=PASS C4_TRIAGE_SAVE=PASS C4_TRIAGE_SAVES_EMPTY=PASS D1_DISK_IDENTICAL=PASS D1_DOCUMENT_IDENTICAL=PASS D1_EPHEMERAL_ZERO=PASS D1_PROMPT_UP=PASS D1_SAVE_DOC_UNCHANGED=PASS D1_SAVE_NO_LIVE_VALUE=PASS D2_DISK_HAS_PLAYER=FAIL D2_PATHA_CLICKED=PASS D2_PATHA_LIVE_VALUE=PASS D2_PATHA_ONE_UNDO=PASS D2_PATHA_WHOLE_COMPONENT=PASS D2_PATHB_EPHEMERAL_DROPPED=PASS D2_PATHB_NODE_IN_DOC=FAIL D2_PATHB_NOT_UNDOABLE=PASS D2_PLAYER_SELECTED_FACE=PASS D2_REPLAY_HEALTH_PRESENT=FAIL D2_REPLAY_PLAYER_IN_GAME=FAIL D2_REPLAY_SUN_Y=FAIL LTR1_GREEN_DISK_UNCHANGED=PASS LTR1_GREEN_DOCUMENT_UNCHANGED=PASS LTR1_GREEN_NO_UNDO=PASS 
+=== phase live run 2026-11-04 04:08:39 build=bd65fef9 ===
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t25-live-tuning/t25-live pid=45445 (recovery modal clear)
+--- warm build (the game binary the PIE legs reuse) ---
+WARM_BUILD_OK
+=== WINDOW E: D2 — Path A (authored overlay, one undo group) and Path B (ephemeral promote, no undo) ===
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t25-live-tuning/t25-live pid=45886 (recovery modal clear)
+session up: {"authored":3,"entities":34,"ephemeral":31}
+switched to Live view
+Save to Scene button bits: 4294963053
+D2_PATHA_CLICKED_PASS
+Path A: undo 0 -> 1 transform_keywords=3 (want +1 exactly; >=3 = the whole component landed)
+D2_PATHA_ONE_UNDO_PASS
+D2_PATHA_WHOLE_COMPONENT_PASS
+D2_PATHA_LIVE_VALUE_PASS
+--- Path B: the ephemeral player promotes to a new document node ---
+player preview bits: 12884897252
+D2_PLAYER_SELECTED_FACE_PASS
+Path B: ephemeral 31 -> 30 undo 1 -> 1 (want -1 / unchanged — the LT5 v1 note)
+D2_PATHB_EPHEMERAL_DROPPED_PASS
+D2_PATHB_NOT_UNDOABLE_PASS
+D2_PATHB_NODE_IN_DOC_PASS
+D2_PROMOTE_INTERNALS_LAND_PASS
+note: a leftover entry raised the prompt; Discard cleans it
+click 'Discard': {"entity":12884894562,"kind":"button","operator":null,"text":"Discard"}
+--- D2 closing chain: save -> reload -> replay -> the player is in the game ---
+D2_DISK_HAS_PLAYER_PASS
+session up: {"authored":17,"entities":37,"ephemeral":20}
+switched to Live view
+after the replay: players=1 health.current=100.0 game Sun y= (want >=1 / coherent / 6.5)
+D2_REPLAY_PLAYER_IN_GAME_PASS
+D2_REPLAY_HEALTH_PRESENT_PASS
+D2_REPLAY_SUN_Y_FAIL
+WINDOW E done
+--- epilogue: restore the pristine scene.bsn ---
+pristine scene restored on disk
+CENSUS: error-handler panics=9 swap_remove-signature=13 across 2 windows (N13 family, attributed; ~5-6/cycle is the baseline)
+WARN-SHAPES: SetComponent|AddComponent=0 unknown-field=0 field-write-skipped=0 (the green run expects zeros — the game-side failure mouths never spoke)
+LIVE done: D2_DISK_HAS_PLAYER=PASS D2_PATHA_CLICKED=PASS D2_PATHA_LIVE_VALUE=PASS D2_PATHA_ONE_UNDO=PASS D2_PATHA_WHOLE_COMPONENT=PASS D2_PATHB_EPHEMERAL_DROPPED=PASS D2_PATHB_NODE_IN_DOC=PASS D2_PATHB_NOT_UNDOABLE=PASS D2_PLAYER_SELECTED_FACE=PASS D2_PROMOTE_INTERNALS_LAND=PASS D2_REPLAY_HEALTH_PRESENT=PASS D2_REPLAY_PLAYER_IN_GAME=PASS D2_REPLAY_SUN_Y=FAIL 
+PHASE_DONE live results: D2_DISK_HAS_PLAYER=PASS D2_PATHA_CLICKED=PASS D2_PATHA_LIVE_VALUE=PASS D2_PATHA_ONE_UNDO=PASS D2_PATHA_WHOLE_COMPONENT=PASS D2_PATHB_EPHEMERAL_DROPPED=PASS D2_PATHB_NODE_IN_DOC=PASS D2_PATHB_NOT_UNDOABLE=PASS D2_PLAYER_SELECTED_FACE=PASS D2_PROMOTE_INTERNALS_LAND=PASS D2_REPLAY_HEALTH_PRESENT=PASS D2_REPLAY_PLAYER_IN_GAME=PASS D2_REPLAY_SUN_Y=FAIL 
+=== phase live run 2026-11-04 04:18:45 build=bd65fef9 ===
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t25-live-tuning/t25-live pid=49274 (recovery modal clear)
+--- warm build (the game binary the PIE legs reuse) ---
+WARM_BUILD_OK
+=== WINDOW E: D2 — Path A (authored overlay, one undo group) and Path B (ephemeral promote, no undo) ===
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t25-live-tuning/t25-live pid=49686 (recovery modal clear)
+session up: {"authored":3,"entities":34,"ephemeral":31}
+switched to Live view
+Save to Scene button bits: 4294963053
+D2_PATHA_CLICKED_PASS
+Path A: undo 0 -> 1 transform_keywords=3 (want +1 exactly; >=3 = the whole component landed)
+D2_PATHA_ONE_UNDO_PASS
+D2_PATHA_WHOLE_COMPONENT_PASS
+D2_PATHA_LIVE_VALUE_PASS
+--- Path B: the ephemeral player promotes to a new document node ---
+player preview bits: 12884897250
+D2_PLAYER_SELECTED_FACE_PASS
+Path B: ephemeral 31 -> 30 undo 1 -> 1 (want -1 / unchanged — the LT5 v1 note)
+D2_PATHB_EPHEMERAL_DROPPED_PASS
+D2_PATHB_NOT_UNDOABLE_PASS
+D2_PATHB_NODE_IN_DOC_PASS
+D2_PROMOTE_INTERNALS_LAND_PASS
+note: a leftover entry raised the prompt; Discard cleans it
+click 'Discard': {"entity":12884893005,"kind":"button","operator":null,"text":"Discard"}
+--- D2 closing chain: save -> reload -> replay -> the player is in the game ---
+D2_DISK_HAS_PLAYER_PASS
+note: the game BRP did not answer within budget
+the instance stage never read live
+note: the D2 replay lagged
+switched to Live view
+after the replay: players= health.current= game Sun y= (want >=1 / coherent / 6.5)
+D2_REPLAY_PLAYER_IN_GAME_FAIL
+D2_REPLAY_HEALTH_PRESENT_FAIL
+D2_REPLAY_SUN_Y_FAIL
+WINDOW E done
+--- epilogue: restore the pristine scene.bsn ---
+pristine scene restored on disk
+CENSUS: error-handler panics=7 swap_remove-signature=9 across 2 windows (N13 family, attributed; ~5-6/cycle is the baseline)
+WARN-SHAPES: SetComponent|AddComponent=0 unknown-field=0 field-write-skipped=0 (the green run expects zeros — the game-side failure mouths never spoke)
+LIVE done: D2_DISK_HAS_PLAYER=PASS D2_PATHA_CLICKED=PASS D2_PATHA_LIVE_VALUE=PASS D2_PATHA_ONE_UNDO=PASS D2_PATHA_WHOLE_COMPONENT=PASS D2_PATHB_EPHEMERAL_DROPPED=PASS D2_PATHB_NODE_IN_DOC=PASS D2_PATHB_NOT_UNDOABLE=PASS D2_PLAYER_SELECTED_FACE=PASS D2_PROMOTE_INTERNALS_LAND=PASS D2_REPLAY_HEALTH_PRESENT=FAIL D2_REPLAY_PLAYER_IN_GAME=FAIL D2_REPLAY_SUN_Y=FAIL 
+PHASE_DONE live results: D2_DISK_HAS_PLAYER=PASS D2_PATHA_CLICKED=PASS D2_PATHA_LIVE_VALUE=PASS D2_PATHA_ONE_UNDO=PASS D2_PATHA_WHOLE_COMPONENT=PASS D2_PATHB_EPHEMERAL_DROPPED=PASS D2_PATHB_NODE_IN_DOC=PASS D2_PATHB_NOT_UNDOABLE=PASS D2_PLAYER_SELECTED_FACE=PASS D2_PROMOTE_INTERNALS_LAND=PASS D2_REPLAY_HEALTH_PRESENT=FAIL D2_REPLAY_PLAYER_IN_GAME=FAIL D2_REPLAY_SUN_Y=FAIL 
+=== phase live run 2026-11-04 05:23:47 build=c86b5034 ===
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t25-live-tuning/t25-live pid=78217 (recovery modal clear)
+--- warm build (the game binary the PIE legs reuse) ---
+WARM_BUILD_OK
+=== WINDOW E: D2 — Path A (authored overlay, one undo group) and Path B (ephemeral promote, no undo) ===
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t25-live-tuning/t25-live pid=78722 (recovery modal clear)
+session up: {"authored":3,"entities":34,"ephemeral":31}
+switched to Live view
+Save to Scene button bits: 4294963048
+D2_PATHA_CLICKED_PASS
+Path A: undo 0 -> 1 transform_keywords=3 (want +1 exactly; >=3 = the whole component landed)
+D2_PATHA_ONE_UNDO_PASS
+D2_PATHA_WHOLE_COMPONENT_PASS
+D2_PATHA_LIVE_VALUE_PASS
+--- Path B: the ephemeral player promotes to a new document node ---
+player preview bits: 12884897251
+D2_PLAYER_SELECTED_FACE_PASS
+Path B: ephemeral 31 -> 30 undo 1 -> 1 (want -1 / unchanged — the LT5 v1 note)
+D2_PATHB_EPHEMERAL_DROPPED_PASS
+D2_PATHB_NOT_UNDOABLE_PASS
+D2_PATHB_NODE_IN_DOC_PASS
+D2_PROMOTE_INTERNALS_LAND_FAIL
+note: a leftover entry raised the prompt; Discard cleans it
+click 'Discard': {"entity":8589928975,"kind":"button","operator":null,"text":"Discard"}
+--- D2 closing chain: save -> reload -> replay -> the player is in the game ---
+D2_DISK_HAS_PLAYER_PASS
+session up: {"authored":4,"entities":35,"ephemeral":31}
+switched to Live view
+after the replay: players=1 health.current=100.0 game Sun y=6.5 (want >=1 / coherent / 6.5)
+D2_REPLAY_PLAYER_IN_GAME_PASS
+D2_REPLAY_HEALTH_PRESENT_PASS
+D2_REPLAY_SUN_Y_PASS
+WINDOW E done
+--- epilogue: restore the pristine scene.bsn ---
+pristine scene restored on disk
+CENSUS: error-handler panics=7 swap_remove-signature=11 across 2 windows (N13 family, attributed; ~5-6/cycle is the baseline)
+WARN-SHAPES: SetComponent|AddComponent=0 unknown-field=0 field-write-skipped=0 (the green run expects zeros — the game-side failure mouths never spoke)
+LIVE done: D2_DISK_HAS_PLAYER=PASS D2_PATHA_CLICKED=PASS D2_PATHA_LIVE_VALUE=PASS D2_PATHA_ONE_UNDO=PASS D2_PATHA_WHOLE_COMPONENT=PASS D2_PATHB_EPHEMERAL_DROPPED=PASS D2_PATHB_NODE_IN_DOC=PASS D2_PATHB_NOT_UNDOABLE=PASS D2_PLAYER_SELECTED_FACE=PASS D2_PROMOTE_INTERNALS_LAND=FAIL D2_REPLAY_HEALTH_PRESENT=PASS D2_REPLAY_PLAYER_IN_GAME=PASS D2_REPLAY_SUN_Y=PASS 
+PHASE_DONE live results: D2_DISK_HAS_PLAYER=PASS D2_PATHA_CLICKED=PASS D2_PATHA_LIVE_VALUE=PASS D2_PATHA_ONE_UNDO=PASS D2_PATHA_WHOLE_COMPONENT=PASS D2_PATHB_EPHEMERAL_DROPPED=PASS D2_PATHB_NODE_IN_DOC=PASS D2_PATHB_NOT_UNDOABLE=PASS D2_PLAYER_SELECTED_FACE=PASS D2_PROMOTE_INTERNALS_LAND=FAIL D2_REPLAY_HEALTH_PRESENT=PASS D2_REPLAY_PLAYER_IN_GAME=PASS D2_REPLAY_SUN_Y=PASS 
+=== phase live run 2026-11-04 05:28:26 build=c86b5034 ===
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t25-live-tuning/t25-live pid=80861 (recovery modal clear)
+--- warm build (the game binary the PIE legs reuse) ---
+WARM_BUILD_OK
+=== WINDOW E: D2 — Path A (authored overlay, one undo group) and Path B (ephemeral promote, no undo) ===
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t25-live-tuning/t25-live pid=81274 (recovery modal clear)
+session up: {"authored":3,"entities":34,"ephemeral":31}
+switched to Live view
+Save to Scene button bits: 4294963048
+D2_PATHA_CLICKED_PASS
+Path A: undo 0 -> 1 transform_keywords=3 (want +1 exactly; >=3 = the whole component landed)
+D2_PATHA_ONE_UNDO_PASS
+D2_PATHA_WHOLE_COMPONENT_PASS
+D2_PATHA_LIVE_VALUE_PASS
+--- Path B: the ephemeral player promotes to a new document node ---
+player preview bits: 12884897251
+D2_PLAYER_SELECTED_FACE_PASS
+Path B: ephemeral 31 -> 30 undo 1 -> 1 (want -1 / unchanged — the LT5 v1 note)
+D2_PATHB_EPHEMERAL_DROPPED_PASS
+D2_PATHB_NOT_UNDOABLE_PASS
+D2_PATHB_NODE_IN_DOC_PASS
+D2_PROMOTE_INTERNALS_LAND_FAIL
+note: a leftover entry raised the prompt; Discard cleans it
+click 'Discard': {"entity":8589928975,"kind":"button","operator":null,"text":"Discard"}
+--- D2 closing chain: save -> reload -> replay -> the player is in the game ---
+D2_DISK_HAS_PLAYER_PASS
+session up: {"authored":4,"entities":35,"ephemeral":31}
+switched to Live view
+after the replay: players=1 health.current=100.0 game Sun y=6.5 (want >=1 / coherent / 6.5)
+D2_REPLAY_PLAYER_IN_GAME_PASS
+D2_REPLAY_HEALTH_PRESENT_PASS
+D2_REPLAY_SUN_Y_PASS
+WINDOW E done
+--- epilogue: restore the pristine scene.bsn ---
+pristine scene restored on disk
+CENSUS: error-handler panics=7 swap_remove-signature=11 across 2 windows (N13 family, attributed; ~5-6/cycle is the baseline)
+WARN-SHAPES: SetComponent|AddComponent=0 unknown-field=0 field-write-skipped=0 (the green run expects zeros — the game-side failure mouths never spoke)
+LIVE done: D2_DISK_HAS_PLAYER=PASS D2_PATHA_CLICKED=PASS D2_PATHA_LIVE_VALUE=PASS D2_PATHA_ONE_UNDO=PASS D2_PATHA_WHOLE_COMPONENT=PASS D2_PATHB_EPHEMERAL_DROPPED=PASS D2_PATHB_NODE_IN_DOC=PASS D2_PATHB_NOT_UNDOABLE=PASS D2_PLAYER_SELECTED_FACE=PASS D2_PROMOTE_INTERNALS_LAND=FAIL D2_REPLAY_HEALTH_PRESENT=PASS D2_REPLAY_PLAYER_IN_GAME=PASS D2_REPLAY_SUN_Y=PASS 
+PHASE_DONE live results: D2_DISK_HAS_PLAYER=PASS D2_PATHA_CLICKED=PASS D2_PATHA_LIVE_VALUE=PASS D2_PATHA_ONE_UNDO=PASS D2_PATHA_WHOLE_COMPONENT=PASS D2_PATHB_EPHEMERAL_DROPPED=PASS D2_PATHB_NODE_IN_DOC=PASS D2_PATHB_NOT_UNDOABLE=PASS D2_PLAYER_SELECTED_FACE=PASS D2_PROMOTE_INTERNALS_LAND=FAIL D2_REPLAY_HEALTH_PRESENT=PASS D2_REPLAY_PLAYER_IN_GAME=PASS D2_REPLAY_SUN_Y=PASS 
+=== phase live run 2026-11-04 05:31:34 build=c86b5034 ===
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t25-live-tuning/t25-live pid=82981 (recovery modal clear)
+--- warm build (the game binary the PIE legs reuse) ---
+WARM_BUILD_OK
+=== WINDOW E: D2 — Path A (authored overlay, one undo group) and Path B (ephemeral promote, no undo) ===
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t25-live-tuning/t25-live pid=83382 (recovery modal clear)
+session up: {"authored":3,"entities":34,"ephemeral":31}
+switched to Live view
+Save to Scene button bits: 4294963048
+D2_PATHA_CLICKED_PASS
+Path A: undo 0 -> 1 transform_keywords=3 (want +1 exactly; >=3 = the whole component landed)
+D2_PATHA_ONE_UNDO_PASS
+D2_PATHA_WHOLE_COMPONENT_PASS
+D2_PATHA_LIVE_VALUE_PASS
+--- Path B: the ephemeral player promotes to a new document node ---
+player preview bits: 12884897251
+D2_PLAYER_SELECTED_FACE_PASS
+Path B: ephemeral 31 -> 30 undo 1 -> 1 (want -1 / unchanged — the LT5 v1 note)
+D2_PATHB_EPHEMERAL_DROPPED_PASS
+D2_PATHB_NOT_UNDOABLE_PASS
+D2_PATHB_NODE_IN_DOC_PASS
+D2_PROMOTE_INTERNALS_LAND_FAIL
+note: a leftover entry raised the prompt; Discard cleans it
+click 'Discard': {"entity":8589928975,"kind":"button","operator":null,"text":"Discard"}
+--- D2 closing chain: save -> reload -> replay -> the player is in the game ---
+D2_DISK_HAS_PLAYER_PASS
+session up: {"authored":17,"entities":37,"ephemeral":20}
+switched to Live view
+after the replay: players=1 health.current=100.0 game Sun y= (want >=1 / coherent / 6.5)
+D2_REPLAY_PLAYER_IN_GAME_PASS
+D2_REPLAY_HEALTH_PRESENT_PASS
+D2_REPLAY_SUN_Y_FAIL
+WINDOW E done
+--- epilogue: restore the pristine scene.bsn ---
+pristine scene restored on disk
+CENSUS: error-handler panics=9 swap_remove-signature=13 across 2 windows (N13 family, attributed; ~5-6/cycle is the baseline)
+WARN-SHAPES: SetComponent|AddComponent=0 unknown-field=0 field-write-skipped=0 (the green run expects zeros — the game-side failure mouths never spoke)
+LIVE done: D2_DISK_HAS_PLAYER=PASS D2_PATHA_CLICKED=PASS D2_PATHA_LIVE_VALUE=PASS D2_PATHA_ONE_UNDO=PASS D2_PATHA_WHOLE_COMPONENT=PASS D2_PATHB_EPHEMERAL_DROPPED=PASS D2_PATHB_NODE_IN_DOC=PASS D2_PATHB_NOT_UNDOABLE=PASS D2_PLAYER_SELECTED_FACE=PASS D2_PROMOTE_INTERNALS_LAND=FAIL D2_REPLAY_HEALTH_PRESENT=PASS D2_REPLAY_PLAYER_IN_GAME=PASS D2_REPLAY_SUN_Y=FAIL 
+PHASE_DONE live results: D2_DISK_HAS_PLAYER=PASS D2_PATHA_CLICKED=PASS D2_PATHA_LIVE_VALUE=PASS D2_PATHA_ONE_UNDO=PASS D2_PATHA_WHOLE_COMPONENT=PASS D2_PATHB_EPHEMERAL_DROPPED=PASS D2_PATHB_NODE_IN_DOC=PASS D2_PATHB_NOT_UNDOABLE=PASS D2_PLAYER_SELECTED_FACE=PASS D2_PROMOTE_INTERNALS_LAND=FAIL D2_REPLAY_HEALTH_PRESENT=PASS D2_REPLAY_PLAYER_IN_GAME=PASS D2_REPLAY_SUN_Y=FAIL 
+=== phase live run 2026-11-04 05:35:29 build=c86b5034 ===
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t25-live-tuning/t25-live pid=85285 (recovery modal clear)
+--- warm build (the game binary the PIE legs reuse) ---
+WARM_BUILD_OK
+=== WINDOW E: D2 — Path A (authored overlay, one undo group) and Path B (ephemeral promote, no undo) ===
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t25-live-tuning/t25-live pid=85696 (recovery modal clear)
+session up: {"authored":3,"entities":34,"ephemeral":31}
+switched to Live view
+Save to Scene button bits: 4294963048
+D2_PATHA_CLICKED_PASS
+Path A: undo 0 -> 1 transform_keywords=3 (want +1 exactly; >=3 = the whole component landed)
+D2_PATHA_ONE_UNDO_PASS
+D2_PATHA_WHOLE_COMPONENT_PASS
+D2_PATHA_LIVE_VALUE_PASS
+--- Path B: the ephemeral player promotes to a new document node ---
+player preview bits: 12884897249
+D2_PLAYER_SELECTED_FACE_PASS
+Path B: ephemeral 31 -> 30 undo 1 -> 1 (want -1 / unchanged — the LT5 v1 note)
+D2_PATHB_EPHEMERAL_DROPPED_PASS
+D2_PATHB_NOT_UNDOABLE_PASS
+D2_PATHB_NODE_IN_DOC_PASS
+D2_PROMOTE_INTERNALS_LAND_FAIL
+note: a leftover entry raised the prompt; Discard cleans it
+click 'Discard': {"entity":8589928975,"kind":"button","operator":null,"text":"Discard"}
+--- D2 closing chain: save -> reload -> replay -> the player is in the game ---
+D2_DISK_HAS_PLAYER_PASS
+session up: {"authored":4,"entities":35,"ephemeral":31}
+switched to Live view
+after the replay: players=1 health.current=100.0 game Sun y=6.5 (want >=1 / coherent / 6.5)
+D2_REPLAY_PLAYER_IN_GAME_PASS
+D2_REPLAY_HEALTH_PRESENT_PASS
+D2_REPLAY_SUN_Y_PASS
+WINDOW E done
+--- epilogue: restore the pristine scene.bsn ---
+pristine scene restored on disk
+CENSUS: error-handler panics=8 swap_remove-signature=12 across 2 windows (N13 family, attributed; ~5-6/cycle is the baseline)
+WARN-SHAPES: SetComponent|AddComponent=0 unknown-field=0 field-write-skipped=0 (the green run expects zeros — the game-side failure mouths never spoke)
+LIVE done: D2_DISK_HAS_PLAYER=PASS D2_PATHA_CLICKED=PASS D2_PATHA_LIVE_VALUE=PASS D2_PATHA_ONE_UNDO=PASS D2_PATHA_WHOLE_COMPONENT=PASS D2_PATHB_EPHEMERAL_DROPPED=PASS D2_PATHB_NODE_IN_DOC=PASS D2_PATHB_NOT_UNDOABLE=PASS D2_PLAYER_SELECTED_FACE=PASS D2_PROMOTE_INTERNALS_LAND=FAIL D2_REPLAY_HEALTH_PRESENT=PASS D2_REPLAY_PLAYER_IN_GAME=PASS D2_REPLAY_SUN_Y=PASS 
+PHASE_DONE live results: D2_DISK_HAS_PLAYER=PASS D2_PATHA_CLICKED=PASS D2_PATHA_LIVE_VALUE=PASS D2_PATHA_ONE_UNDO=PASS D2_PATHA_WHOLE_COMPONENT=PASS D2_PATHB_EPHEMERAL_DROPPED=PASS D2_PATHB_NODE_IN_DOC=PASS D2_PATHB_NOT_UNDOABLE=PASS D2_PLAYER_SELECTED_FACE=PASS D2_PROMOTE_INTERNALS_LAND=FAIL D2_REPLAY_HEALTH_PRESENT=PASS D2_REPLAY_PLAYER_IN_GAME=PASS D2_REPLAY_SUN_Y=PASS 
+=== phase live run 2026-11-04 05:38:34 build=c86b5034 ===
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t25-live-tuning/t25-live pid=87494 (recovery modal clear)
+--- warm build (the game binary the PIE legs reuse) ---
+WARM_BUILD_OK
+=== WINDOW E: D2 — Path A (authored overlay, one undo group) and Path B (ephemeral promote, no undo) ===
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t25-live-tuning/t25-live pid=87906 (recovery modal clear)
+session up: {"authored":3,"entities":34,"ephemeral":31}
+switched to Live view
+Save to Scene button bits: 4294963048
+D2_PATHA_CLICKED_PASS
+Path A: undo 0 -> 1 transform_keywords=3 (want +1 exactly; >=3 = the whole component landed)
+D2_PATHA_ONE_UNDO_PASS
+D2_PATHA_WHOLE_COMPONENT_PASS
+D2_PATHA_LIVE_VALUE_PASS
+--- Path B: the ephemeral player promotes to a new document node ---
+player preview bits: 12884897249
+D2_PLAYER_SELECTED_FACE_PASS
+Path B: ephemeral 31 -> 30 undo 1 -> 1 (want -1 / unchanged — the LT5 v1 note)
+D2_PATHB_EPHEMERAL_DROPPED_PASS
+D2_PATHB_NOT_UNDOABLE_PASS
+D2_PATHB_NODE_IN_DOC_PASS
+D2_PROMOTE_INTERNALS_LAND_FAIL
+note: a leftover entry raised the prompt; Discard cleans it
+click 'Discard': {"entity":8589928975,"kind":"button","operator":null,"text":"Discard"}
+--- D2 closing chain: save -> reload -> replay -> the player is in the game ---
+D2_DISK_HAS_PLAYER_PASS
+session up: {"authored":4,"entities":35,"ephemeral":31}
+switched to Live view
+after the replay: players=1 health.current=100.0 game Sun y=6.5 (want >=1 / coherent / 6.5)
+D2_REPLAY_PLAYER_IN_GAME_PASS
+D2_REPLAY_HEALTH_PRESENT_PASS
+D2_REPLAY_SUN_Y_PASS
+WINDOW E done
+--- epilogue: restore the pristine scene.bsn ---
+pristine scene restored on disk
+CENSUS: error-handler panics=8 swap_remove-signature=12 across 2 windows (N13 family, attributed; ~5-6/cycle is the baseline)
+WARN-SHAPES: SetComponent|AddComponent=0 unknown-field=0 field-write-skipped=0 (the green run expects zeros — the game-side failure mouths never spoke)
+LIVE done: D2_DISK_HAS_PLAYER=PASS D2_PATHA_CLICKED=PASS D2_PATHA_LIVE_VALUE=PASS D2_PATHA_ONE_UNDO=PASS D2_PATHA_WHOLE_COMPONENT=PASS D2_PATHB_EPHEMERAL_DROPPED=PASS D2_PATHB_NODE_IN_DOC=PASS D2_PATHB_NOT_UNDOABLE=PASS D2_PLAYER_SELECTED_FACE=PASS D2_PROMOTE_INTERNALS_LAND=FAIL D2_REPLAY_HEALTH_PRESENT=PASS D2_REPLAY_PLAYER_IN_GAME=PASS D2_REPLAY_SUN_Y=PASS 
+PHASE_DONE live results: D2_DISK_HAS_PLAYER=PASS D2_PATHA_CLICKED=PASS D2_PATHA_LIVE_VALUE=PASS D2_PATHA_ONE_UNDO=PASS D2_PATHA_WHOLE_COMPONENT=PASS D2_PATHB_EPHEMERAL_DROPPED=PASS D2_PATHB_NODE_IN_DOC=PASS D2_PATHB_NOT_UNDOABLE=PASS D2_PLAYER_SELECTED_FACE=PASS D2_PROMOTE_INTERNALS_LAND=FAIL D2_REPLAY_HEALTH_PRESENT=PASS D2_REPLAY_PLAYER_IN_GAME=PASS D2_REPLAY_SUN_Y=PASS 
+=== phase live run 2026-11-04 05:41:38 build=c86b5034 ===
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t25-live-tuning/t25-live pid=89711 (recovery modal clear)
+--- warm build (the game binary the PIE legs reuse) ---
+WARM_BUILD_OK
+=== WINDOW E: D2 — Path A (authored overlay, one undo group) and Path B (ephemeral promote, no undo) ===
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t25-live-tuning/t25-live pid=90124 (recovery modal clear)
+session up: {"authored":3,"entities":34,"ephemeral":31}
+switched to Live view
+Save to Scene button bits: 4294963048
+D2_PATHA_CLICKED_PASS
+Path A: undo 0 -> 1 transform_keywords=3 (want +1 exactly; >=3 = the whole component landed)
+D2_PATHA_ONE_UNDO_PASS
+D2_PATHA_WHOLE_COMPONENT_PASS
+D2_PATHA_LIVE_VALUE_PASS
+--- Path B: the ephemeral player promotes to a new document node ---
+player preview bits: 12884897251
+D2_PLAYER_SELECTED_FACE_PASS
+Path B: ephemeral 31 -> 30 undo 1 -> 1 (want -1 / unchanged — the LT5 v1 note)
+D2_PATHB_EPHEMERAL_DROPPED_PASS
+D2_PATHB_NOT_UNDOABLE_PASS
+D2_PATHB_NODE_IN_DOC_PASS
+D2_PROMOTE_INTERNALS_LAND_FAIL
+note: a leftover entry raised the prompt; Discard cleans it
+click 'Discard': {"entity":8589928975,"kind":"button","operator":null,"text":"Discard"}
+--- D2 closing chain: save -> reload -> replay -> the player is in the game ---
+D2_DISK_HAS_PLAYER_PASS
+session up: {"authored":4,"entities":35,"ephemeral":31}
+switched to Live view
+after the replay: players=1 health.current=100.0 game Sun y=6.5 (want >=1 / coherent / 6.5)
+D2_REPLAY_PLAYER_IN_GAME_PASS
+D2_REPLAY_HEALTH_PRESENT_PASS
+D2_REPLAY_SUN_Y_PASS
+WINDOW E done
+--- epilogue: restore the pristine scene.bsn ---
+pristine scene restored on disk
+CENSUS: error-handler panics=8 swap_remove-signature=12 across 2 windows (N13 family, attributed; ~5-6/cycle is the baseline)
+WARN-SHAPES: SetComponent|AddComponent=0 unknown-field=0 field-write-skipped=0 (the green run expects zeros — the game-side failure mouths never spoke)
+LIVE done: D2_DISK_HAS_PLAYER=PASS D2_PATHA_CLICKED=PASS D2_PATHA_LIVE_VALUE=PASS D2_PATHA_ONE_UNDO=PASS D2_PATHA_WHOLE_COMPONENT=PASS D2_PATHB_EPHEMERAL_DROPPED=PASS D2_PATHB_NODE_IN_DOC=PASS D2_PATHB_NOT_UNDOABLE=PASS D2_PLAYER_SELECTED_FACE=PASS D2_PROMOTE_INTERNALS_LAND=FAIL D2_REPLAY_HEALTH_PRESENT=PASS D2_REPLAY_PLAYER_IN_GAME=PASS D2_REPLAY_SUN_Y=PASS 
+PHASE_DONE live results: D2_DISK_HAS_PLAYER=PASS D2_PATHA_CLICKED=PASS D2_PATHA_LIVE_VALUE=PASS D2_PATHA_ONE_UNDO=PASS D2_PATHA_WHOLE_COMPONENT=PASS D2_PATHB_EPHEMERAL_DROPPED=PASS D2_PATHB_NODE_IN_DOC=PASS D2_PATHB_NOT_UNDOABLE=PASS D2_PLAYER_SELECTED_FACE=PASS D2_PROMOTE_INTERNALS_LAND=FAIL D2_REPLAY_HEALTH_PRESENT=PASS D2_REPLAY_PLAYER_IN_GAME=PASS D2_REPLAY_SUN_Y=PASS 

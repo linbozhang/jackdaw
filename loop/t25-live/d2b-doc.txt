@@ -1,0 +1,150 @@
+bevy_ecs::hierarchy::Children [
+    #Root
+    jackdaw_scene_types::node_id::SceneNodeId(7001)
+    bevy_transform::components::transform::Transform
+    bevy_camera::visibility::Visibility::Visible
+    bevy_ecs::hierarchy::Children [
+        #Sun
+        jackdaw_scene_types::node_id::SceneNodeId(7002)
+        bevy_light::directional_light::DirectionalLight {
+            color: bevy_color::color::Color::LinearRgba(bevy_color::linear_rgba::LinearRgba { red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0 }),
+            illuminance: 10000.0,
+            shadow_maps_enabled: false,
+            contact_shadows_enabled: false,
+            soft_shadow_size: core::option::Option::None,
+            affects_lightmapped_mesh_diffuse: true,
+            shadow_depth_bias: 0.019999999552965164,
+            shadow_normal_bias: 1.7999999523162842,
+        }
+        bevy_transform::components::transform::Transform {
+            translation: glam::Vec3 {
+                x: 0.0,
+                y: 6.5,
+                z: 0.0,
+            },
+            rotation: glam::Quat {
+                x: -0.4226182997226715,
+                y: 0.0,
+                z: 0.0,
+                w: 0.9063078165054321,
+            },
+            scale: glam::Vec3 {
+                x: 1.0,
+                y: 1.0,
+                z: 1.0,
+            },
+        }
+        bevy_camera::visibility::Visibility::Visible
+        bevy_light::cascade::CascadeShadowConfig {
+            bounds: [
+                10.0,
+                24.662120819091797,
+                60.822021484375,
+                149.99998474121094,
+            ],
+            overlap_proportion: 0.20000000298023224,
+            minimum_distance: 0.10000000149011612,
+        }
+        --
+        #Ambient
+        jackdaw_scene_types::node_id::SceneNodeId(7003)
+        bevy_audio::audio::AudioPlayer<bevy_audio::audio_source::AudioSource>("sounds/ambient.wav")
+        bevy_audio::audio::PlaybackSettings {
+            mode: bevy_audio::audio::PlaybackMode::Loop,
+            volume: bevy_audio::volume::Volume::Linear(0.8),
+            spatial: true,
+        }
+        bevy_transform::components::transform::Transform {
+            translation: glam::Vec3 {
+                x: 6.0,
+                y: 2.0,
+                z: -4.0,
+            },
+        }
+        bevy_camera::visibility::Visibility::Visible
+    ]
+    --
+    avian3d::collision::collider::ColliderAabb {
+        min: glam::Vec3 {
+            x: -2.369999885559082,
+            y: -0.010000038892030716,
+            z: -0.3700000047683716,
+        },
+        max: glam::Vec3 {
+            x: -1.6299999952316284,
+            y: 1.7299998998641968,
+            z: 0.3700000047683716,
+        },
+    }
+    avian3d::physics_transform::transform::PreSolveDeltaPosition(glam::Vec3 { x: 0.0, y: 0.0, z: 0.0 })
+    avian3d::collision::collider::collider_transform::ColliderTransform {
+        translation: glam::Vec3 {
+            x: 0.0,
+            y: 0.0,
+            z: 0.0,
+        },
+        rotation: glam::Quat {
+            x: 0.0,
+            y: 0.0,
+            z: 0.0,
+            w: 1.0,
+        },
+        scale: glam::Vec3 {
+            x: 1.0,
+            y: 1.0,
+            z: 1.0,
+        },
+    }
+    avian3d::dynamics::rigid_body::mass_properties::components::computed::ComputedCenterOfMass(glam::Vec3 { x: 0.0, y: 0.0, z: 0.0 })
+    avian3d::physics_transform::transform::Rotation(glam::Quat { x: 0.0, y: 0.0, z: 0.0, w: 1.0 })
+    avian3d::collision::collider::ColliderAabbMargin(0.05000000074505806)
+    avian3d::collision::collider::EnlargedAabb(avian3d::collision::collider::ColliderAabb { min: glam::Vec3 { x: -2.419999837875366, y: -0.060000039637088776, z: -0.42000001668930054 }, max: glam::Vec3 { x: -1.5800000429153442, y: 1.779999852180481, z: 0.42000001668930054 } })
+    avian3d::dynamics::rigid_body::sleeping::Sleeping
+    avian3d::dynamics::rigid_body::sleeping::SleepThreshold {
+        linear: 0.15000000596046448,
+        angular: 0.15000000596046448,
+    }
+    avian3d::dynamics::rigid_body::LinearVelocity(glam::Vec3 { x: 0.0, y: 0.0, z: 0.0 })
+    avian3d::dynamics::rigid_body::mass_properties::components::computed::ComputedMass {
+        inverse: 1.7716691493988037,
+    }
+    avian3d::physics_transform::transform::Position(glam::Vec3 { x: -2.0, y: 0.8600000143051147, z: 0.0 })
+    avian3d::dynamics::rigid_body::AngularVelocity(glam::Vec3 { x: 0.0, y: 0.0, z: 0.0 })
+    avian3d::dynamics::rigid_body::forces::AccumulatedLocalAcceleration
+    avian3d::dynamics::rigid_body::RigidBody::Kinematic
+    avian3d::dynamics::rigid_body::sleeping::SleepTimer(0.5)
+    avian3d::collision::collider::backend::ColliderMarker
+    avian3d::dynamics::rigid_body::mass_properties::components::computed::ComputedAngularInertia {
+        inverse: glam_matrix_extras::symmetric::symmetric_mat3::SymmetricMat3 {
+            m00: 8.255813598632813,
+            m01: 0.0,
+            m02: 0.0,
+            m11: 30.891002655029297,
+            m12: 0.0,
+            m22: 8.255813598632813,
+        },
+    }
+    avian3d::dynamics::rigid_body::mass_properties::components::collider::ColliderDensity(1.0)
+    avian3d::dynamics::integrator::VelocityIntegrationData
+    avian3d::collision::collider::layers::CollisionLayers {
+        memberships: avian3d::collision::collider::layers::LayerMask(1),
+        filters: avian3d::collision::collider::layers::LayerMask(4294967295),
+    }
+    bevy_camera::visibility::Visibility::Inherited
+    bevy_transform::components::transform::Transform {
+        translation: glam::Vec3 {
+            x: -2.0,
+            y: 0.8600000143051147,
+            z: 0.0,
+        },
+    }
+    avian3d::dynamics::rigid_body::mass_properties::components::collider::ColliderMassProperties(bevy_heavy::dim3::MassProperties3d { mass: 0.5644394755363464, principal_angular_inertia: glam::Vec3 { x: 0.12112676352262497, y: 0.032371886074543, z: 0.12112676352262497 }, local_inertial_frame: glam::Quat { x: 0.0, y: 0.0, z: 0.0, w: 1.0 }, center_of_mass: glam::Vec3 { x: 0.0, y: 0.0, z: 0.0 } })
+    jackdaw_scene_types::node_id::SceneNodeId(6368824110483345097)
+    avian3d::collision::collider::collider_hierarchy::RigidBodyColliders(["4637v2"])
+    jackdaw_avian_integration::AvianCollider(avian3d::collision::collider::constructor::ColliderConstructor::Capsule { radius: 0.3499999940395355, height: 1.0 })
+    avian3d::physics_transform::transform::PreSolveDeltaRotation(glam::Quat { x: 0.0, y: 0.0, z: 0.0, w: 1.0 })
+    avian3d::collision::collider::collider_hierarchy::ColliderOf {
+        body: "4637v2",
+    }
+]
+

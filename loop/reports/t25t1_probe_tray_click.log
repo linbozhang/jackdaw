@@ -1,0 +1,41 @@
+# T25-T1 reachability probe (decision 6(a) premise) - tray + stop prompt via jackdaw/ui_click,
+# post-fix build (LT2 route as the injection surface), 2026-11-03. Three windows:
+#   v1 loop/qa/t25-probe.sh (console-probe.log lines 1-51) - ran with the Recovered Work
+#      modal still up (its scrim swallowed badge/tray clicks; the prompt's GlobalZ-210
+#      buttons landed anyway) - the v1 finding led to the boot-time modal dismissal;
+#   v2 loop/qa/t25-probe.sh (lines 52-104) - modal cleared; prompt three keys end to end;
+#   v3 loop/qa/t25-probe3.sh - the tray row buttons, clicked in the Review-handoff-opened tray.
+# Evidence: loop/t25-live/{console-probe.log,console-probe3.log,walk-probe-*.json,walk-p3-*.json,
+# probe-*-click.json,p3-*-click.json,census-probe.txt}.
+#
+# == verdicts (the decision 6(a) matrix) ==
+INJECTION=PASS           component.set on the projected Spinner produces a real ledger entry (the LT2 route fires on the machine)
+BADGE=PASS               the badge chip ('1 edit') is in the ui_tree walk (text + kind=button)
+BADGE_OPENS_TRAY=FAIL    the click lands (clicked:true, target=the badge button) but the tray never spawns -
+                         the synthetic click's picking does not reach the badge (candidate: an overlaying node
+                         at the badge point or the hidden() prop). LT candidate for T2; not a 6(a) blocker:
+                         the tray opens by the Review handoff (stop -> Review), which is itself the C4 chain.
+TRAY_ROW=PASS            in the open tray's walk: the row label ('Spinner / Transform.translation.y'),
+                         the 'baseline -> live' cell ('3.0 -> 4.0'), per-row Save/Revert buttons (kind=button),
+                         the footer Apply All / Discard All
+ROW_SAVE=PASS (end to end)  click -> document authored (6c31e7... -> 2750fdaf...), undo +1, count 0
+ROW_REVERT=PASS (end to end) click -> entry settled (count 0), the editor entity restored to its baseline;
+                         the game-side half reads empty because the game is already stopped in this window
+                         (the leg's probe mis-design; the revert's ControlEvent drops quietly with no game)
+FOOTER_APPLY_ALL=PASS (end to end)  click -> document authored, count 0
+PROMPT_TITLE=PASS        '1 live edit not saved to scene' in the walk
+PROMPT_APPLY_ALL=PASS (end to end)  click -> document authored (134099... -> 6c31e7...), count 0, prompt closed
+PROMPT_DISCARD=PASS (end to end)    click -> count 0, document byte-identical, undo depth unchanged
+PROMPT_REVIEW=PASS (end to end)     click -> prompt closed, tray opened with the entry rows (the handoff)
+
+# == T2 handoff (decision 6(a) holds with one design note) ==
+# 1. Tray-opening route for the B-series legs: play -> make entries -> stop -> ui_click 'Review' ->
+#    the tray is up (rows, diff cells, Save/Revert, footer all walk-addressable and clickable).
+#    The badge click route stays an LT candidate.
+# 2. Button resolution: the T24-T2 C3 parent-of-text resolver needs one ancestor more for the tray
+#    (label text -> flex-grown holder -> row node holds the buttons as siblings); the fixed
+#    ancestor-climbing resolver is in loop/qa/t25-probe{,3}.sh (button_bits_in_row).
+# 3. click_text ambiguity: with both the tray and the recovery modal up, 'Discard' matches two nodes;
+#    the scripts retry against the kind=button candidate (click_label).
+# 4. Census: v1 panics=4 swap_remove=5; v2 panics=3 swap_remove=3; v3 panics=5 swap_remove=7
+#    (N13 family, attributed per discipline; not a leg criterion).

@@ -1,0 +1,12 @@
+--- /Users/zhanglinbo/workspace/jackdaw/loop/t25-live/t25t25_run10/editor-live-w1.log panics=0 swap_remove=0 ---
+--- /Users/zhanglinbo/workspace/jackdaw/loop/t25-live/t25t25_run10/editor-live-w2.log panics=4 swap_remove=6 ---
+swap_remove index (is 0) should be < len (is 0)
+[2m2026-11-04T04:08:38.644395Z[0m [31mERROR[0m [2mbevy_ecs::error::handler[0m[2m:[0m Encountered an error in system `jackdaw::pie::drain_game_events`: Exclusive system panicked
+swap_remove index (is 0) should be < len (is 0)
+[2m2026-11-04T04:08:58.382765Z[0m [31mERROR[0m [2mbevy_ecs::error::handler[0m[2m:[0m Encountered an error in system `jackdaw::pie::cleanup_session_on_stop`: Exclusive system panicked
+swap_remove index (is 0) should be < len (is 0)
+swap_remove index (is 2) should be < len (is 2)
+[2m2026-11-04T04:09:37.653557Z[0m [31mERROR[0m [2mbevy_ecs::error::handler[0m[2m:[0m Encountered an error in system `jackdaw::pie::drain_game_events`: Exclusive system panicked
+swap_remove index (is 2) should be < len (is 1)
+[2m2026-11-04T04:09:46.240657Z[0m [31mERROR[0m [2mbevy_ecs::error::handler[0m[2m:[0m Encountered an error in system `jackdaw::pie::cleanup_session_on_stop`: Exclusive system panicked
+swap_remove index (is 2) should be < len (is 1)

@@ -2355,6 +2355,7 @@ mod tests {
                 baseline: None,
                 live_value: serde_json::json!(null),
                 label: "probe".to_string(),
+                kind: crate::live_edits::LiveEditKind::Field,
             };
             world
                 .resource_mut::<crate::live_edits::LiveEditLog>()

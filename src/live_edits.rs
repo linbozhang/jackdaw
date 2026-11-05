@@ -8,7 +8,9 @@ use bevy::prelude::*;
 use jackdaw_api::prelude::*;
 use jackdaw_bsn::SceneBsnAst;
 
-use crate::commands::{CommandGroup, CommandHistory, EditorCommand, SetBsnField};
+use crate::commands::{
+    CommandGroup, CommandHistory, EditorCommand, RemoveProjectComponent, SetBsnField,
+};
 
 /// Identifies one tracked field. Keyed by the game-side entity bits only:
 /// the authored node id is resolved against whatever AST is open at record
@@ -20,6 +22,20 @@ pub struct LiveEditKey {
     pub bits: u64,
     pub type_path: String,
     pub field_path: String,
+}
+
+/// What an entry tracks. Field edits are the inspector's per-field route and
+/// carry a revertible baseline. The structural kinds record a runtime
+/// component add/remove (`field_path` empty, the value a whole component or
+/// `null`): Save authors/removes the component patch, but there is no field
+/// baseline to send back, so the tray disables Revert for them instead of
+/// offering a button that could only warn.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
+pub enum LiveEditKind {
+    #[default]
+    Field,
+    ComponentAdded,
+    ComponentRemoved,
 }
 
 /// One tracked edit: the authored field value at first edit and the latest
@@ -38,6 +54,8 @@ pub struct LiveEditEntry {
     /// Display label captured at record time (entity name + field), so the
     /// tray can label entries even after the entity despawns.
     pub label: String,
+    /// Whether this is a plain field edit or a runtime component add/remove.
+    pub kind: LiveEditKind,
 }
 
 /// Which per-entry action the tray asked for. Stashed on [`LiveEditLog`]
@@ -76,6 +94,13 @@ impl LiveEditLog {
     pub fn is_empty(&self) -> bool {
         self.entries.is_empty()
     }
+}
+
+/// Whether the document still holds the component patch for `entity`.
+fn patch_authored(world: &World, entity: Entity, type_path: &str) -> bool {
+    let ast = world.resource::<SceneBsnAst>();
+    ast.ast_for(entity)
+        .is_some_and(|node| ast.find_patch_by_type_path(node, type_path).is_some())
 }
 
 /// The authored node id for a preview entity, when it maps to the open
@@ -179,6 +204,77 @@ pub fn record_live_edit(
             baseline,
             live_value: field_value,
             label,
+            kind: LiveEditKind::Field,
+        },
+    ));
+}
+
+/// Record a runtime component add/remove (the inspector operators' live
+/// route) as a structural entry: whole component, empty field path. The
+/// baseline is the component's authored value when the document holds it;
+/// a removal of a component the document never authored falls back to the
+/// value the game held just before the removal, so the tray row still shows
+/// what went away. Structural entries save through the whole-component path
+/// (an add authors the patch, a removal drops it) and their Revert is
+/// disabled in the tray.
+pub fn record_live_structural_edit(
+    world: &mut World,
+    preview: Entity,
+    bits: u64,
+    type_path: &str,
+    kind: LiveEditKind,
+    live_value: serde_json::Value,
+) {
+    let node_id = node_id_for_entity(world, preview);
+    let key = LiveEditKey {
+        bits,
+        type_path: type_path.to_string(),
+        field_path: String::new(),
+    };
+    if let Some(entry) = world.resource_mut::<LiveEditLog>().get_mut(&key) {
+        entry.live_value = live_value;
+        entry.node_id = entry.node_id.or(node_id);
+        return;
+    }
+    // A zone hot-reload respawns the same authored node under new bits, so the
+    // exact-key lookup misses. Re-key the existing structural entry for this
+    // node instead of duplicating it, keeping its baseline and label.
+    if let Some(node_id) = node_id {
+        let mut log = world.resource_mut::<LiveEditLog>();
+        if let Some((existing_key, existing_entry)) = log.entries.iter_mut().find(|(k, e)| {
+            e.node_id == Some(node_id) && k.type_path == type_path && k.field_path.is_empty()
+        }) {
+            existing_key.bits = bits;
+            existing_entry.live_value = live_value;
+            return;
+        }
+    }
+    let baseline = {
+        let registry = world.resource::<AppTypeRegistry>().clone();
+        let registry = registry.read();
+        let ast = world.resource::<SceneBsnAst>();
+        ast.ast_for(preview)
+            .and_then(|node| authored_field_json(ast, node, type_path, "", &registry))
+            .or_else(|| {
+                (kind == LiveEditKind::ComponentRemoved)
+                    .then(|| serialize_component_json(world, preview, type_path))
+                    .filter(|value| !value.is_null())
+            })
+    };
+    let name = world
+        .get::<Name>(preview)
+        .map(|n| n.as_str().to_string())
+        .unwrap_or_else(|| format!("entity {bits:x}"));
+    let short_type = type_path.rsplit("::").next().unwrap_or(type_path);
+    let label = format!("{name} / {short_type}");
+    world.resource_mut::<LiveEditLog>().entries.push((
+        key,
+        LiveEditEntry {
+            node_id,
+            baseline,
+            live_value,
+            label,
+            kind,
         },
     ));
 }
@@ -328,6 +424,13 @@ fn build_save_command(
     key: &LiveEditKey,
     entry: &LiveEditEntry,
 ) -> Option<Box<dyn EditorCommand>> {
+    // A runtime component removal reconciles by dropping the authored patch
+    // (undo puts it back from the command's own snapshot). Callers settle
+    // entries whose patch is already absent before reaching here.
+    if entry.kind == LiveEditKind::ComponentRemoved {
+        return RemoveProjectComponent::from_world(world, entity, key.type_path.clone())
+            .map(|cmd| Box::new(cmd) as Box<dyn EditorCommand>);
+    }
     // Branch on whether the COMPONENT is authored on the node, not on the
     // entry's field baseline: the document stores sparse patches, so a
     // default-valued field reads as no baseline even though the component
@@ -411,6 +514,14 @@ pub fn save_entry_to_scene(world: &mut World, key: &LiveEditKey) {
             );
             return;
         };
+        // A removal of a component the document never held needs no
+        // authoring: the runtime-only removal simply settles the entry.
+        if entry.kind == LiveEditKind::ComponentRemoved
+            && !patch_authored(world, entity, &key.type_path)
+        {
+            world.resource_mut::<LiveEditLog>().remove(key);
+            return;
+        }
         let Some(mut cmd) = build_save_command(world, entity, key, &entry) else {
             warn!(
                 "save live edit: {} no longer has {}, keeping the entry",
@@ -562,6 +673,14 @@ pub fn apply_all_to_scene(world: &mut World) {
                 stale += 1;
                 continue;
             };
+            // A removal of a component the document never held needs no
+            // authoring: the runtime-only removal simply settles the entry.
+            if entry.kind == LiveEditKind::ComponentRemoved
+                && !patch_authored(world, entity, &key.type_path)
+            {
+                handled.push(key.clone());
+                continue;
+            }
             let Some(cmd) = build_save_command(world, entity, key, entry) else {
                 stale += 1;
                 continue;
@@ -937,6 +1056,7 @@ mod tests {
             baseline: None,
             live_value: serde_json::Value::Null,
             label: String::new(),
+            kind: LiveEditKind::Field,
         };
         assert_eq!(
             resolve_entry_entity(
@@ -1423,6 +1543,7 @@ mod tests {
                 baseline: None,
                 live_value: serde_json::json!([0.0, 0.0, 0.0]),
                 label: "ghost".to_string(),
+                kind: LiveEditKind::Field,
             },
         ));
 
@@ -1482,5 +1603,251 @@ mod tests {
             world.resource::<LiveEditLog>().is_empty(),
             "every entry for the promoted entity is dropped"
         );
+    }
+
+    // ---- structural entries: the runtime component add/remove ledger (LT1) --
+
+    #[test]
+    fn a_structural_add_records_a_whole_component_entry_and_saves_the_patch() {
+        let (mut world, preview, _node_id) = build_world();
+
+        record_live_structural_edit(
+            &mut world,
+            preview,
+            7,
+            &health_path(),
+            LiveEditKind::ComponentAdded,
+            serde_json::json!({"current": 50.0}),
+        );
+
+        {
+            let log = world.resource::<LiveEditLog>();
+            assert_eq!(log.entries.len(), 1);
+            let (key, entry) = &log.entries[0];
+            assert_eq!(key.bits, 7);
+            assert_eq!(key.type_path, health_path());
+            assert_eq!(
+                key.field_path, "",
+                "a structural entry carries no field path"
+            );
+            assert_eq!(entry.kind, LiveEditKind::ComponentAdded);
+            assert_eq!(entry.baseline, None, "the component was never authored");
+            assert_eq!(entry.live_value, serde_json::json!({"current": 50.0}));
+            assert_eq!(entry.label, "player / Health");
+        }
+
+        // The game streamed the component back; the preview entity holds it,
+        // so the whole-component save branch can serialize it.
+        world.entity_mut(preview).insert(Health { current: 50.0 });
+        let key = world.resource::<LiveEditLog>().entries[0].0.clone();
+        save_entry_to_scene(&mut world, &key);
+
+        let ast = world.resource::<SceneBsnAst>();
+        let node = ast.ast_for(preview).expect("the authored node");
+        assert!(
+            ast.find_patch_by_type_path(node, &health_path()).is_some(),
+            "Save authored the whole component patch"
+        );
+        assert!(
+            world.resource::<LiveEditLog>().entries.is_empty(),
+            "the entry is settled"
+        );
+        assert_eq!(world.resource::<CommandHistory>().undo_stack.len(), 1);
+    }
+
+    #[test]
+    fn a_structural_remove_records_the_baseline_and_saves_as_a_patch_drop() {
+        let (mut world, preview, _node_id) = build_world();
+
+        record_live_structural_edit(
+            &mut world,
+            preview,
+            7,
+            TRANSFORM_PATH,
+            LiveEditKind::ComponentRemoved,
+            serde_json::Value::Null,
+        );
+
+        {
+            let (key, entry) = &world.resource::<LiveEditLog>().entries[0];
+            assert_eq!(key.field_path, "");
+            assert_eq!(entry.kind, LiveEditKind::ComponentRemoved);
+            assert!(
+                entry.baseline.is_some(),
+                "the authored component is the baseline, so the tray shows what went away"
+            );
+            assert_eq!(entry.live_value, serde_json::Value::Null);
+        }
+
+        let key = world.resource::<LiveEditLog>().entries[0].0.clone();
+        save_entry_to_scene(&mut world, &key);
+
+        let ast = world.resource::<SceneBsnAst>();
+        let node = ast.ast_for(preview).expect("the authored node");
+        assert!(
+            ast.find_patch_by_type_path(node, TRANSFORM_PATH).is_none(),
+            "Save dropped the authored component patch"
+        );
+        assert!(
+            world.resource::<LiveEditLog>().entries.is_empty(),
+            "the entry is settled"
+        );
+        assert_eq!(
+            world.resource::<CommandHistory>().undo_stack.len(),
+            1,
+            "one undoable removal, undo restores the patch"
+        );
+    }
+
+    #[test]
+    fn a_runtime_only_removal_settles_without_authoring_anything() {
+        let (mut world, preview, _node_id) = build_world();
+        // Health is not authored on the node: removing it at runtime needs
+        // no document reconciliation, so the entry simply settles.
+        record_live_structural_edit(
+            &mut world,
+            preview,
+            7,
+            &health_path(),
+            LiveEditKind::ComponentRemoved,
+            serde_json::Value::Null,
+        );
+
+        let key = world.resource::<LiveEditLog>().entries[0].0.clone();
+        save_entry_to_scene(&mut world, &key);
+
+        assert!(
+            world.resource::<LiveEditLog>().entries.is_empty(),
+            "the entry is settled"
+        );
+        assert_eq!(
+            world.resource::<CommandHistory>().undo_stack.len(),
+            0,
+            "nothing was authored"
+        );
+    }
+
+    #[test]
+    fn apply_all_lands_structural_and_field_entries_in_one_group() {
+        let (mut world, preview, _node_id) = build_world();
+        // A field edit and a runtime component add, plus a runtime-only
+        // removal that needs no authoring.
+        record_live_edit(
+            &mut world,
+            preview,
+            7,
+            TRANSFORM_PATH,
+            "translation",
+            serde_json::json!([9.0, 2.0, 3.0]),
+        );
+        record_live_structural_edit(
+            &mut world,
+            preview,
+            7,
+            &health_path(),
+            LiveEditKind::ComponentAdded,
+            serde_json::json!({"current": 50.0}),
+        );
+        world.entity_mut(preview).insert(Health { current: 50.0 });
+        record_live_structural_edit(
+            &mut world,
+            preview,
+            7,
+            &shield_path(),
+            LiveEditKind::ComponentRemoved,
+            serde_json::Value::Null,
+        );
+
+        apply_all_to_scene(&mut world);
+
+        let ast = world.resource::<SceneBsnAst>();
+        let node = ast.ast_for(preview).expect("the authored node");
+        assert_eq!(
+            ast_field(&world, preview, "translation"),
+            Some(serde_json::json!([9.0, 2.0, 3.0])),
+            "the field edit landed"
+        );
+        assert!(
+            ast.find_patch_by_type_path(node, &health_path()).is_some(),
+            "the added component patch landed"
+        );
+        assert!(
+            world.resource::<LiveEditLog>().entries.is_empty(),
+            "every entry settled"
+        );
+        assert_eq!(
+            world.resource::<CommandHistory>().undo_stack.len(),
+            1,
+            "the authoring halves land as one undo group"
+        );
+    }
+
+    #[test]
+    fn a_structural_re_edit_updates_one_entry_without_duplicating() {
+        let (mut world, preview, _node_id) = build_world();
+
+        record_live_structural_edit(
+            &mut world,
+            preview,
+            7,
+            &health_path(),
+            LiveEditKind::ComponentAdded,
+            serde_json::json!({"current": 50.0}),
+        );
+        record_live_structural_edit(
+            &mut world,
+            preview,
+            7,
+            &health_path(),
+            LiveEditKind::ComponentAdded,
+            serde_json::json!({"current": 80.0}),
+        );
+
+        let log = world.resource::<LiveEditLog>();
+        assert_eq!(log.entries.len(), 1, "one entry per component");
+        assert_eq!(
+            log.entries[0].1.live_value,
+            serde_json::json!({"current": 80.0})
+        );
+    }
+
+    #[test]
+    fn a_field_edit_and_a_structural_edit_on_one_type_stay_separate() {
+        let (mut world, preview, _node_id) = build_world();
+
+        record_live_edit(
+            &mut world,
+            preview,
+            7,
+            TRANSFORM_PATH,
+            "translation",
+            serde_json::json!([9.0, 2.0, 3.0]),
+        );
+        record_live_structural_edit(
+            &mut world,
+            preview,
+            7,
+            TRANSFORM_PATH,
+            LiveEditKind::ComponentRemoved,
+            serde_json::Value::Null,
+        );
+
+        let log = world.resource::<LiveEditLog>();
+        assert_eq!(
+            log.entries.len(),
+            2,
+            "a field entry and the structural entry key apart"
+        );
+        assert_ne!(log.entries[0].1.kind, log.entries[1].1.kind);
+    }
+
+    #[derive(Component, Reflect, Default)]
+    #[reflect(Component)]
+    struct Shield {
+        strength: f32,
+    }
+
+    fn shield_path() -> String {
+        <Shield as bevy::reflect::TypePath>::type_path().to_string()
     }
 }

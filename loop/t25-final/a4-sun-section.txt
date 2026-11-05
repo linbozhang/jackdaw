@@ -1,0 +1,17 @@
+#Sun
+    jackdaw_scene_types::node_id::SceneNodeId(7002)
+    bevy_transform::components::transform::Transform {
+        translation: glam::Vec3 {
+            x: 0.0,
+            y: 8.0,
+            z: 0.0,
+        },
+        rotation: glam::Quat {
+            x: -0.4226183,
+            y: 0.0,
+            z: 0.0,
+            w: 0.9063078,
+        },
+    }
+    bevy_camera::visibility::Visibility::Visible
+    

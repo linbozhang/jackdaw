@@ -239,15 +239,52 @@ pub(crate) fn entity_set_transform(
         if new_transform == old {
             return;
         }
-        let mut cmd: Box<dyn EditorCommand> = Box::new(SetTransform {
-            entity,
-            old_transform: old,
-            new_transform,
-        });
-        cmd.execute(world);
-        world.resource_mut::<CommandHistory>().push_executed(cmd);
+        apply_computed_transform(world, entity, old, new_transform);
     });
     Some(OperatorResult::Finished)
+}
+
+/// Land one computed transform write: live routing first (the same dual
+/// condition — Live view and a projected entity — as the Inspector's field
+/// rows), else the authored [`SetTransform`] command. In the live case the
+/// whole transform streams to the focused game and lands in the ledger
+/// instead of silently authoring the document behind the game's back; the
+/// next projection delta brings the preview entity back in step.
+fn apply_computed_transform(
+    world: &mut World,
+    entity: Entity,
+    old: Transform,
+    new_transform: Transform,
+) {
+    const TRANSFORM_PATH: &str = "bevy_transform::components::transform::Transform";
+    {
+        let registry = world
+            .resource::<bevy::ecs::reflect::AppTypeRegistry>()
+            .clone();
+        let value_json = {
+            let registry = registry.read();
+            use bevy::reflect::serde::TypedReflectSerializer;
+            let serializer =
+                TypedReflectSerializer::new(new_transform.as_partial_reflect(), &registry);
+            serde_json::to_value(&serializer).unwrap_or(serde_json::Value::Null)
+        };
+        if crate::inspector::reflect_fields::try_route_pie_live_field_edit(
+            world,
+            entity,
+            TRANSFORM_PATH,
+            "",
+            value_json,
+        ) {
+            return;
+        }
+    }
+    let mut cmd: Box<dyn EditorCommand> = Box::new(SetTransform {
+        entity,
+        old_transform: old,
+        new_transform,
+    });
+    cmd.execute(world);
+    world.resource_mut::<CommandHistory>().push_executed(cmd);
 }
 
 /// Set one field on one entity's component, by reflection path. Unlike
@@ -285,14 +322,36 @@ pub(crate) fn component_set(
     let field_path = params.as_str("field").unwrap_or_default().to_string();
     let value = param_json(&params, "value")?;
     commands.queue(move |world: &mut World| {
-        if !crate::commands::field_edit_commit_on(world, entity, &type_path, &field_path, &value) {
-            warn_caller(
-                world,
-                format!("component.set: {value} is not a value for {type_path}.{field_path}"),
-            );
-        }
+        apply_component_set(world, entity, &type_path, &field_path, value);
     });
     Some(OperatorResult::Finished)
+}
+
+/// The body of `component.set`: live routing first (the same dual condition
+/// — Live view and a projected entity — as the Inspector's field rows), else
+/// the authored [`crate::commands::field_edit_commit_on`] path.
+fn apply_component_set(
+    world: &mut World,
+    entity: Entity,
+    type_path: &str,
+    field_path: &str,
+    value: serde_json::Value,
+) {
+    if crate::inspector::reflect_fields::try_route_pie_live_field_edit(
+        world,
+        entity,
+        type_path,
+        field_path,
+        value.clone(),
+    ) {
+        return;
+    }
+    if !crate::commands::field_edit_commit_on(world, entity, type_path, field_path, &value) {
+        warn_caller(
+            world,
+            format!("component.set: {value} is not a value for {type_path}.{field_path}"),
+        );
+    }
 }
 
 /// A parameter as JSON. A string parses as JSON when it can and stands for
@@ -308,5 +367,241 @@ fn param_json(params: &OperatorParameters, key: &str) -> Option<serde_json::Valu
                 .unwrap_or_else(|_| serde_json::Value::String(value.to_string())),
         ),
         _ => None,
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::live_edits::LiveEditLog;
+    use crate::pie_mirror::PieViewMode;
+    use crate::pie_projection::PieProjection;
+    use bevy::ecs::reflect::AppTypeRegistry;
+    use jackdaw_bsn::SceneBsnAst;
+
+    const TRANSFORM_PATH: &str = "bevy_transform::components::transform::Transform";
+
+    fn build_world(view: PieViewMode) -> (World, Entity) {
+        let mut world = World::new();
+        world.init_resource::<AppTypeRegistry>();
+        world.init_resource::<PieProjection>();
+        world.init_resource::<LiveEditLog>();
+        world.init_resource::<CommandHistory>();
+        world.init_resource::<crate::commands::FieldEditSessions>();
+        world.insert_resource(view);
+        {
+            let registry = world.resource::<AppTypeRegistry>().clone();
+            let mut registry = registry.write();
+            registry.register::<Transform>();
+        }
+        let preview = world
+            .spawn((Name::new("player"), Transform::from_xyz(1.0, 2.0, 3.0)))
+            .id();
+        let mut ast = SceneBsnAst::default();
+        let patches = {
+            let registry = world.resource::<AppTypeRegistry>().clone();
+            let registry = registry.read();
+            let transform = Transform::from_xyz(1.0, 2.0, 3.0);
+            vec![jackdaw_bsn::component_to_bsn_patch(&transform, &registry)]
+        };
+        let node = ast.create_entity_node(patches);
+        ast.add_to_roots(node);
+        ast.link(preview, node);
+        world.insert_resource(ast);
+        world
+            .resource_mut::<PieProjection>()
+            .by_bits
+            .insert(7, preview);
+        (world, preview)
+    }
+
+    /// The authored document field as a comparable debug string, so the tests
+    /// can pin "the document did not move" without a JSON conversion.
+    fn doc_field_debug(world: &World, entity: Entity, field_path: &str) -> Option<String> {
+        let ast = world.resource::<SceneBsnAst>();
+        let node = ast.ast_for(entity)?;
+        Some(format!(
+            "{:?}",
+            jackdaw_bsn::get_bsn_field(ast, node, TRANSFORM_PATH, field_path)?
+        ))
+    }
+
+    fn ledger_len(world: &World) -> usize {
+        world.resource::<LiveEditLog>().entries.len()
+    }
+
+    fn undo_len(world: &World) -> usize {
+        world.resource::<CommandHistory>().undo_stack.len()
+    }
+
+    #[test]
+    fn live_component_set_tracks_the_edit_and_leaves_the_document() {
+        let (mut world, preview) = build_world(PieViewMode::Live);
+        let before = doc_field_debug(&world, preview, "translation");
+
+        apply_component_set(
+            &mut world,
+            preview,
+            TRANSFORM_PATH,
+            "translation.y",
+            serde_json::json!(2.5),
+        );
+
+        {
+            let log = world.resource::<LiveEditLog>();
+            assert_eq!(log.entries.len(), 1, "the edit lands in the ledger");
+            let (key, entry) = &log.entries[0];
+            assert_eq!(key.bits, 7);
+            assert_eq!(key.type_path, TRANSFORM_PATH);
+            assert_eq!(key.field_path, "translation.y");
+            assert_eq!(entry.live_value, serde_json::json!(2.5));
+            assert_eq!(
+                entry.baseline,
+                Some(serde_json::json!(2.0)),
+                "the authored y is the baseline"
+            );
+            assert_eq!(entry.label, "player / Transform.translation.y");
+        }
+        assert_eq!(
+            doc_field_debug(&world, preview, "translation"),
+            before,
+            "the document is untouched while live"
+        );
+        assert_eq!(undo_len(&world), 0, "no authored history entry while live");
+    }
+
+    #[test]
+    fn scene_mode_component_set_authors_the_document_and_skips_the_ledger() {
+        let (mut world, preview) = build_world(PieViewMode::Scene);
+
+        apply_component_set(
+            &mut world,
+            preview,
+            TRANSFORM_PATH,
+            "translation.y",
+            serde_json::json!(2.5),
+        );
+
+        assert_eq!(ledger_len(&world), 0, "no ledger entry in Scene view");
+        assert_eq!(undo_len(&world), 1, "one authored undo entry, as before");
+        assert_eq!(
+            doc_field_debug(&world, preview, "translation.y"),
+            Some("Float(2.5)".to_string()),
+            "the authored path wrote the document"
+        );
+    }
+
+    #[test]
+    fn scene_mode_ephemeral_writes_stay_skipped_with_no_ledger() {
+        let (mut world, _preview) = build_world(PieViewMode::Scene);
+        // An ephemeral projected entity: in the projection, no AST node —
+        // the SetBsnField no-node warn branch, unchanged by the routing.
+        let ephemeral = world
+            .spawn((Name::new("hazard"), Transform::from_xyz(0.0, 5.0, 0.0)))
+            .id();
+        world
+            .resource_mut::<PieProjection>()
+            .by_bits
+            .insert(9, ephemeral);
+
+        apply_component_set(
+            &mut world,
+            ephemeral,
+            TRANSFORM_PATH,
+            "translation.y",
+            serde_json::json!(7.0),
+        );
+
+        assert_eq!(ledger_len(&world), 0, "no ledger entry for a skipped write");
+        assert!(
+            doc_field_debug(&world, ephemeral, "translation").is_none(),
+            "no document node exists to author"
+        );
+        // The authored path warns and writes nothing, but the command it
+        // pushed still rides the history — the pre-existing ephemeral warn
+        // shape, unchanged by the routing.
+        assert_eq!(undo_len(&world), 1, "the pushed no-op command, as before");
+    }
+
+    #[test]
+    fn live_ephemeral_component_set_tracks_without_a_document() {
+        let (mut world, _preview) = build_world(PieViewMode::Live);
+        let ephemeral = world
+            .spawn((Name::new("hazard"), Transform::from_xyz(0.0, 5.0, 0.0)))
+            .id();
+        world
+            .resource_mut::<PieProjection>()
+            .by_bits
+            .insert(9, ephemeral);
+
+        apply_component_set(
+            &mut world,
+            ephemeral,
+            TRANSFORM_PATH,
+            "translation.y",
+            serde_json::json!(7.0),
+        );
+
+        let log = world.resource::<LiveEditLog>();
+        assert_eq!(log.entries.len(), 1, "the runtime entity's edit is tracked");
+        let (key, entry) = &log.entries[0];
+        assert_eq!(key.bits, 9);
+        assert_eq!(
+            entry.node_id, None,
+            "the runtime entity has no authored node"
+        );
+        assert_eq!(entry.live_value, serde_json::json!(7.0));
+    }
+
+    #[test]
+    fn live_set_transform_routes_the_whole_component_into_the_ledger() {
+        let (mut world, preview) = build_world(PieViewMode::Live);
+        let before = doc_field_debug(&world, preview, "translation");
+
+        apply_computed_transform(
+            &mut world,
+            preview,
+            Transform::from_xyz(1.0, 2.0, 3.0),
+            Transform::from_xyz(9.0, 2.0, 3.0),
+        );
+
+        {
+            let log = world.resource::<LiveEditLog>();
+            assert_eq!(log.entries.len(), 1);
+            let (key, entry) = &log.entries[0];
+            assert_eq!(key.bits, 7);
+            assert_eq!(key.field_path, "", "a whole-component entry");
+            assert_eq!(
+                entry.live_value["translation"][0],
+                serde_json::json!(9.0),
+                "the streamed component carries the new x"
+            );
+        }
+        assert_eq!(
+            doc_field_debug(&world, preview, "translation"),
+            before,
+            "the document is untouched while live"
+        );
+        assert_eq!(undo_len(&world), 0, "no authored history entry while live");
+    }
+
+    #[test]
+    fn scene_mode_set_transform_keeps_the_authored_command() {
+        let (mut world, preview) = build_world(PieViewMode::Scene);
+
+        apply_computed_transform(
+            &mut world,
+            preview,
+            Transform::from_xyz(1.0, 2.0, 3.0),
+            Transform::from_xyz(9.0, 2.0, 3.0),
+        );
+
+        assert_eq!(ledger_len(&world), 0, "no ledger entry in Scene view");
+        assert_eq!(undo_len(&world), 1, "one authored undo entry, as before");
+        assert_eq!(
+            world.get::<Transform>(preview),
+            Some(&Transform::from_xyz(9.0, 2.0, 3.0)),
+            "the ECS transform moved, as before"
+        );
     }
 }

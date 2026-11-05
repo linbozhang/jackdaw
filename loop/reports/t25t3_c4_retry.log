@@ -1,0 +1,40 @@
+=== phase live run 2026-11-04 18:52:52 build=44162952 ===
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t25-live-tuning/t25-live pid=9951 (recovery modal clear)
+--- warm build (the game binary the PIE legs reuse) ---
+WARM_BUILD_OK
+=== WINDOW C: C3 — Discard preserves the document byte for byte ===
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t25-live-tuning/t25-live pid=10376 (recovery modal clear)
+session up: {"authored":3,"entities":34,"ephemeral":31}
+switched to Live view
+C3 entry made: edits=1 (want 1)
+C3_PROMPT_UP_PASS
+click 'Discard': {"entity":8589929210,"kind":"button","operator":null,"text":"Discard"}
+C3_DISCARD_CLICKED_PASS
+after Discard: doc same=yes disk same=yes undo 0 -> 0 edits -> 0
+C3_DOCUMENT_IDENTICAL_PASS
+C3_DISK_IDENTICAL_PASS
+C3_UNTOUCHED_UNDO_PASS
+C3_COUNT_ZERO_PASS
+C3_PROMPT_CLOSED_PASS
+=== WINDOW C (cont): C4 — Review opens the tray; per-row triage empties the ledger ===
+session up: {"authored":3,"entities":34,"ephemeral":31}
+switched to Live view
+C4 entries made: edits=2 (want 2)
+C4_PROMPT_UP_PASS
+click 'Review': {"entity":8589928926,"kind":"button","operator":null,"text":"Review"}
+C4_REVIEW_CLICKED_PASS
+C4_HANDOFF_TRAY_PASS
+C4_REVERT_KEEPS_ENTRY_PASS
+after the row Revert (post-stop): edits=2 (the designed keep + warn)
+after the row Saves: edits=0 undo 0 -> 2 (want 0 / +2 — one entry per Save)
+C4_TRIAGE_SAVES_EMPTY_PASS
+C4_TRIAGE_SAVE_PASS
+C4_SAVE_TWO_UNDOS_PASS
+C4_SELF_HEALED_PASS
+WINDOW C done
+--- epilogue: restore the pristine scene.bsn ---
+pristine scene restored on disk
+CENSUS: error-handler panics=1 swap_remove-signature=1 across 2 windows (N13 family, attributed; ~5-6/cycle is the baseline)
+WARN-SHAPES: SetComponent|AddComponent=0 unknown-field=0 field-write-skipped=0 (the green run expects zeros — the game-side failure mouths never spoke)
+LIVE done: C3_COUNT_ZERO=PASS C3_DISCARD_CLICKED=PASS C3_DISK_IDENTICAL=PASS C3_DOCUMENT_IDENTICAL=PASS C3_PROMPT_CLOSED=PASS C3_PROMPT_UP=PASS C3_UNTOUCHED_UNDO=PASS C4_HANDOFF_TRAY=PASS C4_PROMPT_UP=PASS C4_REVERT_KEEPS_ENTRY=PASS C4_REVIEW_CLICKED=PASS C4_SAVE_TWO_UNDOS=PASS C4_SELF_HEALED=PASS C4_TRIAGE_SAVE=PASS C4_TRIAGE_SAVES_EMPTY=PASS 
+PHASE_DONE live results: C3_COUNT_ZERO=PASS C3_DISCARD_CLICKED=PASS C3_DISK_IDENTICAL=PASS C3_DOCUMENT_IDENTICAL=PASS C3_PROMPT_CLOSED=PASS C3_PROMPT_UP=PASS C3_UNTOUCHED_UNDO=PASS C4_HANDOFF_TRAY=PASS C4_PROMPT_UP=PASS C4_REVERT_KEEPS_ENTRY=PASS C4_REVIEW_CLICKED=PASS C4_SAVE_TWO_UNDOS=PASS C4_SELF_HEALED=PASS C4_TRIAGE_SAVE=PASS C4_TRIAGE_SAVES_EMPTY=PASS 

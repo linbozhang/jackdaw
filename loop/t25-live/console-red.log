@@ -1,0 +1,55 @@
+=== red run 2026-11-03 22:28:21 build=050b4813 ===
+disk: 46Gi free
+PREP_OK fixture=/Users/zhanglinbo/workspace/loop-mac/t25-live-tuning/t25-live
+PHASE_DONE prep results: 
+=== red run 2026-11-03 22:28:32 build=050b4813 ===
+EDITOR_BOOT_FAIL: an editor still answers :15703 after five kills
+=== red run 2026-11-03 22:30:45 build=050b4813 ===
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t25-live-tuning/t25-live pid=74364
+--- warm build (fills .jackdaw/target so the play leg stays short) ---
+WARM_BUILD_OK
+--- baselines before the play ---
+BSN_SHA_BEFORE=134099b4cd80ef202aa28aeeaf4bc57b56f5b343caf1fbf622a780ba38adb2a7 DISK_SHA_BEFORE=f7fa8f24fc59190c9f1d6c367e38397d3cacf8f72d95517cdada3aed9649ee42 HISTORY_BEFORE=0
+--- play, wait live, switch to Live view ---
+LTR1_GAME_UP_PASS
+switched to Live view (entity 4294963388)
+SPINNER_PREVIEW_BITS=4294962567
+LTR1_PROJECTION_SELECTED_PASS
+SPINNER_GAME_BITS=769v0
+GAME_TRANSLATION_Y_BEFORE=1.0 (want 1)
+note: the game baseline y is '1.0' (assertion below judges)
+LIVE_EDITS_BEFORE=0 HISTORY_AFTER_PLAY=0 (want 0 / 0)
+LTR1_LEDGER_CLEAN_BEFORE_PASS
+--- LT-R1: component.set translation.y=2.5 on the projected entity ---
+component.set response: {"jsonrpc":"2.0","id":23488,"result":{"entities":[],"id":"component.set","result":"finished","warnings":[]}}
+LT-R1 verdicts:
+  document: 134099b4cd80ef202aa28aeeaf4bc57b56f5b343caf1fbf622a780ba38adb2a7 -> aebf28f351c5f36b89dee7d4c641f982863954a589b32487fbbd88362afbcd77 (changed = the silent authoring)
+  game y:   1.0 -> 1.0 (unchanged = the game never heard)
+  ledger:   0 -> 0 (0 = the route bypassed it)
+  disk:     f7fa8f24fc59190c9f1d6c367e38397d3cacf8f72d95517cdada3aed9649ee42 -> f7fa8f24fc59190c9f1d6c367e38397d3cacf8f72d95517cdada3aed9649ee42
+  history:  0 -> 1 (+1 = an authored undo entry exists)
+LTR1_DOCUMENT_SILENTLY_AUTHORED_PASS
+LTR1_GAME_VALUE_UNCHANGED_PASS
+LTR1_LEDGER_COUNT_ZERO_PASS
+LTR1_DISK_UNTOUCHED_PASS
+LTR1_HISTORY_ENTRY_PUSHED_PASS
+--- LT-R2: ui_input typed into the Inspector numeric rows ---
+R2 row 1 (entity 4294962905): live_edits=0 game_y=1.0
+R2 row 2 (entity 17179864543): live_edits=0 game_y=1.0
+R2 row 3 (entity 8589929828): live_edits=0 game_y=1.0
+R2 row 4 (entity 8589929596): live_edits=0 game_y=1.0
+R2 row 5 (entity 8589929562): live_edits=0 game_y=1.0
+R2 row 6 (entity 8589929577): live_edits=0 game_y=1.0
+LT-R2 verdicts:
+  rows tried: 6; a commit anywhere: 0 (want 0)
+  ledger: 0 (want 0)  game y: 1.0 (want 1.0)
+  document:  -> aebf28f351c5f36b89dee7d4c641f982863954a589b32487fbbd88362afbcd77 (want identical)
+LTR2_NO_COMMIT_PASS
+LTR2_GAME_VALUE_UNCHANGED_PASS
+LTR2_DOCUMENT_STABLE_FAIL
+LTR2_ROWS_REACHED_PASS
+--- stop and census ---
+note: the pie session ran past its stop budget (the kill below closes it)
+CENSUS: error-handler panics=0 swap_remove-signature=0 (N13 family, attributed, not a leg criterion)
+RED done: LTR1_DISK_UNTOUCHED=PASS LTR1_DOCUMENT_SILENTLY_AUTHORED=PASS LTR1_GAME_UP=PASS LTR1_GAME_VALUE_UNCHANGED=PASS LTR1_HISTORY_ENTRY_PUSHED=PASS LTR1_LEDGER_CLEAN_BEFORE=PASS LTR1_LEDGER_COUNT_ZERO=PASS LTR1_PROJECTION_SELECTED=PASS LTR2_DOCUMENT_STABLE=FAIL LTR2_GAME_VALUE_UNCHANGED=PASS LTR2_NO_COMMIT=PASS LTR2_ROWS_REACHED=PASS 
+PHASE_DONE red results: LTR1_DISK_UNTOUCHED=PASS LTR1_DOCUMENT_SILENTLY_AUTHORED=PASS LTR1_GAME_UP=PASS LTR1_GAME_VALUE_UNCHANGED=PASS LTR1_HISTORY_ENTRY_PUSHED=PASS LTR1_LEDGER_CLEAN_BEFORE=PASS LTR1_LEDGER_COUNT_ZERO=PASS LTR1_PROJECTION_SELECTED=PASS LTR2_DOCUMENT_STABLE=FAIL LTR2_GAME_VALUE_UNCHANGED=PASS LTR2_NO_COMMIT=PASS LTR2_ROWS_REACHED=PASS 

@@ -557,3 +557,14 @@
   ①DF-W1 🟡 warn_on_load 仅 fresh-open——已开 tab 的 reread 路径静默（载入摘要嘴覆盖缺口）；②DF-W2 🟡 游戏侧 flow 载入丢字段零 warn（A16 域近亲；T24-T2 QA QD3：按旁证级采信不补腿）；③DF-W3 ⚪ (path,mtime) 锁写窗中间态双 key（重复告警窗口）；④DF-W4 ⚪ ui_tree 走查重复发射子树（A7 工具域）；⑤DF-W5 🟡 drain_game_events panic（N13 家族同病灶）；⑥DF-W6 ⚪ PIE 收尾悬空 ChildOf（A10/N13 PIE 域）；⑦DF-W7 🟡 PIE 后立即直启的游戏可失去 remote 面。（严重度为主控 2026-11-03 依 QA QD4 补注。）
   证据锚：loop/reports/t24-t2-report.md DF 节+`t24t2_*` 归档。修复方向：T3 book 轮裁定吸收面；④可并 A7 批次随手，⑤并 N13，⑦与 A10 同域。
   > 2026-11-03 主控收官裁定（T24-T3 QA 建议）：④并 A7 批次、⑤并 N13、⑦A10 域（维持票面并法）；DF-W1 下轮触碰 operators/external_watch 时顺手（warn_on_load reread 调用面）；DF-W3 维持记档不单开票。DF-W1/W3 产品修复未启动，吸收面如上。
+
+- [ ] **LT8. Live Changes badge 点击不展开托盘（⚪，T25-T1 探针发现，只记不修）**（2026-11-03 T25-T1 可达性探针三窗实证；主控批准立账）
+  hierarchy 头部 badge click `clicked:true` 但不 spawn 托盘面板（live_edits_ui.rs badge 观察器无展开行为）；托盘开行现成路线=停止→StopPrompt「Review」键交接（即 C4 链本体，零产品改动）。
+  修复方向（候裁）：badge click 补托盘 spawn（一行级观察器）或 book 注记「badge 是计数器，开托盘走 Review/结构树」；T25-T3 book 轮顺手裁定。
+
+- [x] **LT10 🔴 Path B 提携（promote_ephemeral_to_authored/Inspector 头部 Save to Scene）把 avian 关系内件与逐帧字段落盘——下次加载非确定 panic**（2026-11-04 T25-T2 真机 D2 格发现；T25-T2.5 已修复）
+  原症状：Path B 提携运行时实体（player 带 avian 物理件）时全组件捕获未剔 `ColliderOf { body: 本会话 bits }` 等关系内件与逐帧字段（position/velocity 快照）——落盘文档下次加载非确定 panic（exit 101，原始三次复跑两崩一过）。原始红证保留：`loop/t25-live/editor-live-w2.log`、`loop/reports/t25t2_live_legs.log` D2 段。
+  修复：仅在 promote 捕获面复用 save-side `should_skip_component`，另按确切 Avian 关系 type path + 反射 Entity 树跳过 `ColliderOf`/`RigidBodyColliders`，并按确切 Avian type paths 排除 physics-transform 镜像、积分器/速度/睡眠/力累积与派生质量内件；常规 `Transform`、`RigidBody`、`AvianCollider` 形状、`ColliderDensity` 等保留。新红绿+三次独立 D2 重开证据见 `loop/reports/t25-t25-report.md` 和 `loop/t25-live/t25t25_run9/`–`t25t25_run11/`。
+- [ ] **LT9 🟡 长会话投影陈旧绑定——component.set 自第 4 个 play 会话起静默落 authored 路径**（2026-11-04 T25-T2 真机发现；主控批准立账）
+  `entity_for_stable_id` 应答死亡实体：authored 预览实体 3→13 膨胀，live 路由反查 miss 后 component.set 静默直写文档（文档被改而游戏不知情——LT2 修复前的三重静默在长会话形态复现）。诊断三轮隔离探针在档（t25t2 归档）。
+  修复方向（候裁）：五窗结构自守已证（T2 矩阵按此跑通）+`ROUTE_FALL_THROUGH` 护栏（undo→重启→重试）；修复面在投影反查的死亡实体判定。

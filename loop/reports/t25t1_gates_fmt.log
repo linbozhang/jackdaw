@@ -1,0 +1,6 @@
+# T25-T1 fmt gate - cargo fmt --all -- --check
+# Rework note (QA-1): the first T1 commit (6bf62357) recorded this gate green
+# from a stale run made BEFORE the clippy needless_borrow fix introduced a
+# 105-char line at src/remote_ops.rs:264; QA reproduced EXIT=1 on exactly that
+# diff. The line is now wrapped, this run is the real gate: zero diff, EXIT=0.
+FMT_CHECK_EXIT=0

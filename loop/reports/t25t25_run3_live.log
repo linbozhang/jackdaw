@@ -1,0 +1,40 @@
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t25-live-tuning/t25-live pid=82981 (recovery modal clear)
+--- warm build (the game binary the PIE legs reuse) ---
+WARM_BUILD_OK
+=== WINDOW E: D2 — Path A (authored overlay, one undo group) and Path B (ephemeral promote, no undo) ===
+loop/qa/t25-live.sh: line 812: 82981 Terminated: 15          nohup env DYLD_LIBRARY_PATH="$TOOLCHAIN_LIB" ./target/debug/jackdaw > "$EDITOR_LOG" 2>&1
+EDITOR_READY project=/Users/zhanglinbo/workspace/loop-mac/t25-live-tuning/t25-live pid=83382 (recovery modal clear)
+session up: {"authored":3,"entities":34,"ephemeral":31}
+switched to Live view
+Save to Scene button bits: 4294963048
+D2_PATHA_CLICKED_PASS
+Path A: undo 0 -> 1 transform_keywords=3 (want +1 exactly; >=3 = the whole component landed)
+D2_PATHA_ONE_UNDO_PASS
+D2_PATHA_WHOLE_COMPONENT_PASS
+D2_PATHA_LIVE_VALUE_PASS
+--- Path B: the ephemeral player promotes to a new document node ---
+  candidate 12884897251: translation: glam::Vec3A { x: -2.0
+player preview bits: 12884897251
+D2_PLAYER_SELECTED_FACE_PASS
+Path B: ephemeral 31 -> 30 undo 1 -> 1 (want -1 / unchanged — the LT5 v1 note)
+D2_PATHB_EPHEMERAL_DROPPED_PASS
+D2_PATHB_NOT_UNDOABLE_PASS
+D2_PATHB_NODE_IN_DOC_PASS
+D2_PROMOTE_INTERNALS_LAND_FAIL
+note: a leftover entry raised the prompt; Discard cleans it
+--- D2 closing chain: save -> reload -> replay -> the player is in the game ---
+D2_DISK_HAS_PLAYER_PASS
+session up: {"authored":17,"entities":37,"ephemeral":20}
+switched to Live view
+after the replay: players=1 health.current=100.0 game Sun y= (want >=1 / coherent / 6.5)
+D2_REPLAY_PLAYER_IN_GAME_PASS
+D2_REPLAY_HEALTH_PRESENT_PASS
+D2_REPLAY_SUN_Y_FAIL
+loop/qa/t25-live.sh: line 801: 83382 Terminated: 15          nohup env DYLD_LIBRARY_PATH="$TOOLCHAIN_LIB" ./target/debug/jackdaw > "$EDITOR_LOG" 2>&1
+WINDOW E done
+--- epilogue: restore the pristine scene.bsn ---
+pristine scene restored on disk
+CENSUS: error-handler panics=9 swap_remove-signature=13 across 2 windows (N13 family, attributed; ~5-6/cycle is the baseline)
+WARN-SHAPES: SetComponent|AddComponent=0 unknown-field=0 field-write-skipped=0 (the green run expects zeros — the game-side failure mouths never spoke)
+LIVE done: D2_DISK_HAS_PLAYER=PASS D2_PATHA_CLICKED=PASS D2_PATHA_LIVE_VALUE=PASS D2_PATHA_ONE_UNDO=PASS D2_PATHA_WHOLE_COMPONENT=PASS D2_PATHB_EPHEMERAL_DROPPED=PASS D2_PATHB_NODE_IN_DOC=PASS D2_PATHB_NOT_UNDOABLE=PASS D2_PLAYER_SELECTED_FACE=PASS D2_PROMOTE_INTERNALS_LAND=FAIL D2_REPLAY_HEALTH_PRESENT=PASS D2_REPLAY_PLAYER_IN_GAME=PASS D2_REPLAY_SUN_Y=FAIL 
+PHASE_DONE live results: D2_DISK_HAS_PLAYER=PASS D2_PATHA_CLICKED=PASS D2_PATHA_LIVE_VALUE=PASS D2_PATHA_ONE_UNDO=PASS D2_PATHA_WHOLE_COMPONENT=PASS D2_PATHB_EPHEMERAL_DROPPED=PASS D2_PATHB_NODE_IN_DOC=PASS D2_PATHB_NOT_UNDOABLE=PASS D2_PLAYER_SELECTED_FACE=PASS D2_PROMOTE_INTERNALS_LAND=FAIL D2_REPLAY_HEALTH_PRESENT=PASS D2_REPLAY_PLAYER_IN_GAME=PASS D2_REPLAY_SUN_Y=FAIL 
