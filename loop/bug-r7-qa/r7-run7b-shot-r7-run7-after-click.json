@@ -1,0 +1,9 @@
+{
+ "jsonrpc": "2.0",
+ "id": 1,
+ "result": {
+  "height": 753,
+  "path": "/Users/linbo.zhang/workspace/jackdaw/tests/fixtures/bsn_game/r7qa-shots/r7-run7-after-click.png",
+  "width": 1377
+ }
+}

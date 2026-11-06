@@ -1,0 +1,10 @@
+{
+ "jsonrpc": "2.0",
+ "id": 1,
+ "result": {
+  "entities": [],
+  "id": "brush.exit_edit_mode",
+  "result": "cancelled",
+  "warnings": []
+ }
+}

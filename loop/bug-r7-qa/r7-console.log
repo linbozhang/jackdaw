@@ -1,0 +1,215 @@
+[17:19:48] boot: editor pid=13347 project=/Users/linbo.zhang/workspace/jackdaw/tests/fixtures/bsn_game binary=710021909 Nov 6
+[17:20:06] setup dialog up; clicking Open without setup
+[17:20:50] PROJECT_OPEN
+{"project":"/Users/linbo.zhang/workspace/jackdaw/tests/fixtures/bsn_game","scene":null,"selection":[]}
+[17:20:50] EDITOR_READY pid=13347
+[17:21:25] === R7 PROBE BEGIN ===
+[17:21:25] operator ids:        0 matched (nudge/csg/edit_mode/cube)
+[17:21:25] history baseline: {"undo_len":0,"redo_len":0,"dirty":false}
+[17:21:25] initial brushes: null
+[17:21:27] after add.cube: null
+[17:21:27] === R7 PROBE END ===
+[17:29:23] === R7 LEG1 (L-shaped brush construction) BEGIN ===
+[17:30:25] scene after undos: []
+[17:32:27] two brushes present: {"Cube": 12884895585, "CubeB": 8589927131}
+[17:34:32] scene after subtract: [(12884895585, 'Cube'), (8589927131, 'CubeB')]
+[17:34:32] baseline brush archived: r7-brush-baseline.bsn.txt
+[17:34:32] === R7 LEG1 END ===
+[17:35:34] === R7 LEG2 (L-shaped brush, cutter/target semantics) BEGIN ===
+[17:36:38] scene after 4 undos: []
+[17:39:41] scene after spawns: [(21474829431, 'Cube'), (8589925875, 'CubeB'), (12884896852, 'CubeC')]
+[17:39:42] history before subtract: {"undo_len":3,"redo_len":0,"top":"Apply BSN"}
+[17:42:46] subtract reply: {"jsonrpc":"2.0","id":1,"result":{"entities":[],"id":"brush.csg_subtract","result":"cancelled","warnings":[]}}
+[17:42:46] scene after subtract: [(8589925875, 'CubeB'), (12884896852, 'CubeC'), (21474829431, 'Cube')]
+[17:42:46] history after subtract: {"undo_len":3,"redo_len":0,"top":"Apply BSN"}
+[17:42:46] === R7 LEG2 END ===
+[17:44:26] === R7 LEG3 (real Brush cutters) BEGIN ===
+[17:45:31] scene after undos: []
+[17:51:41] scene after layout: [(38654698459, 'Cube'), (25769797549, 'Cube'), (25769797859, 'Cube')]
+[17:54:46] subtract reply: {"jsonrpc":"2.0","id":1,"result":{"entities":[],"id":"brush.csg_subtract","result":"finished","warnings":[]}}
+[17:54:46] scene after subtract: [(38654698459, 'Cube'), (25769797549, 'Cube'), (25769797859, 'Cube')]
+[17:54:47] history: before={"undo_len":49} after={"undo_len":49,"top":"Nudge"}
+[17:54:47] product brush bsn bytes:      105
+[17:54:47] === R7 LEG3 END ===
+[17:57:36] === R7 LEG4 BEGIN ===
+[17:57:49] scene after undos: {38654698459: 'Cube', 25769797549: 'Cube', 25769797859: 'Cube'}
+[17:57:49] LEG4_FAIL: scene not empty after 12 undos
+2f489e1cb110253a788cdbcf74b45c842db0dae9a86209412452b712e88b671f  /Users/linbo.zhang/workspace/jackdaw/tests/fixtures/bsn_game/assets/scene.bsn
+[17:58:14] boot: editor pid=25234 project=/Users/linbo.zhang/workspace/jackdaw/tests/fixtures/bsn_game binary=710021909 Nov 6
+[17:58:24] setup dialog up; clicking Open without setup
+[17:58:44] PROJECT_OPEN
+{"project":"/Users/linbo.zhang/workspace/jackdaw/tests/fixtures/bsn_game","scene":null,"selection":[]}
+[17:58:44] EDITOR_READY pid=25234
+[17:58:49] === R7 LEG4 BEGIN ===
+[17:58:49] scene after undos: {}
+[17:58:51] add_cube A: bits=4294962604
+[17:58:53] add_cube B: bits=4294959400
+[17:58:55] nudge xx2 on 4294959400: translation now [(0.5, 0.0, 0.0)] (expect ~(0.5, 0.0, 0.0)) OK
+[17:58:56] nudge yx2 on 4294959400: translation now [(0.5, 0.5, 0.0)] (expect ~(0.5, 0.5, 0.0)) OK
+[17:58:58] nudge zx2 on 4294959400: translation now [(0.5, 0.5, 0.5)] (expect ~(0.5, 0.5, 0.5)) OK
+[17:59:00] add_cube C: bits=25769797423
+[17:59:03] nudge xx40 on 25769797423: translation now [(10.0, 0.0, 0.0)] (expect ~(10.0, 0.0, 0.0)) OK
+[17:59:03] scene after layout: {4294962604: 'Cube', 25769797423: 'Cube', 4294959400: 'Cube'}
+[17:59:03] history before subtract: undo_len=49
+[17:59:03] selection: [{'entity': 4294959400, 'name': 'Cube'}, {'entity': 25769797423, 'name': 'Cube'}]
+[17:59:03] subtract reply: {"jsonrpc": "2.0", "id": 1, "result": {"entities": [], "id": "brush.csg_subtract", "result": "finished", "warnings": []}}
+[17:59:07] scene after subtract: {34359733269: 'Cube', 25769797423: 'Cube', 4294959400: 'Cube'}
+[17:59:07] entity 34359733269 (Cube): faces=9 verts=14 translation=[(-7.450580596923828e-09, -7.450580596923828e-09, -7.450580596923828e-09)]
+[17:59:07] PRODUCT FOUND: 34359733269 with 9 faces — concave brush built
+[17:59:07] entity 25769797423 (Cube): faces=6 verts=8 translation=[(10.0, 0.0, 0.0)]
+[17:59:07] entity 4294959400 (Cube): faces=6 verts=8 translation=[(0.5, 0.5, 0.5)]
+[17:59:07] === R7 LEG4 END ===
+[18:01:37] === R7 LEG5 BEGIN (product 34359733269, click (480.0, 270.0)) ===
+[18:01:37] selection: [{'entity': 34359733269, 'name': 'Cube'}]
+[18:01:42] face mode entered; product shape: faces=9 verts=14
+[18:01:44] click reply: {"jsonrpc": "2.0", "id": 1, "result": {"entities": [], "id": "input.pointer", "result": "finished", "warnings": []}}
+[18:01:48] history before PageUp: undo_len=50 top=CSG Subtract
+[18:01:48] PageUp reply: {"jsonrpc": "2.0", "id": 1, "result": {"entities": [], "id": "input.key", "result": "finished", "warnings": []}}
+[18:01:52] history after PageUp: undo_len=50 top=CSG Subtract redo_len=0
+[18:01:52] ASSERT1 shape: faces 9->9 verts 14->14
+[18:01:52] ASSERT1 moved verts: 0 (expect the selected face's ring)
+[18:01:55] ASSERT2 undo entries added by the nudge: 0 (expect 1)
+[18:01:59] ASSERT2 after undo: faces=0 verts=0 verts_identical=True
+[18:01:59] === R7 LEG5 END ===
+[18:04:25] === R7 MASTER (rebuild + nudge leg) BEGIN ===
+[18:04:39] scene after clean: {47244632076: 'Cube', 25769797423: 'Cube', 4294959400: 'Cube'}
+[18:04:39] MASTER_FAIL: scene not empty; a reboot is required
+2f489e1cb110253a788cdbcf74b45c842db0dae9a86209412452b712e88b671f  /Users/linbo.zhang/workspace/jackdaw/tests/fixtures/bsn_game/assets/scene.bsn
+[18:05:06] boot: editor pid=26139 project=/Users/linbo.zhang/workspace/jackdaw/tests/fixtures/bsn_game binary=710021909 Nov 6
+[18:05:16] setup dialog up; clicking Open without setup
+[18:05:36] PROJECT_OPEN
+{"project":"/Users/linbo.zhang/workspace/jackdaw/tests/fixtures/bsn_game","scene":null,"selection":[]}
+[18:05:36] EDITOR_READY pid=26139
+[18:05:36] === R7 MASTER (rebuild + nudge leg) BEGIN ===
+[18:05:36] scene after clean: {}
+[18:05:38] add_cube A: bits=4294962604
+[18:05:40] add_cube B: bits=4294959400
+[18:05:41]   moved xx2 -> [(0.5, 0.0, 0.0)] OK
+[18:05:43]   moved yx2 -> [(0.5, 0.5, 0.0)] OK
+[18:05:45]   moved zx2 -> [(0.5, 0.5, 0.5)] OK
+[18:05:47] add_cube C: bits=21474829077
+[18:05:49]   moved xx40 -> [(10.0, 0.0, 0.0)] OK
+[18:05:50] subtract: {"jsonrpc": "2.0", "id": 1, "result": {"entities": [], "id": "brush.csg_subtract", "result": "finished", "warnings": []}
+[18:05:55] product: 47244634266 faces=9 verts=14 t=[(-7.450580596923828e-09, -7.450580596923828e-09, -7.450580596923828e-09)]
+[18:06:05] click attempt 1 at (480.0, 270.0) done
+[18:06:05] history pre-nudge: undo_len=50 top=CSG Subtract
+[18:06:09] history post-nudge: undo_len=50 top=CSG Subtract delta=0
+[18:06:09] ASSERT1 shape: faces 9->9 verts 14->14 moved_verts=0 lifted_by_grid=0
+[18:06:15] ASSERT2 after undo: faces=0 verts=0 verts_identical=True undo_len=49
+[18:06:15] === R7 MASTER END ===
+[18:08:24] === R7 RUN6 BEGIN ===
+[18:08:35] scene after clean: {60129536957: 'Cube', 21474829077: 'Cube', 4294959400: 'Cube'}
+[18:08:35] RUN6_FAIL: scene not empty; reboot needed
+2f489e1cb110253a788cdbcf74b45c842db0dae9a86209412452b712e88b671f  /Users/linbo.zhang/workspace/jackdaw/tests/fixtures/bsn_game/assets/scene.bsn
+[18:09:54] boot: editor pid=26957 project=/Users/linbo.zhang/workspace/jackdaw/tests/fixtures/bsn_game binary=710021909 Nov 6
+[18:10:04] setup dialog up; clicking Open without setup
+[18:10:23] PROJECT_OPEN
+{"project":"/Users/linbo.zhang/workspace/jackdaw/tests/fixtures/bsn_game","scene":"/Users/linbo.zhang/workspace/jackdaw/tests/fixtures/bsn_game/assets/scene.bsn","selection":[]}
+[18:10:23] EDITOR_READY pid=26957
+[18:10:23] === R7 RUN7A BEGIN ===
+[18:10:23] scene at start: {4294962682: 'Root'}
+[18:10:23] RUN7A_FAIL: scene not empty on fresh boot
+[18:10:41] === R7 RUN7A BEGIN ===
+[18:10:41] scene at start (Root excluded): {}
+[18:10:44] add_cube A: bits=4294962579
+[18:10:46] add_cube B: bits=4294959375
+[18:10:47]   xx2 -> [(0.5, 0.0, 0.0)] OK
+[18:10:49]   yx2 -> [(0.5, 0.5, 0.0)] OK
+[18:10:51]   zx2 -> [(0.5, 0.5, 0.5)] OK
+[18:10:53] add_cube C: bits=21474830579
+[18:10:55]   xx40 -> [(10.0, 0.0, 0.0)] OK
+[18:11:00] product: 4294962682 faces=0 verts=0
+[18:11:00] product: 38654699881 faces=9 verts=14
+[18:11:00] baseline: faces=9 verts=14 undo_len=50
+[18:11:11] screenshot: {"jsonrpc": "2.0", "id": 1, "result": {"height": 753, "path": "/Users/linbo.zhang/workspace/jackdaw/tests/fixtures/bsn_g
+[18:11:11] === R7 RUN7A END (awaiting manual click coordinates) ===
+[18:11:31] === R7 RUN7B BEGIN (product 38654699881, click 546.5,197.5) ===
+[18:11:31] click reply: {"jsonrpc": "2.0", "id": 1, "result": {"entities": [], "id": "input.pointer", "result": "finished", "warnings": []}}
+[18:11:36] history pre-nudge: undo_len=50 top=CSG Subtract
+[18:11:40] history post-nudge: undo_len=50 top=CSG Subtract delta=0
+[18:11:40] ASSERT1 shape-preserved: faces 9->9 verts 14->14 moved_verts=0 lifted_by_grid=0 (counts equal: True)
+[18:11:46] ASSERT2 undo-restores: faces=0 verts=0 identical_to_baseline=False undo_len=49 (pre=50)
+[18:11:48] === R7 RUN7B END ===
+[18:14:12] selection before: [{'entity': 47244634669, 'name': 'Cube'}, {'entity': 60129534952, 'name': 'Cube'}]
+[18:14:12] click: {"jsonrpc": "2.0", "id": 1, "result": {"entities": [], "id": "input.pointer", "result": "finished", 
+[18:14:16] selection after viewport click: []
+2f489e1cb110253a788cdbcf74b45c842db0dae9a86209412452b712e88b671f  /Users/linbo.zhang/workspace/jackdaw/tests/fixtures/bsn_game/assets/scene.bsn
+[18:17:09] boot: editor pid=27918 project=/Users/linbo.zhang/workspace/jackdaw/tests/fixtures/bsn_game binary=710021909 Nov 6
+[18:17:20] setup dialog up; clicking Open without setup
+[18:17:39] PROJECT_OPEN
+{"project":"/Users/linbo.zhang/workspace/jackdaw/tests/fixtures/bsn_game","scene":null,"selection":[]}
+[18:17:39] EDITOR_READY pid=27918
+[18:17:39] === R7 RUN7A BEGIN ===
+[18:17:39] scene at start (Root excluded): {}
+[18:17:41] add_cube A: bits=4294962604
+[18:17:43] add_cube B: bits=4294959400
+[18:17:45]   xx2 -> [(0.5, 0.0, 0.0)] OK
+[18:17:46]   yx2 -> [(0.5, 0.5, 0.0)] OK
+[18:17:48]   zx2 -> [(0.5, 0.5, 0.5)] OK
+[18:17:50] add_cube C: bits=25769797423
+[18:17:52]   xx40 -> [(10.0, 0.0, 0.0)] OK
+[18:17:58] product: 38654700371 faces=9 verts=14
+[18:17:58] baseline: faces=9 verts=14 undo_len=50
+[18:18:08] screenshot: {"jsonrpc": "2.0", "id": 1, "result": {"height": 753, "path": "/Users/linbo.zhang/workspace/jackdaw/tests/fixtures/bsn_g
+[18:18:08] === R7 RUN7A END (awaiting manual click coordinates) ===
+[18:18:08] === R7 RUN7B BEGIN (product 38654700371, click 546.5,197.5) ===
+[18:18:09] probes pre-click: EditMode={'BrushEdit': 'Face'} BrushHalfedge entities=[]
+[18:18:09] click reply: {"jsonrpc": "2.0", "id": 1, "result": {"entities": [], "id": "input.pointer", "result": "finished", "warnings": []}}
+[18:18:13] EditMode after click: {'BrushEdit': 'Face'}
+[18:18:14] history pre-nudge: undo_len=50 top=CSG Subtract
+[18:18:18] history post-nudge: undo_len=50 top=CSG Subtract delta=0
+[18:18:18] ASSERT1 shape-preserved: faces 9->9 verts 14->14 moved_verts=0 lifted_by_grid=0 (counts equal: True)
+[18:18:24] ASSERT2 undo-restores: faces=0 verts=0 identical_to_baseline=False undo_len=49 (pre=50)
+[18:18:26] === R7 RUN7B END ===
+2f489e1cb110253a788cdbcf74b45c842db0dae9a86209412452b712e88b671f  /Users/linbo.zhang/workspace/jackdaw/tests/fixtures/bsn_game/assets/scene.bsn
+[18:19:50] boot: editor pid=28517 project=/Users/linbo.zhang/workspace/jackdaw/tests/fixtures/bsn_game binary=710021909 Nov 6
+[18:20:00] setup dialog up; clicking Open without setup
+[18:20:19] PROJECT_OPEN
+{"project":"/Users/linbo.zhang/workspace/jackdaw/tests/fixtures/bsn_game","scene":null,"selection":[]}
+[18:20:19] EDITOR_READY pid=28517
+[18:20:19] === R7 RUN7A BEGIN ===
+[18:20:19] scene at start (Root excluded): {}
+[18:20:21] add_cube A: bits=4294962604
+[18:20:23] add_cube B: bits=4294959400
+[18:20:25]   xx2 -> [(0.5, 0.0, 0.0)] OK
+[18:20:27]   yx2 -> [(0.5, 0.5, 0.0)] OK
+[18:20:28]   zx2 -> [(0.5, 0.5, 0.5)] OK
+[18:20:30] add_cube C: bits=25769797423
+[18:20:33]   xx40 -> [(10.0, 0.0, 0.0)] OK
+[18:20:38] product: 38654700371 faces=9 verts=14
+[18:20:38] baseline: faces=9 verts=14 undo_len=50
+[18:20:49] screenshot: {"jsonrpc": "2.0", "id": 1, "result": {"height": 753, "path": "/Users/linbo.zhang/workspace/jackdaw/tests/fixtures/bsn_g
+[18:20:49] BrushHalfedge entities after face mode: []
+[18:20:49] structured brush.nudge_up probe: {"jsonrpc": "2.0", "id": 1, "result": {"entities": [], "id": "brush.nudge_up", "result": "cancelled", "warnings": []}}
+[18:20:53] after structured probe: faces=9 verts=14 moved_verts=0
+[18:20:57] after probe-undo: faces=0 verts=0 (expect 9/14)
+[18:20:57] === R7 RUN7A END (awaiting manual click coordinates) ===
+[18:22:00] redo: {"jsonrpc": "2.0", "id": 1, "result": {"entities": [], "id": "history.redo", "result": "finished", "
+[18:22:04] scene: {55834569146: 'Cube', 25769797423: 'Cube', 4294959400: 'Cube'}
+[18:22:04] product back: 55834569146
+[18:22:04] selection.set: {"jsonrpc": "2.0", "id": 1, "result": {"selection": [{"entity": 55834569146, "name": "Cube"}]}}
+[18:22:05] edit_mode.face: {"jsonrpc": "2.0", "id": 1, "result": {"entities": [], "id": "edit_mode.face", "result": "finished", "warnings": []}}
+[18:22:10] EditMode: {'BrushEdit': 'Face'}
+[18:22:10] BrushHalfedge: []
+[18:22:10] Brush entities: [{'components': {}, 'entity': '7895v0'}, {'components': {}, 'entity': '6352v5'}, {'components': {}, 'entity': '5701v12'}]
+[18:23:04] EditMode now: {'BrushEdit': 'Face'}
+[18:23:04] exit_edit_mode: finished EditMode=Object
+[18:23:05] product: 55834569146  scene: ['Cube', 'Cube', 'Cube']
+[18:23:05] selection.set: [{"entity": 55834569146, "name": "Cube"}]
+[18:23:06] edit_mode.face: finished EditMode={'BrushEdit': 'Face'}
+[18:23:10] EditMode after settle: {'BrushEdit': 'Face'}
+[18:23:10] BrushHalfedge: []
+[18:24:33] move: finished
+[18:24:34] brush.face.drag invoke: {"jsonrpc": "2.0", "id": 1, "result": {"entities": [], "id": "brush.face.drag", "result": "cancelled", "warnings": []}}
+[18:24:35] release: finished
+[18:24:39] status after: {"selection": [{"entity": 55834569146, "name": "Cube"}], "warnings": null}
+[18:25:11] baseline: faces=9 verts=0
+[18:25:11] history pre: undo_len=50 top=CSG Subtract
+[18:25:11] click: finished
+[18:25:15] PageUp: finished
+[18:25:19] history post: undo_len=50 top=CSG Subtract delta=0
+[18:25:19] RESULT: faces 9->9 verts 0->0 moved=0 lifted_by_grid=0
+[18:25:43] EditMode: {'BrushEdit': 'Face'}
+[18:25:46] after Escape: Object
+[18:25:48] after Digit4: Object
+[18:25:50] after Digit3: Object
