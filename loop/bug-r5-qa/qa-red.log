@@ -1,0 +1,113 @@
+=== RED LEG 1: kernel targeted ===
+   Compiling jackdaw_terrain v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_terrain)
+    Finished `test` profile [optimized + debuginfo] target(s) in 8.04s
+     Running unittests src/lib.rs (target/debug/deps/jackdaw_terrain-00dc8dc176359b43)
+
+running 1 test
+test erosion::tests::grids_below_four_vertices_a_side_are_refused_without_touching_heights ... FAILED
+
+failures:
+
+---- erosion::tests::grids_below_four_vertices_a_side_are_refused_without_touching_heights stdout ----
+
+thread 'erosion::tests::grids_below_four_vertices_a_side_are_refused_without_touching_heights' (1480038) panicked at crates/jackdaw_terrain/src/erosion.rs:75:29:
+cannot sample empty range
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    erosion::tests::grids_below_four_vertices_a_side_are_refused_without_touching_heights
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 532 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `-p jackdaw_terrain --lib`
+KERNEL-RED-EXIT=101
+=== RED LEG 2: op targeted ===
+   Compiling bevy_dylib v0.20.0 (/Users/linbo.zhang/workspace/bevy-fork-pinned/crates/bevy_dylib)
+   Compiling jackdaw_project_build v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_project_build)
+   Compiling bevy v0.20.0 (/Users/linbo.zhang/workspace/bevy-fork-pinned)
+   Compiling jackdaw_geometry v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_geometry)
+   Compiling jackdaw_input v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_input)
+   Compiling jackdaw_commands v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_commands)
+   Compiling jackdaw_localization v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_localization)
+   Compiling jackdaw_bsn v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_bsn)
+   Compiling jackdaw_widgets_runtime v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_widgets_runtime)
+   Compiling bevy_transform_interpolation v0.6.0
+   Compiling jackdaw_bind v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_bind)
+   Compiling jackdaw_pie_protocol v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_pie_protocol)
+   Compiling bevy_window_chrome v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/bevy_window_chrome)
+   Compiling jackdaw_camera v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_camera)
+   Compiling jackdaw_widgets v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_widgets)
+   Compiling jackdaw_scene_types v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_scene_types)
+   Compiling jackdaw_prefab v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_prefab)
+   Compiling avian3d v0.8.0
+   Compiling jackdaw_animation_runtime v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_animation_runtime)
+   Compiling jackdaw_uv v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_uv)
+   Compiling jackdaw_csg v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_csg)
+   Compiling jackdaw_pick v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_pick)
+   Compiling jackdaw_select v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_select)
+   Compiling jackdaw_hull v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_hull)
+   Compiling jackdaw_feathers v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_feathers)
+   Compiling jackdaw_terrain v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_terrain)
+   Compiling jackdaw_schema v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_schema)
+   Compiling jackdaw_camera_rig v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_camera_rig)
+   Compiling jackdaw_surface v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_surface)
+   Compiling jackdaw_multiplayer v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_multiplayer)
+   Compiling jackdaw_jsn v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_jsn)
+   Compiling jackdaw_remote v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_remote)
+   Compiling jackdaw_panels v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_panels)
+   Compiling jackdaw_node_graph v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_node_graph)
+   Compiling jackdaw_runtime v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_runtime)
+   Compiling jackdaw_api_internal v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_api_internal)
+   Compiling jackdaw_animation v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_animation)
+   Compiling jackdaw_avian_integration v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/integrations/physics/jackdaw_avian_integration)
+   Compiling jackdaw_loader v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_loader)
+   Compiling jackdaw_scaffold v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_scaffold)
+   Compiling jackdaw_dylib v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_dylib)
+   Compiling jackdaw_api v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_api)
+   Compiling jackdaw_extension v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_extension)
+   Compiling jackdaw_multiplayer_editor v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_multiplayer_editor)
+   Compiling jackdaw_physics v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/integrations/physics/jackdaw_physics)
+   Compiling test_fixture_extension v0.0.0 (/Users/linbo.zhang/workspace/jackdaw/tests/fixtures/test_fixture_extension)
+   Compiling jackdaw v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw)
+warning: variable does not need to be mutable
+   --> src/terrain/ops.rs:306:5
+    |
+306 |     mut commands: Commands,
+    |     ----^^^^^^^^
+    |     |
+    |     help: remove this `mut`
+    |
+    = note: `#[warn(unused_mut)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused variable: `commands`
+   --> src/terrain/ops.rs:306:5
+    |
+306 |     mut commands: Commands,
+    |     ^^^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_commands`
+    |
+    = note: `#[warn(unused_variables)]` (part of `#[warn(unused)]`) on by default
+
+warning: `jackdaw` (lib test) generated 2 warnings (run `cargo fix --lib -p jackdaw --tests` to apply 2 suggestions)
+    Finished `test` profile [optimized + debuginfo] target(s) in 1m 30s
+     Running unittests src/lib.rs (target/debug/deps/jackdaw-8a72dd60f1d78351)
+
+running 1 test
+test terrain::ops::tests::eroding_an_empty_terrain_is_refused_without_undo_or_dirty ... FAILED
+
+failures:
+
+---- terrain::ops::tests::eroding_an_empty_terrain_is_refused_without_undo_or_dirty stdout ----
+
+thread 'terrain::ops::tests::eroding_an_empty_terrain_is_refused_without_undo_or_dirty' (1484450) panicked at crates/jackdaw_terrain/src/erosion.rs:75:29:
+cannot sample empty range
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    terrain::ops::tests::eroding_an_empty_terrain_is_refused_without_undo_or_dirty
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1277 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `--lib`
+OP-RED-EXIT=101
