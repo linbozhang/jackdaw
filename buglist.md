@@ -53,10 +53,11 @@
   修复方向：`add_placement` 拒绝超出当前 regions 包围盒合理余量（如 2 倍跨度）的坐标，import/adopt 报"落在地形外"。
   （2026-11-06 修复：`add_placement` 单咽喉位置闸 `placement_within_extent`（`ensure_region` 之前、仅拦需新 region 的点，既有 ground 短路放行）+ `try_add_placement -> Result<_, PlacementRefusal{NoRoom, OutsideExtent}>`（判定顺序满仓先于越界；`add_placement` 保持 Option 委托零调用方破坏）。口径经主控裁定由票面「2 倍跨度」改为**绝对上限 4096 格/轴 + 空文档首点种子窗**——纯比例会复利（递远点序列爬回同一 abort）且做不到绿证两序口径；QA 推演核验 **4096 ≥ 最大合法 extent 1024**（4 倍余量，`ensure_extent(1024)` 为唯一生产分配点，合法地形永不误拒）。红证：摘闸复红 4 FAILED + extent 爆表 1000192² 格/轴 ≈3TiB 复现；真机四断言（存活 3 轮 idle RSS +2.9MB / 远点拒且 `"1 fell outside the terrain"` ui_tree+日志双取证 / 正常点 `imported 2` / 负方向远点同拒）。libtests 3104=3098+6。程序 `db31900a`、QA `e53c02de`、合入 main `8d2953da`；QA `loop/reports/bug-r6-qa.md` PASS。顺带立票 A23（stored_extent i64 溢出加固）。）
 
-- [ ] **R7. Nudge（PageUp/PageDown）走凸包重建，直接摧毁凹多面体笔刷**
+- [x] **R7. Nudge（PageUp/PageDown）走凸包重建，直接摧毁凹多面体笔刷**
   `src/brush_element_ops.rs:356-357`（`rebuild_brush_from_vertices`，实现在 `src/brush/hull.rs:18`，内部为 `jackdaw_hull` 凸包）。
   问题：vertex drag 走 `apply_vertex_deltas`（半边优先），nudge 完全不查 `BrushHalfedge`。对 CSG/Knife 产出的凹笔刷，选中面按 PageUp，整个 brush 被静默替换为顶点凸包（L 形变方块）。
   修复方向：nudge 改走 `apply_vertex_deltas`（半边优先、hull 仅 legacy 兜底），与 vertex drag 共用路径。
+  （2026-11-06 修复：nudge 改走与 vertex drag/numeric transform/gizmo 共用的 `apply_vertex_deltas` 半边路径，新核心 `apply_nudge_to_brush`（世界 Y 网格步经 `broadcast_drag_to_captures` 同构换算；旋转笔刷语义从 brush local Y 变为世界 Y=裁定口径，红证测试锁定）；D3=凸包 `old_to_new` remap 整体删除（半边路径面索引天然稳定）；legacy 无半边组件笔刷仍落凸包兜底（hull.rs 零改动）。红证：L 形 9 面/14 顶点被毁为 7 面/10。QA 真机复跑（工具=为补 Face 拾取缺口新立的 `brush.selection.set_faces` operator，MCP 优先原则）：L 形保形 9→9/14→14 且逐顶点世界系恰 +0.25 无漂移、undo 恰一条、凸笔刷 6→6/8→8 回归锚；libtests 3117=3113+4。程序 `88301659`（原 971cf7c9 rebase）、QA `ef86915e`+`7bcc20cf`、合入 main `93a588af`；QA `loop/reports/bug-r7-qa.md` §七 PASS。附记：undo「推进栈但不还原几何」为既有框架疑缺陷→A26；凸包退化面合并缺陷→A24；Face 拾取真鼠标链路→A25。）
 
 - [ ] **R8. Extend-to-Brush 用凸半空间交集重建，凹主笔刷被凸化**
   `src/draw_brush/extend_face.rs:288-329`（`compute_brush_geometry_from_planes` + `clean_degenerate_faces` + `compute_brush_topology` 凸范式路径）。
@@ -580,6 +581,9 @@
 - [ ] **A25. Face 模式视口点选 brush 面的真鼠标链路未验证（复现先行；工具半边已由 `brush.selection.set_faces` 补）**（2026-11-06 R7 QA 真机死点发现；主控批准立账——MCP 优先原则家族）
   R7 QA 实测：Face 模式可进入（EditMode=BrushEdit(Face)、状态栏 Edit: Face）、Escape 切模式正常、object 模式同坐标 click 能到达 picking，但 brush 子元素面拾取无法经合成点击达成（`BrushSelection.sub.faces` 恒空）——真鼠标是否可用未知。工具半边已补（`brush.selection.set_faces`，合入 main `eaaa952b`）。证据：`loop/reports/bug-r7-qa.md` 死点节+`loop/bug-r7-qa/`。
   修复方向：复现先行——osascript/SendInput 级真点击验证；若真鼠标也失效则为产品缺陷（与 Y26 拾取家族并查：深度过滤/阈值）。
+- [ ] **A26. brush nudge undo 推进栈但几何不还原（疑似直改型 operator 无 EditorCommand 快照；复现先行）**（2026-11-06 R7 QA 复跑发现；主控裁定=既有框架疑缺陷非 R7 回归，立票）
+  真机实测（两轮复测一致）：`history.undo` 正常推进（53→52→51、label "Nudge Up"、delta=1）但 translation/顶点零还原——nudge 为直改型 operator，undo 命令快照疑似不捕获 brush 几何；修前凸包路径为同一 push 形态，疑似既有缺陷（真机无法回修前实证，headless 双态验证=A26 首步）。证据：`loop/reports/bug-r7-qa.md` §七断言②+`loop/bug-r7-qa/r8c-*.bsn.txt` 三态归档。
+  修复方向：对照 R1（关键帧 undo 绕过文档 AST，已修）的 EditorCommand 包装模式补几何快照；范围含 vertex drag/numeric transform/gizmo 共用路径的 undo 还原核验（若 drag 同病则整族修复）。
 - [ ] **LT8. Live Changes badge 点击不展开托盘（⚪，T25-T1 探针发现，只记不修）**（2026-11-03 T25-T1 可达性探针三窗实证；主控批准立账）
   hierarchy 头部 badge click `clicked:true` 但不 spawn 托盘面板（live_edits_ui.rs badge 观察器无展开行为）；托盘开行现成路线=停止→StopPrompt「Review」键交接（即 C4 链本体，零产品改动）。
   修复方向（候裁）：badge click 补托盘 spawn（一行级观察器）或 book 注记「badge 是计数器，开托盘走 Review/结构树」；T25-T3 book 轮顺手裁定。
