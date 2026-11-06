@@ -1,0 +1,363 @@
+   Compiling jackdaw v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw)
+   Compiling jackdaw_physics v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/integrations/physics/jackdaw_physics)
+   Compiling jackdaw_editor v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_editor)
+    Finished `test` profile [optimized + debuginfo] target(s) in 24.35s
+     Running unittests src/lib.rs (target/debug/deps/bevy_window_chrome-a0a1688a456e5b32)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 2 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (target/debug/deps/dynamic_extension-f03b787e4cb5c66e)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (target/debug/deps/jackdaw-ca5c63995e9a9bf0)
+
+running 4 tests
+test brush_element_ops::nudge_tests::nudge_offset_follows_world_y_through_brush_rotation ... ok
+test brush_element_ops::nudge_tests::face_nudge_on_a_convex_brush_keeps_cuboid_shape ... ok
+test brush_element_ops::nudge_tests::vertex_nudge_on_concave_brush_preserves_the_shape ... ok
+test brush_element_ops::nudge_tests::face_nudge_on_concave_brush_preserves_the_shape ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 1278 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (target/debug/deps/jackdaw_animation-d3888fc6c97fa723)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 14 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (target/debug/deps/jackdaw_animation_runtime-322dd847d8dfb1bf)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 4 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (target/debug/deps/jackdaw_api-7e4865ee02715788)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (target/debug/deps/jackdaw_api_internal-7c6405bc58ce4ef2)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 68 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (target/debug/deps/jackdaw_api_macros-1c9185dea8dd4b45)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (target/debug/deps/jackdaw_avian_integration-24779216677313f6)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 5 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (target/debug/deps/jackdaw_bind-64bfd94edd0a8e5b)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 24 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (target/debug/deps/jackdaw_bsn-7d424423547a0bb6)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 129 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (target/debug/deps/jackdaw_camera-8f628257458e0379)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 5 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (target/debug/deps/jackdaw_camera_rig-f47fb2b8bc102c47)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 7 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (target/debug/deps/jackdaw_cli_internal-63b3bfc07818274c)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 18 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (target/debug/deps/jackdaw_commands-92e8f4dea5e04782)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 16 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (target/debug/deps/jackdaw_csg-6ff2bd6145647d98)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 6 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (target/debug/deps/jackdaw_dylib-af80eae240f1c0b9)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (target/debug/deps/jackdaw_editor-afd09e77ee5d99d3)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (target/debug/deps/jackdaw_env-568392444a8ef193)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 5 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (target/debug/deps/jackdaw_extension-66c0ff35c7a499b9)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (target/debug/deps/jackdaw_feathers-5a06d2954538654e)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 82 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (target/debug/deps/jackdaw_fuzzy-995694baae3b3537)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (target/debug/deps/jackdaw_geometry-3b0ba8742bdd357b)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 35 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (target/debug/deps/jackdaw_hull-9177f5f0e03d8697)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 14 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (target/debug/deps/jackdaw_input-802fd52375217ae6)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 9 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (target/debug/deps/jackdaw_jsn-417bc1236ed8bf0f)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 13 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (target/debug/deps/jackdaw_loader-1be8a94006aba5e5)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 3 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (target/debug/deps/jackdaw_localization-9f3eb10574366a17)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 3 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (target/debug/deps/jackdaw_material-78b0c8e5a672edb1)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 26 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (target/debug/deps/jackdaw_mcp-31127da4f87e7c45)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 1 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (target/debug/deps/jackdaw_multiplayer-c29ddc86fc36f60a)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 4 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (target/debug/deps/jackdaw_multiplayer_editor-1333dee164a33b12)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 2 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (target/debug/deps/jackdaw_node_graph-60852efe13fe35b1)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (target/debug/deps/jackdaw_package-55c984e57e71cdff)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 7 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (target/debug/deps/jackdaw_panels-51df14dc0e53ba4c)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 28 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (target/debug/deps/jackdaw_physics-71cb811842499215)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (target/debug/deps/jackdaw_pick-239135e048cc4693)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 7 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (target/debug/deps/jackdaw_pie_protocol-10db435c661fed93)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 28 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (target/debug/deps/jackdaw_prefab-ca742dc8551ae799)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 22 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (target/debug/deps/jackdaw_project_build-636efb9abd5c9be5)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 227 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (target/debug/deps/jackdaw_releases-de2fdc47a854d1cf)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 28 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (target/debug/deps/jackdaw_remote-68c50a6e3985f3e5)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 9 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (target/debug/deps/jackdaw_runtime-90c670b6c325946a)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 87 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (target/debug/deps/jackdaw_rustc_wrapper-80b667ebd87a6094)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 14 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (target/debug/deps/jackdaw_scaffold-4741d86ecfbbf73b)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 93 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (target/debug/deps/jackdaw_scene_types-eba3793887b5b048)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 48 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (target/debug/deps/jackdaw_schema-122a5ce92d79364b)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 26 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (target/debug/deps/jackdaw_sdk-3abf505d151977c5)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (target/debug/deps/jackdaw_select-e586a127c899f982)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 8 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (target/debug/deps/jackdaw_snap-85e99f9f97c3e924)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 28 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (target/debug/deps/jackdaw_surface-5f0e4f0c5cae8def)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 52 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (target/debug/deps/jackdaw_terrain-0db2d9acd73870a7)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 539 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (target/debug/deps/jackdaw_tilemap_collision-76dbca6306d8a286)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 8 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (target/debug/deps/jackdaw_uv-b836633dfe96f577)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 11 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (target/debug/deps/jackdaw_widgets-3e523e75172b0411)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 20 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (target/debug/deps/jackdaw_widgets_runtime-146a062101c2d259)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 19 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (target/debug/deps/jd-a871300ba99943bc)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 22 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (target/debug/deps/test_fixture_extension-ee3407ff2d1f5eed)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (target/debug/deps/viewable_camera_extension-905791adbe1f7eca)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+EXIT=0

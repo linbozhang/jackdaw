@@ -1,0 +1,12 @@
+{
+ "jsonrpc": "2.0",
+ "id": 1,
+ "result": {
+  "entities": [
+   55834568993
+  ],
+  "id": "entity.add.cube",
+  "result": "finished",
+  "warnings": []
+ }
+}

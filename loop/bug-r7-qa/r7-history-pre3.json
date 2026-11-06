@@ -1,0 +1,1 @@
+{"jsonrpc":"2.0","id":1,"result":{"dirty":false,"has_save_baseline":false,"redo":[],"redo_len":0,"saved_len":0,"top":"Apply BSN","undo":[{"label":"Apply BSN"},{"label":"Apply BSN"},{"label":"Add Cube"}],"undo_len":3}}

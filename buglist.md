@@ -574,6 +574,12 @@
 - [ ] **A23. `region.rs` `stored_extent()` 在 legacy 极端坐标下 i64 乘法可溢出（加固票，⚪ 低优先）**（2026-11-06 R6 程序/QA 双核实成立；主控批准立账）
   `stored_extent()` 的 span 乘法在 legacy 导入（`from_legacy_v1` 可产 extent>4096）等极端坐标下 i64 可溢出；R6 修复面内 `placement_within_extent` 已用 i128 宽乘自防，本票收 `region.rs` 本体的同型隐患。证据：`loop/reports/bug-r6-report.md` §六.4+`bug-r6-qa.md` 推演节。
   修复方向：span 计算改 i128 或饱和运算+上限断言；与 Y6/Y17 饱和转换家族同批处理可顺手。
+- [ ] **A24. `jackdaw_hull`/`rebuild_brush_from_vertices` 对退化共面三角形合并不净（⚪，R7 修后 dormancy）**（2026-11-06 R7 红证发现+QA 复红亲证；主控批准立账）
+  旋转立方体（纯凸、6 面）经凸包重建产出 7 面——退化共面三角形合并不净；R7 把 nudge 迁走后半边路径仅剩 legacy 兜底与既有调用方，缺陷 dormancy 但 hull 本体仍在（W21/Y22 凸重建家族近亲）。证据：`loop/bug-r7-qa/qa-red-forced-hull.log`（面 6→7 断言）+ `bug-r7-report/qa` 两报告。
+  修复方向：hull 侧退化面合并清理+凸体回归钉（6 面进 6 面出）；与 R8（extend_face 凸路径）同域可并批。
+- [ ] **A25. Face 模式视口点选 brush 面的真鼠标链路未验证（复现先行；工具半边已由 `brush.selection.set_faces` 补）**（2026-11-06 R7 QA 真机死点发现；主控批准立账——MCP 优先原则家族）
+  R7 QA 实测：Face 模式可进入（EditMode=BrushEdit(Face)、状态栏 Edit: Face）、Escape 切模式正常、object 模式同坐标 click 能到达 picking，但 brush 子元素面拾取无法经合成点击达成（`BrushSelection.sub.faces` 恒空）——真鼠标是否可用未知。工具半边已补（`brush.selection.set_faces`，合入 main `eaaa952b`）。证据：`loop/reports/bug-r7-qa.md` 死点节+`loop/bug-r7-qa/`。
+  修复方向：复现先行——osascript/SendInput 级真点击验证；若真鼠标也失效则为产品缺陷（与 Y26 拾取家族并查：深度过滤/阈值）。
 - [ ] **LT8. Live Changes badge 点击不展开托盘（⚪，T25-T1 探针发现，只记不修）**（2026-11-03 T25-T1 可达性探针三窗实证；主控批准立账）
   hierarchy 头部 badge click `clicked:true` 但不 spawn 托盘面板（live_edits_ui.rs badge 观察器无展开行为）；托盘开行现成路线=停止→StopPrompt「Review」键交接（即 C4 链本体，零产品改动）。
   修复方向（候裁）：badge click 补托盘 spawn（一行级观察器）或 book 注记「badge 是计数器，开托盘走 Review/结构树」；T25-T3 book 轮顺手裁定。

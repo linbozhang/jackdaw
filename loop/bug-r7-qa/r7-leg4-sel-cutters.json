@@ -1,0 +1,16 @@
+{
+ "jsonrpc": "2.0",
+ "id": 1,
+ "result": {
+  "selection": [
+   {
+    "entity": 4294959400,
+    "name": "Cube"
+   },
+   {
+    "entity": 25769797423,
+    "name": "Cube"
+   }
+  ]
+ }
+}

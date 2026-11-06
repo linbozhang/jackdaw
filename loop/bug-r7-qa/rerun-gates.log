@@ -1,0 +1,11 @@
+=== clippy ===
+    Checking jd v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jd)
+    Checking jackdaw_editor v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_editor)
+    Finished `dev` profile [optimized + debuginfo] target(s) in 17.01s
+CLIPPY_EXIT=0
+=== build ===
+   Compiling jackdaw v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw)
+    Finished `dev` profile [optimized + debuginfo] target(s) in 1m 08s
+BUILD_EXIT=0
+=== libtests ===
+LIBTESTS_EXIT=0

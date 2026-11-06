@@ -1,0 +1,8 @@
+{
+ "jsonrpc": "2.0",
+ "id": 1,
+ "error": {
+  "code": -32602,
+  "message": "`/Users/linbo.zhang/workspace/jackdaw/loop/bug-r7-qa/r7-leg5-viewport-before.png` is absolute; name a path relative to /Users/linbo.zhang/workspace/jackdaw/tests/fixtures/bsn_game"
+ }
+}

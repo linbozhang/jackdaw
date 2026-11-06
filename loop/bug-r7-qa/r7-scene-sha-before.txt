@@ -1,0 +1,1 @@
+2f489e1cb110253a788cdbcf74b45c842db0dae9a86209412452b712e88b671f  /Users/linbo.zhang/workspace/jackdaw/tests/fixtures/bsn_game/assets/scene.bsn

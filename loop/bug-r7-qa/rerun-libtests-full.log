@@ -1,0 +1,40 @@
+     Running unittests src/lib.rs (target/debug/deps/jd-a871300ba99943bc)
+
+running 22 tests
+test archive::tests::formats_follow_the_published_extension ... ok
+test editors::tests::an_unpinned_project_opens_with_the_default_editor ... ok
+test editors::tests::a_pinned_project_prefers_its_install_over_the_editor_beside_jd ... ok
+test editors::tests::names_that_could_leave_their_directory_are_refused ... ok
+test editor_cli::tests::installs_are_grouped_by_bevy_line_with_main_first ... ok
+test editor_cli::tests::newer_patches_and_nightlies_are_reported_for_installed_lines_only ... ok
+test editors::tests::version_lines_are_read_from_editor_output ... ok
+test editors::tests::a_missing_line_names_the_install_command_unless_jd_ships_that_line ... ok
+test fetch::tests::plain_http_is_refused_before_connecting ... ok
+test fetch::tests::windows_file_urls_drop_the_slash_before_the_drive ... ok
+test editors::tests::the_exact_editor_beside_jd_wins_over_an_older_install_of_its_line ... ok
+test sign::tests::generated_keys_round_trip_through_pkcs8 ... ok
+test sign::tests::packed_bundles_verify_and_detect_tampering ... ok
+test sign::tests::existing_publisher_key_reproduces_its_signature ... ok
+test self_update::tests::a_standalone_release_jd_may_update_itself ... ok
+test self_update::tests::a_cargo_installed_jd_is_left_to_cargo ... ok
+test self_update::tests::a_jd_inside_a_managed_install_names_that_install ... ok
+test archive::tests::a_gzipped_tarball_unpacks_under_its_single_folder ... ok
+test self_update::tests::development_and_prerelease_builds_are_not_replaced ... ok
+test archive::tests::a_zip_unpacks_its_files ... ok
+test self_update::tests::a_jd_beside_its_editor_or_sdk_stays_with_that_bundle ... ok
+test fetch::tests::file_urls_read_and_hash_local_files ... ok
+
+test result: ok. 22 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+
+     Running unittests src/lib.rs (target/debug/deps/test_fixture_extension-ee3407ff2d1f5eed)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (target/debug/deps/viewable_camera_extension-905791adbe1f7eca)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
