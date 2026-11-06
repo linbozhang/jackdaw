@@ -1177,6 +1177,43 @@ impl Default for RegionTerrainData {
     }
 }
 
+/// The farthest, in cells, the stored regions may reach along one axis once
+/// a placement is accepted.
+///
+/// The dense grid the editor samples every frame is squared off the stored
+/// extent ([`TerrainRegions::stored_extent`]), so a placement on a
+/// coordinate a million units out would have the next frame reserve a grid
+/// of trillions of heights and abort. The cap is absolute rather than a
+/// multiple of the current reach, because a multiple compounds: a few
+/// accepted points at ever-tripling coordinates would climb back to the
+/// same abort. 4096 cells a side is four times what a fresh terrain
+/// carries (four regions of [`RegionSize::DEFAULT`]), and its dense
+/// buffer tops out at 64 MiB.
+const MAX_EXTENT_CELLS_PER_AXIS: u64 = 4096;
+
+/// Why [`RegionTerrainData::try_add_placement`] refused to store an
+/// instance.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum PlacementRefusal {
+    /// The terrain already holds [`crate::region::MAX_REGIONS`] regions and
+    /// the position would need a new one. What
+    /// [`RegionTerrainData::add_placement`]'s `None` has always meant.
+    NoRoom,
+    /// The position sits so far past the stored regions that storing it
+    /// would square the stored extent into a grid no frame can sample.
+    /// What the import summary counts as "fell outside the terrain".
+    OutsideExtent,
+}
+
+impl core::fmt::Display for PlacementRefusal {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+        match self {
+            Self::NoRoom => write!(f, "the terrain holds its limit of regions"),
+            Self::OutsideExtent => write!(f, "the position falls outside the terrain"),
+        }
+    }
+}
+
 impl RegionTerrainData {
     /// Vertices per edge of the dense grid this document presents: how far
     /// its regions reach, squared off to the longer axis. A document with
@@ -1393,8 +1430,11 @@ impl RegionTerrainData {
     /// Store one instance at terrain-local `local`, allocating the region under
     /// it if the terrain does not reach there yet.
     ///
-    /// Returns where it landed. `None` when the terrain is already at
-    /// [`crate::region::MAX_REGIONS`] and the position needs a new one.
+    /// Returns where it landed. `None` when the position is refused, which
+    /// [`Self::try_add_placement`] spells out: the terrain is already at
+    /// [`crate::region::MAX_REGIONS`] and the position needs a new one, or
+    /// the position sits so far past the stored regions that storing it
+    /// would square the stored extent into a grid no frame can sample.
     pub fn add_placement(
         &mut self,
         local: bevy_math::Vec3,
@@ -1403,6 +1443,21 @@ impl RegionTerrainData {
         yaw: f32,
         scale: f32,
     ) -> Option<(RegionCoord, usize)> {
+        self.try_add_placement(local, group, asset, yaw, scale).ok()
+    }
+
+    /// [`Self::add_placement`] with the refusal named: a terrain at its
+    /// region cap turns a position needing new ground away as
+    /// [`PlacementRefusal::NoRoom`], and one a million units out as
+    /// [`PlacementRefusal::OutsideExtent`].
+    pub fn try_add_placement(
+        &mut self,
+        local: bevy_math::Vec3,
+        group: u16,
+        asset: u16,
+        yaw: f32,
+        scale: f32,
+    ) -> Result<(RegionCoord, usize), PlacementRefusal> {
         let (mut coord, mut x, mut z) = self.placement_slot(local);
         // The last vertex of a terrain sits exactly on the edge of the region
         // past its last one. Storing it there would allocate ground the terrain
@@ -1430,7 +1485,10 @@ impl RegionTerrainData {
             }
         }
         if self.regions.region(coord).is_none() && !self.regions.has_room_for_one_more() {
-            return None;
+            return Err(PlacementRefusal::NoRoom);
+        }
+        if !self.placement_within_extent(coord) {
+            return Err(PlacementRefusal::OutsideExtent);
         }
         let mut placement = ScatterPlacement {
             group,
@@ -1444,7 +1502,36 @@ impl RegionTerrainData {
         placement.sanitize();
         let region = self.regions.ensure_region(coord);
         region.placements_mut().push(placement);
-        Some((coord, region.placements().len() - 1))
+        Ok((coord, region.placements().len() - 1))
+    }
+
+    /// Whether storing a placement on `coord` keeps the stored extent
+    /// inside [`MAX_EXTENT_CELLS_PER_AXIS`] cells a side.
+    ///
+    /// Ground a region already holds is always fine: none is claimed. The
+    /// first ground of an empty document sits inside a window around the
+    /// grid's origin region, sized so a document seeded there can still
+    /// grow to the cap; ground past nothing yet a million units out is
+    /// what a mistyped import coordinate is.
+    fn placement_within_extent(&self, coord: RegionCoord) -> bool {
+        if self.regions.region(coord).is_some() {
+            return true;
+        }
+        let side = self.regions.region_size().get();
+        let Some((min, max)) = self.regions.region_bounds() else {
+            let window =
+                (MAX_EXTENT_CELLS_PER_AXIS / u64::from(side).max(1)).saturating_sub(1) as i64;
+            return i64::from(coord.x).abs() <= window && i64::from(coord.z).abs() <= window;
+        };
+        // Regions of a legacy file can sit at the ends of the coordinate
+        // space, where the span times the region side overflows `i64`, so
+        // the reach multiplies wide.
+        let reach = |lo: i32, hi: i32, at: i32| {
+            (i128::from(hi).max(i128::from(at)) - i128::from(lo).min(i128::from(at)) + 1)
+                * i128::from(side)
+        };
+        reach(min.x, max.x, coord.x) <= i128::from(MAX_EXTENT_CELLS_PER_AXIS)
+            && reach(min.z, max.z, coord.z) <= i128::from(MAX_EXTENT_CELLS_PER_AXIS)
     }
 
     /// Every stored placement, by the region holding it and its index
@@ -3791,6 +3878,237 @@ mod tests {
         assert_eq!(
             data.placement_position(coord, data.placement(coord, 0).expect("stored")),
             bevy_math::Vec3::new(4.0, 0.0, 4.0)
+        );
+    }
+
+    // --- R6: a far coordinate must not square the stored extent ---
+    //
+    // The dense grid the editor samples every frame is squared off the
+    // stored extent, so one placement on a coordinate millions of units out
+    // would reserve a grid of trillions of heights and abort the next one.
+    // The 4096 figure is the extent cap a placement must keep the terrain
+    // inside; it is written out here rather than named so the tests read
+    // the same against the code that fixes them.
+
+    /// A default document with one region at the origin: one-metre cells,
+    /// 256-cell regions, so a coordinate a million units out is 3906
+    /// regions out.
+    fn document_with_one_region_at_the_origin() -> RegionTerrainData {
+        let mut data = RegionTerrainData {
+            scatter: ScatterPalette {
+                assets: vec![ScatterPaletteEntry::new("a.glb")],
+                groups: vec!["g".to_string()],
+            },
+            ..RegionTerrainData::default()
+        };
+        data.regions.set_height(0, 0, 1.0);
+        data
+    }
+
+    /// An empty document of the same geometry, for the order-of-arrival
+    /// cases.
+    fn empty_scatter_document() -> RegionTerrainData {
+        RegionTerrainData {
+            scatter: ScatterPalette {
+                assets: vec![ScatterPaletteEntry::new("a.glb")],
+                groups: vec!["g".to_string()],
+            },
+            ..RegionTerrainData::default()
+        }
+    }
+
+    /// A placement a million units out past near ones is refused, and the
+    /// stored extent stays inside the sampling budget.
+    #[test]
+    fn a_far_point_after_near_ones_is_refused_and_the_extent_stays_bounded() {
+        let mut data = document_with_one_region_at_the_origin();
+        assert!(
+            data.add_placement(bevy_math::Vec3::new(1.0, 0.0, 1.0), 0, 0, 0.0, 1.0)
+                .is_some(),
+            "the near point stores"
+        );
+
+        let far = bevy_math::Vec3::new(1_000_000.0, 0.0, 1_000_000.0);
+        assert!(
+            data.add_placement(far, 0, 0, 0.0, 1.0).is_none(),
+            "the far point is refused, not stored"
+        );
+
+        let (x, z) = data
+            .regions
+            .stored_extent()
+            .expect("the origin region holds");
+        assert!(
+            u64::from(x) <= 4096 && u64::from(z) <= 4096,
+            "the extent stays inside the sampling budget: {x} x {z}"
+        );
+        assert_eq!(
+            data.regions.region_count(),
+            1,
+            "no region was allocated for the far point"
+        );
+    }
+
+    /// The same far point is refused when it arrives first: the first
+    /// ground an empty document admits sits within the reach a document
+    /// under the extent cap can span from the grid's origin, so the near
+    /// ground keeps working whatever order the import listed.
+    #[test]
+    fn a_far_point_that_arrives_first_is_refused_and_near_ground_still_stores() {
+        let mut data = empty_scatter_document();
+
+        assert!(
+            data.add_placement(
+                bevy_math::Vec3::new(1_000_000.0, 0.0, 1_000_000.0),
+                0,
+                0,
+                0.0,
+                1.0
+            )
+            .is_none(),
+            "the far first point is refused"
+        );
+        assert_eq!(
+            data.regions.region_count(),
+            0,
+            "nothing was allocated for it"
+        );
+
+        assert!(
+            data.add_placement(bevy_math::Vec3::new(1.0, 0.0, 1.0), 0, 0, 0.0, 1.0)
+                .is_some(),
+            "the near ground still stores"
+        );
+        let (x, z) = data.regions.stored_extent().expect("one region holds");
+        assert!(
+            u64::from(x) <= 4096 && u64::from(z) <= 4096,
+            "the extent stays inside the sampling budget: {x} x {z}"
+        );
+    }
+
+    /// The margin is a hard ceiling on the stored extent, tested at its
+    /// edge: a point landing the extent exactly on 4096 cells a side
+    /// stores, and the point one region past it does not.
+    #[test]
+    fn a_point_landing_the_extent_on_the_cap_stores_and_one_past_it_is_refused() {
+        let mut data = document_with_one_region_at_the_origin();
+
+        // Region (15, 0): the x reach lands on exactly 16 regions of 256
+        // cells, the cap itself.
+        assert!(
+            data.add_placement(bevy_math::Vec3::new(3841.0, 0.0, 1.0), 0, 0, 0.0, 1.0)
+                .is_some(),
+            "the point that lands the extent on the cap stores"
+        );
+        assert_eq!(data.regions.stored_extent(), Some((4096, 256)));
+
+        assert!(
+            data.add_placement(bevy_math::Vec3::new(4100.0, 0.0, 1.0), 0, 0, 0.0, 1.0)
+                .is_none(),
+            "one region past the cap is refused"
+        );
+        assert_eq!(
+            data.regions.stored_extent(),
+            Some((4096, 256)),
+            "the refused point left the extent where it was"
+        );
+    }
+
+    /// Ordinary work stays ordinary: a point just past a terrain's edge
+    /// still claims the one region under it. The cap is for coordinates
+    /// millions of units out, not for the region next door.
+    #[test]
+    fn a_point_just_past_the_stored_ground_still_claims_the_region_under_it() {
+        let mut data = RegionTerrainData {
+            regions: TerrainRegions::new(RegionSize::new(4).unwrap()),
+            scatter: ScatterPalette {
+                assets: vec![ScatterPaletteEntry::new("a.glb")],
+                groups: vec!["g".to_string()],
+            },
+            ..RegionTerrainData::default()
+        };
+        data.regions.set_height(0, 0, 1.0);
+        let before = data.regions.region_count();
+
+        let (coord, _) = data
+            .add_placement(bevy_math::Vec3::new(5.0, 0.0, 1.0), 0, 0, 0.0, 1.0)
+            .expect("one region past the edge is ordinary growth");
+        assert_eq!(coord, RegionCoord::new(1, 0));
+        assert_eq!(data.regions.region_count(), before + 1);
+    }
+
+    /// A terrain at the region cap keeps the meaning its refusals always
+    /// had: a position on a held region stores, one needing new ground is
+    /// turned away as before.
+    #[test]
+    fn a_terrain_at_the_region_cap_keeps_its_no_room_meaning() {
+        let mut data = RegionTerrainData {
+            regions: TerrainRegions::new(RegionSize::new(4).unwrap()),
+            scatter: ScatterPalette {
+                assets: vec![ScatterPaletteEntry::new("a.glb")],
+                groups: vec!["g".to_string()],
+            },
+            ..RegionTerrainData::default()
+        };
+        for rz in 0..32 {
+            for rx in 0..32 {
+                data.regions.ensure_region(RegionCoord::new(rx, rz));
+            }
+        }
+        assert!(!data.regions.has_room_for_one_more());
+
+        assert!(
+            data.add_placement(bevy_math::Vec3::new(1.0, 0.0, 1.0), 0, 0, 0.0, 1.0)
+                .is_some(),
+            "a held region still stores at the cap"
+        );
+        assert!(
+            data.add_placement(bevy_math::Vec3::new(200.0, 0.0, 1.0), 0, 0, 0.0, 1.0)
+                .is_none(),
+            "a position needing new ground is the refusal it always was"
+        );
+    }
+
+    /// The two refusals carry their own names for a caller that wants to
+    /// tell them apart, while `add_placement` keeps boiling both down to
+    /// the `None` it has always returned.
+    #[test]
+    fn the_two_refusals_are_named_and_both_read_as_none_through_add_placement() {
+        let mut data = empty_scatter_document();
+        assert_eq!(
+            data.try_add_placement(
+                bevy_math::Vec3::new(1_000_000.0, 0.0, 1_000_000.0),
+                0,
+                0,
+                0.0,
+                1.0
+            ),
+            Err(PlacementRefusal::OutsideExtent),
+            "the far point names the extent"
+        );
+
+        let mut full = RegionTerrainData {
+            regions: TerrainRegions::new(RegionSize::new(4).unwrap()),
+            scatter: ScatterPalette {
+                assets: vec![ScatterPaletteEntry::new("a.glb")],
+                groups: vec!["g".to_string()],
+            },
+            ..RegionTerrainData::default()
+        };
+        for rz in 0..32 {
+            for rx in 0..32 {
+                full.regions.ensure_region(RegionCoord::new(rx, rz));
+            }
+        }
+        assert_eq!(
+            full.try_add_placement(bevy_math::Vec3::new(200.0, 0.0, 1.0), 0, 0, 0.0, 1.0),
+            Err(PlacementRefusal::NoRoom),
+            "the capped terrain names the room"
+        );
+        assert!(
+            full.add_placement(bevy_math::Vec3::new(200.0, 0.0, 1.0), 0, 0, 0.0, 1.0)
+                .is_none(),
+            "and add_placement still answers None for it"
         );
     }
 

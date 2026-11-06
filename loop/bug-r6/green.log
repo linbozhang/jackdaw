@@ -1,0 +1,14 @@
+   Compiling jackdaw_terrain v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_terrain)
+    Finished `test` profile [optimized + debuginfo] target(s) in 7.40s
+     Running unittests src/lib.rs (target/debug/deps/jackdaw_terrain-00dc8dc176359b43)
+
+running 6 tests
+test sidecar::tests::a_point_just_past_the_stored_ground_still_claims_the_region_under_it ... ok
+test sidecar::tests::a_far_point_after_near_ones_is_refused_and_the_extent_stays_bounded ... ok
+test sidecar::tests::a_far_point_that_arrives_first_is_refused_and_near_ground_still_stores ... ok
+test sidecar::tests::a_point_landing_the_extent_on_the_cap_stores_and_one_past_it_is_refused ... ok
+test sidecar::tests::the_two_refusals_are_named_and_both_read_as_none_through_add_placement ... ok
+test sidecar::tests::a_terrain_at_the_region_cap_keeps_its_no_room_meaning ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 533 filtered out; finished in 0.00s
+

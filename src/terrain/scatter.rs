@@ -2032,6 +2032,7 @@ fn adopt_group(world: &mut World, entity: Entity, terrain_name: Option<&str>, ke
         .map(|t| t.data_path.clone())
         .unwrap_or_default();
     let materials = model_materials(world, entity);
+    let asked = models.len();
     let adopted = match scatter_data::adopt(world, &data_path, &key, entity, models, &materials) {
         Ok(adopted) => adopted,
         Err(reason) => {
@@ -2046,11 +2047,22 @@ fn adopt_group(world: &mut World, entity: Entity, terrain_name: Option<&str>, ke
         }
     };
 
+    // A model parked far off the terrain is refused by the document's
+    // extent guard, and the adopt must say so rather than quietly store
+    // fewer placements than the group held.
+    let refused = asked.saturating_sub(adopted);
+    let note = if refused > 0 {
+        format!(" ({refused} fell outside the terrain)")
+    } else {
+        String::new()
+    };
     set_report(
         world,
         TerrainScatterReport {
             placed: adopted,
-            message: format!("adopted '{key}': {adopted} placements now stored on the terrain"),
+            message: format!(
+                "adopted '{key}': {adopted} placements now stored on the terrain{note}"
+            ),
             ..default()
         },
     );
