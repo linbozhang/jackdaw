@@ -1,0 +1,11 @@
+thread 'sidecar::tests::qa_red_extent_blowup_reproduction' (1601526) panicked at crates/jackdaw_terrain/src/sidecar.rs:3932:9:
+QA RED REPRO: far point landed=Some((RegionCoord { x: 3906, z: 3906 }, 0)) stored_extent=1000192 x 1000192 cells per axis (dense buffer would reserve 1000192x1000192x4B = 3 TiB)
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+--
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 539 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `-p jackdaw_terrain --lib`

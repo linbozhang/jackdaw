@@ -1,0 +1,1 @@
+terrain.scatter: imported 0 into 'r6probe2' (1 fell outside the terrain)
