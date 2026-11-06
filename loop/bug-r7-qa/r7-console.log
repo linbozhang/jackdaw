@@ -213,3 +213,15 @@
 [18:25:46] after Escape: Object
 [18:25:48] after Digit4: Object
 [18:25:50] after Digit3: Object
+2f489e1cb110253a788cdbcf74b45c842db0dae9a86209412452b712e88b671f  /Users/linbo.zhang/workspace/jackdaw/tests/fixtures/bsn_game/assets/scene.bsn
+[18:56:50] boot: editor pid=37712 project=/Users/linbo.zhang/workspace/jackdaw/tests/fixtures/bsn_game binary=710097413 Nov 6
+[18:57:11] setup dialog up; clicking Open without setup
+[18:57:30] PROJECT_OPEN
+{"project":"/Users/linbo.zhang/workspace/jackdaw/tests/fixtures/bsn_game","scene":null,"selection":[]}
+[18:57:30] EDITOR_READY pid=37712
+2f489e1cb110253a788cdbcf74b45c842db0dae9a86209412452b712e88b671f  /Users/linbo.zhang/workspace/jackdaw/tests/fixtures/bsn_game/assets/scene.bsn
+[19:03:25] boot: editor pid=38791 project=/Users/linbo.zhang/workspace/jackdaw/tests/fixtures/bsn_game binary=710097413 Nov 6
+[19:03:35] setup dialog up; clicking Open without setup
+[19:03:55] PROJECT_OPEN
+{"project":"/Users/linbo.zhang/workspace/jackdaw/tests/fixtures/bsn_game","scene":null,"selection":[]}
+[19:03:55] EDITOR_READY pid=38791

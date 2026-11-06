@@ -1,0 +1,39 @@
+{
+ "jsonrpc": "2.0",
+ "id": 1,
+ "result": {
+  "dirty": false,
+  "has_save_baseline": false,
+  "redo": [],
+  "redo_len": 0,
+  "saved_len": 0,
+  "top": "Nudge Up",
+  "undo": [
+   {
+    "label": "Nudge Up"
+   },
+   {
+    "label": "Nudge Up"
+   },
+   {
+    "label": "Rotate 90\u00b0"
+   },
+   {
+    "label": "Nudge Up"
+   },
+   {
+    "label": "Add Cube"
+   },
+   {
+    "label": "CSG Subtract"
+   },
+   {
+    "label": "Nudge"
+   },
+   {
+    "label": "Nudge"
+   }
+  ],
+  "undo_len": 55
+ }
+}

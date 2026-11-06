@@ -1,153 +1,159 @@
-[2m2026-11-06T10:19:50.331734Z[0m [32m INFO[0m [2mbevy_diagnostic::system_information_diagnostics_plugin::internal[0m[2m:[0m SystemInfo { os: "macOS 26.3 Tahoe", kernel: "25.3.0", cpu: "Apple M2 Pro", core_count: "12", memory: "32.0 GiB" }
-[2m2026-11-06T10:19:50.332200Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
-[2m2026-11-06T10:19:50.390996Z[0m [32m INFO[0m [2mbevy_render::renderer[0m[2m:[0m AdapterInfo { name: "Apple M2 Pro", vendor: 0, device: 0, device_type: IntegratedGpu, device_pci_bus_id: "", driver: "", driver_info: "", backend: Metal, subgroup_min_size: 4, subgroup_max_size: 64, transient_saves_memory: Some(true), limit_bucket: None }
-[2m2026-11-06T10:19:50.584809Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw::test_input::plugin` of extension `jackdaw.test_input`
-[2m2026-11-06T10:19:50.584988Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw_physics::PhysicsEditorPlugin` of extension `jackdaw.physics`
-[2m2026-11-06T10:19:50.587349Z[0m [32m INFO[0m [2mbevy_pbr::cluster[0m[2m:[0m GPU clustering is supported on this device.
-[2m2026-11-06T10:19:50.587385Z[0m [32m INFO[0m [2mbevy_render::batching::gpu_preprocessing[0m[2m:[0m GPU preprocessing is fully supported on this device.
-[2m2026-11-06T10:19:50.624294Z[0m [32m INFO[0m [2mbevy_winit::system[0m[2m:[0m Creating new window jackdaw (71v0)
-[2m2026-11-06T10:19:50.720951Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.timeline
-[2m2026-11-06T10:19:50.721114Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core_windows
-[2m2026-11-06T10:19:50.721167Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.physics
-[2m2026-11-06T10:19:50.721368Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.viewport_panel
-[2m2026-11-06T10:19:50.721437Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.project_window
-[2m2026-11-06T10:19:50.721450Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.build_panel
-[2m2026-11-06T10:19:50.721462Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.inspector
-[2m2026-11-06T10:19:50.721487Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.multiplayer
-[2m2026-11-06T10:19:50.721518Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.test_input
-[2m2026-11-06T10:19:50.721537Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.animation_graph
-[2m2026-11-06T10:19:50.721548Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.game_panel
-[2m2026-11-06T10:19:50.721558Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core
-[2m2026-11-06T10:19:50.722950Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.ui_palette
-[2m2026-11-06T10:19:50.724313Z[0m [33m WARN[0m [2mjackdaw_api_internal::keymap::apply[0m[2m:[0m preset 'classic' has 10 chords claimed by more than one action: ["Home (Press, Operators): viewport2d.frame, clip.timeline.jump_start, view.frame_all", "Delete (Press, Operators): clip.delete_keyframes, entity.delete, brush.delete_element", "Backspace (Press, Operators): clip.delete_keyframes, viewport.draw_brush.remove_last_vertex, brush.delete_element", "Super+KeyC (Press, Operators): clip.copy_keyframes, entity.copy", "Super+KeyV (Press, Operators): clip.paste_keyframes, entity.paste", "Tab (Press, Operators): viewport.draw_brush.toggle_mode, brush.clip.cycle_mode", "Enter (Press, Operators): viewport.draw_brush.commit_polygon, brush.clip.apply", "KeyE (Press, Operators): tool.rotate, brush.mesh.extrude", "Escape (Press, Operators): brush.exit_edit_mode, selection.clear, brush.clip.clear, terrain.tool.exit_to_select", "Super+KeyB (Press, Operators): brush.mesh.edge_bevel, brush.mesh.vertex_bevel"]
-[2m2026-11-06T10:19:50.724349Z[0m [32m INFO[0m [2mjackdaw::extension_lifecycle[0m[2m:[0m applied keymap preset 'classic': 113 entries, 113 bindings, 0 user rows
-[2m2026-11-06T10:19:50.757162Z[0m [32m INFO[0m [2mjackdaw::project_select[0m[2m:[0m Project at /Users/linbo.zhang/workspace/jackdaw/tests/fixtures/bsn_game has a Cargo.toml but no jackdaw.toml; offering setup.
-[2m2026-11-06T10:20:00.564049Z[0m [32m INFO[0m [2mjackdaw::project_select[0m[2m:[0m recovery: 1 leftover session(s) from a crash; the recovery dialog will offer them
-[2m2026-11-06T10:20:00.597801Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking /Users/linbo.zhang/workspace/jackdaw/tests/fixtures/bsn_game/assets recursively
-[2m2026-11-06T10:20:00.597904Z[0m [32m INFO[0m [2mjackdaw::asset_catalog[0m[2m:[0m No asset catalog found, starting with empty catalog
-[2m2026-11-06T10:20:00.660604Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: pre-building the game in the background for a fast first Play
-[2m2026-11-06T10:20:00.662007Z[0m [32m INFO[0m [2mjackdaw::material_browser[0m[2m:[0m update_material_browser_ui: rebuilding with 1 entries
-[2m2026-11-06T10:20:00.737000Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 1, typed 0, referencing 1)
-[2m2026-11-06T10:20:00.737131Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 0)
-[2m2026-11-06T10:20:16.564637Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: refreshed project types from schema (5 project components)
-[2m2026-11-06T10:20:19.651510Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: entity.add.cube
-[2m2026-11-06T10:20:21.734300Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: entity.add.cube
-[2m2026-11-06T10:20:24.334183Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_x_pos
-[2m2026-11-06T10:20:24.353995Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_x_pos
-[2m2026-11-06T10:20:25.406351Z[0m [33m WARN[0m [2mjackdaw_bsn::document::from_reflect[0m[2m:[0m value of type 'bevy_ecs::entity::Entity' has no BSN representation; storing its Debug form as a string
-[2m2026-11-06T10:20:25.406423Z[0m [33m WARN[0m [2mjackdaw_bsn::document::from_reflect[0m[2m:[0m value of type 'bevy_ecs::entity::Entity' has no BSN representation; storing its Debug form as a string
-[2m2026-11-06T10:20:25.406516Z[0m [33m WARN[0m [2mjackdaw_bsn::document::from_reflect[0m[2m:[0m value of type 'core::any::TypeId' has no BSN representation; storing its Debug form as a string
-[2m2026-11-06T10:20:26.014679Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_y_pos
-[2m2026-11-06T10:20:26.034053Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_y_pos
-[2m2026-11-06T10:20:27.083861Z[0m [33m WARN[0m [2mjackdaw_bsn::document::from_reflect[0m[2m:[0m value of type 'bevy_ecs::entity::Entity' has no BSN representation; storing its Debug form as a string
-[2m2026-11-06T10:20:27.083928Z[0m [33m WARN[0m [2mjackdaw_bsn::document::from_reflect[0m[2m:[0m value of type 'bevy_ecs::entity::Entity' has no BSN representation; storing its Debug form as a string
-[2m2026-11-06T10:20:27.083972Z[0m [33m WARN[0m [2mjackdaw_bsn::document::from_reflect[0m[2m:[0m value of type 'core::any::TypeId' has no BSN representation; storing its Debug form as a string
-[2m2026-11-06T10:20:27.635226Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_z_pos
-[2m2026-11-06T10:20:27.655312Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_z_pos
-[2m2026-11-06T10:20:28.705424Z[0m [33m WARN[0m [2mjackdaw_bsn::document::from_reflect[0m[2m:[0m value of type 'bevy_ecs::entity::Entity' has no BSN representation; storing its Debug form as a string
-[2m2026-11-06T10:20:28.705486Z[0m [33m WARN[0m [2mjackdaw_bsn::document::from_reflect[0m[2m:[0m value of type 'bevy_ecs::entity::Entity' has no BSN representation; storing its Debug form as a string
-[2m2026-11-06T10:20:28.705528Z[0m [33m WARN[0m [2mjackdaw_bsn::document::from_reflect[0m[2m:[0m value of type 'core::any::TypeId' has no BSN representation; storing its Debug form as a string
-[2m2026-11-06T10:20:28.745873Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: entity.add.cube
-[2m2026-11-06T10:20:31.345041Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_x_pos
-[2m2026-11-06T10:20:31.364505Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_x_pos
-[2m2026-11-06T10:20:31.384035Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_x_pos
-[2m2026-11-06T10:20:31.403854Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_x_pos
-[2m2026-11-06T10:20:31.423365Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_x_pos
-[2m2026-11-06T10:20:31.442714Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_x_pos
-[2m2026-11-06T10:20:31.462907Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_x_pos
-[2m2026-11-06T10:20:31.483085Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_x_pos
-[2m2026-11-06T10:20:31.502782Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_x_pos
-[2m2026-11-06T10:20:31.522220Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_x_pos
-[2m2026-11-06T10:20:31.542543Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_x_pos
-[2m2026-11-06T10:20:31.562615Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_x_pos
-[2m2026-11-06T10:20:31.582219Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_x_pos
-[2m2026-11-06T10:20:31.607091Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_x_pos
-[2m2026-11-06T10:20:31.627804Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_x_pos
-[2m2026-11-06T10:20:31.648026Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_x_pos
-[2m2026-11-06T10:20:31.667538Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_x_pos
-[2m2026-11-06T10:20:31.687159Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_x_pos
-[2m2026-11-06T10:20:31.706594Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_x_pos
-[2m2026-11-06T10:20:31.726773Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_x_pos
-[2m2026-11-06T10:20:31.747851Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_x_pos
-[2m2026-11-06T10:20:31.767453Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_x_pos
-[2m2026-11-06T10:20:31.786988Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_x_pos
-[2m2026-11-06T10:20:31.806763Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_x_pos
-[2m2026-11-06T10:20:31.826771Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_x_pos
-[2m2026-11-06T10:20:31.847219Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_x_pos
-[2m2026-11-06T10:20:31.866747Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_x_pos
-[2m2026-11-06T10:20:31.886445Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_x_pos
-[2m2026-11-06T10:20:31.905761Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_x_pos
-[2m2026-11-06T10:20:31.925570Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_x_pos
-[2m2026-11-06T10:20:31.945368Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_x_pos
-[2m2026-11-06T10:20:31.966043Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_x_pos
-[2m2026-11-06T10:20:31.985460Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_x_pos
-[2m2026-11-06T10:20:32.004959Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_x_pos
-[2m2026-11-06T10:20:32.025218Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_x_pos
-[2m2026-11-06T10:20:32.045933Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_x_pos
-[2m2026-11-06T10:20:32.065825Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_x_pos
-[2m2026-11-06T10:20:32.085484Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_x_pos
-[2m2026-11-06T10:20:32.105349Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_x_pos
-[2m2026-11-06T10:20:32.130470Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_x_pos
-[2m2026-11-06T10:20:33.170870Z[0m [33m WARN[0m [2mjackdaw_bsn::document::from_reflect[0m[2m:[0m value of type 'bevy_ecs::entity::Entity' has no BSN representation; storing its Debug form as a string
-[2m2026-11-06T10:20:33.170927Z[0m [33m WARN[0m [2mjackdaw_bsn::document::from_reflect[0m[2m:[0m value of type 'bevy_ecs::entity::Entity' has no BSN representation; storing its Debug form as a string
-[2m2026-11-06T10:20:33.170975Z[0m [33m WARN[0m [2mjackdaw_bsn::document::from_reflect[0m[2m:[0m value of type 'core::any::TypeId' has no BSN representation; storing its Debug form as a string
-[2m2026-11-06T10:20:34.285892Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: brush.csg_subtract
-[2m2026-11-06T10:20:38.376305Z[0m [33m WARN[0m [2mjackdaw_bsn::document::from_reflect[0m[2m:[0m value of type 'bevy_ecs::entity::Entity' has no BSN representation; storing its Debug form as a string
-[2m2026-11-06T10:20:38.376367Z[0m [33m WARN[0m [2mjackdaw_bsn::document::from_reflect[0m[2m:[0m value of type 'bevy_ecs::entity::Entity' has no BSN representation; storing its Debug form as a string
-[2m2026-11-06T10:20:38.376412Z[0m [33m WARN[0m [2mjackdaw_bsn::document::from_reflect[0m[2m:[0m value of type 'core::any::TypeId' has no BSN representation; storing its Debug form as a string
-[2m2026-11-06T10:20:38.397082Z[0m [33m WARN[0m [2mjackdaw_bsn::document::from_reflect[0m[2m:[0m value of type 'bevy_ecs::entity::Entity' has no BSN representation; storing its Debug form as a string
-[2m2026-11-06T10:20:38.397145Z[0m [33m WARN[0m [2mjackdaw_bsn::document::from_reflect[0m[2m:[0m value of type 'bevy_ecs::entity::Entity' has no BSN representation; storing its Debug form as a string
-[2m2026-11-06T10:20:38.397187Z[0m [33m WARN[0m [2mjackdaw_bsn::document::from_reflect[0m[2m:[0m value of type 'core::any::TypeId' has no BSN representation; storing its Debug form as a string
-[2m2026-11-06T10:20:38.417815Z[0m [33m WARN[0m [2mjackdaw_bsn::document::from_reflect[0m[2m:[0m value of type 'bevy_ecs::entity::Entity' has no BSN representation; storing its Debug form as a string
-[2m2026-11-06T10:20:38.417874Z[0m [33m WARN[0m [2mjackdaw_bsn::document::from_reflect[0m[2m:[0m value of type 'bevy_ecs::entity::Entity' has no BSN representation; storing its Debug form as a string
-[2m2026-11-06T10:20:38.417919Z[0m [33m WARN[0m [2mjackdaw_bsn::document::from_reflect[0m[2m:[0m value of type 'core::any::TypeId' has no BSN representation; storing its Debug form as a string
-[2m2026-11-06T10:20:38.438490Z[0m [33m WARN[0m [2mjackdaw_bsn::document::from_reflect[0m[2m:[0m value of type 'bevy_ecs::entity::Entity' has no BSN representation; storing its Debug form as a string
-[2m2026-11-06T10:20:38.438542Z[0m [33m WARN[0m [2mjackdaw_bsn::document::from_reflect[0m[2m:[0m value of type 'bevy_ecs::entity::Entity' has no BSN representation; storing its Debug form as a string
-[2m2026-11-06T10:20:38.438584Z[0m [33m WARN[0m [2mjackdaw_bsn::document::from_reflect[0m[2m:[0m value of type 'core::any::TypeId' has no BSN representation; storing its Debug form as a string
-[2m2026-11-06T10:20:39.505512Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: view.frame_selected
-[2m2026-11-06T10:20:43.566771Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: edit_mode.face
-[2m2026-11-06T10:20:47.676925Z[0m [32m INFO[0m [2mjackdaw::screenshot[0m[2m:[0m screenshot: wrote /Users/linbo.zhang/workspace/jackdaw/tests/fixtures/bsn_game/r7qa-shots/r7-run7-before-click.png
-[2m2026-11-06T10:20:47.770208Z[0m [32m INFO[0m [2mjackdaw::screenshot[0m[2m:[0m screenshot: wrote /Users/linbo.zhang/workspace/jackdaw/tests/fixtures/bsn_game/r7qa-shots/r7-run7-before-click.png
-[2m2026-11-06T10:20:49.249130Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: brush.nudge_up
-[2m2026-11-06T10:20:53.302209Z[0m [33m WARN[0m [2mjackdaw_bsn::document::from_reflect[0m[2m:[0m value of type 'bevy_ecs::entity::Entity' has no BSN representation; storing its Debug form as a string
-[2m2026-11-06T10:20:53.302284Z[0m [33m WARN[0m [2mjackdaw_bsn::document::from_reflect[0m[2m:[0m value of type 'bevy_ecs::entity::Entity' has no BSN representation; storing its Debug form as a string
-[2m2026-11-06T10:20:53.302331Z[0m [33m WARN[0m [2mjackdaw_bsn::document::from_reflect[0m[2m:[0m value of type 'core::any::TypeId' has no BSN representation; storing its Debug form as a string
-[2m2026-11-06T10:20:53.323087Z[0m [33m WARN[0m [2mjackdaw_bsn::document::from_reflect[0m[2m:[0m value of type 'bevy_ecs::entity::Entity' has no BSN representation; storing its Debug form as a string
-[2m2026-11-06T10:20:53.323145Z[0m [33m WARN[0m [2mjackdaw_bsn::document::from_reflect[0m[2m:[0m value of type 'bevy_ecs::entity::Entity' has no BSN representation; storing its Debug form as a string
-[2m2026-11-06T10:20:53.323189Z[0m [33m WARN[0m [2mjackdaw_bsn::document::from_reflect[0m[2m:[0m value of type 'core::any::TypeId' has no BSN representation; storing its Debug form as a string
-[2m2026-11-06T10:20:53.343375Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: history.undo
-[2m2026-11-06T10:20:53.344745Z[0m [33m WARN[0m [2mjackdaw_bsn::sync[0m[2m:[0m 7895v0 has no document node; its move was not written to the document
-[2m2026-11-06T10:22:00.821959Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: history.redo
-[2m2026-11-06T10:22:00.823382Z[0m [33m WARN[0m [2mjackdaw_bsn::sync[0m[2m:[0m 7895v0 has no document node; its move was not written to the document
-[2m2026-11-06T10:22:04.903999Z[0m [33m WARN[0m [2mjackdaw_bsn::document::from_reflect[0m[2m:[0m value of type 'bevy_ecs::entity::Entity' has no BSN representation; storing its Debug form as a string
-[2m2026-11-06T10:22:04.904056Z[0m [33m WARN[0m [2mjackdaw_bsn::document::from_reflect[0m[2m:[0m value of type 'bevy_ecs::entity::Entity' has no BSN representation; storing its Debug form as a string
-[2m2026-11-06T10:22:04.904108Z[0m [33m WARN[0m [2mjackdaw_bsn::document::from_reflect[0m[2m:[0m value of type 'core::any::TypeId' has no BSN representation; storing its Debug form as a string
-[2m2026-11-06T10:22:05.947592Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: edit_mode.face
-[2m2026-11-06T10:23:04.031459Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: brush.exit_edit_mode
-[2m2026-11-06T10:23:05.094573Z[0m [33m WARN[0m [2mjackdaw_bsn::document::from_reflect[0m[2m:[0m value of type 'bevy_ecs::entity::Entity' has no BSN representation; storing its Debug form as a string
-[2m2026-11-06T10:23:05.094648Z[0m [33m WARN[0m [2mjackdaw_bsn::document::from_reflect[0m[2m:[0m value of type 'bevy_ecs::entity::Entity' has no BSN representation; storing its Debug form as a string
-[2m2026-11-06T10:23:05.094694Z[0m [33m WARN[0m [2mjackdaw_bsn::document::from_reflect[0m[2m:[0m value of type 'core::any::TypeId' has no BSN representation; storing its Debug form as a string
-[2m2026-11-06T10:23:06.141740Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: edit_mode.face
-2026-11-06 18:23:26.545 jackdaw[28517:1762962] error messaging the mach port for IMKCFRunLoopWakeUpReliable
-[2m2026-11-06T10:24:33.118755Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: input.pointer
-[2m2026-11-06T10:24:34.151521Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: brush.face.drag
-[2m2026-11-06T10:24:35.178117Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: input.pointer
-[2m2026-11-06T10:25:11.133122Z[0m [33m WARN[0m [2mjackdaw_bsn::document::from_reflect[0m[2m:[0m value of type 'bevy_ecs::entity::Entity' has no BSN representation; storing its Debug form as a string
-[2m2026-11-06T10:25:11.133180Z[0m [33m WARN[0m [2mjackdaw_bsn::document::from_reflect[0m[2m:[0m value of type 'bevy_ecs::entity::Entity' has no BSN representation; storing its Debug form as a string
-[2m2026-11-06T10:25:11.133226Z[0m [33m WARN[0m [2mjackdaw_bsn::document::from_reflect[0m[2m:[0m value of type 'core::any::TypeId' has no BSN representation; storing its Debug form as a string
-[2m2026-11-06T10:25:11.173018Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: input.pointer
-[2m2026-11-06T10:25:11.224533Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: brush.face.drag
-[2m2026-11-06T10:25:15.240741Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: input.key
-[2m2026-11-06T10:25:15.243134Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: brush.nudge_up
-[2m2026-11-06T10:25:19.316131Z[0m [33m WARN[0m [2mjackdaw_bsn::document::from_reflect[0m[2m:[0m value of type 'bevy_ecs::entity::Entity' has no BSN representation; storing its Debug form as a string
-[2m2026-11-06T10:25:19.316203Z[0m [33m WARN[0m [2mjackdaw_bsn::document::from_reflect[0m[2m:[0m value of type 'bevy_ecs::entity::Entity' has no BSN representation; storing its Debug form as a string
-[2m2026-11-06T10:25:19.316258Z[0m [33m WARN[0m [2mjackdaw_bsn::document::from_reflect[0m[2m:[0m value of type 'core::any::TypeId' has no BSN representation; storing its Debug form as a string
-[2m2026-11-06T10:25:43.990842Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: input.key
-[2m2026-11-06T10:25:43.992706Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: brush.exit_edit_mode
-[2m2026-11-06T10:25:43.992890Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: selection.clear
-[2m2026-11-06T10:25:46.040309Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: input.key
-[2m2026-11-06T10:25:46.051447Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: edit_mode.clip
-[2m2026-11-06T10:25:46.053525Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: viewport.bookmark.load
-[2m2026-11-06T10:25:48.091918Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: input.key
-[2m2026-11-06T10:25:48.103081Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: edit_mode.face
-[2m2026-11-06T10:25:48.105286Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: viewport.bookmark.load
+[2m2026-11-06T11:03:25.192063Z[0m [32m INFO[0m [2mbevy_diagnostic::system_information_diagnostics_plugin::internal[0m[2m:[0m SystemInfo { os: "macOS 26.3 Tahoe", kernel: "25.3.0", cpu: "Apple M2 Pro", core_count: "12", memory: "32.0 GiB" }
+[2m2026-11-06T11:03:25.192410Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-11-06T11:03:25.240432Z[0m [32m INFO[0m [2mbevy_render::renderer[0m[2m:[0m AdapterInfo { name: "Apple M2 Pro", vendor: 0, device: 0, device_type: IntegratedGpu, device_pci_bus_id: "", driver: "", driver_info: "", backend: Metal, subgroup_min_size: 4, subgroup_max_size: 64, transient_saves_memory: Some(true), limit_bucket: None }
+[2m2026-11-06T11:03:25.428354Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw::test_input::plugin` of extension `jackdaw.test_input`
+[2m2026-11-06T11:03:25.428529Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw_physics::PhysicsEditorPlugin` of extension `jackdaw.physics`
+[2m2026-11-06T11:03:25.430642Z[0m [32m INFO[0m [2mbevy_pbr::cluster[0m[2m:[0m GPU clustering is supported on this device.
+[2m2026-11-06T11:03:25.430678Z[0m [32m INFO[0m [2mbevy_render::batching::gpu_preprocessing[0m[2m:[0m GPU preprocessing is fully supported on this device.
+[2m2026-11-06T11:03:25.463484Z[0m [32m INFO[0m [2mbevy_winit::system[0m[2m:[0m Creating new window jackdaw (71v0)
+[2m2026-11-06T11:03:25.583843Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core
+[2m2026-11-06T11:03:25.585411Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core_windows
+[2m2026-11-06T11:03:25.585490Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.physics
+[2m2026-11-06T11:03:25.585609Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.build_panel
+[2m2026-11-06T11:03:25.585625Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.multiplayer
+[2m2026-11-06T11:03:25.585642Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.inspector
+[2m2026-11-06T11:03:25.585671Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.timeline
+[2m2026-11-06T11:03:25.585682Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.test_input
+[2m2026-11-06T11:03:25.585697Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.animation_graph
+[2m2026-11-06T11:03:25.585707Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.game_panel
+[2m2026-11-06T11:03:25.585718Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.project_window
+[2m2026-11-06T11:03:25.585728Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.viewport_panel
+[2m2026-11-06T11:03:25.585766Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.ui_palette
+[2m2026-11-06T11:03:25.587130Z[0m [33m WARN[0m [2mjackdaw_api_internal::keymap::apply[0m[2m:[0m preset 'classic' has 10 chords claimed by more than one action: ["Delete (Press, Operators): clip.delete_keyframes, entity.delete, brush.delete_element", "Backspace (Press, Operators): clip.delete_keyframes, viewport.draw_brush.remove_last_vertex, brush.delete_element", "Home (Press, Operators): clip.timeline.jump_start, view.frame_all, viewport2d.frame", "Super+KeyC (Press, Operators): clip.copy_keyframes, entity.copy", "Super+KeyV (Press, Operators): clip.paste_keyframes, entity.paste", "Tab (Press, Operators): viewport.draw_brush.toggle_mode, brush.clip.cycle_mode", "Enter (Press, Operators): viewport.draw_brush.commit_polygon, brush.clip.apply", "KeyE (Press, Operators): tool.rotate, brush.mesh.extrude", "Escape (Press, Operators): brush.exit_edit_mode, selection.clear, brush.clip.clear, terrain.tool.exit_to_select", "Super+KeyB (Press, Operators): brush.mesh.edge_bevel, brush.mesh.vertex_bevel"]
+[2m2026-11-06T11:03:25.587160Z[0m [32m INFO[0m [2mjackdaw::extension_lifecycle[0m[2m:[0m applied keymap preset 'classic': 113 entries, 113 bindings, 0 user rows
+[2m2026-11-06T11:03:25.619844Z[0m [32m INFO[0m [2mjackdaw::project_select[0m[2m:[0m Project at /Users/linbo.zhang/workspace/jackdaw/tests/fixtures/bsn_game has a Cargo.toml but no jackdaw.toml; offering setup.
+[2m2026-11-06T11:03:35.431205Z[0m [32m INFO[0m [2mjackdaw::project_select[0m[2m:[0m recovery: 1 leftover session(s) from a crash; the recovery dialog will offer them
+[2m2026-11-06T11:03:35.466572Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking /Users/linbo.zhang/workspace/jackdaw/tests/fixtures/bsn_game/assets recursively
+[2m2026-11-06T11:03:35.466657Z[0m [32m INFO[0m [2mjackdaw::asset_catalog[0m[2m:[0m No asset catalog found, starting with empty catalog
+[2m2026-11-06T11:03:35.527898Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: pre-building the game in the background for a fast first Play
+[2m2026-11-06T11:03:35.529382Z[0m [32m INFO[0m [2mjackdaw::material_browser[0m[2m:[0m update_material_browser_ui: rebuilding with 1 entries
+[2m2026-11-06T11:03:35.605670Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 1, typed 0, referencing 1)
+[2m2026-11-06T11:03:35.605808Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 0)
+[2m2026-11-06T11:03:52.432506Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: refreshed project types from schema (5 project components)
+[2m2026-11-06T11:03:55.302753Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: entity.add.cube
+[2m2026-11-06T11:03:57.406742Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: entity.add.cube
+[2m2026-11-06T11:04:00.020124Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_x_pos
+[2m2026-11-06T11:04:00.040321Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_x_pos
+[2m2026-11-06T11:04:01.098445Z[0m [33m WARN[0m [2mjackdaw_bsn::document::from_reflect[0m[2m:[0m value of type 'bevy_ecs::entity::Entity' has no BSN representation; storing its Debug form as a string
+[2m2026-11-06T11:04:01.098516Z[0m [33m WARN[0m [2mjackdaw_bsn::document::from_reflect[0m[2m:[0m value of type 'bevy_ecs::entity::Entity' has no BSN representation; storing its Debug form as a string
+[2m2026-11-06T11:04:01.098607Z[0m [33m WARN[0m [2mjackdaw_bsn::document::from_reflect[0m[2m:[0m value of type 'core::any::TypeId' has no BSN representation; storing its Debug form as a string
+[2m2026-11-06T11:04:01.707991Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_y_pos
+[2m2026-11-06T11:04:01.727799Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_y_pos
+[2m2026-11-06T11:04:02.771811Z[0m [33m WARN[0m [2mjackdaw_bsn::document::from_reflect[0m[2m:[0m value of type 'bevy_ecs::entity::Entity' has no BSN representation; storing its Debug form as a string
+[2m2026-11-06T11:04:02.771898Z[0m [33m WARN[0m [2mjackdaw_bsn::document::from_reflect[0m[2m:[0m value of type 'bevy_ecs::entity::Entity' has no BSN representation; storing its Debug form as a string
+[2m2026-11-06T11:04:02.771946Z[0m [33m WARN[0m [2mjackdaw_bsn::document::from_reflect[0m[2m:[0m value of type 'core::any::TypeId' has no BSN representation; storing its Debug form as a string
+[2m2026-11-06T11:04:03.318164Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_z_pos
+[2m2026-11-06T11:04:03.337387Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_z_pos
+[2m2026-11-06T11:04:04.377335Z[0m [33m WARN[0m [2mjackdaw_bsn::document::from_reflect[0m[2m:[0m value of type 'bevy_ecs::entity::Entity' has no BSN representation; storing its Debug form as a string
+[2m2026-11-06T11:04:04.377394Z[0m [33m WARN[0m [2mjackdaw_bsn::document::from_reflect[0m[2m:[0m value of type 'bevy_ecs::entity::Entity' has no BSN representation; storing its Debug form as a string
+[2m2026-11-06T11:04:04.377439Z[0m [33m WARN[0m [2mjackdaw_bsn::document::from_reflect[0m[2m:[0m value of type 'core::any::TypeId' has no BSN representation; storing its Debug form as a string
+[2m2026-11-06T11:04:04.417019Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: entity.add.cube
+[2m2026-11-06T11:04:07.022287Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_x_pos
+[2m2026-11-06T11:04:07.042687Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_x_pos
+[2m2026-11-06T11:04:07.063312Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_x_pos
+[2m2026-11-06T11:04:07.082949Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_x_pos
+[2m2026-11-06T11:04:07.102195Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_x_pos
+[2m2026-11-06T11:04:07.122092Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_x_pos
+[2m2026-11-06T11:04:07.141234Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_x_pos
+[2m2026-11-06T11:04:07.161128Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_x_pos
+[2m2026-11-06T11:04:07.181150Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_x_pos
+[2m2026-11-06T11:04:07.201051Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_x_pos
+[2m2026-11-06T11:04:07.220137Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_x_pos
+[2m2026-11-06T11:04:07.239596Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_x_pos
+[2m2026-11-06T11:04:07.265043Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_x_pos
+[2m2026-11-06T11:04:07.285007Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_x_pos
+[2m2026-11-06T11:04:07.304451Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_x_pos
+[2m2026-11-06T11:04:07.323938Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_x_pos
+[2m2026-11-06T11:04:07.344066Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_x_pos
+[2m2026-11-06T11:04:07.364242Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_x_pos
+[2m2026-11-06T11:04:07.384648Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_x_pos
+[2m2026-11-06T11:04:07.404668Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_x_pos
+[2m2026-11-06T11:04:07.424367Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_x_pos
+[2m2026-11-06T11:04:07.444430Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_x_pos
+[2m2026-11-06T11:04:07.464366Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_x_pos
+[2m2026-11-06T11:04:07.484606Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_x_pos
+[2m2026-11-06T11:04:07.504428Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_x_pos
+[2m2026-11-06T11:04:07.523553Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_x_pos
+[2m2026-11-06T11:04:07.543362Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_x_pos
+[2m2026-11-06T11:04:07.564201Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_x_pos
+[2m2026-11-06T11:04:07.584188Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_x_pos
+[2m2026-11-06T11:04:07.603746Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_x_pos
+[2m2026-11-06T11:04:07.623588Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_x_pos
+[2m2026-11-06T11:04:07.643302Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_x_pos
+[2m2026-11-06T11:04:07.663976Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_x_pos
+[2m2026-11-06T11:04:07.684146Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_x_pos
+[2m2026-11-06T11:04:07.703828Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_x_pos
+[2m2026-11-06T11:04:07.722890Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_x_pos
+[2m2026-11-06T11:04:07.742535Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_x_pos
+[2m2026-11-06T11:04:07.761783Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_x_pos
+[2m2026-11-06T11:04:07.787239Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_x_pos
+[2m2026-11-06T11:04:07.806716Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: transform.nudge_x_pos
+[2m2026-11-06T11:04:08.872891Z[0m [33m WARN[0m [2mjackdaw_bsn::document::from_reflect[0m[2m:[0m value of type 'bevy_ecs::entity::Entity' has no BSN representation; storing its Debug form as a string
+[2m2026-11-06T11:04:08.872952Z[0m [33m WARN[0m [2mjackdaw_bsn::document::from_reflect[0m[2m:[0m value of type 'bevy_ecs::entity::Entity' has no BSN representation; storing its Debug form as a string
+[2m2026-11-06T11:04:08.872995Z[0m [33m WARN[0m [2mjackdaw_bsn::document::from_reflect[0m[2m:[0m value of type 'core::any::TypeId' has no BSN representation; storing its Debug form as a string
+[2m2026-11-06T11:04:09.996207Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: brush.csg_subtract
+[2m2026-11-06T11:04:14.096984Z[0m [33m WARN[0m [2mjackdaw_bsn::document::from_reflect[0m[2m:[0m value of type 'bevy_ecs::entity::Entity' has no BSN representation; storing its Debug form as a string
+[2m2026-11-06T11:04:14.097046Z[0m [33m WARN[0m [2mjackdaw_bsn::document::from_reflect[0m[2m:[0m value of type 'bevy_ecs::entity::Entity' has no BSN representation; storing its Debug form as a string
+[2m2026-11-06T11:04:14.097092Z[0m [33m WARN[0m [2mjackdaw_bsn::document::from_reflect[0m[2m:[0m value of type 'core::any::TypeId' has no BSN representation; storing its Debug form as a string
+[2m2026-11-06T11:04:14.118030Z[0m [33m WARN[0m [2mjackdaw_bsn::document::from_reflect[0m[2m:[0m value of type 'bevy_ecs::entity::Entity' has no BSN representation; storing its Debug form as a string
+[2m2026-11-06T11:04:14.118096Z[0m [33m WARN[0m [2mjackdaw_bsn::document::from_reflect[0m[2m:[0m value of type 'bevy_ecs::entity::Entity' has no BSN representation; storing its Debug form as a string
+[2m2026-11-06T11:04:14.118150Z[0m [33m WARN[0m [2mjackdaw_bsn::document::from_reflect[0m[2m:[0m value of type 'core::any::TypeId' has no BSN representation; storing its Debug form as a string
+[2m2026-11-06T11:04:14.138387Z[0m [32m INFO[0m [2mjackdaw::boot_ops[0m[2m:[0m JACKDAW_RUN_OP: brush.selection.set_faces: `entity` = 5296v8 (Cube), by id
+[2m2026-11-06T11:04:14.138581Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: brush.selection.set_faces
+[2m2026-11-06T11:04:14.206193Z[0m [33m WARN[0m [2mbevy_ecs::relationship[0m[2m:[0m The bevy_ecs::hierarchy::ChildOf(7835v8) relationship on entity 4956v10 relates to an entity that does not exist. The invalid bevy_ecs::hierarchy::ChildOf relationship has been removed.
+[2m2026-11-06T11:04:15.188426Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: input.key
+[2m2026-11-06T11:04:15.191544Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: brush.nudge_up
+[2m2026-11-06T11:04:19.281658Z[0m [33m WARN[0m [2mjackdaw_bsn::document::from_reflect[0m[2m:[0m value of type 'bevy_ecs::entity::Entity' has no BSN representation; storing its Debug form as a string
+[2m2026-11-06T11:04:19.281721Z[0m [33m WARN[0m [2mjackdaw_bsn::document::from_reflect[0m[2m:[0m value of type 'bevy_ecs::entity::Entity' has no BSN representation; storing its Debug form as a string
+[2m2026-11-06T11:04:19.281763Z[0m [33m WARN[0m [2mjackdaw_bsn::document::from_reflect[0m[2m:[0m value of type 'core::any::TypeId' has no BSN representation; storing its Debug form as a string
+[2m2026-11-06T11:04:19.302835Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: history.undo
+[2m2026-11-06T11:04:23.353598Z[0m [33m WARN[0m [2mjackdaw_bsn::document::from_reflect[0m[2m:[0m value of type 'bevy_ecs::entity::Entity' has no BSN representation; storing its Debug form as a string
+[2m2026-11-06T11:04:23.353666Z[0m [33m WARN[0m [2mjackdaw_bsn::document::from_reflect[0m[2m:[0m value of type 'bevy_ecs::entity::Entity' has no BSN representation; storing its Debug form as a string
+[2m2026-11-06T11:04:23.353720Z[0m [33m WARN[0m [2mjackdaw_bsn::document::from_reflect[0m[2m:[0m value of type 'core::any::TypeId' has no BSN representation; storing its Debug form as a string
+[2m2026-11-06T11:07:18.064014Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: brush.exit_edit_mode
+[2m2026-11-06T11:07:19.132879Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: entity.add.cube
+[2m2026-11-06T11:07:21.194801Z[0m [33m WARN[0m [2mjackdaw_bsn::document::from_reflect[0m[2m:[0m value of type 'bevy_ecs::entity::Entity' has no BSN representation; storing its Debug form as a string
+[2m2026-11-06T11:07:21.194873Z[0m [33m WARN[0m [2mjackdaw_bsn::document::from_reflect[0m[2m:[0m value of type 'bevy_ecs::entity::Entity' has no BSN representation; storing its Debug form as a string
+[2m2026-11-06T11:07:21.194920Z[0m [33m WARN[0m [2mjackdaw_bsn::document::from_reflect[0m[2m:[0m value of type 'core::any::TypeId' has no BSN representation; storing its Debug form as a string
+[2m2026-11-06T11:07:21.279910Z[0m [32m INFO[0m [2mjackdaw::boot_ops[0m[2m:[0m JACKDAW_RUN_OP: brush.selection.set_faces: `entity` = 6194v11 (Cube), by id
+[2m2026-11-06T11:07:21.280017Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: brush.selection.set_faces
+[2m2026-11-06T11:07:22.358986Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: brush.nudge_up
+[2m2026-11-06T11:07:24.415890Z[0m [33m WARN[0m [2mjackdaw_bsn::document::from_reflect[0m[2m:[0m value of type 'bevy_ecs::entity::Entity' has no BSN representation; storing its Debug form as a string
+[2m2026-11-06T11:07:24.415961Z[0m [33m WARN[0m [2mjackdaw_bsn::document::from_reflect[0m[2m:[0m value of type 'bevy_ecs::entity::Entity' has no BSN representation; storing its Debug form as a string
+[2m2026-11-06T11:07:24.416006Z[0m [33m WARN[0m [2mjackdaw_bsn::document::from_reflect[0m[2m:[0m value of type 'core::any::TypeId' has no BSN representation; storing its Debug form as a string
+[2m2026-11-06T11:09:00.998164Z[0m [33m WARN[0m [2mjackdaw_bsn::document::from_reflect[0m[2m:[0m value of type 'bevy_ecs::entity::Entity' has no BSN representation; storing its Debug form as a string
+[2m2026-11-06T11:09:00.998240Z[0m [33m WARN[0m [2mjackdaw_bsn::document::from_reflect[0m[2m:[0m value of type 'bevy_ecs::entity::Entity' has no BSN representation; storing its Debug form as a string
+[2m2026-11-06T11:09:00.998288Z[0m [33m WARN[0m [2mjackdaw_bsn::document::from_reflect[0m[2m:[0m value of type 'core::any::TypeId' has no BSN representation; storing its Debug form as a string
+[2m2026-11-06T11:09:01.018552Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: history.undo
+[2m2026-11-06T11:09:03.046438Z[0m [33m WARN[0m [2mjackdaw_bsn::document::from_reflect[0m[2m:[0m value of type 'bevy_ecs::entity::Entity' has no BSN representation; storing its Debug form as a string
+[2m2026-11-06T11:09:03.046495Z[0m [33m WARN[0m [2mjackdaw_bsn::document::from_reflect[0m[2m:[0m value of type 'bevy_ecs::entity::Entity' has no BSN representation; storing its Debug form as a string
+[2m2026-11-06T11:09:03.046541Z[0m [33m WARN[0m [2mjackdaw_bsn::document::from_reflect[0m[2m:[0m value of type 'core::any::TypeId' has no BSN representation; storing its Debug form as a string
+[2m2026-11-06T11:09:03.091742Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: history.undo
+[2m2026-11-06T11:11:59.355679Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: entity.add.cube
+[2m2026-11-06T11:12:01.416222Z[0m [33m WARN[0m [2mjackdaw_bsn::document::from_reflect[0m[2m:[0m value of type 'bevy_ecs::entity::Entity' has no BSN representation; storing its Debug form as a string
+[2m2026-11-06T11:12:01.416285Z[0m [33m WARN[0m [2mjackdaw_bsn::document::from_reflect[0m[2m:[0m value of type 'bevy_ecs::entity::Entity' has no BSN representation; storing its Debug form as a string
+[2m2026-11-06T11:12:01.416330Z[0m [33m WARN[0m [2mjackdaw_bsn::document::from_reflect[0m[2m:[0m value of type 'core::any::TypeId' has no BSN representation; storing its Debug form as a string
+[2m2026-11-06T11:12:01.501847Z[0m [32m INFO[0m [2mjackdaw::boot_ops[0m[2m:[0m JACKDAW_RUN_OP: brush.selection.set_faces: `entity` = 7732v19 (Cube), by id
+[2m2026-11-06T11:12:01.501927Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: brush.selection.set_faces
+[2m2026-11-06T11:12:02.566495Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: brush.nudge_up
+[2m2026-11-06T11:12:04.613966Z[0m [33m WARN[0m [2mjackdaw_bsn::document::from_reflect[0m[2m:[0m value of type 'bevy_ecs::entity::Entity' has no BSN representation; storing its Debug form as a string
+[2m2026-11-06T11:12:04.614037Z[0m [33m WARN[0m [2mjackdaw_bsn::document::from_reflect[0m[2m:[0m value of type 'bevy_ecs::entity::Entity' has no BSN representation; storing its Debug form as a string
+[2m2026-11-06T11:12:04.614091Z[0m [33m WARN[0m [2mjackdaw_bsn::document::from_reflect[0m[2m:[0m value of type 'core::any::TypeId' has no BSN representation; storing its Debug form as a string
+[2m2026-11-06T11:14:03.279345Z[0m [33m WARN[0m [2mjackdaw_bsn::document::from_reflect[0m[2m:[0m value of type 'bevy_ecs::entity::Entity' has no BSN representation; storing its Debug form as a string
+[2m2026-11-06T11:14:03.279415Z[0m [33m WARN[0m [2mjackdaw_bsn::document::from_reflect[0m[2m:[0m value of type 'bevy_ecs::entity::Entity' has no BSN representation; storing its Debug form as a string
+[2m2026-11-06T11:14:03.279463Z[0m [33m WARN[0m [2mjackdaw_bsn::document::from_reflect[0m[2m:[0m value of type 'core::any::TypeId' has no BSN representation; storing its Debug form as a string
+[2m2026-11-06T11:14:03.299861Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: brush.nudge_up
+[2m2026-11-06T11:14:05.322688Z[0m [33m WARN[0m [2mjackdaw_bsn::document::from_reflect[0m[2m:[0m value of type 'bevy_ecs::entity::Entity' has no BSN representation; storing its Debug form as a string
+[2m2026-11-06T11:14:05.322762Z[0m [33m WARN[0m [2mjackdaw_bsn::document::from_reflect[0m[2m:[0m value of type 'bevy_ecs::entity::Entity' has no BSN representation; storing its Debug form as a string
+[2m2026-11-06T11:14:05.322808Z[0m [33m WARN[0m [2mjackdaw_bsn::document::from_reflect[0m[2m:[0m value of type 'core::any::TypeId' has no BSN representation; storing its Debug form as a string
+[2m2026-11-06T11:17:00.136266Z[0m [33m WARN[0m [2mjackdaw_bsn::document::from_reflect[0m[2m:[0m value of type 'bevy_ecs::entity::Entity' has no BSN representation; storing its Debug form as a string
+[2m2026-11-06T11:17:00.136334Z[0m [33m WARN[0m [2mjackdaw_bsn::document::from_reflect[0m[2m:[0m value of type 'bevy_ecs::entity::Entity' has no BSN representation; storing its Debug form as a string
+[2m2026-11-06T11:17:00.136380Z[0m [33m WARN[0m [2mjackdaw_bsn::document::from_reflect[0m[2m:[0m value of type 'core::any::TypeId' has no BSN representation; storing its Debug form as a string
+[2m2026-11-06T11:17:00.157109Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: history.undo
+[2m2026-11-06T11:17:03.192667Z[0m [33m WARN[0m [2mjackdaw_bsn::document::from_reflect[0m[2m:[0m value of type 'bevy_ecs::entity::Entity' has no BSN representation; storing its Debug form as a string
+[2m2026-11-06T11:17:03.192746Z[0m [33m WARN[0m [2mjackdaw_bsn::document::from_reflect[0m[2m:[0m value of type 'bevy_ecs::entity::Entity' has no BSN representation; storing its Debug form as a string
+[2m2026-11-06T11:17:03.192790Z[0m [33m WARN[0m [2mjackdaw_bsn::document::from_reflect[0m[2m:[0m value of type 'core::any::TypeId' has no BSN representation; storing its Debug form as a string
+[2m2026-11-06T11:17:03.231825Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: history.undo
+[2m2026-11-06T11:17:06.266126Z[0m [33m WARN[0m [2mjackdaw_bsn::document::from_reflect[0m[2m:[0m value of type 'bevy_ecs::entity::Entity' has no BSN representation; storing its Debug form as a string
+[2m2026-11-06T11:17:06.266196Z[0m [33m WARN[0m [2mjackdaw_bsn::document::from_reflect[0m[2m:[0m value of type 'bevy_ecs::entity::Entity' has no BSN representation; storing its Debug form as a string
+[2m2026-11-06T11:17:06.266248Z[0m [33m WARN[0m [2mjackdaw_bsn::document::from_reflect[0m[2m:[0m value of type 'core::any::TypeId' has no BSN representation; storing its Debug form as a string

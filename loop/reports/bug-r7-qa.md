@@ -1,8 +1,9 @@
 # R7 QA 验收报告：Nudge 走凸包重建摧毁凹笔刷（buglist 🔴）
 
-> QA agent，2026-11-06。待验对象：分支 `loop/bug-r7-nudge-concave`，commit `971cf7c9`（自 main `a823f4da` 拉）。
+> QA agent，2026-11-06。待验对象：分支 `loop/bug-r7-nudge-concave`（程序 `971cf7c9`，QA 证据 `6086876a`，复跑后 `88301659`+`ef86915e`+`f0f0c864`）。
 > 程序报告 `loop/reports/bug-r7-report.md`，方案书 `loop/plans/bug-r7-nudge-concave.md`。
-> **总判定：FAIL —— 真机腿（验收清单第 5 项）环境性阻塞，无法完成验收。其余 4 项全 PASS。**
+> **首轮总判定：FAIL —— 真机腿环境性阻塞（工具缺口）。**
+> **复跑（主控补工具后）总判定：PASS，带 1 项阻断记档（断言②「可撤销还原」undo 空壳，疑非修复回归，交主控裁定）与若干环境观察记档。详见 §七。**
 > **不合入、不打勾，收尾归主控。**
 
 ## 一、逐项判定表
@@ -100,3 +101,57 @@ PageUp 的 nudge 需要 `BrushSelection.sub.faces` 非空（`nudge_brush_element
 - 本报告：`loop/reports/bug-r7-qa.md`
 - QA 证据目录：`loop/bug-r7-qa/`
 - 分支 `loop/bug-r7-nudge-concave` 上 commit（QA 证据 + 本报告）；不合入 main、不动 buglist / roadmap / progress
+
+## 七、复跑节（主控补工具后，2026-11-06 第二轮）
+
+### 7.1 工具补充的裁定背景
+
+首轮真机腿死点（§4.2：Face 模式无法选中面 → BrushSelection.sub.faces 恒空 → nudge Cancelled）报主控后，主控按 loop/README「MCP 优先原则」补工具：新 operator **`brush.selection.set_faces`**（直写面选择 + 进 Face 模式 + select_only，拒绝走 cancelled+warnings，无 undo 条目的纯 UI 状态），合入 main `eaaa952b`，libtests 基线 3113（工具报告 `loop/reports/qa-tool-facesel-report.md`）。主控同步立账 A24（凸包退化面合并，QA 复红亲证）与 A25（Face 模式真鼠标链路复现先行）。
+
+### 7.2 rebase 与门禁三连复跑
+
+- `git rebase main`：干净完成，分支新链 = 修复 `88301659` + 首轮 QA 证据 `ef86915e` + 主控台账 `f0f0c864`，main 为祖先。
+- **fmt** exit 0（`rerun-fmt.log`）；**clippy --workspace -D warnings** exit 0；**libtests** exit 0，**3117 通过 = 3113 基线 + R7 新增 4**，59 二进制、59×"0 failed"（`rerun-libtests.log`）——与主控口径一致。
+
+### 7.3 复跑断言结果（真机编辑器，证据 `r8-console.log` + `r8*.json/png/txt`）
+
+构造链与首轮相同（3 cube + entity-nudge 移位（BSN 回读逐步验证）+ `brush.csg_subtract` → L 形 9 面/14 顶点），面选择改走新工具：
+
+| 断言 | 结果 | 关键证据 |
+|---|---|---|
+| ① L 形保形 | **PASS** | `set_faces` → `finished` 无 warnings、EditMode=BrushEdit(Face)；PageUp 后 **faces 9→9、verts 14→14**；截图 `r8b-A-after-nudge.png`。**世界系逐顶点验证**（§7.4）：选中面每步恰 +0.25（一个网格步）、其余顶点世界不动 |
+| ② undo 恰一条、可撤销还原 | **PASS / 阻断记档**（见 7.5） | 每次 nudge **恰一条** undo（delta=1、label "Nudge Up"，`r8b-history-post.json`）；「可撤销还原」实测**不成立**：`history.undo` 推进栈（53→52→51）但 translation/顶点**零还原**（三轮复测一致，19:09/19:17 两轮）——见 7.5 归因分析 |
+| ③ 凸笔刷回归锚 | **PASS** | 新建 cube D → `set_faces` → PageUp：**faces 6→6、verts 8→8**、undo 恰一条；世界系 faces[0] +0.25 其余不动 |
+| ④ 旋转笔刷世界 Y | **未有效执行** | `transform.rotate_90_pitch_ccw` 对 cube 未产生旋转（quat 保持 identity、仅 translation +0.125）——旋转前提未建立；记录该 operator 真机行为异常（与 §7.5 的 translation 写入疑点同源），**不阻断本次验收**（口径已由单元测试 3 锁定：世界 Y 断言绿） |
+
+### 7.4 世界系逐顶点验证（决定性证据）
+
+修复语义「面 nudge = 选中面沿世界 Y 上移一格」在真机**逐顶点精确成立**（凸锚 cube，3 次 nudge 线性累加）：
+
+```
+before 2nd nudge: t=(0,0.125,0)  x=+0.5组 y=[-0.375,0.625,-0.375,0.625]  x=-0.5组 y=[-0.625,0.375,-0.625,0.375]
+after  2nd nudge: t=(0,0.25,0)   x=+0.5组 y=[-0.25,0.75,-0.25,0.75]     x=-0.5组 y=[-0.75,0.25,-0.75,0.25]
+x+0.5 delta = [+0.125 ×4]（local）+ translation [+0.125] ⇒ 世界 +0.25/步
+x-0.5 delta = [-0.125 ×4]（local）+ translation [+0.125] ⇒ 世界 0（未选中面不动）
+```
+
+**几何语义完全正确**：选中面（faces[0]=x=+0.5 侧面）沿世界 Y 每步恰 +0.25，其余顶点世界不动，faces/verts 数不变——**「不再凸包化」（修复核心目标，修复前同场景 9→7）真机成立**。local 读数呈 `y'=y+0.125·sign(x)` 剪切样分解（含 translation 的锚点表示联动，r8c BSN 全文归档 `r8c-{baseline,after-nudge,after-undo}.bsn.txt`）。
+
+### 7.5 阻断记档：undo 撤销不还原几何（断言②的「还原」子项）
+
+**实测**（凸锚 cube，两轮复测一致）：`history.undo` 正常推进（条目出栈、top 变化），但 **translation 与顶点零还原**（undo 前后逐字节一致）。undo 条目由 call_operator 框架自动创建（creates_history_entry），**nudge 的几何写入是 operator 体内 Query/ResMut 直改、无 EditorCommand 包装**——框架快照对直改型 operator 疑似不捕获（对照：命令型 operator（SpawnEntity/CSG/SetTransform）的 undo 在同会话实测全部正常还原）。
+
+**归因判断（QA 意见，非定论）**：修前 nudge 同样是「operator 直改（凸包 rebuild）+ 无 EditorCommand 包装」的相同结构，故**大概率是既有框架行为而非 R7 回归**；但 QA 无法在真机回到修前实证，且方案书 D4 口径为「undo 历史语义与修前完全一致」——**一致性成立与否超出本轮真机可验证范围**。R5 先例（history 断言正常）的 operator 均为显式命令型，不可直接对照。**建议主控：立票核查「直改型 operator 的 undo 快照」（与 A25 同属真机交互层），或批准以 headless 断言（nudge_tests 的 moved/any_modified 语义 ✓ + libtests 3117）作为 D4 的验收口径。**
+
+### 7.6 复跑期间的其它环境观察（记档，不阻断）
+
+1. **首测解析缺陷（QA 自身）**：`jackdaw/entity` BSN 的 MeshVert position 为多行格式，首轮 `vert_positions` 单行正则匹配为空——moved-verts 对比在 r8/r8c 首轮失效（r8b 修正为多行正则后恢复）；不影响 faces/verts 计数与 undo 计数断言。
+2. **`transform.rotate_90_pitch_ccw` 真机异常**：对选中 cube 未写 rotation（quat identity）而 translation +0.125——与 §7.5 的 translation 写入疑点疑似同源（A25 家族），记档。
+3. **BrushHalfedge BRP 探针恒空**：`world.query filter with BrushHalfedge` 在 face mode 下返回空（对照：同法 filter Brush 返回 3 实体）——探针 false negative（proxy 空间未代理该组件）或 lift 未发生，二者的行为差异（半边 vs legacy 凸包）已被 faces 9→9 排除（legacy 必 9→7），故 nudge 实际走了半边路径；探针口径留给 A25。
+
+### 7.7 复跑后交付物增量
+
+- 复跑脚本：`r8-run.py` / `r8b-run.py` / `r8c-run.py`（+ 首轮工具缺口前的 r7-live.sh / r7-leg*.sh / r7-run7a.py / r7-run7b.py）
+- 复跑证据：`rerun-fmt.log` / `rerun-gates.log` / `rerun-libtests.log` / `r8-console.log` / `r8b-*.png` / `r8c-*.bsn.txt` / 各 BRP 应答 JSON
+- 本报告复跑节（§七）；fixture `scene.bsn` SHA256 跑前跑后一致（`2f489e1c…`）、临时目录已清理、编辑器进程已清理
+- **最终总判定：PASS（带 §7.5 阻断记档，交主控裁定 D4 口径）**；不合入、不打勾

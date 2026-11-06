@@ -1,0 +1,819 @@
+#Cube
+bevy_transform::components::global_transform::GlobalTransform(glam::Affine3A { matrix3: glam::Mat3A { x_axis: glam::Vec3A { x: 1.0, y: 0.0, z: 0.0 }, y_axis: glam::Vec3A { x: 0.0, y: 1.0, z: 0.0 }, z_axis: glam::Vec3A { x: 0.0, y: 0.0, z: 1.0 } }, translation: glam::Vec3A { x: -0.000000007450580596923828, y: -0.000000007450580596923828, z: -0.000000007450580596923828 } })
+bevy_transform::components::transform::Transform {
+    translation: glam::Vec3 {
+        x: -0.000000007450580596923828,
+        y: -0.000000007450580596923828,
+        z: -0.000000007450580596923828,
+    },
+}
+bevy_transform::components::transform::TransformTreeChanged
+bevy_camera::visibility::Visibility::Inherited
+bevy_camera::visibility::InheritedVisibility(true)
+bevy_camera::visibility::ViewVisibility(3)
+jackdaw_scene_types::types::Brush {
+    faces: [
+        jackdaw_geometry::BrushFaceData {
+            plane: jackdaw_geometry::BrushPlane {
+                normal: glam::Vec3 {
+                    x: -1.0,
+                    y: 0.0,
+                    z: 0.0,
+                },
+                distance: 0.5,
+            },
+            material: "",
+            uv_offset: glam::Vec2 {
+                x: 0.071428582072258,
+                y: 0.071428582072258,
+            },
+            uv_scale: glam::Vec2 {
+                x: 1.0,
+                y: 1.0,
+            },
+            uv_rotation: 0.0,
+            uv_u_axis: glam::Vec3 {
+                x: 0.0,
+                y: 0.0,
+                z: -1.0,
+            },
+            uv_v_axis: glam::Vec3 {
+                x: -0.0,
+                y: -1.0,
+                z: -0.0,
+            },
+        },
+        jackdaw_geometry::BrushFaceData {
+            plane: jackdaw_geometry::BrushPlane {
+                normal: glam::Vec3 {
+                    x: 0.0,
+                    y: -1.0,
+                    z: 0.0,
+                },
+                distance: 0.5,
+            },
+            material: "",
+            uv_offset: glam::Vec2 {
+                x: 0.071428582072258,
+                y: 0.071428582072258,
+            },
+            uv_scale: glam::Vec2 {
+                x: 1.0,
+                y: 1.0,
+            },
+            uv_rotation: 0.0,
+            uv_u_axis: glam::Vec3 {
+                x: -1.0,
+                y: 0.0,
+                z: 0.0,
+            },
+            uv_v_axis: glam::Vec3 {
+                x: -0.0,
+                y: -0.0,
+                z: -1.0,
+            },
+        },
+        jackdaw_geometry::BrushFaceData {
+            plane: jackdaw_geometry::BrushPlane {
+                normal: glam::Vec3 {
+                    x: 0.0,
+                    y: 0.0,
+                    z: -1.0,
+                },
+                distance: 0.5,
+            },
+            material: "",
+            uv_offset: glam::Vec2 {
+                x: -0.071428582072258,
+                y: 0.071428582072258,
+            },
+            uv_scale: glam::Vec2 {
+                x: 1.0,
+                y: 1.0,
+            },
+            uv_rotation: 0.0,
+            uv_u_axis: glam::Vec3 {
+                x: 1.0,
+                y: 0.0,
+                z: 0.0,
+            },
+            uv_v_axis: glam::Vec3 {
+                x: 0.0,
+                y: -1.0,
+                z: 0.0,
+            },
+        },
+        jackdaw_geometry::BrushFaceData {
+            plane: jackdaw_geometry::BrushPlane {
+                normal: glam::Vec3 {
+                    x: 0.0,
+                    y: 0.0,
+                    z: 1.0,
+                },
+                distance: 0.5,
+            },
+            material: "",
+            uv_offset: glam::Vec2 {
+                x: 0.071428582072258,
+                y: 0.071428582072258,
+            },
+            uv_scale: glam::Vec2 {
+                x: 1.0,
+                y: 1.0,
+            },
+            uv_rotation: 0.0,
+            uv_u_axis: glam::Vec3 {
+                x: -1.0,
+                y: 0.0,
+                z: 0.0,
+            },
+            uv_v_axis: glam::Vec3 {
+                x: 0.0,
+                y: -1.0,
+                z: 0.0,
+            },
+        },
+        jackdaw_geometry::BrushFaceData {
+            plane: jackdaw_geometry::BrushPlane {
+                normal: glam::Vec3 {
+                    x: 0.0,
+                    y: 1.0,
+                    z: 0.0,
+                },
+                distance: 0.5,
+            },
+            material: "",
+            uv_offset: glam::Vec2 {
+                x: -0.071428582072258,
+                y: 0.071428582072258,
+            },
+            uv_scale: glam::Vec2 {
+                x: 1.0,
+                y: 1.0,
+            },
+            uv_rotation: 0.0,
+            uv_u_axis: glam::Vec3 {
+                x: 1.0,
+                y: 0.0,
+                z: 0.0,
+            },
+            uv_v_axis: glam::Vec3 {
+                x: 0.0,
+                y: 0.0,
+                z: -1.0,
+            },
+        },
+        jackdaw_geometry::BrushFaceData {
+            plane: jackdaw_geometry::BrushPlane {
+                normal: glam::Vec3 {
+                    x: 1.0,
+                    y: 0.0,
+                    z: 0.0,
+                },
+                distance: 0.5,
+            },
+            material: "",
+            uv_offset: glam::Vec2 {
+                x: -0.071428582072258,
+                y: 0.071428582072258,
+            },
+            uv_scale: glam::Vec2 {
+                x: 1.0,
+                y: 1.0,
+            },
+            uv_rotation: 0.0,
+            uv_u_axis: glam::Vec3 {
+                x: 0.0,
+                y: 0.0,
+                z: 1.0,
+            },
+            uv_v_axis: glam::Vec3 {
+                x: 0.0,
+                y: -1.0,
+                z: 0.0,
+            },
+        },
+        jackdaw_geometry::BrushFaceData {
+            plane: jackdaw_geometry::BrushPlane {
+                normal: glam::Vec3 {
+                    x: 1.0,
+                    y: 0.0,
+                    z: 0.0,
+                },
+                distance: 0.000000007450580596923828,
+            },
+            material: "",
+            uv_offset: glam::Vec2 {
+                x: 0.071428582072258,
+                y: 0.071428582072258,
+            },
+            uv_scale: glam::Vec2 {
+                x: 1.0,
+                y: 1.0,
+            },
+            uv_rotation: 0.0,
+            uv_u_axis: glam::Vec3 {
+                x: 0.0,
+                y: 0.0,
+                z: -1.0,
+            },
+            uv_v_axis: glam::Vec3 {
+                x: -0.0,
+                y: -1.0,
+                z: -0.0,
+            },
+        },
+        jackdaw_geometry::BrushFaceData {
+            plane: jackdaw_geometry::BrushPlane {
+                normal: glam::Vec3 {
+                    x: 0.0,
+                    y: 1.0,
+                    z: 0.0,
+                },
+                distance: 0.000000007450580596923828,
+            },
+            material: "",
+            uv_offset: glam::Vec2 {
+                x: 0.071428582072258,
+                y: 0.071428582072258,
+            },
+            uv_scale: glam::Vec2 {
+                x: 1.0,
+                y: 1.0,
+            },
+            uv_rotation: 0.0,
+            uv_u_axis: glam::Vec3 {
+                x: -1.0,
+                y: 0.0,
+                z: 0.0,
+            },
+            uv_v_axis: glam::Vec3 {
+                x: -0.0,
+                y: -0.0,
+                z: -1.0,
+            },
+        },
+        jackdaw_geometry::BrushFaceData {
+            plane: jackdaw_geometry::BrushPlane {
+                normal: glam::Vec3 {
+                    x: 0.0,
+                    y: 0.0,
+                    z: 1.0,
+                },
+                distance: 0.000000007450580596923828,
+            },
+            material: "",
+            uv_offset: glam::Vec2 {
+                x: -0.071428582072258,
+                y: 0.071428582072258,
+            },
+            uv_scale: glam::Vec2 {
+                x: 1.0,
+                y: 1.0,
+            },
+            uv_rotation: 0.0,
+            uv_u_axis: glam::Vec3 {
+                x: 1.0,
+                y: 0.0,
+                z: 0.0,
+            },
+            uv_v_axis: glam::Vec3 {
+                x: 0.0,
+                y: -1.0,
+                z: 0.0,
+            },
+        },
+    ],
+    topology: jackdaw_geometry::topology::BrushTopology {
+        vertices: [
+            jackdaw_geometry::topology::MeshVert {
+                position: glam::Vec3 {
+                    x: -0.5,
+                    y: -0.5,
+                    z: -0.5,
+                },
+            },
+            jackdaw_geometry::topology::MeshVert {
+                position: glam::Vec3 {
+                    x: -0.5,
+                    y: -0.5,
+                    z: 0.5,
+                },
+            },
+            jackdaw_geometry::topology::MeshVert {
+                position: glam::Vec3 {
+                    x: -0.5,
+                    y: 0.5,
+                    z: -0.5,
+                },
+            },
+            jackdaw_geometry::topology::MeshVert {
+                position: glam::Vec3 {
+                    x: -0.5,
+                    y: 0.5,
+                    z: 0.5,
+                },
+            },
+            jackdaw_geometry::topology::MeshVert {
+                position: glam::Vec3 {
+                    x: 0.5,
+                    y: -0.5,
+                    z: -0.5,
+                },
+            },
+            jackdaw_geometry::topology::MeshVert {
+                position: glam::Vec3 {
+                    x: 0.5,
+                    y: -0.5,
+                    z: 0.5,
+                },
+            },
+            jackdaw_geometry::topology::MeshVert {
+                position: glam::Vec3 {
+                    x: 0.5,
+                    y: 0.5,
+                    z: -0.5,
+                },
+            },
+            jackdaw_geometry::topology::MeshVert {
+                position: glam::Vec3 {
+                    x: 0.000000007450580596923828,
+                    y: 0.000000007450580596923828,
+                    z: 0.000000007450580596923828,
+                },
+            },
+            jackdaw_geometry::topology::MeshVert {
+                position: glam::Vec3 {
+                    x: 0.000000007450580596923828,
+                    y: 0.000000007450580596923828,
+                    z: 0.5,
+                },
+            },
+            jackdaw_geometry::topology::MeshVert {
+                position: glam::Vec3 {
+                    x: 0.000000007450580596923828,
+                    y: 0.5,
+                    z: 0.000000007450580596923828,
+                },
+            },
+            jackdaw_geometry::topology::MeshVert {
+                position: glam::Vec3 {
+                    x: 0.000000007450580596923828,
+                    y: 0.5,
+                    z: 0.5,
+                },
+            },
+            jackdaw_geometry::topology::MeshVert {
+                position: glam::Vec3 {
+                    x: 0.5,
+                    y: 0.000000007450580596923828,
+                    z: 0.000000007450580596923828,
+                },
+            },
+            jackdaw_geometry::topology::MeshVert {
+                position: glam::Vec3 {
+                    x: 0.5,
+                    y: 0.000000007450580596923828,
+                    z: 0.5,
+                },
+            },
+            jackdaw_geometry::topology::MeshVert {
+                position: glam::Vec3 {
+                    x: 0.5,
+                    y: 0.5,
+                    z: 0.000000007450580596923828,
+                },
+            },
+        ],
+        edges: [
+            jackdaw_geometry::topology::MeshEdge {
+                v: [
+                    0,
+                    1,
+                ],
+            },
+            jackdaw_geometry::topology::MeshEdge {
+                v: [
+                    1,
+                    3,
+                ],
+            },
+            jackdaw_geometry::topology::MeshEdge {
+                v: [
+                    2,
+                    3,
+                ],
+            },
+            jackdaw_geometry::topology::MeshEdge {
+                v: [
+                    0,
+                    2,
+                ],
+            },
+            jackdaw_geometry::topology::MeshEdge {
+                v: [
+                    0,
+                    4,
+                ],
+            },
+            jackdaw_geometry::topology::MeshEdge {
+                v: [
+                    4,
+                    5,
+                ],
+            },
+            jackdaw_geometry::topology::MeshEdge {
+                v: [
+                    1,
+                    5,
+                ],
+            },
+            jackdaw_geometry::topology::MeshEdge {
+                v: [
+                    2,
+                    6,
+                ],
+            },
+            jackdaw_geometry::topology::MeshEdge {
+                v: [
+                    4,
+                    6,
+                ],
+            },
+            jackdaw_geometry::topology::MeshEdge {
+                v: [
+                    5,
+                    12,
+                ],
+            },
+            jackdaw_geometry::topology::MeshEdge {
+                v: [
+                    8,
+                    12,
+                ],
+            },
+            jackdaw_geometry::topology::MeshEdge {
+                v: [
+                    8,
+                    10,
+                ],
+            },
+            jackdaw_geometry::topology::MeshEdge {
+                v: [
+                    3,
+                    10,
+                ],
+            },
+            jackdaw_geometry::topology::MeshEdge {
+                v: [
+                    9,
+                    10,
+                ],
+            },
+            jackdaw_geometry::topology::MeshEdge {
+                v: [
+                    9,
+                    13,
+                ],
+            },
+            jackdaw_geometry::topology::MeshEdge {
+                v: [
+                    6,
+                    13,
+                ],
+            },
+            jackdaw_geometry::topology::MeshEdge {
+                v: [
+                    11,
+                    13,
+                ],
+            },
+            jackdaw_geometry::topology::MeshEdge {
+                v: [
+                    11,
+                    12,
+                ],
+            },
+            jackdaw_geometry::topology::MeshEdge {
+                v: [
+                    7,
+                    9,
+                ],
+            },
+            jackdaw_geometry::topology::MeshEdge {
+                v: [
+                    7,
+                    8,
+                ],
+            },
+            jackdaw_geometry::topology::MeshEdge {
+                v: [
+                    7,
+                    11,
+                ],
+            },
+        ],
+        polygons: [
+            jackdaw_geometry::topology::MeshPoly {
+                loop_start: 0,
+                loop_total: 4,
+            },
+            jackdaw_geometry::topology::MeshPoly {
+                loop_start: 4,
+                loop_total: 4,
+            },
+            jackdaw_geometry::topology::MeshPoly {
+                loop_start: 8,
+                loop_total: 4,
+            },
+            jackdaw_geometry::topology::MeshPoly {
+                loop_start: 12,
+                loop_total: 6,
+            },
+            jackdaw_geometry::topology::MeshPoly {
+                loop_start: 18,
+                loop_total: 6,
+            },
+            jackdaw_geometry::topology::MeshPoly {
+                loop_start: 24,
+                loop_total: 6,
+            },
+            jackdaw_geometry::topology::MeshPoly {
+                loop_start: 30,
+                loop_total: 4,
+            },
+            jackdaw_geometry::topology::MeshPoly {
+                loop_start: 34,
+                loop_total: 4,
+            },
+            jackdaw_geometry::topology::MeshPoly {
+                loop_start: 38,
+                loop_total: 4,
+            },
+        ],
+        loops: [
+            jackdaw_geometry::topology::MeshLoop {
+                vert: 0,
+                edge: 0,
+            },
+            jackdaw_geometry::topology::MeshLoop {
+                vert: 1,
+                edge: 1,
+            },
+            jackdaw_geometry::topology::MeshLoop {
+                vert: 3,
+                edge: 2,
+            },
+            jackdaw_geometry::topology::MeshLoop {
+                vert: 2,
+                edge: 3,
+            },
+            jackdaw_geometry::topology::MeshLoop {
+                vert: 0,
+                edge: 4,
+            },
+            jackdaw_geometry::topology::MeshLoop {
+                vert: 4,
+                edge: 5,
+            },
+            jackdaw_geometry::topology::MeshLoop {
+                vert: 5,
+                edge: 6,
+            },
+            jackdaw_geometry::topology::MeshLoop {
+                vert: 1,
+                edge: 0,
+            },
+            jackdaw_geometry::topology::MeshLoop {
+                vert: 0,
+                edge: 3,
+            },
+            jackdaw_geometry::topology::MeshLoop {
+                vert: 2,
+                edge: 7,
+            },
+            jackdaw_geometry::topology::MeshLoop {
+                vert: 6,
+                edge: 8,
+            },
+            jackdaw_geometry::topology::MeshLoop {
+                vert: 4,
+                edge: 4,
+            },
+            jackdaw_geometry::topology::MeshLoop {
+                vert: 1,
+                edge: 6,
+            },
+            jackdaw_geometry::topology::MeshLoop {
+                vert: 5,
+                edge: 9,
+            },
+            jackdaw_geometry::topology::MeshLoop {
+                vert: 12,
+                edge: 10,
+            },
+            jackdaw_geometry::topology::MeshLoop {
+                vert: 8,
+                edge: 11,
+            },
+            jackdaw_geometry::topology::MeshLoop {
+                vert: 10,
+                edge: 12,
+            },
+            jackdaw_geometry::topology::MeshLoop {
+                vert: 3,
+                edge: 1,
+            },
+            jackdaw_geometry::topology::MeshLoop {
+                vert: 2,
+                edge: 2,
+            },
+            jackdaw_geometry::topology::MeshLoop {
+                vert: 3,
+                edge: 12,
+            },
+            jackdaw_geometry::topology::MeshLoop {
+                vert: 10,
+                edge: 13,
+            },
+            jackdaw_geometry::topology::MeshLoop {
+                vert: 9,
+                edge: 14,
+            },
+            jackdaw_geometry::topology::MeshLoop {
+                vert: 13,
+                edge: 15,
+            },
+            jackdaw_geometry::topology::MeshLoop {
+                vert: 6,
+                edge: 7,
+            },
+            jackdaw_geometry::topology::MeshLoop {
+                vert: 4,
+                edge: 8,
+            },
+            jackdaw_geometry::topology::MeshLoop {
+                vert: 6,
+                edge: 15,
+            },
+            jackdaw_geometry::topology::MeshLoop {
+                vert: 13,
+                edge: 16,
+            },
+            jackdaw_geometry::topology::MeshLoop {
+                vert: 11,
+                edge: 17,
+            },
+            jackdaw_geometry::topology::MeshLoop {
+                vert: 12,
+                edge: 9,
+            },
+            jackdaw_geometry::topology::MeshLoop {
+                vert: 5,
+                edge: 5,
+            },
+            jackdaw_geometry::topology::MeshLoop {
+                vert: 7,
+                edge: 18,
+            },
+            jackdaw_geometry::topology::MeshLoop {
+                vert: 9,
+                edge: 13,
+            },
+            jackdaw_geometry::topology::MeshLoop {
+                vert: 10,
+                edge: 11,
+            },
+            jackdaw_geometry::topology::MeshLoop {
+                vert: 8,
+                edge: 19,
+            },
+            jackdaw_geometry::topology::MeshLoop {
+                vert: 7,
+                edge: 19,
+            },
+            jackdaw_geometry::topology::MeshLoop {
+                vert: 8,
+                edge: 10,
+            },
+            jackdaw_geometry::topology::MeshLoop {
+                vert: 12,
+                edge: 17,
+            },
+            jackdaw_geometry::topology::MeshLoop {
+                vert: 11,
+                edge: 20,
+            },
+            jackdaw_geometry::topology::MeshLoop {
+                vert: 7,
+                edge: 20,
+            },
+            jackdaw_geometry::topology::MeshLoop {
+                vert: 11,
+                edge: 16,
+            },
+            jackdaw_geometry::topology::MeshLoop {
+                vert: 13,
+                edge: 14,
+            },
+            jackdaw_geometry::topology::MeshLoop {
+                vert: 9,
+                edge: 18,
+            },
+        ],
+        attributes: jackdaw_geometry::topology::AttributeStack {
+            vert: map[],
+            edge: map[],
+            loop_: map[],
+            face: map[],
+        },
+    },
+}
+jackdaw_scene_types::node_id::SceneNodeId(8421122417102022664)
+avian3d::dynamics::rigid_body::RigidBody::Static
+avian3d::physics_transform::transform::Position(glam::Vec3 { x: -0.000000007450580596923828, y: -0.000000007450580596923828, z: -0.000000007450580596923828 })
+avian3d::physics_transform::transform::Rotation(glam::Quat { x: 0.0, y: 0.0, z: 0.0, w: 1.0 })
+avian3d::dynamics::rigid_body::LinearVelocity(glam::Vec3 { x: 0.0, y: 0.0, z: 0.0 })
+avian3d::dynamics::rigid_body::AngularVelocity(glam::Vec3 { x: 0.0, y: 0.0, z: 0.0 })
+avian3d::dynamics::rigid_body::mass_properties::components::computed::ComputedMass {
+    inverse: 1.142857313156128,
+}
+avian3d::dynamics::rigid_body::mass_properties::components::computed::ComputedAngularInertia {
+    inverse: glam_matrix_extras::symmetric::symmetric_mat3::SymmetricMat3 {
+        m00: 7.0156450271606445,
+        m01: -0.40744924545288086,
+        m02: -0.4133492708206177,
+        m11: 7.0202789306640625,
+        m12: -0.4110032320022583,
+        m22: 7.008462429046631,
+    },
+}
+avian3d::dynamics::rigid_body::mass_properties::components::computed::ComputedCenterOfMass(glam::Vec3 { x: -0.0357142835855484, y: -0.035714294761419296, z: -0.035714291036129 })
+avian3d::dynamics::rigid_body::forces::AccumulatedLocalAcceleration
+avian3d::physics_transform::transform::PreSolveDeltaPosition(glam::Vec3 { x: 0.0, y: 0.0, z: 0.0 })
+avian3d::physics_transform::transform::PreSolveDeltaRotation(glam::Quat { x: 0.0, y: 0.0, z: 0.0, w: 1.0 })
+avian3d::dynamics::rigid_body::mass_properties::components::collider::ColliderMassProperties(bevy_heavy::dim3::MassProperties3d { mass: 0.8749998807907104, principal_angular_inertia: glam::Vec3 { x: 0.1346725970506668, y: 0.13467256724834442, z: 0.1614583134651184 }, local_inertial_frame: glam::Quat { x: 0.7474802136421204, y: 0.4795295298099518, z: -0.4491164982318878, w: 0.098077192902565 }, center_of_mass: glam::Vec3 { x: -0.0357142835855484, y: -0.035714294761419296, z: -0.035714291036129 } })
+avian3d::collision::collider::collider_transform::ColliderTransform {
+    translation: glam::Vec3 {
+        x: 0.0,
+        y: 0.0,
+        z: 0.0,
+    },
+    rotation: glam::Quat {
+        x: 0.0,
+        y: 0.0,
+        z: 0.0,
+        w: 1.0,
+    },
+    scale: glam::Vec3 {
+        x: 1.0,
+        y: 1.0,
+        z: 1.0,
+    },
+}
+avian3d::collision::collider::collider_hierarchy::RigidBodyColliders(["5296v8"])
+avian3d::collision::collider::backend::ColliderMarker
+avian3d::collision::collider::ColliderAabb {
+    min: glam::Vec3 {
+        x: -0.5199999809265137,
+        y: -0.5199999809265137,
+        z: -0.5199999809265137,
+    },
+    max: glam::Vec3 {
+        x: 0.5199999809265137,
+        y: 0.5199999809265137,
+        z: 0.5199999809265137,
+    },
+}
+avian3d::collision::collider::layers::CollisionLayers {
+    memberships: avian3d::collision::collider::layers::LayerMask(1),
+    filters: avian3d::collision::collider::layers::LayerMask(4294967295),
+}
+avian3d::collision::collider::EnlargedAabb(avian3d::collision::collider::ColliderAabb { min: glam::Vec3 { x: -0.5699999928474426, y: -0.5699999928474426, z: -0.5699999928474426 }, max: glam::Vec3 { x: 0.5699999928474426, y: 0.5699999928474426, z: 0.5699999928474426 } })
+avian3d::dynamics::rigid_body::mass_properties::components::collider::ColliderDensity(1.0)
+avian3d::collision::collider::ColliderAabbMargin(0.05000000074505806)
+avian3d::collision::collider::collider_hierarchy::ColliderOf {
+    body: "5296v8",
+}
+jackdaw_avian_integration::AvianCollider(avian3d::collision::collider::constructor::ColliderConstructor::TrimeshFromMesh)
+bevy_ecs::hierarchy::Children [
+    bevy_transform::components::global_transform::GlobalTransform(glam::Affine3A { matrix3: glam::Mat3A { x_axis: glam::Vec3A { x: 1.0, y: 0.0, z: 0.0 }, y_axis: glam::Vec3A { x: 0.0, y: 1.0, z: 0.0 }, z_axis: glam::Vec3A { x: 0.0, y: 0.0, z: 1.0 } }, translation: glam::Vec3A { x: -0.000000007450580596923828, y: -0.000000007450580596923828, z: -0.000000007450580596923828 } })
+    bevy_transform::components::transform::Transform
+    bevy_transform::components::transform::TransformTreeChanged
+    bevy_camera::visibility::Visibility::Inherited
+    bevy_camera::visibility::InheritedVisibility(true)
+    bevy_camera::visibility::ViewVisibility(3)
+    bevy_mesh::components::Mesh3d("")
+    bevy_camera::visibility::VisibilityClass(["TypeId(0xd0ac8f023d804f0cdfdd7d5e4930dfee)"])
+    jackdaw_scene_types::EditorHidden
+    bevy_camera::primitives::Aabb {
+        half_extents: glam::Vec3A {
+            x: 0.5,
+            y: 0.5,
+            z: 0.5,
+        },
+    }
+    bevy_pbr::mesh_material::MeshMaterial3d<bevy_pbr::pbr_material::StandardMaterial>("")
+    bevy_light::NotShadowCaster
+    bevy_light::NotShadowReceiver
+]
