@@ -41,10 +41,11 @@
   修复方向：改用 `jackdaw_pie_protocol::snapshot::entity_bits(&value)`。
   （2026-11-06 修复：`extract_parent` 改走 `jackdaw_pie_protocol::snapshot::entity_bits`（全限定单行，`relationships.rs:63` 先例）+ entity_browser.rs 文件内首个测试锚 4 条（文本/数组两形态修前红证 `None vs Some(4294967290)`、数值 bits 回归锚、垃圾值负例）。QA 真机铁证：游戏 BRP 线上 `ChildOf` 恰为实体文本形态（`"566v0"`/`"570v0"`）、面板树修前平铺→修后 `scene > Root > Bgm Probe/…` 三层嵌套（截图+ui_tree JSON 归档 `loop/bug-r4-qa/`）。程序 `efdf0430`、QA `dc76ac78`、合入 main `943fd40e`；QA `loop/reports/bug-r4-qa.md` PASS（libtests 3095=3091+4·59 二进制）。顺带立票 A20/A21/A22。）
 
-- [ ] **R5. 空地形上点 Erode 直接 panic**
+- [x] **R5. 空地形上点 Erode 直接 panic**
   `crates/jackdaw_terrain/src/erosion.rs:75` + `src/terrain/ops.rs:308-312`（`terrain_erode`）。
   问题：`rng.random_range(1.0..(res - 2) as f32)` 对 resolution 0–3 为空/反区间，rand panic（`terrain_generate` 在 ops.rs:246-251 有空地形分支，erode 没有）；面板 Erode 按钮（`src/terrain/panel.rs:2449-2456`）只有 `has_selected_terrain` 门槛，UI 可直接触达。
   修复方向：kernel 开头 `if resolution < 4 { return; }`，或 op 里拒绝 `grid_resolution() < 4`。
+  （2026-11-06 修复：双层守卫——op 层 `terrain_erode` 对 `resolution < 4` 拒绝+toast（严格沿用 `terrain_generate` refused 分支形态：不写 undo/不置 dirty/不重建，规避「新旧 heights 全等的垃圾 undo 记录」）；kernel 层 `hydraulic_erosion` 开头 `if resolution < 4 { return; }` 兜底。红证双腿 panic 于 `erosion.rs:75:29 cannot sample empty range` 与票面逐字一致；QA 真机三断言：进程存活 0 panic / toast 实拍渲染（截图 `loop/bug-r5-qa/live-erode-toast-async.png`）/ undo 栈零新增（`undo_len` 恒 1、top=Add Terrain）。libtests 3098=3095+3。程序 `740c48b4`、QA `393225ae`、合入 main `cbd6daf5`；QA `loop/reports/bug-r5-qa.md` PASS。A20 二次实证：Generation tab 首点被按钮中心越窗缘阻断，QA 走 `terrain.panel.tab` operator 绕过。）
 
 - [ ] **R6. Scatter placement 坐标无界，一个远点撑爆稠密网格导致编辑器 abort**
   `crates/jackdaw_terrain/src/sidecar.rs:1431-1441`（`add_placement`）、`region.rs:622-628`（`stored_extent` 平方化）、`src/terrain/scatter.rs:744-753`（import 无范围检查）。
