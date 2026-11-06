@@ -1,0 +1,6 @@
+     Locking 1 package to highest Rust 1.99.0 compatible version
+      Adding jackdaw_remote v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_remote)
+   Compiling jackdaw_remote v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_remote)
+   Compiling bsn_scene_game v0.1.0 (/Users/linbo.zhang/workspace/jackdaw/tests/fixtures/bsn_game)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 14.56s
+GAME_BUILD2_EXIT=0

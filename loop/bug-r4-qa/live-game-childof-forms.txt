@@ -1,0 +1,8 @@
+entities: 7
+entity=4294966725 name=Root ChildOf="566v0"
+entity=4294966722 name=Marker Probe ChildOf="570v0"
+entity=4294966720 name=Scatter Group ChildOf="570v0"
+entity=4294966729 name=scene ChildOf=null
+entity=4294966723 name=Sun ChildOf="570v0"
+entity=4294966724 name=Main Camera ChildOf="570v0"
+entity=4294966721 name=Bgm Probe ChildOf="570v0"
