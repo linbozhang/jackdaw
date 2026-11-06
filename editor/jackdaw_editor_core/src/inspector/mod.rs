@@ -1,7 +1,5 @@
 pub(crate) mod add_header;
 pub(crate) mod anchor_presets;
-pub(crate) mod anim_diamond;
-mod animation_graph_card;
 pub mod asset_row;
 pub mod bindings_card;
 pub(crate) mod category_strip;
@@ -187,7 +185,6 @@ impl Plugin for InspectorPlugin {
             .add_observer(custom_props_display::on_custom_property_checkbox_commit)
             .add_observer(custom_props_display::on_custom_property_text_commit)
             .add_observer(on_name_field_commit)
-            .add_observer(anim_diamond::on_diamond_click)
             .add_observer(anchor_presets::on_anchor_preset_change)
             .init_resource::<live_edit_dots::LiveEditMenuTarget>()
             .add_observer(live_edit_dots::on_live_edit_menu_action)
@@ -563,6 +560,7 @@ pub fn resource_card_text(world: &mut World, type_path: &str) -> Vec<String> {
         }
     }
     lines
+}
 
 /// The component a card shows, as its type path, or `None` when the entity is
 /// no component card.

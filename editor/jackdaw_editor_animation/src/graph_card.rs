@@ -12,10 +12,10 @@ use jackdaw_feathers::{
     tooltip::Tooltip,
 };
 
-use jackdaw_editor_core::animation_mode::library::AnimationLibrary;
-use jackdaw_editor_core::project::ProjectRoot;
 use crate::graph_doc::graph_files;
 use crate::graph_ops::{AnimationGraphAssignOp, AnimationGraphConvertSetOp};
+use jackdaw_editor_core::animation_mode::library::AnimationLibrary;
+use jackdaw_editor_core::project::ProjectRoot;
 
 /// List the project's graph files under an [`AnimationGraphRef`] card, so the
 /// path is picked rather than typed, and say so when the held path names

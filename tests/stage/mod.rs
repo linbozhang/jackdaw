@@ -40,11 +40,8 @@ mod sprite_drop;
 mod sprite_gizmo;
 mod sprite_picking;
 mod sprite_snap;
-<<<<<<< HEAD:tests/stage/main.rs
-=======
 mod sprite_sort;
 mod status_line;
->>>>>>> github/main:tests/stage/mod.rs
 mod synthetic_input;
 mod tilemap_guard;
 mod tilemap_ops;
@@ -60,7 +57,4 @@ mod ui_text_edit;
 mod view_ops;
 mod water;
 mod world_guides;
-<<<<<<< HEAD:tests/stage/main.rs
-=======
 mod world_units;
->>>>>>> github/main:tests/stage/mod.rs

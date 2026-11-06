@@ -1,0 +1,125 @@
+   Compiling jackdaw_schema v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_schema)
+   Compiling jackdaw_project_build v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_project_build)
+   Compiling jackdaw_releases v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_releases)
+   Compiling jackdaw_extension v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_extension)
+   Compiling test_fixture_extension v0.0.0 (/Users/linbo.zhang/workspace/jackdaw/tests/fixtures/test_fixture_extension)
+   Compiling jackdaw_runtime v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_runtime)
+   Compiling jackdaw_scaffold v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_scaffold)
+   Compiling jackdaw_avian_integration v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/integrations/physics/jackdaw_avian_integration)
+   Compiling jackdaw_editor_core v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/editor/jackdaw_editor_core)
+   Compiling jackdaw_editor_modelling v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/editor/jackdaw_editor_modelling)
+   Compiling jackdaw_editor_tile v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/editor/jackdaw_editor_tile)
+   Compiling jackdaw_editor_launcher v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/editor/jackdaw_editor_launcher)
+   Compiling jackdaw_editor_remote v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/editor/jackdaw_editor_remote)
+   Compiling jackdaw_editor_animation v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/editor/jackdaw_editor_animation)
+   Compiling jackdaw_editor_terrain v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/editor/jackdaw_editor_terrain)
+   Compiling jackdaw v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw)
+error[E0428]: the name `poll` is defined multiple times
+    --> tests/guards/editor_remote.rs:1588:1
+     |
+  37 | / fn poll<M>(
+  38 | |     app: &mut App,
+  39 | |     handler: impl bevy::ecs::system::IntoSystem<
+  40 | |         In<Option<Value>>,
+...    |
+  58 | |     panic!("the handler never answered");
+  59 | | }
+     | |_- previous definition of the value `poll` here
+...
+1588 | / fn poll<M>(
+1589 | |     app: &mut App,
+1590 | |     handler: impl bevy::ecs::system::IntoSystem<
+1591 | |         In<Option<Value>>,
+...    |
+1609 | |     panic!("the handler never answered");
+1610 | | }
+     | |_^ `poll` redefined here
+     |
+     = note: `poll` must be defined only once in the value namespace of this module
+
+error[E0428]: the name `call` is defined multiple times
+    --> tests/guards/editor_remote.rs:1614:1
+     |
+  23 | / fn call<M>(
+  24 | |     app: &mut App,
+  25 | |     handler: impl bevy::ecs::system::IntoSystem<In<Option<Value>>, bevy::remote::BrpResult, M> + 'static,
+  26 | |     params: Value,
+...    |
+  31 | |         .unwrap_or_else(|err| panic!("the handler refused: {}", err.message))
+  32 | | }
+     | |_- previous definition of the value `call` here
+...
+1614 | / fn call<M>(
+1615 | |     app: &mut App,
+1616 | |     handler: impl bevy::ecs::system::IntoSystem<In<Option<Value>>, bevy::remote::BrpResult, M> + 'static,
+1617 | |     params: Value,
+...    |
+1622 | |         .unwrap_or_else(|err| panic!("the handler refused: {}", err.message))
+1623 | | }
+     | |_^ `call` redefined here
+     |
+     = note: `call` must be defined only once in the value namespace of this module
+
+error[E0061]: this function takes 2 arguments but 1 argument was supplied
+   --> tests/guards/game_input.rs:289:18
+    |
+289 |     let assets = jackdaw_schema::extract_asset_types(&registry);
+    |                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^----------- argument #2 of type `&ProjectCrates` is missing
+    |
+note: function defined here
+   --> crates/jackdaw_schema/src/lib.rs:602:12
+    |
+602 |     pub fn extract_asset_types(
+    |            ^^^^^^^^^^^^^^^^^^^
+help: provide the argument
+    |
+289 |     let assets = jackdaw_schema::extract_asset_types(&registry, /* &ProjectCrates */);
+    |                                                               ++++++++++++++++++++++
+
+error[E0560]: struct `TilemapLayer` has no field named `name`
+    --> tests/guards/play_overlay.rs:1091:13
+     |
+1091 |             name: "Ground".to_string(),
+     |             ^^^^ `TilemapLayer` does not have this field
+     |
+     = note: available fields are: `cell_size`, `columns`, `rows`, `image`, `order`
+
+error[E0560]: struct `TilemapLayer` has no field named `tileset`
+    --> tests/guards/play_overlay.rs:1092:13
+     |
+1092 |             tileset: "overworld.tileset.bsn".to_string(),
+     |             ^^^^^^^ `TilemapLayer` does not have this field
+     |
+     = note: available fields are: `cell_size`, `columns`, `rows`, `image`, `order`
+
+error[E0560]: struct `TilemapLayer` has no field named `kind`
+    --> tests/guards/play_overlay.rs:1093:13
+     |
+1093 |             kind: jackdaw_scene_types::TilemapLayerKind::Tile,
+     |             ^^^^ `TilemapLayer` does not have this field
+     |
+     = note: available fields are: `cell_size`, `columns`, `rows`, `image`, `order`
+
+error[E0308]: mismatched types
+    --> tests/guards/play_overlay.rs:1090:22
+     |
+1090 |           layers: vec![jackdaw_scene_types::TilemapLayer {
+     |  ______________________^
+1091 | |             name: "Ground".to_string(),
+1092 | |             tileset: "overworld.tileset.bsn".to_string(),
+1093 | |             kind: jackdaw_scene_types::TilemapLayerKind::Tile,
+1094 | |             ..default()
+1095 | |         }],
+     | |_________^ expected `TilemapGridLayer`, found `TilemapLayer`
+
+error[E0063]: missing field `kind` in initializer of `LiveEditEntry`
+    --> tests/guards/play_scene.rs:1828:13
+     |
+1828 |             jackdaw::live_edits::LiveEditEntry {
+     |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ missing `kind`
+
+Some errors have detailed explanations: E0061, E0063, E0308, E0428, E0560.
+For more information about an error, try `rustc --explain E0061`.
+error: could not compile `jackdaw` (test "guards") due to 8 previous errors
+warning: build failed, waiting for other jobs to finish...
+GUARDS_EXIT=101

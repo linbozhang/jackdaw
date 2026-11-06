@@ -1,6 +1,9 @@
 //! Repository-wide guards and smoke checks that scan the tree or the
 //! running editor rather than exercising one feature.
 
+#[path = "../util/mod.rs"]
+mod util;
+
 /// Serializes the modules that each boot a whole editor per test
 /// (`play_current_scene`, `stop_restore`): in parallel they saturate the
 /// machine enough to push this binary's timing-sensitive tests (the
@@ -38,7 +41,6 @@ mod play_overlay;
 mod play_scene;
 mod play_sync;
 mod remote_batches;
-mod scaffolded_component_flow;
 mod two_d_workspace;
 mod undo_history;
 mod user_config;

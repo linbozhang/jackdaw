@@ -428,12 +428,12 @@ pub fn status_handler(In(_): In<Option<Value>>, world: &mut World) -> BrpResult 
 /// through the `recovery.restore` / `recovery.dismiss` operators.
 pub fn recovery_handler(In(_): In<Option<Value>>, world: &mut World) -> BrpResult {
     check_enabled(world)?;
-    let own = crate::scene_io::session_journal::session_dir(world);
-    let Some(root) = crate::scenes::recovery_dialog::leftover_root(world) else {
+    let own = jackdaw_editor_core::scene_io::session_journal::session_dir(world);
+    let Some(root) = jackdaw_editor_core::scenes::recovery_dialog::leftover_root(world) else {
         return Ok(json!({ "available": false, "sessions": [] }));
     };
     let mut sessions = Vec::new();
-    for dir in crate::scene_io::session_journal::list_sessions(&root) {
+    for dir in jackdaw_editor_core::scene_io::session_journal::list_sessions(&root) {
         if Some(&dir) == own.as_ref() || !dir.join("journal.json").is_file() {
             continue;
         }
@@ -448,7 +448,9 @@ pub fn recovery_handler(In(_): In<Option<Value>>, world: &mut World) -> BrpResul
             .ok()
             .and_then(|time| time.duration_since(std::time::UNIX_EPOCH).ok())
             .map(|since| since.as_secs());
-        let Some(journal) = crate::scene_io::session_journal::read_session_journal(&dir) else {
+        let Some(journal) =
+            jackdaw_editor_core::scene_io::session_journal::read_session_journal(&dir)
+        else {
             sessions.push(json!({
                 "session": name,
                 "updated": updated,
@@ -470,7 +472,7 @@ pub fn recovery_handler(In(_): In<Option<Value>>, world: &mut World) -> BrpResul
                     "captured_at": tab.captured_at,
                     "saved_at": tab.saved_at,
                     "entity_count": tab.entity_count,
-                    "diff": crate::scenes::recovery_dialog::diff_summary(tab),
+                    "diff": jackdaw_editor_core::scenes::recovery_dialog::diff_summary(tab),
                 })
             })
             .collect();
@@ -498,7 +500,7 @@ pub fn recovery_handler(In(_): In<Option<Value>>, world: &mut World) -> BrpResul
 /// asserts against here.
 pub fn audit_handler(In(_): In<Option<Value>>, world: &mut World) -> BrpResult {
     check_enabled(world)?;
-    let findings = crate::reference_audit::audit_references(world);
+    let findings = jackdaw_editor_core::reference_audit::audit_references(world);
     let entries: Vec<Value> = findings
         .iter()
         .map(|finding| {
@@ -513,7 +515,7 @@ pub fn audit_handler(In(_): In<Option<Value>>, world: &mut World) -> BrpResult {
         })
         .collect();
     Ok(json!({
-        "summary": crate::reference_audit::summarize(&findings),
+        "summary": jackdaw_editor_core::reference_audit::summarize(&findings),
         "count": findings.len(),
         "findings": entries,
     }))
@@ -528,7 +530,7 @@ pub fn audit_handler(In(_): In<Option<Value>>, world: &mut World) -> BrpResult {
 pub fn pie_handler(In(_): In<Option<Value>>, world: &mut World) -> BrpResult {
     check_enabled(world)?;
     let instances: Vec<Value> = world
-        .get_non_send::<crate::pie::PieSession>()
+        .get_non_send::<jackdaw_editor_core::pie::PieSession>()
         .map(|session| {
             session
                 .instance_faces()
@@ -556,26 +558,26 @@ pub fn pie_handler(In(_): In<Option<Value>>, world: &mut World) -> BrpResult {
         .unwrap_or_default();
 
     let view_mode = world
-        .get_resource::<crate::pie_mirror::PieViewMode>()
+        .get_resource::<jackdaw_editor_core::pie_mirror::PieViewMode>()
         .map(|mode| match *mode {
-            crate::pie_mirror::PieViewMode::Live => "live",
-            crate::pie_mirror::PieViewMode::Scene => "scene",
+            jackdaw_editor_core::pie_mirror::PieViewMode::Live => "live",
+            jackdaw_editor_core::pie_mirror::PieViewMode::Scene => "scene",
         })
         .unwrap_or("scene");
     let focused = world
-        .get_resource::<crate::pie_mirror::PieInstances>()
+        .get_resource::<jackdaw_editor_core::pie_mirror::PieInstances>()
         .and_then(|instances| instances.focused.as_ref())
         .map(std::string::ToString::to_string);
 
     let (entities, authored) = world
-        .get_resource::<crate::pie_projection::PieProjection>()
+        .get_resource::<jackdaw_editor_core::pie_projection::PieProjection>()
         .map(|projection| {
             let mapped: Vec<Entity> = projection.by_bits.values().copied().collect();
             let authored = mapped
                 .iter()
                 .filter(|entity| {
                     world
-                        .get::<crate::pie_projection::PieEphemeral>(**entity)
+                        .get::<jackdaw_editor_core::pie_projection::PieEphemeral>(**entity)
                         .is_none()
                 })
                 .count();
@@ -583,17 +585,17 @@ pub fn pie_handler(In(_): In<Option<Value>>, world: &mut World) -> BrpResult {
         })
         .unwrap_or((0, 0));
     let ephemeral = world
-        .query_filtered::<Entity, With<crate::pie_projection::PieEphemeral>>()
+        .query_filtered::<Entity, With<jackdaw_editor_core::pie_projection::PieEphemeral>>()
         .iter(world)
         .count();
 
     let live_edits = world
-        .get_resource::<crate::live_edits::LiveEditLog>()
+        .get_resource::<jackdaw_editor_core::live_edits::LiveEditLog>()
         .map(|log| log.entries.len())
         .unwrap_or(0);
 
     Ok(json!({
-        "status": crate::pie::play_status(world),
+        "status": jackdaw_editor_core::pie::play_status(world),
         "view_mode": view_mode,
         "focused": focused,
         "instances": instances,
@@ -616,9 +618,9 @@ pub fn pie_handler(In(_): In<Option<Value>>, world: &mut World) -> BrpResult {
 pub fn export_handler(In(_): In<Option<Value>>, world: &mut World) -> BrpResult {
     check_enabled(world)?;
     let face = world
-        .get_resource::<crate::game_export::GameExports>()
-        .map(crate::game_export::GameExports::face)
-        .unwrap_or_else(|| crate::game_export::ExportFace {
+        .get_resource::<jackdaw_editor_core::game_export::GameExports>()
+        .map(jackdaw_editor_core::game_export::GameExports::face)
+        .unwrap_or_else(|| jackdaw_editor_core::game_export::ExportFace {
             state: "idle",
             outcome: None,
             dist_dir: None,
@@ -651,15 +653,15 @@ pub fn export_handler(In(_): In<Option<Value>>, world: &mut World) -> BrpResult 
 /// poll keeps, or inspects fresh when it has not run yet.
 pub fn game_flow_handler(In(_): In<Option<Value>>, world: &mut World) -> BrpResult {
     check_enabled(world)?;
-    let held = world.get_resource::<crate::game_flow::GameFlowState>();
+    let held = world.get_resource::<jackdaw_editor_core::game_flow::GameFlowState>();
     let (inspection, file) = match held {
         Some(state) if state.flow_file.is_some() => {
             (state.inspection.clone(), state.flow_file.clone())
         }
         _ => {
             let assets = world
-                .get_resource::<crate::project::ProjectRoot>()
-                .map(crate::project::ProjectRoot::assets_dir);
+                .get_resource::<jackdaw_editor_core::project::ProjectRoot>()
+                .map(jackdaw_editor_core::project::ProjectRoot::assets_dir);
             let file = assets
                 .as_ref()
                 .map(|assets| jackdaw_project_build::flow::flow_path(assets));
@@ -739,12 +741,12 @@ pub fn selection_set_handler(In(params): In<Option<Value>>, world: &mut World) -
         if !entities.contains(&entity)
             && let Ok(mut entity_mut) = world.get_entity_mut(entity)
         {
-            entity_mut.remove::<crate::selection::Selected>();
+            entity_mut.remove::<jackdaw_editor_core::selection::Selected>();
         }
     }
     for entity in &entities {
         if let Ok(mut entity_mut) = world.get_entity_mut(*entity) {
-            entity_mut.insert(crate::selection::Selected);
+            entity_mut.insert(jackdaw_editor_core::selection::Selected);
         }
     }
 
@@ -2285,8 +2287,8 @@ fn pie_wait(
         .map_or(PIE_WAIT_FRAMES, |frames| frames as u32);
 
     let launch_baseline = world
-        .get_non_send::<crate::pie::PieSession>()
-        .map_or(0, crate::pie::PieSession::launches);
+        .get_non_send::<jackdaw_editor_core::pie::PieSession>()
+        .map_or(0, jackdaw_editor_core::pie::PieSession::launches);
     // Read the current count before the waits borrow: it moves with every
     // launch, so this is the count as of this poll.
     let launches_now = launch_baseline;
@@ -2339,14 +2341,6 @@ fn pie_wait(
 
 /// Work the editor started on its own and has not finished.
 fn editor_is_busy(world: &mut World) -> bool {
-    // A gesture is a list of beats spread over frames, so the editor is still
-    // busy until the last beat has played — the same reading
-    // `crate::boot_ops` gives its own queue. This is what makes
-    // `wait(until: "idle")` answer after a `ui_click`'s click has landed,
-    // rather than after the call that queued it returned.
-    let gesture_playing = !world
-        .get_resource::<crate::test_input::SyntheticInput>()
-        .is_none_or(crate::test_input::SyntheticInput::is_idle);
     let building = world
         .get_resource::<jackdaw_editor_core::build_status::BuildStatus>()
         .is_some_and(|status| {
@@ -2606,11 +2600,11 @@ mod tests {
     /// pending live edit, and a session that never launched anything.
     fn pie_face_world() -> World {
         let mut world = World::new();
-        world.init_resource::<crate::selection::Selection>();
-        world.init_resource::<crate::pie_projection::PieProjection>();
-        world.init_resource::<crate::pie_mirror::PieInstances>();
-        world.init_resource::<crate::pie_mirror::PieViewMode>();
-        world.init_resource::<crate::live_edits::LiveEditLog>();
+        world.init_resource::<jackdaw_editor_core::selection::Selection>();
+        world.init_resource::<jackdaw_editor_core::pie_projection::PieProjection>();
+        world.init_resource::<jackdaw_editor_core::pie_mirror::PieInstances>();
+        world.init_resource::<jackdaw_editor_core::pie_mirror::PieViewMode>();
+        world.init_resource::<jackdaw_editor_core::live_edits::LiveEditLog>();
 
         let authored = world
             .spawn((
@@ -2619,12 +2613,13 @@ mod tests {
             ))
             .id();
         world.spawn((
-            crate::pie_projection::PieEphemeral,
+            jackdaw_editor_core::pie_projection::PieEphemeral,
             bevy::prelude::Name::new("GameActor"),
         ));
-        let mut projection = world.resource_mut::<crate::pie_projection::PieProjection>();
+        let mut projection =
+            world.resource_mut::<jackdaw_editor_core::pie_projection::PieProjection>();
         projection.by_bits.insert(0xA0, authored);
-        world.insert_non_send(crate::pie::PieSession::default());
+        world.insert_non_send(jackdaw_editor_core::pie::PieSession::default());
         world
     }
 
@@ -2636,20 +2631,20 @@ mod tests {
 
         // One pending live edit, so the count is exercised.
         {
-            let key = crate::live_edits::LiveEditKey {
+            let key = jackdaw_editor_core::live_edits::LiveEditKey {
                 bits: 0xA0,
                 type_path: "T".to_string(),
                 field_path: String::new(),
             };
-            let entry = crate::live_edits::LiveEditEntry {
+            let entry = jackdaw_editor_core::live_edits::LiveEditEntry {
                 node_id: None,
                 baseline: None,
                 live_value: serde_json::json!(null),
                 label: "probe".to_string(),
-                kind: crate::live_edits::LiveEditKind::Field,
+                kind: jackdaw_editor_core::live_edits::LiveEditKind::Field,
             };
             world
-                .resource_mut::<crate::live_edits::LiveEditLog>()
+                .resource_mut::<jackdaw_editor_core::live_edits::LiveEditLog>()
                 .entries
                 .push((key, entry));
         }
@@ -2672,14 +2667,14 @@ mod tests {
     #[test]
     fn the_export_face_reports_idle_ready_failed_and_building() {
         let mut world = World::new();
-        world.init_resource::<crate::game_export::GameExports>();
+        world.init_resource::<jackdaw_editor_core::game_export::GameExports>();
 
         let answer = export_handler(In(None), &mut world).expect("the face answers");
         assert_eq!(answer["state"], "idle", "nothing exported yet: {answer}");
 
         // A finished export latches its report: where, how much, manifest.
         {
-            let mut exports = world.resource_mut::<crate::game_export::GameExports>();
+            let mut exports = world.resource_mut::<jackdaw_editor_core::game_export::GameExports>();
             exports.last_report = Some(jackdaw_project_build::export::ExportReport {
                 dist_dir: std::path::PathBuf::from("my-game/.jackdaw/dist/release"),
                 executable: std::path::PathBuf::from("my-game/.jackdaw/dist/release/my-game.exe"),
@@ -2713,7 +2708,7 @@ mod tests {
 
         // A failed export latches its reason instead.
         {
-            let mut exports = world.resource_mut::<crate::game_export::GameExports>();
+            let mut exports = world.resource_mut::<jackdaw_editor_core::game_export::GameExports>();
             exports.last_report = None;
             exports.last_error = Some("no assets directory".to_string());
         }
@@ -2752,16 +2747,24 @@ mod tests {
             "the answer names what it selected"
         );
         assert_eq!(
-            world.resource::<crate::selection::Selection>().entities,
+            world
+                .resource::<jackdaw_editor_core::selection::Selection>()
+                .entities,
             vec![entity]
         );
-        assert!(world.get::<crate::selection::Selected>(entity).is_some());
+        assert!(
+            world
+                .get::<jackdaw_editor_core::selection::Selected>(entity)
+                .is_some()
+        );
 
         // By name.
         selection_set_handler(In(Some(json!({ "names": ["Authored"] }))), &mut world)
             .expect("set by name");
         assert_eq!(
-            world.resource::<crate::selection::Selection>().entities,
+            world
+                .resource::<jackdaw_editor_core::selection::Selection>()
+                .entities,
             vec![entity]
         );
 
@@ -2769,11 +2772,15 @@ mod tests {
         selection_set_handler(In(Some(json!({ "clear": true }))), &mut world).expect("cleared");
         assert!(
             world
-                .resource::<crate::selection::Selection>()
+                .resource::<jackdaw_editor_core::selection::Selection>()
                 .entities
                 .is_empty()
         );
-        assert!(world.get::<crate::selection::Selected>(entity).is_none());
+        assert!(
+            world
+                .get::<jackdaw_editor_core::selection::Selected>(entity)
+                .is_none()
+        );
 
         // A dead id is refused, not silently dropped: an index nothing holds
         // (legal bits, no entity behind them).
@@ -2803,7 +2810,7 @@ mod tests {
         // The session launches and ends entirely between two polls: the count
         // moved past the wait's baseline.
         world
-            .non_send_mut::<crate::pie::PieSession>()
+            .non_send_mut::<jackdaw_editor_core::pie::PieSession>()
             .note_launch_for_test();
 
         let answer = pie_wait(

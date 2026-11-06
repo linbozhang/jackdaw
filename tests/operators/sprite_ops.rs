@@ -304,7 +304,6 @@ fn the_add_menu_shows_the_2d_group_with_2d_world_entries_unavailable_without_a_2
             .any(|(action, _)| action.contains("pixel_camera")),
         "no Pixel Camera entry: {rows:?}"
     );
->>>>>>> github/main
 }
 
 #[test]

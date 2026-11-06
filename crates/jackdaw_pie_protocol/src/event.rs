@@ -1,3 +1,12 @@
+/// Which mode the editor launched the game in.
+#[derive(serde::Serialize, serde::Deserialize, Clone, Copy, PartialEq, Eq, Debug, Default)]
+#[serde(rename_all = "kebab-case")]
+pub enum PieMode {
+    #[default]
+    Play,
+    EditorPreview,
+}
+
 use serde::{Deserialize, Serialize};
 
 use crate::snapshot::RemoteEntity;
@@ -23,6 +32,12 @@ pub enum StateEvent {
     },
     EntityDespawned {
         entity: u64,
+    },
+    /// The game's log said something (the pie game-log channel): one line
+    /// and its notice tier, forwarded into the editor's game-log strip.
+    Log {
+        level: String,
+        message: String,
     },
     /// The game's cursor options changed (mouse-look grabs); the editor
     /// mirrors this onto its own cursor while input capture is engaged.

@@ -1,0 +1,51 @@
+    Updating git repository `https://github.com/bevyengine/bevy`
+   Compiling jackdaw_env v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_env)
+    Checking jackdaw_data_path v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_data_path)
+   Compiling jackdaw_api_macros v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_api_macros)
+    Checking jackdaw_geometry v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_geometry)
+    Checking jackdaw_input v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_input)
+    Checking jackdaw_commands v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_commands)
+    Checking jackdaw_bsn v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_bsn)
+    Checking jackdaw_localization v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_localization)
+   Compiling jackdaw_package v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_package)
+   Compiling jackdaw_project_build v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_project_build)
+    Checking jackdaw_pie_protocol v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_pie_protocol)
+    Checking jackdaw_bind v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_bind)
+error: this file contains an unclosed delimiter
+   --> crates/jackdaw_commands/src/lib.rs:606:3
+    |
+ 36 | pub trait EditorCommand: Send + Sync + 'static {
+    |                                                - unclosed delimiter
+...
+142 | impl CommandHistory {
+    |                     - unclosed delimiter
+...
+342 | impl EditorCommand for CommandGroup {
+    |                                     - unclosed delimiter
+...
+366 |     fn touches_scene_document(&self) -> bool {
+    |                                              - this delimiter might not be properly closed...
+...
+377 | }
+    | - ...as it matches this but it has different indentation
+...
+606 | }
+    |  ^
+
+error: this file contains an unclosed delimiter
+   --> crates/jackdaw_pie_protocol/src/transport_ipc.rs:493:3
+    |
+290 | mod tests {
+    |           - unclosed delimiter
+...
+300 |     fn one_drain_is_bounded_under_backlog_and_nothing_is_lost() {
+    |                                                                 - this delimiter might not be properly closed...
+...
+493 | }
+    | -^
+    | |
+    | ...as it matches this but it has different indentation
+
+error: could not compile `jackdaw_commands` (lib) due to 1 previous error
+warning: build failed, waiting for other jobs to finish...
+error: could not compile `jackdaw_pie_protocol` (lib) due to 1 previous error

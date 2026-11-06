@@ -1,0 +1,104 @@
+   Compiling jackdaw_project_build v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_project_build)
+    Checking jackdaw_runtime v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_runtime)
+    Checking jackdaw_dylib v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_dylib)
+    Checking jackdaw_loader v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_loader)
+error[E0425]: cannot find value `pace_frame_capture` in module `crate::pie_frames`
+   --> crates/jackdaw_runtime/src/pie.rs:110:43
+    |
+110 |         (stream_state, crate::pie_frames::pace_frame_capture),
+    |                                           ^^^^^^^^^^^^^^^^^^ not found in `crate::pie_frames`
+
+    Checking jackdaw_api v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_api)
+error[E0425]: cannot find function `rust_env_command` in this scope
+   --> crates/jackdaw_project_build/src/bevy_source.rs:122:18
+    |
+122 |     let output = rust_env_command("cargo")
+    |                  ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0308]: mismatched types
+  --> crates/jackdaw_runtime/src/pie.rs:96:41
+   |
+96 |     app.insert_non_send(PieTransportRes(transport));
+   |                         --------------- ^^^^^^^^^ expected `Box<dyn PieTransport>`, found `IpcChannelTransport`
+   |                         |
+   |                         arguments to this struct are incorrect
+   |
+   = note: expected struct `std::boxed::Box<(dyn PieTransport + 'static)>`
+              found struct `IpcChannelTransport`
+   = note: for more on the distinction between the stack and the heap, read https://doc.rust-lang.org/book/ch15-01-box.html, https://doc.rust-lang.org/rust-by-example/std/box.html, and https://doc.rust-lang.org/std/boxed/index.html
+note: tuple struct defined here
+  --> crates/jackdaw_runtime/src/pie.rs:54:19
+   |
+54 | pub(crate) struct PieTransportRes(pub(crate) Box<dyn PieTransport>);
+   |                   ^^^^^^^^^^^^^^^
+help: store this in the heap by calling `Box::new`
+   |
+96 |     app.insert_non_send(PieTransportRes(Box::new(transport)));
+   |                                         +++++++++         +
+
+error[E0425]: cannot find function `rust_env_command` in this scope
+   --> crates/jackdaw_project_build/src/binary.rs:284:23
+    |
+284 |     let mut command = rust_env_command("cargo");
+    |                       ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `rust_env_command` in this scope
+   --> crates/jackdaw_project_build/src/binary.rs:382:23
+    |
+382 |     let mut command = rust_env_command("cargo");
+    |                       ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0277]: the size for values of type `str` cannot be known at compilation time
+   --> crates/jackdaw_project_build/src/binary.rs:401:9
+    |
+401 |     for line in BufReader::new(stdout).lines().map_while(Result::ok) {
+    |         ^^^^ doesn't have a size known at compile-time
+    |
+    = help: the trait `Sized` is not implemented for `str`
+    = note: all local variables must have a statically known size
+
+error[E0277]: the size for values of type `str` cannot be known at compilation time
+   --> crates/jackdaw_project_build/src/binary.rs:401:5
+    |
+401 | /     for line in BufReader::new(stdout).lines().map_while(Result::ok) {
+402 | |         if let Some(path) = executable_for_package(&line, package, wanted) {
+403 | |             executables.push(path);
+...   |
+408 | |         parse_build_line(&line, &mut done, &mut log, report);
+409 | |     }
+    | |_____^ doesn't have a size known at compile-time
+    |
+    = help: the trait `Sized` is not implemented for `str`
+note: required by an implicit `Sized` bound in `std::option::Option`
+   --> /rustc/b940084d7eb6a299eb4bfeb8e34901bc051e7ac4/library/core/src/option.rs:598:0
+
+error[E0599]: no variant named `Log` found for enum `StateEvent`
+   --> crates/jackdaw_runtime/src/pie_log.rs:230:47
+    |
+230 |         let Ok(bytes) = to_bytes(&StateEvent::Log {
+    |                                               ^^^ variant not found in `StateEvent`
+
+Some errors have detailed explanations: E0277, E0425.
+For more information about an error, try `rustc --explain E0277`.
+error: could not compile `jackdaw_project_build` (lib) due to 5 previous errors
+warning: build failed, waiting for other jobs to finish...
+warning: unused import: `jackdaw_pie_protocol::transport::PieTransport`
+  --> crates/jackdaw_runtime/src/pie_log.rs:24:5
+   |
+24 | use jackdaw_pie_protocol::transport::PieTransport;
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+   = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused variable: `expanded`
+    --> crates/jackdaw_runtime/src/lib.rs:1038:15
+     |
+1038 |     let (ast, expanded) = resolve_prefab_references(world, ast, &scene_name, parent_path);
+     |               ^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_expanded`
+     |
+     = note: `#[warn(unused_variables)]` (part of `#[warn(unused)]`) on by default
+
+Some errors have detailed explanations: E0308, E0425, E0599.
+For more information about an error, try `rustc --explain E0308`.
+warning: `jackdaw_runtime` (lib) generated 2 warnings
+error: could not compile `jackdaw_runtime` (lib) due to 3 previous errors; 2 warnings emitted

@@ -331,7 +331,6 @@ impl Plugin for SceneIoPlugin {
     fn build(&self, app: &mut App) {
         app.init_resource::<SceneFilePath>()
             .init_resource::<hooks::DocumentIoHooks>()
-            .init_resource::<SceneDirtyState>()
             .add_systems(
                 Update,
                 (poll_scene_dialog, session_journal::session_journal_system)

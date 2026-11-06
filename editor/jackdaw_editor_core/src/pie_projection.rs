@@ -612,7 +612,9 @@ pub fn project_event(world: &mut World, event: StateEvent) {
         StateEvent::CursorState { .. }
         | StateEvent::RequestScene { .. }
         | StateEvent::SceneRequestAbandoned { .. }
-        | StateEvent::OwnWindow => {}
+        | StateEvent::OwnWindow
+        // Log lines feed the Game panel strip, not the preview world.
+        | StateEvent::Log { .. } => {}
     }
 }
 

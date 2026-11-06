@@ -1,0 +1,24 @@
+error: no test target named `guards` in `jackdaw` package
+help: available test targets:
+    asset_formats
+    asset_watch_reload
+    audio_gate
+    bsn_game_run
+    component_shape_refresh
+    dylib_linkage_identity
+    editor
+    editor_journey
+    export
+    extern_redirect_ecosystem
+    keymap
+    mcp_smoke
+    panels
+    reflect_auto_register
+    resource_panel
+    scaffold_e2e
+    sdk_feature_superset
+    sdk_installed_layout
+    sdk_layout
+    sdk_recipe
+    stress_reload
+GUARDS_EXIT=101

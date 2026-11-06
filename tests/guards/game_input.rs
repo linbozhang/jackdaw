@@ -286,7 +286,8 @@ fn the_runtime_config_assets_reach_the_new_asset_list() {
     let mut registry = bevy::reflect::TypeRegistry::new();
     registry.register::<GameInputConfig>();
     registry.register_type_data::<GameInputConfig, bevy::asset::ReflectAsset>();
-    let assets = jackdaw_schema::extract_asset_types(&registry);
+    let assets =
+        jackdaw_schema::extract_asset_types(&registry, &jackdaw_schema::ProjectCrates::default());
     let paths: Vec<&str> = assets.iter().map(|s| s.type_path.as_str()).collect();
     assert!(
         paths.iter().any(|p| p.ends_with("GameInputConfig")),

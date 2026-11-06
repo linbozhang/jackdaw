@@ -44,13 +44,13 @@ pub struct GameExports {
     /// The project the export builds, for the staging step's plan.
     pub(crate) root: PathBuf,
     /// When the current (or latest) export started, Unix seconds.
-    pub(crate) started_unix: Option<u64>,
+    pub started_unix: Option<u64>,
     /// The report of the export that finished last, kept until the next
     /// one starts.
-    pub(crate) last_report: Option<ExportReport>,
+    pub last_report: Option<ExportReport>,
     /// The error of the export that failed last, kept until the next
     /// one starts.
-    pub(crate) last_error: Option<String>,
+    pub last_error: Option<String>,
     /// What the project's `game.flow.json` had wrong when this export
     /// set out (empty when nothing did): the export stages it whole and
     /// the game falls back at startup, so the export still proceeds —
@@ -144,6 +144,8 @@ fn game_export_is_available(
     label = "Build Game Executable",
     description = "Build the game with the release profile and stage it with its assets into .jackdaw/dist/.",
     is_available = game_export_is_available,
+    // Stages the executable and assets under .jackdaw/dist/.
+    writes_disk = true,
     allows_undo = false
 )]
 pub(crate) fn game_export(_: In<OperatorParameters>, mut commands: Commands) -> OperatorResult {

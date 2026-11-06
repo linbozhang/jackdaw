@@ -1,0 +1,74 @@
+   Compiling jackdaw_env v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_env)
+    Checking jackdaw_commands v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_commands)
+    Checking jackdaw_scene_types v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_scene_types)
+    Checking jackdaw_pie_protocol v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_pie_protocol)
+    Checking jackdaw_animation_runtime v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_animation_runtime)
+   Compiling jackdaw_project_build v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_project_build)
+    Checking jackdaw_tilemap v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_tilemap)
+    Checking jackdaw_prefab v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_prefab)
+    Checking jackdaw_widgets_runtime v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_widgets_runtime)
+    Checking jackdaw_rustc_wrapper v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_rustc_wrapper)
+    Checking jackdaw_csg v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_csg)
+    Checking jackdaw_hull v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_hull)
+error: this file contains an unclosed delimiter
+   --> crates/jackdaw_commands/src/lib.rs:607:3
+    |
+ 36 | pub trait EditorCommand: Send + Sync + 'static {
+    |                                                - unclosed delimiter
+...
+142 | impl CommandHistory {
+    |                     - unclosed delimiter
+...
+267 |     pub fn redo(&mut self, world: &mut World) {
+    |                                               - this delimiter might not be properly closed...
+...
+297 | }
+    | - ...as it matches this but it has different indentation
+...
+607 | }
+    |  ^
+
+error: could not compile `jackdaw_commands` (lib) due to 1 previous error
+warning: build failed, waiting for other jobs to finish...
+error: expected expression, found `.`
+   --> crates/jackdaw_scene_types/src/lib.rs:157:13
+    |
+157 |             .register_type::<Locked>()
+    |             ^ expected expression
+
+error[E0432]: unresolved import `crate::event::PieMode`
+  --> crates/jackdaw_pie_protocol/src/manifest.rs:11:5
+   |
+11 | use crate::event::PieMode;
+   |     ^^^^^^^^^^^^^^-------
+   |                   |
+   |                   no `PieMode` in `event`
+
+error[E0255]: the name `TilemapLayer` is defined multiple times
+   --> crates/jackdaw_scene_types/src/lib.rs:288:1
+    |
+ 53 | pub use tilemap::{LayerTerrainMatch, Tilemap, TilemapLayer, TilemapLayerKind};
+    |                                               ------------ previous import of the type `TilemapLayer` here
+...
+288 | pub struct TilemapLayer {
+    | ^^^^^^^^^^^^^^^^^^^^^^^ `TilemapLayer` redefined here
+    |
+    = note: `TilemapLayer` must be defined only once in the type namespace of this module
+help: you can use `as` to change the binding name of the import
+    |
+ 53 | pub use tilemap::{LayerTerrainMatch, Tilemap, TilemapLayer as OtherTilemapLayer, TilemapLayerKind};
+    |                                                            ++++++++++++++++++++
+
+warning: unused import: `TilemapLayer`
+  --> crates/jackdaw_scene_types/src/lib.rs:53:47
+   |
+53 | pub use tilemap::{LayerTerrainMatch, Tilemap, TilemapLayer, TilemapLayerKind};
+   |                                               ^^^^^^^^^^^^
+   |
+   = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+For more information about this error, try `rustc --explain E0432`.
+error: could not compile `jackdaw_pie_protocol` (lib) due to 1 previous error
+For more information about this error, try `rustc --explain E0255`.
+warning: `jackdaw_scene_types` (lib) generated 1 warning
+error: could not compile `jackdaw_scene_types` (lib) due to 2 previous errors; 1 warning emitted

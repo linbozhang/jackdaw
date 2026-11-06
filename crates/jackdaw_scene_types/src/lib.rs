@@ -50,7 +50,12 @@ pub use mesh_rebuild::evaluate_brush_geometry;
 pub use node_id::{SCENE_NODE_ID_TYPE_PATH, SPARSE_MIN, SceneNodeId};
 pub use pixel_canvas::{CanvasScale, PIXEL_CANVAS_TYPE_PATH, PixelCanvas};
 pub use recipe_instance::{RECIPE_INSTANCE_TYPE_PATH, RecipeInstance};
-pub use tilemap::{LayerTerrainMatch, Tilemap, TilemapLayer, TilemapLayerKind};
+// The tile module's `TilemapLayer` deliberately stays off the crate root:
+// the root-level `TilemapLayer` below is the Loop's per-layer component,
+// and the tile module's consolidated layer keeps its saved type path
+// `jackdaw_scene_types::tilemap::TilemapLayer` (upstream documents spell
+// it that way). Reference the tile one by its module path.
+pub use tilemap::{LayerTerrainMatch, Tilemap, TilemapLayerKind};
 pub use types::{
     Brush, BrushFaceData, BrushPlane, BrushTopology, CustomProperties, DerivedFaceMesh,
     DetailLayer, DetailMesh, DetailPresser, DetailVariety, GltfSource, HIDDEN_IN_GAME_TYPE_PATH,
@@ -152,8 +157,6 @@ impl Plugin for SceneTypesPlugin {
             .register_type::<TilemapLayer>()
             .register_type::<TileGridCell>()
             .register_type::<TileCollisionMode>()
-            .register_type::<Locked>();
-
             .register_type::<Locked>()
             .register_type::<Tags>()
             .register_type::<PixelCanvas>()

@@ -4399,8 +4399,6 @@ checksum = "8f42a60cbdf9a97f5d2305f08a87dc4e09308d1276d28c869c684d7777685682"
 name = "jackdaw"
 version = "0.21.0-dev"
 dependencies = [
- "anyhow",
- "async-channel",
  "avian3d",
  "base64 0.22.1",
  "bevy",
@@ -4431,8 +4429,6 @@ dependencies = [
  "jackdaw_node_graph",
  "jackdaw_package",
  "jackdaw_panels",
- "jackdaw_physics",
- "jackdaw_pick",
  "jackdaw_pie_protocol",
  "jackdaw_prefab",
  "jackdaw_project_build",
@@ -4458,10 +4454,8 @@ dependencies = [
  "tempfile",
  "test_fixture_extension",
  "toml",
- "toml_edit",
  "tracing",
  "tracing-subscriber",
- "windows-sys 0.61.2",
  "winit",
 ]
 
@@ -4662,6 +4656,7 @@ version = "0.21.0-dev"
 dependencies = [
  "anyhow",
  "async-channel",
+ "avian3d",
  "base64 0.22.1",
  "bevy",
  "bevy_window_chrome",
@@ -4675,6 +4670,7 @@ dependencies = [
  "jackdaw_animation_runtime",
  "jackdaw_api",
  "jackdaw_api_internal",
+ "jackdaw_avian_integration",
  "jackdaw_bind",
  "jackdaw_bsn",
  "jackdaw_camera",
@@ -4694,6 +4690,7 @@ dependencies = [
  "jackdaw_multiplayer_editor",
  "jackdaw_node_graph",
  "jackdaw_panels",
+ "jackdaw_physics",
  "jackdaw_pick",
  "jackdaw_pie_protocol",
  "jackdaw_prefab",
@@ -4763,6 +4760,7 @@ dependencies = [
  "jackdaw_api_internal",
  "jackdaw_bsn",
  "jackdaw_commands",
+ "jackdaw_csg",
  "jackdaw_editor_core",
  "jackdaw_feathers",
  "jackdaw_geometry",
@@ -4797,6 +4795,7 @@ dependencies = [
  "jackdaw_panels",
  "jackdaw_pie_protocol",
  "jackdaw_prefab",
+ "jackdaw_project_build",
  "jackdaw_remote",
  "jackdaw_runtime",
  "jackdaw_scene_types",
@@ -5290,11 +5289,29 @@ dependencies = [
 ]
 
 [[package]]
+name = "jackdaw_tilemap"
+version = "0.21.0-dev"
+dependencies = [
+ "glam 0.33.12",
+ "image",
+ "jackdaw_data_path",
+]
+
+[[package]]
 name = "jackdaw_tilemap_collision"
 version = "0.21.0-dev"
 dependencies = [
  "bevy",
  "glam 0.33.12",
+]
+
+[[package]]
+name = "jackdaw_tileset"
+version = "0.21.0-dev"
+dependencies = [
+ "bevy",
+ "image",
+ "jackdaw_tilemap",
 ]
 
 [[package]]

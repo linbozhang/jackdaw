@@ -1498,6 +1498,7 @@ fn spawn_fragment_group(
                    is false otherwise. The first selected brush keeps its entity \
                    id and transform; others are despawned.",
     is_available = can_run_binary_brush_op,
+    allows_undo = false,
 )]
 pub(crate) fn brush_join(_: In<OperatorParameters>, mut commands: Commands) -> OperatorResult {
     commands.queue(join_selected_brushes_impl);

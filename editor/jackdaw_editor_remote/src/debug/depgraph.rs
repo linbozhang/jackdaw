@@ -31,7 +31,7 @@ use super::super::entity_browser::{RemoteSceneCache, RemoteSelection};
 use super::graph::{self, GraphEdgeMaterial, GraphNodeSpec};
 use super::schedules::{ACCESS_READ, ACCESS_UNBOUNDED, ACCESS_WRITE, SchedulesReply, SystemInfo};
 use super::style;
-use crate::selection::Selection;
+use jackdaw_editor_core::selection::Selection;
 
 /// Which schedule's graph is shown. Defaults to `"Update"`; the rebuild
 /// system falls back to the reply's first schedule if `"Update"` is absent.
@@ -626,7 +626,7 @@ pub(crate) fn on_add_access_filter_clicked(
         props,
         AccessFilterPicker,
         crate::EditorEntity,
-        crate::BlocksCameraInput,
+        jackdaw_editor_core::BlocksCameraInput,
     ));
 }
 

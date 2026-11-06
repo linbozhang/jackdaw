@@ -21,7 +21,6 @@ use bevy::log::tracing_subscriber::{Layer, layer::Context, registry::LookupSpan}
 use bevy::prelude::*;
 
 use jackdaw_pie_protocol::event::{StateEvent, to_bytes};
-use jackdaw_pie_protocol::transport::PieTransport;
 
 use crate::pie::PieTransportRes;
 

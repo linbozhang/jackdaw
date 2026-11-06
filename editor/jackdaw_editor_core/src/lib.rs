@@ -13,6 +13,7 @@ pub mod animation_mode;
 pub mod app_ops;
 pub mod asset_catalog;
 pub mod asset_drag;
+pub mod asset_failures;
 pub mod asset_files;
 pub mod asset_index;
 pub mod asset_ingest;
@@ -21,6 +22,7 @@ pub mod authored_widgets;
 pub mod boot_ops;
 pub mod brush;
 pub mod brush_drag_ops;
+pub mod build_diagnostics;
 pub mod build_panel;
 pub mod build_status;
 pub mod builtin_extensions;
@@ -40,9 +42,12 @@ pub mod entity_refs;
 pub mod environment_ops;
 pub mod face_grid;
 pub use jackdaw_runtime::frame_work;
+pub mod game_export;
+pub mod game_flow;
 pub mod game_panel;
 pub mod gizmo_ops;
 pub mod gizmos;
+pub mod graphics_panel;
 pub mod grid_ops;
 pub mod hierarchy;
 pub mod history_ops;
@@ -117,6 +122,8 @@ pub mod operator_calls;
 pub mod operator_tooltip;
 pub mod perf_probe;
 pub mod pie;
+pub mod pie_current;
+pub mod pie_game_log;
 pub mod pie_menu;
 pub mod pie_mirror;
 mod pie_outbox;
@@ -141,10 +148,13 @@ pub mod project_settings;
 pub mod project_types;
 pub mod project_window;
 pub mod recipes;
+pub mod reference_audit;
 pub mod reference_image;
+pub mod reference_rewrite;
 pub mod reflect_default;
 pub mod remote_mode;
 pub mod remote_ops;
+pub mod render_backend;
 pub mod render_diagnostics;
 pub mod restart;
 pub mod run_config;
@@ -162,6 +172,7 @@ pub mod sdk_paths;
 pub mod sdk_setup;
 pub mod selection;
 pub mod snapping;
+pub mod sprite_atlas;
 pub mod sprite_gizmo;
 pub mod sprite_ops;
 pub mod sprite_props;
@@ -177,6 +188,8 @@ pub mod texture_files;
 pub mod texture_import;
 pub mod thumbnail;
 pub mod tile_mode;
+pub mod tilemap;
+pub mod tilemap_palette;
 pub mod timestamps;
 pub mod tool_ops;
 pub mod toolbar_2d;
@@ -466,12 +479,21 @@ impl Plugin for EditorCorePlugin {
         .add_plugins(jackdaw_surface::ReflectionProbePlugin)
         .add_plugins(jackdaw_surface::ShadowViewCleanupPlugin)
         .add_plugins(probe_bake::plugin)
+        .add_plugins(asset_failures::plugin)
+        .add_plugins(build_diagnostics::plugin)
+        .add_plugins(material_overrides::plugin)
         .add_plugins(tags::plugin)
         .add_plugins(recipes::plugin)
         .add_plugins(tile_mode::plugin)
         .add_plugins(terrain_mode::plugin)
         .add_plugins(jackdaw_runtime::MaterialOverridesPlugin)
         .add_plugins(jackdaw_runtime::LodPlugin)
+        // Loop 功能面：tilemap 调色板与 graphics 面板的挂接（本地 T22/T16 系）。
+        .add_plugins((
+            tilemap::plugin,
+            tilemap_palette::plugin,
+            graphics_panel::plugin,
+        ))
         .add_plugins((
             lod_group::plugin,
             model_lod::plugin,
@@ -557,6 +579,8 @@ impl Plugin for EditorCorePlugin {
         .add_plugins(hot_reload::HotReloadPlugin)
         .add_plugins(extension_build::ExtensionBuildPlugin)
         .add_plugins(pie::PiePlugin)
+        .add_plugins(game_export::GameExportPlugin)
+        .add_plugins(game_flow::GameFlowPlugin)
         .add_plugins(project_build::ProjectBuildPlugin)
         .add_plugins(play_sync::plugin)
         .add_plugins(live_frame_view::LiveFrameViewPlugin)
@@ -716,6 +740,14 @@ impl Plugin for ExtensionPlugin {
         if self.enable_builtin_extensiosn {
             app.add_plugins(jackdaw_multiplayer::JackdawMultiplayerTypesPlugin)
                 .register_extension::<jackdaw_multiplayer_editor::MultiplayerExtension>();
+        }
+
+        // The Physics module's editor tooling, always present: the physics
+        // tool, collider overlays and the physics toggles in the inspector.
+        // avian runs in the editor's world through the extension, and games
+        // get their own copy through the module's crates.
+        if self.enable_builtin_extensiosn {
+            app.register_extension::<jackdaw_physics::PhysicsExtension>();
         }
 
         // Bundled behind the default-on `camera_rig` feature: registers the
@@ -1439,6 +1471,8 @@ fn file_menu_rows(hot_reload_label: &str, recent: Vec<(String, String)>) -> Vec<
             op_entry::<crate::scenes::operators::SceneSaveAllOp>("Save All"),
             op_entry::<scene_ops::SceneSaveSelectionAsPrefabOp>("Save Selection as Prefab"),
             separator(),
+            op_entry::<crate::game_export::GameExportOp>("Build Game..."),
+            separator(),
             op_entry::<app_ops::AppOpenKeybindsOp>("Keybinds..."),
             op_entry::<app_ops::AppOpenExtensionsOp>("Extensions..."),
             op_entry::<project_modules::ProjectModulesOp>("Modules..."),
@@ -1641,7 +1675,6 @@ fn cleanup_editor(world: &mut World) {
     // 5. Reset resources. The catalog, the asset index and the material
     // registry all describe the project being closed.
     world.insert_resource(scene_io::SceneFilePath::default());
-    world.insert_resource(scene_io::SceneDirtyState::default());
     world.insert_resource(Selection::default());
     world.insert_resource(commands::CommandHistory::default());
     world.insert_resource(asset_catalog::AssetCatalog::default());

@@ -297,6 +297,7 @@ pub(crate) fn save_scene_inner(world: &mut World) -> Result<(), BevyError> {
             .map(Path::to_path_buf)
             .unwrap_or_else(|| PathBuf::from("."));
         let pending = super::hooks::begin_save(world, &path.to_string_lossy());
+        let text = emit_bsn_scene_with_inline_assets(world, &parent);
         let written = write_prefab_files(world, &path, &parent, &pending);
         super::hooks::finish_save(world, pending, written.is_ok());
         written?;
@@ -362,7 +363,7 @@ pub(crate) fn save_scene_inner(world: &mut World) -> Result<(), BevyError> {
     let pending = super::hooks::begin_save(world, &path);
     let written = write_scene_files(world, &path, legacy_backup.as_deref(), &pending);
     super::hooks::finish_save(world, pending, written.is_ok());
-    written?;
+    let fingerprint = written?;
 
     world.trigger(jackdaw_api_internal::document::SceneSaved {
         path: PathBuf::from(&path),
@@ -379,7 +380,7 @@ pub(crate) fn save_scene_inner(world: &mut World) -> Result<(), BevyError> {
         let history = world.resource::<jackdaw_commands::CommandHistory>();
         (history.undo_stack.len(), history.scene_pushes())
     };
-    let fingerprint = document_hash(&saved_body);
+    // The fingerprint rides out of `write_scene_files`, hashed from the emitted body.
     if legacy_backup.is_some() {
         world.resource_mut::<SceneFilePath>().path = Some(path.clone());
     }
@@ -480,14 +481,15 @@ fn write_scene_files(
     path: &str,
     legacy_backup: Option<&str>,
     pending: &super::hooks::PendingSave,
-) -> Result<(), BevyError> {
-    let contents = {
+) -> Result<u64, BevyError> {
+    let (contents, fingerprint) = {
         let parent_path = Path::new(&path)
             .parent()
             .map(Path::to_path_buf)
             .unwrap_or_default();
         let body = emit_bsn_scene_for_file(world, &parent_path)
             .map_err(|refusal| BevyError::from(format!("cannot save {path}: {refusal}")))?;
+        let fingerprint = document_hash(&body);
         let parsed = jackdaw_bsn::parse_emitted(&body)
             .map_err(|err| BevyError::from(format!("cannot save {path}: {err}")))?;
         if brush_notice_possible(world, path, body.len())
@@ -498,7 +500,7 @@ fn write_scene_files(
         // Record the jackdaw + Bevy version at the disk boundary only, so
         // the in-memory undo / tab-swap snapshots from the same emitter stay
         // stamp-free.
-        crate::scene_io::stamp::with_stamp(&body)
+        (crate::scene_io::stamp::with_stamp(&body), fingerprint)
     };
 
     // Sidecars (terrain heights and paint channels, tilemap data) are
@@ -540,7 +542,7 @@ fn write_scene_files(
     // Record the written bytes so the open-tab watcher does not read this
     // write back as an outside edit.
     crate::scenes::external_watch::note_known_content(world, Path::new(&path), &contents);
-    Ok(())
+    Ok(fingerprint)
 }
 
 pub fn save_layout_to_project(world: &mut World) {

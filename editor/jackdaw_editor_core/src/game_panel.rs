@@ -14,13 +14,32 @@ use jackdaw_panels::tree::{DockTree, NodeId, TabId};
 
 use crate::live_frame::LiveFrameStream;
 use crate::pie::PieWindowMode;
+use bevy::ui_widgets::ValueChange;
+use jackdaw_feathers::segmented;
 
 /// Dock window id, used for registration and presence checks.
 pub const GAME_WINDOW_ID: &str = "jackdaw.game";
 
+/// What a click in the Game panel does.
+#[derive(Resource, Default, Debug, Clone, Copy, PartialEq, Eq)]
+pub enum GamePanelMode {
+    /// Clicks engage input capture; the game is playable.
+    #[default]
+    Play,
+    /// Game input is off; clicks pick the entity under the cursor.
+    Select,
+}
+
 /// Marker on the panel content root.
 #[derive(Component)]
 pub struct GamePanel;
+
+/// Marker on one Play/Select segment.
+#[derive(Component, Clone, Copy, Debug, PartialEq, Eq)]
+pub enum GameModeSegment {
+    Play,
+    Select,
+}
 
 /// Marker on the letterbox container the frame image centers inside. Its
 /// computed size is the stream request size and the cursor remap space.
@@ -156,6 +175,7 @@ pub fn game_panel_content() -> impl Bundle {
                     ..Default::default()
                 },
                 children![
+                    game_mode_bar(),
                     game_no_signal_chip(),
                     game_playing_chip(),
                     game_play_input_button(),

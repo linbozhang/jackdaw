@@ -297,6 +297,7 @@ pub(super) fn resolve_active_on_rebuild(
     added: Query<(), Added<super::ComponentDisplay>>,
     mut removed: RemovedComponents<super::ComponentDisplay>,
     mut active: ResMut<ActiveInspectorCategory>,
+    chips: Query<&jackdaw_api_internal::inspector::InspectorChip>,
 ) {
     let changed = !added.is_empty() || removed.read().next().is_some();
     if !changed {

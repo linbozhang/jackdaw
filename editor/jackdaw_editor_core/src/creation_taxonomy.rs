@@ -10,9 +10,9 @@ use crate::entity_ops::EntityAddCameraRigOp;
 use crate::entity_ops::{
     EntityAddAnimationPlayerOp, EntityAddAudioSourceOp, EntityAddCameraOp, EntityAddConeOp,
     EntityAddCubeOp, EntityAddCylinderOp, EntityAddDirectionalLightOp, EntityAddEmptyOp,
-    EntityAddFogVolumeOp, EntityAddImageOp, EntityAddPlaneOp, EntityAddPointLightOp,
-    EntityAddPrefabOp, EntityAddPyramidOp, EntityAddReflectionProbeOp, EntityAddSphereHighPolyOp,
-    EntityAddSphereOp, EntityAddSpotLightOp, EntityAddTerrainOp, EntityAddWedgeOp,
+    EntityAddFogVolumeOp, EntityAddPlaneOp, EntityAddPointLightOp, EntityAddPrefabOp,
+    EntityAddPyramidOp, EntityAddReflectionProbeOp, EntityAddSphereHighPolyOp, EntityAddSphereOp,
+    EntityAddSpotLightOp, EntityAddTerrainOp, EntityAddWedgeOp,
 };
 #[cfg(feature = "multiplayer")]
 use crate::entity_ops::{EntityAddNetworkRoomOp, EntityAddSpawnPointOp, EntityAddZoneTransitionOp};

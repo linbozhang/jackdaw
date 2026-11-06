@@ -138,8 +138,10 @@ impl ResourcePanelVisibility {
     /// allows and the engine allowlist.
     pub fn visible(&self, type_path: &str) -> bool {
         !self.denied(type_path)
-            && (crate::type_metadata::is_game_type(type_path)
-                || self.allowed(type_path)
+            && (crate::type_metadata::is_game_type(
+                type_path,
+                &crate::project_types::ProjectTypes::default(),
+            ) || self.allowed(type_path)
                 || ENGINE_RESOURCE_ALLOWLIST.contains(&type_path))
     }
 }
@@ -196,16 +198,26 @@ pub fn enumerate_visible_resources(
         if !visibility.visible(type_path) {
             continue;
         }
+        let project_types = world
+            .resource::<crate::project_types::ProjectTypes>()
+            .clone();
         rows.push(ResourceRow {
             type_path: type_path.to_string(),
             short_name: table.short_path().to_string(),
-            group: crate::type_metadata::TypeChrome::default().group(type_path),
+            group: crate::type_metadata::TypeChrome::default().group(type_path, &project_types),
             entity,
         });
     }
+    let project = world
+        .resource::<crate::project_types::ProjectTypes>()
+        .clone();
     rows.sort_by(|a, b| {
-        crate::type_metadata::group_order(&b.type_path, "")
-            .cmp(&crate::type_metadata::group_order(&a.type_path, ""))
+        crate::type_metadata::group_order(&b.type_path, "", &project)
+            .cmp(&crate::type_metadata::group_order(
+                &a.type_path,
+                "",
+                &project,
+            ))
             .then_with(|| a.group.cmp(&b.group))
             .then_with(|| {
                 a.short_name
@@ -410,7 +422,11 @@ impl Matchable for ResourcePickInfo {
         };
         Category {
             name: Some(name),
-            order: crate::type_metadata::group_order(&self.type_path, ""),
+            order: crate::type_metadata::group_order(
+                &self.type_path,
+                "",
+                &crate::project_types::ProjectTypes::default(),
+            ),
         }
     }
 }
@@ -457,9 +473,12 @@ fn enumerate_insertable_resources(
         if !visibility.visible(type_path) {
             continue;
         }
+        let project_types = world
+            .resource::<crate::project_types::ProjectTypes>()
+            .clone();
         out.push(ResourcePickInfo {
             short_name: table.short_path().to_string(),
-            group: crate::type_metadata::TypeChrome::default().group(type_path),
+            group: crate::type_metadata::TypeChrome::default().group(type_path, &project_types),
             type_path: type_path.to_string(),
         });
     }

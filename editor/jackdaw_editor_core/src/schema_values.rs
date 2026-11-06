@@ -780,13 +780,6 @@ mod tests {
         serde_json::from_value(serde_json::json!({
             "type_path": "my_game::Collider",
             "short_name": "Collider",
-
-    /// The binding enum a rebinding edits: tuple, struct and unit
-    /// variants, the shape `GameInputBinding` has.
-    fn binding_enum_schema() -> TypeSchema {
-        serde_json::from_value(serde_json::json!({
-            "type_path": "my_game::GameInputBinding",
-            "short_name": "GameInputBinding",
             "module_path": "my_game",
             "category": "",
             "description": "",
@@ -799,7 +792,21 @@ mod tests {
                 .enumerate()
                 .map(|(at, type_path)| serde_json::json!({ "name": at.to_string(), "type_path": type_path }))
                 .collect::<Vec<_>>()
+        }))
+        .expect("the schema reads")
+    }
 
+    /// The binding enum a rebinding edits: tuple, struct and unit
+    /// variants, the shape `GameInputBinding` has.
+    fn binding_enum_schema() -> TypeSchema {
+        serde_json::from_value(serde_json::json!({
+            "type_path": "my_game::GameInputBinding",
+            "short_name": "GameInputBinding",
+            "module_path": "my_game",
+            "category": "",
+            "description": "",
+            "hidden": false,
+            "default_constructible": true,
             "kind": "Enum",
             "default": null,
             "fields": [],
@@ -852,7 +859,6 @@ mod tests {
         assert!(matches!(authored(&data, "1"), Some(BsnValue::Int(3))));
     }
 
-
     fn types_with_binding() -> ProjectTypes {
         let schema = jackdaw_schema::ProjectSchema {
             components: vec![],
@@ -861,6 +867,7 @@ mod tests {
             functions: vec![],
             assets: vec![],
             field_types: vec![binding_enum_schema()],
+            project_crates: vec![],
         };
         let mut types = ProjectTypes::default();
         types.update(&schema, &std::collections::HashSet::new());

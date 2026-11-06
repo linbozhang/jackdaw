@@ -8,7 +8,8 @@ use std::collections::{HashMap, HashSet};
 use std::sync::Arc;
 
 use bevy::prelude::*;
-use jackdaw_scene_types::{LayerTerrainMatch, Tilemap, TilemapLayer};
+use jackdaw_scene_types::tilemap::TilemapLayer;
+use jackdaw_scene_types::{LayerTerrainMatch, Tilemap};
 use jackdaw_tilemap::{
     CellRect, ChunkedLayer, LayerKind, Placement, TerrainAuthoring, TerrainSet, TileRef,
     resolve_region_within,

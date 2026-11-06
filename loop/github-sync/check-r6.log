@@ -1,0 +1,18 @@
+   Compiling jackdaw_project_build v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_project_build)
+    Checking jackdaw_panels v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_panels)
+    Checking jackdaw_runtime v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_runtime)
+    Checking jackdaw_node_graph v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_node_graph)
+error: this file contains an unclosed delimiter
+    --> crates/jackdaw_runtime/src/lib.rs:2898:3
+     |
+ 919 | ) {
+     |   - unclosed delimiter
+...
+1007 |         if let Err(err) = jackdaw_bsn::reject_retired_ui_components(&ast) {
+     |                                                                           - unclosed delimiter
+...
+2898 | }
+     |  ^
+
+error: could not compile `jackdaw_runtime` (lib) due to 1 previous error
+warning: build failed, waiting for other jobs to finish...

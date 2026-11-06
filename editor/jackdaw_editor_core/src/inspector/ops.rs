@@ -429,7 +429,7 @@ pub(crate) fn field_set(
     crate::selection::select_for_edit(world, entity);
     let label = "Set field on multiple entities";
     let Err(why) =
-        crate::commands::try_field_edit_commit(world, type_path, field_path, &value, label)
+        crate::commands::try_field_edit_commit(world, None, type_path, field_path, &value, label)
     else {
         return Some(OperatorResult::Finished);
     };
@@ -464,45 +464,6 @@ pub(crate) fn component_revert_baseline(
         {
             error!("revert_component_to_baseline failed: {err}");
         }
-    });
-    Some(OperatorResult::Finished)
-}
-
-/// Spawn (or replace) a keyframe at the current timeline cursor for one
-/// of the entity's animatable properties. Creates the clip and track
-/// lazily if they don't exist yet.
-#[operator(
-    id = "animation.toggle_keyframe",
-    label = "Toggle Keyframe",
-    description = "Add or replace a keyframe for this property at the current timeline cursor.",
-    is_available = has_primary_selection,
-    params(
-        entity(Entity, doc = "Source entity whose property is being animated."),
-        component_type_path(String, doc = "Fully-qualified Bevy reflected type path of the component that owns the property."),
-        field_path(String, doc = "Dotted path to the field within the component (e.g. \"translation\")."),
-    ),
-)]
-pub(crate) fn animation_toggle_keyframe(
-    params: In<OperatorParameters>,
-    mut commands: Commands,
-) -> Option<OperatorResult> {
-    let entity = params.as_entity("entity")?;
-    let type_path = params.as_str("component_type_path").map(str::to_string)?;
-    let field_path = params.as_str("field_path").map(str::to_string)?;
-    commands.queue(move |world: &mut World| {
-        let spawned = world
-            .run_system_cached_with(
-                super::anim_diamond::toggle_keyframe,
-                (entity, type_path, field_path),
-            )
-            .ok()
-            .unwrap_or_default();
-        // Register the new clip / track / keyframe in the document now,
-        // inside the operator's span, so a history-creating dispatch's
-        // after-snapshot diff catches the keyframe and the toggle carries
-        // its own undo entry. Waiting for the update watcher would leave
-        // the change to fold silently into whatever entry runs next.
-        crate::scene_io::register_entities_in_ast(world, &spawned);
     });
     Some(OperatorResult::Finished)
 }

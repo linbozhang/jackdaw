@@ -1,0 +1,20 @@
+   Compiling jackdaw_project_build v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_project_build)
+    Checking jackdaw_api_internal v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_api_internal)
+    Checking jackdaw_runtime v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_runtime)
+    Checking jackdaw_animation v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_animation)
+error: unexpected closing delimiter: `}`
+    --> crates/jackdaw_runtime/src/lib.rs:1051:1
+     |
+ 919 | ) {
+     |   - this delimiter might not be properly closed...
+...
+ 937 |             served_scene::Gate::File => {}
+     |                                         -- block is empty, you might have not meant to close it
+...
+1050 |     }
+     |     - ...as it matches this but it has different indentation
+1051 | }
+     | ^ unexpected closing delimiter
+
+error: could not compile `jackdaw_runtime` (lib) due to 1 previous error
+warning: build failed, waiting for other jobs to finish...

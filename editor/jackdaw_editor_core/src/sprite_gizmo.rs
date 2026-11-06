@@ -257,7 +257,9 @@ fn gizmo_parts(
     }
     let mut parts = vec![Part::square(pivot, PIVOT_SIZE, tokens::TEXT_PRIMARY).round()];
     match tool {
-        ActiveTool::Select => {}
+        // Select and Tile-grid authoring stand down: neither drives sprite
+        // gizmos (Tilemap's strokes own the pointer, like Select does).
+        ActiveTool::Select | ActiveTool::Tilemap => {}
         ActiveTool::Translate => {
             for (kind, direction, color) in [
                 (SpriteHandle::AxisX, Vec2::X, tokens::AXIS_X_COLOR),

@@ -242,10 +242,7 @@ fn update_status_center(
 ) {
     let had = std::mem::replace(&mut *had_project, project.is_some());
     let project_changed = project.as_ref().is_some_and(Res::is_changed) || had != project.is_some();
-    if !scene_path.is_changed()
-        && !history.is_changed()
-        && !scenes.is_changed()
-        && !project_changed
+    if !scene_path.is_changed() && !history.is_changed() && !scenes.is_changed() && !project_changed
     {
         return;
     }

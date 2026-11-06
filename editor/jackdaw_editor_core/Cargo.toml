@@ -82,6 +82,10 @@ jackdaw_surface.workspace = true
 jackdaw_node_graph.workspace = true
 jackdaw_animation.workspace = true
 jackdaw_animation_runtime.workspace = true
+# The Physics module's editor tooling: the physics extension is always
+# registered below, so avian runs in the editor's world and games get
+# their own copy through the module's crates.
+jackdaw_physics.workspace = true
 # Optional, activated by the default-on `multiplayer` feature. Together
 # these bundle the editor-only networking authoring extension (proxy
 # reflection types + the toggleable networking extension) into the
@@ -168,6 +172,11 @@ fontique = { version = "0.11", default-features = false, features = [
 
 [dev-dependencies]
 tempfile = "3"
+# The physics tests (the promote-capture suite) drive the real engine's
+# reflected types: avian's components and the trigger bridge live in the
+# integration crates the editor already carries as dependencies.
+avian3d.workspace = true
+jackdaw_avian_integration.workspace = true
 
 [lints]
 workspace = true

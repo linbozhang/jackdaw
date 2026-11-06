@@ -7,7 +7,7 @@ use std::process::{Child, Command, Output, Stdio};
 use std::time::{Duration, Instant};
 
 use jackdaw_env::process::StderrCapture;
-use jackdaw_env::user_toolchain_command;
+use jackdaw_env::sdk_toolchain_command;
 use jackdaw_schema::{
     PROJECT_CRATES_ENV, ProjectSchema, SCHEMA_FLAG, parse_from_stdout, write_schema,
 };
@@ -281,7 +281,7 @@ fn ensure_lockfile(root: &Path, report: &mut dyn FnMut(BuildEvent)) {
     if lockfile.is_file() {
         return;
     }
-    let mut command = rust_env_command("cargo");
+    let mut command = sdk_toolchain_command("cargo");
     command
         .arg("generate-lockfile")
         .current_dir(root)
@@ -309,162 +309,6 @@ fn ensure_lockfile(root: &Path, report: &mut dyn FnMut(BuildEvent)) {
 /// build because of `--locked`: the lockfile is out of date with
 /// `Cargo.toml` (a dependency added or changed by hand), and the fix
 /// is one command, not a mystery.
-fn locked_failure_hint(stderr: &str) -> Option<&'static str> {
-    stderr.contains("--locked was passed").then_some(
-        "note: the lock file is out of date with Cargo.toml and the build locks it; run \
-             `cargo update` to refresh it (or delete Cargo.lock to regenerate), then commit the \
-             result for reproducible builds",
-    )
-}
-
-/// Build a project's game binary and extract its type schema.
-///
-/// `jackdaw_dir` is the project's `.jackdaw/`, where the schema is persisted for
-/// the editor's watcher and where the build's own artifacts land. It builds
-/// against the user's own manifest, lockfile and toolchain, but into
-/// [`game_target_dir`] rather than the project's `target/`: the editor builds
-/// the plain package with optimised dependencies
-/// while a developer's own build carries the features and profile their game
-/// needs, and the two must not overwrite each other's binary. It travels as a
-/// flag rather than as `CARGO_TARGET_DIR`, which `detach_from_host_build` strips
-/// along with the rest of the editor's own build environment.
-pub fn build_project_binary(
-    spec: &ShimSpec,
-    jackdaw_dir: &Path,
-    report: &mut dyn FnMut(BuildEvent),
-) -> Result<ProjectBinaryBuild, ProjectBuildError> {
-    build_project_binary_with_load(spec, jackdaw_dir, None, BuildLoad::Foreground, report)
-}
-
-/// [`build_project_binary`], with a say in how much of the machine the
-/// cargo run may take.
-///
-/// `target` narrows the build to one run target (`--bin`/`--example`,
-/// features, profile, and an optional `-p` package override). The
-/// executable comes from cargo's own JSON report whatever the target is,
-/// so the per-profile and `examples/` directory rules stay cargo's.
-pub fn build_project_binary_with_load(
-    spec: &ShimSpec,
-    jackdaw_dir: &Path,
-    target: Option<&CargoTarget>,
-    load: BuildLoad,
-    report: &mut dyn FnMut(BuildEvent),
-) -> Result<ProjectBinaryBuild, ProjectBuildError> {
-    let target_dir = game_target_dir(jackdaw_dir);
-    // A run target may name another workspace member than the resolved
-    // package; the rest of the spec (root, crate name) is per-project.
-    let package = target.map_or(spec.package_name.as_str(), |t| {
-        t.package_or(spec.package_name.as_str())
-    });
-    let wanted = WantedArtifact::from(target);
-    report(BuildEvent::Log(format!(
-        "building {} as a cargo binary in {}, into {}",
-        package,
-        spec.project_root.display(),
-        target_dir.display()
-    )));
-    for notice in reproducibility_notices(&spec.project_root) {
-        report(BuildEvent::Log(notice));
-    }
-
-    // A build on Bevy's main branch hands the game its own Bevy commit; a
-    // lockfile at another commit would build a game whose types are not
-    // the editor's.
-    match crate::bevy_source::pin_project(&spec.project_root) {
-        Ok(Some(pinned)) => report(BuildEvent::Log(pinned)),
-        Ok(None) => {}
-        Err(error) => report(BuildEvent::Log(format!("warning: {error}"))),
-    }
-    // With the pin settled, the lockfile the `--locked` build will use
-    // is the one that should exist: generate it here if it does not.
-    ensure_lockfile(&spec.project_root, report);
-
-    let mut command = rust_env_command("cargo");
-    command
-        .args(cargo_build_argv(package, target, &target_dir))
-        .current_dir(&spec.project_root)
-        .stdout(Stdio::piped())
-        // Captured rather than inherited: cargo's own failures, such as an
-        // unresolvable dependency, are never in the JSON stream, and inherited
-        // they reach only the terminal the editor was launched from.
-        .stderr(Stdio::piped());
-    detach_from_host_build(&mut command);
-    apply_load(&mut command, load);
-    let mut child = command.spawn()?;
-
-    let stdout = child.stdout.take().expect("piped stdout");
-    let stderr = StderrCapture::take(&mut child);
-    let mut done = 0u32;
-    let mut log = String::new();
-    let mut executables: Vec<PathBuf> = Vec::new();
-    let mut dylib_artifacts: Vec<String> = Vec::new();
-    for line in BufReader::new(stdout).lines().map_while(Result::ok) {
-        if let Some(path) = executable_for_package(&line, package, wanted) {
-            executables.push(path);
-        }
-        if let Some(crate_name) = dylib_artifact_in(&line) {
-            dylib_artifacts.push(crate_name);
-        }
-        parse_build_line(&line, &mut done, &mut log, report);
-    }
-    let status = child.wait()?;
-    if !status.success() {
-        let stderr = stderr.finish();
-        // Cargo's own account of the failure never goes through the JSON stream.
-        // `Display` for `Compile` is one line, so the detail has to reach the
-        // panel line by line the way rustc's diagnostics do.
-        for line in stderr.lines() {
-            report(BuildEvent::Log(line.to_string()));
-        }
-        if let Some(hint) = locked_failure_hint(&stderr) {
-            report(BuildEvent::Log(hint.to_string()));
-        }
-        return Err(ProjectBuildError::Compile {
-            log: with_toolchain_hint(
-                compile_failure_log(log, &stderr),
-                &stderr,
-                &spec.project_root,
-            ),
-        });
-    }
-
-    let binary = executables
-        .pop()
-        .ok_or_else(|| ProjectBuildError::Compile {
-            log: no_binary_message(package, wanted),
-        })?;
-
-    // Ask the freshly built game for its types: a throwaway run that prints and
-    // exits. A failure here is not fatal, and the editor keeps its prior schema.
-    let schema = match run_binary_extractor(&binary, spec) {
-        Ok(schema) => Some(schema),
-        Err(err) => {
-            tracing::warn!("project schema extraction skipped: {err}");
-            report(BuildEvent::Log(format!(
-                "project schema extraction skipped: {err}"
-            )));
-            None
-        }
-    };
-
-    if let Some(schema) = &schema
-        && let Err(err) = write_schema(jackdaw_dir, schema)
-    {
-        tracing::warn!("failed to persist project schema: {err}");
-    }
-
-    Ok(ProjectBinaryBuild {
-        binary,
-        schema,
-        dylib_artifacts,
-    })
-}
-
-/// Profile overrides for a game the editor builds. A game spends its load and
-/// its frames in Bevy and the runtime, which are many times slower unoptimised,
-/// while the game's own crate stays at the profile's level so a rebuild is quick.
-/// Line tables keep backtraces readable without the memory and link time of full
-/// debug info on optimised code.
 const GAME_DEPENDENCY_OPT_LEVEL: &str = "profile.dev.package.\"*\".opt-level=2";
 const GAME_DEPENDENCY_DEBUG: &str = "profile.dev.package.\"*\".debug=\"line-tables-only\"";
 
@@ -565,19 +409,25 @@ fn read_toml(file: &Path) -> Option<toml::Value> {
 }
 
 /// The `cargo build` that compiles the game, run by the project's own
-/// toolchain and detached from the editor's build environment.
+/// toolchain and detached from the editor's build environment. The live
+/// spawn path above (`build_project_binary_with_load`) inlines the same
+/// argv, target and profile decisions because it also carries the run
+/// target and the wanted-artifact selection; these helpers remain the
+/// upstream shape the tests drive.
+#[cfg(test)]
 fn game_build_command(spec: &ShimSpec, target_dir: &Path, load: BuildLoad) -> Command {
     let profile = game_dependency_profile(&spec.project_root);
     game_build_command_with(spec, target_dir, load, &profile)
 }
 
+#[cfg(test)]
 fn game_build_command_with(
     spec: &ShimSpec,
     target_dir: &Path,
     load: BuildLoad,
     profile: &[&str],
 ) -> Command {
-    let mut command = user_toolchain_command("cargo");
+    let mut command = sdk_toolchain_command("cargo");
     command
         .arg("build")
         .args(["-p", &spec.package_name])
@@ -600,6 +450,165 @@ fn game_build_command_with(
     detach_from_host_build(&mut command);
     apply_load(&mut command, load);
     command
+}
+
+fn locked_failure_hint(stderr: &str) -> Option<&'static str> {
+    stderr.contains("--locked was passed").then_some(
+        "note: the lock file is out of date with Cargo.toml and the build locks it; run \
+             `cargo update` to refresh it (or delete Cargo.lock to regenerate), then commit the \
+             result for reproducible builds",
+    )
+}
+
+/// Build a project's game binary and extract its type schema.
+///
+/// `jackdaw_dir` is the project's `.jackdaw/`, where the schema is persisted for
+/// the editor's watcher and where the build's own artifacts land. It builds
+/// against the user's own manifest, lockfile and toolchain, but into
+/// [`game_target_dir`] rather than the project's `target/`: the editor builds
+/// the plain package with optimised dependencies
+/// while a developer's own build carries the features and profile their game
+/// needs, and the two must not overwrite each other's binary. It travels as a
+/// flag rather than as `CARGO_TARGET_DIR`, which `detach_from_host_build` strips
+/// along with the rest of the editor's own build environment.
+pub fn build_project_binary(
+    spec: &ShimSpec,
+    jackdaw_dir: &Path,
+    report: &mut dyn FnMut(BuildEvent),
+) -> Result<ProjectBinaryBuild, ProjectBuildError> {
+    build_project_binary_with_load(spec, jackdaw_dir, None, BuildLoad::Foreground, report)
+}
+
+/// [`build_project_binary`], with a say in how much of the machine the
+/// cargo run may take.
+///
+/// `target` narrows the build to one run target (`--bin`/`--example`,
+/// features, profile, and an optional `-p` package override). The
+/// executable comes from cargo's own JSON report whatever the target is,
+/// so the per-profile and `examples/` directory rules stay cargo's.
+pub fn build_project_binary_with_load(
+    spec: &ShimSpec,
+    jackdaw_dir: &Path,
+    target: Option<&CargoTarget>,
+    load: BuildLoad,
+    report: &mut dyn FnMut(BuildEvent),
+) -> Result<ProjectBinaryBuild, ProjectBuildError> {
+    let target_dir = game_target_dir(jackdaw_dir);
+    // A run target may name another workspace member than the resolved
+    // package; the rest of the spec (root, crate name) is per-project.
+    let package = target.map_or(spec.package_name.as_str(), |t| {
+        t.package_or(spec.package_name.as_str())
+    });
+    let wanted = WantedArtifact::from(target);
+    report(BuildEvent::Log(format!(
+        "building {} as a cargo binary in {}, into {}",
+        package,
+        spec.project_root.display(),
+        target_dir.display()
+    )));
+    for notice in reproducibility_notices(&spec.project_root) {
+        report(BuildEvent::Log(notice));
+    }
+
+    // A build on Bevy's main branch hands the game its own Bevy commit; a
+    // lockfile at another commit would build a game whose types are not
+    // the editor's.
+    match crate::bevy_source::pin_project(&spec.project_root) {
+        Ok(Some(pinned)) => report(BuildEvent::Log(pinned)),
+        Ok(None) => {}
+        Err(error) => report(BuildEvent::Log(format!("warning: {error}"))),
+    }
+    // With the pin settled, the lockfile the `--locked` build will use
+    // is the one that should exist: generate it here if it does not.
+    ensure_lockfile(&spec.project_root, report);
+
+    let mut command = sdk_toolchain_command("cargo");
+    command
+        .args(cargo_build_argv(package, target, &target_dir))
+        // The game's dependencies compile once at opt-level 2 with
+        // line-tables-only debug info (the upstream dev-profile override):
+        // repeated runs rebuild in a fraction of the default time.
+        .args(
+            game_dependency_profile(&spec.project_root)
+                .into_iter()
+                .flat_map(|setting| ["--config".to_string(), setting.to_string()]),
+        )
+        .current_dir(&spec.project_root)
+        .stdout(Stdio::piped())
+        // Captured rather than inherited: cargo's own failures, such as an
+        // unresolvable dependency, are never in the JSON stream, and inherited
+        // they reach only the terminal the editor was launched from.
+        .stderr(Stdio::piped());
+    detach_from_host_build(&mut command);
+    apply_load(&mut command, load);
+    let mut child = command.spawn()?;
+
+    let stdout = child.stdout.take().expect("piped stdout");
+    let stderr = StderrCapture::take(&mut child);
+    let mut done = 0u32;
+    let mut log = String::new();
+    let mut executables: Vec<PathBuf> = Vec::new();
+    let mut dylib_artifacts: Vec<String> = Vec::new();
+    for line in BufReader::new(stdout).lines().map_while(Result::ok) {
+        if let Some(path) = executable_for_package(&line, package, wanted) {
+            executables.push(path);
+        }
+        if let Some(crate_name) = dylib_artifact_in(&line) {
+            dylib_artifacts.push(crate_name);
+        }
+        parse_build_line(&line, &mut done, &mut log, report);
+    }
+    let status = child.wait()?;
+    if !status.success() {
+        let stderr = stderr.finish();
+        // Cargo's own account of the failure never goes through the JSON stream.
+        // `Display` for `Compile` is one line, so the detail has to reach the
+        // panel line by line the way rustc's diagnostics do.
+        for line in stderr.lines() {
+            report(BuildEvent::Log(line.to_string()));
+        }
+        if let Some(hint) = locked_failure_hint(&stderr) {
+            report(BuildEvent::Log(hint.to_string()));
+        }
+        return Err(ProjectBuildError::Compile {
+            log: with_toolchain_hint(
+                compile_failure_log(log, &stderr),
+                &stderr,
+                &spec.project_root,
+            ),
+        });
+    }
+
+    let binary = executables
+        .pop()
+        .ok_or_else(|| ProjectBuildError::Compile {
+            log: no_binary_message(package, wanted),
+        })?;
+
+    // Ask the freshly built game for its types: a throwaway run that prints and
+    // exits. A failure here is not fatal, and the editor keeps its prior schema.
+    let schema = match run_binary_extractor(&binary, spec) {
+        Ok(schema) => Some(schema),
+        Err(err) => {
+            tracing::warn!("project schema extraction skipped: {err}");
+            report(BuildEvent::Log(format!(
+                "project schema extraction skipped: {err}"
+            )));
+            None
+        }
+    };
+
+    if let Some(schema) = &schema
+        && let Err(err) = write_schema(jackdaw_dir, schema)
+    {
+        tracing::warn!("failed to persist project schema: {err}");
+    }
+
+    Ok(ProjectBinaryBuild {
+        binary,
+        schema,
+        dylib_artifacts,
+    })
 }
 
 /// What a failed build reports: rustc's diagnostics, then cargo's own stderr.
@@ -1379,7 +1388,7 @@ mod tests {
         )
         .expect("fixture manifest");
         std::fs::write(root.join("src/main.rs"), "fn main() {}\n").expect("fixture source");
-        let generated = rust_env_command("cargo")
+        let generated = sdk_toolchain_command("cargo")
             .arg("generate-lockfile")
             .current_dir(&root)
             .output()

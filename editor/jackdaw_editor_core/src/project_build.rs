@@ -4,8 +4,7 @@
 //! ([`jackdaw_project_build`]) at the editor's historical module path.
 
 use std::path::{Path, PathBuf};
-use std::sync::Arc;
-use std::time::{Duration, Instant};
+use std::time::Instant;
 
 use bevy::prelude::*;
 use jackdaw_api::pie::PlayState;
@@ -18,10 +17,10 @@ use crate::pie::{
 use crate::run_config::RunConfigs;
 
 pub use jackdaw_project_build::{
-    BuildEvent, BuildLoad, ProjectBinaryBuild, ProjectBuild, ProjectBuildError,
-    build_project_binary, build_project_binary_with_load, build_project_dylib, cargo_meta,
-    detach_from_host_build, linkage, plan, prepare_game_command, project_manifest, shim,
-    shim_spec_for_project,
+    BuildEvent, BuildLoad, CargoTarget, ProjectBinaryBuild, ProjectBuild, ProjectBuildError,
+    TargetKind, build_project_binary, build_project_binary_with_load, build_project_dylib,
+    cargo_meta, detach_from_host_build, linkage, plan, prepare_game_command, project_manifest,
+    run_manifest, shim, shim_spec_for_project,
 };
 
 pub struct ProjectBuildPlugin;
@@ -122,13 +121,14 @@ pub(crate) fn prebuild_play_target(world: &mut World) {
         }
     };
     let mut session = world.non_send_mut::<PieSession>();
-    if session.builds.contains_key(&root) {
+    let key = (root.to_path_buf(), None);
+    if session.builds.contains_key(&key) {
         return; // already built or building (the user may have hit Play already)
     }
     info!("PIE: pre-building the game in the background for a fast first Play");
-    let (task, progress) = spawn_game_build(&root, spec, BuildLoad::Background);
+    let (task, progress) = spawn_game_build(&root, spec, None, BuildLoad::Background);
     session.builds.insert(
-        root,
+        key,
         PieBuildState::Running {
             task,
             pending: Vec::new(),
@@ -218,8 +218,9 @@ pub(crate) fn persist_project_build_settings(world: &World) {
 /// operator. The finished build persists `.jackdaw/schema.json`, which
 /// [`watch_project_schema`] picks up to refresh the editor's types.
 pub(crate) fn spawn_project_build(world: &mut World, root: &Path, load: BuildLoad) {
+    let key = (root.to_path_buf(), None);
     if matches!(
-        world.non_send::<PieSession>().builds.get(root),
+        world.non_send::<PieSession>().builds.get(&key),
         Some(PieBuildState::Running { .. })
     ) {
         return;
@@ -232,9 +233,9 @@ pub(crate) fn spawn_project_build(world: &mut World, root: &Path, load: BuildLoa
         }
     };
     info!("PIE: building the game");
-    let (task, progress) = spawn_game_build(root, spec, load);
+    let (task, progress) = spawn_game_build(root, spec, None, load);
     world.non_send_mut::<PieSession>().builds.insert(
-        root.to_path_buf(),
+        key,
         PieBuildState::Running {
             task,
             pending: Vec::new(),
@@ -293,7 +294,11 @@ fn watch_project_source_for_edit(world: &mut World) {
     }
     // Only rebuild once the project has been built and loaded at least
     // once; the initial build is driven by `prebuild_play_target`.
-    let built_path = match world.non_send::<PieSession>().builds.get(&root) {
+    let built_path = match world
+        .non_send::<PieSession>()
+        .builds
+        .get(&(root.to_path_buf(), None))
+    {
         Some(PieBuildState::Done(path)) => path.clone(),
         _ => return,
     };
@@ -401,62 +406,6 @@ fn watch_project_schema(world: &mut World) {
         }
     }
     info!("PIE: refreshed project types from schema ({component_count} project components)");
-}
-
-/// Mirror the active game or extension build into the editor's
-/// `BuildStatus` so the footer shows what is compiling, and clear it once
-/// no build remains.
-pub(crate) fn reconcile_build_status(world: &mut World) {
-    let building = world
-        .non_send::<PieSession>()
-        .builds
-        .values()
-        .find_map(|build| match build {
-            PieBuildState::Running { progress, .. } => Some(Arc::clone(progress)),
-            _ => None,
-        })
-        .or_else(|| {
-            world
-                .get_resource::<crate::extension_build::ExtensionBuild>()
-                .and_then(crate::extension_build::ExtensionBuild::progress)
-        });
-    let project = world
-        .get_resource::<crate::project::ProjectRoot>()
-        .map(|p| p.root.clone())
-        .unwrap_or_default();
-    let Some(mut status) = world.get_resource_mut::<BuildStatus>() else {
-        return;
-    };
-    match building {
-        Some(progress) => {
-            status.outcome = None;
-            status.failed_log = None;
-            status.state = crate::build_status::BuildState::Building {
-                project,
-                started: Instant::now(),
-                progress,
-            };
-        }
-        None => match &status.state {
-            // A build ended with no outcome latched yet: go Idle.
-            // `poll_builds` (Failed) and `watch_project_schema` (Ready)
-            // set the real outcome the same or next frame.
-            crate::build_status::BuildState::Building { .. } => {
-                status.state = crate::build_status::BuildState::Idle;
-            }
-            // Keep a recent success on screen, then let it fade to Idle.
-            crate::build_status::BuildState::Ready { at, .. } => {
-                if at.elapsed() > Duration::from_secs(6) {
-                    status.state = crate::build_status::BuildState::Idle;
-                }
-            }
-            // Sticky: a failure stays until the next build starts, and only
-            // the user fixing their project clears a block.
-            crate::build_status::BuildState::Failed { .. }
-            | crate::build_status::BuildState::Blocked { .. }
-            | crate::build_status::BuildState::Idle => {}
-        },
-    }
 }
 
 #[cfg(test)]

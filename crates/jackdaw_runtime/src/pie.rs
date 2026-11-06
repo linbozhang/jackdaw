@@ -93,22 +93,12 @@ pub fn attach_pie(app: &mut App, transport: IpcChannelTransport) {
     app.insert_resource(crate::pie_frames::spawn_frame_sender_thread(
         transport.lane_sender(jackdaw_pie_protocol::PieChannel::Frames),
     ));
-    app.insert_non_send(PieTransportRes(transport));
-    app.init_resource::<PieStreamState>();
-    app.init_resource::<HighlightedEntity>();
-    // Drain control in PreUpdate, before input processing so forwarded editor
-    // input lands in `ButtonInput` the same frame, and before Update where a
-    // stop or restart despawns the readback entity that pacing would target.
-    app.add_systems(
-        PreUpdate,
-        (apply_control, stream_cursor_state)
-            .chain()
-            .before(bevy::input::InputSystems),
-    );
-    app.add_systems(
-        Update,
-        (stream_state, crate::pie_frames::pace_frame_capture),
-    );
+    let link: Box<dyn PieTransport> =
+        match jackdaw_pie_protocol::QueuedSendTransport::new(transport) {
+            Ok(queued) => Box::new(queued),
+            Err(direct) => Box::new(direct),
+        };
+    install_link(app, link);
     // The game's log lines stream to the editor's Game panel (the relay half
     // was planted by the LogPlugin custom layer `maybe_windowless` set up).
     crate::pie_log::install(app);

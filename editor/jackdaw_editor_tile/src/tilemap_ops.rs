@@ -11,7 +11,8 @@ use jackdaw_api_internal::operator::{report_to_caller, warn_caller};
 use jackdaw_feathers::picker::{
     PickerItems, PickerProps, SelectInput, SpawnItemInput, match_text, picker_item,
 };
-use jackdaw_scene_types::{LayerTerrainMatch, Tilemap, TilemapLayer, TilemapLayerKind};
+use jackdaw_scene_types::tilemap::TilemapLayer;
+use jackdaw_scene_types::{LayerTerrainMatch, Tilemap, TilemapLayerKind};
 use jackdaw_tilemap::{LayerData, TilemapData};
 use jackdaw_tileset::{TerrainMatch, Tileset};
 

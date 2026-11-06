@@ -1,0 +1,788 @@
+warning: constant `GAME_DEPENDENCY_OPT_LEVEL` is never used
+   --> crates/jackdaw_project_build/src/binary.rs:469:7
+    |
+469 | const GAME_DEPENDENCY_OPT_LEVEL: &str = "profile.dev.package.\"*\".opt-level=2";
+    |       ^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: constant `GAME_DEPENDENCY_DEBUG` is never used
+   --> crates/jackdaw_project_build/src/binary.rs:470:7
+    |
+470 | const GAME_DEPENDENCY_DEBUG: &str = "profile.dev.package.\"*\".debug=\"line-tables-only\"";
+    |       ^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `game_dependency_profile` is never used
+   --> crates/jackdaw_project_build/src/binary.rs:478:4
+    |
+478 | fn game_dependency_profile(project_root: &Path) -> Vec<&'static str> {
+    |    ^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: struct `DevProfileEnv` is never constructed
+   --> crates/jackdaw_project_build/src/binary.rs:500:8
+    |
+500 | struct DevProfileEnv {
+    |        ^^^^^^^^^^^^^
+
+warning: function `dependency_profile_for` is never used
+   --> crates/jackdaw_project_build/src/binary.rs:505:4
+    |
+505 | fn dependency_profile_for(
+    |    ^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `profile_files` is never used
+   --> crates/jackdaw_project_build/src/binary.rs:545:4
+    |
+545 | fn profile_files(project_root: &Path, cargo_home: Option<&Path>) -> Vec<std::path::PathBuf> {
+    |    ^^^^^^^^^^^^^
+
+warning: function `read_toml` is never used
+   --> crates/jackdaw_project_build/src/binary.rs:564:4
+    |
+564 | fn read_toml(file: &Path) -> Option<toml::Value> {
+    |    ^^^^^^^^^
+
+warning: function `game_build_command` is never used
+   --> crates/jackdaw_project_build/src/binary.rs:570:4
+    |
+570 | fn game_build_command(spec: &ShimSpec, target_dir: &Path, load: BuildLoad) -> Command {
+    |    ^^^^^^^^^^^^^^^^^^
+
+warning: function `game_build_command_with` is never used
+   --> crates/jackdaw_project_build/src/binary.rs:575:4
+    |
+575 | fn game_build_command_with(
+    |    ^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: `jackdaw_project_build` (lib) generated 9 warnings
+warning: unused import: `jackdaw_pie_protocol::transport::PieTransport`
+  --> crates/jackdaw_runtime/src/pie_log.rs:24:5
+   |
+24 | use jackdaw_pie_protocol::transport::PieTransport;
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+   = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused variable: `expanded`
+    --> crates/jackdaw_runtime/src/lib.rs:1039:15
+     |
+1039 |     let (ast, expanded) = resolve_prefab_references(world, ast, &scene_name, parent_path);
+     |               ^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_expanded`
+     |
+     = note: `#[warn(unused_variables)]` (part of `#[warn(unused)]`) on by default
+
+warning: function `spawn_scene_entities` is never used
+    --> crates/jackdaw_runtime/src/lib.rs:1196:4
+     |
+1196 | fn spawn_scene_entities(
+     |    ^^^^^^^^^^^^^^^^^^^^
+     |
+     = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: struct `SidecarDir` is never constructed
+    --> crates/jackdaw_runtime/src/lib.rs:1315:19
+     |
+1315 | pub(crate) struct SidecarDir {
+     |                   ^^^^^^^^^^
+
+warning: function `sidecar_dirs` is never used
+    --> crates/jackdaw_runtime/src/lib.rs:1327:4
+     |
+1327 | fn sidecar_dirs(
+     |    ^^^^^^^^^^^^
+
+warning: function `spawn_node` is never used
+    --> crates/jackdaw_runtime/src/lib.rs:1529:4
+     |
+1529 | fn spawn_node(
+     |    ^^^^^^^^^^
+
+warning: function `patch_to_bsn_value` is never used
+    --> crates/jackdaw_runtime/src/lib.rs:1660:4
+     |
+1660 | fn patch_to_bsn_value(patch: &BsnPatch) -> Option<BsnValue> {
+     |    ^^^^^^^^^^^^^^^^^^
+
+warning: function `patch_type_path` is never used
+    --> crates/jackdaw_runtime/src/lib.rs:1671:4
+     |
+1671 | fn patch_type_path(patch: &BsnPatch) -> Option<&str> {
+     |    ^^^^^^^^^^^^^^^
+
+warning: function `resolve_component_type_id` is never used
+    --> crates/jackdaw_runtime/src/lib.rs:1682:4
+     |
+1682 | fn resolve_component_type_id(reg: &TypeRegistry, type_path: &str) -> Option<TypeId> {
+     |    ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `convert_component` is never used
+    --> crates/jackdaw_runtime/src/lib.rs:1694:4
+     |
+1694 | fn convert_component<T: bevy::reflect::FromReflect>(
+     |    ^^^^^^^^^^^^^^^^^
+
+warning: function `load_embedded_assets` is never used
+    --> crates/jackdaw_runtime/src/lib.rs:1733:4
+     |
+1733 | fn load_embedded_assets(
+     |    ^^^^^^^^^^^^^^^^^^^^
+
+warning: function `overlaid_sidecar_dir` is never used
+   --> crates/jackdaw_runtime/src/play_overlay.rs:127:15
+    |
+127 | pub(crate) fn overlaid_sidecar_dir(
+    |               ^^^^^^^^^^^^^^^^^^^^
+
+warning: function `attach_sidecars` is never used
+   --> crates/jackdaw_runtime/src/terrain.rs:190:15
+    |
+190 | pub(crate) fn attach_sidecars(world: &mut World, dirs: &[crate::SidecarDir]) {
+    |               ^^^^^^^^^^^^^^^
+
+warning: function `attach_sidecars` is never used
+  --> crates/jackdaw_runtime/src/tilemap.rs:54:15
+   |
+54 | pub(crate) fn attach_sidecars(world: &mut World, dirs: &[crate::SidecarDir]) {
+   |               ^^^^^^^^^^^^^^^
+
+warning: function `spawn_for_2d_scene` is never used
+  --> crates/jackdaw_runtime/src/fallback_camera.rs:16:15
+   |
+16 | pub(crate) fn spawn_for_2d_scene(world: &mut World, spawned: &[Entity]) {
+   |               ^^^^^^^^^^^^^^^^^^
+
+warning: function `window_slot` is never used
+  --> crates/jackdaw_runtime/src/fallback_camera.rs:71:4
+   |
+71 | fn window_slot(world: &World, camera: Entity) -> Option<(Option<Entity>, isize)> {
+   |    ^^^^^^^^^^^
+
+warning: function `one_camera_per_window_order` is never used
+  --> crates/jackdaw_runtime/src/fallback_camera.rs:86:15
+   |
+86 | pub(crate) fn one_camera_per_window_order(world: &mut World, spawned: &[Entity]) {
+   |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: `jackdaw_runtime` (lib) generated 17 warnings (run `cargo fix --lib -p jackdaw_runtime` to apply 1 suggestion)
+    Checking jackdaw_editor_core v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/editor/jackdaw_editor_core)
+warning: function `resolve_dependencies` is never used
+   --> crates/jackdaw_cli/src/lib.rs:645:4
+    |
+645 | fn resolve_dependencies(root: &Path) -> Result<(), String> {
+    |    ^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `jackdaw_cli_internal` (lib) generated 1 warning
+error[E0252]: the name `observe` is defined multiple times
+  --> editor/jackdaw_editor_core/src/game_panel.rs:15:37
+   |
+ 7 | use bevy::{prelude::*, ui_widgets::observe};
+   |                        ------------------- previous import of the value `observe` here
+...
+15 | use bevy::ui_widgets::{ValueChange, observe};
+   |                                     ^^^^^^^ `observe` reimported here
+   |
+   = note: `observe` must be defined only once in the value namespace of this module
+
+error[E0433]: cannot find module or crate `jackdaw_editor_animation` in this scope
+  --> editor/jackdaw_editor_core/src/inspector/animation_graph_card.rs:15:5
+   |
+15 | use jackdaw_editor_animation::graph_doc::graph_files;
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^ use of unresolved module or unlinked crate `jackdaw_editor_animation`
+   |
+help: there is a crate or module with a similar name
+   |
+15 - use jackdaw_editor_animation::graph_doc::graph_files;
+15 + use jackdaw_animation::graph_doc::graph_files;
+   |
+
+error[E0433]: cannot find module or crate `jackdaw_editor_animation` in this scope
+  --> editor/jackdaw_editor_core/src/inspector/animation_graph_card.rs:16:5
+   |
+16 | use jackdaw_editor_animation::graph_ops::{AnimationGraphAssignOp, AnimationGraphConvertSetOp};
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^ use of unresolved module or unlinked crate `jackdaw_editor_animation`
+   |
+help: there is a crate or module with a similar name
+   |
+16 - use jackdaw_editor_animation::graph_ops::{AnimationGraphAssignOp, AnimationGraphConvertSetOp};
+16 + use jackdaw_animation::graph_ops::{AnimationGraphAssignOp, AnimationGraphConvertSetOp};
+   |
+
+error[E0433]: cannot find `remote` in the crate root
+   --> editor/jackdaw_editor_core/src/inspector/anchor_presets.rs:144:43
+    |
+144 |     remote_proxies: Query<(), With<crate::remote::entity_browser::RemoteEntityProxy>>,
+    |                                           ^^^^^^ could not find `remote` in the crate root
+
+error[E0433]: cannot find `animation` in the crate root
+    --> editor/jackdaw_editor_core/src/pie.rs:1251:32
+     |
+1251 |         .get_resource::<crate::animation::AnimationGraphDoc>()
+     |                                ^^^^^^^^^ could not find `animation` in the crate root
+
+error[E0433]: cannot find `animation` in the crate root
+    --> editor/jackdaw_editor_core/src/pie.rs:1253:19
+     |
+1253 |         && crate::animation::graph_doc::write_graph_file(world).is_none()
+     |                   ^^^^^^^^^ could not find `animation` in the crate root
+
+error[E0433]: cannot find `SceneDirtyState` in `scene_io`
+    --> editor/jackdaw_editor_core/src/lib.rs:1657:37
+     |
+1657 |     world.insert_resource(scene_io::SceneDirtyState::default());
+     |                                     ^^^^^^^^^^^^^^^ could not find `SceneDirtyState` in `scene_io`
+
+error[E0425]: cannot find value `bound` in this scope
+   --> editor/jackdaw_editor_core/src/commands.rs:242:52
+    |
+242 |     if let Some(bound) = stale_bound_entity(world, bound) {
+    |                                                    ^^^^^ not found in this scope
+
+error[E0425]: cannot find value `chips` in this scope
+   --> editor/jackdaw_editor_core/src/inspector/category_strip.rs:306:38
+    |
+306 |     let chip_categories: Vec<&str> = chips.iter().map(|chip| chip.category.as_ref()).collect();
+    |                                      ^^^^^ not found in this scope
+
+error[E0425]: cannot find value `absolute` in this scope
+    --> editor/jackdaw_editor_core/src/pie.rs:1265:9
+     |
+1265 |     if !absolute.is_empty() {
+     |         ^^^^^^^^ not found in this scope
+     |
+help: consider importing this function
+     |
+  16 + use std::path::absolute;
+     |
+
+error[E0425]: cannot find value `absolute` in this scope
+    --> editor/jackdaw_editor_core/src/pie.rs:1266:78
+     |
+1266 |         let message = format!("Playing unsaved: could not save {}", messages(absolute));
+     |                                                                              ^^^^^^^^ not found in this scope
+     |
+help: consider importing this function
+     |
+  16 + use std::path::absolute;
+     |
+
+error[E0425]: cannot find value `is_scene_document` in this scope
+    --> editor/jackdaw_editor_core/src/project_window.rs:1825:8
+     |
+1825 |     if is_scene_document {
+     |        ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `start_scene` in this scope
+    --> editor/jackdaw_editor_core/src/project_window.rs:1826:24
+     |
+1826 |         let is_start = start_scene.is_some_and(|start| {
+     |                        ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `text` in this scope
+   --> editor/jackdaw_editor_core/src/scene_io/save.rs:311:42
+    |
+311 |         let fingerprint = document_hash(&text);
+    |                                          ^^^^
+    |
+   ::: /Users/linbo.zhang/workspace/bevy-fork-pinned/crates/bevy_ui/src/widget/text.rs:126:1
+    |
+126 | pub struct Text(pub String);
+    | --------------- similarly named tuple struct `Text` defined here
+    |
+note: function `crate::graphics_panel::text` exists but is inaccessible
+   --> editor/jackdaw_editor_core/src/graphics_panel.rs:211:1
+    |
+211 | fn text(localization: &Localization, key: &str) -> String {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not accessible
+help: a tuple struct with a similar name exists
+    |
+311 -         let fingerprint = document_hash(&text);
+311 +         let fingerprint = document_hash(&Text);
+    |
+
+error[E0425]: cannot find value `saved_body` in this scope
+   --> editor/jackdaw_editor_core/src/scene_io/save.rs:382:38
+    |
+382 |     let fingerprint = document_hash(&saved_body);
+    |                                      ^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `SceneDirtyState` in this scope
+   --> editor/jackdaw_editor_core/src/scene_io/mod.rs:334:30
+    |
+334 |             .init_resource::<SceneDirtyState>()
+    |                              ^^^^^^^^^^^^^^^ not found in this scope
+    |
+help: you might be missing a type parameter
+    |
+330 | impl<SceneDirtyState> Plugin for SceneIoPlugin {
+    |     +++++++++++++++++
+
+error[E0425]: cannot find function `name_instance_roots` in module `crate::scene_nodes`
+   --> editor/jackdaw_editor_core/src/scenes/recovery_dialog.rs:571:29
+    |
+571 |         crate::scene_nodes::name_instance_roots(&mut doc);
+    |                             ^^^^^^^^^^^^^^^^^^^ not found in `crate::scene_nodes`
+
+error[E0603]: function `is_game_type` is private
+   --> editor/jackdaw_editor_core/src/inspector/resource_panel.rs:141:39
+    |
+141 |             && (crate::type_metadata::is_game_type(type_path)
+    |                                       ^^^^^^^^^^^^ private function
+    |
+note: the function `is_game_type` is defined here
+   --> editor/jackdaw_editor_core/src/type_metadata.rs:80:1
+    |
+ 80 | fn is_game_type(type_path: &str, project: &ProjectTypes) -> bool {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `EntityAddImageOp`
+  --> editor/jackdaw_editor_core/src/creation_taxonomy.rs:13:27
+   |
+13 |     EntityAddFogVolumeOp, EntityAddImageOp, EntityAddPlaneOp, EntityAddPointLightOp,
+   |                           ^^^^^^^^^^^^^^^^
+   |
+   = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused import: `observe`
+  --> editor/jackdaw_editor_core/src/game_panel.rs:15:37
+   |
+15 | use bevy::ui_widgets::{ValueChange, observe};
+   |                                     ^^^^^^^
+
+warning: unused import: `jackdaw_api::op::Operator as _`
+ --> editor/jackdaw_editor_core/src/inspector/animation_graph_card.rs:8:5
+  |
+8 | use jackdaw_api::op::Operator as _;
+  |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error[E0069]: `return;` in a function whose return type is not `()`
+   --> editor/jackdaw_editor_core/src/commands.rs:248:9
+    |
+238 | ) -> Result<(), FieldEditRefused> {
+    |      ---------------------------- expected `Result<(), FieldEditRefused>` because of this return type
+...
+248 |         return;
+    |         ^^^^^^ return type is not `()`
+    |
+help: give the `return` a value of the expected type
+    |
+248 |         return Ok(());
+    |                ++++++
+
+error[E0308]: `match` arms have incompatible types
+    --> editor/jackdaw_editor_core/src/commands.rs:1952:27
+     |
+1950 |           match component.reflect_path_mut(field_path) {
+     |           -------------------------------------------- `match` arms have incompatible types
+1951 |               Ok(field) => apply_json_to_reflect(field, value, &registry),
+     |                            ---------------------------------------------- this is found to be of type `bool`
+1952 |               Err(error) => warn!(
+     |  ___________________________^
+1953 | |                 "live write skipped: `{type_path}.{field_path}` on {entity} did not resolve ({error})"
+1954 | |             ),
+     | |_____________^ expected `bool`, found `()`
+     |
+     = note: this error originates in the macro `$crate::event` which comes from the expansion of the macro `warn` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0061]: this function takes 2 arguments but 1 argument was supplied
+   --> editor/jackdaw_editor_core/src/inspector/resource_panel.rs:141:17
+    |
+141 |             && (crate::type_metadata::is_game_type(type_path)
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^----------- argument #2 of type `&ProjectTypes` is missing
+    |
+note: function defined here
+   --> editor/jackdaw_editor_core/src/type_metadata.rs:80:4
+    |
+ 80 | fn is_game_type(type_path: &str, project: &ProjectTypes) -> bool {
+    |    ^^^^^^^^^^^^                  ----------------------
+help: provide the argument
+    |
+141 |             && (crate::type_metadata::is_game_type(type_path, /* &ProjectTypes */)
+    |                                                             +++++++++++++++++++++
+
+error[E0061]: this method takes 2 arguments but 1 argument was supplied
+   --> editor/jackdaw_editor_core/src/inspector/resource_panel.rs:202:64
+    |
+202 |             group: crate::type_metadata::TypeChrome::default().group(type_path),
+    |                                                                ^^^^^----------- argument #2 of type `&ProjectTypes` is missing
+    |
+note: method defined here
+   --> editor/jackdaw_editor_core/src/type_metadata.rs:56:12
+    |
+ 56 |     pub fn group(&self, type_path: &str, project: &ProjectTypes) -> String {
+    |            ^^^^^                         ----------------------
+help: provide the argument
+    |
+202 |             group: crate::type_metadata::TypeChrome::default().group(type_path, /* &ProjectTypes */),
+    |                                                                               +++++++++++++++++++++
+
+error[E0061]: this function takes 3 arguments but 2 arguments were supplied
+   --> editor/jackdaw_editor_core/src/inspector/resource_panel.rs:207:9
+    |
+207 |         crate::type_metadata::group_order(&b.type_path, "")
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^------------------ argument #3 of type `&ProjectTypes` is missing
+    |
+note: function defined here
+   --> editor/jackdaw_editor_core/src/type_metadata.rs:90:8
+    |
+ 90 | pub fn group_order(type_path: &str, authored_category: &str, project: &ProjectTypes) -> i32 {
+    |        ^^^^^^^^^^^                                           ----------------------
+help: provide the argument
+    |
+207 |         crate::type_metadata::group_order(&b.type_path, "", /* &ProjectTypes */)
+    |                                                           +++++++++++++++++++++
+
+error[E0061]: this function takes 3 arguments but 2 arguments were supplied
+   --> editor/jackdaw_editor_core/src/inspector/resource_panel.rs:208:19
+    |
+208 |             .cmp(&crate::type_metadata::group_order(&a.type_path, ""))
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^------------------ argument #3 of type `&ProjectTypes` is missing
+    |
+note: function defined here
+   --> editor/jackdaw_editor_core/src/type_metadata.rs:90:8
+    |
+ 90 | pub fn group_order(type_path: &str, authored_category: &str, project: &ProjectTypes) -> i32 {
+    |        ^^^^^^^^^^^                                           ----------------------
+help: provide the argument
+    |
+208 |             .cmp(&crate::type_metadata::group_order(&a.type_path, "", /* &ProjectTypes */))
+    |                                                                     +++++++++++++++++++++
+
+error[E0061]: this function takes 3 arguments but 2 arguments were supplied
+   --> editor/jackdaw_editor_core/src/inspector/resource_panel.rs:413:20
+    |
+413 |             order: crate::type_metadata::group_order(&self.type_path, ""),
+    |                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^--------------------- argument #3 of type `&ProjectTypes` is missing
+    |
+note: function defined here
+   --> editor/jackdaw_editor_core/src/type_metadata.rs:90:8
+    |
+ 90 | pub fn group_order(type_path: &str, authored_category: &str, project: &ProjectTypes) -> i32 {
+    |        ^^^^^^^^^^^                                           ----------------------
+help: provide the argument
+    |
+413 |             order: crate::type_metadata::group_order(&self.type_path, "", /* &ProjectTypes */),
+    |                                                                         +++++++++++++++++++++
+
+error[E0061]: this method takes 2 arguments but 1 argument was supplied
+   --> editor/jackdaw_editor_core/src/inspector/resource_panel.rs:462:64
+    |
+462 |             group: crate::type_metadata::TypeChrome::default().group(type_path),
+    |                                                                ^^^^^----------- argument #2 of type `&ProjectTypes` is missing
+    |
+note: method defined here
+   --> editor/jackdaw_editor_core/src/type_metadata.rs:56:12
+    |
+ 56 |     pub fn group(&self, type_path: &str, project: &ProjectTypes) -> String {
+    |            ^^^^^                         ----------------------
+help: provide the argument
+    |
+462 |             group: crate::type_metadata::TypeChrome::default().group(type_path, /* &ProjectTypes */),
+    |                                                                               +++++++++++++++++++++
+
+error[E0271]: type mismatch resolving `<Vec<String> as IntoIterator>::Item == TabSaveFailure`
+    --> editor/jackdaw_editor_core/src/pie.rs:1246:21
+     |
+1246 |     failures.extend(crate::definition_assets::save_dirty_assets(world));
+     |              ------ ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `TabSaveFailure`, found `String`
+     |              |
+     |              required by a bound introduced by this call
+     |
+note: required by a bound in `extend`
+    --> /rustc/b940084d7eb6a299eb4bfeb8e34901bc051e7ac4/library/core/src/iter/traits/collect.rs:416:4
+
+error[E0308]: mismatched types
+    --> editor/jackdaw_editor_core/src/pie.rs:1255:23
+     |
+1255 |         failures.push("the open animation graph".to_string());
+     |                  ---- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `TabSaveFailure`, found `String`
+     |                  |
+     |                  arguments to this method are incorrect
+     |
+note: method defined here
+    --> /rustc/b940084d7eb6a299eb4bfeb8e34901bc051e7ac4/library/alloc/src/vec/mod.rs:995:11
+
+error[E0308]: mismatched types
+    --> editor/jackdaw_editor_core/src/pie.rs:1258:9
+     |
+1257 | /     if failures.is_empty() {
+1258 | |         Ok(())
+     | |         ^^^^^^ expected `()`, found `Result<(), _>`
+1259 | |     } else {
+1260 | |         Err(format!(
+...    |
+1263 | |         ))
+1264 | |     }
+     | |_____- expected this to be `()`
+     |
+     = note: expected unit type `()`
+                     found enum `std::result::Result<(), _>`
+help: you might have meant to return this value
+     |
+1258 |         return Ok(());
+     |         ++++++       +
+
+error[E0599]: the method `join` exists for struct `std::vec::Vec<TabSaveFailure>`, but its trait bounds were not satisfied
+    --> editor/jackdaw_editor_core/src/pie.rs:1262:22
+     |
+1262 |             failures.join("; ")
+     |                      ^^^^ method cannot be called on `std::vec::Vec<TabSaveFailure>` due to unsatisfied trait bounds
+     |
+     = note: the following trait bounds were not satisfied:
+             `[TabSaveFailure]: Join<_>`
+
+error[E0308]: mismatched types
+    --> editor/jackdaw_editor_core/src/pie.rs:1260:9
+     |
+1257 | /      if failures.is_empty() {
+1258 | |          Ok(())
+1259 | |      } else {
+1260 | |/         Err(format!(
+1261 | ||             "Not {action}: could not save {}",
+1262 | ||             failures.join("; ")
+1263 | ||         ))
+     | ||__________^ expected `()`, found `Result<_, String>`
+1264 | |      }
+     | |______- expected this to be `()`
+     |
+     = note: expected unit type `()`
+                     found enum `std::result::Result<_, std::string::String>`
+help: consider using a semicolon here
+     |
+1263 |         ));
+     |           +
+help: you might have meant to return this value
+     |
+1260 ~         return Err(format!(
+1261 |             "Not {action}: could not save {}",
+1262 |             failures.join("; ")
+1263 ~         ));
+     |
+
+error[E0425]: cannot find function `messages` in this scope
+    --> editor/jackdaw_editor_core/src/pie.rs:1266:69
+     |
+1266 |         let message = format!("Playing unsaved: could not save {}", messages(absolute));
+     |                                                                     ^^^^^^^^ not found in this scope
+
+error[E0308]: mismatched types
+    --> editor/jackdaw_editor_core/src/pie.rs:1459:37
+     |
+1459 |                     send_control_to(transport, ControlEvent::Stop);
+     |                     --------------- ^^^^^^^^^ expected `&GameOutbox`, found `&mut IpcChannelTransport`
+     |                     |
+     |                     arguments to this function are incorrect
+     |
+     = note:      expected reference `&GameOutbox`
+             found mutable reference `&mut IpcChannelTransport`
+note: function defined here
+    --> editor/jackdaw_editor_core/src/pie.rs:1649:4
+     |
+1649 | fn send_control_to(outbox: &GameOutbox, event: ControlEvent) {
+     |    ^^^^^^^^^^^^^^^ -------------------
+
+error[E0271]: type mismatch resolving `<Vec<String> as IntoIterator>::Item == TabSaveFailure`
+   --> editor/jackdaw_editor_core/src/pie_current.rs:289:29
+    |
+289 |             failures.extend(crate::definition_assets::save_dirty_assets(world));
+    |                      ------ ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `TabSaveFailure`, found `String`
+    |                      |
+    |                      required by a bound introduced by this call
+    |
+note: required by a bound in `extend`
+   --> /rustc/b940084d7eb6a299eb4bfeb8e34901bc051e7ac4/library/core/src/iter/traits/collect.rs:416:4
+
+error[E0599]: the method `join` exists for struct `std::vec::Vec<TabSaveFailure>`, but its trait bounds were not satisfied
+   --> editor/jackdaw_editor_core/src/pie_current.rs:293:30
+    |
+293 |                     failures.join("; ")
+    |                              ^^^^ method cannot be called on `std::vec::Vec<TabSaveFailure>` due to unsatisfied trait bounds
+    |
+    = note: the following trait bounds were not satisfied:
+            `[TabSaveFailure]: Join<_>`
+
+error[E0616]: field `builds` of struct `PieSession` is private
+   --> editor/jackdaw_editor_core/src/project_build.rs:125:16
+    |
+125 |     if session.builds.contains_key(&root) {
+    |                ^^^^^^ private field
+
+error[E0061]: this function takes 4 arguments but 3 arguments were supplied
+    --> editor/jackdaw_editor_core/src/project_build.rs:129:28
+     |
+ 129 |     let (task, progress) = spawn_game_build(&root, spec, BuildLoad::Background);
+     |                            ^^^^^^^^^^^^^^^^              --------------------- argument #3 of type `std::option::Option<CargoTarget>` is missing
+     |
+note: function defined here
+    --> editor/jackdaw_editor_core/src/pie.rs:1352:15
+     |
+1352 | pub(crate) fn spawn_game_build(
+     |               ^^^^^^^^^^^^^^^^
+...
+1355 |     target: Option<CargoTarget>,
+     |     ---------------------------
+help: provide the argument
+     |
+ 129 |     let (task, progress) = spawn_game_build(&root, spec, /* Option<CargoTarget> */, BuildLoad::Background);
+     |                                                          ++++++++++++++++++++++++++
+
+error[E0616]: field `builds` of struct `PieSession` is private
+   --> editor/jackdaw_editor_core/src/project_build.rs:130:13
+    |
+130 |     session.builds.insert(
+    |             ^^^^^^ private field
+
+error[E0616]: field `builds` of struct `PieSession` is private
+   --> editor/jackdaw_editor_core/src/project_build.rs:222:40
+    |
+222 |         world.non_send::<PieSession>().builds.get(root),
+    |                                        ^^^^^^ private field
+
+error[E0061]: this function takes 4 arguments but 3 arguments were supplied
+    --> editor/jackdaw_editor_core/src/project_build.rs:235:28
+     |
+ 235 |     let (task, progress) = spawn_game_build(root, spec, load);
+     |                            ^^^^^^^^^^^^^^^^             ---- argument #3 of type `std::option::Option<CargoTarget>` is missing
+     |
+note: function defined here
+    --> editor/jackdaw_editor_core/src/pie.rs:1352:15
+     |
+1352 | pub(crate) fn spawn_game_build(
+     |               ^^^^^^^^^^^^^^^^
+...
+1355 |     target: Option<CargoTarget>,
+     |     ---------------------------
+help: provide the argument
+     |
+ 235 |     let (task, progress) = spawn_game_build(root, spec, /* Option<CargoTarget> */, load);
+     |                                                         ++++++++++++++++++++++++++
+
+error[E0616]: field `builds` of struct `PieSession` is private
+   --> editor/jackdaw_editor_core/src/project_build.rs:236:40
+    |
+236 |     world.non_send_mut::<PieSession>().builds.insert(
+    |                                        ^^^^^^ private field
+
+error[E0616]: field `builds` of struct `PieSession` is private
+   --> editor/jackdaw_editor_core/src/project_build.rs:296:59
+    |
+296 |     let built_path = match world.non_send::<PieSession>().builds.get(&root) {
+    |                                                           ^^^^^^ private field
+
+error[E0616]: field `builds` of struct `PieSession` is private
+   --> editor/jackdaw_editor_core/src/project_build.rs:412:10
+    |
+412 |         .builds
+    |          ^^^^^^ private field
+
+error[E0308]: mismatched types
+   --> editor/jackdaw_editor_core/src/project_build.rs:415:72
+    |
+415 |             PieBuildState::Running { progress, .. } => Some(Arc::clone(progress)),
+    |                                                             ---------- ^^^^^^^^ expected `&Arc<_, _>`, found `Arc<Mutex<BuildProgress>>`
+    |                                                             |
+    |                                                             arguments to this function are incorrect
+    |
+    = note: expected reference `&Arc<_, _>`
+                  found struct `Arc<std::sync::Mutex<BuildProgress>, std::alloc::Global>`
+note: method defined here
+   --> /rustc/b940084d7eb6a299eb4bfeb8e34901bc051e7ac4/library/core/src/clone.rs:236:7
+help: consider borrowing here
+    |
+415 |             PieBuildState::Running { progress, .. } => Some(Arc::clone(&progress)),
+    |                                                                        +
+
+warning: unused variable: `bound`
+   --> editor/jackdaw_editor_core/src/commands.rs:217:5
+    |
+217 |     bound: Option<Entity>,
+    |     ^^^^^ help: if this is intentional, prefix it with an underscore: `_bound`
+    |
+    = note: `#[warn(unused_variables)]` (part of `#[warn(unused)]`) on by default
+
+error[E0004]: non-exhaustive patterns: `&StateEvent::Log { .. }` not covered
+  --> editor/jackdaw_editor_core/src/pie_mirror.rs:77:15
+   |
+77 |         match event {
+   |               ^^^^^ pattern `&StateEvent::Log { .. }` not covered
+   |
+note: `StateEvent` defined here
+  --> crates/jackdaw_pie_protocol/src/event.rs:24:1
+   |
+24 | pub enum StateEvent {
+   | ^^^^^^^^^^^^^^^^^^^
+...
+38 |     Log {
+   |     --- not covered
+   = note: the matched value is of type `&StateEvent`
+help: ensure that all possible cases are being handled by adding a match arm with a wildcard pattern or an explicit pattern as shown
+   |
+97 ~             | jackdaw_pie_protocol::StateEvent::OwnWindow => {},
+98 +             &StateEvent::Log { .. } => todo!()
+   |
+
+error[E0004]: non-exhaustive patterns: `StateEvent::Log { .. }` not covered
+   --> editor/jackdaw_editor_core/src/pie_projection.rs:514:11
+    |
+514 |     match event {
+    |           ^^^^^ pattern `StateEvent::Log { .. }` not covered
+    |
+note: `StateEvent` defined here
+   --> crates/jackdaw_pie_protocol/src/event.rs:24:1
+    |
+ 24 | pub enum StateEvent {
+    | ^^^^^^^^^^^^^^^^^^^
+...
+ 38 |     Log {
+    |     --- not covered
+    = note: the matched value is of type `StateEvent`
+help: ensure that all possible cases are being handled by adding a match arm with a wildcard pattern or an explicit pattern as shown
+    |
+615 ~         | StateEvent::OwnWindow => {},
+616 +         StateEvent::Log { .. } => todo!()
+    |
+
+warning: unused variable: `is_scene_document`
+    --> editor/jackdaw_editor_core/src/project_window.rs:1787:5
+     |
+1787 |     is_scene_document: bool,
+     |     ^^^^^^^^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_is_scene_document`
+
+warning: unused variable: `start_scene`
+    --> editor/jackdaw_editor_core/src/project_window.rs:1788:5
+     |
+1788 |     start_scene: Option<&str>,
+     |     ^^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_start_scene`
+
+error[E0004]: non-exhaustive patterns: `ActiveTool::Tilemap` not covered
+   --> editor/jackdaw_editor_core/src/sprite_gizmo.rs:259:11
+    |
+259 |     match tool {
+    |           ^^^^ pattern `ActiveTool::Tilemap` not covered
+    |
+note: `ActiveTool` defined here
+   --> editor/jackdaw_editor_core/src/active_tool.rs:15:10
+    |
+ 15 | pub enum ActiveTool {
+    |          ^^^^^^^^^^
+...
+ 24 |     Tilemap,
+    |     ------- not covered
+    = note: the matched value is of type `ActiveTool`
+help: ensure that all possible cases are being handled by adding a match arm with a wildcard pattern or an explicit pattern as shown
+    |
+301 ~         },
+302 +         ActiveTool::Tilemap => todo!()
+    |
+
+warning: unused variable: `grid`
+    --> editor/jackdaw_editor_core/src/viewport_2d.rs:2034:9
+     |
+2034 |     let grid = panel.map_or(DEFAULT_UI_GRID, |host| host.view.grid);
+     |         ^^^^ help: if this is intentional, prefix it with an underscore: `_grid`
+
+Some errors have detailed explanations: E0004, E0061, E0069, E0252, E0271, E0308, E0425, E0433, E0599...
+For more information about an error, try `rustc --explain E0004`.
+warning: `jackdaw_editor_core` (lib) generated 7 warnings
+error: could not compile `jackdaw_editor_core` (lib) due to 47 previous errors; 7 warnings emitted

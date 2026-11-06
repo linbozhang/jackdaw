@@ -23,7 +23,9 @@ use jackdaw_editor_core::operator_calls::invalid_params;
 use jackdaw_editor_core::test_input::{
     SyntheticInput, click_gesture, drag_gesture, enter_gesture, select_all_gesture, typing_gesture,
 };
-use jackdaw_editor_core::viewport::{ActiveViewport, CameraFlyActive, CameraPanActive, MainViewportCamera};
+use jackdaw_editor_core::viewport::{
+    ActiveViewport, CameraFlyActive, CameraPanActive, MainViewportCamera,
+};
 
 use super::server::check_enabled;
 

@@ -19,7 +19,8 @@ use jackdaw_feathers::{
     tooltip::Tooltip,
     utils::find_ancestor,
 };
-use jackdaw_scene_types::{Tilemap, TilemapLayer, TilemapLayerKind};
+use jackdaw_scene_types::tilemap::TilemapLayer;
+use jackdaw_scene_types::{Tilemap, TilemapLayerKind};
 use jackdaw_tileset::Tileset;
 
 use crate::tile_tools::{TileEditMode, TilemapEditModeExitOp, TilemapEditModeOp};

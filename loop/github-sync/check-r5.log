@@ -1,0 +1,29 @@
+    Checking jackdaw_commands v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_commands)
+    Checking jackdaw_scene_types v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_scene_types)
+    Checking jackdaw_package v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_package)
+   Compiling jackdaw_project_build v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_project_build)
+    Checking jackdaw_remote v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_remote)
+    Checking jackdaw_releases v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_releases)
+    Checking jackdaw_rustc_wrapper v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_rustc_wrapper)
+    Checking jackdaw_tilemap_collision v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_tilemap_collision)
+    Checking jackdaw_mcp v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_mcp)
+    Checking jackdaw_api_macros v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_api_macros)
+    Checking jackdaw_widgets v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_widgets)
+    Checking jackdaw_terrain v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_terrain)
+    Checking jackdaw_schema v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_schema)
+    Checking jackdaw_camera_rig v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_camera_rig)
+    Checking jackdaw_surface v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_surface)
+    Checking jackdaw_multiplayer v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_multiplayer)
+    Checking jackdaw_jsn v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_jsn)
+    Checking jackdaw_feathers v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_feathers)
+error: this file contains an unclosed delimiter
+   --> crates/jackdaw_project_build/src/build_source.rs:289:3
+    |
+128 | fn crate_path(root: &Path, crate_name: &str) -> PathBuf {
+    |                                                         - unclosed delimiter
+...
+289 | }
+    |  ^
+
+error: could not compile `jackdaw_project_build` (lib) due to 1 previous error
+warning: build failed, waiting for other jobs to finish...

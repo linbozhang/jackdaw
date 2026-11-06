@@ -1,0 +1,294 @@
+warning: constant `GAME_DEPENDENCY_OPT_LEVEL` is never used
+   --> crates/jackdaw_project_build/src/binary.rs:469:7
+    |
+469 | const GAME_DEPENDENCY_OPT_LEVEL: &str = "profile.dev.package.\"*\".opt-level=2";
+    |       ^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: constant `GAME_DEPENDENCY_DEBUG` is never used
+   --> crates/jackdaw_project_build/src/binary.rs:470:7
+    |
+470 | const GAME_DEPENDENCY_DEBUG: &str = "profile.dev.package.\"*\".debug=\"line-tables-only\"";
+    |       ^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `game_dependency_profile` is never used
+   --> crates/jackdaw_project_build/src/binary.rs:478:4
+    |
+478 | fn game_dependency_profile(project_root: &Path) -> Vec<&'static str> {
+    |    ^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: struct `DevProfileEnv` is never constructed
+   --> crates/jackdaw_project_build/src/binary.rs:500:8
+    |
+500 | struct DevProfileEnv {
+    |        ^^^^^^^^^^^^^
+
+warning: function `dependency_profile_for` is never used
+   --> crates/jackdaw_project_build/src/binary.rs:505:4
+    |
+505 | fn dependency_profile_for(
+    |    ^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `profile_files` is never used
+   --> crates/jackdaw_project_build/src/binary.rs:545:4
+    |
+545 | fn profile_files(project_root: &Path, cargo_home: Option<&Path>) -> Vec<std::path::PathBuf> {
+    |    ^^^^^^^^^^^^^
+
+warning: function `read_toml` is never used
+   --> crates/jackdaw_project_build/src/binary.rs:564:4
+    |
+564 | fn read_toml(file: &Path) -> Option<toml::Value> {
+    |    ^^^^^^^^^
+
+warning: function `game_build_command` is never used
+   --> crates/jackdaw_project_build/src/binary.rs:570:4
+    |
+570 | fn game_build_command(spec: &ShimSpec, target_dir: &Path, load: BuildLoad) -> Command {
+    |    ^^^^^^^^^^^^^^^^^^
+
+warning: function `game_build_command_with` is never used
+   --> crates/jackdaw_project_build/src/binary.rs:575:4
+    |
+575 | fn game_build_command_with(
+    |    ^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: `jackdaw_project_build` (lib) generated 9 warnings
+warning: unused import: `jackdaw_pie_protocol::transport::PieTransport`
+  --> crates/jackdaw_runtime/src/pie_log.rs:24:5
+   |
+24 | use jackdaw_pie_protocol::transport::PieTransport;
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+   = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused variable: `expanded`
+    --> crates/jackdaw_runtime/src/lib.rs:1039:15
+     |
+1039 |     let (ast, expanded) = resolve_prefab_references(world, ast, &scene_name, parent_path);
+     |               ^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_expanded`
+     |
+     = note: `#[warn(unused_variables)]` (part of `#[warn(unused)]`) on by default
+
+warning: function `spawn_scene_entities` is never used
+    --> crates/jackdaw_runtime/src/lib.rs:1196:4
+     |
+1196 | fn spawn_scene_entities(
+     |    ^^^^^^^^^^^^^^^^^^^^
+     |
+     = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: struct `SidecarDir` is never constructed
+    --> crates/jackdaw_runtime/src/lib.rs:1315:19
+     |
+1315 | pub(crate) struct SidecarDir {
+     |                   ^^^^^^^^^^
+
+warning: function `sidecar_dirs` is never used
+    --> crates/jackdaw_runtime/src/lib.rs:1327:4
+     |
+1327 | fn sidecar_dirs(
+     |    ^^^^^^^^^^^^
+
+warning: function `spawn_node` is never used
+    --> crates/jackdaw_runtime/src/lib.rs:1529:4
+     |
+1529 | fn spawn_node(
+     |    ^^^^^^^^^^
+
+warning: function `patch_to_bsn_value` is never used
+    --> crates/jackdaw_runtime/src/lib.rs:1660:4
+     |
+1660 | fn patch_to_bsn_value(patch: &BsnPatch) -> Option<BsnValue> {
+     |    ^^^^^^^^^^^^^^^^^^
+
+warning: function `patch_type_path` is never used
+    --> crates/jackdaw_runtime/src/lib.rs:1671:4
+     |
+1671 | fn patch_type_path(patch: &BsnPatch) -> Option<&str> {
+     |    ^^^^^^^^^^^^^^^
+
+warning: function `resolve_component_type_id` is never used
+    --> crates/jackdaw_runtime/src/lib.rs:1682:4
+     |
+1682 | fn resolve_component_type_id(reg: &TypeRegistry, type_path: &str) -> Option<TypeId> {
+     |    ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `convert_component` is never used
+    --> crates/jackdaw_runtime/src/lib.rs:1694:4
+     |
+1694 | fn convert_component<T: bevy::reflect::FromReflect>(
+     |    ^^^^^^^^^^^^^^^^^
+
+warning: function `load_embedded_assets` is never used
+    --> crates/jackdaw_runtime/src/lib.rs:1733:4
+     |
+1733 | fn load_embedded_assets(
+     |    ^^^^^^^^^^^^^^^^^^^^
+
+warning: function `overlaid_sidecar_dir` is never used
+   --> crates/jackdaw_runtime/src/play_overlay.rs:127:15
+    |
+127 | pub(crate) fn overlaid_sidecar_dir(
+    |               ^^^^^^^^^^^^^^^^^^^^
+
+warning: function `attach_sidecars` is never used
+   --> crates/jackdaw_runtime/src/terrain.rs:190:15
+    |
+190 | pub(crate) fn attach_sidecars(world: &mut World, dirs: &[crate::SidecarDir]) {
+    |               ^^^^^^^^^^^^^^^
+
+warning: function `attach_sidecars` is never used
+  --> crates/jackdaw_runtime/src/tilemap.rs:54:15
+   |
+54 | pub(crate) fn attach_sidecars(world: &mut World, dirs: &[crate::SidecarDir]) {
+   |               ^^^^^^^^^^^^^^^
+
+warning: function `spawn_for_2d_scene` is never used
+  --> crates/jackdaw_runtime/src/fallback_camera.rs:16:15
+   |
+16 | pub(crate) fn spawn_for_2d_scene(world: &mut World, spawned: &[Entity]) {
+   |               ^^^^^^^^^^^^^^^^^^
+
+warning: function `window_slot` is never used
+  --> crates/jackdaw_runtime/src/fallback_camera.rs:71:4
+   |
+71 | fn window_slot(world: &World, camera: Entity) -> Option<(Option<Entity>, isize)> {
+   |    ^^^^^^^^^^^
+
+warning: function `one_camera_per_window_order` is never used
+  --> crates/jackdaw_runtime/src/fallback_camera.rs:86:15
+   |
+86 | pub(crate) fn one_camera_per_window_order(world: &mut World, spawned: &[Entity]) {
+   |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: `jackdaw_runtime` (lib) generated 17 warnings (run `cargo fix --lib -p jackdaw_runtime` to apply 1 suggestion)
+    Checking jackdaw_editor_core v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/editor/jackdaw_editor_core)
+warning: function `resolve_dependencies` is never used
+   --> crates/jackdaw_cli/src/lib.rs:645:4
+    |
+645 | fn resolve_dependencies(root: &Path) -> Result<(), String> {
+    |    ^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `jackdaw_cli_internal` (lib) generated 1 warning
+warning: unused import: `EntityAddImageOp`
+  --> editor/jackdaw_editor_core/src/creation_taxonomy.rs:13:27
+   |
+13 |     EntityAddFogVolumeOp, EntityAddImageOp, EntityAddPlaneOp, EntityAddPointLightOp,
+   |                           ^^^^^^^^^^^^^^^^
+   |
+   = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+error[E0308]: mismatched types
+   --> editor/jackdaw_editor_core/src/project_build.rs:298:70
+    |
+298 |     let built_path = match world.non_send::<PieSession>().builds.get(&root) {
+    |                                                                  --- ^^^^^ expected `&(PathBuf, Option<CargoTarget>)`, found `&PathBuf`
+    |                                                                  |
+    |                                                                  arguments to this method are incorrect
+    |
+    = note: expected reference `&(PathBuf, std::option::Option<CargoTarget>)`
+               found reference `&PathBuf`
+note: method defined here
+   --> /rustc/b940084d7eb6a299eb4bfeb8e34901bc051e7ac4/library/std/src/collections/hash/map.rs:1034:11
+
+warning: unused variable: `bound`
+   --> editor/jackdaw_editor_core/src/commands.rs:217:5
+    |
+217 |     bound: Option<Entity>,
+    |     ^^^^^ help: if this is intentional, prefix it with an underscore: `_bound`
+    |
+    = note: `#[warn(unused_variables)]` (part of `#[warn(unused)]`) on by default
+
+error[E0502]: cannot borrow `*world` as mutable because it is also borrowed as immutable
+    --> editor/jackdaw_editor_core/src/pie.rs:1264:29
+     |
+1262 |     if let Some(savers) = world.get_resource::<LaunchAssetSavers>() {
+     |                           ----- immutable borrow occurs here
+1263 |         for saver in &savers.0 {
+     |                      --------- immutable borrow later used here
+1264 |             failures.extend(saver(world));
+     |                             ^^^^^^^^^^^^ mutable borrow occurs here
+
+warning: unused variable: `transport`
+    --> editor/jackdaw_editor_core/src/pie.rs:1460:17
+     |
+1460 |                 transport,
+     |                 ^^^^^^^^^ help: try ignoring the field: `transport: _`
+
+error[E0004]: non-exhaustive patterns: `&StateEvent::Log { .. }` not covered
+  --> editor/jackdaw_editor_core/src/pie_mirror.rs:77:15
+   |
+77 |         match event {
+   |               ^^^^^ pattern `&StateEvent::Log { .. }` not covered
+   |
+note: `StateEvent` defined here
+  --> crates/jackdaw_pie_protocol/src/event.rs:24:1
+   |
+24 | pub enum StateEvent {
+   | ^^^^^^^^^^^^^^^^^^^
+...
+38 |     Log {
+   |     --- not covered
+   = note: the matched value is of type `&StateEvent`
+help: ensure that all possible cases are being handled by adding a match arm with a wildcard pattern or an explicit pattern as shown
+   |
+97 ~             | jackdaw_pie_protocol::StateEvent::OwnWindow => {},
+98 +             &StateEvent::Log { .. } => todo!()
+   |
+
+error[E0004]: non-exhaustive patterns: `StateEvent::Log { .. }` not covered
+   --> editor/jackdaw_editor_core/src/pie_projection.rs:514:11
+    |
+514 |     match event {
+    |           ^^^^^ pattern `StateEvent::Log { .. }` not covered
+    |
+note: `StateEvent` defined here
+   --> crates/jackdaw_pie_protocol/src/event.rs:24:1
+    |
+ 24 | pub enum StateEvent {
+    | ^^^^^^^^^^^^^^^^^^^
+...
+ 38 |     Log {
+    |     --- not covered
+    = note: the matched value is of type `StateEvent`
+help: ensure that all possible cases are being handled by adding a match arm with a wildcard pattern or an explicit pattern as shown
+    |
+615 ~         | StateEvent::OwnWindow => {},
+616 +         StateEvent::Log { .. } => todo!()
+    |
+
+error[E0004]: non-exhaustive patterns: `ActiveTool::Tilemap` not covered
+   --> editor/jackdaw_editor_core/src/sprite_gizmo.rs:259:11
+    |
+259 |     match tool {
+    |           ^^^^ pattern `ActiveTool::Tilemap` not covered
+    |
+note: `ActiveTool` defined here
+   --> editor/jackdaw_editor_core/src/active_tool.rs:15:10
+    |
+ 15 | pub enum ActiveTool {
+    |          ^^^^^^^^^^
+...
+ 24 |     Tilemap,
+    |     ------- not covered
+    = note: the matched value is of type `ActiveTool`
+help: ensure that all possible cases are being handled by adding a match arm with a wildcard pattern or an explicit pattern as shown
+    |
+301 ~         },
+302 +         ActiveTool::Tilemap => todo!()
+    |
+
+warning: unused variable: `grid`
+    --> editor/jackdaw_editor_core/src/viewport_2d.rs:2034:9
+     |
+2034 |     let grid = panel.map_or(DEFAULT_UI_GRID, |host| host.view.grid);
+     |         ^^^^ help: if this is intentional, prefix it with an underscore: `_grid`
+
+Some errors have detailed explanations: E0004, E0308, E0502.
+For more information about an error, try `rustc --explain E0004`.
+warning: `jackdaw_editor_core` (lib) generated 4 warnings
+error: could not compile `jackdaw_editor_core` (lib) due to 5 previous errors; 4 warnings emitted

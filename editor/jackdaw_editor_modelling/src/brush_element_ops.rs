@@ -23,7 +23,6 @@ use jackdaw_editor_core::brush::{
     EditMode, VertexDragState,
 };
 use jackdaw_editor_core::brush_drag_ops::apply_vertex_deltas;
-use jackdaw_editor_core::core_extension::CoreExtensionInputContext;
 use jackdaw_editor_core::keybind_focus::KeybindFocus;
 
 pub(crate) fn add_to_extension(ctx: &mut ExtensionContext) {
@@ -528,7 +527,8 @@ mod nudge_tests {
     /// freshly lifted edit mesh (the live halfedge component).
     fn nudge_once(brush: &Brush, affected: &[usize]) -> Brush {
         let mut nudged = brush.clone();
-        let mut halfedge = jackdaw_editor_core::brush::BrushHalfedge::from_topology(&brush.topology);
+        let mut halfedge =
+            jackdaw_editor_core::brush::BrushHalfedge::from_topology(&brush.topology);
         let ok = super::apply_nudge_to_brush(
             &mut nudged,
             Some(&mut halfedge),
@@ -622,7 +622,8 @@ mod nudge_tests {
         let affected = vec![0usize];
 
         let mut nudged = brush.clone();
-        let mut halfedge = jackdaw_editor_core::brush::BrushHalfedge::from_topology(&brush.topology);
+        let mut halfedge =
+            jackdaw_editor_core::brush::BrushHalfedge::from_topology(&brush.topology);
         let ok = super::apply_nudge_to_brush(
             &mut nudged,
             Some(&mut halfedge),

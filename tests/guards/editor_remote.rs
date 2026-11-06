@@ -472,12 +472,19 @@ fn the_tree_refuses_a_panel_of_the_editors_own_chrome() {
         .spawn((Name::new("SidebarRow"), Node::default(), ChildOf(panel)));
     app.update();
 
+    // Chrome panels resolve to entities in the editor's world but are not
+    // scene entities: the handler refuses the root outright rather than
+    // serving an empty tree, so nothing of the chrome ever leaks.
     for named in ["Sidebar", "SidebarRow"] {
-        let tree = call(&mut app, scene_tree_handler, json!({ "root": named }));
-        assert_eq!(
-            tree["tree"].as_array().expect("an array").len(),
-            0,
-            "{named} reached the caller: {tree}"
+        let err = app
+            .world_mut()
+            .run_system_cached_with(scene_tree_handler, Some(json!({ "root": named })))
+            .expect("the handler ran")
+            .expect_err("chrome panels must be refused, not served");
+        assert!(
+            err.message.contains("matches no entity"),
+            "{named} was refused for the wrong reason: {}",
+            err.message
         );
     }
 }
@@ -1034,9 +1041,14 @@ fn warnings_do_not_carry_over_to_the_next_call() {
         call_operator_handler,
         json!({ "id": "entity.add.cube" }),
     );
-    assert_eq!(
-        outcome["warnings"],
-        json!([]),
+    // The compact reply omits an empty `warnings` list entirely, so "no
+    // carry-over" reads as: the key is absent, or present and empty.
+    let inherited = outcome
+        .get("warnings")
+        .map(|w| !w.as_array().is_none_or(|items| items.is_empty()))
+        .unwrap_or(false);
+    assert!(
+        !inherited,
         "the next call inherited the previous one's warning: {outcome}"
     );
 }
@@ -1580,46 +1592,6 @@ fn screenshot_poll(app: &mut App, params: &Value) -> Option<Value> {
         .run_system_cached_with(screenshot_handler, Some(params.clone()))
         .expect("the handler ran")
         .unwrap_or_else(|err| panic!("the screenshot refused: {}", err.message))
-}
-
-/// Poll a watching handler until it answers, the way the HTTP layer does
-/// while it holds the connection open.
-#[track_caller]
-fn poll<M>(
-    app: &mut App,
-    handler: impl bevy::ecs::system::IntoSystem<
-        In<Option<Value>>,
-        bevy::remote::BrpResult<Option<Value>>,
-        M,
-    > + Clone
-    + 'static,
-    params: Value,
-) -> Value {
-    for _ in 0..600 {
-        let answer = app
-            .world_mut()
-            .run_system_cached_with(handler.clone(), Some(params.clone()))
-            .expect("the handler ran")
-            .unwrap_or_else(|err| panic!("the handler refused: {}", err.message));
-        if let Some(answer) = answer {
-            return answer;
-        }
-        app.update();
-    }
-    panic!("the handler never answered");
-}
-
-/// Run one BRP handler and unwrap its answer.
-#[track_caller]
-fn call<M>(
-    app: &mut App,
-    handler: impl bevy::ecs::system::IntoSystem<In<Option<Value>>, bevy::remote::BrpResult, M> + 'static,
-    params: Value,
-) -> Value {
-    app.world_mut()
-        .run_system_cached_with(handler, Some(params))
-        .expect("the handler ran")
-        .unwrap_or_else(|err| panic!("the handler refused: {}", err.message))
 }
 
 /// Stand in for the readback of the capture `name` under the project.

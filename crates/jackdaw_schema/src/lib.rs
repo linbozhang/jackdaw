@@ -607,7 +607,7 @@ mod extract {
             .iter()
             .filter(|registration| {
                 registration.data::<ReflectAsset>().is_some()
-                    && asset_belongs_to_the_project(registration)
+                    && asset_belongs_to_the_project(registration, project)
             })
             .map(|registration| registration.type_info().type_path())
             .collect();
@@ -619,17 +619,33 @@ mod extract {
         })
     }
 
+    /// Whether a crate segment names the game's own code rather than the
+    /// engine, the editor, or the standard library. Only crate names the
+    /// engine itself ships are excluded, so a game crate that merely reads
+    /// like one keeps its types.
+    fn is_project_crate(segment: &str) -> bool {
+        !matches!(segment, "bevy" | "jackdaw" | "std" | "core" | "alloc")
+            && !segment.starts_with("bevy_")
+            && !segment.starts_with("jackdaw_")
+    }
+
     /// Whether an asset type the game registers belongs in its New Asset
     /// list. A project crate answers yes; the `jackdaw_runtime` crate the
     /// game links answers for its config-asset family only — an `Asset`
     /// that is also a `Resource` (the `ConfigPlugin` family, e.g.
     /// `GameInputConfig`) is authored as a file by design, while an Asset
     /// without the resource mark (`JackdawScene`, the scene file format)
-    /// is machinery the editor drives itself.
-    fn asset_belongs_to_the_project(registration: &TypeRegistration) -> bool {
+    /// is machinery the editor drives itself. A crate the build named is a
+    /// project crate even when its name reads like the engine's
+    /// (`project.includes`), which is the upstream face of the same rule.
+    fn asset_belongs_to_the_project(
+        registration: &TypeRegistration,
+        project: &ProjectCrates,
+    ) -> bool {
         let path = registration.type_info().type_path();
         let segment = crate_segment(path);
-        is_project_crate(segment)
+        project.includes(segment)
+            || is_project_crate(segment)
             || (segment == "jackdaw_runtime" && registration.data::<ReflectResource>().is_some())
     }
 

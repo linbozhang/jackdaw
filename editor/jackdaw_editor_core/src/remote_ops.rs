@@ -326,33 +326,6 @@ pub(crate) fn component_set(
     Some(OperatorResult::Cancelled)
 }
 
-/// The body of `component.set`: live routing first (the same dual condition
-/// — Live view and a projected entity — as the Inspector's field rows), else
-/// the authored [`crate::commands::field_edit_commit_on`] path.
-fn apply_component_set(
-    world: &mut World,
-    entity: Entity,
-    type_path: &str,
-    field_path: &str,
-    value: serde_json::Value,
-) {
-    if crate::inspector::reflect_fields::try_route_pie_live_field_edit(
-        world,
-        entity,
-        type_path,
-        field_path,
-        value.clone(),
-    ) {
-        return;
-    }
-    if !crate::commands::field_edit_commit_on(world, entity, type_path, field_path, &value) {
-        warn_caller(
-            world,
-            format!("component.set: {value} is not a value for {type_path}.{field_path}"),
-        );
-    }
-}
-
 /// A parameter as JSON. A string parses as JSON when it can and stands for
 /// itself when it cannot.
 fn param_json(params: &OperatorParameters, key: &str) -> Option<serde_json::Value> {
@@ -601,6 +574,35 @@ mod tests {
             world.get::<Transform>(preview),
             Some(&Transform::from_xyz(9.0, 2.0, 3.0)),
             "the ECS transform moved, as before"
+        );
+    }
+}
+
+// Retained for the component.set live-routing tests: the operator face moved
+// to `try_field_edit_commit_on`, the ledger-recording body these tests drive
+// stays exactly as the Loop work wrote it.
+#[cfg(test)]
+/// the authored [`crate::commands::field_edit_commit_on`] path.
+fn apply_component_set(
+    world: &mut World,
+    entity: Entity,
+    type_path: &str,
+    field_path: &str,
+    value: serde_json::Value,
+) {
+    if crate::inspector::reflect_fields::try_route_pie_live_field_edit(
+        world,
+        entity,
+        type_path,
+        field_path,
+        value.clone(),
+    ) {
+        return;
+    }
+    if !crate::commands::field_edit_commit_on(world, entity, type_path, field_path, &value) {
+        warn_caller(
+            world,
+            format!("component.set: {value} is not a value for {type_path}.{field_path}"),
         );
     }
 }

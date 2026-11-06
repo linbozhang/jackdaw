@@ -220,7 +220,8 @@ pub(crate) fn field_edit_commit(
     new_json: &serde_json::Value,
     group_label: &str,
 ) {
-    if let Err(refused) = try_field_edit_commit(world, type_path, field_path, new_json, group_label)
+    if let Err(refused) =
+        try_field_edit_commit(world, bound, type_path, field_path, new_json, group_label)
     {
         warn!("{refused}");
     }
@@ -231,6 +232,7 @@ pub(crate) fn field_edit_commit(
 /// drives the component. A refusal records nothing.
 pub(crate) fn try_field_edit_commit(
     world: &mut World,
+    bound: Option<Entity>,
     type_path: &str,
     field_path: &str,
     new_json: &serde_json::Value,
@@ -245,7 +247,9 @@ pub(crate) fn try_field_edit_commit(
             STALE_FIELD_EDIT_DROPPED
         );
         clear_field_edit_session(world, type_path, field_path);
-        return;
+        return Err(FieldEditRefused(format!(
+            "{type_path}.{field_path}: the selection moved"
+        )));
     }
     // Immediate commits (no prior preview) still need a derived baseline.
     field_edit_begin(world, type_path, field_path);
@@ -1948,7 +1952,13 @@ pub(crate) fn apply_json_field_to_ecs(
         };
         let component = reflected.into_inner();
         match component.reflect_path_mut(field_path) {
-            Ok(field) => apply_json_to_reflect(field, value, &registry),
+            Ok(field) => {
+                if !apply_json_to_reflect(field, value, &registry) {
+                    warn!(
+                        "live write skipped: `{type_path}.{field_path}` on {entity} did not take the value"
+                    );
+                }
+            }
             Err(error) => warn!(
                 "live write skipped: `{type_path}.{field_path}` on {entity} did not resolve ({error})"
             ),
@@ -3835,6 +3845,7 @@ mod set_bsn_field_tests {
         let type_path = TextFont::type_path();
         field_edit_commit(
             app.world_mut(),
+            None,
             type_path,
             "font_size.0",
             &serde_json::json!(1.5),
@@ -3867,6 +3878,7 @@ mod set_bsn_field_tests {
         let (mut app, _) = selected_app(DistanceFog::default());
         field_edit_commit(
             app.world_mut(),
+            None,
             DistanceFog::type_path(),
             "falloff.start",
             &serde_json::json!(5.0),
@@ -3892,6 +3904,7 @@ mod set_bsn_field_tests {
         let (mut app, _) = selected_app(Reach::default());
         field_edit_commit(
             app.world_mut(),
+            None,
             Reach::type_path(),
             "range.1",
             &serde_json::json!(4.0),
@@ -3923,6 +3936,7 @@ mod set_bsn_field_tests {
         app.register_type::<Reach>();
         let refused = try_field_edit_commit(
             app.world_mut(),
+            None,
             Reach::type_path(),
             "range.0",
             &serde_json::json!(1.0),

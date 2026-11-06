@@ -842,6 +842,7 @@ fn spawn_action(world: &mut World, body: Entity, label: &str, operator: &'static
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::texture_files::TextureInfo;
     use bevy::asset::UntypedAssetLoadFailedEvent;
     use bevy::ecs::system::RunSystemOnce as _;
 

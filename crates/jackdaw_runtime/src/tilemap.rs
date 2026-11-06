@@ -15,7 +15,8 @@ use std::path::{Path, PathBuf};
 
 use bevy::prelude::*;
 use bevy::sprite_render::{TilemapChunkMaterial, TilemapChunkMeshCache};
-use jackdaw_scene_types::{LayerTerrainMatch, Tilemap, TilemapLayer, TilemapLayerKind};
+use jackdaw_scene_types::tilemap::TilemapLayer;
+use jackdaw_scene_types::{LayerTerrainMatch, Tilemap, TilemapLayerKind};
 use jackdaw_tilemap::{Placement, TilemapData};
 use jackdaw_tileset::chunk::{ChunkDraw, TileLayout, TilemapChunkOf, TilemapEdgePiece};
 use jackdaw_tileset::{TerrainMatch, Tileset, TilesetPlugin};

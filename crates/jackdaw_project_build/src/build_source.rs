@@ -124,19 +124,15 @@ pub const CRATES_ELSEWHERE: &[(&str, &str)] = &[
     ("jackdaw_physics", "integrations/physics/jackdaw_physics"),
 ];
 
-/// Where a jackdaw crate's sources sit inside a workspace.
-fn crate_path(root: &Path, crate_name: &str) -> PathBuf {
+/// Where a jackdaw crate's sources sit inside a checkout: under `crates/`, or
+/// for a module's crate, in its workspace under `integrations/`.
+pub fn crate_path(root: &Path, crate_name: &str) -> PathBuf {
     if let Some((_, relative)) = CRATES_ELSEWHERE
         .iter()
         .find(|(name, _)| *name == crate_name)
     {
         return root.join(relative);
     }
-    root.join("crates").join(crate_name)
-
-/// Where a jackdaw crate's sources sit inside a checkout: under `crates/`, or
-/// for a module's crate, in its workspace under `integrations/`.
-pub fn crate_path(root: &Path, crate_name: &str) -> PathBuf {
     let in_crates = root.join("crates").join(crate_name);
     if in_crates.is_dir() {
         return in_crates;

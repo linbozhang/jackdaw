@@ -98,7 +98,7 @@ fn write_document(path: &Path, document: &Map<String, Value>) {
         Ok(bytes) => {
             // Atomic like every other authoritative write, so a crash
             // mid-write cannot corrupt the settings.
-            if let Err(error) = jackdaw_api_internal::document::write_atomic(&path, &bytes) {
+            if let Err(error) = jackdaw_api_internal::document::write_atomic(path, &bytes) {
                 warn!("could not persist the project settings: {error}");
             }
         }

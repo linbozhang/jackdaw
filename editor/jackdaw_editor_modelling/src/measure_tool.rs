@@ -6,12 +6,12 @@ use bevy::{
 use jackdaw_api::prelude::*;
 use jackdaw_feathers::tokens;
 
+use jackdaw_api_internal::tools::ToolStatus;
 use jackdaw_editor_core::{
     JackdawDrawSystems, default_style,
     modal_inputs::ModalInputs,
     viewport::{MainViewportCamera, SceneViewport},
 };
-use jackdaw_api_internal::tools::ToolStatus;
 
 // -- Plugin --
 

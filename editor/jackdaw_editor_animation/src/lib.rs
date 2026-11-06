@@ -52,7 +52,14 @@ impl Plugin for AnimationEditorPlugin {
             preview::plugin,
             timeline_glue::plugin,
         ))
-        .add_systems(
+        // A dirty open graph is authored state a launch must not play stale:
+        // register the saver the launch gate calls with the other refusals.
+        .init_resource::<jackdaw_editor_core::pie::LaunchAssetSavers>();
+        app.world_mut()
+            .resource_mut::<jackdaw_editor_core::pie::LaunchAssetSavers>()
+            .0
+            .push(save_dirty_graph);
+        app.add_systems(
             Update,
             (
                 keyframe_ops::follow_scene_selection_to_clip,
@@ -243,5 +250,20 @@ impl JackdawExtension for AnimationGraphExtension {
                     window.spawn(animation_graph_window_content());
                 }),
         );
+    }
+}
+
+/// Save the open animation graph if it is dirty, before a launch reads the
+/// game's files: a graph the game would read as the stale file blocks the
+/// launch instead of playing yesterday's transitions. Returns the names of
+/// the states it could not save.
+fn save_dirty_graph(world: &mut World) -> Vec<String> {
+    let dirty = world
+        .get_resource::<graph_doc::AnimationGraphDoc>()
+        .is_some_and(|doc| doc.dirty);
+    if dirty && graph_doc::write_graph_file(world).is_none() {
+        vec!["the open animation graph".to_string()]
+    } else {
+        Vec::new()
     }
 }

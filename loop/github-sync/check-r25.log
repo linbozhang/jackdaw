@@ -1,0 +1,1037 @@
+warning: constant `GAME_DEPENDENCY_OPT_LEVEL` is never used
+   --> crates/jackdaw_project_build/src/binary.rs:469:7
+    |
+469 | const GAME_DEPENDENCY_OPT_LEVEL: &str = "profile.dev.package.\"*\".opt-level=2";
+    |       ^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: constant `GAME_DEPENDENCY_DEBUG` is never used
+   --> crates/jackdaw_project_build/src/binary.rs:470:7
+    |
+470 | const GAME_DEPENDENCY_DEBUG: &str = "profile.dev.package.\"*\".debug=\"line-tables-only\"";
+    |       ^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `game_dependency_profile` is never used
+   --> crates/jackdaw_project_build/src/binary.rs:478:4
+    |
+478 | fn game_dependency_profile(project_root: &Path) -> Vec<&'static str> {
+    |    ^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: struct `DevProfileEnv` is never constructed
+   --> crates/jackdaw_project_build/src/binary.rs:500:8
+    |
+500 | struct DevProfileEnv {
+    |        ^^^^^^^^^^^^^
+
+warning: function `dependency_profile_for` is never used
+   --> crates/jackdaw_project_build/src/binary.rs:505:4
+    |
+505 | fn dependency_profile_for(
+    |    ^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `profile_files` is never used
+   --> crates/jackdaw_project_build/src/binary.rs:545:4
+    |
+545 | fn profile_files(project_root: &Path, cargo_home: Option<&Path>) -> Vec<std::path::PathBuf> {
+    |    ^^^^^^^^^^^^^
+
+warning: function `read_toml` is never used
+   --> crates/jackdaw_project_build/src/binary.rs:564:4
+    |
+564 | fn read_toml(file: &Path) -> Option<toml::Value> {
+    |    ^^^^^^^^^
+
+warning: function `game_build_command` is never used
+   --> crates/jackdaw_project_build/src/binary.rs:570:4
+    |
+570 | fn game_build_command(spec: &ShimSpec, target_dir: &Path, load: BuildLoad) -> Command {
+    |    ^^^^^^^^^^^^^^^^^^
+
+warning: function `game_build_command_with` is never used
+   --> crates/jackdaw_project_build/src/binary.rs:575:4
+    |
+575 | fn game_build_command_with(
+    |    ^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: `jackdaw_project_build` (lib) generated 9 warnings
+warning: unused import: `jackdaw_pie_protocol::transport::PieTransport`
+  --> crates/jackdaw_runtime/src/pie_log.rs:24:5
+   |
+24 | use jackdaw_pie_protocol::transport::PieTransport;
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+   = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused variable: `expanded`
+    --> crates/jackdaw_runtime/src/lib.rs:1039:15
+     |
+1039 |     let (ast, expanded) = resolve_prefab_references(world, ast, &scene_name, parent_path);
+     |               ^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_expanded`
+     |
+     = note: `#[warn(unused_variables)]` (part of `#[warn(unused)]`) on by default
+
+warning: function `spawn_scene_entities` is never used
+    --> crates/jackdaw_runtime/src/lib.rs:1196:4
+     |
+1196 | fn spawn_scene_entities(
+     |    ^^^^^^^^^^^^^^^^^^^^
+     |
+     = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: struct `SidecarDir` is never constructed
+    --> crates/jackdaw_runtime/src/lib.rs:1315:19
+     |
+1315 | pub(crate) struct SidecarDir {
+     |                   ^^^^^^^^^^
+
+warning: function `sidecar_dirs` is never used
+    --> crates/jackdaw_runtime/src/lib.rs:1327:4
+     |
+1327 | fn sidecar_dirs(
+     |    ^^^^^^^^^^^^
+
+warning: function `spawn_node` is never used
+    --> crates/jackdaw_runtime/src/lib.rs:1529:4
+     |
+1529 | fn spawn_node(
+     |    ^^^^^^^^^^
+
+warning: function `patch_to_bsn_value` is never used
+    --> crates/jackdaw_runtime/src/lib.rs:1660:4
+     |
+1660 | fn patch_to_bsn_value(patch: &BsnPatch) -> Option<BsnValue> {
+     |    ^^^^^^^^^^^^^^^^^^
+
+warning: function `patch_type_path` is never used
+    --> crates/jackdaw_runtime/src/lib.rs:1671:4
+     |
+1671 | fn patch_type_path(patch: &BsnPatch) -> Option<&str> {
+     |    ^^^^^^^^^^^^^^^
+
+warning: function `resolve_component_type_id` is never used
+    --> crates/jackdaw_runtime/src/lib.rs:1682:4
+     |
+1682 | fn resolve_component_type_id(reg: &TypeRegistry, type_path: &str) -> Option<TypeId> {
+     |    ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `convert_component` is never used
+    --> crates/jackdaw_runtime/src/lib.rs:1694:4
+     |
+1694 | fn convert_component<T: bevy::reflect::FromReflect>(
+     |    ^^^^^^^^^^^^^^^^^
+
+warning: function `load_embedded_assets` is never used
+    --> crates/jackdaw_runtime/src/lib.rs:1733:4
+     |
+1733 | fn load_embedded_assets(
+     |    ^^^^^^^^^^^^^^^^^^^^
+
+warning: function `overlaid_sidecar_dir` is never used
+   --> crates/jackdaw_runtime/src/play_overlay.rs:127:15
+    |
+127 | pub(crate) fn overlaid_sidecar_dir(
+    |               ^^^^^^^^^^^^^^^^^^^^
+
+warning: function `attach_sidecars` is never used
+   --> crates/jackdaw_runtime/src/terrain.rs:190:15
+    |
+190 | pub(crate) fn attach_sidecars(world: &mut World, dirs: &[crate::SidecarDir]) {
+    |               ^^^^^^^^^^^^^^^
+
+warning: function `attach_sidecars` is never used
+  --> crates/jackdaw_runtime/src/tilemap.rs:54:15
+   |
+54 | pub(crate) fn attach_sidecars(world: &mut World, dirs: &[crate::SidecarDir]) {
+   |               ^^^^^^^^^^^^^^^
+
+warning: function `spawn_for_2d_scene` is never used
+  --> crates/jackdaw_runtime/src/fallback_camera.rs:16:15
+   |
+16 | pub(crate) fn spawn_for_2d_scene(world: &mut World, spawned: &[Entity]) {
+   |               ^^^^^^^^^^^^^^^^^^
+
+warning: function `window_slot` is never used
+  --> crates/jackdaw_runtime/src/fallback_camera.rs:71:4
+   |
+71 | fn window_slot(world: &World, camera: Entity) -> Option<(Option<Entity>, isize)> {
+   |    ^^^^^^^^^^^
+
+warning: function `one_camera_per_window_order` is never used
+  --> crates/jackdaw_runtime/src/fallback_camera.rs:86:15
+   |
+86 | pub(crate) fn one_camera_per_window_order(world: &mut World, spawned: &[Entity]) {
+   |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: `jackdaw_runtime` (lib) generated 17 warnings (run `cargo fix --lib -p jackdaw_runtime` to apply 1 suggestion)
+warning: unused import: `EntityAddImageOp`
+  --> editor/jackdaw_editor_core/src/creation_taxonomy.rs:13:27
+   |
+13 |     EntityAddFogVolumeOp, EntityAddImageOp, EntityAddPlaneOp, EntityAddPointLightOp,
+   |                           ^^^^^^^^^^^^^^^^
+   |
+   = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused variable: `bound`
+   --> editor/jackdaw_editor_core/src/commands.rs:217:5
+    |
+217 |     bound: Option<Entity>,
+    |     ^^^^^ help: if this is intentional, prefix it with an underscore: `_bound`
+    |
+    = note: `#[warn(unused_variables)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused variable: `transport`
+    --> editor/jackdaw_editor_core/src/pie.rs:1462:17
+     |
+1462 |                 transport,
+     |                 ^^^^^^^^^ help: try ignoring the field: `transport: _`
+
+warning: unused variable: `grid`
+    --> editor/jackdaw_editor_core/src/viewport_2d.rs:2034:9
+     |
+2034 |     let grid = panel.map_or(DEFAULT_UI_GRID, |host| host.view.grid);
+     |         ^^^^ help: if this is intentional, prefix it with an underscore: `_grid`
+
+warning: method `insert` is never used
+  --> editor/jackdaw_editor_core/src/asset_failures.rs:64:8
+   |
+50 | impl WarnedFailures {
+   | ------------------- method in this implementation
+...
+64 |     fn insert(&mut self, file: PathBuf, mtime: Option<SystemTime>, row: LoadFailureRow) -> bool {
+   |        ^^^^^^
+   |
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: function `on_disk` is never used
+  --> editor/jackdaw_editor_core/src/asset_failures.rs:82:4
+   |
+82 | fn on_disk(project: Option<&ProjectRoot>, asset_path: &Path) -> PathBuf {
+   |    ^^^^^^^
+
+warning: function `plugin` is never used
+  --> editor/jackdaw_editor_core/src/asset_failures.rs:89:15
+   |
+89 | pub(crate) fn plugin(app: &mut App) {
+   |               ^^^^^^
+
+warning: function `report_failed_loads` is never used
+  --> editor/jackdaw_editor_core/src/asset_failures.rs:96:4
+   |
+96 | fn report_failed_loads(
+   |    ^^^^^^^^^^^^^^^^^^^
+
+warning: function `sync_build_diagnostics` is never used
+   --> editor/jackdaw_editor_core/src/build_diagnostics.rs:149:15
+    |
+149 | pub(crate) fn sync_build_diagnostics(
+    |               ^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `plugin` is never used
+   --> editor/jackdaw_editor_core/src/build_diagnostics.rs:322:15
+    |
+322 | pub(crate) fn plugin(app: &mut App) {
+    |               ^^^^^^
+
+warning: function `game_mode_bar` is never used
+   --> editor/jackdaw_editor_core/src/game_panel.rs:286:4
+    |
+286 | fn game_mode_bar() -> impl Bundle {
+    |    ^^^^^^^^^^^^^
+
+warning: function `game_mode_segment` is never used
+   --> editor/jackdaw_editor_core/src/game_panel.rs:332:4
+    |
+332 | fn game_mode_segment(
+    |    ^^^^^^^^^^^^^^^^^
+
+warning: constant `TONEMAPPERS` is never used
+  --> editor/jackdaw_editor_core/src/graphics_panel.rs:48:7
+   |
+48 | const TONEMAPPERS: [Tonemapper; 9] = [
+   |       ^^^^^^^^^^^
+
+warning: constant `EXPOSURE_RANGE` is never used
+  --> editor/jackdaw_editor_core/src/graphics_panel.rs:61:7
+   |
+61 | const EXPOSURE_RANGE: std::ops::Range<f32> = -5.0..20.0;
+   |       ^^^^^^^^^^^^^^
+
+warning: constant `BLOOM_RANGE` is never used
+  --> editor/jackdaw_editor_core/src/graphics_panel.rs:63:7
+   |
+63 | const BLOOM_RANGE: std::ops::Range<f32> = 0.0..1.0;
+   |       ^^^^^^^^^^^
+
+warning: constant `SHARPEN_RANGE` is never used
+  --> editor/jackdaw_editor_core/src/graphics_panel.rs:65:7
+   |
+65 | const SHARPEN_RANGE: std::ops::Range<f32> = 0.0..1.0;
+   |       ^^^^^^^^^^^^^
+
+warning: function `plugin` is never used
+  --> editor/jackdaw_editor_core/src/graphics_panel.rs:67:15
+   |
+67 | pub(crate) fn plugin(app: &mut App) {
+   |               ^^^^^^
+
+warning: function `user_action` is never used
+   --> editor/jackdaw_editor_core/src/graphics_panel.rs:105:4
+    |
+105 | fn user_action() -> CallOperatorSettings {
+    |    ^^^^^^^^^^^
+
+warning: method `show_flag` is never used
+   --> editor/jackdaw_editor_core/src/graphics_panel.rs:138:8
+    |
+136 | impl GraphicsToggle {
+    | ------------------- method in this implementation
+137 |     /// The `viewport.show.toggle` flag this row flips, if it is one.
+138 |     fn show_flag(self) -> Option<&'static str> {
+    |        ^^^^^^^^^
+
+warning: method `scene_path` is never used
+   --> editor/jackdaw_editor_core/src/graphics_panel.rs:162:8
+    |
+160 | impl GraphicsSlider {
+    | ------------------- method in this implementation
+161 |     /// The `environment.set` field path this slider drives, if it is one.
+162 |     fn scene_path(self) -> Option<&'static str> {
+    |        ^^^^^^^^^^
+
+warning: function `text` is never used
+   --> editor/jackdaw_editor_core/src/graphics_panel.rs:211:4
+    |
+211 | fn text(localization: &Localization, key: &str) -> String {
+    |    ^^^^
+
+warning: function `populate_graphics_panel` is never used
+   --> editor/jackdaw_editor_core/src/graphics_panel.rs:218:4
+    |
+218 | fn populate_graphics_panel(
+    |    ^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `spawn_section` is never used
+   --> editor/jackdaw_editor_core/src/graphics_panel.rs:241:4
+    |
+241 | fn spawn_section(commands: &mut Commands, parent: Entity, title: String, note: String) -> Entity {
+    |    ^^^^^^^^^^^^^
+
+warning: function `spawn_segmented_row` is never used
+   --> editor/jackdaw_editor_core/src/graphics_panel.rs:278:4
+    |
+278 | fn spawn_segmented_row(
+    |    ^^^^^^^^^^^^^^^^^^^
+
+warning: function `build_viewport_section` is never used
+   --> editor/jackdaw_editor_core/src/graphics_panel.rs:322:4
+    |
+322 | fn build_viewport_section(
+    |    ^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `build_scene_section` is never used
+   --> editor/jackdaw_editor_core/src/graphics_panel.rs:414:4
+    |
+414 | fn build_scene_section(
+    |    ^^^^^^^^^^^^^^^^^^^
+
+warning: function `build_realtime_gi_row` is never used
+   --> editor/jackdaw_editor_core/src/graphics_panel.rs:525:4
+    |
+525 | fn build_realtime_gi_row(commands: &mut Commands, panel: Entity, localization: &Localization) {
+    |    ^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `on_segment_pick` is never used
+   --> editor/jackdaw_editor_core/src/graphics_panel.rs:543:4
+    |
+543 | fn on_segment_pick(
+    |    ^^^^^^^^^^^^^^^
+
+warning: function `on_toggle` is never used
+   --> editor/jackdaw_editor_core/src/graphics_panel.rs:567:4
+    |
+567 | fn on_toggle(
+    |    ^^^^^^^^^
+
+warning: function `on_slider` is never used
+   --> editor/jackdaw_editor_core/src/graphics_panel.rs:604:4
+    |
+604 | fn on_slider(event: On<ValueChange<f32>>, sliders: Query<&GraphicsSlider>, mut commands: Commands) {
+    |    ^^^^^^^^^
+
+warning: function `on_tonemapper_pick` is never used
+   --> editor/jackdaw_editor_core/src/graphics_panel.rs:634:4
+    |
+634 | fn on_tonemapper_pick(
+    |    ^^^^^^^^^^^^^^^^^^
+
+warning: function `sync_viewport_fields` is never used
+   --> editor/jackdaw_editor_core/src/graphics_panel.rs:655:4
+    |
+655 | fn sync_viewport_fields(
+    |    ^^^^^^^^^^^^^^^^^^^^
+
+warning: function `sync_scene_fields` is never used
+   --> editor/jackdaw_editor_core/src/graphics_panel.rs:709:4
+    |
+709 | fn sync_scene_fields(
+    |    ^^^^^^^^^^^^^^^^^
+
+warning: function `update_opt_out_hint` is never used
+   --> editor/jackdaw_editor_core/src/graphics_panel.rs:745:4
+    |
+745 | fn update_opt_out_hint(
+    |    ^^^^^^^^^^^^^^^^^^^
+
+warning: function `update_scene_empty_hint` is never used
+   --> editor/jackdaw_editor_core/src/graphics_panel.rs:763:4
+    |
+763 | fn update_scene_empty_hint(
+    |    ^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `variant_name` is never used
+   --> editor/jackdaw_editor_core/src/graphics_panel.rs:782:4
+    |
+782 | fn variant_name(choice: Tonemapper) -> &'static str {
+    |    ^^^^^^^^^^^^
+
+warning: constant `CURSOR_ON_KEYFRAME_EPS` is never used
+  --> editor/jackdaw_editor_core/src/inspector/anim_diamond.rs:21:7
+   |
+21 | const CURSOR_ON_KEYFRAME_EPS: f32 = 0.02;
+   |       ^^^^^^^^^^^^^^^^^^^^^^
+
+warning: constant `ANIMATABLE_FIELDS` is never used
+  --> editor/jackdaw_editor_core/src/inspector/anim_diamond.rs:29:7
+   |
+29 | const ANIMATABLE_FIELDS: &[(&str, &str)] = &[
+   |       ^^^^^^^^^^^^^^^^^
+
+warning: function `is_animatable` is never used
+  --> editor/jackdaw_editor_core/src/inspector/anim_diamond.rs:46:4
+   |
+46 | fn is_animatable(component_type_path: &str, field_path: &str) -> bool {
+   |    ^^^^^^^^^^^^^
+
+warning: function `decorate_animatable_fields` is never used
+  --> editor/jackdaw_editor_core/src/inspector/anim_diamond.rs:63:8
+   |
+63 | pub fn decorate_animatable_fields(
+   |        ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: enum `DiamondState` is never used
+   --> editor/jackdaw_editor_core/src/inspector/anim_diamond.rs:340:6
+    |
+340 | enum DiamondState {
+    |      ^^^^^^^^^^^^
+
+warning: function `update_anim_diamond_highlights` is never used
+   --> editor/jackdaw_editor_core/src/inspector/anim_diamond.rs:360:8
+    |
+360 | pub fn update_anim_diamond_highlights(
+    |        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `recolor_button_icon` is never used
+   --> editor/jackdaw_editor_core/src/inspector/anim_diamond.rs:404:4
+    |
+404 | fn recolor_button_icon(
+    |    ^^^^^^^^^^^^^^^^^^^
+
+warning: function `compute_diamond_state` is never used
+   --> editor/jackdaw_editor_core/src/inspector/anim_diamond.rs:427:4
+    |
+427 | fn compute_diamond_state(
+    |    ^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `plugin` is never used
+  --> editor/jackdaw_editor_core/src/material_overrides.rs:49:15
+   |
+49 | pub(crate) fn plugin(app: &mut App) {
+   |               ^^^^^^
+
+warning: field `0` is never read
+  --> editor/jackdaw_editor_core/src/material_overrides.rs:64:30
+   |
+64 | pub struct ReportedOverrides(HashSet<(Entity, String)>);
+   |            ----------------- ^^^^^^^^^^^^^^^^^^^^^^^^^
+   |            |
+   |            field in this struct
+   |
+   = help: consider removing this field
+
+warning: struct `BrokenEntry` is never constructed
+  --> editor/jackdaw_editor_core/src/material_overrides.rs:76:8
+   |
+76 | struct BrokenEntry {
+   |        ^^^^^^^^^^^
+
+warning: methods `identity` and `line` are never used
+  --> editor/jackdaw_editor_core/src/material_overrides.rs:91:8
+   |
+88 | impl BrokenEntry {
+   | ---------------- methods in this implementation
+...
+91 |     fn identity(&self) -> String {
+   |        ^^^^^^^^
+...
+99 |     fn line(&self, who: &str) -> String {
+   |        ^^^^
+
+warning: function `broken_entries` is never used
+   --> editor/jackdaw_editor_core/src/material_overrides.rs:122:4
+    |
+122 | fn broken_entries(world: &World, holder: Entity) -> Vec<BrokenEntry> {
+    |    ^^^^^^^^^^^^^^
+
+warning: function `report_broken_overrides` is never used
+   --> editor/jackdaw_editor_core/src/material_overrides.rs:157:4
+    |
+157 | fn report_broken_overrides(
+    |    ^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: field `attempted` is never read
+    --> editor/jackdaw_editor_core/src/pie.rs:2128:5
+     |
+2127 | pub struct PiePrebuildState {
+     |            ---------------- field in this struct
+2128 |     attempted: bool,
+     |     ^^^^^^^^^
+
+warning: function `env_allows_prebuild` is never used
+    --> editor/jackdaw_editor_core/src/pie.rs:2136:4
+     |
+2136 | fn env_allows_prebuild(raw: Option<&str>) -> bool {
+     |    ^^^^^^^^^^^^^^^^^^^
+
+warning: function `prebuild_wanted` is never used
+    --> editor/jackdaw_editor_core/src/pie.rs:2142:4
+     |
+2142 | fn prebuild_wanted(world: &World) -> bool {
+     |    ^^^^^^^^^^^^^^^
+
+warning: function `prebuild_play_target` is never used
+    --> editor/jackdaw_editor_core/src/pie.rs:2158:4
+     |
+2158 | fn prebuild_play_target(world: &mut World) {
+     |    ^^^^^^^^^^^^^^^^^^^^
+
+warning: struct `EditRebuildThrottle` is never constructed
+    --> editor/jackdaw_editor_core/src/pie.rs:2254:8
+     |
+2254 | struct EditRebuildThrottle(Timer);
+     |        ^^^^^^^^^^^^^^^^^^^
+
+warning: function `sync_project_build_settings` is never used
+    --> editor/jackdaw_editor_core/src/pie.rs:2296:4
+     |
+2296 | fn sync_project_build_settings(
+     |    ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `spawn_project_build` is never used
+    --> editor/jackdaw_editor_core/src/pie.rs:2334:4
+     |
+2334 | fn spawn_project_build(world: &mut World, root: &Path, load: BuildLoad) {
+     |    ^^^^^^^^^^^^^^^^^^^
+
+warning: function `watch_project_source_for_edit` is never used
+    --> editor/jackdaw_editor_core/src/pie.rs:2362:4
+     |
+2362 | fn watch_project_source_for_edit(world: &mut World) {
+     |    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: field `throttle` is never read
+    --> editor/jackdaw_editor_core/src/pie.rs:2414:5
+     |
+2412 | struct ProjectSchemaWatch {
+     |        ------------------ field in this struct
+2413 |     last_mtime: Option<std::time::SystemTime>,
+2414 |     throttle: Timer,
+     |     ^^^^^^^^
+
+warning: function `watch_project_schema` is never used
+    --> editor/jackdaw_editor_core/src/pie.rs:2466:4
+     |
+2466 | fn watch_project_schema(world: &mut World) {
+     |    ^^^^^^^^^^^^^^^^^^^^
+
+warning: function `reconcile_build_status` is never used
+   --> editor/jackdaw_editor_core/src/project_build.rs:411:15
+    |
+411 | pub(crate) fn reconcile_build_status(world: &mut World) {
+    |               ^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `apply_component_set` is never used
+   --> editor/jackdaw_editor_core/src/remote_ops.rs:332:4
+    |
+332 | fn apply_component_set(
+    |    ^^^^^^^^^^^^^^^^^^^
+
+warning: function `plugin` is never used
+  --> editor/jackdaw_editor_core/src/tilemap.rs:54:15
+   |
+54 | pub(crate) fn plugin(app: &mut App) {
+   |               ^^^^^^
+
+warning: constant `SHEET_DISPLAY_WIDTH` is never used
+  --> editor/jackdaw_editor_core/src/tilemap_palette.rs:49:7
+   |
+49 | const SHEET_DISPLAY_WIDTH: f32 = 168.0;
+   |       ^^^^^^^^^^^^^^^^^^^
+
+warning: constant `TRIGGER_TINT` is never used
+  --> editor/jackdaw_editor_core/src/tilemap_palette.rs:52:7
+   |
+52 | const TRIGGER_TINT: Color = Color::srgba(0.0, 0.9, 0.9, 0.55);
+   |       ^^^^^^^^^^^^
+
+warning: function `plugin` is never used
+  --> editor/jackdaw_editor_core/src/tilemap_palette.rs:54:15
+   |
+54 | pub(crate) fn plugin(app: &mut App) {
+   |               ^^^^^^
+
+warning: struct `TilemapPalettePanel` is never constructed
+   --> editor/jackdaw_editor_core/src/tilemap_palette.rs:101:8
+    |
+101 | struct TilemapPalettePanel;
+    |        ^^^^^^^^^^^^^^^^^^^
+
+warning: struct `TilemapSheet` is never constructed
+   --> editor/jackdaw_editor_core/src/tilemap_palette.rs:105:8
+    |
+105 | struct TilemapSheet;
+    |        ^^^^^^^^^^^^
+
+warning: struct `TilemapHighlight` is never constructed
+   --> editor/jackdaw_editor_core/src/tilemap_palette.rs:109:8
+    |
+109 | struct TilemapHighlight;
+    |        ^^^^^^^^^^^^^^^^
+
+warning: struct `TilemapTileLabel` is never constructed
+   --> editor/jackdaw_editor_core/src/tilemap_palette.rs:113:8
+    |
+113 | struct TilemapTileLabel;
+    |        ^^^^^^^^^^^^^^^^
+
+warning: struct `TilemapLayerRow` is never constructed
+   --> editor/jackdaw_editor_core/src/tilemap_palette.rs:117:8
+    |
+117 | struct TilemapLayerRow(Entity);
+    |        ^^^^^^^^^^^^^^^
+
+warning: struct `TilemapModeBadge` is never constructed
+   --> editor/jackdaw_editor_core/src/tilemap_palette.rs:121:8
+    |
+121 | struct TilemapModeBadge(Entity);
+    |        ^^^^^^^^^^^^^^^^
+
+warning: struct `TilemapEye` is never constructed
+   --> editor/jackdaw_editor_core/src/tilemap_palette.rs:125:8
+    |
+125 | struct TilemapEye(Entity);
+    |        ^^^^^^^^^^
+
+warning: struct `TilemapBrushButton` is never constructed
+   --> editor/jackdaw_editor_core/src/tilemap_palette.rs:129:8
+    |
+129 | struct TilemapBrushButton(TileBrush);
+    |        ^^^^^^^^^^^^^^^^^^
+
+warning: struct `AddLayerButton` is never constructed
+   --> editor/jackdaw_editor_core/src/tilemap_palette.rs:133:8
+    |
+133 | struct AddLayerButton;
+    |        ^^^^^^^^^^^^^^
+
+warning: struct `PanelFingerprint` is never constructed
+   --> editor/jackdaw_editor_core/src/tilemap_palette.rs:140:8
+    |
+140 | struct PanelFingerprint(PaneState);
+    |        ^^^^^^^^^^^^^^^^
+
+warning: struct `PaneState` is never constructed
+   --> editor/jackdaw_editor_core/src/tilemap_palette.rs:143:8
+    |
+143 | struct PaneState {
+    |        ^^^^^^^^^
+
+warning: associated functions `read`, `layers`, and `sheet` are never used
+   --> editor/jackdaw_editor_core/src/tilemap_palette.rs:152:8
+    |
+151 | impl PanelFingerprint {
+    | --------------------- associated functions in this implementation
+152 |     fn read(world: &mut World) -> Self {
+    |        ^^^^
+...
+167 |     fn layers(world: &mut World) -> Vec<(Entity, String, TileCollisionMode, bool)> {
+    |        ^^^^^^
+...
+190 |     fn sheet(world: &mut World) -> Option<(Entity, u32, u32, Vec2)> {
+    |        ^^^^^
+
+warning: function `sync_palette_panel` is never used
+   --> editor/jackdaw_editor_core/src/tilemap_palette.rs:200:4
+    |
+200 | fn sync_palette_panel(
+    |    ^^^^^^^^^^^^^^^^^^
+
+warning: function `sync_palette_content` is never used
+   --> editor/jackdaw_editor_core/src/tilemap_palette.rs:248:4
+    |
+248 | fn sync_palette_content(world: &mut World) {
+    |    ^^^^^^^^^^^^^^^^^^^^
+
+warning: function `mode_letter` is never used
+   --> editor/jackdaw_editor_core/src/tilemap_palette.rs:385:4
+    |
+385 | fn mode_letter(mode: &TileCollisionMode) -> &'static str {
+    |    ^^^^^^^^^^^
+
+warning: function `mode_color` is never used
+   --> editor/jackdaw_editor_core/src/tilemap_palette.rs:393:4
+    |
+393 | fn mode_color(mode: &TileCollisionMode) -> Color {
+    |    ^^^^^^^^^^
+
+warning: function `caption` is never used
+   --> editor/jackdaw_editor_core/src/tilemap_palette.rs:401:4
+    |
+401 | fn caption(text: &str) -> Text {
+    |    ^^^^^^^
+
+warning: function `icon_text_font` is never used
+   --> editor/jackdaw_editor_core/src/tilemap_palette.rs:408:4
+    |
+408 | fn icon_text_font(world: &World) -> TextFont {
+    |    ^^^^^^^^^^^^^^
+
+warning: function `text_button` is never used
+   --> editor/jackdaw_editor_core/src/tilemap_palette.rs:420:4
+    |
+420 | fn text_button(label: &str) -> impl Bundle {
+    |    ^^^^^^^^^^^
+
+warning: function `cell_display_px` is never used
+   --> editor/jackdaw_editor_core/src/tilemap_palette.rs:440:4
+    |
+440 | fn cell_display_px(cell_size: Vec2, columns: u32) -> f32 {
+    |    ^^^^^^^^^^^^^^^
+
+warning: function `spawn_sheet` is never used
+   --> editor/jackdaw_editor_core/src/tilemap_palette.rs:447:4
+    |
+447 | fn spawn_sheet(
+    |    ^^^^^^^^^^^
+
+warning: function `sync_tile_highlight` is never used
+   --> editor/jackdaw_editor_core/src/tilemap_palette.rs:512:4
+    |
+512 | fn sync_tile_highlight(
+    |    ^^^^^^^^^^^^^^^^^^^
+
+warning: function `sync_brush_button_look` is never used
+   --> editor/jackdaw_editor_core/src/tilemap_palette.rs:542:4
+    |
+542 | fn sync_brush_button_look(
+    |    ^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `on_sheet_press` is never used
+   --> editor/jackdaw_editor_core/src/tilemap_palette.rs:564:4
+    |
+564 | fn on_sheet_press(
+    |    ^^^^^^^^^^^^^^
+
+warning: function `dispatch_layer_op` is never used
+   --> editor/jackdaw_editor_core/src/tilemap_palette.rs:607:4
+    |
+607 | fn dispatch_layer_op(
+    |    ^^^^^^^^^^^^^^^^^
+
+warning: function `on_layer_row_press` is never used
+   --> editor/jackdaw_editor_core/src/tilemap_palette.rs:623:4
+    |
+623 | fn on_layer_row_press(
+    |    ^^^^^^^^^^^^^^^^^^
+
+warning: function `on_mode_badge_press` is never used
+   --> editor/jackdaw_editor_core/src/tilemap_palette.rs:634:4
+    |
+634 | fn on_mode_badge_press(
+    |    ^^^^^^^^^^^^^^^^^^^
+
+warning: function `on_eye_press` is never used
+   --> editor/jackdaw_editor_core/src/tilemap_palette.rs:661:4
+    |
+661 | fn on_eye_press(
+    |    ^^^^^^^^^^^^
+
+warning: function `on_add_layer_press` is never used
+   --> editor/jackdaw_editor_core/src/tilemap_palette.rs:682:4
+    |
+682 | fn on_add_layer_press(
+    |    ^^^^^^^^^^^^^^^^^^
+
+warning: function `on_brush_button_press` is never used
+   --> editor/jackdaw_editor_core/src/tilemap_palette.rs:697:4
+    |
+697 | fn on_brush_button_press(
+    |    ^^^^^^^^^^^^^^^^^^^^^
+
+warning: fields `op`, `layer`, `tile`, and `cells` are never read
+   --> editor/jackdaw_editor_core/src/tilemap_palette.rs:727:5
+    |
+726 | struct PendingStroke {
+    |        ------------- fields in this struct
+727 |     op: &'static str,
+    |     ^^
+728 |     layer: Entity,
+    |     ^^^^^
+729 |     tile: u32,
+    |     ^^^^
+730 |     cells: String,
+    |     ^^^^^
+
+warning: fields `layer`, `tile`, `from`, and `to` are never read
+   --> editor/jackdaw_editor_core/src/tilemap_palette.rs:735:5
+    |
+734 | struct PendingFill {
+    |        ----------- fields in this struct
+735 |     layer: Entity,
+    |     ^^^^^
+736 |     tile: u32,
+    |     ^^^^
+737 |     from: IVec2,
+    |     ^^^^
+738 |     to: IVec2,
+    |     ^^
+
+warning: field `0` is never read
+   --> editor/jackdaw_editor_core/src/tilemap_palette.rs:753:11
+    |
+753 |     Cells(PendingStroke),
+    |     ----- ^^^^^^^^^^^^^
+    |     |
+    |     field in this variant
+    |
+help: consider changing the field to be of unit type to suppress this warning while preserving the field numbering, or remove the field
+    |
+753 -     Cells(PendingStroke),
+753 +     Cells(()),
+    |
+
+warning: field `0` is never read
+   --> editor/jackdaw_editor_core/src/tilemap_palette.rs:754:10
+    |
+754 |     Fill(PendingFill),
+    |     ---- ^^^^^^^^^^^
+    |     |
+    |     field in this variant
+    |
+help: consider changing the field to be of unit type to suppress this warning while preserving the field numbering, or remove the field
+    |
+754 -     Fill(PendingFill),
+754 +     Fill(()),
+    |
+
+warning: function `apply_pending_stroke` is never used
+   --> editor/jackdaw_editor_core/src/tilemap_palette.rs:759:4
+    |
+759 | fn apply_pending_stroke(
+    |    ^^^^^^^^^^^^^^^^^^^^
+
+warning: function `draw_trigger_overlays` is never used
+    --> editor/jackdaw_editor_core/src/tilemap_palette.rs:1015:4
+     |
+1015 | fn draw_trigger_overlays(
+     |    ^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `click_gesture` is never used
+   --> editor/jackdaw_editor_core/src/test_input.rs:473:15
+    |
+473 | pub(crate) fn click_gesture(at: Vec2, double: bool, frames: u32) -> Vec<Beat> {
+    |               ^^^^^^^^^^^^^
+
+warning: function `drag_gesture` is never used
+   --> editor/jackdaw_editor_core/src/test_input.rs:502:15
+    |
+502 | pub(crate) fn drag_gesture(from: Vec2, to: Vec2, steps: u32, frames: u32) -> Vec<Beat> {
+    |               ^^^^^^^^^^^^
+
+warning: function `typing_gesture` is never used
+   --> editor/jackdaw_editor_core/src/test_input.rs:539:15
+    |
+539 | pub(crate) fn typing_gesture(text: &str, frames: u32) -> Vec<Beat> {
+    |               ^^^^^^^^^^^^^^
+
+warning: function `enter_gesture` is never used
+   --> editor/jackdaw_editor_core/src/test_input.rs:565:15
+    |
+565 | pub(crate) fn enter_gesture(frames: u32) -> Vec<Beat> {
+    |               ^^^^^^^^^^^^^
+
+warning: function `select_all_gesture` is never used
+   --> editor/jackdaw_editor_core/src/test_input.rs:584:15
+    |
+584 | pub(crate) fn select_all_gesture(frames: u32) -> Vec<Beat> {
+    |               ^^^^^^^^^^^^^^^^^^
+
+warning: `jackdaw_editor_core` (lib) generated 107 warnings (run `cargo fix --lib -p jackdaw_editor_core` to apply 4 suggestions)
+    Checking jackdaw_editor_remote v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/editor/jackdaw_editor_remote)
+warning: unused import: `jackdaw_editor_core::core_extension::CoreExtensionInputContext`
+  --> editor/jackdaw_editor_modelling/src/brush_element_ops.rs:26:5
+   |
+26 | use jackdaw_editor_core::core_extension::CoreExtensionInputContext;
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+   = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: `jackdaw_editor_modelling` (lib) generated 1 warning (run `cargo fix --lib -p jackdaw_editor_modelling` to apply 1 suggestion)
+warning: function `resolve_dependencies` is never used
+   --> crates/jackdaw_cli/src/lib.rs:645:4
+    |
+645 | fn resolve_dependencies(root: &Path) -> Result<(), String> {
+    |    ^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `jackdaw_cli_internal` (lib) generated 1 warning
+error[E0433]: cannot find module or crate `jackdaw_project_build` in this scope
+   --> editor/jackdaw_editor_remote/src/server.rs:665:31
+    |
+665 |                 .map(|assets| jackdaw_project_build::flow::flow_path(assets));
+    |                               ^^^^^^^^^^^^^^^^^^^^^ use of unresolved module or unlinked crate `jackdaw_project_build`
+    |
+    = help: if you wanted to use a crate named `jackdaw_project_build`, use `cargo add jackdaw_project_build` to add it to your `Cargo.toml`
+
+error[E0433]: cannot find module or crate `jackdaw_project_build` in this scope
+   --> editor/jackdaw_editor_remote/src/server.rs:668:35
+    |
+668 |                     .map(|assets| jackdaw_project_build::flow::inspect_flow(&assets))
+    |                                   ^^^^^^^^^^^^^^^^^^^^^ use of unresolved module or unlinked crate `jackdaw_project_build`
+    |
+    = help: if you wanted to use a crate named `jackdaw_project_build`, use `cargo add jackdaw_project_build` to add it to your `Cargo.toml`
+
+error[E0425]: cannot find value `BlocksCameraInput` in the crate root
+   --> editor/jackdaw_editor_remote/src/debug/depgraph.rs:629:16
+    |
+629 |         crate::BlocksCameraInput,
+    |                ^^^^^^^^^^^^^^^^^ not found in the crate root
+
+error[E0603]: function `click_gesture` is private
+   --> editor/jackdaw_editor_remote/src/ui_probe.rs:24:21
+    |
+ 24 |     SyntheticInput, click_gesture, drag_gesture, enter_gesture, select_all_gesture, typing_gesture,
+    |                     ^^^^^^^^^^^^^ private function
+    |
+note: the function `click_gesture` is defined here
+   --> editor/jackdaw_editor_core/src/test_input.rs:473:1
+    |
+473 | pub(crate) fn click_gesture(at: Vec2, double: bool, frames: u32) -> Vec<Beat> {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error[E0603]: function `drag_gesture` is private
+   --> editor/jackdaw_editor_remote/src/ui_probe.rs:24:36
+    |
+ 24 |     SyntheticInput, click_gesture, drag_gesture, enter_gesture, select_all_gesture, typing_gesture,
+    |                                    ^^^^^^^^^^^^ private function
+    |
+note: the function `drag_gesture` is defined here
+   --> editor/jackdaw_editor_core/src/test_input.rs:502:1
+    |
+502 | pub(crate) fn drag_gesture(from: Vec2, to: Vec2, steps: u32, frames: u32) -> Vec<Beat> {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error[E0603]: function `enter_gesture` is private
+   --> editor/jackdaw_editor_remote/src/ui_probe.rs:24:50
+    |
+ 24 |     SyntheticInput, click_gesture, drag_gesture, enter_gesture, select_all_gesture, typing_gesture,
+    |                                                  ^^^^^^^^^^^^^ private function
+    |
+note: the function `enter_gesture` is defined here
+   --> editor/jackdaw_editor_core/src/test_input.rs:565:1
+    |
+565 | pub(crate) fn enter_gesture(frames: u32) -> Vec<Beat> {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error[E0603]: function `select_all_gesture` is private
+   --> editor/jackdaw_editor_remote/src/ui_probe.rs:24:65
+    |
+ 24 |     SyntheticInput, click_gesture, drag_gesture, enter_gesture, select_all_gesture, typing_gesture,
+    |                                                                 ^^^^^^^^^^^^^^^^^^ private function
+    |
+note: the function `select_all_gesture` is defined here
+   --> editor/jackdaw_editor_core/src/test_input.rs:584:1
+    |
+584 | pub(crate) fn select_all_gesture(frames: u32) -> Vec<Beat> {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error[E0603]: function `typing_gesture` is private
+   --> editor/jackdaw_editor_remote/src/ui_probe.rs:24:85
+    |
+ 24 |     SyntheticInput, click_gesture, drag_gesture, enter_gesture, select_all_gesture, typing_gesture,
+    |                                                                                     ^^^^^^^^^^^^^^ private function
+    |
+note: the function `typing_gesture` is defined here
+   --> editor/jackdaw_editor_core/src/test_input.rs:539:1
+    |
+539 | pub(crate) fn typing_gesture(text: &str, frames: u32) -> Vec<Beat> {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error[E0603]: function `leftover_root` is private
+   --> editor/jackdaw_editor_remote/src/server.rs:432:68
+    |
+432 |     let Some(root) = jackdaw_editor_core::scenes::recovery_dialog::leftover_root(world) else {
+    |                                                                    ^^^^^^^^^^^^^ private function
+    |
+note: the function `leftover_root` is defined here
+   --> editor/jackdaw_editor_core/src/scenes/recovery_dialog.rs:520:1
+    |
+520 | pub(crate) fn leftover_root(world: &World) -> Option<PathBuf> {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error[E0624]: method `queue` is private
+   --> editor/jackdaw_editor_remote/src/ui_probe.rs:673:10
+    |
+673 |         .queue(click_gesture(placement.centre, double, 1));
+    |          ^^^^^ private method
+    |
+   ::: editor/jackdaw_editor_core/src/test_input.rs:139:5
+    |
+139 |     pub(crate) fn queue(&mut self, beats: Vec<Beat>) {
+    |     ------------------------------------------------ private method defined here
+
+error[E0624]: method `queue` is private
+   --> editor/jackdaw_editor_remote/src/ui_probe.rs:712:10
+    |
+712 |         .queue(drag_gesture(from, to, steps, 1));
+    |          ^^^^^ private method
+    |
+   ::: editor/jackdaw_editor_core/src/test_input.rs:139:5
+    |
+139 |     pub(crate) fn queue(&mut self, beats: Vec<Beat>) {
+    |     ------------------------------------------------ private method defined here
+
+error[E0624]: method `queue` is private
+   --> editor/jackdaw_editor_remote/src/ui_probe.rs:795:52
+    |
+795 |     world.get_resource_or_init::<SyntheticInput>().queue(beats);
+    |                                                    ^^^^^ private method
+    |
+   ::: editor/jackdaw_editor_core/src/test_input.rs:139:5
+    |
+139 |     pub(crate) fn queue(&mut self, beats: Vec<Beat>) {
+    |     ------------------------------------------------ private method defined here
+
+warning: unused variable: `gesture_playing`
+    --> editor/jackdaw_editor_remote/src/server.rs:2347:9
+     |
+2347 |     let gesture_playing = !world
+     |         ^^^^^^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_gesture_playing`
+     |
+     = note: `#[warn(unused_variables)]` (part of `#[warn(unused)]`) on by default
+
+Some errors have detailed explanations: E0425, E0433, E0603, E0624.
+For more information about an error, try `rustc --explain E0425`.
+warning: `jackdaw_editor_remote` (lib) generated 1 warning
+error: could not compile `jackdaw_editor_remote` (lib) due to 12 previous errors; 1 warning emitted

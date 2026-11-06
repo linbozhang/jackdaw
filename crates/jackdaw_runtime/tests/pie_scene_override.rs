@@ -9,9 +9,7 @@
 
 use bevy::asset::AssetPath;
 use bevy::prelude::*;
-use jackdaw_runtime::{
-    JackdawPlugin, JackdawScene, JackdawSceneRoot, PieSceneOverride,
-};
+use jackdaw_runtime::{JackdawPlugin, JackdawScene, JackdawSceneRoot, PieSceneOverride};
 use std::path::{Path, PathBuf};
 use std::time::Duration;
 
@@ -343,7 +341,10 @@ fn under_play_the_main_scene_root_loads_the_open_scene() {
 
     let root = spawn_root(&mut app, "scene.bsn");
 
-    assert_eq!(upstream_spawned_names(&mut app, root), vec!["Meadow".to_string()]);
+    assert_eq!(
+        upstream_spawned_names(&mut app, root),
+        vec!["Meadow".to_string()]
+    );
 }
 
 #[test]
@@ -354,8 +355,14 @@ fn a_hud_spawned_first_is_left_alone_and_the_level_spawns_once() {
     let hud = spawn_root(&mut app, "hud.bsn");
     let level = spawn_root(&mut app, "scene.bsn");
 
-    assert_eq!(upstream_spawned_names(&mut app, hud), vec!["Hud".to_string()]);
-    assert_eq!(upstream_spawned_names(&mut app, level), vec!["Meadow".to_string()]);
+    assert_eq!(
+        upstream_spawned_names(&mut app, hud),
+        vec!["Hud".to_string()]
+    );
+    assert_eq!(
+        upstream_spawned_names(&mut app, level),
+        vec!["Meadow".to_string()]
+    );
     let meadows = app
         .world_mut()
         .query::<&Name>()
@@ -376,7 +383,10 @@ fn an_in_memory_root_is_left_alone() {
 
     let root = app.world_mut().spawn(JackdawSceneRoot(handle)).id();
 
-    assert_eq!(upstream_spawned_names(&mut app, root), vec!["Built".to_string()]);
+    assert_eq!(
+        upstream_spawned_names(&mut app, root),
+        vec!["Built".to_string()]
+    );
 }
 
 #[test]
@@ -407,7 +417,10 @@ fn an_open_scene_whose_name_holds_a_hash_loads_as_a_file() {
 
     let root = spawn_root(&mut app, "scene.bsn");
 
-    assert_eq!(upstream_spawned_names(&mut app, root), vec!["Boss".to_string()]);
+    assert_eq!(
+        upstream_spawned_names(&mut app, root),
+        vec!["Boss".to_string()]
+    );
 }
 
 #[test]
@@ -417,5 +430,8 @@ fn without_an_override_the_game_loads_its_own_scene() {
 
     let root = spawn_root(&mut app, "scene.bsn");
 
-    assert_eq!(upstream_spawned_names(&mut app, root), vec!["Default".to_string()]);
+    assert_eq!(
+        upstream_spawned_names(&mut app, root),
+        vec!["Default".to_string()]
+    );
 }

@@ -32,6 +32,7 @@
     reason = "jd is a user-facing terminal tool; stdout/stderr is its output channel"
 )]
 
+use jackdaw_env::sdk_toolchain_command;
 use std::path::{Path, PathBuf};
 use std::process::ExitCode;
 
@@ -637,28 +638,6 @@ fn removed_feature_problems(root: &Path, package_dir: &Path) -> Vec<Problem> {
         .collect()
 }
 
-/// Ask cargo to resolve the project's full dependency graph, reporting
-/// its first error line. Unlike the `--no-deps` metadata call used to
-/// find the package, this one does the version solving, which is where
-/// an unpublished or mistyped requirement surfaces.
-fn resolve_dependencies(root: &Path) -> Result<(), String> {
-    let output = rust_env_command("cargo")
-        .current_dir(root)
-        .args(["metadata", "--format-version", "1"])
-        .output()
-        .map_err(|error| format!("could not run cargo: {error}"))?;
-    if output.status.success() {
-        return Ok(());
-    }
-    let stderr = String::from_utf8_lossy(&output.stderr);
-    Err(stderr
-        .lines()
-        .map(str::trim)
-        .find(|line| line.starts_with("error"))
-        .unwrap_or("cargo could not resolve this project's dependencies")
-        .to_string())
-}
-
 /// `jd build [--project <path>] [--config <label>]`: run the same
 /// pipeline the editor runs. A game persists `.jackdaw/schema.json`,
 /// which a running editor watches and reloads; a project that is only
@@ -775,7 +754,7 @@ fn configured_game_command(binary: &Path, cwd: &Path, entry: &RunEntry) -> std::
 /// stays pinned by test — with no run selected, `jd run` is what it
 /// always was, byte for byte.
 fn bare_cargo_run(root: &Path) -> std::process::Command {
-    let mut command = rust_env_command("cargo");
+    let mut command = sdk_toolchain_command("cargo");
     command.arg("run").current_dir(root);
     command
 }
@@ -994,17 +973,10 @@ struct BuildOutcome {
     dylib_artifacts: Vec<String>,
 }
 
-/// Build the project at `root`: a game as its own binary with its
-/// schema persisted, a project that is only an extension against the
-/// SDK. `target` narrows a game build to one run's cargo target.
-/// Returns what the build produced, so `jd run --config` can launch
-/// the binary and `jd export` can check how it linked.
-fn build_project(root: &Path, target: Option<&CargoTarget>) -> Result<BuildOutcome, ExitCode> {
-
 /// Build the project at `root`: a game as its own binary with its schema
-/// persisted, a project that is only an extension against the SDK. Returns
-/// the game's binary, or `None` for an extension.
-fn build_project(root: &Path) -> Result<Option<PathBuf>, ExitCode> {
+/// persisted, a project that is only an extension against the SDK. A run
+/// target selects the game binary a named run config launches.
+fn build_project(root: &Path, target: Option<&CargoTarget>) -> Result<BuildOutcome, ExitCode> {
     let spec = match jackdaw_project_build::shim_spec_for_project(root) {
         Ok(spec) => spec,
         Err(error) => {

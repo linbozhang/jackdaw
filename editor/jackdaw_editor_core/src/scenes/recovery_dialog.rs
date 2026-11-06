@@ -517,7 +517,7 @@ pub fn dismiss_all(world: &mut World) {
 }
 
 /// Where the open project's recovery sessions live, if a project is open.
-pub(crate) fn leftover_root(world: &World) -> Option<PathBuf> {
+pub fn leftover_root(world: &World) -> Option<PathBuf> {
     world
         .get_resource::<crate::project::ProjectRoot>()
         .map(|project| project.root.clone())
@@ -568,7 +568,9 @@ pub fn restore_tab(world: &mut World, dir: &Path, index: usize) -> Result<(), St
     jackdaw_prefab::absolutize_isa_sources(&mut doc, &assets_root, &parent);
     crate::prefab::save_load::retarget_isa_sources(&mut doc, &assets_root, &parent);
     if kind == TabKind::Scene {
-        crate::scene_nodes::name_instance_roots(&mut doc);
+        let registry = world.resource::<AppTypeRegistry>().clone();
+        let reg = registry.read();
+        crate::scene_nodes::name_scene_nodes(&mut doc, &reg);
     }
 
     // The clean baseline is the file on disk: hash what a save of that

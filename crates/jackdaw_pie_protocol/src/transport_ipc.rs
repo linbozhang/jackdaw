@@ -336,6 +336,7 @@ mod tests {
             "backlog digests over drains with nothing dropped"
         );
         game.drain_received();
+    }
 
     /// A peer that stopped reading backs the queue up past its limit, every send
     /// is still kept, and reading again clears the congestion.

@@ -285,7 +285,10 @@ pub(crate) fn resolve_override_for_launch(
         if named {
             crate::pie::save_scenes_before_launch(world, action)?;
         } else {
-            let mut failures = crate::scenes::operators::save_modified_scenes(world);
+            let mut failures: Vec<String> = crate::scenes::operators::save_modified_scenes(world)
+                .into_iter()
+                .map(|failure| failure.message)
+                .collect();
             failures.extend(crate::definition_assets::save_dirty_assets(world));
             if !failures.is_empty() {
                 return Err(format!(
@@ -796,6 +799,9 @@ pub(crate) fn pie_play_current(
     id = "project.set_save_before_play",
     label = "Set Save Before Play",
     description = "Set how Play handles unsaved scenes: save, ask, or play an unsaved copy.",
+    // The `save` policy persists into project settings and fires scene
+    // saves before launch; batches that must roll back refuse it.
+    writes_disk = true,
     params(mode(
         String,
         doc = "The policy: \"save\" (save modified scenes, then launch), \"ask\" \

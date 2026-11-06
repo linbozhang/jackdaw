@@ -1,0 +1,490 @@
+   Compiling jackdaw_project_build v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_project_build)
+warning: function `game_build_command` is never used
+   --> crates/jackdaw_project_build/src/binary.rs:413:4
+    |
+413 | fn game_build_command(spec: &ShimSpec, target_dir: &Path, load: BuildLoad) -> Command {
+    |    ^^^^^^^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: function `game_build_command_with` is never used
+   --> crates/jackdaw_project_build/src/binary.rs:418:4
+    |
+418 | fn game_build_command_with(
+    |    ^^^^^^^^^^^^^^^^^^^^^^^
+
+   Compiling jackdaw_scaffold v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_scaffold)
+   Compiling jackdaw_cli_internal v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_cli)
+warning: `jackdaw_project_build` (lib) generated 2 warnings
+   Compiling jackdaw_editor_core v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/editor/jackdaw_editor_core)
+   Compiling jd v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jd)
+warning: unused import: `TextureInfo`
+  --> editor/jackdaw_editor_core/src/inspector/file_card.rs:25:67
+   |
+25 | use crate::texture_files::{AssetPreviewState, is_image_file_path, TextureInfo};
+   |                                                                   ^^^^^^^^^^^
+   |
+   = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused import: `crate::build_status::BuildStatus`
+    --> editor/jackdaw_editor_core/src/pie.rs:3921:9
+     |
+3921 |     use crate::build_status::BuildStatus;
+     |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+     = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: function `handle_pick_result` is never used
+    --> editor/jackdaw_editor_core/src/pie.rs:1165:15
+     |
+1165 | pub(crate) fn handle_pick_result(world: &mut World, bits: Option<u64>) {
+     |               ^^^^^^^^^^^^^^^^^^
+     |
+     = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+   Compiling jackdaw_editor_animation v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/editor/jackdaw_editor_animation)
+   Compiling jackdaw_editor_modelling v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/editor/jackdaw_editor_modelling)
+   Compiling jackdaw_editor_tile v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/editor/jackdaw_editor_tile)
+   Compiling jackdaw_editor_remote v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/editor/jackdaw_editor_remote)
+   Compiling jackdaw_editor_launcher v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/editor/jackdaw_editor_launcher)
+   Compiling jackdaw_editor_terrain v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/editor/jackdaw_editor_terrain)
+warning: `jackdaw_editor_core` (lib test) generated 1 warning (run `cargo fix --lib -p jackdaw_editor_core --tests` to apply 1 suggestion)
+warning: `jackdaw_editor_core` (lib) generated 2 warnings (run `cargo fix --lib -p jackdaw_editor_core` to apply 1 suggestion)
+   Compiling jackdaw v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw)
+   Compiling jackdaw_physics v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/integrations/physics/jackdaw_physics)
+   Compiling jackdaw_editor v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_editor)
+    Finished `test` profile [optimized + debuginfo] target(s) in 28.61s
+     Running unittests src/lib.rs (target/debug/deps/bevy_window_chrome-a0a1688a456e5b32)
+
+running 2 tests
+test shell::tests::shell_camera_is_marked_the_default_ui_camera ... ok
+test shell::tests::shell_camera_leaves_lights_outside_the_scene_camera_unseen ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.11s
+
+     Running unittests src/lib.rs (target/debug/deps/dynamic_extension-25adad1a6892510e)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (target/debug/deps/jackdaw-91b0e74401f4101b)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (target/debug/deps/jackdaw_animation-653c7f2c8b819236)
+
+running 14 tests
+test clip::tests::a_lit_marker_goes_out_once_its_time_is_up ... ok
+test compile::tests::a_cubic_track_reads_its_tangents_off_the_keys_beside_each_one ... ok
+test sheet::tests::a_series_reads_linearly_between_its_keys ... ok
+test timeline::tests::a_key_within_the_threshold_wins_the_snap_over_the_frame_beside_it ... ok
+test sheet::tests::a_flat_series_still_gets_a_band_to_sit_in ... ok
+test timeline::tests::a_time_just_off_a_frame_snaps_back_onto_it ... ok
+test timeline::tests::snapping_switched_off_leaves_a_time_where_it_was_dragged ... ok
+test graph_owner::tests::a_target_already_playing_gets_its_own_graph_back ... ok
+test graph_owner::tests::returning_untags_only_what_the_loan_tagged ... ok
+test graph_owner::tests::a_target_with_no_player_keeps_none_after_the_loan ... ok
+test sheet::tests::the_tracks_hang_under_a_heading_naming_what_they_animate ... ok
+test sheet::tests::the_summary_row_holds_every_key_of_the_clip ... ok
+test compile::tests::a_disabled_track_is_left_out_of_the_compiled_clip ... ok
+test compile::tests::every_interpolation_mode_compiles_to_a_curve ... ok
+
+test result: ok. 14 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running unittests src/lib.rs (target/debug/deps/jackdaw_animation_runtime-be3b8b564f649c0f)
+
+running 4 tests
+test events::tests::a_key_on_the_first_frame_of_a_clip_fires_as_playback_leaves_it ... ok
+test events::tests::a_clip_that_wrapped_fires_the_keys_on_both_sides_of_the_wrap ... ok
+test events::tests::a_wrap_that_lands_where_it_started_fires_the_whole_clip ... ok
+test events::tests::an_event_key_fires_once_when_playback_crosses_it ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running unittests src/lib.rs (target/debug/deps/jackdaw_api-dd98ba2dba7d6123)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (target/debug/deps/jackdaw_api_internal-f50d548e62ebe51c)
+
+running 71 tests
+test asset_kinds::tests::a_kind_answers_to_its_id_its_type_path_and_its_label ... ok
+test asset_kinds::tests::a_kind_is_named_after_its_type ... ok
+test asset_kinds::tests::a_kind_the_editor_compiled_in_wins_over_the_schemas ... ok
+test asset_kinds::tests::a_schema_kind_gives_way_to_a_compiled_one_registered_after_it ... ok
+test asset_kinds::tests::a_schema_kind_does_not_take_the_name_of_a_compiled_one ... ok
+test asset_kinds::tests::a_label_two_kinds_share_names_neither_of_them ... ok
+test asset_kinds::tests::a_schema_kind_is_edited_as_schema_and_scanned_for_files ... ok
+test asset_kinds::tests::a_type_called_only_def_keeps_its_name ... ok
+test asset_kinds::tests::registering_a_kind_again_replaces_the_earlier_registration ... ok
+test inspector::tests::builtin_categories_carry_descriptions ... ok
+test inspector::tests::camera_body_routes_to_object_by_submodule_prefixes ... ok
+test inspector::tests::category_for_maps_builtins_and_defaults_to_components ... ok
+test inspector::tests::light_derived_companions_stay_in_components ... ok
+test inspector::tests::categories_sorted_by_order ... ok
+test inspector::tests::lights_route_to_object_by_exact_entry ... ok
+test inspector::tests::material_card_prefix_routes_to_material ... ok
+test inspector::tests::resolve_keeps_current_when_applicable_else_first ... ok
+test inspector::tests::register_category_and_mapping ... ok
+test inspector::tests::prefix_routing_and_exact_wins ... ok
+test entity_icons::tests::registered_icon_returns_first_match ... ok
+test entity_icons::tests::a_predicate_decides_when_no_component_rule_has ... ok
+test entity_icons::tests::a_last_resort_rule_stands_behind_a_kind_registered_after_it ... ok
+test entity_icons::tests::first_registered_match_wins ... ok
+test keymap::apply::tests::a_saved_ctrl_row_stays_ctrl_over_a_cmd_default ... ok
+test keymap::apply::tests::applier_applies_double_click_phase ... ok
+test keymap::apply::tests::a_primary_default_binds_cmd_on_macos_and_ctrl_elsewhere ... ok
+test keymap::apply::tests::applier_applies_scroll_input_with_scroll_tick ... ok
+test keymap::apply::tests::applier_applies_modal_context_when_builtin_registered ... ok
+test keymap::apply::tests::applier_applies_mouse_button_with_press_condition ... ok
+test keymap::apply::tests::applier_rejects_unknown_mouse_button_name ... ok
+test keymap::apply::tests::applier_never_touches_foreign_bindings ... ok
+test keymap::apply::tests::applier_binds_every_action_entity_of_an_operator ... ok
+test keymap::apply::tests::applier_skips_modal_context_when_builtin_absent ... ok
+test keymap::apply::tests::resolve_keeps_a_user_row_naming_an_operator_with_no_default ... ok
+test keymap::apply::tests::resolve_replaces_every_row_of_an_overridden_operator ... ok
+test keymap::apply::tests::resolve_with_no_user_rows_is_the_defaults ... ok
+test keymap::apply::tests::applier_spawns_and_replaces_bindings ... ok
+test keymap::types::tests::default_keymap_snapshot_is_classic ... ok
+test keymap::types::tests::key_code_names_round_trip ... ok
+test keymap::types::tests::minimal_handwritten_json_parses_with_defaults ... ok
+test keymap::types::tests::mouse_button_golden_shape ... ok
+test keymap::types::tests::mouse_button_name_round_trips ... ok
+test keymap::types::tests::preset_round_trips_through_json ... ok
+test keymap::types::tests::serialized_shape_is_the_documented_contract ... ok
+test operator::parameter_tests::a_nested_call_never_replaces_the_outer_calls_outcome ... ok
+test keymap::types::tests::unknown_key_name_is_none_not_panic ... ok
+test operator::parameter_tests::a_nested_call_never_replaces_the_outer_calls_replacements ... ok
+test operator::parameter_tests::a_value_that_arrived_as_text_reads_as_its_type ... ok
+test operator::parameter_tests::a_vec3_reads_from_a_vector_or_from_three_numbers_as_text ... ok
+test operator::parameter_tests::text_that_spells_nothing_reads_as_nothing ... ok
+test selection::tests::clear_selection_in_world_skips_already_despawned_entity ... ok
+test selection::tests::clear_selection_in_world_empties_and_removes_markers ... ok
+test selection::tests::select_multiple_drops_an_entity_that_is_no_longer_there ... ok
+test terrain::tests::brush_active_covers_both_sculpt_and_paint ... ok
+test terrain::tests::brush_active_excludes_tools_without_a_brush ... ok
+test terrain::tests::toggling_the_tool_in_use_puts_it_away ... ok
+test viewport::tests::an_empty_hover_map_does_not_block_the_click ... ok
+test tests::action_for_spawns_action_with_no_keymap_entry ... ok
+test viewport::tests::no_active_viewport_does_not_block_the_click ... ok
+test viewport::tests::an_overlay_entity_blocks_the_click ... ok
+test viewport::tests::viewport_own_node_does_not_block_the_click ... ok
+test widgets::tests::scoped_override_is_restored_when_the_override_unregisters ... ok
+test tests::bind_operator_records_defaults_and_spawns_action ... ok
+test widgets::tests::unregistering_a_shadowed_definition_keeps_the_override ... ok
+test keymap::persist::tests::the_copy_fallback_leaves_nothing_behind_to_be_rescued_again ... ok
+test keymap::persist::tests::an_empty_file_is_not_a_file_worth_rescuing ... ok
+test document::tests::write_atomic_replaces_and_cleans_up ... ok
+test document::tests::write_atomic_names_distinct_temps_per_call ... ok
+test document::tests::write_atomic_rotates_the_previous_version_to_one_bak ... ok
+test document::tests::sweep_takes_only_stale_editor_temps ... ok
+test document::tests::write_atomic_failure_leaves_the_old_file ... ok
+
+test result: ok. 71 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.08s
+
+     Running unittests src/lib.rs (target/debug/deps/jackdaw_api_macros-1c9185dea8dd4b45)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (target/debug/deps/jackdaw_avian_integration-0e42d0aed3e951e4)
+
+running 5 tests
+test tests::convex_brush_honors_convex_hull_request ... ok
+test tests::cuboid_brush_builds_a_trimesh_collider ... ok
+test tests::bridge_inserts_collider_on_spawn ... ok
+test tests::bridge_builds_a_primitive_collider_on_a_plain_mesh_entity ... ok
+test tests::cuboid_honors_convex_decomposition_request ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.23s
+
+     Running unittests src/lib.rs (target/debug/deps/jackdaw_bind-64bfd94edd0a8e5b)
+
+running 24 tests
+test evaluate::tests::renders_bools_and_strings ... ok
+test evaluate::tests::renders_whole_floats_without_a_fraction ... ok
+test evaluate::tests::more_placeholders_than_args_is_an_error ... ok
+test error::tests::display_text_is_pinned ... ok
+test resolve::tests::an_unregistered_type_still_reads_as_unknown ... ok
+test resolve::tests::a_short_type_path_two_types_share_reads_as_ambiguous ... ok
+test types::tests::a_path_that_does_name_a_field_is_not_a_marker ... ok
+test resolve::tests::missing_type_registry_is_an_error_not_a_panic ... ok
+test resolve::tests::missing_context_is_an_error_not_a_panic ... ok
+test resolve::tests::reads_component_field_by_short_path ... ok
+test actions::tests::a_tuple_struct_event_is_refused_when_the_binding_is_resolved ... ok
+test actions::tests::an_enum_event_is_refused_when_the_binding_is_resolved ... ok
+test types::tests::a_path_with_no_field_names_a_whole_component ... ok
+test types::tests::garbage_is_an_error ... ok
+test types::tests::nested_field_paths_survive ... ok
+test resolve::tests::despawned_context_entity_is_an_error_not_a_panic ... ok
+test resolve::tests::context_walks_up_hierarchy ... ok
+test resolve::tests::missing_component_is_an_error_not_a_panic ... ok
+test resolve::tests::a_context_at_the_edge_of_the_walk_still_resolves ... ok
+test types::tests::parses_component_path_with_full_type_path ... ok
+test resolve::tests::reads_resource_field_without_context ... ok
+test resolve::tests::a_context_past_the_edge_of_the_walk_does_not ... ok
+test types::tests::parses_resource_path ... ok
+test types::tests::parses_short_component_path ... ok
+
+test result: ok. 24 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (target/debug/deps/jackdaw_bsn-13df6555c1b93ca4)
+
+running 148 tests
+test apply::document_only_tests::a_clean_scene_says_nothing ... ok
+test apply::document_only_tests::a_following_scene_reports_only_its_own_gaps ... ok
+test apply::binding_issue_tests::a_reload_relists_rows_but_speaks_only_for_a_change ... ok
+test apply::document_only_tests::a_name_below_a_reported_struct_is_not_a_variant_of_it ... ok
+test apply::document_only_tests::a_reported_project_component_is_quiet_and_unrecorded ... ok
+test apply::document_only_tests::an_unchanged_remedy_is_not_repeated ... ok
+test apply::document_only_tests::a_world_without_the_resources_records_nothing_and_stays_loud ... ok
+test apply::binding_issue_tests::a_bare_unknown_name_is_reported ... ok
+test apply::document_only_tests::the_remedy_names_both_honest_moves ... ok
+test apply::binding_issue_tests::a_re_export_spelling_is_reported_with_the_registered_face ... ok
+test apply::document_only_tests::an_unreported_type_in_a_reported_module_is_still_recorded ... ok
+test apply::document_only_tests::two_missing_types_read_plural ... ok
+test apply::binding_issue_tests::an_unknown_field_is_recorded_once_with_its_entity ... ok
+test apply::document_only_tests::a_variant_of_a_reported_project_enum_answers_through_its_owner ... ok
+test apply::apply_value_tests::enum_typed_field_data_variant_round_trips_through_apply ... ok
+test apply::apply_value_tests::an_entity_with_no_transform_gets_no_visibility ... ok
+test apply::apply_value_tests::map_of_enum_round_trips_through_apply ... ok
+test apply::field_navigation_matrix::a_list_element_that_does_not_fit_is_dropped_not_panicked_on ... ok
+test apply::field_navigation_matrix::bracket_key_reads_and_writes_map_entry ... ok
+test apply::field_navigation_matrix::get_field_bracket_index_reads_list_element ... ok
+test apply::apply_value_tests::a_placed_entity_saved_without_visibility_inherits_it ... ok
+test apply::field_navigation_matrix::get_field_missing_path_returns_none ... ok
+test apply::field_navigation_matrix::get_field_empty_path_returns_whole_component ... ok
+test apply::apply_value_tests::an_authored_visibility_is_kept ... ok
+test apply::field_navigation_matrix::get_field_reads_named_struct_field ... ok
+test apply::field_navigation_matrix::get_field_unregistered_type_returns_none ... ok
+test apply::field_navigation_matrix::get_field_round_trips_with_set_field ... ok
+test apply::field_navigation_matrix::get_field_unwraps_enum_variant_and_reads_field ... ok
+test apply::field_navigation_matrix::newtype_variant_field_round_trips_through_index_zero ... ok
+test apply::tests::a_nonzero_field_refuses_zero_and_out_of_range ... ok
+test apply::field_navigation_matrix::pathbuf_field_round_trips_as_plain_string ... ok
+test apply::tests::a_nonzero_field_takes_an_int_it_can_hold ... ok
+test apply::field_navigation_matrix::set_field_on_unregistered_type_is_noop ... ok
+test apply::field_navigation_matrix::set_field_empty_path_replaces_whole_value ... ok
+test apply::tests::a_nonzero_value_round_trips_through_the_document ... ok
+test apply::tests::a_tuple_field_round_trips_through_the_document ... ok
+test apply::tests::applies_default_less_struct_fieldwise ... ok
+test apply::tests::removing_one_field_of_a_nested_struct_keeps_its_siblings ... ok
+test apply::tests::removing_the_last_field_of_a_nested_struct_removes_the_struct ... ok
+test apply::tests::promotes_type_patch_to_struct ... ok
+test apply::tests::set_and_get_nested_field ... ok
+test apply::tests::set_field_on_newtype_tuple_struct_authors_tuple_patch ... ok
+test catalog::tests::adopting_a_clipboard_document_s_assets_makes_its_references_resolvable ... ok
+test catalog::tests::malformed_catalog_returns_err_not_panic ... ok
+test catalog::tests::a_second_entry_of_the_same_name_is_adopted_only_when_it_is_the_same_asset ... ok
+test delta::tests::apply_deltas_inserts_missing_field ... ok
+test delta::tests::apply_deltas_non_struct_replaces_whole ... ok
+test catalog::tests::an_unemittable_entry_is_reported_not_dropped_silently ... ok
+test delta::tests::diff_keeps_only_changed_leaf_of_nested_struct ... ok
+test delta::tests::diff_of_equal_structs_is_none ... ok
+test catalog::tests::loading_onto_a_held_handle_writes_the_value_into_its_asset ... ok
+test delta::tests::round_trip_over_varied_shapes ... ok
+test delta::tests::nested_struct_round_trips ... ok
+test document::compact::tests::shortest_text_reads_back_as_the_same_bits ... ok
+test catalog::tests::round_trips_scalar_catalog_by_name_and_value ... ok
+test document::mutate::tests::a_child_in_the_second_list_can_be_removed ... ok
+test document::mutate::tests::a_move_within_a_split_list_does_not_duplicate_the_child ... ok
+test catalog::tests::serialized_text_is_name_sorted_and_deterministic ... ok
+test document::mutate::tests::every_child_list_contributes_to_the_child_order ... ok
+test document::mutate::tests::an_index_past_the_first_list_lands_in_the_second ... ok
+test document::query::query_tests::ancestor_with_component_is_inclusive_of_self ... ok
+test document::query::query_tests::ast_parent_of_walks_children_relation ... ok
+test catalog::tests::older_text_of_an_asset_the_scene_holds_is_adopted_as_the_same_asset ... ok
+test document::query::query_tests::descendants_exclude_root ... ok
+test document::query::query_tests::entities_with_component_spans_all_depths ... ok
+test document::query::query_tests::find_node_by_component_int_matches_tuple_struct_newtype ... ok
+test document::query::query_tests::clone_node_into_copies_components_but_not_children ... ok
+test document::query::query_tests::type_paths_include_matches_enum_variant_patches ... ok
+test document::query::query_tests::nodes_by_component_int_finds_what_each_lookup_finds ... ok
+test emitter::tests::checked_emit_refuses_a_document_whose_text_does_not_read_back ... ok
+test emitter::tests::emit_children ... ok
+test emitter::tests::checked_emit_returns_the_text_of_a_document_that_reads_back ... ok
+test emitter::tests::emit_is_deterministic_for_multi_field_document ... ok
+test document::mutate::tests::cloning_a_cyclic_document_ends_at_the_depth_cap ... ok
+test emitter::tests::emit_simple_entity ... ok
+test emitter::tests::emit_struct_with_fields ... ok
+test emitter::tests::emit_tuple_struct ... ok
+test header::tests::a_comment_below_the_body_is_not_a_header ... ok
+test emitter::tests::every_row_of_a_list_ends_in_a_comma_so_adding_one_touches_one_line ... ok
+test header::tests::a_document_opening_a_hierarchy_is_known_from_its_first_tokens ... ok
+test header::tests::a_file_without_a_header_names_no_type ... ok
+test header::tests::a_header_below_the_version_stamp_is_found ... ok
+test header::tests::a_flat_first_root_opens_with_the_type_it_names ... ok
+test header::tests::a_header_and_a_root_naming_a_generic_type_agree ... ok
+test header::tests::a_name_is_the_last_segment_before_its_first_dot ... ok
+test header::tests::a_header_naming_a_moved_type_reads_as_its_new_path ... ok
+test header::tests::a_name_one_document_carries_stands_for_it ... ok
+test header::tests::a_name_two_documents_carry_stands_for_neither_and_names_both ... ok
+test header::tests::a_root_reports_the_type_it_names ... ok
+test header::tests::an_asset_file_s_header_round_trips ... ok
+test header::tests::the_opening_agrees_with_a_parse_on_a_moved_type ... ok
+test header::tests::typing_a_scene_costs_no_parse ... ok
+test header::tests::what_the_tokens_cannot_settle_is_left_to_a_parse ... ok
+test migrate::tests::a_019_corner_radius_becomes_a_circular_corner ... ok
+test migrate::tests::a_019_entity_comma_becomes_a_double_minus_and_value_commas_stay ... ok
+test migrate::tests::a_019_text_scroll_is_dropped ... ok
+test migrate::tests::a_019_scene_takes_the_020_type_paths ... ok
+test migrate::tests::a_020_scene_takes_the_type_paths_of_bevy_main ... ok
+test migrate::tests::a_020_scene_keeps_its_text ... ok
+test migrate::tests::a_020_scene_is_left_as_written ... ok
+test migrate::tests::a_moved_type_is_renamed_in_strings_and_generics ... ok
+test migrate::tests::a_document_on_the_new_paths_is_left_alone ... ok
+test migrate::tests::a_moved_type_takes_its_new_path_in_stamped_and_unstamped_scenes ... ok
+test migrate::tests::a_scene_from_bevy_main_is_newer_than_every_release ... ok
+test migrate::tests::a_stamped_019_scene_migrates_and_an_unstamped_one_does_not ... ok
+test migrate::tests::hand_authored_scene_has_no_stamp ... ok
+test migrate::tests::baseline_migration_is_a_noop_and_does_not_allocate ... ok
+test migrate::tests::minor_ordering ... ok
+test migrate::tests::only_whole_paths_are_renamed ... ok
+test retired::tests::a_scene_using_a_facade_ui_component_is_rejected_by_name ... ok
+test retired::tests::a_scene_with_no_facade_components_loads ... ok
+test sync::tests::create_entity_in_ast_links_new_entity_under_parent ... ok
+test retired::tests::every_retired_type_is_caught_by_the_prefix_not_a_list ... ok
+test sync::tests::delete_subtree_leaves_no_stale_links_for_descendants ... ok
+test sync::tests::delete_entity_from_ast_removes_node_and_subtree ... ok
+test sync::tests::sync_to_ast_creates_patch_when_missing ... ok
+test syntax::lex::tests::a_double_minus_separates_entities_and_a_negative_number_follows_it ... ok
+test sync::tests::sync_to_ast_updates_existing_patch_with_current_component_value ... ok
+test sync::tests::sync_hierarchy_to_ast_reparents_node ... ok
+test syntax::lex::tests::a_nested_generic_closes_with_two_separate_tokens ... ok
+test syntax::lex::tests::comments_lex_as_whitespace ... ok
+test syntax::lex::tests::identifiers_starting_with_reserved_words_stay_identifiers ... ok
+test syntax::lex::tests::lexes_signed_special_floats ... ok
+test syntax::lex::tests::lexes_every_token_kind ... ok
+test syntax::lex::tests::spans_record_offsets_and_lines ... ok
+test syntax::parse::tests::a_comma_does_not_separate_entities ... ok
+test catalog::tests::a_directory_of_named_assets_round_trips_one_file_at_a_time ... ok
+test syntax::parse::tests::a_list_root_rejects_a_stray_closing_delimiter ... ok
+test syntax::parse::tests::a_list_root_holds_entities_separated_by_double_minus ... ok
+test syntax::parse::tests::an_at_sign_includes_an_uncached_scene ... ok
+test syntax::parse::tests::a_quoted_name_reads_as_a_name ... ok
+test syntax::lex::tests::unsigned_special_float_words_lex_as_identifiers ... ok
+test syntax::parse::tests::generic_arguments_stay_on_their_segment ... ok
+test syntax::parse::tests::lists_and_maps_read_as_values ... ok
+test syntax::parse::tests::parse_bsn ... ok
+test syntax::parse_stream::tests::a_lex_error_is_not_the_end_of_input ... ok
+test syntax::parse_stream::tests::parse_basics ... ok
+test writer::tests::always_save_overrides_skip_rules ... ok
+test writer::tests::default_valued_components_still_emit_as_bare_type_paths ... ok
+test writer::tests::include_all_still_emits_hierarchy_structurally ... ok
+test writer::tests::skip_entity_name_prefixes_exclude_entities ... ok
+test writer::tests::serialize_to_bsn_writes_named_entities_and_hierarchy ... ok
+test header::tests::a_file_holding_another_type_is_refused ... ok
+test header::tests::an_asset_file_reads_back_as_the_value_it_holds ... ok
+test header::tests::an_asset_file_whose_root_carries_no_name_still_reads ... ok
+test header::tests::a_walk_lists_asset_files_with_their_types_and_leaves_scenes_and_prefabs_out ... ok
+test catalog::tests::option_handle_none_field_round_trips_as_none ... ok
+test catalog::tests::handle_and_option_handle_fields_round_trip_as_paths ... ok
+
+test result: ok. 148 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running unittests src/lib.rs (target/debug/deps/jackdaw_camera-8f628257458e0379)
+
+running 5 tests
+test tests::camera_nav_input_default_is_inactive ... ok
+test tests::ortho_pan_scales_with_ortho_scale ... ok
+test tests::pan_scales_with_speed ... ok
+test tests::pan_drag_moves_the_camera_against_the_drag ... ok
+test tests::inverting_y_reverses_the_pitch_a_look_drag_produces ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running unittests src/lib.rs (target/debug/deps/jackdaw_camera_rig-f47fb2b8bc102c47)
+
+running 8 tests
+test tests::camera_rig_registers_with_reflect_component_and_default ... ok
+test tests::only_active_rig_materializes_camera ... ok
+test tests::first_person_sits_at_eye_height ... ok
+test tests::the_active_rig_switches_off_a_camera_at_its_window_order ... ok
+test tests::gated_activation_leaves_a_lone_rig_dormant ... ok
+test tests::deactivating_a_rig_removes_its_camera ... ok
+test tests::convenience_activates_lone_rig_only ... ok
+test tests::third_person_orbit_is_decoupled_from_parent_rotation ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running unittests src/lib.rs (target/debug/deps/jackdaw_cli_internal-fe51f8da98aa038f)
+
+running 18 tests
+test tests::a_missing_sdk_is_information_for_a_game_and_a_failure_for_an_extension ... ok
+test tests::a_config_label_is_not_read_as_a_project_path ... ok
+test tests::a_build_outcome_carries_what_an_export_checks ... ok
+test tests::a_usable_sdk_passes_for_every_project ... ok
+test tests::a_configured_run_points_its_asset_root_at_the_run_cwd ... ok
+test tests::an_out_directory_must_be_absolute ... ok
+test tests::a_run_that_sets_its_own_asset_root_wins ... ok
+test tests::a_missing_manifest_names_the_file ... ok
+test tests::export_flag_values_are_not_read_as_project_paths ... ok
+test tests::the_bare_run_path_runs_plain_cargo_run_in_the_project_root ... ok
+test tests::the_config_flag_reads_its_label ... ok
+test tests::the_export_profile_flag_beats_the_target_then_defaults_to_release ... ok
+test tests::a_removed_runtime_feature_fails_with_the_upgrade_that_drops_it ... ok
+test tests::a_removed_runtime_feature_in_a_project_not_set_up_is_fixed_by_import ... ok
+test tests::current_runtime_features_are_no_problem ... ok
+test tests::an_invalid_target_reports_its_shape_before_resolving_anything ... ok
+test tests::an_unknown_label_lists_the_runs_the_manifest_has ... ok
+test tests::an_unknown_export_profile_lists_what_is_available ... ok
+
+test result: ok. 18 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (target/debug/deps/jackdaw_commands-92e8f4dea5e04782)
+
+running 18 tests
+test keybinds::mouse_modifier_tests::modifiers_match_requires_mouse_state_to_match ... ok
+test keybinds::mouse_modifier_tests::plain_keybind_has_no_mouse_modifier ... ok
+test keybinds::mouse_modifier_tests::parse_round_trips_rmb_prefix ... ok
+test shortcut_platform::tests::ctrl_keeps_its_name_on_macos ... ok
+test shortcut_platform::tests::macos_shortcuts_are_built_on_cmd ... ok
+test shortcut_platform::tests::other_shortcuts_are_built_on_ctrl ... ok
+test keybinds::mouse_modifier_tests::rmb_key_sets_right_mouse_modifier ... ok
+test shortcut_platform::tests::primary_pressed_reads_only_the_primary_keys ... ok
+test tests::a_history_inside_its_budget_keeps_every_entry ... ok
+test tests::a_zero_budget_caps_nothing ... ok
+test tests::an_empty_span_costs_its_enclosing_span_nothing ... ok
+test tests::passing_the_budget_drops_the_oldest_entries ... ok
+test tests::the_newest_entry_survives_even_when_it_alone_exceeds_the_budget ... ok
+test tests::non_scene_commands_share_the_history_without_counting_as_scene_pushes ... ok
+test tests::the_revision_rises_on_do_undo_and_redo_and_never_repeats ... ok
+test tests::undone_entries_still_count_toward_the_total ... ok
+test tests::undo_drops_entries_whose_target_is_gone_and_undoes_the_next ... ok
+test tests::a_span_around_inner_spans_groups_only_their_entries ... ok
+
+test result: ok. 18 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (target/debug/deps/jackdaw_csg-6ff2bd6145647d98)
+
+running 6 tests
+test tests::boundary_rings_split_at_a_shared_corner_in_any_triangle_order ... ok
+test tests::boolean_returns_empty_on_disjoint_inputs ... ok
+test tests::material_idx_propagates_through_boolean ... ok
+test tests::cube_minus_cube_produces_expected_topology ... ok
+test tests::concave_output_round_trips_through_kernel ... ok
+test tests::concave_brush_subtract_works ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (target/debug/deps/jackdaw_data_path-8d66a176b6c56758)
+
+running 2 tests
+test tests::refuses_paths_that_leave_the_base ... ok
+test tests::resolves_plain_relative_paths ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (target/debug/deps/jackdaw_dylib-4e37b4ad9c2c9657)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (target/debug/deps/jackdaw_editor-ac0b2b6f91e9b8b9)

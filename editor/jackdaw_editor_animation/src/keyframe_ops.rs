@@ -397,9 +397,10 @@ impl jackdaw_commands::EditorCommand for DespawnKeyframeCmd {
             | Self::Quat { keyframe, .. }
             | Self::F32 { keyframe, .. } => *keyframe,
         };
-        if let Ok(ent) = world.get_entity_mut(entity) {
-            ent.despawn();
-        }
+        // Despawn through the document-aware path: a bare ECS despawn would
+        // leave the keyframe's node in the AST, so a later document respawn
+        // (any snapshot-entry undo) would resurrect the deleted keyframe.
+        jackdaw_editor_core::commands::despawn_scene_entity(world, entity);
     }
 
     fn undo(&mut self, world: &mut World) {
@@ -439,6 +440,11 @@ impl jackdaw_commands::EditorCommand for DespawnKeyframeCmd {
                 ))
                 .id(),
         };
+        // Register the revived keyframe in the document now, not on the
+        // next frame's watcher: without this the watcher's registration
+        // races whoever emits the document next, and an undo that respawns
+        // the whole scene would mint a second node for the same keyframe.
+        jackdaw_editor_core::scene_io::register_entity_in_ast(world, new_id);
         match self {
             Self::Vec3 { keyframe, .. }
             | Self::Quat { keyframe, .. }
@@ -507,6 +513,9 @@ impl DespawnKeyframeCmd {
     label = "Delete Keyframes",
     description = "Remove the selected animation keyframes.",
     is_available = has_selected_keyframes,
+    // The queued command group pushes its own history entry; a dispatch
+    // snapshot around it would record two entries for one action.
+    allows_undo = false,
 )]
 pub(crate) fn clip_delete_keyframes(
     _: In<OperatorParameters>,
@@ -736,6 +745,9 @@ pub(crate) fn clip_copy_keyframes(
     label = "Paste Keyframes",
     description = "Paste keyframes from the clipboard at the playhead.",
     is_available = timeline_paste_available,
+    // The queued command group pushes its own history entry; a dispatch
+    // snapshot around it would record two entries for one action.
+    allows_undo = false,
 )]
 pub(crate) fn clip_paste_keyframes(
     _: In<OperatorParameters>,
@@ -1160,6 +1172,11 @@ impl jackdaw_commands::EditorCommand for SpawnKeyframeCmd {
                 ))
                 .id(),
         };
+        // Register the pasted keyframe in the document now, not on the
+        // next frame's watcher: without this the watcher's registration
+        // races whoever emits the document next, and an undo that respawns
+        // the whole scene would mint a second node for the same keyframe.
+        jackdaw_editor_core::scene_io::register_entity_in_ast(world, new_id);
         match self {
             Self::Vec3 { keyframe, .. }
             | Self::Quat { keyframe, .. }
@@ -1174,10 +1191,11 @@ impl jackdaw_commands::EditorCommand for SpawnKeyframeCmd {
             | Self::Quat { keyframe, .. }
             | Self::F32 { keyframe, .. } => *keyframe,
         };
-        if let Some(entity) = entity
-            && let Ok(ent) = world.get_entity_mut(entity)
-        {
-            ent.despawn();
+        // Despawn through the document-aware path: a bare ECS despawn would
+        // leave the keyframe's node in the AST, so a later document respawn
+        // (any snapshot-entry undo) would resurrect the pasted keyframe.
+        if let Some(entity) = entity {
+            jackdaw_editor_core::commands::despawn_scene_entity(world, entity);
         }
     }
 
@@ -1333,12 +1351,19 @@ pub(crate) fn animation_toggle_keyframe(
     let type_path = params.as_str("component_type_path").map(str::to_string)?;
     let field_path = params.as_str("field_path").map(str::to_string)?;
     commands.queue(move |world: &mut World| {
-        world
+        let spawned = world
             .run_system_cached_with(
                 crate::anim_diamond::toggle_keyframe,
                 (entity, type_path, field_path),
             )
-            .ok();
+            .ok()
+            .unwrap_or_default();
+        // Register the new clip / track / keyframe in the document now,
+        // inside the operator's span, so a history-creating dispatch's
+        // after-snapshot diff catches the keyframe and the toggle carries
+        // its own undo entry. Waiting for the update watcher would leave
+        // the change to fold silently into whatever entry runs next.
+        jackdaw_editor_core::scene_io::register_entities_in_ast(world, &spawned);
     });
     Some(OperatorResult::Finished)
 }

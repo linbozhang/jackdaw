@@ -1798,7 +1798,7 @@ fn open_context_menu(
         entity.despawn();
     }
 
-    let items = context_items(path, is_directory);
+    let items = context_items(path, is_directory, is_scene_document, start_scene);
     let entity = jackdaw_feathers::context_menu::spawn_context_menu(commands, cursor, None, &items);
     menu.menu_entity = Some(entity);
     commands.insert_resource(MenuTarget {
@@ -1807,7 +1807,12 @@ fn open_context_menu(
 }
 
 /// The actions the context menu offers on `path`, as action and label.
-pub fn context_items(path: &Path, is_directory: bool) -> Vec<(&'static str, &'static str)> {
+pub fn context_items(
+    path: &Path,
+    is_directory: bool,
+    is_scene_document: bool,
+    start_scene: Option<&str>,
+) -> Vec<(&'static str, &'static str)> {
     let mut items: Vec<(&str, &str)> = Vec::new();
     if is_directory {
         items.push((NEW_FOLDER_ACTION, "New Folder"));
@@ -1874,7 +1879,6 @@ fn on_context_action(
             .param("path", target.path.to_string_lossy().into_owned())
             .param("edit", true)
             .call();
-
     } else if action == MOVE_ACTION {
         // The folder is asked for through the same native dialog the assets
         // folder picker uses; the move itself goes through `file.move`, so it

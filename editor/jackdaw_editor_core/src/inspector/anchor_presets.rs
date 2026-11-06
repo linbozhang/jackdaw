@@ -141,7 +141,7 @@ fn anchor_matches(current: Vec2, preset: Vec2) -> bool {
 pub(crate) fn on_anchor_preset_change(
     change: On<ValueChange<Entity>>,
     cells: Query<&AnchorPresetCell>,
-    remote_proxies: Query<(), With<crate::remote::entity_browser::RemoteEntityProxy>>,
+    remote_proxies: Query<(), With<crate::remote_mode::RemoteEntityProxy>>,
     mut commands: Commands,
 ) {
     let Ok(cell) = cells.get(change.value) else {

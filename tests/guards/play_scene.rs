@@ -1830,6 +1830,7 @@ fn stop_respawns_after_a_live_edit() {
                 baseline: None,
                 live_value: serde_json::json!([3.0, 3.0, 3.0]),
                 label: "cube / Transform.scale".to_string(),
+                kind: jackdaw::live_edits::LiveEditKind::Field,
             },
         ));
 

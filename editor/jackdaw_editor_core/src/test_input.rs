@@ -91,7 +91,7 @@ const MAX_FRAMES: i64 = 600;
 
 /// One input to deliver, in the form the window system delivers it.
 #[derive(Clone, Debug)]
-pub(crate) enum Emit {
+pub enum Emit {
     /// Move the cursor to a position in window logical pixels.
     Cursor(Vec2),
     Button {
@@ -117,7 +117,7 @@ pub(crate) enum Emit {
 /// friends) can queue the same gestures the operators do, into the same queue,
 /// rather than trigger anything by hand.
 #[derive(Clone, Debug)]
-pub(crate) struct Beat {
+pub struct Beat {
     pub(crate) events: Vec<Emit>,
     pub(crate) frames: u32,
 }
@@ -136,7 +136,7 @@ impl SyntheticInput {
         self.beats.is_empty() && self.wait == 0
     }
 
-    pub(crate) fn queue(&mut self, beats: Vec<Beat>) {
+    pub fn queue(&mut self, beats: Vec<Beat>) {
         self.beats.extend(beats);
     }
 }
@@ -470,7 +470,7 @@ fn with_mods(mods: &[KeyCode], frames: u32, gesture: Vec<Beat>) -> Vec<Beat> {
 /// A click at a window-logical position: move, press, release. The move first
 /// is what makes it a *click on* the position — the hover a menu needs to open
 /// arrives before the press.
-pub(crate) fn click_gesture(at: Vec2, double: bool, frames: u32) -> Vec<Beat> {
+pub fn click_gesture(at: Vec2, double: bool, frames: u32) -> Vec<Beat> {
     let move_to = Beat {
         events: vec![Emit::Cursor(at)],
         frames,
@@ -499,7 +499,7 @@ pub(crate) fn click_gesture(at: Vec2, double: bool, frames: u32) -> Vec<Beat> {
 /// A drag between window-logical positions: move to `from` first — a press
 /// with no cursor position hits nothing — then press, a move per
 /// interpolation step, and release at `to`.
-pub(crate) fn drag_gesture(from: Vec2, to: Vec2, steps: u32, frames: u32) -> Vec<Beat> {
+pub fn drag_gesture(from: Vec2, to: Vec2, steps: u32, frames: u32) -> Vec<Beat> {
     let steps = steps.max(1);
     let mut beats = vec![
         Beat {
@@ -536,7 +536,7 @@ pub(crate) fn drag_gesture(from: Vec2, to: Vec2, steps: u32, frames: u32) -> Vec
 }
 
 /// A string typed one key at a time, the shape `input.text` queues.
-pub(crate) fn typing_gesture(text: &str, frames: u32) -> Vec<Beat> {
+pub fn typing_gesture(text: &str, frames: u32) -> Vec<Beat> {
     let mut beats = Vec::with_capacity(text.chars().count() * 2);
     for character in text.chars() {
         let key = key_code_for(character);
@@ -562,7 +562,7 @@ pub(crate) fn typing_gesture(text: &str, frames: u32) -> Vec<Beat> {
 }
 
 /// An Enter press and release, the commit a text field's keyboard path takes.
-pub(crate) fn enter_gesture(frames: u32) -> Vec<Beat> {
+pub fn enter_gesture(frames: u32) -> Vec<Beat> {
     let beat = |state| Beat {
         events: vec![Emit::Key {
             key: KeyCode::Enter,
@@ -581,7 +581,7 @@ pub(crate) fn enter_gesture(frames: u32) -> Vec<Beat> {
 /// platform's command key — the widget layer (bevy's text input) binds
 /// select-all to Cmd on macOS and Ctrl elsewhere, and a Ctrl+A on a Mac
 /// keyboard is a no-op the typing then appends past.
-pub(crate) fn select_all_gesture(frames: u32) -> Vec<Beat> {
+pub fn select_all_gesture(frames: u32) -> Vec<Beat> {
     let (modifier_key, modifier_logical) = if cfg!(target_os = "macos") {
         (KeyCode::SuperLeft, Key::Super)
     } else {

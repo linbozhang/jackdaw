@@ -1087,7 +1087,7 @@ fn an_untitled_scene_plays_with_its_terrain_and_tilemap() {
 /// A map in the document in front, with the data path its tab gives it.
 fn add_map_node(app: &mut App) {
     let map = Tilemap {
-        layers: vec![jackdaw_scene_types::TilemapLayer {
+        layers: vec![jackdaw_scene_types::tilemap::TilemapLayer {
             name: "Ground".to_string(),
             tileset: "overworld.tileset.bsn".to_string(),
             kind: jackdaw_scene_types::TilemapLayerKind::Tile,

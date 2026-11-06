@@ -10,6 +10,7 @@
 use std::path::{Path, PathBuf};
 use std::process::Stdio;
 
+use jackdaw_env::sdk_toolchain_command;
 use jackdaw_env::user_toolchain_command;
 
 use crate::{BEVY_REV, BEVY_VERSION};
@@ -119,7 +120,7 @@ pub fn pin_project(root: &Path) -> Result<Option<String>, String> {
 /// build pipeline, which generates the lockfile a `--locked` build
 /// needs when it is missing.
 pub(crate) fn workspace_lockfile(root: &Path) -> Result<PathBuf, String> {
-    let output = rust_env_command("cargo")
+    let output = sdk_toolchain_command("cargo")
         .args(["locate-project", "--workspace", "--message-format", "plain"])
         .current_dir(root)
         .output()

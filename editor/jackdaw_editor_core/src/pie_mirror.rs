@@ -94,7 +94,9 @@ impl InstanceBuffer {
             jackdaw_pie_protocol::StateEvent::CursorState { .. }
             | jackdaw_pie_protocol::StateEvent::RequestScene { .. }
             | jackdaw_pie_protocol::StateEvent::SceneRequestAbandoned { .. }
-            | jackdaw_pie_protocol::StateEvent::OwnWindow => {}
+            | jackdaw_pie_protocol::StateEvent::OwnWindow
+            // Log lines feed the Game panel strip, not the mirror.
+            | jackdaw_pie_protocol::StateEvent::Log { .. } => {}
         }
     }
 }

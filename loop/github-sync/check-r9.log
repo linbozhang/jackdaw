@@ -1,0 +1,111 @@
+    Checking jackdaw_pie_protocol v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_pie_protocol)
+   Compiling jackdaw_project_build v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_project_build)
+    Checking jackdaw_multiplayer_editor v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_multiplayer_editor)
+    Checking jackdaw_extension v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_extension)
+    Checking test_fixture_extension v0.0.0 (/Users/linbo.zhang/workspace/jackdaw/tests/fixtures/test_fixture_extension)
+    Checking dynamic_extension v0.1.0 (/Users/linbo.zhang/workspace/jackdaw/examples/extension/dynamic_extension)
+    Checking viewable_camera_extension v0.1.0 (/Users/linbo.zhang/workspace/jackdaw/examples/extension/viewable_camera_extension)
+    Checking jackdaw_runtime v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_runtime)
+    Checking jackdaw_remote v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_remote)
+warning: constant `GAME_DEPENDENCY_OPT_LEVEL` is never used
+   --> crates/jackdaw_project_build/src/binary.rs:469:7
+    |
+469 | const GAME_DEPENDENCY_OPT_LEVEL: &str = "profile.dev.package.\"*\".opt-level=2";
+    |       ^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: constant `GAME_DEPENDENCY_DEBUG` is never used
+   --> crates/jackdaw_project_build/src/binary.rs:470:7
+    |
+470 | const GAME_DEPENDENCY_DEBUG: &str = "profile.dev.package.\"*\".debug=\"line-tables-only\"";
+    |       ^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `game_dependency_profile` is never used
+   --> crates/jackdaw_project_build/src/binary.rs:478:4
+    |
+478 | fn game_dependency_profile(project_root: &Path) -> Vec<&'static str> {
+    |    ^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: struct `DevProfileEnv` is never constructed
+   --> crates/jackdaw_project_build/src/binary.rs:500:8
+    |
+500 | struct DevProfileEnv {
+    |        ^^^^^^^^^^^^^
+
+warning: function `dependency_profile_for` is never used
+   --> crates/jackdaw_project_build/src/binary.rs:505:4
+    |
+505 | fn dependency_profile_for(
+    |    ^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `profile_files` is never used
+   --> crates/jackdaw_project_build/src/binary.rs:545:4
+    |
+545 | fn profile_files(project_root: &Path, cargo_home: Option<&Path>) -> Vec<std::path::PathBuf> {
+    |    ^^^^^^^^^^^^^
+
+warning: function `read_toml` is never used
+   --> crates/jackdaw_project_build/src/binary.rs:564:4
+    |
+564 | fn read_toml(file: &Path) -> Option<toml::Value> {
+    |    ^^^^^^^^^
+
+warning: function `game_build_command` is never used
+   --> crates/jackdaw_project_build/src/binary.rs:570:4
+    |
+570 | fn game_build_command(spec: &ShimSpec, target_dir: &Path, load: BuildLoad) -> Command {
+    |    ^^^^^^^^^^^^^^^^^^
+
+warning: function `game_build_command_with` is never used
+   --> crates/jackdaw_project_build/src/binary.rs:575:4
+    |
+575 | fn game_build_command_with(
+    |    ^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: `jackdaw_project_build` (lib) generated 9 warnings
+    Checking jackdaw_scaffold v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_scaffold)
+    Checking jackdaw_cli_internal v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_cli)
+error: this file contains an unclosed delimiter
+    --> crates/jackdaw_cli/src/lib.rs:1544:3
+     |
+1002 | fn build_project(root: &Path, target: Option<&CargoTarget>) -> Result<BuildOutcome, ExitCode> {
+     |                                                                                               - unclosed delimiter
+...
+1544 | }
+     |  ^
+
+error: could not compile `jackdaw_cli_internal` (lib) due to 1 previous error
+warning: build failed, waiting for other jobs to finish...
+error[E0425]: cannot find value `CRATES_ELSEWHERE` in module `jackdaw_project_build::build_source`
+   --> crates/jackdaw_scaffold/src/dev_checkout.rs:101:71
+    |
+101 |     if let Some((_, relative)) = jackdaw_project_build::build_source::CRATES_ELSEWHERE
+    |                                                                       ^^^^^^^^^^^^^^^^ not found in `jackdaw_project_build::build_source`
+
+error[E0425]: cannot find value `pace_frame_capture` in module `crate::pie_frames`
+   --> crates/jackdaw_runtime/src/pie.rs:105:48
+    |
+105 |     app.add_systems(Update, crate::pie_frames::pace_frame_capture);
+    |                                                ^^^^^^^^^^^^^^^^^^ not found in `crate::pie_frames`
+
+For more information about this error, try `rustc --explain E0425`.
+error: could not compile `jackdaw_scaffold` (lib) due to 1 previous error
+warning: unused import: `jackdaw_pie_protocol::transport::PieTransport`
+  --> crates/jackdaw_runtime/src/pie_log.rs:24:5
+   |
+24 | use jackdaw_pie_protocol::transport::PieTransport;
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+   = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused variable: `expanded`
+    --> crates/jackdaw_runtime/src/lib.rs:1038:15
+     |
+1038 |     let (ast, expanded) = resolve_prefab_references(world, ast, &scene_name, parent_path);
+     |               ^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_expanded`
+     |
+     = note: `#[warn(unused_variables)]` (part of `#[warn(unused)]`) on by default
+
+warning: `jackdaw_runtime` (lib) generated 2 warnings
+error: could not compile `jackdaw_runtime` (lib) due to 1 previous error; 2 warnings emitted

@@ -1,0 +1,6 @@
+Diff in /Users/linbo.zhang/workspace/jackdaw/editor/jackdaw_editor_core/src/inspector/ops.rs:467:
+     });
+     Some(OperatorResult::Finished)
+ }
+-
+ 

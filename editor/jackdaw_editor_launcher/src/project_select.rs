@@ -552,7 +552,7 @@ pub fn transition_to_editor(world: &mut World, root: PathBuf) {
                     .map(|name| name.to_string_lossy().into_owned())
                     .unwrap_or_else(|| "project.json.corrupt".to_string());
                 warn!("damaged project config kept as {kept}");
-                crate::status_bar::notify_info(
+                jackdaw_editor_core::status_bar::notify_info(
                     world,
                     format!(
                         "The project config was damaged; it was kept as {kept} and \
@@ -575,22 +575,24 @@ pub fn transition_to_editor(world: &mut World, root: PathBuf) {
     // The same for the temporary run copies a killed editor left under
     // `assets/.jackdaw-pie/`: every copy is regenerable and named for the
     // editor pid that wrote it, so a fresh open owes them nothing.
-    crate::pie_current::sweep_orphan_pie_copies(&root);
+    jackdaw_editor_core::pie_current::sweep_orphan_pie_copies(&root);
 
     // The crash journal's session starts with the project: a directory
     // under the state tree that periodic snapshots of dirty tabs fill and
     // a clean exit removes.
-    crate::scene_io::session_journal::begin_session(world, &root);
+    jackdaw_editor_core::scene_io::session_journal::begin_session(world, &root);
 
     // Crash leftovers become the recovery queue: sessions holding a
     // journal that are not this one. The recovery dialog asks about them
     // before the tab restore opens the project's scenes, and never blocks
     // this transition itself.
     {
-        let own = crate::scene_io::session_journal::session_dir(world);
+        let own = jackdaw_editor_core::scene_io::session_journal::session_dir(world);
         let leftovers: std::collections::VecDeque<std::path::PathBuf> =
-            crate::scene_io::session_journal::sessions_root(&root)
-                .map(|sessions| crate::scene_io::session_journal::list_sessions(&sessions))
+            jackdaw_editor_core::scene_io::session_journal::sessions_root(&root)
+                .map(|sessions| {
+                    jackdaw_editor_core::scene_io::session_journal::list_sessions(&sessions)
+                })
                 .unwrap_or_default()
                 .into_iter()
                 .filter(|dir| Some(dir) != own.as_ref() && dir.join("journal.json").is_file())
@@ -601,10 +603,12 @@ pub fn transition_to_editor(world: &mut World, root: PathBuf) {
                  dialog will offer them",
                 leftovers.len()
             );
-            world.insert_resource(crate::scenes::recovery_dialog::PendingRecovery {
-                queue: leftovers,
-                current: None,
-            });
+            world.insert_resource(
+                jackdaw_editor_core::scenes::recovery_dialog::PendingRecovery {
+                    queue: leftovers,
+                    current: None,
+                },
+            );
         }
     }
 
@@ -687,7 +691,7 @@ fn open_pending_scenes(world: &mut World) {
     // The recovery dialog owns the foreground until the user has decided
     // what to do with the crashed session's work; the tab restore waits.
     if world
-        .get_resource::<crate::scenes::recovery_dialog::PendingRecovery>()
+        .get_resource::<jackdaw_editor_core::scenes::recovery_dialog::PendingRecovery>()
         .is_some()
     {
         return;

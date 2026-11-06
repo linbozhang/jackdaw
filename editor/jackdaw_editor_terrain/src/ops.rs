@@ -302,7 +302,7 @@ pub(crate) fn terrain_erode(
     if let Some(message) = refused {
         warn!("{message}");
         commands.queue(move |world: &mut World| {
-            crate::terrain::toast_terrain_notice(world, &message);
+            crate::toast_terrain_notice(world, &message);
         });
         return None;
     }

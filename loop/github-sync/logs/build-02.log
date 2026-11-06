@@ -1,0 +1,25 @@
+warning: output filename collision at /Users/linbo.zhang/workspace/jackdaw/target/debug/jackdaw-rustc-wrapper
+  |
+  = note: the bin target `jackdaw-rustc-wrapper` in package `jackdaw_rustc_wrapper v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_rustc_wrapper)` has the same output filename as the bin target `jackdaw-rustc-wrapper` in package `jackdaw v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw)`
+  = note: this may become a hard error in the future; see <https://github.com/rust-lang/cargo/issues/6313>
+  = help: consider changing their names to be unique or compiling them separately
+warning: output filename collision at /Users/linbo.zhang/workspace/jackdaw/target/debug/jackdaw-rustc-wrapper.dSYM
+  |
+  = note: the bin target `jackdaw-rustc-wrapper` in package `jackdaw_rustc_wrapper v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_rustc_wrapper)` has the same output filename as the bin target `jackdaw-rustc-wrapper` in package `jackdaw v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw)`
+  = note: this may become a hard error in the future; see <https://github.com/rust-lang/cargo/issues/6313>
+  = help: consider changing their names to be unique or compiling them separately
+   Compiling jackdaw_project_build v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_project_build)
+   Compiling jackdaw_scaffold v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_scaffold)
+   Compiling jackdaw_cli_internal v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_cli)
+   Compiling jackdaw_editor_core v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/editor/jackdaw_editor_core)
+   Compiling jd v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jd)
+   Compiling jackdaw_editor_launcher v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/editor/jackdaw_editor_launcher)
+   Compiling jackdaw_editor_terrain v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/editor/jackdaw_editor_terrain)
+   Compiling jackdaw_editor_animation v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/editor/jackdaw_editor_animation)
+   Compiling jackdaw_editor_modelling v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/editor/jackdaw_editor_modelling)
+   Compiling jackdaw_editor_tile v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/editor/jackdaw_editor_tile)
+   Compiling jackdaw_editor_remote v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/editor/jackdaw_editor_remote)
+   Compiling jackdaw v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw)
+   Compiling jackdaw_editor v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_editor)
+    Finished `dev` profile [optimized + debuginfo] target(s) in 40.83s
+BUILD_EXIT=0

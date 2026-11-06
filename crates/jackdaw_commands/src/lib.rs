@@ -67,6 +67,7 @@ pub trait EditorCommand: Send + Sync + 'static {
     /// command's behavior unchanged.
     fn touches_scene_document(&self) -> bool {
         true
+    }
 
     /// Why the entry can never apply again, if what it edits is gone. Undo
     /// and redo drop such an entry and go on to the next one.
@@ -264,8 +265,6 @@ impl CommandHistory {
         self.scene_pushes
     }
 
-    pub fn redo(&mut self, world: &mut World) {
-
     /// Redoes the next entry, dropping the ones whose target is gone as
     /// [`undo`](Self::undo) does.
     pub fn redo(&mut self, world: &mut World) -> Option<String> {
@@ -368,6 +367,7 @@ impl EditorCommand for CommandGroup {
         // edit: erring towards dirty costs a re-look, erring away costs
         // a lost change marker.
         self.commands.iter().any(|cmd| cmd.touches_scene_document())
+    }
 
     fn gone(&self, world: &World) -> Option<String> {
         let mut reasons = self.commands.iter().map(|command| command.gone(world));

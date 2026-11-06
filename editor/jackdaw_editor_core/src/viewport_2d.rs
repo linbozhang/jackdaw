@@ -2031,7 +2031,6 @@ pub fn snap_menu_rows(world: &World, host: Entity) -> Vec<(String, String)> {
         )
     };
     let panel = world.get::<Viewport2dPanelHost>(host);
-    let grid = panel.map_or(DEFAULT_UI_GRID, |host| host.view.grid);
     let world_scene =
         panel.is_some_and(|host| crate::sprite_stage::world_shows_2d_world(world, host));
 
