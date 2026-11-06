@@ -34,11 +34,12 @@
   修复方向：按 `ast_parent_of` 重建父子关系，每个子孙挂到其原父节点在变体中的对应节点下。
   > 已修 8f8581f6（T14-T2，并账 PF3）：`save_as_variant` 按 `ast_parent_of` 重建变体内父子，内嵌 IsA 与 deleted 保留；红绿证 `tests/prefabs/prefab_t14_acceptance.rs::a_variant_keeps_the_nested_levels_of_the_instance_it_was_cut_from`。
 
-- [ ] **R4. 远程实体树父子解析与协议格式失配，远程层级面板整体失效**
+- [x] **R4. 远程实体树父子解析与协议格式失配，远程层级面板整体失效**
   `src/remote/entity_browser.rs:92-97`（`extract_parent` 用 `as_u64()`）。
   问题：生产端 `crates/jackdaw_pie_protocol/src/snapshot.rs` 序列化的 `ChildOf` 是实体文本形式（如 `"0v1"`）或 `[bits]` 数组，`as_u64()` 均返回 `None`；协议 crate 专门提供了 `entity_bits()`（`src/pie_projection.rs:79` 用的就是它），此处没用。
   后果：`jackdaw/scene_snapshot` 拉回的所有实体被判为根、`has_children` 恒 false、懒展开永不填充，远程层级树退化为平铺列表。
   修复方向：改用 `jackdaw_pie_protocol::snapshot::entity_bits(&value)`。
+  （2026-11-06 修复：`extract_parent` 改走 `jackdaw_pie_protocol::snapshot::entity_bits`（全限定单行，`relationships.rs:63` 先例）+ entity_browser.rs 文件内首个测试锚 4 条（文本/数组两形态修前红证 `None vs Some(4294967290)`、数值 bits 回归锚、垃圾值负例）。QA 真机铁证：游戏 BRP 线上 `ChildOf` 恰为实体文本形态（`"566v0"`/`"570v0"`）、面板树修前平铺→修后 `scene > Root > Bgm Probe/…` 三层嵌套（截图+ui_tree JSON 归档 `loop/bug-r4-qa/`）。程序 `efdf0430`、QA `dc76ac78`、合入 main `943fd40e`；QA `loop/reports/bug-r4-qa.md` PASS（libtests 3095=3091+4·59 二进制）。顺带立票 A20/A21/A22。）
 
 - [ ] **R5. 空地形上点 Erode 直接 panic**
   `crates/jackdaw_terrain/src/erosion.rs:75` + `src/terrain/ops.rs:308-312`（`terrain_erode`）。
@@ -558,6 +559,15 @@
   证据锚：loop/reports/t24-t2-report.md DF 节+`t24t2_*` 归档。修复方向：T3 book 轮裁定吸收面；④可并 A7 批次随手，⑤并 N13，⑦与 A10 同域。
   > 2026-11-03 主控收官裁定（T24-T3 QA 建议）：④并 A7 批次、⑤并 N13、⑦A10 域（维持票面并法）；DF-W1 下轮触碰 operators/external_watch 时顺手（warn_on_load reread 调用面）；DF-W3 维持记档不单开票。DF-W1/W3 产品修复未启动，吸收面如上。
 
+- [ ] **A20. 连接状态 popover 放置越出窗口右缘，中心点击必然落空**（2026-11-06 R4 QA 真机轮发现；主控批准立账）
+  popover（宽 252，TopStart 放置）锚定状态栏指示器（右缘 x≈1908），整体右缘 x≈2067 越出窗口逻辑宽 1920；`ui_click` 以 `placement.centre`（x=1941）注入的点击落在窗口外，`clicked:true` 但手势永不生效（QA 绕过已证可靠：对可见区内坐标用 `input.pointer` move→press→release 三步）。证据：`loop/reports/bug-r4-qa.md` §6.3+`loop/bug-r4-qa/`。
+  修复方向：popover 放置做窗口边界 clamp（或 `ui_click` 对越界中心点回退可见区交点）。
+- [ ] **A21. `ui_tree` 的 text 过滤对 popover 子树失效（工具层，A14/A7 家族）**（2026-11-06 R4 QA 真机轮发现；主控批准立账——MCP 优先原则家族）
+  popover 打开时 `ui_tree {"text":"Remote Connection"}` 返回空，同参数无过滤全量 walk 可见 popover 全部节点——`locate_for_tree` 起点集合不含 popover/浮层子树；QA 曾因此误判 popover 未开。证据：`loop/reports/bug-r4-qa.md` §6.4。
+  修复方向：`locate_for_tree` 起点集合纳入浮层/popover 子树。
+- [ ] **A22. Remote Entities 窗口无 operator/命令面板/菜单入口（工具层）**（2026-11-06 R4 QA 真机轮发现；主控批准立账——MCP 优先原则：窗口开关 operator）
+  `jackdaw.remote.entities` 窗口无 operator、无命令面板命令、无菜单项（Window 菜单 y<40 禁触区，手册 7.5），QA 只能经 `project.json` 布局持久化让面板默认打开（改前备份收尾还原）。证据：`loop/reports/bug-r4-qa.md` §6.5。
+  修复方向：补窗口开关 operator（窗面 operator 家族），顺带盘点其他 chrome 窗口的 operator 可达性。
 - [ ] **LT8. Live Changes badge 点击不展开托盘（⚪，T25-T1 探针发现，只记不修）**（2026-11-03 T25-T1 可达性探针三窗实证；主控批准立账）
   hierarchy 头部 badge click `clicked:true` 但不 spawn 托盘面板（live_edits_ui.rs badge 观察器无展开行为）；托盘开行现成路线=停止→StopPrompt「Review」键交接（即 C4 链本体，零产品改动）。
   修复方向（候裁）：badge click 补托盘 spawn（一行级观察器）或 book 注记「badge 是计数器，开托盘走 Review/结构树」；T25-T3 book 轮顺手裁定。
