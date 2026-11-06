@@ -1,0 +1,46 @@
+[2m2026-11-06T06:44:44.116325Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-11-06T06:44:44.179647Z[0m [32m INFO[0m [2mbevy_render::renderer[0m[2m:[0m AdapterInfo { name: "Apple M2 Pro", vendor: 0, device: 0, device_type: IntegratedGpu, device_pci_bus_id: "", driver: "", driver_info: "", backend: Metal, subgroup_min_size: 4, subgroup_max_size: 64, transient_saves_memory: Some(true), limit_bucket: None }
+[2m2026-11-06T06:44:44.451341Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw::test_input::plugin` of extension `jackdaw.test_input`
+[2m2026-11-06T06:44:44.451527Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw_physics::PhysicsEditorPlugin` of extension `jackdaw.physics`
+[2m2026-11-06T06:44:44.454063Z[0m [32m INFO[0m [2mbevy_pbr::cluster[0m[2m:[0m GPU clustering is supported on this device.
+[2m2026-11-06T06:44:44.454124Z[0m [32m INFO[0m [2mbevy_render::batching::gpu_preprocessing[0m[2m:[0m GPU preprocessing is fully supported on this device.
+[2m2026-11-06T06:44:44.538641Z[0m [32m INFO[0m [2mbevy_winit::system[0m[2m:[0m Creating new window jackdaw (71v0)
+[2m2026-11-06T06:44:44.853350Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.project_window
+[2m2026-11-06T06:44:44.853531Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.physics
+[2m2026-11-06T06:44:44.853787Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core_windows
+[2m2026-11-06T06:44:44.853831Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.ui_palette
+[2m2026-11-06T06:44:44.853874Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.game_panel
+[2m2026-11-06T06:44:44.853891Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.animation_graph
+[2m2026-11-06T06:44:44.853907Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core
+[2m2026-11-06T06:44:44.855456Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.inspector
+[2m2026-11-06T06:44:44.855486Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.test_input
+[2m2026-11-06T06:44:44.855503Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.timeline
+[2m2026-11-06T06:44:44.855514Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.viewport_panel
+[2m2026-11-06T06:44:44.855557Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.multiplayer
+[2m2026-11-06T06:44:44.855583Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.build_panel
+[2m2026-11-06T06:44:44.857143Z[0m [33m WARN[0m [2mjackdaw_api_internal::keymap::apply[0m[2m:[0m preset 'classic' has 10 chords claimed by more than one action: ["Delete (Press, Operators): clip.delete_keyframes, entity.delete, brush.delete_element", "Backspace (Press, Operators): clip.delete_keyframes, viewport.draw_brush.remove_last_vertex, brush.delete_element", "Home (Press, Operators): clip.timeline.jump_start, view.frame_all, viewport2d.frame", "Super+KeyC (Press, Operators): clip.copy_keyframes, entity.copy", "Super+KeyV (Press, Operators): clip.paste_keyframes, entity.paste", "Tab (Press, Operators): viewport.draw_brush.toggle_mode, brush.clip.cycle_mode", "Enter (Press, Operators): viewport.draw_brush.commit_polygon, brush.clip.apply", "KeyE (Press, Operators): tool.rotate, brush.mesh.extrude", "Escape (Press, Operators): brush.exit_edit_mode, selection.clear, brush.clip.clear, terrain.tool.exit_to_select", "Super+KeyB (Press, Operators): brush.mesh.edge_bevel, brush.mesh.vertex_bevel"]
+[2m2026-11-06T06:44:44.857196Z[0m [32m INFO[0m [2mjackdaw::extension_lifecycle[0m[2m:[0m applied keymap preset 'classic': 113 entries, 113 bindings, 0 user rows
+[2m2026-11-06T06:44:44.890617Z[0m [32m INFO[0m [2mjackdaw::project_select[0m[2m:[0m Project at /Users/linbo.zhang/workspace/jackdaw/tests/fixtures/bsn_game has a Cargo.toml but no jackdaw.toml; offering setup.
+[2m2026-11-06T06:44:54.078068Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: scene.open
+[2m2026-11-06T06:44:54.078323Z[0m [33m WARN[0m [2mjackdaw::scenes::operators[0m[2m:[0m scene.open: failed to read assets/scene.bsn: failed to read assets/scene.bsn: No such file or directory (os error 2)
+[2m2026-11-06T06:45:21.714131Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walking /Users/linbo.zhang/workspace/jackdaw/tests/fixtures/bsn_game/assets recursively
+[2m2026-11-06T06:45:21.714274Z[0m [32m INFO[0m [2mjackdaw::asset_catalog[0m[2m:[0m No asset catalog found, starting with empty catalog
+[2m2026-11-06T06:45:21.744285Z[0m [32m INFO[0m [2mjackdaw::pie[0m[2m:[0m PIE: pre-build disabled; the first Play will compile the game
+[2m2026-11-06T06:45:21.746392Z[0m [32m INFO[0m [2mjackdaw::material_browser[0m[2m:[0m update_material_browser_ui: rebuilding with 1 entries
+[2m2026-11-06T06:45:21.814748Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: walk landed (documents 1, typed 0, referencing 1)
+[2m2026-11-06T06:45:21.814884Z[0m [32m INFO[0m [2mjackdaw::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 0)
+[2m2026-11-06T06:45:21.816824Z[0m [33m WARN[0m [2mjackdaw_bsn::apply[0m[2m:[0m cannot apply 'bsn_scene_game::MusicBus' on entity #Bgm Probe: type not in the registry; check the spelling against the project's registered components
+[2m2026-11-06T06:45:21.817039Z[0m [33m WARN[0m [2mjackdaw_bsn::catalog[0m[2m:[0m 1 type in this scene is in neither the editor's registry nor the project's extracted schema (bsn_scene_game::MusicBus). Rebuild the project if the type is new to it; if the scene spells a re-exported or renamed path, rewrite it to the definition module path the editor registers — the scene-problems list carries one row per occurrence.
+[2m2026-11-06T06:45:41.364870Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: scene.open
+[2m2026-11-06T06:45:41.366706Z[0m [32m INFO[0m [2mjackdaw::scene_io::load[0m[2m:[0m Scene loaded from /Users/linbo.zhang/workspace/jackdaw/tests/fixtures/bsn_game/assets/scene.bsn (6 entities, 0 embedded assets)
+[2m2026-11-06T06:46:00.638258Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: input.pointer
+[2m2026-11-06T06:46:01.672565Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: input.pointer
+[2m2026-11-06T06:46:02.706869Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: input.pointer
+[2m2026-11-06T06:46:37.886507Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: input.pointer
+[2m2026-11-06T06:46:38.920316Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: input.pointer
+[2m2026-11-06T06:46:39.954767Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: input.pointer
+[2m2026-11-06T06:46:40.016532Z[0m [32m INFO[0m [2mjackdaw::remote::connection[0m[2m:[0m Connected to remote game: Bevy Game
+[2m2026-11-06T06:46:40.117334Z[0m [32m INFO[0m [2mjackdaw::remote::registry_fetch[0m[2m:[0m Fetched remote registry: 1470 types
+[2m2026-11-06T06:46:40.121958Z[0m [32m INFO[0m [2mjackdaw::remote::registry_fetch[0m[2m:[0m Cached remote registry to /Users/linbo.zhang/workspace/jackdaw/tests/fixtures/bsn_game/.jackdaw/registry.json
+[2m2026-11-06T06:49:03.113041Z[0m [32m INFO[0m [2mjackdaw::screenshot[0m[2m:[0m screenshot: wrote /Users/linbo.zhang/workspace/jackdaw/tests/fixtures/bsn_game/loop/bug-r4-qa/live-screenshot-window.png
+[2m2026-11-06T06:49:03.176625Z[0m [32m INFO[0m [2mjackdaw::screenshot[0m[2m:[0m screenshot: wrote /Users/linbo.zhang/workspace/jackdaw/tests/fixtures/bsn_game/loop/bug-r4-qa/live-screenshot-window.png

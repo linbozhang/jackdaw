@@ -1,0 +1,11 @@
+[2m2026-11-06T06:21:01.242291Z[0m [32m INFO[0m [2mbevy_diagnostic::system_information_diagnostics_plugin::internal[0m[2m:[0m SystemInfo { os: "macOS 26.3 Tahoe", kernel: "25.3.0", cpu: "Apple M2 Pro", core_count: "12", memory: "32.0 GiB" }
+[2m2026-11-06T06:21:01.247602Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-11-06T06:21:01.348268Z[0m [32m INFO[0m [2mbevy_render::renderer[0m[2m:[0m AdapterInfo { name: "Apple M2 Pro", vendor: 0, device: 0, device_type: IntegratedGpu, device_pci_bus_id: "", driver: "", driver_info: "", backend: Metal, subgroup_min_size: 4, subgroup_max_size: 64, transient_saves_memory: Some(true), limit_bucket: None }
+[2m2026-11-06T06:21:01.723684Z[0m [32m INFO[0m [2mbevy_pbr::cluster[0m[2m:[0m GPU clustering is supported on this device.
+[2m2026-11-06T06:21:01.723830Z[0m [32m INFO[0m [2mbevy_render::batching::gpu_preprocessing[0m[2m:[0m GPU preprocessing is fully supported on this device.
+[2m2026-11-06T06:21:01.764849Z[0m [32m INFO[0m [2mbevy_winit::system[0m[2m:[0m Creating new window bsn_scene_game (69v0)
+BSN_GAME_STARTED
+[2m2026-11-06T06:21:01.845878Z[0m [32m INFO[0m [2mjackdaw_runtime[0m[2m:[0m No catalog at /Users/linbo.zhang/workspace/jackdaw/tests/fixtures/bsn_game/assets/catalog.bsn, skipping catalog load
+BSN_SCENE_LOADED entities=7 node_ids=1 target=999 has_target=true ids=[999] names=["LineGizmoRenderer", "LineStripGizmoRenderer", "LineJointGizmoRenderer", "Root", "Scatter Group", "Sun", "Marker Probe", "Bgm Probe", "scene", "Main Camera"] scatter_keys=["Props"]
+[2m2026-11-06T06:21:07.246019Z[0m [32m INFO[0m [2mbevy_winit::system[0m[2m:[0m Monitor removed 563v0
+AUDIO_SINK_LIVE kind=music volume=0.160 paused=false finished=false position=1.42

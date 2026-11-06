@@ -1,0 +1,204 @@
+   Compiling jackdaw v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw)
+    Finished `test` profile [optimized + debuginfo] target(s) in 44.48s
+     Running unittests src/lib.rs (target/debug/deps/jackdaw-8a72dd60f1d78351)
+
+running 4 tests
+test remote::entity_browser::tests::extract_parent_rejects_a_garbage_value ... ok
+test remote::entity_browser::tests::extract_parent_reads_the_array_form_of_a_tuple_component ... ok
+test remote::entity_browser::tests::extract_parent_reads_the_text_form_bevy_writes_for_child_of ... ok
+test remote::entity_browser::tests::extract_parent_still_reads_bare_bits ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 1273 filtered out; finished in 0.00s
+
+     Running unittests src/main.rs (target/debug/deps/jackdaw-613010324494a74e)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/bin/jackdaw-rustc-wrapper.rs (target/debug/deps/jackdaw_rustc_wrapper-47b583cf61b54b7c)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/asset_formats.rs (target/debug/deps/asset_formats-d29b3964cc3dc60a)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 2 filtered out; finished in 0.00s
+
+     Running tests/asset_watch_reload.rs (target/debug/deps/asset_watch_reload-8263226b0dc284e8)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 1 filtered out; finished in 0.00s
+
+     Running tests/audio_gate.rs (target/debug/deps/audio_gate-c59d550c21d094b3)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 7 filtered out; finished in 0.00s
+
+     Running tests/bsn_game_run.rs (target/debug/deps/bsn_game_run-04d69e37cfdd7351)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 3 filtered out; finished in 0.00s
+
+     Running tests/component_shape_refresh.rs (target/debug/deps/component_shape_refresh-5e26687536af4ee0)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/controls/main.rs (target/debug/deps/controls-494ed12b4ec56c3e)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 41 filtered out; finished in 0.00s
+
+     Running tests/dylib_linkage_identity.rs (target/debug/deps/dylib_linkage_identity-466cd2c78ff5bd14)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/editor_journey.rs (target/debug/deps/editor_journey-ed5d86497e7b37b1)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 1 filtered out; finished in 0.00s
+
+     Running tests/export.rs (target/debug/deps/export-52159dada2af410c)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 1 filtered out; finished in 0.00s
+
+     Running tests/extern_redirect_ecosystem.rs (target/debug/deps/extern_redirect_ecosystem-8882f5fe9dcde95b)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/guards/main.rs (target/debug/deps/guards-e7019aa6177a9349)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 248 filtered out; finished in 0.00s
+
+     Running tests/inspector/main.rs (target/debug/deps/inspector-9b89f2fbec98d621)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 168 filtered out; finished in 0.00s
+
+     Running tests/keymap/main.rs (target/debug/deps/keymap-db00600557fb4fd5)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 50 filtered out; finished in 0.00s
+
+     Running tests/mcp_smoke.rs (target/debug/deps/mcp_smoke-d19ec550eca4d208)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 1 filtered out; finished in 0.00s
+
+     Running tests/operators/main.rs (target/debug/deps/operators-9af715dd7b66b9de)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 169 filtered out; finished in 0.00s
+
+     Running tests/outliner/main.rs (target/debug/deps/outliner-450a1b8029965c00)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 191 filtered out; finished in 0.00s
+
+     Running tests/panels/main.rs (target/debug/deps/panels-a430077c3a259ed6)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 14 filtered out; finished in 0.00s
+
+     Running tests/prefabs/main.rs (target/debug/deps/prefabs-b3480a8dc6fbfe88)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 101 filtered out; finished in 0.00s
+
+     Running tests/reflect_auto_register.rs (target/debug/deps/reflect_auto_register-a3717eb2990f3f85)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/resource_panel/main.rs (target/debug/deps/resource_panel-6edc53f3d6d2407d)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 17 filtered out; finished in 0.00s
+
+     Running tests/scaffold_e2e.rs (target/debug/deps/scaffold_e2e-57ca419f1d2478d8)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 2 filtered out; finished in 0.00s
+
+     Running tests/scenes/main.rs (target/debug/deps/scenes-7e39379f7e8de5f4)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 122 filtered out; finished in 0.00s
+
+     Running tests/sdk_feature_superset.rs (target/debug/deps/sdk_feature_superset-d643106929f4e073)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 1 filtered out; finished in 0.00s
+
+     Running tests/sdk_installed_layout.rs (target/debug/deps/sdk_installed_layout-ef4ee2d1a40d4ed2)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 3 filtered out; finished in 0.00s
+
+     Running tests/sdk_layout/main.rs (target/debug/deps/sdk_layout-77df06e5a8f8498a)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 20 filtered out; finished in 0.00s
+
+     Running tests/sdk_recipe.rs (target/debug/deps/sdk_recipe-03e430d452438863)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 6 filtered out; finished in 0.00s
+
+     Running tests/stage/main.rs (target/debug/deps/stage-e0b8f370ea8fffdd)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 572 filtered out; finished in 0.00s
+
+     Running tests/stress_reload.rs (target/debug/deps/stress_reload-f695ecffb43f27ff)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/terrain/main.rs (target/debug/deps/terrain-862beed18fff0061)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 48 filtered out; finished in 0.00s
+
+     Running tests/viewport/main.rs (target/debug/deps/viewport-ee5b828863e277cf)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 167 filtered out; finished in 0.00s
+

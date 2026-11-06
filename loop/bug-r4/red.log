@@ -1,0 +1,81 @@
+   Compiling bevy_dylib v0.20.0 (/Users/linbo.zhang/workspace/bevy-fork-pinned/crates/bevy_dylib)
+   Compiling jackdaw_project_build v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_project_build)
+   Compiling bevy v0.20.0 (/Users/linbo.zhang/workspace/bevy-fork-pinned)
+   Compiling jackdaw_geometry v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_geometry)
+   Compiling jackdaw_input v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_input)
+   Compiling jackdaw_commands v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_commands)
+   Compiling jackdaw_localization v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_localization)
+   Compiling jackdaw_bsn v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_bsn)
+   Compiling jackdaw_bind v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_bind)
+   Compiling jackdaw_widgets_runtime v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_widgets_runtime)
+   Compiling bevy_transform_interpolation v0.6.0
+   Compiling jackdaw_pie_protocol v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_pie_protocol)
+   Compiling bevy_window_chrome v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/bevy_window_chrome)
+   Compiling jackdaw_camera v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_camera)
+   Compiling jackdaw_widgets v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_widgets)
+   Compiling jackdaw_scene_types v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_scene_types)
+   Compiling jackdaw_prefab v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_prefab)
+   Compiling avian3d v0.8.0
+   Compiling jackdaw_animation_runtime v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_animation_runtime)
+   Compiling jackdaw_hull v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_hull)
+   Compiling jackdaw_pick v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_pick)
+   Compiling jackdaw_uv v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_uv)
+   Compiling jackdaw_csg v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_csg)
+   Compiling jackdaw_select v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_select)
+   Compiling jackdaw_remote v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_remote)
+   Compiling jackdaw_feathers v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_feathers)
+   Compiling jackdaw_terrain v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_terrain)
+   Compiling jackdaw_schema v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_schema)
+   Compiling jackdaw_camera_rig v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_camera_rig)
+   Compiling jackdaw_surface v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_surface)
+   Compiling jackdaw_multiplayer v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_multiplayer)
+   Compiling jackdaw_jsn v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_jsn)
+   Compiling jackdaw_scaffold v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_scaffold)
+   Compiling jackdaw_panels v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_panels)
+   Compiling jackdaw_runtime v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_runtime)
+   Compiling jackdaw_api_internal v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_api_internal)
+   Compiling jackdaw_avian_integration v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/integrations/physics/jackdaw_avian_integration)
+   Compiling jackdaw_node_graph v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_node_graph)
+   Compiling jackdaw_animation v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_animation)
+   Compiling jackdaw_loader v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_loader)
+   Compiling jackdaw_dylib v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_dylib)
+   Compiling jackdaw_api v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_api)
+   Compiling jackdaw_physics v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/integrations/physics/jackdaw_physics)
+   Compiling jackdaw_multiplayer_editor v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_multiplayer_editor)
+   Compiling jackdaw_extension v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_extension)
+   Compiling test_fixture_extension v0.0.0 (/Users/linbo.zhang/workspace/jackdaw/tests/fixtures/test_fixture_extension)
+   Compiling jackdaw v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw)
+    Finished `test` profile [optimized + debuginfo] target(s) in 2m 05s
+     Running unittests src/lib.rs (target/debug/deps/jackdaw-8a72dd60f1d78351)
+
+running 4 tests
+test remote::entity_browser::tests::extract_parent_rejects_a_garbage_value ... ok
+test remote::entity_browser::tests::extract_parent_still_reads_bare_bits ... ok
+test remote::entity_browser::tests::extract_parent_reads_the_text_form_bevy_writes_for_child_of ... FAILED
+test remote::entity_browser::tests::extract_parent_reads_the_array_form_of_a_tuple_component ... FAILED
+
+failures:
+
+---- remote::entity_browser::tests::extract_parent_reads_the_text_form_bevy_writes_for_child_of stdout ----
+
+thread 'remote::entity_browser::tests::extract_parent_reads_the_text_form_bevy_writes_for_child_of' (1240772) panicked at src/remote/entity_browser.rs:854:9:
+assertion `left == right` failed
+  left: None
+ right: Some(4294967290)
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- remote::entity_browser::tests::extract_parent_reads_the_array_form_of_a_tuple_component stdout ----
+
+thread 'remote::entity_browser::tests::extract_parent_reads_the_array_form_of_a_tuple_component' (1240771) panicked at src/remote/entity_browser.rs:863:9:
+assertion `left == right` failed
+  left: None
+ right: Some(4294967290)
+
+
+failures:
+    remote::entity_browser::tests::extract_parent_reads_the_array_form_of_a_tuple_component
+    remote::entity_browser::tests::extract_parent_reads_the_text_form_bevy_writes_for_child_of
+
+test result: FAILED. 2 passed; 2 failed; 0 ignored; 0 measured; 1273 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `-p jackdaw --lib`

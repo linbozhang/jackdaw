@@ -1,0 +1,29 @@
+R4 QA live-leg: remote hierarchy tree nested assertion (extracted from
+live-walk-expand3.json, ui_tree depth=24 over the Remote Entities panel;
+x = window-logical px of the row label, y = row top; indentation depth
+encodes parent-child nesting in the tree rows)
+
+  y=   93  x= 49  scene              <- top-level root row (the only root)
+  y=  121  x=  70  Root               <- child row of scene (indent x=70 > 49)
+  y=  149  x=  91  Bgm Probe          <- child row of Root (indent x=91 > 70)
+  y=  177  x=  91  Main Camera        <- child row of Root
+  y=  205  x=  91  Marker Probe       <- child row of Root
+  y=  233  x=  91  Scatter Group      <- child row of Root
+  y=  261  x=  91  Sun                <- child row of Root
+
+Panel status text read "7 entities" before expansion; only the true root
+("scene", ChildOf=null in the game snapshot) rendered as a top-level row;
+lazy expansion populated child rows under each expanded parent (scene ->
+Root -> the five children), matching the game-side wire forms archived in
+live-game-childof-forms.txt where ChildOf serializes as entity text
+("566v0" / "570v0") -- exactly the shape serde_json Value::as_u64 drops
+and jackdaw_pie_protocol::snapshot::entity_bits now resolves.
+
+Pre-fix expectation (the R4 symptom): all seven entities judged roots and
+rendered as a flat list at x=49 with has_children=false.
+
+Connection face: editor log line
+  [06:46:40] INFO jackdaw::remote::connection: Connected to remote game: Bevy Game
+status bar label flipped to "Connected: Bevy Game" (live-walk-connected.json
+records the same label in the previous editor instance).
+Screenshot: live-screenshot-window.png (1920x1080, tree + status bar visible).

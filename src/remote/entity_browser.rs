@@ -93,7 +93,7 @@ fn extract_parent(entity: &RemoteEntity) -> Option<u64> {
     entity
         .components
         .get("bevy_ecs::hierarchy::ChildOf")
-        .and_then(serde_json::Value::as_u64)
+        .and_then(jackdaw_pie_protocol::snapshot::entity_bits)
 }
 
 fn display_name(entity: &RemoteEntity) -> String {
@@ -824,4 +824,62 @@ pub(crate) fn cleanup_remote_proxies(
     });
 
     commands.remove_resource::<RemoteSnapshotTask>();
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    /// A minimal remote entity carrying only the given component, as the
+    /// `jackdaw/scene_snapshot` producer would serialize it.
+    fn remote_entity_with(component_path: &str, value: serde_json::Value) -> RemoteEntity {
+        RemoteEntity {
+            entity: Entity::from_raw_u32(2).unwrap().to_bits(),
+            components: HashMap::from([(component_path.to_string(), value)]),
+            scene_node_id: None,
+        }
+    }
+
+    #[test]
+    fn extract_parent_reads_the_text_form_bevy_writes_for_child_of() {
+        // The producer serializes a reflected `ChildOf` parent as the entity
+        // text Bevy writes (`{index}v{generation}`), not bare bits.
+        let parent = Entity::from_raw_u32(5).unwrap();
+        let parent_bits = parent.to_bits();
+        let child = remote_entity_with(
+            "bevy_ecs::hierarchy::ChildOf",
+            serde_json::to_value(parent).unwrap(),
+        );
+        // This is the exact chain the root filter and `has_children` rely on.
+        assert_eq!(extract_parent(&child), Some(parent_bits));
+    }
+
+    #[test]
+    fn extract_parent_reads_the_array_form_of_a_tuple_component() {
+        let parent = Entity::from_raw_u32(5).unwrap();
+        let parent_bits = parent.to_bits();
+        let text = serde_json::to_value(parent).unwrap();
+        let child = remote_entity_with("bevy_ecs::hierarchy::ChildOf", serde_json::json!([text]));
+        assert_eq!(extract_parent(&child), Some(parent_bits));
+    }
+
+    #[test]
+    fn extract_parent_still_reads_bare_bits() {
+        // Regression anchor: the numeric form must keep resolving after any fix.
+        let parent_bits = Entity::from_raw_u32(5).unwrap().to_bits();
+        let child = remote_entity_with(
+            "bevy_ecs::hierarchy::ChildOf",
+            serde_json::json!(parent_bits),
+        );
+        assert_eq!(extract_parent(&child), Some(parent_bits));
+    }
+
+    #[test]
+    fn extract_parent_rejects_a_garbage_value() {
+        let child = remote_entity_with(
+            "bevy_ecs::hierarchy::ChildOf",
+            serde_json::json!("not an entity"),
+        );
+        assert_eq!(extract_parent(&child), None);
+    }
 }

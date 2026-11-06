@@ -1,0 +1,18 @@
+[13:25:38] boot: editor pid=59162 project=/Users/linbo.zhang/workspace/jackdaw/tests/fixtures/bsn_game
+[13:35:14] boot: editor pid=61998 project=/Users/linbo.zhang/workspace/jackdaw/tests/fixtures/bsn_game
+[13:50:23] BOOT_FAIL: the asset pipeline never went idle
+[13:51:52] boot: editor pid=66654 project=/Users/linbo.zhang/workspace/jackdaw/tests/fixtures/bsn_game
+[14:03:14] boot: editor pid=71984 project=/Users/linbo.zhang/workspace/jackdaw/tests/fixtures/bsn_game
+[14:07:00] BOOT_FAIL: the asset pipeline never went idle
+[14:18:21] BOOT_FAIL: the asset pipeline never went idle
+[14:20:41] boot: editor pid=77360 project=/Users/linbo.zhang/workspace/jackdaw/tests/fixtures/bsn_game
+[14:20:51] project face null after boot; trying a direct scene.open
+{"project":null,"scene":null}
+[14:20:54] EDITOR_READY pid=77360
+[14:21:01] game launched pid=77448 (standalone, T25 form)
+[14:21:07] GAME_BRP_UP: {"jsonrpc":"2.0","id":1,"result":{"app_name":"Bevy Game","bevy_version":"0.21"}}
+[14:23:08] CONNECT_FAIL: the indicator never read Connected
+[14:44:43] boot: editor pid=80614 project=/Users/linbo.zhang/workspace/jackdaw/tests/fixtures/bsn_game
+[14:44:54] project face null after boot; trying a direct scene.open
+{"project":null,"scene":null}
+[14:44:57] EDITOR_READY pid=80614
