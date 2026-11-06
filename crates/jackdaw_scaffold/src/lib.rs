@@ -11,7 +11,6 @@ use std::path::{Path, PathBuf};
 use std::process::ExitCode;
 
 use include_dir::{Dir, include_dir};
-use jackdaw_env::rust_env_command;
 use jackdaw_project_build::modules::{GameDependencies, ModuleCatalog, ModuleSet};
 use jackdaw_project_build::runtime_wiring::{
     PIE_FEATURE, RUNTIME_CRATE, RuntimeDependency, RuntimeWiring,
@@ -428,7 +427,10 @@ impl std::fmt::Display for NewProjectWarning {
 /// build would hit. Runs cargo's resolver, which updates the registry
 /// index first on a cold cache, so call it off the UI thread.
 pub fn check_new_project(dest: &Path) -> Vec<NewProjectWarning> {
-    check_new_project_with(dest, resolves)
+    check_new_project_with(
+        dest,
+        jackdaw_project_build::cargo_meta::resolve_dependencies,
+    )
 }
 
 /// [`check_new_project`] with the resolver supplied by the caller.
@@ -477,27 +479,6 @@ fn enclosing_workspace(dest: &Path) -> Option<PathBuf> {
         }
         candidate = candidate.parent()?;
     }
-}
-
-/// Whether cargo can resolve a project's full dependency graph,
-/// reporting its first error line. Unlike the `--no-deps` metadata call
-/// used to find a package, this one does the version solving.
-fn resolves(root: &Path) -> Result<(), String> {
-    let output = rust_env_command("cargo")
-        .current_dir(root)
-        .args(["metadata", "--format-version", "1"])
-        .output()
-        .map_err(|error| format!("could not run cargo: {error}"))?;
-    if output.status.success() {
-        return Ok(());
-    }
-    let stderr = String::from_utf8_lossy(&output.stderr);
-    Err(stderr
-        .lines()
-        .map(str::trim)
-        .find(|line| line.starts_with("error"))
-        .unwrap_or("cargo could not resolve this project's dependencies")
-        .to_string())
 }
 
 /// The first bare argument, skipping flags and the values belonging to
@@ -1115,6 +1096,7 @@ const STARTER_SCENE_2D: &str = "\
 // Starter scene. Authored by the jackdaw editor; safe to edit by hand.
 
 #Root
+jackdaw_scene_types::Scene2dRoot
 bevy_transform::components::transform::Transform
 bevy_camera::visibility::Visibility::Visible
 bevy_ecs::hierarchy::Children [
@@ -2216,10 +2198,18 @@ fn jackdaw_crate_like_runtime(doc: &DocumentMut, name: &str) -> Option<String> {
     let table = entry.as_table_like()?;
     let text = |key: &str| table.get(key).and_then(toml_edit::Item::as_str);
     if let Some(path) = text("path") {
-        let sibling = path
+        let parent = path
             .trim_end_matches(['/', '\\'])
-            .strip_suffix(RUNTIME_CRATE)
-            .map(|parent| format!("{parent}{name}"))?;
+            .strip_suffix(RUNTIME_CRATE)?;
+        let checkout = Path::new(parent.trim_end_matches(['/', '\\']));
+        let sibling = match checkout.parent() {
+            Some(root) if checkout.file_name() == Some("crates".as_ref()) => {
+                jackdaw_project_build::build_source::crate_path(root, name)
+                    .to_slash_lossy()
+                    .into_owned()
+            }
+            _ => format!("{parent}{name}"),
+        };
         return Some(format!("{{ path = '{sibling}' }}"));
     }
     if let Some(git) = text("git") {
@@ -2688,10 +2678,10 @@ fn replace_line(text: &str, placeholder: &str, lines: &str) -> String {
 }
 
 /// The runtime features a new game enables: its modules' features, then
-/// terrain drawing and the editor link.
+/// terrain and tilemap drawing and the editor link.
 fn template_runtime_features(modules: &ModuleSet) -> String {
     let mut features = module_runtime_features(modules);
-    for always in ["terrain", PIE_FEATURE] {
+    for always in ["terrain", "tilemap", PIE_FEATURE] {
         if !features.iter().any(|feature| feature == always) {
             features.push(always.to_string());
         }
@@ -3752,6 +3742,26 @@ mod tests {
     }
 
     #[test]
+    fn the_2d_starter_scene_is_a_2d_scene_that_keeps_its_camera() {
+        let dest = temp_dir("starter_2d");
+        std::fs::create_dir_all(dest.join("assets")).unwrap();
+
+        write_starter_scene(&dest, StarterScene::TwoD).unwrap();
+
+        let scene = std::fs::read_to_string(dest.join("assets/scene.bsn")).unwrap();
+        let root = scene.split("bevy_ecs::hierarchy::Children").next().unwrap();
+        assert!(
+            root.contains("jackdaw_scene_types::Scene2dRoot"),
+            "the root says the scene is 2D:\n{scene}"
+        );
+        assert!(
+            scene.contains("bevy_camera::components::Camera2d"),
+            "{scene}"
+        );
+        let _ = std::fs::remove_dir_all(&dest);
+    }
+
+    #[test]
     fn a_project_inside_a_workspace_that_stops_resolving_is_warned_about() {
         let outer = temp_dir("broken_workspace");
         std::fs::write(outer.join("Cargo.toml"), "[workspace]\nmembers = [\"*\"]\n").unwrap();
@@ -3860,6 +3870,11 @@ mod tests {
         let lib = std::fs::read_to_string(dest.join("src/lib.rs")).unwrap();
         assert!(lib.contains("pub struct GamePlugin"));
         assert!(!lib.contains("{{"));
+        let main = std::fs::read_to_string(dest.join("src/main.rs")).unwrap();
+        assert!(
+            main.contains("DefaultPlugins.set(jackdaw_runtime::image_plugin())"),
+            "the game reads the project's 2D sampling: {main}"
+        );
     }
 
     /// The templates state the whole jackdaw requirement rather than a
@@ -5759,7 +5774,7 @@ mod tests {
         .unwrap();
         let cargo = std::fs::read_to_string(dest.join("Cargo.toml")).unwrap();
         assert!(
-            cargo.contains("features = [\"navmesh\", \"terrain\", \"pie\"] }"),
+            cargo.contains("features = [\"navmesh\", \"terrain\", \"tilemap\", \"pie\"] }"),
             "got:\n{cargo}"
         );
         assert!(!cargo.contains("avian3d"), "got:\n{cargo}");
@@ -5774,7 +5789,7 @@ mod tests {
             .unwrap();
         let cargo = std::fs::read_to_string(bare.join("Cargo.toml")).unwrap();
         assert!(
-            cargo.contains("features = [\"terrain\", \"pie\"] }"),
+            cargo.contains("features = [\"terrain\", \"tilemap\", \"pie\"] }"),
             "got:\n{cargo}"
         );
         assert!(!cargo.contains("avian3d"), "got:\n{cargo}");
@@ -5870,7 +5885,8 @@ mod tests {
     #[test]
     fn changing_modules_later_edits_both_manifests_and_keeps_the_games_crates() {
         let root = temp_dir("change-modules").join("change-game");
-        scaffold_new_project(&root, "change-game", TemplateKind::Game).unwrap();
+        scaffold_new_project_with(&root, "change-game", TemplateKind::Game, &ModuleSet::new())
+            .unwrap();
         let cargo_path = root.join("Cargo.toml");
 
         let chosen = modules(&["multiplayer", "navmesh"]);
@@ -5879,7 +5895,7 @@ mod tests {
         apply_import_plan(&plan).unwrap();
         let cargo = std::fs::read_to_string(&cargo_path).unwrap();
         assert!(
-            cargo.contains("features = [\"terrain\", \"pie\", \"navmesh\"]"),
+            cargo.contains("features = [\"terrain\", \"tilemap\", \"pie\", \"navmesh\"]"),
             "got:\n{cargo}"
         );
         assert!(cargo.contains("jackdaw_multiplayer = {"), "got:\n{cargo}");
@@ -5900,7 +5916,7 @@ mod tests {
         apply_import_plan(&plan).unwrap();
         let cargo = std::fs::read_to_string(&cargo_path).unwrap();
         assert!(
-            cargo.contains("features = [\"terrain\", \"pie\"]"),
+            cargo.contains("features = [\"terrain\", \"tilemap\", \"pie\"]"),
             "got:\n{cargo}"
         );
         assert!(cargo.contains("jackdaw_multiplayer = {"), "got:\n{cargo}");

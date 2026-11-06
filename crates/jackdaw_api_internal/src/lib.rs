@@ -293,6 +293,7 @@ impl<'a> ExtensionContext<'a> {
             default_area: descriptor.default_area.anchor_id().to_string(),
             priority: descriptor.priority.unwrap_or(100),
             build: descriptor.build,
+            unlisted: descriptor.unlisted,
         };
         self.world
             .resource_mut::<WindowRegistry>()
@@ -399,7 +400,10 @@ impl<'a> ExtensionContext<'a> {
                 cancel,
                 modal: O::MODAL,
                 allows_undo: O::ALLOWS_UNDO,
+                writes_disk: O::WRITES_DISK,
+                leaves_history: O::LEAVES_HISTORY,
                 remote_hidden: O::REMOTE_HIDDEN,
+                unavailable_reason: O::UNAVAILABLE_REASON,
             },
             ChildOf(ext),
         ));
@@ -422,6 +426,33 @@ impl<'a> ExtensionContext<'a> {
         defaults: impl IntoIterator<Item = crate::keymap::PresetInput>,
     ) -> &mut Self {
         self.action_for::<C, O>();
+        self.record_defaults::<O>(defaults)
+    }
+
+    /// Like [`Self::bind_operator`], but the action belongs to `context`, an
+    /// entity of this extension carrying its own input context, so the chords
+    /// fire only while that context is active, and then hide their keys from
+    /// the contexts below it.
+    pub fn bind_operator_in<O: crate::Operator>(
+        &mut self,
+        context: Entity,
+        defaults: impl IntoIterator<Item = crate::keymap::PresetInput>,
+    ) -> &mut Self {
+        self.world.spawn((
+            ActionOf(context),
+            OperatorAction(O::ID),
+            ActionSettings {
+                require_reset: true,
+                consume_input: true,
+            },
+        ));
+        self.record_defaults::<O>(defaults)
+    }
+
+    fn record_defaults<O: crate::Operator>(
+        &mut self,
+        defaults: impl IntoIterator<Item = crate::keymap::PresetInput>,
+    ) -> &mut Self {
         let mut keymap = self
             .world
             .get_resource_or_init::<crate::keymap::DefaultKeymap>();
@@ -797,6 +828,9 @@ pub struct WindowDescriptor {
     pub default_area: Option<DefaultArea>,
     pub priority: Option<i32>,
     pub build: Arc<dyn Fn(&mut ChildSpawner) + Send + Sync + 'static>,
+    /// Opened only for a document, by an operator; the Window menus and the
+    /// default layout leave it out.
+    pub unlisted: bool,
 }
 
 impl WindowDescriptor {
@@ -839,6 +873,14 @@ impl WindowDescriptor {
         self
     }
 
+    /// Keeps the window out of the Window menus and the default layout, for a
+    /// window that only makes sense opened on a document.
+    #[must_use]
+    pub fn unlisted(mut self) -> Self {
+        self.unlisted = true;
+        self
+    }
+
     /// Sets the build function for the window, which is used for building the window's UI.
     #[must_use]
     pub fn with_build(mut self, build: impl Fn(&mut ChildSpawner) + Send + Sync + 'static) -> Self {
@@ -856,6 +898,7 @@ impl Default for WindowDescriptor {
             default_area: None,
             priority: None,
             build: Arc::new(|_| {}),
+            unlisted: false,
         }
     }
 }

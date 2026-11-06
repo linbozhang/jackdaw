@@ -1,0 +1,689 @@
+use crate::{
+    EditorEntity,
+    brush::BrushMeshCache,
+    brush_drag_ops::cursor_over_brush_face,
+    gizmos::handle_gizmo_hover,
+    schema_preview::SchemaPreview,
+    selection::Selection,
+    viewport::{InteractionGuards, SceneViewport, ViewportCursor},
+    viewport_util::window_to_viewport_cursor_for,
+};
+use bevy::input_focus::InputFocus;
+use bevy::ui::ui_transform::UiGlobalTransform;
+use bevy::{
+    picking::mesh_picking::ray_cast::{MeshRayCast, MeshRayCastSettings, RayCastVisibility},
+    prelude::*,
+};
+use jackdaw_api::prelude::*;
+use jackdaw_scene_types::Brush;
+
+/// Marker for the box-select visual overlay node.
+#[derive(Component)]
+struct BoxSelectOverlay;
+
+pub struct ViewportSelectPlugin;
+
+impl Plugin for ViewportSelectPlugin {
+    fn build(&self, app: &mut App) {
+        app.init_resource::<BoxSelectState>().add_systems(
+            Update,
+            (
+                handle_viewport_click.after(handle_gizmo_hover),
+                box_select_pending_trigger,
+                box_select_promote_pending.after(box_select_pending_trigger),
+                update_box_select_overlay,
+            )
+                .in_set(crate::EditorInteractionSystems),
+        );
+    }
+}
+
+pub(crate) fn add_to_extension(ctx: &mut ExtensionContext) {
+    ctx.register_operator::<BoxSelectOp>()
+        .register_operator::<SelectionClearOp>();
+    ctx.bind_operator::<crate::core_extension::CoreExtensionInputContext, SelectionClearOp>([
+        jackdaw_api_internal::keymap::PresetInput::key("Escape"),
+    ]);
+}
+
+/// Whether Escape means "drop the selection" right now.
+///
+/// Escape is the universal back-out, so nearly everything on screen has a
+/// prior claim on it: a modal operator cancels, a dialog closes, an open
+/// menu or radial menu closes, a running gesture on the canvas or in a
+/// viewport is abandoned, and a keybind being recorded stops recording.
+/// Only with none of those in flight, and something actually selected,
+/// does the press reach this far.
+///
+/// The gestures are asked of their own state rather than of the pointer:
+/// a drag is in flight for as long as its resource holds nodes, whatever
+/// the pointer is doing meanwhile.
+fn escape_is_free(
+    selection: Res<Selection>,
+    guards: InteractionGuards,
+    keybind_focus: crate::keybind_focus::KeybindFocus,
+    ui_gesture: Res<crate::ui_stage::UiManipulation>,
+    sprite_gesture: Res<crate::sprite_gizmo::SpriteManipulation>,
+    guide_gesture: Res<crate::ui_stage::GuideManipulation>,
+    marquee: Res<crate::ui_stage::MarqueeSelect>,
+    box_select: Res<BoxSelectState>,
+    menu_bar: Res<jackdaw_widgets::menu_bar::MenuBarState>,
+    context_menu: Res<jackdaw_widgets::context_menu::ContextMenuState>,
+    radial: Res<jackdaw_widgets::RadialMenuState>,
+    recording: Res<crate::keybind_settings::KeybindRecordingState>,
+    add_entity_picker: Query<(), With<crate::add_entity_picker::AddEntityPicker>>,
+) -> bool {
+    if selection.entities.is_empty() || guards.is_any_interaction_active() {
+        return false;
+    }
+    // Escape ends an F2 rename, and closes the Add Entity picker, before it
+    // means anything else. Neither is about the selection, and both would
+    // otherwise take it with them on the way out.
+    if keybind_focus.keyboard_is_spoken_for() || !add_entity_picker.is_empty() {
+        return false;
+    }
+    if ui_gesture.is_running()
+        || sprite_gesture.is_running()
+        || guide_gesture.position().is_some()
+        || marquee.corners().is_some()
+        || box_select.active
+    {
+        return false;
+    }
+    if menu_bar.open_menu.is_some()
+        || context_menu.menu_entity.is_some()
+        || radial.open.is_some()
+        || recording.is_recording()
+    {
+        return false;
+    }
+    true
+}
+
+/// Deselect everything, for callers that need the empty-selection state without
+/// a click on empty viewport space.
+#[operator(
+    id = "selection.clear",
+    label = "Deselect All",
+    description = "Clear the current selection.",
+    is_available = escape_is_free,
+    allows_undo = false,
+)]
+pub(crate) fn selection_clear(
+    _: In<OperatorParameters>,
+    mut selection: ResMut<Selection>,
+    mut commands: Commands,
+) -> OperatorResult {
+    selection.clear(&mut commands);
+    OperatorResult::Finished
+}
+
+/// Cursor delta (in window pixels) that promotes a pending LMB-down
+/// into an active box-select. Below this, the press is treated as a
+/// plain click and `handle_viewport_click` keeps ownership of it.
+pub const BOX_SELECT_DRAG_THRESHOLD: f32 = 5.0;
+
+#[derive(Resource, Default)]
+pub struct BoxSelectState {
+    pub active: bool,
+    pub start: Vec2,
+    pub current: Vec2,
+    /// Camera entity of the viewport the drag started in. Captured at
+    /// modal start so the operator keeps querying the same viewport
+    /// across frames even if the cursor wanders into a different one
+    /// (multi-viewport setups).
+    pub camera: Option<Entity>,
+    /// `SceneViewport` UI-node entity of the same viewport.
+    pub viewport: Option<Entity>,
+    /// Cursor position recorded at LMB-down before we know whether the
+    /// gesture is a click or a box-select drag. Cleared when promoted
+    /// to active or when LMB releases without crossing the threshold.
+    pub pending: Option<Vec2>,
+}
+
+impl BoxSelectState {
+    /// Begin an active box-select session, anchoring the rectangle at
+    /// the previously-pending press position recorded by the trigger
+    /// system if any, otherwise at `cursor_pos`.
+    pub fn activate(&mut self, cursor_pos: Vec2) {
+        let start = self.pending.take().unwrap_or(cursor_pos);
+        self.active = true;
+        self.start = start;
+        self.current = cursor_pos;
+    }
+}
+
+/// True when a cursor at `current` has moved far enough from `start`
+/// to promote a pending press into an active box-select.
+#[inline]
+pub fn cursor_dragged_past_threshold(start: Vec2, current: Vec2) -> bool {
+    current.distance_squared(start) >= BOX_SELECT_DRAG_THRESHOLD * BOX_SELECT_DRAG_THRESHOLD
+}
+
+pub(crate) fn handle_viewport_click(
+    pointer: crate::modal_inputs::PointerInputs,
+    keyboard: Res<ButtonInput<KeyCode>>,
+    vp: ViewportCursor,
+    scene_entities: Query<(Entity, &GlobalTransform), (Without<EditorEntity>, With<Transform>)>,
+    editor_entities: Query<(), With<EditorEntity>>,
+    parents: Query<&ChildOf>,
+    brushes: Query<(), With<Brush>>,
+    schema_previews: Query<(), With<SchemaPreview>>,
+    reference_images: Query<&crate::reference_image::ReferenceImage>,
+    guards: InteractionGuards,
+    mut selection: ResMut<Selection>,
+    mut input_focus: ResMut<InputFocus>,
+    mut commands: Commands,
+    mut ray_cast: MeshRayCast,
+    // One-frame memory of `draw_state.active`. `draw_brush.confirm` clears
+    // the state inline before this system runs, so the same mouse-press
+    // would otherwise fall through to `selection.clear()` and strip
+    // `Selected` from the just-spawned brush.
+    mut was_drawing: Local<bool>,
+) {
+    let drawing_now = guards.draw_state.active.is_some();
+    let just_finished_draw = *was_drawing && !drawing_now;
+    *was_drawing = drawing_now;
+
+    if !pointer.pointer_primary_just_pressed()
+        || guards.is_any_interaction_active()
+        || guards.gizmo_hover.hovered_axis.is_some()
+        || just_finished_draw
+        || guards.terrain_edit_mode.brush_active()
+    {
+        return;
+    }
+
+    // Bails when the cursor is over no viewport, and when it is over an overlay drawn on
+    // the viewport rather than the scene behind it. The active viewport is whichever one
+    // the cursor is in.
+    let Some(cursor_pos) = vp.viewport_pointer() else {
+        return;
+    };
+
+    let Some((vp_computed, vp_tf)) = vp.viewport() else {
+        return;
+    };
+    let Some((camera, cam_tf)) = vp.camera() else {
+        return;
+    };
+
+    // Overlays like the terrain tool palette are UI children of the
+    // `SceneViewport` node, positioned on top of it, so a click inside the
+    // viewport's screen rect is not necessarily a click on the 3D scene.
+    // Without this check, clicking a palette button also runs the raycast
+    // below, finds nothing under the cursor, and deselects the terrain the
+    // palette needs to stay visible.
+    if vp.blocked_by_overlay() {
+        return;
+    }
+    let map = crate::viewport_util::ViewportRemap::new(camera, vp_computed, vp_tf);
+    let local_cursor = (cursor_pos - map.top_left) * map.remap;
+
+    // Clear input focus so keyboard shortcuts (G/R/S) work after viewport click
+    input_focus.clear();
+
+    // Try mesh raycast first for accurate geometry-based selection
+    let mut best_entity = None;
+
+    if let Ok(ray) = camera.viewport_to_world(cam_tf, local_cursor) {
+        // Filter out editor-internal mesh entities (material preview
+        // spheres, gizmo meshes, draw previews, etc). These have
+        // `EditorEntity` and live on non-viewport render layers, but
+        // `MeshRayCast` doesn't filter by render layer, so without
+        // this guard the picker hits invisible meshes at world origin
+        // and short-circuits before reaching the actual scene.
+        // Locked reference images are also excluded so clicks pass
+        // through them to the geometry behind.
+        let editor_filter = |entity: Entity| {
+            !editor_entities.contains(entity) && !is_locked_reference(&reference_images, entity)
+        };
+        let settings = MeshRayCastSettings::default()
+            .with_visibility(RayCastVisibility::Any)
+            .with_filter(&editor_filter);
+        let hits = ray_cast.cast_ray(ray, &settings);
+
+        for (hit_entity, _) in hits {
+            if let Some(ancestor) = find_selectable_ancestor(
+                *hit_entity,
+                &scene_entities,
+                &parents,
+                &brushes,
+                &schema_previews,
+                &reference_images,
+            ) {
+                best_entity = Some(ancestor);
+                break;
+            }
+        }
+        // If we'd select a different entity, but the current selection is also
+        // under the cursor (overlapping geometry), keep the current selection.
+        // This prevents re-selecting the original after Ctrl+D duplication.
+        if let Some(candidate) = best_entity
+            && let Some(current_primary) = selection.primary()
+            && candidate != current_primary
+        {
+            for (hit_entity, _) in hits {
+                if find_selectable_ancestor(
+                    *hit_entity,
+                    &scene_entities,
+                    &parents,
+                    &brushes,
+                    &schema_previews,
+                    &reference_images,
+                ) == Some(current_primary)
+                {
+                    return;
+                }
+            }
+        }
+    }
+
+    // Fall back to screen-space proximity for non-mesh entities (lights, empties)
+    if best_entity.is_none() {
+        let mut best_dist = 30.0_f32;
+        for (entity, global_tf) in &scene_entities {
+            if is_locked_reference(&reference_images, entity) {
+                continue;
+            }
+            let pos = global_tf.translation();
+            if let Ok(screen_pos) = camera.world_to_viewport(cam_tf, pos) {
+                let dist = (screen_pos - local_cursor).length();
+                if dist < best_dist {
+                    best_dist = dist;
+                    best_entity = Some(entity);
+                }
+            }
+        }
+    }
+
+    if let Some(entity) = best_entity {
+        let ctrl = keyboard.any_pressed([KeyCode::ControlLeft, KeyCode::ControlRight]);
+        if ctrl {
+            selection.toggle(&mut commands, entity);
+        } else if !selection.is_only(entity) {
+            selection.select_single(&mut commands, entity);
+        }
+    } else {
+        let ctrl = keyboard.any_pressed([KeyCode::ControlLeft, KeyCode::ControlRight]);
+        if !ctrl && !selection.entities.is_empty() {
+            selection.clear(&mut commands);
+        }
+    }
+}
+
+/// LMB-down records a pending box-select start position. The press
+/// stays pending until either the cursor crosses
+/// [`BOX_SELECT_DRAG_THRESHOLD`] (promoted to active by
+/// [`box_select_promote_pending`]) or LMB releases without movement
+/// (cleared, leaving `handle_viewport_click` to handle the click as
+/// a single-select). Sit outside the keybind menu because
+/// drag gestures aren't expressible as key actions.
+///
+/// Yields to face-drag when the cursor is over a face of the
+/// selected brush; without that guard box-select would race
+/// face-drag because face-drag's hit-test runs inside its operator
+/// a frame later. See `cursor_over_brush_face`.
+fn box_select_pending_trigger(
+    pointer: crate::modal_inputs::PointerInputs,
+    vp: ViewportCursor,
+    guards: InteractionGuards,
+    active_tool: Res<crate::active_tool::ActiveTool>,
+    mut box_state: ResMut<BoxSelectState>,
+    viewport_query: Query<(&ComputedNode, &UiGlobalTransform), With<SceneViewport>>,
+    selection: Res<Selection>,
+    brushes: Query<(), With<Brush>>,
+    transforms: Query<&GlobalTransform>,
+    brush_caches: Query<&BrushMeshCache>,
+) {
+    // The Tilemap tool owns the left button on the 2D canvas.
+    if *active_tool == crate::active_tool::ActiveTool::Tilemap {
+        return;
+    }
+    // `gizmo_drag.active` doesn't flip until next frame because the
+    // gizmo invoke-trigger queues its dispatch; `gizmo_hover` covers
+    // the same-frame case.
+    if box_state.active
+        || box_state.pending.is_some()
+        || !pointer.pointer_primary_just_pressed()
+        || guards.is_any_interaction_active()
+        || guards.gizmo_hover.hovered_axis.is_some()
+    {
+        return;
+    }
+    // Bail when the press isn't the viewport's: otherwise any LMB press anywhere in the
+    // editor (toolbar, panel header, tab being dragged, a palette button over the
+    // viewport) records a pending box-select whose overlay renders across the whole window
+    // during the drag.
+    let Some(cursor_pos) = vp.viewport_pointer() else {
+        return;
+    };
+
+    let Some((camera, cam_tf)) = vp.camera() else {
+        return;
+    };
+    let Some(viewport_entity) = vp.viewport_entity() else {
+        return;
+    };
+
+    // Yield to face-drag when the cursor is over a face of the
+    // selected brush. Routes through `vp` so we hit-test against the
+    // viewport the cursor is actually over, not a hard-coded main
+    // camera (multi-viewport setups can have several scene cameras).
+    if let Some(brush_entity) = selection.primary().filter(|&e| brushes.contains(e))
+        && let Some(viewport_cursor) =
+            window_to_viewport_cursor_for(cursor_pos, camera, viewport_entity, &viewport_query)
+        && cursor_over_brush_face(
+            brush_entity,
+            viewport_cursor,
+            camera,
+            cam_tf,
+            &transforms,
+            &brush_caches,
+        )
+    {
+        return;
+    }
+
+    box_state.pending = Some(cursor_pos);
+}
+
+/// Promotes a pending LMB-down to an active box-select once the
+/// cursor moves past [`BOX_SELECT_DRAG_THRESHOLD`]. Clears the
+/// pending state on LMB release without movement (so the press
+/// resolves as a plain click instead).
+fn box_select_promote_pending(
+    mouse: Res<ButtonInput<MouseButton>>,
+    vp: ViewportCursor,
+    guards: InteractionGuards,
+    mut box_state: ResMut<BoxSelectState>,
+    mut commands: Commands,
+) {
+    let Some(start) = box_state.pending else {
+        return;
+    };
+    if !mouse.pressed(MouseButton::Left) {
+        box_state.pending = None;
+        return;
+    }
+    // An interaction that started in the same frame as the press
+    // wouldn't have shown up in the trigger's guard check, but has by
+    // now. Drop the pending press so we don't fight it.
+    if guards.is_any_interaction_active() {
+        box_state.pending = None;
+        return;
+    }
+    let Some(cursor_pos) = vp.cursor() else {
+        return;
+    };
+    if cursor_dragged_past_threshold(start, cursor_pos) {
+        commands.queue(|world: &mut World| {
+            if let Err(err) = world.operator(BoxSelectOp::ID).call() {
+                error!("box-select dispatch failed: {err}");
+            }
+        });
+    }
+}
+
+#[operator(
+    id = "selection.box_select",
+    label = "Box Select",
+    description = "Drag a rectangle to select entities inside it.",
+    modal = true,
+    cancel = cancel_box_select,
+)]
+pub fn box_select(
+    _: In<OperatorParameters>,
+    mouse: Res<ButtonInput<MouseButton>>,
+    vp: ViewportCursor,
+    mut box_state: ResMut<BoxSelectState>,
+    scene_entities: Query<(Entity, &GlobalTransform), (Without<EditorEntity>, With<Name>)>,
+    reference_images: Query<&crate::reference_image::ReferenceImage>,
+    mut selection: ResMut<Selection>,
+    mut commands: Commands,
+    active: ActiveModalQuery,
+) -> Option<OperatorResult> {
+    let cursor_pos = vp.cursor()?;
+
+    if !active.is_modal_running() {
+        // Honour the press-down position recorded by
+        // `box_select_pending_trigger` so the rectangle anchors at
+        // the original click rather than where the threshold tripped.
+        box_state.activate(cursor_pos);
+        // Capture the viewport that owns this drag so subsequent
+        // frames keep referring to it even if the cursor wanders
+        // into a different viewport mid-drag.
+        box_state.camera = vp.camera_entity();
+        box_state.viewport = vp.viewport_entity();
+        return Some(OperatorResult::Running);
+    }
+
+    box_state.current = cursor_pos;
+    if !mouse.just_released(MouseButton::Left) {
+        return Some(OperatorResult::Running);
+    }
+    box_state.active = false;
+
+    let Some(camera_entity) = box_state.camera else {
+        return Some(OperatorResult::Finished);
+    };
+    let Some(viewport_entity) = box_state.viewport else {
+        return Some(OperatorResult::Finished);
+    };
+    let Some((camera, cam_tf)) = vp.camera_for(camera_entity) else {
+        return Some(OperatorResult::Finished);
+    };
+    let Some((vp_computed, vp_tf)) = vp.viewport_for(viewport_entity) else {
+        return Some(OperatorResult::Finished);
+    };
+    let (min, max) = crate::viewport_util::box_select_rect(
+        camera,
+        vp_computed,
+        vp_tf,
+        box_state.start,
+        box_state.current,
+    );
+
+    let selected: Vec<Entity> = scene_entities
+        .iter()
+        .filter_map(|(entity, tf)| {
+            // Locked reference images stay out of box selection, same
+            // as they stay out of click selection.
+            if is_locked_reference(&reference_images, entity) {
+                return None;
+            }
+            let screen = camera.world_to_viewport(cam_tf, tf.translation()).ok()?;
+            (screen.x >= min.x && screen.x <= max.x && screen.y >= min.y && screen.y <= max.y)
+                .then_some(entity)
+        })
+        .collect();
+
+    if !selected.is_empty() {
+        selection.select_multiple(&mut commands, &selected);
+    }
+    Some(OperatorResult::Finished)
+}
+
+fn cancel_box_select(mut box_state: ResMut<BoxSelectState>) {
+    box_state.active = false;
+    box_state.pending = None;
+}
+
+fn update_box_select_overlay(
+    box_state: Res<BoxSelectState>,
+    overlay_query: Query<Entity, With<BoxSelectOverlay>>,
+    mut commands: Commands,
+) {
+    if box_state.active {
+        let node = (
+            BoxSelectOverlay,
+            crate::viewport_util::marquee_node(box_state.start, box_state.current),
+        );
+
+        if let Some(entity) = overlay_query.iter().next() {
+            commands.entity(entity).insert(node);
+        } else {
+            commands.spawn(node);
+        }
+    } else {
+        for entity in &overlay_query {
+            commands.entity(entity).despawn();
+        }
+    }
+}
+
+/// Returns `true` when `entity` is a reference image with `locked = true`.
+/// Used in multiple selection paths to make locked boards pass-through.
+fn is_locked_reference(
+    refs: &Query<&crate::reference_image::ReferenceImage>,
+    entity: Entity,
+) -> bool {
+    refs.get(entity).is_ok_and(|r| r.locked)
+}
+
+/// Walk up the `ChildOf` hierarchy from a raycast hit entity to find the
+/// selectable ancestor. A brush resolves to itself regardless of nesting.
+/// A non-brush scene entity whose parent is also a scene entity walks up
+/// to the scene-entity root (resolves GLTF sub-meshes to the model root).
+/// Locked reference images resolve to `None` so viewport clicks pass
+/// through to whatever sits behind them.
+fn find_selectable_ancestor(
+    mut entity: Entity,
+    scene_entities: &Query<(Entity, &GlobalTransform), (Without<EditorEntity>, With<Transform>)>,
+    parents: &Query<&ChildOf>,
+    brushes: &Query<(), With<Brush>>,
+    schema_previews: &Query<(), With<SchemaPreview>>,
+    reference_images: &Query<&crate::reference_image::ReferenceImage>,
+) -> Option<Entity> {
+    if let Some(host) = schema_preview_host(entity, parents, schema_previews) {
+        return scene_entities
+            .contains(host)
+            .then_some(host)
+            .filter(|h| !is_locked_reference(reference_images, *h));
+    }
+
+    loop {
+        if is_locked_reference(reference_images, entity) {
+            return None;
+        }
+        if scene_entities.contains(entity) {
+            // A brush always resolves to itself; never walk past it to a parent.
+            if brushes.contains(entity) {
+                return Some(entity);
+            }
+            // For non-brush scene entities, check whether the parent is also
+            // a scene entity. If so, prefer the parent (resolves GLTF sub-meshes
+            // to the model root).
+            if let Ok(child_of) = parents.get(entity) {
+                let parent = child_of.0;
+                if scene_entities.contains(parent) {
+                    entity = parent;
+                    continue;
+                }
+            }
+            return Some(entity);
+        }
+        if let Ok(child_of) = parents.get(entity) {
+            entity = child_of.0;
+        } else {
+            return None;
+        }
+    }
+}
+
+/// If `entity` is a schema preview or lives under one, return the marker host
+/// that owns that preview.
+fn schema_preview_host(
+    mut entity: Entity,
+    parents: &Query<&ChildOf>,
+    schema_previews: &Query<(), With<SchemaPreview>>,
+) -> Option<Entity> {
+    loop {
+        if schema_previews.contains(entity) {
+            return parents.get(entity).ok().map(|child_of| child_of.0);
+        }
+        match parents.get(entity) {
+            Ok(child_of) => entity = child_of.0,
+            Err(_) => return None,
+        }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    /// `BoxSelectOp`'s first call hands the rectangle's anchor over
+    /// from `pending`. Drag-threshold promotion records the press
+    /// position, so the rectangle should start there, not at the
+    /// later promotion point.
+    #[test]
+    fn activate_uses_pending_as_start_when_set() {
+        let mut state = BoxSelectState {
+            pending: Some(Vec2::new(50.0, 60.0)),
+            ..Default::default()
+        };
+
+        state.activate(Vec2::new(70.0, 90.0));
+
+        assert!(state.active);
+        assert_eq!(state.start, Vec2::new(50.0, 60.0));
+        assert_eq!(state.current, Vec2::new(70.0, 90.0));
+        assert!(state.pending.is_none(), "activate should consume `pending`",);
+    }
+
+    /// When no pending press is recorded (e.g. an external dispatch
+    /// of `BoxSelectOp` without going through the trigger pipeline),
+    /// the rectangle anchors at the cursor instead.
+    #[test]
+    fn activate_falls_back_to_cursor_without_pending() {
+        let mut state = BoxSelectState::default();
+
+        state.activate(Vec2::new(70.0, 90.0));
+
+        assert!(state.active);
+        assert_eq!(state.start, Vec2::new(70.0, 90.0));
+        assert_eq!(state.current, Vec2::new(70.0, 90.0));
+    }
+
+    /// A click that hasn't moved past the threshold must stay pending,
+    /// otherwise `handle_viewport_click` and box-select would race for
+    /// the same press.
+    #[test]
+    fn drag_below_threshold_does_not_promote() {
+        // Moves of 0, 2.83 (sqrt(2*2 + 2*2)), and 4.24 are all < 5.
+        assert!(!cursor_dragged_past_threshold(
+            Vec2::new(100.0, 100.0),
+            Vec2::new(100.0, 100.0),
+        ));
+        assert!(!cursor_dragged_past_threshold(
+            Vec2::new(100.0, 100.0),
+            Vec2::new(102.0, 102.0),
+        ));
+        assert!(!cursor_dragged_past_threshold(
+            Vec2::new(100.0, 100.0),
+            Vec2::new(103.0, 103.0),
+        ));
+    }
+
+    /// Once the cursor has moved at least `BOX_SELECT_DRAG_THRESHOLD`
+    /// pixels in any direction, the press promotes to box-select.
+    #[test]
+    fn drag_at_or_above_threshold_promotes() {
+        // Exactly the threshold (5px right): hits the `>=` boundary.
+        assert!(cursor_dragged_past_threshold(
+            Vec2::new(100.0, 100.0),
+            Vec2::new(105.0, 100.0),
+        ));
+        // 3-4-5 right triangle: hypotenuse = 5, exactly threshold.
+        assert!(cursor_dragged_past_threshold(
+            Vec2::new(100.0, 100.0),
+            Vec2::new(104.0, 103.0),
+        ));
+        // Comfortably past threshold.
+        assert!(cursor_dragged_past_threshold(
+            Vec2::new(100.0, 100.0),
+            Vec2::new(120.0, 80.0),
+        ));
+    }
+}

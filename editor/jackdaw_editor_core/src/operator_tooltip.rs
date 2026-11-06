@@ -1,0 +1,460 @@
+//! Operator bridge into the generic feathers tooltip pipeline.
+//!
+//! [`jackdaw_feathers::tooltip`] owns hover/render and reads only the
+//! generic [`Tooltip`] component. This module's `Add,
+//! ButtonOperatorCall` observer looks up the matching
+//! [`OperatorEntity`] and inserts a `Tooltip` carrying its label,
+//! description, signature, and the live keybind.
+//!
+//! The keybind is read from the operator's action entities at
+//! tooltip-attach time (and refreshed whenever a `Bindings` component
+//! changes) so user remaps surface immediately. The link from
+//! `ButtonOperatorCall.id` to the action entity is the [`OperatorAction`]
+//! tag the action carries; nothing in the editor's call sites needs to
+//! opt in.
+//!
+//! Other tooltip sources follow the same shape (one source
+//! component, one `Add` observer). See
+//! `src/inspector/component_tooltip.rs` for the reflection-driven
+//! counterpart.
+
+use std::collections::HashMap;
+
+use bevy::prelude::*;
+use bevy::ui::InteractionDisabled;
+use jackdaw_api_internal::keymap::{PresetInput, ShortcutPlatform, key_code_from_name};
+use jackdaw_api_internal::lifecycle::{OperatorAction, OperatorEntity};
+use jackdaw_api_internal::operator::{RefreshOperatorButtons, UnavailableReason};
+use jackdaw_commands::keybinds::key_display_name;
+use jackdaw_feathers::button::ButtonOperatorCall;
+use jackdaw_feathers::tooltip::Tooltip;
+use jackdaw_input::{Binding, Bindings, ModKeys};
+
+pub struct OperatorTooltipPlugin;
+
+impl Plugin for OperatorTooltipPlugin {
+    fn build(&self, app: &mut App) {
+        app.add_observer(auto_attach_button_tooltip)
+            .add_observer(attach_operator_tooltip)
+            .add_observer(describe_disabled_button)
+            .add_observer(describe_enabled_button)
+            .add_observer(refresh_disabled_descriptions)
+            .add_systems(Update, refresh_keybind_on_bindings_change);
+    }
+}
+
+/// Derive a [`Tooltip`] from the operator backing a freshly-added
+/// [`ButtonOperatorCall`] and insert it on the same entity. Skips
+/// when the operator id doesn't resolve (e.g. extension not loaded
+/// yet); the button renders without a tooltip until the next layout
+/// pass.
+fn auto_attach_button_tooltip(
+    trigger: On<Add<ButtonOperatorCall>>,
+    calls: Query<&ButtonOperatorCall>,
+    operators: Query<&OperatorEntity>,
+    actions: Query<(&OperatorAction, &Bindings)>,
+    binding_components: Query<&Binding>,
+    mut commands: Commands,
+) {
+    let entity = trigger.event_target();
+    let Ok(call) = calls.get(entity) else {
+        return;
+    };
+    let Some(op) = operators.iter().find(|o| o.id() == call.id.as_ref()) else {
+        return;
+    };
+    let keybind = display_keybind(call.id.as_ref(), &actions, &binding_components);
+    let tip = operator_tooltip(op, keybind).with_footer(call.to_string());
+    commands.entity(entity).insert(tip);
+}
+
+/// The tooltip of a control that dispatches operator `.0` itself rather than
+/// through a [`ButtonOperatorCall`]; it shows the operator and its live key.
+#[derive(Component, Clone, Copy, Debug)]
+#[doc(hidden)]
+pub struct OperatorTooltip(pub &'static str);
+
+fn attach_operator_tooltip(
+    add: On<Add<OperatorTooltip>>,
+    tips: Query<&OperatorTooltip>,
+    operators: Query<&OperatorEntity>,
+    actions: Query<(&OperatorAction, &Bindings)>,
+    binding_components: Query<&Binding>,
+    mut commands: Commands,
+) {
+    let entity = add.event_target();
+    let Ok(OperatorTooltip(id)) = tips.get(entity).copied() else {
+        return;
+    };
+    let Some(op) = operators.iter().find(|o| o.id() == id) else {
+        return;
+    };
+    let keybind = display_keybind(id, &actions, &binding_components);
+    commands
+        .entity(entity)
+        .insert(operator_tooltip(op, keybind));
+}
+
+/// The tooltip naming operator `op`, what it does and the key it is bound to.
+fn operator_tooltip(op: &OperatorEntity, keybind: String) -> Tooltip {
+    Tooltip::title(op.label())
+        .with_keybind(keybind)
+        .with_description(op.description())
+}
+
+/// Put the unavailable reason, or the operator description when it has none,
+/// on the tooltip of each of `buttons`. `disabled` fixes a button's state where
+/// the caller knows it; otherwise the button's own `InteractionDisabled` says.
+fn sync_descriptions(world: &mut World, buttons: Vec<(Entity, Option<bool>)>) {
+    let operators: HashMap<&'static str, (Option<UnavailableReason>, &'static str)> = world
+        .query::<&OperatorEntity>()
+        .iter(world)
+        .map(|op| (op.id(), (op.unavailable_reason_fn(), op.description())))
+        .collect();
+    for (entity, disabled) in buttons {
+        let Ok(button) = world.get_entity(entity) else {
+            continue;
+        };
+        let (Some(call), true) = (
+            button.get::<ButtonOperatorCall>(),
+            button.contains::<Tooltip>(),
+        ) else {
+            continue;
+        };
+        let Some((reason, description)) = operators.get(call.id.as_ref()) else {
+            continue;
+        };
+        let disabled = disabled.unwrap_or_else(|| button.contains::<InteractionDisabled>());
+        let wanted = if disabled {
+            reason.and_then(|reason| reason(world))
+        } else {
+            None
+        }
+        .unwrap_or_else(|| (*description).to_string());
+        if let Some(mut tooltip) = world.entity_mut(entity).get_mut::<Tooltip>()
+            && tooltip.description != wanted
+        {
+            tooltip.description = wanted;
+        }
+    }
+}
+
+fn describe_disabled_button(add: On<Add<InteractionDisabled>>, mut commands: Commands) {
+    let entity = add.event_target();
+    commands.queue(move |world: &mut World| sync_descriptions(world, vec![(entity, Some(true))]));
+}
+
+fn describe_enabled_button(remove: On<Remove<InteractionDisabled>>, mut commands: Commands) {
+    let entity = remove.event_target();
+    commands.queue(move |world: &mut World| sync_descriptions(world, vec![(entity, Some(false))]));
+}
+
+/// A reason can change while a button stays disabled, which neither the add nor
+/// the remove of `InteractionDisabled` announces.
+fn refresh_disabled_descriptions(
+    _: On<RefreshOperatorButtons>,
+    buttons: Query<Entity, (With<ButtonOperatorCall>, With<InteractionDisabled>)>,
+    mut commands: Commands,
+) {
+    let buttons: Vec<_> = buttons.iter().map(|entity| (entity, None)).collect();
+    if buttons.is_empty() {
+        return;
+    }
+    commands.queue(move |world: &mut World| sync_descriptions(world, buttons));
+}
+
+/// When the bindings change for any operator's action entity (user
+/// remap, extension load/unload), refresh the cached keybind string
+/// on every tooltip whose `ButtonOperatorCall` matches.
+fn refresh_keybind_on_bindings_change(
+    changed_actions: Query<&OperatorAction, Changed<Bindings>>,
+    actions: Query<(&OperatorAction, &Bindings)>,
+    binding_components: Query<&Binding>,
+    mut tooltips: Query<(
+        Option<&ButtonOperatorCall>,
+        Option<&OperatorTooltip>,
+        &mut Tooltip,
+    )>,
+) {
+    if changed_actions.is_empty() {
+        return;
+    }
+    for (call, tip_of, mut tip) in &mut tooltips {
+        let Some(id) = call.map(|c| c.id.as_ref()).or(tip_of.map(|t| t.0)) else {
+            continue;
+        };
+        if !changed_actions.iter().any(|action| action.0 == id) {
+            continue;
+        }
+        let new_keybind = display_keybind(id, &actions, &binding_components);
+        if tip.keybind != new_keybind {
+            tip.keybind = new_keybind;
+        }
+    }
+}
+
+/// Walk the action entity carrying `OperatorAction(operator_id)` and
+/// stringify its keyboard / mouse-button bindings. Multiple bindings
+/// join with `" / "` (e.g. `Delete / Backspace`). Returns an empty
+/// string when no action entity carries that id, or the operator's
+/// only bindings are mouse-motion / wheel which the tooltip skips.
+pub fn display_keybind(
+    operator_id: &str,
+    actions: &Query<(&OperatorAction, &Bindings)>,
+    binding_components: &Query<&Binding>,
+) -> String {
+    let mut entries: Vec<String> = Vec::new();
+    for (action, bindings) in actions {
+        if action.0 != operator_id {
+            continue;
+        }
+        for binding_entity in bindings {
+            let Ok(binding) = binding_components.get(binding_entity) else {
+                continue;
+            };
+            if let Some(label) = format_binding(*binding) {
+                entries.push(label);
+            }
+        }
+    }
+    entries.join(" / ")
+}
+
+/// Stringify a single [`Binding`]. Returns `None` for variants the
+/// tooltip deliberately skips (mouse motion, mouse wheel; nothing
+/// useful to surface as a single key glyph).
+pub(crate) fn format_binding(binding: Binding) -> Option<String> {
+    format_binding_on(binding, ShortcutPlatform::host())
+}
+
+/// [`format_binding`] with the modifiers named as `platform` names them.
+fn format_binding_on(binding: Binding, platform: ShortcutPlatform) -> Option<String> {
+    let chord = |mod_keys: ModKeys, tail: &str| {
+        let mut parts = platform.modifier_labels(
+            mod_keys.contains(ModKeys::CONTROL),
+            mod_keys.contains(ModKeys::SHIFT),
+            mod_keys.contains(ModKeys::ALT),
+            mod_keys.contains(ModKeys::SUPER),
+        );
+        parts.push(tail);
+        parts.join(" + ")
+    };
+    match binding {
+        Binding::Keyboard { key, mod_keys } => Some(chord(mod_keys, key_display_name(key))),
+        Binding::MouseButton { button, mod_keys } => {
+            let button_name = match button {
+                MouseButton::Left => "Mouse Left",
+                MouseButton::Right => "Mouse Right",
+                MouseButton::Middle => "Mouse Middle",
+                MouseButton::Back => "Mouse Back",
+                MouseButton::Forward => "Mouse Forward",
+                MouseButton::Other(_) => return None,
+            };
+            Some(chord(mod_keys, button_name))
+        }
+        // MouseMotion / MouseWheel: not usefully expressible as a static
+        // label in the tooltip.
+        Binding::MouseMotion { .. } | Binding::MouseWheel { .. } => None,
+    }
+}
+
+/// The same chord text for a keymap row that has not been applied yet.
+///
+/// A row the settings dialog is holding has no [`Binding`] entity behind
+/// it, so it cannot go through [`format_binding`]; this renders the same
+/// string from the preset form, and the two must agree or a pending row
+/// and a live one would read differently side by side.
+pub(crate) fn format_preset_input(input: &PresetInput) -> String {
+    format_preset_input_on(input, ShortcutPlatform::host())
+}
+
+/// [`format_preset_input`] with the modifiers named as `platform` names them.
+fn format_preset_input_on(input: &PresetInput, platform: ShortcutPlatform) -> String {
+    let (ctrl, shift, alt, super_, tail) = match input {
+        PresetInput::Key {
+            key,
+            ctrl,
+            shift,
+            alt,
+            super_,
+        } => {
+            let name = key_code_from_name(key)
+                .map_or_else(|| key.clone(), |code| key_display_name(code).to_string());
+            (*ctrl, *shift, *alt, *super_, name)
+        }
+        PresetInput::MouseButton {
+            button,
+            ctrl,
+            shift,
+            alt,
+            super_,
+        } => (*ctrl, *shift, *alt, *super_, format!("Mouse {button}")),
+        PresetInput::Scroll {
+            up,
+            ctrl,
+            shift,
+            alt,
+            super_,
+        } => (
+            *ctrl,
+            *shift,
+            *alt,
+            *super_,
+            format!("Scroll {}", if *up { "Up" } else { "Down" }),
+        ),
+    };
+    let mut parts = platform.modifier_labels(ctrl, shift, alt, super_);
+    parts.push(&tail);
+    parts.join(" + ")
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use jackdaw_api_internal::keymap::PresetPhase;
+
+    #[test]
+    fn keyboard_binding_no_modifier() {
+        let binding = Binding::Keyboard {
+            key: KeyCode::KeyR,
+            mod_keys: ModKeys::empty(),
+        };
+        assert_eq!(format_binding(binding).as_deref(), Some("R"));
+    }
+
+    #[test]
+    fn keyboard_binding_with_modifier() {
+        let binding = Binding::Keyboard {
+            key: KeyCode::KeyW,
+            mod_keys: ModKeys::CONTROL | ModKeys::SHIFT,
+        };
+        assert_eq!(format_binding(binding).as_deref(), Some("Ctrl + Shift + W"),);
+    }
+
+    #[test]
+    fn mouse_button_no_modifier() {
+        let binding = Binding::MouseButton {
+            button: MouseButton::Back,
+            mod_keys: ModKeys::empty(),
+        };
+        assert_eq!(format_binding(binding).as_deref(), Some("Mouse Back"));
+    }
+
+    #[test]
+    fn mouse_button_with_modifier() {
+        let binding = Binding::MouseButton {
+            button: MouseButton::Left,
+            mod_keys: ModKeys::ALT,
+        };
+        assert_eq!(format_binding(binding).as_deref(), Some("Alt + Mouse Left"));
+    }
+
+    #[test]
+    fn unsupported_variants_return_none() {
+        assert!(
+            format_binding(Binding::MouseMotion {
+                mod_keys: ModKeys::empty(),
+            })
+            .is_none(),
+        );
+        assert!(
+            format_binding(Binding::MouseWheel {
+                mod_keys: ModKeys::empty(),
+            })
+            .is_none(),
+        );
+    }
+
+    /// The pending form and the applied form of one chord must read the
+    /// same, or a row would change its wording the moment it is saved.
+    #[test]
+    fn a_pending_chord_reads_like_the_applied_one() {
+        for (input, binding) in [
+            (
+                PresetInput::key("KeyR"),
+                Binding::Keyboard {
+                    key: KeyCode::KeyR,
+                    mod_keys: ModKeys::empty(),
+                },
+            ),
+            (
+                PresetInput::key("KeyW").ctrl().shift(),
+                Binding::Keyboard {
+                    key: KeyCode::KeyW,
+                    mod_keys: ModKeys::CONTROL | ModKeys::SHIFT,
+                },
+            ),
+            (
+                PresetInput::mouse("Middle").alt(),
+                Binding::MouseButton {
+                    button: MouseButton::Middle,
+                    mod_keys: ModKeys::ALT,
+                },
+            ),
+        ] {
+            assert_eq!(
+                Some(format_preset_input(&input)),
+                format_binding(binding),
+                "pending and applied text must agree for {input:?}"
+            );
+        }
+    }
+
+    #[test]
+    fn a_scroll_chord_has_pending_text_even_though_a_binding_has_none() {
+        assert_eq!(
+            format_preset_input(&PresetInput::scroll(false).ctrl()),
+            "Ctrl + Scroll Down"
+        );
+    }
+
+    #[test]
+    fn an_unparseable_key_name_still_renders_as_itself() {
+        let input = PresetInput::Key {
+            key: "NotAKey".into(),
+            ctrl: false,
+            shift: false,
+            alt: false,
+            super_: false,
+        };
+        assert_eq!(format_preset_input(&input), "NotAKey");
+        // The phase import is what the dialog's row model carries alongside
+        // the input; naming it here keeps this module's view of a row whole.
+        assert!(PresetPhase::Press.is_press());
+    }
+
+    #[test]
+    fn macos_names_super_cmd_in_both_forms() {
+        let mac = ShortcutPlatform::MacOs;
+        let input = PresetInput::key("KeyS").ctrl_or_super_on(mac).shift();
+        let binding = Binding::Keyboard {
+            key: KeyCode::KeyS,
+            mod_keys: ModKeys::SUPER | ModKeys::SHIFT,
+        };
+        assert_eq!(format_preset_input_on(&input, mac), "Shift + Cmd + S");
+        assert_eq!(
+            format_binding_on(binding, mac).as_deref(),
+            Some("Shift + Cmd + S")
+        );
+        assert_eq!(
+            format_binding_on(binding, ShortcutPlatform::Standard).as_deref(),
+            Some("Shift + Super + S")
+        );
+    }
+
+    #[test]
+    fn a_ctrl_chord_reads_ctrl_on_macos() {
+        let mac = ShortcutPlatform::MacOs;
+        assert_eq!(
+            format_preset_input_on(&PresetInput::key("Tab").ctrl(), mac),
+            "Ctrl + Tab"
+        );
+        assert_eq!(
+            format_preset_input_on(
+                &PresetInput::key("KeyZ").ctrl_or_super_on(ShortcutPlatform::Standard),
+                ShortcutPlatform::Standard
+            ),
+            "Ctrl + Z"
+        );
+    }
+}

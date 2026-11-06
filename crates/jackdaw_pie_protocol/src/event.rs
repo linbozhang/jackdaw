@@ -2,21 +2,10 @@ use serde::{Deserialize, Serialize};
 
 use crate::snapshot::RemoteEntity;
 
-/// Which mode the editor launched the game in.
-#[derive(Serialize, Deserialize, Clone, Copy, PartialEq, Eq, Debug, Default)]
-#[serde(rename_all = "kebab-case")]
-pub enum PieMode {
-    #[default]
-    Play,
-    EditorPreview,
-}
-
-/// Delivery channel for a message. Reliable-ordered for control and
-/// discrete changes; unreliable for high-frequency state.
+/// Delivery channel for a message.
 #[derive(Serialize, Deserialize, Clone, Copy, PartialEq, Eq, Debug)]
 pub enum PieChannel {
     Reliable,
-    Unreliable,
     /// Raw frame-view pixel messages (see `crate::frame`); never JSON.
     Frames,
 }
@@ -35,24 +24,47 @@ pub enum StateEvent {
     EntityDespawned {
         entity: u64,
     },
-    Status {
-        mode: PieMode,
-        ready: bool,
-    },
-    Log {
-        level: String,
-        message: String,
-    },
     /// The game's cursor options changed (mouse-look grabs); the editor
     /// mirrors this onto its own cursor while input capture is engaged.
     CursorState {
         grabbed: bool,
         visible: bool,
     },
-    /// Answer to [`ControlEvent::Pick`]: the topmost streamable entity under
-    /// the forwarded cursor, or `None` when nothing inspectable is hit.
-    PickResult {
-        entity: Option<u64>,
+    /// A scene root needs to spawn the scene at `path`, relative to the asset
+    /// folder. The editor replies with [`ControlEvent::SceneDocument`] carrying
+    /// the same `request`.
+    RequestScene {
+        request: u64,
+        path: String,
+    },
+    /// No answer to a [`StateEvent::RequestScene`] came in time, so the game
+    /// loaded the scene's file instead of the editor's document.
+    SceneRequestAbandoned {
+        path: String,
+    },
+    /// The game declined a frame stream because it opened its own window.
+    OwnWindow,
+}
+
+/// What the game spawns a requested scene from.
+#[derive(Serialize, Deserialize, Clone, PartialEq, Debug)]
+pub enum SceneAnswer {
+    /// The editor's current document. `dir` is the folder it counts as being
+    /// in, relative to the asset folder, and `stem` the name it goes by.
+    /// `sidecars` is the private folder of this scene's unsaved sidecars when any
+    /// exist, laid out like the asset folder; a sidecar found there wins over its
+    /// file.
+    Document {
+        text: String,
+        dir: String,
+        stem: String,
+        sidecars: Option<String>,
+    },
+    /// Load this file, relative to the asset folder. `sidecars` is as for
+    /// [`Self::Document`]: a prefab the file instances can have unsaved sidecars.
+    UseFile {
+        path: String,
+        sidecars: Option<String>,
     },
 }
 
@@ -93,23 +105,45 @@ pub enum ControlEvent {
     StopFrameStream,
     /// Forwarded editor input while the Live viewport has input capture.
     Input(crate::input::PieInputEvent),
-    /// Ask what is under the forwarded cursor. The game answers with
-    /// [`StateEvent::PickResult`] using its own picking backend, so picking
-    /// works in any game state and needs no editor-side camera alignment.
-    Pick,
     /// Box the given entity in the game's own render (gizmo bounds), or
     /// clear the highlight with `None`. Sent when the editor selection
     /// changes while an instance is focused.
     Highlight {
         entity: Option<u64>,
     },
-}
-
-/// Either direction, for transports that carry a single type.
-#[derive(Serialize, Deserialize, Clone, PartialEq, Debug)]
-pub enum PieEvent {
-    State(StateEvent),
-    Control(ControlEvent),
+    /// The authored components of one scene node changed in the editor's
+    /// document. `set` holds the full current value of each changed
+    /// component, keyed by type path; `removed` names the components the node
+    /// no longer has. The game applies both to every entity spawned from the
+    /// node, matched by its `SceneNodeId`.
+    NodeComponents {
+        node: u64,
+        set: Vec<(String, serde_json::Value)>,
+        removed: Vec<String>,
+    },
+    /// The reply to a [`StateEvent::RequestScene`].
+    SceneDocument {
+        request: u64,
+        answer: SceneAnswer,
+    },
+    /// Named asset definitions, as the roots a served document embeds them with.
+    /// Sent ahead of an edit naming an asset this game has not been given.
+    SceneAssets {
+        text: String,
+    },
+    /// Asset files the game may not hold as the editor does, as `(path, text)`,
+    /// each text holding the file's one asset root. Sent ahead of anything naming
+    /// the path, and when the asset changes.
+    AssetFiles {
+        files: Vec<(String, String)>,
+    },
+    /// Prefab documents with unsaved changes, as `(path, text)` with `path`
+    /// relative to the asset folder. Sent ahead of the answer that needs them. The
+    /// game reads `text` in place of the file, and `None` sends it back to the
+    /// file.
+    PrefabFiles {
+        files: Vec<(String, Option<String>)>,
+    },
 }
 
 /// Serialize a protocol message to bytes. Uses JSON so component payloads
@@ -137,10 +171,10 @@ mod tests {
     }
 
     #[test]
-    fn state_event_status_round_trips() {
-        let ev = StateEvent::Status {
-            mode: PieMode::Play,
-            ready: true,
+    fn state_event_round_trips() {
+        let ev = StateEvent::CursorState {
+            grabbed: true,
+            visible: false,
         };
         let bytes = to_bytes(&ev).unwrap();
         let back: StateEvent = from_bytes(&bytes).unwrap();
@@ -178,18 +212,75 @@ mod tests {
     }
 
     #[test]
-    fn pick_events_round_trip() {
-        let ev = ControlEvent::Pick;
+    fn node_components_round_trip() {
+        let ev = ControlEvent::NodeComponents {
+            node: 1 << 40,
+            set: vec![
+                (
+                    "bevy_transform::components::transform::Transform".to_string(),
+                    serde_json::json!({
+                        "translation": [1.0, 2.0, 3.0],
+                        "rotation": [0.0, 0.0, 0.0, 1.0],
+                        "scale": [1.0, 1.0, 1.0]
+                    }),
+                ),
+                (
+                    "bevy_ecs::name::Name".to_string(),
+                    serde_json::json!("Rock"),
+                ),
+            ],
+            removed: vec!["game::Health".to_string()],
+        };
         let bytes = to_bytes(&ev).unwrap();
         assert_eq!(from_bytes::<ControlEvent>(&bytes).unwrap(), ev);
+    }
 
-        let ev = StateEvent::PickResult { entity: Some(42) };
+    #[test]
+    fn a_scene_request_and_its_answers_round_trip() {
+        let ev = StateEvent::RequestScene {
+            request: 3,
+            path: "levels/boss#2.bsn".to_string(),
+        };
         let bytes = to_bytes(&ev).unwrap();
         assert_eq!(from_bytes::<StateEvent>(&bytes).unwrap(), ev);
 
-        let ev = StateEvent::PickResult { entity: None };
+        for answer in [
+            SceneAnswer::Document {
+                text: "#Zone\n".to_string(),
+                dir: "levels".to_string(),
+                stem: "zone".to_string(),
+                sidecars: Some("/game/.jackdaw/play".to_string()),
+            },
+            SceneAnswer::UseFile {
+                path: "scene.bsn".to_string(),
+                sidecars: Some("/game/.jackdaw/play/0".to_string()),
+            },
+        ] {
+            let ev = ControlEvent::SceneDocument { request: 3, answer };
+            let bytes = to_bytes(&ev).unwrap();
+            assert_eq!(from_bytes::<ControlEvent>(&bytes).unwrap(), ev);
+        }
+    }
+
+    #[test]
+    fn scene_assets_round_trip() {
+        let ev = ControlEvent::SceneAssets {
+            text: "#Stone\ngame::Swatch\n".to_string(),
+        };
         let bytes = to_bytes(&ev).unwrap();
-        assert_eq!(from_bytes::<StateEvent>(&bytes).unwrap(), ev);
+        assert_eq!(from_bytes::<ControlEvent>(&bytes).unwrap(), ev);
+    }
+
+    #[test]
+    fn prefab_files_round_trip() {
+        let ev = ControlEvent::PrefabFiles {
+            files: vec![
+                ("props/door.bsn".to_string(), Some("#Door\n".to_string())),
+                ("props/gate.bsn".to_string(), None),
+            ],
+        };
+        let bytes = to_bytes(&ev).unwrap();
+        assert_eq!(from_bytes::<ControlEvent>(&bytes).unwrap(), ev);
     }
 
     #[test]

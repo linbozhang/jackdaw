@@ -93,6 +93,23 @@ the cost of compiling the dependencies once more. `.jackdaw/` is
 gitignored, so none of it is committed; a project that does not ignore it
 should.
 
+The editor compiles your dependencies optimised (`opt-level = 2`, line
+tables only) and your own crate as your profile says, because a game
+spends its load and its frames in Bevy and the runtime. A project that sets
+a dev `opt-level` for itself or its dependencies keeps that setting, whether
+in its manifest, a `.cargo/config.toml` in its folder or a parent, cargo's
+home, or `CARGO_PROFILE_DEV_OPT_LEVEL`. So the first build compiles every
+dependency once, which takes several minutes, and later builds only compile
+your crate. A plain `cargo run` follows your manifest; new projects start
+with the same profile in theirs.
+
+To opt out, set `opt-level` under `[profile.dev.package."*"]`: `0` builds
+dependencies as cargo would by default. While the override stands, stepping
+into a dependency in a debugger is limited: the code is optimised and carries
+line tables only, so it has no local variables to show. Setting `debug = true`
+under `[profile.dev.package."*"]` keeps full debug info, on code still
+optimised.
+
 The Play dropdown is filled from the **run configurations** in your
 project's `jackdaw.toml` (`[[run]]` entries carrying a name, environment
 variables, arguments, an instance count, and a working directory). A
@@ -320,10 +337,8 @@ outliner header switches which one the Game panel and Live tree follow.
 
 ## Playing the game
 
-The Game panel header has a **Play | Select** mode bar.
-
-In **Play** mode, click inside the panel to engage input capture (or use
-the **Play Input** header button). While captured:
+Click inside the Game panel to engage input capture (or use the **Play
+Input** header button). While captured:
 
 - Keyboard and mouse forward to the game. WASD, mouse-look, scroll, clicks,
   and typing all reach it.
@@ -338,22 +353,11 @@ also releases on its own if you stop the game, switch instances, click away
 to another application, or close the panel, and any keys you were holding
 are released so nothing stays stuck down.
 
-## Selecting entities from the frame
+## Selecting entities while playing
 
-Switch the mode bar to **Select**. Game input stops, and the cursor becomes
-a picker over the streamed frame.
-
-- Click an object in the frame to select it. The selection appears in the
-  outliner's **Live** tab and the Components panel shows its live values.
-- Picking reads the real frame through the game's own camera, so it needs
-  no alignment and reaches runtime-only entities (the player character,
-  spawned props) that have no authored counterpart.
-- The game draws a bounding box around the picked entity, and the Live tree
-  expands to reveal the selected row.
-- Selecting a row in the Live tree moves the box to that entity.
-
-Menu and UI elements are not pickable; they are not streamable scene
-entities.
+Select entities in the outliner's **Live** tab. The Components panel shows
+the selected entity's live values, and the game draws a bounding box around
+it in the frame.
 
 ## Scene and Live trees
 

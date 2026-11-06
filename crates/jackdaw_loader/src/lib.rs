@@ -203,7 +203,7 @@ impl Plugin for DylibLoaderPlugin {
             Ok(installed) => installed,
             Err(error) => {
                 warn!("Could not read installed extensions: {error}");
-                return;
+                Vec::new()
             }
         };
         for extension in installed {
@@ -241,6 +241,40 @@ impl Plugin for DylibLoaderPlugin {
             }
         }
 
+        let bundled = match package::list_bundled() {
+            Ok(bundled) => bundled,
+            Err(error) => {
+                warn!("Could not read the extensions shipped with this editor: {error}");
+                Vec::new()
+            }
+        };
+        for extension in bundled {
+            let id = &extension.manifest.id;
+            let installed = app
+                .world()
+                .get_resource::<jackdaw_api_internal::lifecycle::ExtensionCatalog>()
+                .is_some_and(|catalog| catalog.contains(id));
+            if installed {
+                info!(
+                    "Extension `{id}` is installed; the copy shipped with the editor is not loaded"
+                );
+                continue;
+            }
+            match try_load(app, &extension.library_path) {
+                Ok(id) => {
+                    info!(
+                        "Loaded extension `{id}` shipped with the editor from {}",
+                        extension.library_path.display()
+                    );
+                    loaded += 1;
+                }
+                Err(err) => {
+                    warn!("Failed to load {}: {err}", extension.library_path.display());
+                    failed += 1;
+                }
+            }
+        }
+
         match (loaded, failed) {
             (0, 0) => info!("Dylib loader: no installed extensions"),
             _ => info!("Dylib loader: {loaded} loaded, {failed} failed"),
@@ -273,6 +307,12 @@ pub enum LoadError {
     /// is surfaced through the same Result so call sites have a
     /// single error type to match on.
     InstallIo(String),
+    /// The library was not built against this editor's SDK, so it is never
+    /// opened.
+    SdkMismatch(package::sdk_identity::Mismatch),
+    /// This editor could not tell which SDK it runs on, so it opens no
+    /// extension library.
+    UnknownSdk(String),
     Other(BevyError),
 }
 
@@ -319,6 +359,11 @@ impl std::fmt::Display for LoadError {
                 "`{id}` adds an App plugin, so it activates after the editor restarts"
             ),
             Self::InstallIo(msg) => write!(f, "install io: {msg}"),
+            Self::SdkMismatch(mismatch) => write!(f, "not loaded: {mismatch}"),
+            Self::UnknownSdk(why) => write!(
+                f,
+                "not loaded: this editor cannot tell which SDK it runs on ({why})"
+            ),
             Self::Other(e) => write!(f, "other: {e}"),
         }
     }
@@ -348,6 +393,8 @@ fn open_and_construct(
     world: &mut World,
     path: &Path,
 ) -> Result<(ExtensionCtor, Box<dyn JackdawExtension>), LoadError> {
+    check_sdk(path)?;
+
     // SAFETY: libloading's standard contract. Extensions are trusted
     // native code; the caller verified linkage identity against the
     // running SDK before handing us the path.
@@ -377,6 +424,55 @@ fn open_and_construct(
     let ext =
         std::panic::catch_unwind(AssertUnwindSafe(ctor)).map_err(|_| LoadError::EntryPanicked)?;
     Ok((ctor, ext))
+}
+
+/// The crate hash of the SDK this editor runs on, which every extension
+/// library must have been built against, or why it is not known.
+static RUNNING_SDK: std::sync::OnceLock<Result<String, String>> = std::sync::OnceLock::new();
+
+/// Record the crate hash of the SDK this editor runs on, or why it could not
+/// be read. Once set, a library is opened only when it was built against
+/// that SDK. A binary that never sets it opens libraries unchecked, as one
+/// that loads no SDK-built extensions does. Set once, before the first load.
+pub fn set_running_sdk(svh: Result<String, String>) {
+    let _ = RUNNING_SDK.set(svh);
+}
+
+/// Refuse a library built against another SDK before it is opened, so none
+/// of its initializers run.
+fn check_sdk(path: &Path) -> Result<(), LoadError> {
+    check_sdk_against(path, RUNNING_SDK.get())
+}
+
+fn check_sdk_against(
+    path: &Path,
+    running: Option<&Result<String, String>>,
+) -> Result<(), LoadError> {
+    let Some(running) = running else {
+        return Ok(());
+    };
+    let running = running
+        .as_ref()
+        .map_err(|why| LoadError::UnknownSdk(why.clone()))?;
+    let library = std::fs::read(path)
+        .map_err(|error| LoadError::InstallIo(format!("{}: {error}", path.display())))?;
+    package::sdk_identity::check(&library, running).map_err(LoadError::SdkMismatch)
+}
+
+/// Open the extension library at `path` and construct it once, without
+/// registering it anywhere, and return its id. For checking that a library
+/// loads into this editor.
+pub fn probe(path: &Path) -> Result<String, LoadError> {
+    let mut world = World::new();
+    world.init_resource::<LoadedDylibs>();
+    world.init_resource::<AppTypeRegistry>();
+    let (_, extension) = open_and_construct(&mut world, path)?;
+    let id = extension.id();
+    drop(extension);
+    // The library stays mapped for the rest of the process: code it handed
+    // out may still be referenced.
+    std::mem::forget(world.remove_resource::<LoadedDylibs>());
+    Ok(id)
 }
 
 /// Startup load: construct once to harvest the extension id and add its App
@@ -502,6 +598,37 @@ mod tests {
 
     #[derive(Reflect)]
     struct LocalProbe;
+
+    #[test]
+    fn a_library_built_against_another_sdk_is_refused_before_it_is_opened() {
+        let dir = std::env::temp_dir().join(format!("jackdaw-sdk-check-{}", std::process::id()));
+        std::fs::create_dir_all(&dir).unwrap();
+        let built = dir.join("built.so");
+        let mut bytes = b"not a real library ".to_vec();
+        bytes.extend_from_slice(package::sdk_identity::MARKER);
+        bytes.extend_from_slice(b"aaaa1111\0");
+        std::fs::write(&built, &bytes).unwrap();
+        let old = dir.join("old.so");
+        std::fs::write(&old, b"an extension from before the hash").unwrap();
+
+        let running = Ok("aaaa1111".to_string());
+        assert!(check_sdk_against(&built, Some(&running)).is_ok());
+        let other = Ok("bbbb2222".to_string());
+        let refused = check_sdk_against(&built, Some(&other)).unwrap_err();
+        assert!(
+            refused.to_string().contains("another jackdaw SDK"),
+            "{refused}"
+        );
+        let refused = check_sdk_against(&old, Some(&running)).unwrap_err();
+        assert!(refused.to_string().contains("rebuild"), "{refused}");
+        let unknown = Err("no SDK beside the editor".to_string());
+        assert!(matches!(
+            check_sdk_against(&built, Some(&unknown)),
+            Err(LoadError::UnknownSdk(_))
+        ));
+        assert!(check_sdk_against(&old, None).is_ok());
+        let _ = std::fs::remove_dir_all(&dir);
+    }
 
     #[test]
     fn a_library_without_the_entry_falls_back_to_the_process_list() {

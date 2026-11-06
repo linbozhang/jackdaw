@@ -61,6 +61,10 @@ pub struct ModuleInfo {
     /// for a module whose tooling is not built into the editor.
     #[serde(default)]
     pub extension: Option<String>,
+    /// The crate that builds that extension, which release archives ship
+    /// prebuilt.
+    #[serde(default)]
+    pub extension_crate: Option<String>,
     /// Why a new game cannot use the module on this editor line yet, such as
     /// a crate it needs having no release for this Bevy.
     #[serde(default)]
@@ -475,6 +479,20 @@ mod tests {
         let catalog = ModuleCatalog::builtin();
         assert!(catalog.unavailable("physics").is_none());
         assert_eq!(catalog.defaults(), set(&["physics"]));
+    }
+
+    fn catalog_with_an_unavailable_module() -> ModuleCatalog {
+        ModuleCatalog::from_json(
+            r#"[{"id": "a", "name": "A", "description": "", "default": true},
+                {"id": "b", "name": "B", "description": "", "default": true,
+                 "unavailable": "it needs a crate with no release yet"}]"#,
+        )
+        .unwrap()
+    }
+
+    #[test]
+    fn a_new_game_starts_with_no_module_this_line_cannot_build() {
+        assert_eq!(catalog_with_an_unavailable_module().defaults(), set(&["a"]));
     }
 
     #[test]

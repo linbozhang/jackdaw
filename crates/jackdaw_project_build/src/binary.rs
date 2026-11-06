@@ -6,16 +6,20 @@ use std::path::{Path, PathBuf};
 use std::process::{Child, Command, Output, Stdio};
 use std::time::{Duration, Instant};
 
-use jackdaw_env::rust_env_command;
-use jackdaw_schema::{ProjectSchema, SCHEMA_FLAG, parse_from_stdout, write_schema};
+use jackdaw_env::process::StderrCapture;
+use jackdaw_env::user_toolchain_command;
+use jackdaw_schema::{
+    PROJECT_CRATES_ENV, ProjectSchema, SCHEMA_FLAG, parse_from_stdout, write_schema,
+};
 
 use crate::build::{BuildEvent, ProjectBuildError, parse_build_line};
 use crate::shim::ShimSpec;
 
 /// A completed binary build.
 pub struct ProjectBinaryBuild {
-    /// The game executable cargo produced. This is the same artifact a
-    /// plain `cargo run` in the project would produce.
+    /// The game executable cargo produced. The same program a plain `cargo run`
+    /// in the project would produce, with its dependencies optimised unless the
+    /// project chose otherwise.
     pub binary: PathBuf,
     /// The project's type schema, extracted by running the binary in
     /// schema mode. `None` when extraction could not run; the editor
@@ -319,10 +323,11 @@ fn locked_failure_hint(stderr: &str) -> Option<&'static str> {
 /// the editor's watcher and where the build's own artifacts land. It builds
 /// against the user's own manifest, lockfile and toolchain, but into
 /// [`game_target_dir`] rather than the project's `target/`: the editor builds
-/// the plain package while a developer's own build carries the features their
-/// game needs, and the two must not overwrite each other's binary. It travels
-/// as a flag rather than as `CARGO_TARGET_DIR`, which `detach_from_host_build`
-/// strips along with the rest of the editor's own build environment.
+/// the plain package with optimised dependencies
+/// while a developer's own build carries the features and profile their game
+/// needs, and the two must not overwrite each other's binary. It travels as a
+/// flag rather than as `CARGO_TARGET_DIR`, which `detach_from_host_build` strips
+/// along with the rest of the editor's own build environment.
 pub fn build_project_binary(
     spec: &ShimSpec,
     jackdaw_dir: &Path,
@@ -388,7 +393,7 @@ pub fn build_project_binary_with_load(
     let mut child = command.spawn()?;
 
     let stdout = child.stdout.take().expect("piped stdout");
-    let stderr = child.stderr.take().map(drain_on_a_thread);
+    let stderr = StderrCapture::take(&mut child);
     let mut done = 0u32;
     let mut log = String::new();
     let mut executables: Vec<PathBuf> = Vec::new();
@@ -404,10 +409,7 @@ pub fn build_project_binary_with_load(
     }
     let status = child.wait()?;
     if !status.success() {
-        let stderr = stderr
-            .and_then(|handle| handle.join().ok())
-            .unwrap_or_default();
-        let stderr = failure_stderr(&String::from_utf8_lossy(&stderr));
+        let stderr = stderr.finish();
         // Cargo's own account of the failure never goes through the JSON stream.
         // `Display` for `Compile` is one line, so the detail has to reach the
         // panel line by line the way rustc's diagnostics do.
@@ -418,7 +420,11 @@ pub fn build_project_binary_with_load(
             report(BuildEvent::Log(hint.to_string()));
         }
         return Err(ProjectBuildError::Compile {
-            log: compile_failure_log(log, &stderr),
+            log: with_toolchain_hint(
+                compile_failure_log(log, &stderr),
+                &stderr,
+                &spec.project_root,
+            ),
         });
     }
 
@@ -430,7 +436,7 @@ pub fn build_project_binary_with_load(
 
     // Ask the freshly built game for its types: a throwaway run that prints and
     // exits. A failure here is not fatal, and the editor keeps its prior schema.
-    let schema = match run_binary_extractor(&binary, &spec.project_root) {
+    let schema = match run_binary_extractor(&binary, spec) {
         Ok(schema) => Some(schema),
         Err(err) => {
             tracing::warn!("project schema extraction skipped: {err}");
@@ -454,24 +460,146 @@ pub fn build_project_binary_with_load(
     })
 }
 
-/// Cargo's stderr without its per-crate progress notes, which say nothing
-/// about why a build failed and would bury the lines that do.
-fn failure_stderr(stderr: &str) -> String {
-    const PROGRESS: [&str; 5] = [
-        "Compiling ",
-        "Checking ",
-        "Downloading ",
-        "Downloaded ",
-        "Fresh ",
-    ];
-    stderr
-        .lines()
-        .filter(|line| {
-            let line = line.trim_start();
-            !PROGRESS.iter().any(|verb| line.starts_with(verb))
+/// Profile overrides for a game the editor builds. A game spends its load and
+/// its frames in Bevy and the runtime, which are many times slower unoptimised,
+/// while the game's own crate stays at the profile's level so a rebuild is quick.
+/// Line tables keep backtraces readable without the memory and link time of full
+/// debug info on optimised code.
+const GAME_DEPENDENCY_OPT_LEVEL: &str = "profile.dev.package.\"*\".opt-level=2";
+const GAME_DEPENDENCY_DEBUG: &str = "profile.dev.package.\"*\".debug=\"line-tables-only\"";
+
+/// The profile overrides a game's build takes. Config on the command line outranks
+/// the manifest and every config file, so each override stands aside for a project
+/// that says anything about it, wherever cargo would read that from. A project that
+/// chose a dev optimisation of its own gets neither: line tables are only the right
+/// trade on code built optimised. A dev debug setting, in a profile file or
+/// `CARGO_PROFILE_DEV_DEBUG`, is a choice about debug info too.
+fn game_dependency_profile(project_root: &Path) -> Vec<&'static str> {
+    let cargo_home = std::env::var_os("CARGO_HOME")
+        .map(std::path::PathBuf::from)
+        .or_else(|| {
+            std::env::var_os("HOME")
+                .or_else(|| std::env::var_os("USERPROFILE"))
+                .map(|home| std::path::PathBuf::from(home).join(".cargo"))
+        });
+    let env_opt_level = std::env::var_os("CARGO_PROFILE_DEV_OPT_LEVEL").is_some();
+    let env_debug = std::env::var_os("CARGO_PROFILE_DEV_DEBUG").is_some();
+    dependency_profile_for(
+        project_root,
+        cargo_home.as_deref(),
+        DevProfileEnv {
+            opt_level: env_opt_level,
+            debug: env_debug,
+        },
+    )
+}
+
+/// Which `CARGO_PROFILE_DEV_*` variables are set.
+#[derive(Clone, Copy)]
+struct DevProfileEnv {
+    opt_level: bool,
+    debug: bool,
+}
+
+fn dependency_profile_for(
+    project_root: &Path,
+    cargo_home: Option<&Path>,
+    env: DevProfileEnv,
+) -> Vec<&'static str> {
+    let files = profile_files(project_root, cargo_home);
+    let dev_profiles: Vec<toml::Value> = files
+        .iter()
+        .filter_map(|file| read_toml(file))
+        .filter_map(|toml| toml.get("profile")?.get("dev").cloned())
+        .collect();
+    let dependencies_set = |key: &str| {
+        dev_profiles.iter().any(|dev| {
+            dev.get("package")
+                .and_then(|package| package.get("*"))
+                .and_then(|dependencies| dependencies.get(key))
+                .is_some()
         })
-        .collect::<Vec<_>>()
-        .join("\n")
+    };
+    let chose_optimisation = env.opt_level
+        || dependencies_set("opt-level")
+        || dev_profiles
+            .iter()
+            .any(|dev| dev.get("opt-level").is_some());
+    if chose_optimisation {
+        return Vec::new();
+    }
+    let mut settings = vec![GAME_DEPENDENCY_OPT_LEVEL];
+    let chose_debug = env.debug
+        || dependencies_set("debug")
+        || dev_profiles.iter().any(|dev| dev.get("debug").is_some());
+    if !chose_debug {
+        settings.push(GAME_DEPENDENCY_DEBUG);
+    }
+    settings
+}
+
+/// Where cargo reads a dev profile from for `project_root`: the manifest it takes
+/// profiles from, the config files of the project's folder and every parent, and
+/// the one in cargo's home.
+fn profile_files(project_root: &Path, cargo_home: Option<&Path>) -> Vec<std::path::PathBuf> {
+    let root_manifest = project_root
+        .ancestors()
+        .map(|dir| dir.join("Cargo.toml"))
+        .filter(|manifest| manifest.is_file())
+        .find(|manifest| read_toml(manifest).is_some_and(|toml| toml.get("workspace").is_some()))
+        .unwrap_or_else(|| project_root.join("Cargo.toml"));
+    let mut files = vec![root_manifest];
+    let config_dirs = project_root
+        .ancestors()
+        .map(|dir| dir.join(".cargo"))
+        .chain(cargo_home.map(Path::to_path_buf));
+    for dir in config_dirs {
+        files.push(dir.join("config.toml"));
+        files.push(dir.join("config"));
+    }
+    files
+}
+
+fn read_toml(file: &Path) -> Option<toml::Value> {
+    toml::from_str(&std::fs::read_to_string(file).ok()?).ok()
+}
+
+/// The `cargo build` that compiles the game, run by the project's own
+/// toolchain and detached from the editor's build environment.
+fn game_build_command(spec: &ShimSpec, target_dir: &Path, load: BuildLoad) -> Command {
+    let profile = game_dependency_profile(&spec.project_root);
+    game_build_command_with(spec, target_dir, load, &profile)
+}
+
+fn game_build_command_with(
+    spec: &ShimSpec,
+    target_dir: &Path,
+    load: BuildLoad,
+    profile: &[&str],
+) -> Command {
+    let mut command = user_toolchain_command("cargo");
+    command
+        .arg("build")
+        .args(["-p", &spec.package_name])
+        .arg("--target-dir")
+        .arg(target_dir);
+    for setting in profile {
+        command.arg("--config").arg(setting);
+    }
+    command
+        // Plain `json`, not `json-render-diagnostics`: that variant renders
+        // diagnostics to cargo's own stderr and emits no `compiler-message`
+        // records, leaving the parser below with nothing to report.
+        .arg("--message-format=json")
+        .current_dir(&spec.project_root)
+        .stdout(Stdio::piped())
+        // Captured rather than inherited: cargo's own failures, such as an
+        // unresolvable dependency, are never in the JSON stream, and inherited
+        // they reach only the terminal the editor was launched from.
+        .stderr(Stdio::piped());
+    detach_from_host_build(&mut command);
+    apply_load(&mut command, load);
+    command
 }
 
 /// What a failed build reports: rustc's diagnostics, then cargo's own stderr.
@@ -479,7 +607,7 @@ fn failure_stderr(stderr: &str) -> String {
 /// rustc's arrive as `compiler-message` records on stdout; cargo's are on stderr
 /// and are the only account of a failure before any code was compiled. Either
 /// can be empty, so both are carried.
-fn compile_failure_log(diagnostics: String, stderr: &str) -> String {
+pub(crate) fn compile_failure_log(diagnostics: String, stderr: &str) -> String {
     let mut log = diagnostics;
     let stderr = stderr.trim();
     if !stderr.is_empty() {
@@ -493,6 +621,33 @@ fn compile_failure_log(diagnostics: String, stderr: &str) -> String {
         log.push_str("project failed to compile, and cargo reported no diagnostics");
     }
     log
+}
+
+const TOOLCHAIN_TOO_OLD: &str = "is not supported by the following package";
+
+/// Cargo's rust-version refusal names the packages but not the way out, which
+/// depends on whether the project picks its own toolchain.
+fn with_toolchain_hint(mut log: String, stderr: &str, project: &Path) -> String {
+    if stderr.contains(TOOLCHAIN_TOO_OLD) {
+        log.push_str(&toolchain_too_old_hint(
+            jackdaw_env::project_toolchain_file(project).as_deref(),
+        ));
+        log.push('\n');
+    }
+    log
+}
+
+fn toolchain_too_old_hint(toolchain_file: Option<&Path>) -> String {
+    match toolchain_file {
+        Some(file) => format!(
+            "hint: this project builds with the toolchain {} selects, which is older than its \
+             dependencies need. Raise the channel in that file.",
+            file.display()
+        ),
+        None => "hint: this project builds with the rustup default toolchain, which is older \
+                 than its dependencies need. Run `rustup update stable`."
+            .to_string(),
+    }
 }
 
 /// How long the extractor may run before it is killed. This path compiles
@@ -525,18 +680,13 @@ fn extractor_timeout() -> Duration {
 /// The run is under a deadline, because the extractor answers from inside the
 /// game's own `App` build and a project whose plugins block would otherwise hang
 /// the editor's build. A kill becomes an ordinary extractor failure.
-fn run_binary_extractor(binary: &Path, cwd: &Path) -> Result<ProjectSchema, String> {
+fn run_binary_extractor(binary: &Path, spec: &ShimSpec) -> Result<ProjectSchema, String> {
     if !binary.is_file() {
         return Err(format!("game binary not found at {}", binary.display()));
     }
-    let mut command = Command::new(binary);
-    command
-        .arg(SCHEMA_FLAG)
-        .current_dir(cwd)
-        .stdout(Stdio::piped())
-        .stderr(Stdio::piped());
-    prepare_game_command(&mut command, binary);
-    let child = command
+    let project_crates =
+        crate::cargo_meta::project_crates(&spec.project_root, &spec.package_name, &spec.crate_name);
+    let child = extractor_command(binary, spec, &project_crates)
         .spawn()
         .map_err(|e| format!("spawn extractor: {e}"))?;
     let output = wait_with_deadline(child, extractor_timeout())?;
@@ -546,7 +696,21 @@ fn run_binary_extractor(binary: &Path, cwd: &Path) -> Result<ProjectSchema, Stri
             String::from_utf8_lossy(&output.stderr)
         ));
     }
-    parse_from_stdout(&output.stdout)
+    let mut schema = parse_from_stdout(&output.stdout)?;
+    schema.project_crates = project_crates;
+    Ok(schema)
+}
+
+fn extractor_command(binary: &Path, spec: &ShimSpec, project_crates: &[String]) -> Command {
+    let mut command = Command::new(binary);
+    command
+        .arg(SCHEMA_FLAG)
+        .current_dir(&spec.project_root)
+        .stdout(Stdio::piped())
+        .stderr(Stdio::piped());
+    prepare_game_command(&mut command, binary);
+    command.env(PROJECT_CRATES_ENV, project_crates.join(","));
+    command
 }
 
 /// Collect a child's output, killing it if it outlives `timeout`.
@@ -916,6 +1080,46 @@ mod tests {
         assert!(is_host_build_var("LD_LIBRARY_PATH"));
     }
 
+    #[test]
+    fn the_extractor_is_told_the_project_s_crates() {
+        let spec = ShimSpec {
+            package_name: "bevy-jam".to_string(),
+            crate_name: "bevy_jam".to_string(),
+            project_root: PathBuf::from("/game"),
+            extension_type: None,
+        };
+
+        let crates = ["bevy_jam".to_string(), "bevy_jam_core".to_string()];
+        let command = extractor_command(Path::new("/game/bin"), &spec, &crates);
+
+        let told = command
+            .get_envs()
+            .find(|(key, _)| *key == PROJECT_CRATES_ENV)
+            .and_then(|(_, value)| value)
+            .expect("the crate list is set");
+        assert_eq!(told, "bevy_jam,bevy_jam_core");
+    }
+
+    #[test]
+    fn a_game_command_uses_the_projects_toolchain() {
+        let spec = ShimSpec {
+            package_name: "my-game".to_string(),
+            crate_name: "my_game".to_string(),
+            project_root: PathBuf::from("/game"),
+            extension_type: None,
+        };
+        let command = game_build_command(&spec, Path::new("/target"), BuildLoad::Foreground);
+        let toolchain: Vec<_> = command
+            .get_envs()
+            .filter(|(key, _)| *key == "RUSTUP_TOOLCHAIN")
+            .collect();
+        assert_eq!(
+            toolchain,
+            [(std::ffi::OsStr::new("RUSTUP_TOOLCHAIN"), None)],
+            "the editor's toolchain must be removed so the project's own applies"
+        );
+    }
+
     /// Locating the toolchain and the shared package cache is exactly
     /// what should carry over, so a project build reuses what is
     /// already downloaded.
@@ -924,6 +1128,162 @@ mod tests {
         assert!(!is_host_build_var("PATH"));
         assert!(!is_host_build_var("CARGO_HOME"));
         assert!(!is_host_build_var("RUSTUP_HOME"));
+    }
+
+    const NO_ENV: DevProfileEnv = DevProfileEnv {
+        opt_level: false,
+        debug: false,
+    };
+
+    fn build_args(project: &Path) -> Vec<String> {
+        let spec = ShimSpec {
+            package_name: "game".to_string(),
+            crate_name: "game".to_string(),
+            project_root: project.to_path_buf(),
+            extension_type: None,
+        };
+        let profile = dependency_profile_for(project, None, NO_ENV);
+        game_build_command_with(&spec, Path::new("/target"), BuildLoad::Foreground, &profile)
+            .get_args()
+            .map(|arg| arg.to_string_lossy().into_owned())
+            .collect()
+    }
+
+    fn project_with_manifest(manifest: &str) -> tempfile::TempDir {
+        let dir = tempfile::tempdir().expect("a temp dir");
+        std::fs::write(dir.path().join("Cargo.toml"), manifest).expect("a manifest");
+        dir
+    }
+
+    const PLAIN: &str = "[package]\nname = \"game\"\n[workspace]\n";
+
+    /// An existing project's manifest stays as it is, and still gets a game
+    /// that loads a large scene at a usable speed.
+    #[test]
+    fn a_plain_project_builds_with_optimised_dependencies() {
+        let project = project_with_manifest(PLAIN);
+        assert_eq!(
+            dependency_profile_for(project.path(), None, NO_ENV),
+            vec![GAME_DEPENDENCY_OPT_LEVEL, GAME_DEPENDENCY_DEBUG]
+        );
+        let args = build_args(project.path());
+        for setting in [GAME_DEPENDENCY_OPT_LEVEL, GAME_DEPENDENCY_DEBUG] {
+            let position = args.iter().position(|arg| arg == setting);
+            let position = position.expect("the override is on the command line");
+            assert_eq!(args[position - 1], "--config");
+        }
+        assert!(!args.iter().any(|arg| arg.contains("profile.dev.opt-level")));
+    }
+
+    #[test]
+    fn a_project_that_picks_its_own_optimisation_keeps_it() {
+        for profile in [
+            "[profile.dev]\nopt-level = 1\n",
+            "[profile.dev.package.\"*\"]\nopt-level = 3\n",
+        ] {
+            let project = project_with_manifest(&format!("{PLAIN}{profile}"));
+            let args = build_args(project.path());
+            assert!(!args.iter().any(|arg| arg == "--config"), "{profile}");
+        }
+
+        let project = project_with_manifest(PLAIN);
+        std::fs::create_dir(project.path().join(".cargo")).expect("a folder");
+        std::fs::write(
+            project.path().join(".cargo/config.toml"),
+            "[profile.dev.package.\"*\"]\nopt-level = 1\n",
+        )
+        .expect("a config");
+        assert!(
+            !build_args(project.path())
+                .iter()
+                .any(|arg| arg == "--config")
+        );
+    }
+
+    /// Cargo reads config from every parent folder and its home, and from the
+    /// environment, and a setting in any of them is the project's choice.
+    #[test]
+    fn a_dev_profile_in_any_config_cargo_reads_is_kept() {
+        const CHOSEN: &str = "[profile.dev.package.\"*\"]\nopt-level = 1\n";
+        let write_config = |folder: &Path| {
+            std::fs::create_dir_all(folder).expect("a folder");
+            std::fs::write(folder.join("config.toml"), CHOSEN).expect("a config");
+        };
+
+        let parent = tempfile::tempdir().expect("a temp dir");
+        let project = parent.path().join("game");
+        std::fs::create_dir(&project).expect("a project");
+        std::fs::write(project.join("Cargo.toml"), PLAIN).expect("a manifest");
+        assert_eq!(dependency_profile_for(&project, None, NO_ENV).len(), 2);
+        assert!(
+            dependency_profile_for(
+                &project,
+                None,
+                DevProfileEnv {
+                    opt_level: true,
+                    ..NO_ENV
+                }
+            )
+            .is_empty(),
+            "the environment"
+        );
+        assert_eq!(
+            dependency_profile_for(
+                &project,
+                None,
+                DevProfileEnv {
+                    debug: true,
+                    ..NO_ENV
+                }
+            ),
+            vec![GAME_DEPENDENCY_OPT_LEVEL],
+            "the debug environment variable"
+        );
+
+        let home = tempfile::tempdir().expect("a temp dir");
+        write_config(home.path());
+        assert!(
+            dependency_profile_for(&project, Some(home.path()), NO_ENV).is_empty(),
+            "cargo's home"
+        );
+
+        write_config(&parent.path().join(".cargo"));
+        assert!(
+            dependency_profile_for(&project, None, NO_ENV).is_empty(),
+            "a parent folder"
+        );
+    }
+
+    #[test]
+    fn a_project_that_sets_only_dependency_debug_info_keeps_it() {
+        let project = project_with_manifest(&format!(
+            "{PLAIN}[profile.dev.package.\"*\"]\ndebug = true\n"
+        ));
+        assert_eq!(
+            dependency_profile_for(project.path(), None, NO_ENV),
+            vec![GAME_DEPENDENCY_OPT_LEVEL]
+        );
+    }
+
+    #[test]
+    fn a_project_that_sets_the_dev_debug_level_keeps_it() {
+        let project = project_with_manifest(&format!("{PLAIN}[profile.dev]\ndebug = 0\n"));
+        assert_eq!(
+            dependency_profile_for(project.path(), None, NO_ENV),
+            vec![GAME_DEPENDENCY_OPT_LEVEL]
+        );
+    }
+
+    #[test]
+    fn a_workspace_members_profile_comes_from_the_workspace_root() {
+        let root = project_with_manifest(
+            "[workspace]\nmembers = [\"game\"]\n[profile.dev.package.\"*\"]\nopt-level = 3\n",
+        );
+        let member = root.path().join("game");
+        std::fs::create_dir(&member).expect("a member");
+        std::fs::write(member.join("Cargo.toml"), "[package]\nname = \"game\"\n")
+            .expect("a manifest");
+        assert!(!build_args(&member).iter().any(|arg| arg == "--config"));
     }
 
     #[test]
@@ -1128,17 +1488,6 @@ mod tests {
     }
 
     #[test]
-    fn a_failure_leaves_out_cargos_progress_notes() {
-        let stderr = "   Compiling bevy v0.19.1\n   Compiling my-game v0.1.0 (/p)\n\
-                      error: could not compile `my-game` (lib) due to 1 previous error\n";
-
-        assert_eq!(
-            failure_stderr(stderr),
-            "error: could not compile `my-game` (lib) due to 1 previous error"
-        );
-    }
-
-    #[test]
     fn a_build_that_says_nothing_at_all_still_says_so() {
         assert_eq!(
             compile_failure_log(String::new(), "   \n"),
@@ -1166,6 +1515,40 @@ mod tests {
         );
         assert!(log.contains("E0308"), "got {log}");
         assert!(log.contains("could not compile"), "got {log}");
+    }
+
+    #[test]
+    fn an_old_toolchain_failure_names_the_fix() {
+        let dir = temp_project_dir("old_toolchain");
+        for stderr in [
+            "error: rustc 1.96.0 is not supported by the following packages:\n",
+            "error: rustc 1.96.0 is not supported by the following package:\n",
+        ] {
+            let log = with_toolchain_hint(String::new(), stderr, &dir);
+            assert!(log.contains("rustup update stable"), "got {log}");
+        }
+        let other = with_toolchain_hint(String::new(), "error: could not compile `x`\n", &dir);
+        assert!(other.is_empty(), "got {other}");
+
+        std::fs::write(
+            dir.join("rust-toolchain.toml"),
+            "[toolchain]\nchannel = \"1.90.0\"\n",
+        )
+        .unwrap();
+        let pinned = with_toolchain_hint(
+            String::new(),
+            "rustc 1.90.0 is not supported by the following packages",
+            &dir,
+        );
+        assert!(pinned.contains("Raise the channel"), "got {pinned}");
+        assert!(!pinned.contains("rustup update"), "got {pinned}");
+    }
+
+    fn temp_project_dir(name: &str) -> PathBuf {
+        let dir = std::env::temp_dir().join(format!("jackdaw_hint_{name}_{}", std::process::id()));
+        let _ = std::fs::remove_dir_all(&dir);
+        std::fs::create_dir_all(&dir).unwrap();
+        dir
     }
 
     #[test]

@@ -4,7 +4,7 @@ use crate::event::PieChannel;
 
 /// A byte pipe between an editor client and a game server, abstracting the
 /// wire (a local socket, an IPC channel). The protocol layer serializes
-/// `PieEvent`s to bytes (`event::to_bytes`) and routes them by channel.
+/// `StateEvent`s and `ControlEvent`s to bytes (`event::to_bytes`) and routes them by channel.
 pub trait PieTransport {
     /// Queue `bytes` for delivery on `channel`.
     fn send(&mut self, channel: PieChannel, bytes: &[u8]);
@@ -17,6 +17,11 @@ pub trait PieTransport {
     fn drain_received(&mut self) -> Vec<(PieChannel, Vec<u8>)>;
     /// Whether the peer has hung up, so nothing more will arrive.
     fn peer_gone(&self) -> bool {
+        false
+    }
+    /// Whether sends are piling up faster than the peer takes them, so a sender
+    /// that can catch up later should hold what can wait.
+    fn congested(&self) -> bool {
         false
     }
 }

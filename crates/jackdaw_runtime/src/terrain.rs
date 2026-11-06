@@ -13,7 +13,7 @@
 //! building ground from partial data. A missing sidecar is the flat-ground
 //! case and is not an error.
 
-use std::path::{Path, PathBuf};
+use std::path::PathBuf;
 use std::sync::Arc;
 
 use bevy::asset::LoadState;
@@ -100,7 +100,11 @@ fn resolve_scatter_prefabs(
 /// The sidecar file one terrain draws, resolved beneath the directory of the
 /// scene that spawned it.
 #[derive(Component)]
-struct TerrainSidecar(PathBuf);
+struct TerrainSidecar {
+    file: PathBuf,
+    /// Where an unsaved copy stands in for the file, under Play.
+    copy: Option<PathBuf>,
+}
 
 /// A terrain's decoded document, plus the heights the mesher samples.
 ///
@@ -179,33 +183,31 @@ struct UntexturedTerrain(Handle<StandardMaterial>);
 
 /// Record the sidecar each freshly spawned terrain draws.
 ///
-/// Called from the scene spawn, the only place the scene's directory is known:
-/// `data_path` is relative to it and the entity keeps no other trace of where
-/// it came from. A path that names nothing loadable is logged and the terrain
+/// Called from the scene spawn with each terrain's document folder, the scene's
+/// or the prefab's it inherits from: `data_path` is relative to it and the
+/// entity keeps no other trace of where it came from. A path that names nothing loadable is logged and the terrain
 /// draws flat.
-pub(crate) fn attach_sidecars(world: &mut World, spawned: &[Entity], parent_path: &Path) {
-    let terrains: Vec<(Entity, String)> = spawned
-        .iter()
-        .filter_map(|&entity| {
-            world
-                .get::<Terrain>(entity)
-                .filter(|terrain| !terrain.data_path.is_empty())
-                .map(|terrain| (entity, terrain.data_path.clone()))
-        })
-        .collect();
-    if terrains.is_empty() {
-        return;
-    }
-    let Some(root) = crate::assets_root(world) else {
-        warn!("no asset root found; terrain sidecars cannot be located");
-        return;
-    };
-
-    let scene_dir = root.join(parent_path);
-    for (entity, data_path) in terrains {
-        match sidecar::resolve_path(&scene_dir, &data_path) {
-            Ok(path) => {
-                world.entity_mut(entity).insert(TerrainSidecar(path));
+pub(crate) fn attach_sidecars(world: &mut World, dirs: &[crate::SidecarDir]) {
+    for crate::SidecarDir {
+        entity,
+        dir,
+        copies,
+    } in dirs
+    {
+        let Some(data_path) = (world.get::<Terrain>(*entity))
+            .filter(|terrain| !terrain.data_path.is_empty())
+            .map(|terrain| terrain.data_path.clone())
+        else {
+            continue;
+        };
+        match sidecar::resolve_path(dir, &data_path) {
+            Ok(file) => {
+                let copy = copies
+                    .as_ref()
+                    .and_then(|copies| sidecar::resolve_path(copies, &data_path).ok());
+                world
+                    .entity_mut(*entity)
+                    .insert(TerrainSidecar { file, copy });
             }
             Err(err) => warn!("terrain data path {data_path:?} is unusable: {err}"),
         }
@@ -225,27 +227,38 @@ fn load_sidecars(
     let assets = crate::resolve_assets_root(catalog_path.as_deref(), asset_folder.as_deref());
     for (entity, terrain, sidecar_path) in &terrains {
         let data = match sidecar_path {
-            Some(TerrainSidecar(path)) => match std::fs::read(path) {
-                Ok(bytes) => match sidecar::load_from(&bytes, assets.as_deref()) {
-                    Ok(loaded) => {
-                        for message in loaded.warnings() {
-                            warn!("{message}");
+            Some(TerrainSidecar { file: path, copy }) => {
+                match crate::play_overlay::read_sidecar(copy.as_deref(), path) {
+                    Ok(bytes) => match sidecar::load_from(&bytes, assets.as_deref()) {
+                        Ok(loaded) => {
+                            for message in loaded.warnings() {
+                                warn!("{message}");
+                            }
+                            loaded.data
                         }
-                        loaded.data
+                        Err(err) => {
+                            error!(
+                                "terrain data {} is unreadable ({err}); this terrain draws nothing \
+                             until the file is fixed",
+                                path.display()
+                            );
+                            commands.entity(entity).insert(TerrainUnreadable);
+                            continue;
+                        }
+                    },
+                    // A missing file is the flat-ground case, not a fault.
+                    Err(err) if err.kind() == std::io::ErrorKind::NotFound => {
+                        RegionTerrainData::default()
                     }
                     Err(err) => {
-                        error!(
-                            "terrain data {} is unreadable ({err}); this terrain draws nothing \
-                             until the file is fixed",
+                        warn!(
+                            "terrain data {} cannot be read ({err}); this terrain draws flat",
                             path.display()
                         );
-                        commands.entity(entity).insert(TerrainUnreadable);
-                        continue;
+                        RegionTerrainData::default()
                     }
-                },
-                // A missing file is the flat-ground case, not a fault.
-                Err(_) => RegionTerrainData::default(),
-            },
+                }
+            }
             None => RegionTerrainData::default(),
         };
 
@@ -707,6 +720,7 @@ mod tests {
     use super::*;
     use bevy::asset::{AssetApp, AssetPlugin};
     use jackdaw_terrain::sidecar::{AutoTerrainSettings, RegionTerrainData};
+    use std::path::Path;
 
     const GRASS: &str = "#grass\nbevy_pbr::pbr_material::StandardMaterial {\n    \
         base_color_texture: \"textures/grass_basecolor.png\",\n    \
@@ -826,7 +840,10 @@ mod tests {
                     data_path: "zone.terrain-0.jdterrain".to_string(),
                     ..default()
                 },
-                TerrainSidecar(path.to_owned()),
+                TerrainSidecar {
+                    file: path.to_owned(),
+                    copy: None,
+                },
             ))
             .id();
         app.update();

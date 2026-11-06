@@ -5,10 +5,8 @@
 //! [`connect`] to complete the bidirectional setup. Both ends then hold an
 //! [`IpcChannelTransport`] carrying `(PieChannel, Vec<u8>)` frames.
 //!
-//! `ipc-channel` is reliable-ordered on every platform, so
-//! [`PieChannel::Unreliable`] frames are
-//! delivered reliably here. The channel tag is preserved so transports that do
-//! distinguish the two can act on it.
+//! `ipc-channel` is reliable-ordered on every platform. The channel tag is
+//! preserved on the wire so the receiver can route each frame.
 
 use bevy::log::warn;
 use ipc_channel::ipc::{self, IpcOneShotServer, IpcReceiver, IpcSender};
@@ -160,16 +158,106 @@ impl IpcLaneSender {
     /// Send one payload on this lane. A send failure (peer hung up) is
     /// logged once per call and otherwise dropped, matching the transport.
     pub fn send(&self, bytes: Vec<u8>) {
-        let frame = Frame {
-            channel: self.channel,
-            bytes,
-        };
-        if let Err(err) = self.tx.send(frame) {
+        if let Err(err) = self.try_send(bytes) {
             warn!(
                 "PIE ipc transport: dropping {:?} frame, send failed: {err}",
                 self.channel
             );
         }
+    }
+
+    /// Send one payload on this lane, leaving a failure to the caller.
+    pub fn try_send(&self, bytes: Vec<u8>) -> std::io::Result<()> {
+        let frame = Frame {
+            channel: self.channel,
+            bytes,
+        };
+        self.tx.send(frame).map_err(ipc_error_to_io)
+    }
+}
+
+/// An [`IpcChannelTransport`] whose reliable sends go out on their own thread.
+///
+/// A socket write blocks while the peer is not reading, and an editor out of view
+/// reads once a second. The game's main thread sends state each frame, so writing
+/// from it would tie the game's frame rate to the editor's.
+///
+/// The queue itself has no bound: every send is kept, since some events only go
+/// once. [`PieTransport::congested`] tells the game to hold what it can resend, so
+/// an editor that stopped reading costs about `SEND_BACKLOG_LIMIT` of resendable
+/// state. Despawns and scene requests are queued past it, since they go once.
+pub struct QueuedSendTransport {
+    link: IpcChannelTransport,
+    queue: std::sync::mpsc::Sender<Vec<u8>>,
+    backlog: std::sync::Arc<std::sync::atomic::AtomicUsize>,
+    limit: usize,
+}
+
+/// Bytes queued for the editor past which [`QueuedSendTransport`] reads congested.
+/// Far more than a healthy editor is ever behind by, and small enough not to
+/// matter to a game left running against one stopped in a debugger.
+const SEND_BACKLOG_LIMIT: usize = 64 * 1024 * 1024;
+
+impl QueuedSendTransport {
+    /// Start the sending thread, handing `link` back if the thread cannot start.
+    pub fn new(link: IpcChannelTransport) -> Result<Self, IpcChannelTransport> {
+        Self::with_limit(link, SEND_BACKLOG_LIMIT)
+    }
+
+    fn with_limit(link: IpcChannelTransport, limit: usize) -> Result<Self, IpcChannelTransport> {
+        use std::sync::atomic::Ordering;
+        let lane = link.lane_sender(PieChannel::Reliable);
+        let (queue, queued) = std::sync::mpsc::channel::<Vec<u8>>();
+        let backlog = std::sync::Arc::new(std::sync::atomic::AtomicUsize::new(0));
+        let sent = backlog.clone();
+        let started = std::thread::Builder::new()
+            .name("pie-state-sender".into())
+            .spawn(move || {
+                while let Ok(bytes) = queued.recv() {
+                    let length = bytes.len();
+                    lane.send(bytes);
+                    sent.fetch_sub(length, Ordering::Relaxed);
+                }
+            });
+        match started {
+            Ok(_) => Ok(Self {
+                link,
+                queue,
+                backlog,
+                limit,
+            }),
+            Err(err) => {
+                warn!("PIE ipc transport: could not start the sending thread: {err}");
+                Err(link)
+            }
+        }
+    }
+}
+
+impl PieTransport for QueuedSendTransport {
+    fn send(&mut self, channel: PieChannel, bytes: &[u8]) {
+        use std::sync::atomic::Ordering;
+        if channel != PieChannel::Reliable {
+            self.link.send(channel, bytes);
+            return;
+        }
+        self.backlog.fetch_add(bytes.len(), Ordering::Relaxed);
+        if self.queue.send(bytes.to_vec()).is_err() {
+            self.backlog.fetch_sub(bytes.len(), Ordering::Relaxed);
+            self.link.send(channel, bytes);
+        }
+    }
+
+    fn drain_received(&mut self) -> Vec<(PieChannel, Vec<u8>)> {
+        self.link.drain_received()
+    }
+
+    fn peer_gone(&self) -> bool {
+        self.link.peer_gone()
+    }
+
+    fn congested(&self) -> bool {
+        self.backlog.load(std::sync::atomic::Ordering::Relaxed) > self.limit
     }
 }
 
@@ -248,6 +336,38 @@ mod tests {
             "backlog digests over drains with nothing dropped"
         );
         game.drain_received();
+
+    /// A peer that stopped reading backs the queue up past its limit, every send
+    /// is still kept, and reading again clears the congestion.
+    #[test]
+    fn a_peer_that_stops_reading_congests_the_queue_until_it_reads() {
+        const FRAME: usize = 256 * 1024;
+        const FRAMES: usize = 64;
+        let (handle, name) = serve().unwrap();
+        let game = std::thread::spawn(move || connect(&name).unwrap());
+        let mut editor = handle.accept().unwrap();
+        let game = game.join().unwrap();
+
+        let mut queued = QueuedSendTransport::with_limit(game, 4 * FRAME)
+            .map_err(|_| "no thread")
+            .unwrap();
+        assert!(!queued.congested());
+        let frame = vec![7u8; FRAME];
+        for _ in 0..FRAMES {
+            queued.send(PieChannel::Reliable, &frame);
+        }
+        assert!(queued.congested(), "nothing reads what was sent");
+
+        let mut received = 0;
+        let deadline = std::time::Instant::now() + std::time::Duration::from_secs(60);
+        while received < FRAMES {
+            assert!(std::time::Instant::now() < deadline, "got {received}");
+            received += editor.drain_received().len();
+        }
+        while queued.congested() {
+            assert!(std::time::Instant::now() < deadline, "still congested");
+            std::thread::yield_now();
+        }
     }
 
     #[test]
@@ -280,6 +400,44 @@ mod tests {
 
         child.join().unwrap();
         assert_eq!(echoed, Some((PieChannel::Reliable, b"ping".to_vec())));
+    }
+
+    /// A peer that is not reading fills the socket, which would block a plain
+    /// send. The game's main thread must not feel it.
+    #[test]
+    fn a_queued_send_does_not_wait_for_a_peer_that_is_not_reading() {
+        let (server, name) = serve().expect("a rendezvous");
+        let child = std::thread::spawn(move || connect(&name).expect("connected"));
+        let mut editor = server.accept().expect("accepted");
+        let game = child.join().expect("the connecting thread");
+        let mut game = QueuedSendTransport::new(game)
+            .ok()
+            .expect("a sending thread");
+
+        let (sent, was_sent) = std::sync::mpsc::channel();
+        let sender = std::thread::spawn(move || {
+            for index in 0..32u8 {
+                game.send(PieChannel::Reliable, &vec![index; 1024 * 1024]);
+            }
+            sent.send(()).expect("the test is waiting");
+            game
+        });
+        was_sent
+            .recv_timeout(std::time::Duration::from_secs(20))
+            .expect("every send returned with nobody reading");
+        let _game = sender.join().expect("the sending thread");
+
+        let mut received = Vec::new();
+        let deadline = std::time::Instant::now() + std::time::Duration::from_secs(20);
+        while received.len() < 32 {
+            assert!(std::time::Instant::now() < deadline, "{}", received.len());
+            received.extend(editor.drain_received());
+            std::thread::yield_now();
+        }
+        for (index, (channel, bytes)) in received.iter().enumerate() {
+            assert_eq!(*channel, PieChannel::Reliable);
+            assert_eq!(bytes[0] as usize, index, "in order");
+        }
     }
 
     #[test]

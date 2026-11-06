@@ -374,10 +374,20 @@ fn a_lod_group_whose_coarsest_model_is_missing_draws_its_other_level_and_the_loa
 
     open(&mut app, &scene);
     settle_load(&mut app);
+    util::update_until(
+        &mut app,
+        "the group to draw its loaded level",
+        std::time::Duration::from_secs(30),
+        |app| {
+            app.world()
+                .resource::<jackdaw_runtime::LiveLevelProgress>()
+                .drawn
+                == 1
+        },
+    );
 
     let progress = *app.world().resource::<jackdaw_runtime::LiveLevelProgress>();
     assert_eq!(progress.groups, 1);
-    assert_eq!(progress.drawn, 1, "the group draws its loaded level");
     let mut parts = app
         .world_mut()
         .query_filtered::<&jackdaw_runtime::LodPartLevel, With<jackdaw_runtime::LodPart>>();
@@ -398,10 +408,18 @@ fn a_lod_group_whose_models_are_all_missing_does_not_hold_the_load_up() {
 
     open(&mut app, &scene);
     settle_load(&mut app);
+    util::update_until(
+        &mut app,
+        "the missing models to fail",
+        std::time::Duration::from_secs(30),
+        |app| {
+            let progress = app.world().resource::<jackdaw_runtime::LiveLevelProgress>();
+            progress.is_drawn() && progress.is_refined()
+        },
+    );
 
     let progress = *app.world().resource::<jackdaw_runtime::LiveLevelProgress>();
     assert_eq!(progress.groups, 1);
-    assert!(progress.is_drawn() && progress.is_refined(), "{progress:?}");
 }
 
 /// An editor with a viewport camera, so LOD groups want levels.

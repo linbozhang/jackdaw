@@ -26,7 +26,7 @@
 
 use std::path::Path;
 
-use jackdaw_env::rust_env_command;
+use jackdaw_env::user_toolchain_command;
 use proc_macro2::LineColumn;
 use syn::spanned::Spanned;
 
@@ -138,7 +138,7 @@ fn rustfmt(source: String) -> String {
     use std::io::Write as _;
     use std::process::Stdio;
 
-    let Ok(mut child) = rust_env_command("rustfmt")
+    let Ok(mut child) = user_toolchain_command("rustfmt")
         .args(["--emit", "stdout", "--edition", "2024", "--quiet"])
         .stdin(Stdio::piped())
         .stdout(Stdio::piped())
@@ -931,7 +931,7 @@ fn render_lib(
         .iter()
         .any(|call| call.rendered.contains("play_gate::is_playing"));
     let gate_note = if gated {
-        " Gameplay\n/// systems gated by [`play_gate::is_playing`] run only during Play."
+        " Gameplay\n/// systems gated by [`play_gate::is_playing`] run only while the game is playing."
     } else {
         ""
     };
@@ -981,9 +981,9 @@ fn render_lib(
 }
 
 const PLAY_GATE_MODULE: &str = "\
-/// Bridges the editor's `PlayState` to gameplay without forcing a `jackdaw` dep\n\
-/// in standalone builds. Always `true` without the `editor` feature; gates on\n\
-/// `PlayState::Playing` when the editor is compiled in.\n\
+/// Keeps gameplay systems from running while the editor is authoring, without\n\
+/// forcing a `jackdaw` dep in standalone builds. Always `true` without the `editor`\n\
+/// feature; gates on `PlayState::Playing` when the editor is compiled in.\n\
 pub mod play_gate {\n\
 \x20   #[cfg(feature = \"editor\")]\n\
 \x20   pub fn is_playing(\n\

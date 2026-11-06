@@ -1,0 +1,508 @@
+//! Inspector operators: per-component buttons (add / remove / revert)
+//! and the small set of typed component actions.
+//! The physics actions live in `physics_display`.
+
+use bevy::ecs::component::ComponentId;
+use bevy::ecs::reflect::{AppTypeRegistry, ReflectComponent};
+use bevy::prelude::*;
+use jackdaw_api::prelude::*;
+
+use super::prefab_field_dots::revert_component_to_baseline;
+use crate::commands::{
+    AddComponent, AddProjectComponent, CommandHistory, EditorCommand, RemoveComponent,
+    RemoveProjectComponent,
+};
+use crate::project_types::ProjectTypes;
+use crate::selection::Selection;
+
+pub(crate) fn add_to_extension(ctx: &mut ExtensionContext) {
+    ctx.register_operator::<ComponentAddOp>()
+        .register_operator::<ComponentRemoveOp>()
+        .register_operator::<ComponentRevertBaselineOp>()
+        .register_operator::<FieldSetOp>()
+        .register_operator::<super::bindings_card::BindingAddOp>()
+        .register_operator::<super::bindings_card::BindingSetOp>()
+        .register_operator::<InspectorCategoryOp>()
+        .register_operator::<InspectorCardOp>();
+}
+
+/// Open or close one inspector card, writing the same collapse state the
+/// header's disclosure toggle writes. A name no card carries still applies:
+/// the entry waits until a selection brings that card up.
+#[operator(
+    id = "inspector.card",
+    label = "Open Inspector Card",
+    description = "Open or close the inspector card with this name.",
+    allows_undo = false,
+    params(
+        name(String, doc = "Card name as the inspector shows it, e.g. \"Node\"."),
+        open(bool, doc = "`true` opens the card, `false` collapses it.")
+    )
+)]
+pub(crate) fn inspector_card(
+    params: In<OperatorParameters>,
+    mut collapse: ResMut<super::InspectorCollapseState>,
+    selection: Res<Selection>,
+    mut commands: Commands,
+) -> OperatorResult {
+    let Some(name) = params.as_str("name").filter(|name| !name.is_empty()) else {
+        warn!("inspector.card: missing 'name' parameter");
+        return OperatorResult::Cancelled;
+    };
+    let open = params.as_bool("open").unwrap_or(true);
+    collapse.0.insert(name.to_string(), !open);
+    if let Some(primary) = selection.primary() {
+        commands.entity(primary).insert(super::InspectorDirty);
+    }
+    OperatorResult::Finished
+}
+
+/// Show one of the inspector's category tabs.
+///
+/// The strip's own tabs write the same resource, so a click and a scripted
+/// call take the same path. An id no tab exists for still applies: the strip
+/// resolves back to an applicable category on its next rebuild.
+#[operator(
+    id = "inspector.category",
+    label = "Inspector Category",
+    description = "Show one of the inspector's category tabs.",
+    allows_undo = false,
+    params(category(
+        String,
+        default = "object",
+        doc = "Category id, e.g. \"object\", \"material\"."
+    ))
+)]
+pub(crate) fn inspector_category(
+    params: In<OperatorParameters>,
+    mut active: ResMut<super::category_strip::ActiveInspectorCategory>,
+) -> OperatorResult {
+    let category = params.as_str("category").unwrap_or("object").to_string();
+    active.0 = std::borrow::Cow::Owned(category);
+    OperatorResult::Finished
+}
+
+/// Inspector operators all act on the inspected entity (the primary
+/// selection). Buttons that dispatch them get greyed out when nothing
+/// is selected.
+pub(crate) fn has_primary_selection(selection: Res<Selection>) -> bool {
+    selection.primary().is_some()
+}
+
+/// When the inspector is in PIE Live mode and `entity` is a projected
+/// preview entity, returns its game-side bits so component add/remove can
+/// be streamed to the running game instead of mutating the authored scene.
+/// Returns `None` for ordinary Scene edits.
+fn pie_live_target_bits(world: &mut World, entity: Entity) -> Option<u64> {
+    use crate::pie_mirror::PieViewMode;
+
+    if *world.resource::<PieViewMode>() != PieViewMode::Live {
+        return None;
+    }
+    world
+        .resource::<crate::pie_projection::PieProjection>()
+        .by_bits
+        .iter()
+        .find_map(|(bits, &e)| if e == entity { Some(*bits) } else { None })
+}
+
+/// Build a default value for `type_path` in canonical reflect JSON (the
+/// form the game's `TypedReflectDeserializer` expects), for streaming an
+/// `AddComponent` to the running game. `None` when the type can't be
+/// default-constructed or serialized.
+fn default_component_json(world: &World, type_path: &str) -> Option<serde_json::Value> {
+    use bevy::reflect::serde::TypedReflectSerializer;
+
+    let registry = world.resource::<AppTypeRegistry>().clone();
+    let registry = registry.read();
+    let registration = registry.get_with_type_path(type_path)?;
+    let default =
+        crate::reflect_default::build_reflective_default(registration.type_id(), &registry)?;
+    let serializer = TypedReflectSerializer::new(default.as_partial_reflect(), &registry);
+    serde_json::to_value(&serializer).ok()
+}
+
+/// Look up `(ComponentId, TypeId)` for a type path, registering
+/// the component on a throwaway entity first if the world hasn't
+/// seen it yet. Without this, types only `register_type`'d
+/// (never inserted) would return `None` from
+/// `world.components().get_id` and the picker would silently
+/// no-op on click.
+fn component_id_for_path(
+    world: &mut World,
+    type_path: &str,
+) -> Option<(ComponentId, std::any::TypeId)> {
+    let registry = world.resource::<AppTypeRegistry>().clone();
+    let type_id = {
+        let registry_read = registry.read();
+        let registration = registry_read.get_with_type_path(type_path)?;
+        registration.type_id()
+    };
+
+    // Fast path: the world already knows about this component.
+    if let Some(component_id) = world.components().get_id(type_id) {
+        return Some((component_id, type_id));
+    }
+
+    // Slow path: insert on a throwaway entity to auto-register
+    // the ComponentId. `build_reflective_default` covers types
+    // without `#[derive(Default)]`.
+    let (reflect_component, default_value) = {
+        let registry_read = registry.read();
+        let reflect_component = registry_read
+            .get_with_type_path(type_path)?
+            .data::<ReflectComponent>()?
+            .clone();
+        let default_value =
+            crate::reflect_default::build_reflective_default(type_id, &registry_read)?;
+        (reflect_component, default_value)
+    };
+
+    let temp = world.spawn_empty().id();
+    {
+        let registry_read = registry.read();
+        reflect_component.insert(
+            &mut world.entity_mut(temp),
+            default_value.as_partial_reflect(),
+            &registry_read,
+        );
+    }
+    let component_id = world.components().get_id(type_id);
+    world.despawn(temp);
+    component_id.map(|id| (id, type_id))
+}
+
+/// Add a component to the target entity. Pushes a single undoable
+/// history entry that recreates the component on undo.
+#[operator(
+    id = "component.add",
+    label = "Add Component",
+    description = "Add a component to the selected entity.",
+    allows_undo = false,
+    is_available = has_primary_selection,
+    params(
+        entity(Entity, doc = "Entity that receives the component."),
+        type_path(String, doc = "Fully-qualified Bevy reflected type path of the component to add."),
+    ),
+)]
+pub(crate) fn component_add(
+    params: In<OperatorParameters>,
+    mut commands: Commands,
+) -> Option<OperatorResult> {
+    let entity = params.as_entity("entity")?;
+    let type_path = params.as_str("type_path").map(str::to_string)?;
+    commands.queue(move |world: &mut World| {
+        if let Some(edit) = add_component_edit(world, entity, type_path) {
+            world.resource_mut::<CommandHistory>().push_executed(edit);
+        }
+    });
+    Some(OperatorResult::Finished)
+}
+
+/// Add `type_path` to `entity` as `component.add` does: streamed to the
+/// running game in Live view, else applied and returned as the executed
+/// history entry for the caller to push. `None` when nothing was recorded.
+pub(crate) fn add_component_edit(
+    world: &mut World,
+    entity: Entity,
+    type_path: String,
+) -> Option<Box<dyn EditorCommand>> {
+    // Live mode: stream the add to the running game; the next state
+    // delta repopulates the mirror and the inspector.
+    if let Some(bits) = pie_live_target_bits(world, entity) {
+        // The running game has the project type registered for real, so
+        // a project component streams to it like any other; fall back to
+        // the extracted schema default when the editor cannot build one.
+        let value = default_component_json(world, &type_path)
+            .or_else(|| {
+                // The schema default is `ReflectSerializer`-wrapped
+                // (`{type_path: value}`); the game deserializes with
+                // `TypedReflectDeserializer`, which wants the inner value.
+                world
+                    .get_resource::<ProjectTypes>()
+                    .and_then(|pt| pt.component(&type_path))
+                    .and_then(|schema| schema.default.as_ref())
+                    .and_then(|d| d.as_object())
+                    .and_then(|o| o.get(&type_path).cloned())
+            })
+            .unwrap_or(serde_json::Value::Null);
+        // The add enters the ledger as a structural entry, so the stop
+        // prompt and the tray know a component was added at runtime and
+        // Save can author the whole component patch.
+        crate::live_edits::record_live_structural_edit(
+            world,
+            entity,
+            bits,
+            &type_path,
+            crate::live_edits::LiveEditKind::ComponentAdded,
+            value.clone(),
+        );
+        crate::pie::send_control_to_focused(
+            world,
+            jackdaw_pie_protocol::ControlEvent::AddComponent {
+                entity: bits,
+                type_path,
+                value,
+            },
+        );
+        return None;
+    }
+    if world
+        .resource::<jackdaw_bsn::SceneBsnAst>()
+        .ast_for(entity)
+        .is_none()
+    {
+        warn!(
+            "component.add: entity {entity:?} is not tracked in the scene document; \
+             {type_path} was not added."
+        );
+        return None;
+    }
+    // A project component is never a real ECS component in the
+    // editor. It lives in the scene document as a dynamic patch;
+    // its real type exists only in the game binary at Play.
+    if world
+        .get_resource::<ProjectTypes>()
+        .is_some_and(|pt| pt.is_project_component(&type_path))
+    {
+        let ast = world.resource::<jackdaw_bsn::SceneBsnAst>();
+        if ast
+            .ast_for(entity)
+            .is_some_and(|node| ast.find_patch_by_type_path(node, &type_path).is_some())
+        {
+            return None;
+        }
+        let mut cmd = AddProjectComponent::new(entity, type_path);
+        cmd.execute(world);
+        if let Ok(mut ec) = world.get_entity_mut(entity) {
+            ec.insert(super::InspectorDirty);
+        }
+        return Some(Box::new(cmd));
+    }
+    let Some((component_id, type_id)) = component_id_for_path(world, &type_path) else {
+        warn!(
+            "component.add: no registration for type_path '{type_path}'. \
+             Make sure your plugin calls `register_type::<T>()` and that `T` \
+             derives `Reflect, Default` with `#[reflect(Component, Default)]`."
+        );
+        return None;
+    };
+    let mut cmd = AddComponent::new(entity, type_id, component_id, type_path);
+    cmd.execute(world);
+    if let Ok(mut ec) = world.get_entity_mut(entity) {
+        ec.insert(super::InspectorDirty);
+    }
+    Some(Box::new(cmd))
+}
+
+/// Remove a component from the target entity.
+#[operator(
+    id = "component.remove",
+    label = "Remove Component",
+    description = "Remove a component from the selected entity.",
+    allows_undo = false,
+    is_available = has_primary_selection,
+    params(
+        entity(Entity, doc = "Entity that loses the component."),
+        type_path(String, doc = "Fully-qualified Bevy reflected type path of the component to remove."),
+    ),
+)]
+pub(crate) fn component_remove(
+    params: In<OperatorParameters>,
+    mut commands: Commands,
+) -> Option<OperatorResult> {
+    let entity = params.as_entity("entity")?;
+    let type_path = params.as_str("type_path").map(str::to_string)?;
+    commands.queue(move |world: &mut World| {
+        if let Some(edit) = remove_component_edit(world, entity, type_path) {
+            world.resource_mut::<CommandHistory>().push_executed(edit);
+        }
+    });
+    Some(OperatorResult::Finished)
+}
+
+/// Remove `type_path` from `entity` as `component.remove` does: streamed to
+/// the running game in Live view, refused while a running preview drives it,
+/// else applied and returned as the executed history entry for the caller to
+/// push. `None` when nothing was recorded.
+pub(crate) fn remove_component_edit(
+    world: &mut World,
+    entity: Entity,
+    type_path: String,
+) -> Option<Box<dyn EditorCommand>> {
+    // Live mode: stream the removal to the running game, and enter it in
+    // the ledger as a structural entry (Save drops the authored patch).
+    if let Some(bits) = pie_live_target_bits(world, entity) {
+        crate::live_edits::record_live_structural_edit(
+            world,
+            entity,
+            bits,
+            &type_path,
+            crate::live_edits::LiveEditKind::ComponentRemoved,
+            serde_json::Value::Null,
+        );
+        crate::pie::send_control_to_focused(
+            world,
+            jackdaw_pie_protocol::ControlEvent::RemoveComponent {
+                entity: bits,
+                type_path,
+            },
+        );
+        return None;
+    }
+    // A running preview owns the components its evaluator writes.
+    if crate::preview_context::preview_writes_type_path(world, entity, &type_path) {
+        warn!(
+            "{}: `{type_path}` on {entity}",
+            crate::preview_context::PREVIEW_EDIT_REFUSED
+        );
+        return None;
+    }
+    // A project component, or one whose type the editor has not loaded,
+    // lives only as a document patch, so there is no ECS component to
+    // remove and dropping the patch is the removal.
+    let document_only = world
+        .get_resource::<ProjectTypes>()
+        .is_some_and(|pt| pt.is_project_component(&type_path))
+        || component_id_for_path(world, &type_path).is_none();
+    if document_only {
+        let mut cmd = RemoveProjectComponent::from_world(world, entity, type_path)?;
+        cmd.execute(world);
+        return Some(Box::new(cmd));
+    }
+    let (component_id, type_id) = component_id_for_path(world, &type_path)?;
+    let mut cmd: Box<dyn EditorCommand> = Box::new(RemoveComponent::from_world(
+        world,
+        entity,
+        type_id,
+        component_id,
+        type_path,
+    ));
+    cmd.execute(world);
+    Some(cmd)
+}
+
+/// Read a parameter as the JSON a field edit commits. A string is parsed as
+/// JSON first, so `{"Px": 120}` arrives as the enum variant it spells, and
+/// falls back to being the string it is.
+fn param_json(params: &OperatorParameters, key: &str) -> Option<serde_json::Value> {
+    use jackdaw_scene_types::PropertyValue;
+    match params.get(key)? {
+        PropertyValue::Bool(value) => Some(serde_json::Value::Bool(*value)),
+        PropertyValue::Int(value) => Some(serde_json::json!(value)),
+        PropertyValue::Float(value) => Some(serde_json::json!(value)),
+        PropertyValue::String(value) => Some(
+            serde_json::from_str(value)
+                .unwrap_or_else(|_| serde_json::Value::String(value.to_string())),
+        ),
+        _ => None,
+    }
+}
+
+/// Set one field of one component, through the same commit the inspector's own
+/// rows use.
+///
+/// The commit acts on the selection, so a target outside it replaces the
+/// selection; a multi-entity selection takes the edit on every member as one
+/// undo entry.
+#[operator(
+    id = "field.set",
+    label = "Set Field",
+    description = "Set one field on a component of the selected entity.",
+    allows_undo = false,
+    is_available = has_primary_selection,
+    params(
+        entity(Entity, doc = "Entity whose component is edited."),
+        type_path(String, doc = "Fully-qualified Bevy reflected type path of the component that owns the field."),
+        field(String, doc = "Dotted path to the field within the component (e.g. \"width\")."),
+        value(String, doc = "New value as JSON: 12, true, text, or {\"Px\": 12}."),
+    ),
+)]
+pub(crate) fn field_set(
+    params: In<OperatorParameters>,
+    world: &mut World,
+) -> Option<OperatorResult> {
+    let entity = params.as_entity("entity")?;
+    let type_path = params.as_str("type_path")?;
+    let field_path = params.as_str("field")?;
+    let value = param_json(&params, "value")?;
+    crate::selection::select_for_edit(world, entity);
+    let label = "Set field on multiple entities";
+    let Err(why) =
+        crate::commands::try_field_edit_commit(world, type_path, field_path, &value, label)
+    else {
+        return Some(OperatorResult::Finished);
+    };
+    jackdaw_api_internal::operator::warn_caller(world, format!("{}: {why}", FieldSetOp::ID));
+    Some(OperatorResult::Cancelled)
+}
+
+/// Restore an overridden component on a prefab instance to the prefab's
+/// baseline value.
+#[operator(
+    id = "component.revert_baseline",
+    label = "Revert To Prefab",
+    description = "Restore the component to the value it had in the source prefab.",
+    is_available = has_primary_selection,
+    params(
+        entity(Entity, doc = "Prefab instance entity to revert."),
+        type_path(String, doc = "Fully-qualified Bevy reflected type path of the component to revert."),
+    ),
+)]
+pub(crate) fn component_revert_baseline(
+    params: In<OperatorParameters>,
+    mut commands: Commands,
+) -> Option<OperatorResult> {
+    let entity = params.as_entity("entity")?;
+    let type_path = params.as_str("type_path").map(str::to_string)?;
+    commands.queue(move |world: &mut World| {
+        let Some((component_id, _)) = component_id_for_path(world, &type_path) else {
+            return;
+        };
+        if let Err(err) =
+            world.run_system_cached_with(revert_component_to_baseline, (entity, component_id))
+        {
+            error!("revert_component_to_baseline failed: {err}");
+        }
+    });
+    Some(OperatorResult::Finished)
+}
+
+/// Spawn (or replace) a keyframe at the current timeline cursor for one
+/// of the entity's animatable properties. Creates the clip and track
+/// lazily if they don't exist yet.
+#[operator(
+    id = "animation.toggle_keyframe",
+    label = "Toggle Keyframe",
+    description = "Add or replace a keyframe for this property at the current timeline cursor.",
+    is_available = has_primary_selection,
+    params(
+        entity(Entity, doc = "Source entity whose property is being animated."),
+        component_type_path(String, doc = "Fully-qualified Bevy reflected type path of the component that owns the property."),
+        field_path(String, doc = "Dotted path to the field within the component (e.g. \"translation\")."),
+    ),
+)]
+pub(crate) fn animation_toggle_keyframe(
+    params: In<OperatorParameters>,
+    mut commands: Commands,
+) -> Option<OperatorResult> {
+    let entity = params.as_entity("entity")?;
+    let type_path = params.as_str("component_type_path").map(str::to_string)?;
+    let field_path = params.as_str("field_path").map(str::to_string)?;
+    commands.queue(move |world: &mut World| {
+        let spawned = world
+            .run_system_cached_with(
+                super::anim_diamond::toggle_keyframe,
+                (entity, type_path, field_path),
+            )
+            .ok()
+            .unwrap_or_default();
+        // Register the new clip / track / keyframe in the document now,
+        // inside the operator's span, so a history-creating dispatch's
+        // after-snapshot diff catches the keyframe and the toggle carries
+        // its own undo entry. Waiting for the update watcher would leave
+        // the change to fold silently into whatever entry runs next.
+        crate::scene_io::register_entities_in_ast(world, &spawned);
+    });
+    Some(OperatorResult::Finished)
+}

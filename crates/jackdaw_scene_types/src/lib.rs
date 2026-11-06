@@ -19,6 +19,7 @@
 
 pub mod asset_path;
 pub mod brush_chunks;
+pub mod build_stage;
 pub mod environment;
 #[cfg(feature = "render")]
 pub mod lod_generate;
@@ -29,12 +30,17 @@ pub mod model_import;
 #[cfg(feature = "render")]
 pub mod model_parts;
 pub mod node_id;
+pub mod pixel_canvas;
+pub mod recipe_instance;
 #[cfg(feature = "render")]
 pub mod render_assets;
+pub mod tilemap;
 pub mod types;
+pub mod y_sort;
 
 pub use asset_path::to_asset_path;
 pub use brush_chunks::{MeshChunk, build_brush_chunks};
+pub use build_stage::{BUILD_STAGE_TYPE_PATH, BuildStage};
 pub use environment::{
     Ambient, AmbientMode, Antialiasing, Environment, Fog, FogMode, Multisampling, PostProcess,
     Reflections, ShadowFiltering, Sky, Tonemapper,
@@ -42,14 +48,21 @@ pub use environment::{
 #[cfg(feature = "render")]
 pub use mesh_rebuild::evaluate_brush_geometry;
 pub use node_id::{SCENE_NODE_ID_TYPE_PATH, SPARSE_MIN, SceneNodeId};
+pub use pixel_canvas::{CanvasScale, PIXEL_CANVAS_TYPE_PATH, PixelCanvas};
+pub use recipe_instance::{RECIPE_INSTANCE_TYPE_PATH, RecipeInstance};
+pub use tilemap::{LayerTerrainMatch, Tilemap, TilemapLayer, TilemapLayerKind};
 pub use types::{
     Brush, BrushFaceData, BrushPlane, BrushTopology, CustomProperties, DerivedFaceMesh,
     DetailLayer, DetailMesh, DetailPresser, DetailVariety, GltfSource, HIDDEN_IN_GAME_TYPE_PATH,
     HiddenInGame, InstanceMaterialOverrides, LodFade, LodGroup, LodLevel, LodOverride,
     MaterialOverrides, NAVMESH_EXCLUDE_TYPE_PATH, NavmeshExclude, NavmeshIgnored, PrefabBaseline,
-    PropertyValue, ReflectionProbe, ScatterGroup, ScatterInstance, SceneRootTag, SceneWind,
-    Terrain, TerrainChannel, TerrainChannelElement, TerrainNavmesh, TerrainPaletteEntry,
+    PropertyValue, ReflectionProbe, RevolveBrushError, ScatterGroup, ScatterInstance, SceneRootTag,
+    SceneWind, Terrain, TerrainChannel, TerrainChannelElement, TerrainNavmesh, TerrainPaletteEntry,
     TerrainQuantization, Wind,
+};
+pub use y_sort::{
+    DrawOrderPlugin, Y_SORT_RANGE, Y_SORT_SPAN, Y_SORT_TYPE_PATH, YSort, unsorted_global,
+    y_sort_offset,
 };
 
 use bevy::prelude::*;
@@ -93,6 +106,7 @@ impl Plugin for SceneTypesPlugin {
             .register_type::<CustomProperties>()
             .register_type::<PropertyValue>()
             .register_type::<SceneNodeId>()
+            .register_type::<RecipeInstance>()
             .register_type::<GltfSource>()
             .register_type::<MaterialOverrides>()
             .register_type::<LodGroup>()
@@ -140,8 +154,15 @@ impl Plugin for SceneTypesPlugin {
             .register_type::<TileCollisionMode>()
             .register_type::<Locked>();
 
+            .register_type::<Locked>()
+            .register_type::<Tags>()
+            .register_type::<PixelCanvas>()
+            .register_type::<Tilemap>()
+            .register_type::<BuildStage>();
+
         app.init_resource::<SceneWind>()
-            .add_systems(First, follow_the_scene_wind);
+            .add_systems(First, follow_the_scene_wind)
+            .add_plugins(DrawOrderPlugin);
 
         #[cfg(feature = "render")]
         {
@@ -351,6 +372,62 @@ pub enum TileCollisionMode {
     /// Region cells: bodies pass through while the game reports overlap.
     Trigger,
 }
+
+/// Free-text labels on a scene node, so a script or a query can address every
+/// node carrying one (`#roof`) without knowing their ids. Kept sorted and
+/// without repeats, so a saved scene does not churn.
+#[derive(Component, Clone, Debug, Default, PartialEq, Eq, Reflect)]
+#[reflect(Component, Default, @EditorHidden)]
+pub struct Tags(pub Vec<String>);
+
+impl Tags {
+    /// The longest tag a node takes.
+    pub const MAX_LEN: usize = 64;
+
+    pub fn contains(&self, tag: &str) -> bool {
+        self.0.iter().any(|held| held == tag)
+    }
+
+    /// Add `tag`, keeping the set sorted. Returns whether it was new.
+    pub fn insert(&mut self, tag: &str) -> bool {
+        match self.0.binary_search_by(|held| held.as_str().cmp(tag)) {
+            Ok(_) => false,
+            Err(at) => {
+                self.0.insert(at, tag.to_string());
+                true
+            }
+        }
+    }
+
+    /// Take `tag` out. Returns whether it was there.
+    pub fn remove(&mut self, tag: &str) -> bool {
+        let before = self.0.len();
+        self.0.retain(|held| held != tag);
+        self.0.len() != before
+    }
+
+    /// Why `tag` cannot be a tag, if it cannot: one to [`Self::MAX_LEN`]
+    /// ASCII letters, digits, `_`, `-` or `.`.
+    pub fn refuse(tag: &str) -> Option<String> {
+        if tag.is_empty() {
+            return Some("a tag is not empty".to_string());
+        }
+        if tag.len() > Self::MAX_LEN {
+            return Some(format!(
+                "`{tag}` is longer than {} characters",
+                Self::MAX_LEN
+            ));
+        }
+        tag.chars()
+            .find(|c| !(c.is_ascii_alphanumeric() || matches!(c, '_' | '-' | '.')))
+            .map(|c| {
+                format!("`{tag}` holds `{c}`; a tag is ASCII letters, digits, `_`, `-` and `.`")
+            })
+    }
+}
+
+/// Reflect type path for [`Tags`].
+pub const TAGS_TYPE_PATH: &str = "jackdaw_scene_types::Tags";
 
 /// Picker grouping for a component. Attach via
 /// `#[reflect(@EditorCategory("Your Group"))]`.

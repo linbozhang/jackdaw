@@ -124,7 +124,7 @@ fn add_component_lands_on_entity_and_in_ast() {
         .param("entity", entity)
         .param(
             "type_path",
-            "guards::scaffolded_component_flow::SpinningCube".to_string(),
+            "editor::guards::scaffolded_component_flow::SpinningCube".to_string(),
         )
         .call()
         .expect("dispatch resolves");
@@ -147,7 +147,7 @@ fn add_component_lands_on_entity_and_in_ast() {
     assert!(
         ast.component_type_paths(node)
             .iter()
-            .any(|tp| tp == "guards::scaffolded_component_flow::SpinningCube"),
+            .any(|tp| tp == "editor::guards::scaffolded_component_flow::SpinningCube"),
         "AddComponent must record the component in the document so \
          scene save preserves it; node has: {:?}",
         ast.component_type_paths(node),
@@ -165,7 +165,7 @@ fn add_marker_component_round_trips_through_ast() {
         .param("entity", entity)
         .param(
             "type_path",
-            "guards::scaffolded_component_flow::PlayerSpawn".to_string(),
+            "editor::guards::scaffolded_component_flow::PlayerSpawn".to_string(),
         )
         .call()
         .expect("dispatch resolves");
@@ -180,7 +180,7 @@ fn add_marker_component_round_trips_through_ast() {
     assert!(
         ast.component_type_paths(node)
             .iter()
-            .any(|tp| tp == "guards::scaffolded_component_flow::PlayerSpawn"),
+            .any(|tp| tp == "editor::guards::scaffolded_component_flow::PlayerSpawn"),
         "marker component must round-trip through the document too",
     );
 }
@@ -198,7 +198,7 @@ fn inspector_field_edit_updates_ecs_and_ast() {
         .param("entity", entity)
         .param(
             "type_path",
-            "guards::scaffolded_component_flow::SpinningCube".to_string(),
+            "editor::guards::scaffolded_component_flow::SpinningCube".to_string(),
         )
         .call()
         .expect("dispatch resolves");
@@ -214,7 +214,7 @@ fn inspector_field_edit_updates_ecs_and_ast() {
 
     let mut cmd: Box<dyn EditorCommand> = Box::new(SetBsnField {
         entity,
-        type_path: "guards::scaffolded_component_flow::SpinningCube".to_string(),
+        type_path: "editor::guards::scaffolded_component_flow::SpinningCube".to_string(),
         field_path: "speed".to_string(),
         old_value: Some(jackdaw_bsn::BsnValue::Float(0.0)),
         new_value: jackdaw_bsn::BsnValue::Float(1.5),
@@ -239,7 +239,7 @@ fn inspector_field_edit_updates_ecs_and_ast() {
     let value = jackdaw_bsn::get_bsn_field(
         ast,
         node,
-        "guards::scaffolded_component_flow::SpinningCube",
+        "editor::guards::scaffolded_component_flow::SpinningCube",
         "speed",
     )
     .expect("document must store the edited field");
@@ -261,7 +261,7 @@ fn inspector_field_edit_undoes_back_to_original() {
         .param("entity", entity)
         .param(
             "type_path",
-            "guards::scaffolded_component_flow::SpinningCube".to_string(),
+            "editor::guards::scaffolded_component_flow::SpinningCube".to_string(),
         )
         .call()
         .expect("dispatch resolves");
@@ -270,7 +270,7 @@ fn inspector_field_edit_undoes_back_to_original() {
 
     let mut cmd: Box<dyn EditorCommand> = Box::new(SetBsnField {
         entity,
-        type_path: "guards::scaffolded_component_flow::SpinningCube".to_string(),
+        type_path: "editor::guards::scaffolded_component_flow::SpinningCube".to_string(),
         field_path: "speed".to_string(),
         old_value: Some(jackdaw_bsn::BsnValue::Float(0.0)),
         new_value: jackdaw_bsn::BsnValue::Float(1.5),
@@ -337,6 +337,7 @@ fn project_schema() -> jackdaw_schema::ProjectSchema {
         PROJECT_TUNING: { "move_speed": 4.0, "jump_speed": 4.5 }
     }));
     jackdaw_schema::ProjectSchema {
+        project_crates: Vec::new(),
         components: vec![
             entry(PROJECT_MARKER, jackdaw_schema::TypeKind::Struct, Vec::new()),
             entry(
@@ -420,7 +421,7 @@ fn the_first_scene_of_a_session_loads_before_any_watcher_tick() {
     );
 
     // What project open does before it restores tabs.
-    jackdaw::pie::refresh_project_types(app.world_mut());
+    jackdaw::project_build::refresh_project_types(app.world_mut());
     jackdaw::scene_io::load_scene_from_file(app.world_mut(), &path);
 
     let unresolved = app

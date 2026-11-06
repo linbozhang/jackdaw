@@ -1,0 +1,21 @@
+//! The outliner and the entity operations reached from it: reordering, the
+//! clipboard, the palette and the add-entity flows.
+
+mod component_picker;
+mod entity_clipboard;
+mod entity_reorder;
+mod multi_outliner;
+mod new_scene_kinds;
+mod outliner_asset_instances;
+mod outliner_drag_cleanup;
+mod outliner_keyboard_walk;
+mod outliner_missing_prefab;
+mod outliner_range_select;
+mod outliner_reference_filter;
+mod outliner_rename;
+mod outliner_row_drop;
+mod outliner_row_icons;
+mod outliner_row_lifecycle;
+mod outliner_rows_in_view;
+mod tree_row_labels;
+mod ui_palette;

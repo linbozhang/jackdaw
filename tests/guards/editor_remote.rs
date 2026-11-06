@@ -1551,3 +1551,946 @@ fn the_ui_methods_refuse_when_the_project_turns_the_surface_off() {
         refusal.message
     );
 }
+
+// --- Upstream sync additions: batch/compact/screenshot/chord test set ---
+
+/// An editor with a project and one viewport camera standing orthographic at
+/// `(0, 0, 10)`, for screenshots that aim it.
+fn editor_with_a_camera() -> (App, Entity, tempfile::TempDir) {
+    let (mut app, project) = editor_with_a_project();
+    let camera = app
+        .world_mut()
+        .spawn((
+            jackdaw::viewport::MainViewportCamera,
+            Transform::from_xyz(0.0, 0.0, 10.0),
+            Projection::Orthographic(OrthographicProjection::default_3d()),
+        ))
+        .id();
+    app.world_mut()
+        .resource_mut::<jackdaw::viewport::ActiveViewport>()
+        .camera = Some(camera);
+    app.update();
+    (app, camera, project)
+}
+
+/// Poll `params` once on the screenshot method.
+#[track_caller]
+fn screenshot_poll(app: &mut App, params: &Value) -> Option<Value> {
+    app.world_mut()
+        .run_system_cached_with(screenshot_handler, Some(params.clone()))
+        .expect("the handler ran")
+        .unwrap_or_else(|err| panic!("the screenshot refused: {}", err.message))
+}
+
+/// Poll a watching handler until it answers, the way the HTTP layer does
+/// while it holds the connection open.
+#[track_caller]
+fn poll<M>(
+    app: &mut App,
+    handler: impl bevy::ecs::system::IntoSystem<
+        In<Option<Value>>,
+        bevy::remote::BrpResult<Option<Value>>,
+        M,
+    > + Clone
+    + 'static,
+    params: Value,
+) -> Value {
+    for _ in 0..600 {
+        let answer = app
+            .world_mut()
+            .run_system_cached_with(handler.clone(), Some(params.clone()))
+            .expect("the handler ran")
+            .unwrap_or_else(|err| panic!("the handler refused: {}", err.message));
+        if let Some(answer) = answer {
+            return answer;
+        }
+        app.update();
+    }
+    panic!("the handler never answered");
+}
+
+/// Run one BRP handler and unwrap its answer.
+#[track_caller]
+fn call<M>(
+    app: &mut App,
+    handler: impl bevy::ecs::system::IntoSystem<In<Option<Value>>, bevy::remote::BrpResult, M> + 'static,
+    params: Value,
+) -> Value {
+    app.world_mut()
+        .run_system_cached_with(handler, Some(params))
+        .expect("the handler ran")
+        .unwrap_or_else(|err| panic!("the handler refused: {}", err.message))
+}
+
+/// Stand in for the readback of the capture `name` under the project.
+fn land_capture(app: &mut App, name: &str) {
+    let project = app.world().resource::<ProjectRoot>().root.clone();
+    let path = dunce::canonicalize(&project).unwrap().join(name);
+    app.world_mut()
+        .resource_mut::<jackdaw::screenshot::CaptureLog>()
+        .record(path, (1280, 720));
+}
+
+/// Make every pending request stale, then poll an unrelated screenshot so
+/// the stale ones expire.
+fn expire_pending(app: &mut App) {
+    app.world_mut()
+        .resource_mut::<bevy::diagnostic::FrameCount>()
+        .0 += 1000;
+    screenshot_poll(
+        app,
+        &json!({ "kind": "window", "path": "other.png", "request": "other" }),
+    );
+}
+
+/// The entity a compact outcome reports first.
+fn first_spawned(outcome: &Value) -> Entity {
+    let bits = outcome["entities"][0]
+        .as_u64()
+        .unwrap_or_else(|| panic!("no entity reported: {outcome}"));
+    Entity::try_from_bits(bits).expect("a live entity id")
+}
+
+/// Whether a capture is queued for the renderer.
+fn capture_queued(app: &mut App) -> bool {
+    app.world_mut()
+        .query_filtered::<Entity, With<bevy::render::view::screenshot::Screenshot>>()
+        .iter(app.world())
+        .next()
+        .is_some()
+}
+
+/// A remote rename answers with its outcome, shows in the tree and takes one
+/// undo to revert.
+#[test]
+fn a_remote_rename_reports_its_outcome_and_the_tree_follows() {
+    let mut app = editor_with_a_scene();
+    let added = call(
+        &mut app,
+        call_operator_handler,
+        json!({ "id": "entity.add.cube", "params": { "name": "Wall" } }),
+    );
+    let id = added["entities"][0].as_u64().expect("an entity id");
+    app.update();
+    let before = app.world().resource::<CommandHistory>().undo_stack.len();
+
+    let renamed = call(
+        &mut app,
+        call_operator_handler,
+        json!({ "id": "entity.rename", "params": { "entity": id, "name": "Gate" } }),
+    );
+    assert_eq!(renamed["result"], json!("finished"), "{renamed}");
+    assert_eq!(renamed["outcome"], json!("changed"), "{renamed}");
+    app.update();
+    let tree = call(&mut app, scene_tree_handler, json!({}));
+    let names: Vec<&Value> = tree["tree"]
+        .as_array()
+        .expect("roots")
+        .iter()
+        .map(|node| &node["name"])
+        .collect();
+    assert!(names.contains(&&json!("Gate")), "{tree}");
+    assert!(!names.contains(&&json!("Wall")), "{tree}");
+    assert_eq!(
+        app.world().resource::<CommandHistory>().undo_stack.len(),
+        before + 1
+    );
+
+    let same = call(
+        &mut app,
+        call_operator_handler,
+        json!({ "id": "entity.rename", "params": { "entity": id, "name": "Gate" } }),
+    );
+    assert_eq!(same["outcome"], json!("unchanged"), "{same}");
+    let refused = call(
+        &mut app,
+        call_operator_handler,
+        json!({ "id": "entity.rename", "params": { "name": "Gate" } }),
+    );
+    assert_eq!(refused["outcome"], json!("invalid"), "{refused}");
+}
+
+/// A parametric add answers with what it made: the outcome and the new id,
+/// which then names the node. A refused one answers `invalid` and adds nothing.
+#[test]
+fn a_parametric_add_reports_its_outcome_and_the_id_it_created() {
+    let mut app = editor_with_a_scene();
+    let outcome = call(
+        &mut app,
+        call_operator_handler,
+        json!({
+            "id": "entity.add.cylinder",
+            "params": { "size": [2.0, 1.0, 2.0], "segments": 3, "name": "Post" },
+        }),
+    );
+    assert_eq!(outcome["result"], json!("finished"), "{outcome}");
+    assert_eq!(outcome["outcome"], json!("changed"), "{outcome}");
+    let ids = outcome["entities"].as_array().expect("entities");
+    assert_eq!(ids.len(), 1, "{outcome}");
+    app.update();
+    let post = call(&mut app, entity_handler, json!({ "entity": ids[0] }));
+    assert!(
+        post["bsn"]
+            .as_str()
+            .is_some_and(|text| text.contains("Post")),
+        "the created id names the post: {post}"
+    );
+
+    let refused = call(
+        &mut app,
+        call_operator_handler,
+        json!({ "id": "entity.add.cylinder", "params": { "segments": 2 } }),
+    );
+    assert_eq!(refused["outcome"], json!("invalid"), "{refused}");
+    assert_eq!(refused["entities"], json!([]), "{refused}");
+}
+
+/// A region rides the request into the capture, and the answer reports the
+/// cropped size. The readback is stood in for by a synthetic frame.
+#[test]
+fn a_screenshot_region_crops_the_capture_it_answers_for() {
+    use bevy::image::ToExtents as _;
+    use bevy::render::render_resource::{TextureDimension, TextureFormat};
+    use bevy::render::view::screenshot::{Screenshot, ScreenshotCaptured};
+
+    let (mut app, _project) = editor_with_a_project();
+    let panel = app
+        .world_mut()
+        .spawn((
+            jackdaw::EditorEntity,
+            Node {
+                width: px(600),
+                height: px(400),
+                ..default()
+            },
+        ))
+        .id();
+    jackdaw::viewport_2d::build_viewport_2d_panel(app.world_mut(), panel);
+    app.update();
+
+    let params = Some(json!({
+        "kind": "viewport2d",
+        "path": "region.png",
+        "request": "one",
+        "region": { "x": 8, "y": 8, "w": 24, "h": 10, "space": "pixels" },
+    }));
+    let first = app
+        .world_mut()
+        .run_system_cached_with(screenshot_handler, params.clone())
+        .expect("the handler ran")
+        .expect("a region within the image queues");
+    assert!(first.is_none());
+
+    let shot = app
+        .world_mut()
+        .query_filtered::<Entity, With<Screenshot>>()
+        .single(app.world())
+        .expect("one capture queued");
+    app.world_mut().trigger(ScreenshotCaptured {
+        entity: shot,
+        image: Image::new_fill(
+            UVec2::new(200, 100).to_extents(),
+            TextureDimension::D2,
+            &[0, 255, 0, 255],
+            TextureFormat::Rgba8UnormSrgb,
+            default(),
+        ),
+    });
+
+    let answer = app
+        .world_mut()
+        .run_system_cached_with(screenshot_handler, params)
+        .expect("the handler ran")
+        .expect("the handler answered")
+        .expect("a landed capture answers");
+    assert_eq!(answer["width"], json!(24), "{answer}");
+    assert_eq!(answer["height"], json!(10), "{answer}");
+}
+
+/// A malformed region is the caller's mistake, reported as one.
+#[test]
+fn a_malformed_screenshot_region_is_an_invalid_params_error() {
+    let (mut app, _project) = editor_with_a_project();
+    for region in [
+        json!({ "x": 1, "y": 1, "w": 5 }),
+        json!({ "x": 1, "y": 1, "w": 5, "h": 0 }),
+        json!({ "x": 1, "y": 1, "w": 5, "h": 5, "space": "screen" }),
+    ] {
+        let refused = app
+            .world_mut()
+            .run_system_cached_with(
+                screenshot_handler,
+                Some(json!({ "kind": "window", "region": region })),
+            )
+            .expect("the handler ran");
+        let err = refused.expect_err("a malformed region is refused");
+        assert_eq!(err.code, bevy::remote::error_codes::INVALID_PARAMS);
+    }
+}
+
+/// A window capture takes a pixel region like a viewport one, and the answer
+/// reports the cropped size.
+#[test]
+fn a_window_screenshot_crops_to_a_pixel_region() {
+    use bevy::image::ToExtents as _;
+    use bevy::render::render_resource::{TextureDimension, TextureFormat};
+    use bevy::render::view::screenshot::{Screenshot, ScreenshotCaptured};
+
+    let (mut app, _project) = editor_with_a_project();
+    let params = Some(json!({
+        "kind": "window",
+        "path": "window-region.png",
+        "request": "one",
+        "region": { "x": 5, "y": 6, "w": 40, "h": 20, "space": "pixels" },
+    }));
+    let first = app
+        .world_mut()
+        .run_system_cached_with(screenshot_handler, params.clone())
+        .expect("the handler ran")
+        .expect("a pixel region on a window capture queues");
+    assert!(first.is_none());
+
+    let shot = app
+        .world_mut()
+        .query_filtered::<Entity, With<Screenshot>>()
+        .single(app.world())
+        .expect("one capture queued");
+    app.world_mut().trigger(ScreenshotCaptured {
+        entity: shot,
+        image: Image::new_fill(
+            UVec2::new(200, 100).to_extents(),
+            TextureDimension::D2,
+            &[0, 0, 255, 255],
+            TextureFormat::Rgba8UnormSrgb,
+            default(),
+        ),
+    });
+    let answer = app
+        .world_mut()
+        .run_system_cached_with(screenshot_handler, params)
+        .expect("the handler ran")
+        .expect("the handler answered")
+        .expect("a landed capture answers");
+    assert_eq!(answer["width"], json!(40), "{answer}");
+    assert_eq!(answer["height"], json!(20), "{answer}");
+}
+
+/// A region the capture cannot honour is the caller's mistake, not the
+/// editor's.
+#[test]
+fn a_region_the_capture_cannot_honour_is_an_invalid_params_error() {
+    let (mut app, _project) = editor_with_a_project();
+    for params in [
+        json!({ "kind": "window", "region": { "x": 0, "y": 0, "w": 5, "h": 5, "space": "world" } }),
+        json!({ "kind": "window", "region": { "x": -50, "y": 0, "w": 5, "h": 5, "space": "pixels" } }),
+        json!({ "kind": "window", "region": { "space": "pixels" } }),
+        json!({ "kind": "window", "region": { "x": 0, "y": 0, "w": 5, "h": 5, "space": "" } }),
+    ] {
+        let refused = app
+            .world_mut()
+            .run_system_cached_with(screenshot_handler, Some(params.clone()))
+            .expect("the handler ran");
+        let err = refused.expect_err("the region is refused");
+        assert_eq!(
+            err.code,
+            bevy::remote::error_codes::INVALID_PARAMS,
+            "{params}"
+        );
+    }
+}
+
+/// A synthetic key chord plays out over the frames after the call returns, so
+/// the wait for idle holds until it has been delivered: a caller that reads the
+/// scene after the wait sees what the chord did.
+#[test]
+fn waiting_for_idle_holds_until_a_synthetic_chord_has_landed() {
+    let mut app = editor_with_a_scene();
+    call(
+        &mut app,
+        call_operator_handler,
+        json!({ "id": "entity.add.cube" }),
+    );
+    app.update();
+    let cubes = |app: &mut App| {
+        let tree = call(app, scene_tree_handler, json!({}));
+        tree["tree"]
+            .as_array()
+            .expect("an array of roots")
+            .iter()
+            .filter(|node| node["name"] == json!("Cube"))
+            .count()
+    };
+    assert_eq!(cubes(&mut app), 1, "the cube arrived");
+
+    let outcome = call(
+        &mut app,
+        call_operator_handler,
+        json!({
+            "id": "input.key",
+            "params": { "key": "KeyZ", "mods": util::primary_mod() },
+        }),
+    );
+    assert_eq!(outcome["result"], json!("finished"), "{outcome}");
+    let held = app
+        .world_mut()
+        .run_system_cached_with(wait_handler, Some(json!({ "until": "idle" })))
+        .expect("the handler ran")
+        .expect("the handler did not refuse");
+    assert_eq!(held, None, "idle answered before the chord was delivered");
+
+    let idle = poll(&mut app, wait_handler, json!({ "until": "idle" }));
+    assert_eq!(idle["idle"], json!(true));
+    assert_eq!(cubes(&mut app), 0, "the undo chord took the cube away");
+}
+
+/// A later call names what an earlier call in the same batch made, so a parent
+/// and the nodes under it build in one round trip.
+#[test]
+fn a_batch_call_names_an_earlier_calls_entity_by_reference() {
+    let mut app = editor_with_a_scene();
+    let outcome = call(
+        &mut app,
+        batch_handler,
+        json!({
+            "calls": [
+                { "id": "entity.add.group", "params": { "name": "Props" } },
+                { "id": "entity.add.cube", "params": { "parent": "$0.entities.0" } },
+            ],
+        }),
+    );
+    app.update();
+
+    let calls = outcome["calls"].as_array().expect("an array");
+    assert_eq!(calls.len(), 2, "{outcome}");
+    let group = first_spawned(&calls[0]);
+    let cube = first_spawned(&calls[1]);
+    assert_eq!(
+        app.world().get::<ChildOf>(cube).map(ChildOf::parent),
+        Some(group),
+        "the cube did not land under the group the reference named: {outcome}"
+    );
+}
+
+/// A reference that is malformed, or names a call that has not run before it,
+/// is refused before anything runs.
+#[test]
+fn a_bad_batch_reference_is_refused_before_any_call_runs() {
+    let mut app = editor_with_a_scene();
+    let before = app.world().resource::<CommandHistory>().undo_stack.len();
+    let roots = root_names(&mut app);
+
+    for reference in [
+        "$1.entities.0",
+        "$7.entities.0",
+        "$0",
+        "$0.entities..0",
+        "$0.colour",
+        "$0x.entities",
+    ] {
+        let error = app
+            .world_mut()
+            .run_system_cached_with(
+                batch_handler,
+                Some(json!({
+                    "calls": [
+                        { "id": "entity.add.cube" },
+                        { "id": "entity.add.cube", "params": { "parent": reference } },
+                    ],
+                })),
+            )
+            .expect("the handler ran")
+            .expect_err("a bad reference is refused");
+        assert_eq!(
+            error.code,
+            bevy::remote::error_codes::INVALID_PARAMS,
+            "{reference}: {}",
+            error.message
+        );
+        assert!(
+            error.message.contains("call 1") && error.message.contains(reference),
+            "{reference}: the refusal names neither the call nor the reference: {}",
+            error.message
+        );
+        app.update();
+    }
+
+    assert_eq!(
+        app.world().resource::<CommandHistory>().undo_stack.len(),
+        before,
+        "a refused batch pushed an undo entry"
+    );
+    assert_eq!(root_names(&mut app), roots, "a refused batch added a node");
+}
+
+/// A reference to a value the earlier call did not produce stops the batch at
+/// the call that holds it.
+#[test]
+fn a_reference_to_a_missing_value_stops_the_batch_there() {
+    let mut app = editor_with_a_scene();
+    let error = app
+        .world_mut()
+        .run_system_cached_with(
+            batch_handler,
+            Some(json!({
+                "calls": [
+                    { "id": "entity.add.cube" },
+                    { "id": "entity.add.cube", "params": { "parent": "$0.entities.4" } },
+                    { "id": "entity.add.cube" },
+                ],
+            })),
+        )
+        .expect("the handler ran")
+        .expect_err("a missing value stops the batch");
+    assert!(
+        error.message.contains("call 1") && error.message.contains("$0.entities.4"),
+        "{}",
+        error.message
+    );
+    let data = error.data.expect("the error carries what ran");
+    assert_eq!(data["failed_at"], json!(1), "{data}");
+    assert_eq!(data["calls"].as_array().map(Vec::len), Some(1), "{data}");
+}
+
+/// An outcome is compact unless the caller asks: the spawned ids and how the
+/// call ended, without the operator id echoed back or empty lists.
+#[test]
+fn a_call_answers_compactly_unless_asked_to_be_verbose() {
+    let mut app = editor_with_a_scene();
+    let compact = call(
+        &mut app,
+        call_operator_handler,
+        json!({ "id": "entity.add.cube" }),
+    );
+    app.update();
+    assert_eq!(compact["result"], json!("finished"), "{compact}");
+    assert_eq!(
+        compact["entities"].as_array().map(Vec::len),
+        Some(1),
+        "{compact}"
+    );
+    for dropped in ["id", "warnings", "reports"] {
+        assert!(compact.get(dropped).is_none(), "{dropped}: {compact}");
+    }
+
+    let verbose = call(
+        &mut app,
+        call_operator_handler,
+        json!({ "id": "entity.add.cube", "verbose": true }),
+    );
+    app.update();
+    assert_eq!(verbose["id"], json!("entity.add.cube"), "{verbose}");
+    assert_eq!(verbose["warnings"], json!([]), "{verbose}");
+
+    let batch = call(
+        &mut app,
+        batch_handler,
+        json!({ "calls": [{ "id": "entity.add.cube" }] }),
+    );
+    app.update();
+    assert!(batch["calls"][0].get("id").is_none(), "{batch}");
+    let batch = call(
+        &mut app,
+        batch_handler,
+        json!({ "calls": [{ "id": "entity.add.cube" }], "verbose": true }),
+    );
+    app.update();
+    assert_eq!(batch["calls"][0]["id"], json!("entity.add.cube"), "{batch}");
+}
+
+/// One operator can be asked for by id, so a caller need not read the whole
+/// catalogue to learn one schema.
+#[test]
+fn the_operator_list_answers_for_one_id() {
+    let mut app = editor_with_a_scene();
+    let listed = call(
+        &mut app,
+        operators_handler,
+        json!({ "id": "entity.add.cube" }),
+    );
+    let operators = listed["operators"].as_array().expect("an array");
+    assert_eq!(operators.len(), 1, "{listed}");
+    assert_eq!(operators[0]["id"], json!("entity.add.cube"));
+    assert!(operators[0]["params"].is_array(), "{listed}");
+
+    let none = call(&mut app, operators_handler, json!({ "id": "entity.add" }));
+    assert_eq!(
+        none["operators"],
+        json!([]),
+        "an id is not a prefix: {none}"
+    );
+}
+
+/// A `max_px` capture also writes a thumbnail that fits inside that many
+/// pixels, in the format asked for, and keeps the full capture where it was.
+#[test]
+fn a_screenshot_writes_a_thumbnail_within_max_px() {
+    use bevy::image::ToExtents as _;
+    use bevy::render::render_resource::{TextureDimension, TextureFormat};
+    use bevy::render::view::screenshot::{Screenshot, ScreenshotCaptured};
+
+    let (mut app, _project) = editor_with_a_project();
+    let params = Some(json!({
+        "kind": "window",
+        "path": "thumbed.png",
+        "request": "one",
+        "max_px": 64,
+        "format": "jpeg",
+    }));
+    let first = app
+        .world_mut()
+        .run_system_cached_with(screenshot_handler, params.clone())
+        .expect("the handler ran")
+        .expect("a window capture queues");
+    assert!(first.is_none());
+
+    let shot = app
+        .world_mut()
+        .query_filtered::<Entity, With<Screenshot>>()
+        .single(app.world())
+        .expect("one capture queued");
+    app.world_mut().trigger(ScreenshotCaptured {
+        entity: shot,
+        image: Image::new_fill(
+            UVec2::new(200, 100).to_extents(),
+            TextureDimension::D2,
+            &[255, 0, 0, 255],
+            TextureFormat::Rgba8UnormSrgb,
+            default(),
+        ),
+    });
+    let answer = app
+        .world_mut()
+        .run_system_cached_with(screenshot_handler, params)
+        .expect("the handler ran")
+        .expect("the handler answered")
+        .expect("a landed capture answers");
+    assert_eq!(answer["width"], json!(200), "{answer}");
+    assert_eq!(answer["height"], json!(100), "{answer}");
+    let thumb = &answer["thumb"];
+    assert_eq!(thumb["width"], json!(64), "{answer}");
+    assert_eq!(thumb["height"], json!(32), "{answer}");
+    let path = thumb["path"].as_str().expect("a thumbnail path");
+    assert!(path.ends_with(".jpg"), "{answer}");
+    let bytes = std::fs::read(path).expect("the thumbnail is on disk");
+    assert_eq!(&bytes[..2], &[0xFF, 0xD8], "not a JPEG: {answer}");
+    let full = answer["path"].as_str().expect("the capture path");
+    assert!(
+        std::fs::metadata(full).is_ok(),
+        "the full capture went away"
+    );
+}
+
+/// A thumbnail format the editor cannot write is the caller's mistake.
+#[test]
+fn an_unknown_thumbnail_format_is_an_invalid_params_error() {
+    let (mut app, _project) = editor_with_a_project();
+    let err = app
+        .world_mut()
+        .run_system_cached_with(
+            screenshot_handler,
+            Some(json!({ "kind": "window", "max_px": 64, "format": "gif" })),
+        )
+        .expect("the handler ran")
+        .expect_err("gif is refused");
+    assert_eq!(err.code, bevy::remote::error_codes::INVALID_PARAMS);
+}
+
+/// A call that holds a reference still has its other parameters typed before
+/// anything runs, so a mistake there refuses the whole batch.
+#[test]
+fn a_referencing_calls_other_parameters_are_checked_before_any_call_runs() {
+    let mut app = editor_with_a_scene();
+    let roots = root_names(&mut app);
+    let error = app
+        .world_mut()
+        .run_system_cached_with(
+            batch_handler,
+            Some(json!({
+                "calls": [
+                    { "id": "entity.add.group", "params": { "name": "Props" } },
+                    {
+                        "id": "entity.add.cube",
+                        "params": { "parent": "$0.entities.0", "size": "tall" },
+                    },
+                ],
+            })),
+        )
+        .expect("the handler ran")
+        .expect_err("a mistyped parameter is refused");
+    assert!(error.message.contains("call 1"), "{}", error.message);
+    app.update();
+    assert_eq!(root_names(&mut app), roots, "a refused batch added a node");
+}
+
+/// Text that starts with `$` is spelled `$$`, and reaches the operator with
+/// one `$`.
+#[test]
+fn a_doubled_dollar_reaches_the_operator_as_text() {
+    let mut app = editor_with_a_scene();
+    let outcome = call(
+        &mut app,
+        batch_handler,
+        json!({
+            "calls": [{ "id": "entity.add.group", "params": { "name": "$$100 Prop" } }],
+        }),
+    );
+    app.update();
+    let group = first_spawned(&outcome["calls"][0]);
+    assert_eq!(
+        app.world().get::<Name>(group).map(Name::as_str),
+        Some("$100 Prop"),
+        "{outcome}"
+    );
+}
+
+/// The batch failure names the operator of the call that failed.
+#[test]
+fn a_batch_failure_names_the_failing_operator() {
+    let mut app = editor_with_a_scene();
+    let error = app
+        .world_mut()
+        .run_system_cached_with(
+            batch_handler,
+            Some(json!({
+                "calls": [
+                    { "id": "entity.add.cube" },
+                    { "id": "entity.add.cube", "params": { "parent": "$0.entities.4" } },
+                ],
+            })),
+        )
+        .expect("the handler ran")
+        .expect_err("a missing value stops the batch");
+    assert!(
+        error.message.contains("call 1 (entity.add.cube)"),
+        "{}",
+        error.message
+    );
+}
+
+/// A capture with no path is matched by the path made when it was queued,
+/// even when it lands in a later second than the one that path is stamped
+/// with.
+#[test]
+fn an_unnamed_screenshot_is_answered_when_it_lands_a_second_later() {
+    use bevy::image::ToExtents as _;
+    use bevy::render::render_resource::{TextureDimension, TextureFormat};
+    use bevy::render::view::screenshot::{Screenshot, ScreenshotCaptured};
+
+    let (mut app, _project) = editor_with_a_project();
+    let params = Some(json!({ "kind": "window", "request": "unnamed" }));
+    let first = app
+        .world_mut()
+        .run_system_cached_with(screenshot_handler, params.clone())
+        .expect("the handler ran")
+        .expect("a window capture queues");
+    assert!(first.is_none());
+
+    std::thread::sleep(std::time::Duration::from_millis(1100));
+    let shot = app
+        .world_mut()
+        .query_filtered::<Entity, With<Screenshot>>()
+        .single(app.world())
+        .expect("one capture queued");
+    app.world_mut().trigger(ScreenshotCaptured {
+        entity: shot,
+        image: Image::new_fill(
+            UVec2::new(40, 20).to_extents(),
+            TextureDimension::D2,
+            &[0, 0, 0, 255],
+            TextureFormat::Rgba8UnormSrgb,
+            default(),
+        ),
+    });
+    let answer = app
+        .world_mut()
+        .run_system_cached_with(screenshot_handler, params)
+        .expect("the handler ran")
+        .expect("the handler answered")
+        .expect("the capture is matched by the path it was queued with");
+    assert_eq!(answer["width"], json!(40), "{answer}");
+}
+
+/// A capture that already fits as a PNG is its own thumbnail; nothing extra
+/// is written.
+#[test]
+fn a_capture_that_fits_is_its_own_thumbnail() {
+    use bevy::image::ToExtents as _;
+    use bevy::render::render_resource::{TextureDimension, TextureFormat};
+    use bevy::render::view::screenshot::{Screenshot, ScreenshotCaptured};
+
+    let (mut app, _project) = editor_with_a_project();
+    let params = Some(json!({
+        "kind": "window",
+        "path": "small.png",
+        "request": "one",
+        "max_px": 512,
+    }));
+    app.world_mut()
+        .run_system_cached_with(screenshot_handler, params.clone())
+        .expect("the handler ran")
+        .expect("a window capture queues");
+    let shot = app
+        .world_mut()
+        .query_filtered::<Entity, With<Screenshot>>()
+        .single(app.world())
+        .expect("one capture queued");
+    app.world_mut().trigger(ScreenshotCaptured {
+        entity: shot,
+        image: Image::new_fill(
+            UVec2::new(100, 50).to_extents(),
+            TextureDimension::D2,
+            &[0, 255, 0, 255],
+            TextureFormat::Rgba8UnormSrgb,
+            default(),
+        ),
+    });
+    let answer = app
+        .world_mut()
+        .run_system_cached_with(screenshot_handler, params)
+        .expect("the handler ran")
+        .expect("the handler answered")
+        .expect("a landed capture answers");
+    assert_eq!(answer["thumb"]["path"], answer["path"], "{answer}");
+    assert_eq!(answer["thumb"]["width"], json!(100), "{answer}");
+}
+
+/// An aimed screenshot queues its capture a frame after aiming, once the
+/// camera's world transform holds the aim, so the frame captured is the aimed
+/// view. Once it lands the camera goes back where the user left it,
+/// projection and all, and the poll after the answer neither captures nor
+/// aims again.
+#[test]
+fn a_screenshot_that_aims_the_camera_captures_the_aim_and_puts_it_back() {
+    let (mut app, camera, _project) = editor_with_a_camera();
+    let params = json!({
+        "kind": "window",
+        "path": "aimed.png",
+        "request": "aimed",
+        "look_at": { "eye": [20.0, 15.0, 20.0], "target": [0.0, 0.0, 0.0] },
+    });
+    assert!(screenshot_poll(&mut app, &params).is_none());
+    assert!(!capture_queued(&mut app), "queued in the frame it aimed");
+    app.update();
+
+    assert!(screenshot_poll(&mut app, &params).is_none());
+    assert!(capture_queued(&mut app), "the capture was not queued");
+    let at_capture = app
+        .world()
+        .get::<GlobalTransform>(camera)
+        .expect("a world transform")
+        .translation();
+    assert_eq!(at_capture, Vec3::new(20.0, 15.0, 20.0));
+
+    land_capture(&mut app, "aimed.png");
+    let answer = screenshot_poll(&mut app, &params).expect("a landed capture answers");
+    assert_eq!(answer["width"], json!(1280), "{answer}");
+    let back = *app.world().get::<Transform>(camera).expect("a transform");
+    assert_eq!(back, Transform::from_xyz(0.0, 0.0, 10.0));
+    assert!(matches!(
+        app.world().get::<Projection>(camera),
+        Some(Projection::Orthographic(_))
+    ));
+
+    let trailing = app
+        .world_mut()
+        .run_system_cached_with(screenshot_handler, Some(params.clone()))
+        .expect("the handler ran");
+    let err = trailing.expect_err("an answered id is not a new screenshot");
+    assert!(err.message.contains("already answered"), "{}", err.message);
+    assert_eq!(
+        *app.world().get::<Transform>(camera).expect("a transform"),
+        back,
+        "the poll after the answer aimed the camera again"
+    );
+}
+
+/// `keep_camera` leaves the camera where the shot aimed it.
+#[test]
+fn a_screenshot_with_keep_camera_leaves_the_camera_aimed() {
+    let (mut app, camera, _project) = editor_with_a_camera();
+    let params = json!({
+        "kind": "window",
+        "path": "kept.png",
+        "request": "kept",
+        "keep_camera": true,
+        "look_at": { "eye": [0.0, 30.0, 5.0] },
+    });
+    assert!(screenshot_poll(&mut app, &params).is_none());
+    app.update();
+    assert!(screenshot_poll(&mut app, &params).is_none());
+    land_capture(&mut app, "kept.png");
+    screenshot_poll(&mut app, &params).expect("a landed capture answers");
+    let kept = app.world().get::<Transform>(camera).expect("a transform");
+    assert_eq!(kept.translation, Vec3::new(0.0, 30.0, 5.0));
+    assert!(matches!(
+        app.world().get::<Projection>(camera),
+        Some(Projection::Perspective(_))
+    ));
+}
+
+/// A `look_at` is refused before anything moves when it has no eye, no
+/// request id, or another aimed screenshot is still capturing.
+#[test]
+fn an_aimed_screenshot_is_refused_where_it_could_not_put_the_camera_back() {
+    let (mut app, camera, _project) = editor_with_a_camera();
+    let home = Transform::from_xyz(0.0, 0.0, 10.0);
+    for (params, says) in [
+        (
+            json!({ "kind": "window", "request": "a", "look_at": { "target": [1.0, 0.0, 0.0] } }),
+            "eye",
+        ),
+        (
+            json!({ "kind": "window", "look_at": { "eye": [5.0, 5.0, 5.0] } }),
+            "request",
+        ),
+    ] {
+        let err = app
+            .world_mut()
+            .run_system_cached_with(screenshot_handler, Some(params.clone()))
+            .expect("the handler ran")
+            .expect_err("refused");
+        assert_eq!(err.code, bevy::remote::error_codes::INVALID_PARAMS);
+        assert!(err.message.contains(says), "{params}: {}", err.message);
+        assert_eq!(*app.world().get::<Transform>(camera).unwrap(), home);
+    }
+
+    let first =
+        json!({ "kind": "window", "request": "one", "look_at": { "eye": [5.0, 5.0, 5.0] } });
+    assert!(screenshot_poll(&mut app, &first).is_none());
+    let err = app
+        .world_mut()
+        .run_system_cached_with(
+            screenshot_handler,
+            Some(json!({ "kind": "window", "request": "two", "look_at": { "eye": [9.0, 9.0, 9.0] } })),
+        )
+        .expect("the handler ran")
+        .expect_err("one aimed screenshot at a time");
+    assert!(err.message.contains("still capturing"), "{}", err.message);
+    assert_eq!(
+        app.world().get::<Transform>(camera).unwrap().translation,
+        Vec3::new(5.0, 5.0, 5.0)
+    );
+}
+
+/// A capture abandoned by its caller puts the camera back when it expires,
+/// unless the user has moved the camera since the aim.
+#[test]
+fn an_abandoned_aim_puts_the_camera_back_only_if_nobody_moved_it() {
+    let (mut app, camera, _project) = editor_with_a_camera();
+    let aimed =
+        json!({ "kind": "window", "request": "left", "look_at": { "eye": [5.0, 5.0, 5.0] } });
+    assert!(screenshot_poll(&mut app, &aimed).is_none());
+    expire_pending(&mut app);
+    assert_eq!(
+        *app.world().get::<Transform>(camera).unwrap(),
+        Transform::from_xyz(0.0, 0.0, 10.0)
+    );
+
+    let aimed =
+        json!({ "kind": "window", "request": "moved", "look_at": { "eye": [5.0, 5.0, 5.0] } });
+    assert!(screenshot_poll(&mut app, &aimed).is_none());
+    let users = Transform::from_xyz(-3.0, 2.0, 7.0);
+    app.world_mut().entity_mut(camera).insert(users);
+    expire_pending(&mut app);
+    assert_eq!(*app.world().get::<Transform>(camera).unwrap(), users);
+}

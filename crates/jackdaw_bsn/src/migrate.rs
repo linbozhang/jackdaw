@@ -21,6 +21,9 @@
 //! not, and scenes an early 0.20 build stamped while it still wrote commas,
 //! without a second pass over current text. Saving writes `--` and the
 //! current stamp.
+//!
+//! Types that move between jackdaw's own crates are listed in
+//! [`MOVED_TYPES`] and renamed in every document, stamped or not.
 
 use std::borrow::Cow;
 
@@ -51,13 +54,132 @@ pub fn read_stamp(text: &str) -> Option<SceneStamp> {
     })
 }
 
-/// Migrate `text` from the Bevy minor its stamp records, or leave it as it is
-/// when it carries no stamp.
+/// Migrate `text` from the Bevy minor its stamp records, then rename the
+/// types that moved between jackdaw crates.
 pub fn migrate_stamped(text: &str) -> Cow<'_, str> {
-    match read_stamp(text) {
+    migrate_with(text, MOVED_TYPES)
+}
+
+fn migrate_with<'a>(text: &'a str, moved: &[(&str, &str)]) -> Cow<'a, str> {
+    let out = match read_stamp(text) {
         Some(stamp) => migrate_type_paths(text, &stamp.bevy),
         None => Cow::Borrowed(text),
+    };
+    match owned(rename_paths(&out, moved)) {
+        Some(renamed) => Cow::Owned(renamed),
+        None => out,
     }
+}
+
+/// Reflected types that moved from one jackdaw crate to another, oldest
+/// first, as `(old, new)` type paths. An entry ending in `::` moves every type
+/// under that module. A moved type's old path is never registered again, so
+/// these apply to every document whatever its stamp, including documents
+/// saved by a development build of the same version.
+///
+/// Moving a saved type into another crate means adding its entry here and a
+/// test in the new crate that loads a scene saved before the move.
+pub const MOVED_TYPES: &[(&str, &str)] = &[
+    (
+        "jackdaw::entity_ops::EmptyEntity",
+        "jackdaw_editor_core::entity_ops::EmptyEntity",
+    ),
+    (
+        "jackdaw::entity_ops::SceneCamera",
+        "jackdaw_editor_core::entity_ops::SceneCamera",
+    ),
+    (
+        "jackdaw::entity_ops::SceneLight",
+        "jackdaw_editor_core::entity_ops::SceneLight",
+    ),
+    (
+        "jackdaw::entity_ops::SceneFogVolume",
+        "jackdaw_editor_core::entity_ops::SceneFogVolume",
+    ),
+    (
+        "jackdaw::entity_ops::SceneReflectionProbe",
+        "jackdaw_editor_core::entity_ops::SceneReflectionProbe",
+    ),
+    (
+        "jackdaw::entity_ops::SceneAnimationPlayer",
+        "jackdaw_editor_core::entity_ops::SceneAnimationPlayer",
+    ),
+    (
+        "jackdaw::entity_ops::SceneAudioSource",
+        "jackdaw_editor_core::entity_ops::SceneAudioSource",
+    ),
+    (
+        "jackdaw::reference_image::ReferenceImage",
+        "jackdaw_editor_core::reference_image::ReferenceImage",
+    ),
+    (
+        "jackdaw::recipes::Recipe",
+        "jackdaw_editor_core::recipes::Recipe",
+    ),
+    (
+        "jackdaw::recipes::RecipeInput",
+        "jackdaw_editor_core::recipes::RecipeInput",
+    ),
+    (
+        "jackdaw::recipes::RecipeCall",
+        "jackdaw_editor_core::recipes::RecipeCall",
+    ),
+];
+
+/// Rename every [`MOVED_TYPES`] path in `text`.
+pub fn moved_types(text: &str) -> Cow<'_, str> {
+    rename_paths(text, MOVED_TYPES)
+}
+
+/// The current path of a single type path that moved crate, or `None` when
+/// it did not.
+pub fn moved_type_path(path: &str) -> Option<String> {
+    owned(moved_types(path))
+}
+
+fn owned(text: Cow<'_, str>) -> Option<String> {
+    match text {
+        Cow::Owned(text) => Some(text),
+        Cow::Borrowed(_) => None,
+    }
+}
+
+/// Apply `renames` in order. A path only matches whole: not as the tail of a
+/// longer path (`my_jackdaw::`) and, unless it ends in `::`, not as the head
+/// of a longer name (`Tile` in `TileSet`).
+fn rename_paths<'a>(text: &'a str, renames: &[(&str, &str)]) -> Cow<'a, str> {
+    let mut out = Cow::Borrowed(text);
+    for (old, new) in renames {
+        if let Some(renamed) = owned(rename_path(&out, old, new)) {
+            out = Cow::Owned(renamed);
+        }
+    }
+    out
+}
+
+fn rename_path<'a>(text: &'a str, old: &str, new: &str) -> Cow<'a, str> {
+    let is_ident = |c: char| c.is_alphanumeric() || c == '_';
+    let prefix = old.ends_with("::");
+    let mut out = String::new();
+    let mut rest = 0;
+    for (at, _) in text.match_indices(old) {
+        let end = at + old.len();
+        let starts_path = text[..at]
+            .chars()
+            .next_back()
+            .is_none_or(|c| !is_ident(c) && c != ':');
+        let ends_name = prefix || text[end..].chars().next().is_none_or(|c| !is_ident(c));
+        if starts_path && ends_name {
+            out.push_str(&text[rest..at]);
+            out.push_str(new);
+            rest = end;
+        }
+    }
+    if rest == 0 {
+        return Cow::Borrowed(text);
+    }
+    out.push_str(&text[rest..]);
+    Cow::Owned(out)
 }
 
 /// Rewrite the `,` that Bevy 0.19 put between sibling entities to the `--`
@@ -101,6 +223,9 @@ pub fn entity_separators(text: &str) -> Cow<'_, str> {
     Cow::Owned(out)
 }
 
+/// The Bevy minor that last changed the form of a saved value, beyond renames.
+const LATEST_FORM_CHANGE: &str = "0.20";
+
 /// Apply type-path migrations to raw scene text for a scene written under
 /// `from_bevy`. Each Bevy minor's renames apply only to scenes older than
 /// that minor, so opening an old scene rewrites every rename between its
@@ -118,12 +243,21 @@ pub fn migrate_type_paths<'a>(text: &'a str, from_bevy: &str) -> Cow<'a, str> {
             }
         }
     }
-    if bevy_minor_lt(from_bevy, "0.20") {
+    if bevy_minor_lt(from_bevy, LATEST_FORM_CHANGE) {
         out = circular_corner_radii(out);
         // Bevy 0.20 keeps an editable text's scroll in `EditableText` itself.
         out = without_component(out, "bevy_ui::widget::text_input_layout::TextScroll(");
     }
     out
+}
+
+/// Whether [`migrate_type_paths`] has anything to do for a scene written under
+/// `from_bevy`.
+pub(crate) fn migrates_from(from_bevy: &str) -> bool {
+    bevy_minor_lt(from_bevy, LATEST_FORM_CHANGE)
+        || RENAMES
+            .iter()
+            .any(|(introduced_in, _)| bevy_minor_lt(from_bevy, introduced_in))
 }
 
 /// Drop every line that holds only the tuple component `opening` starts, as a
@@ -408,6 +542,54 @@ mod tests {
     fn a_020_scene_keeps_its_text() {
         let text = "#A Holder { n: [1, 2] }\n--\n#B";
         assert!(matches!(entity_separators(text), Cow::Borrowed(_)));
+    }
+
+    const MOVES: &[(&str, &str)] = &[
+        ("jackdaw::tilemap::Tile", "jackdaw_editor_tile::Tile"),
+        ("jackdaw::terrain::", "jackdaw_editor_terrain::"),
+    ];
+
+    #[test]
+    fn a_moved_type_takes_its_new_path_in_stamped_and_unstamped_scenes() {
+        let body = "#Root\njackdaw::tilemap::Tile { size: 2 }\njackdaw::terrain::Brush::Raise\n";
+        let want =
+            "#Root\njackdaw_editor_tile::Tile { size: 2 }\njackdaw_editor_terrain::Brush::Raise\n";
+        assert_eq!(migrate_with(body, MOVES), want);
+        let stamped = format!("// jackdaw 0.21.0-dev | bevy main\n{body}");
+        assert_eq!(
+            migrate_with(&stamped, MOVES),
+            format!("// jackdaw 0.21.0-dev | bevy main\n{want}")
+        );
+    }
+
+    #[test]
+    fn a_moved_type_is_renamed_in_strings_and_generics() {
+        let text =
+            r#"Track { component: "jackdaw::tilemap::Tile", list: Vec<jackdaw::tilemap::Tile> }"#;
+        assert_eq!(
+            rename_paths(text, MOVES),
+            r#"Track { component: "jackdaw_editor_tile::Tile", list: Vec<jackdaw_editor_tile::Tile> }"#
+        );
+    }
+
+    #[test]
+    fn only_whole_paths_are_renamed() {
+        let text =
+            "jackdaw::tilemap::TileSet my_jackdaw::tilemap::Tile my_game::jackdaw::terrain::X";
+        assert!(matches!(rename_paths(text, MOVES), Cow::Borrowed(_)));
+    }
+
+    #[test]
+    fn a_document_on_the_new_paths_is_left_alone() {
+        let current: String = MOVED_TYPES
+            .iter()
+            .map(|(_, new)| format!("{new}X\n"))
+            .collect();
+        assert!(matches!(moved_types(&current), Cow::Borrowed(_)));
+        assert!(matches!(
+            rename_paths("jackdaw_editor_tile::Tile", MOVES),
+            Cow::Borrowed(_)
+        ));
     }
 
     #[test]

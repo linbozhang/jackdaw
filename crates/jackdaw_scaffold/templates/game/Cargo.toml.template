@@ -9,12 +9,24 @@ authors = ["{{authors}}"]
 # without the editor installed.
 
 # Keeps this project out of any cargo workspace it was created inside.
-# Delete to join the surrounding workspace instead.
+# Delete to join the surrounding workspace instead; its profiles must then move
+# to that workspace's root.
 [workspace]
+
+# Bevy and the runtime compile optimised so scenes load and run at a usable
+# speed; your own crate stays unoptimised so it rebuilds quickly. This costs a
+# few extra minutes on the very first build.
+[profile.dev.package."*"]
+opt-level = 2
+debug = "line-tables-only"
 
 [dependencies]
 {{bevy_pin_note}}
 bevy = {{bevy_dependency}}
+# Loads authored scenes (assets/*.bsn). `terrain` and `tilemap` draw authored
+# terrain and tilemaps, and `pie` connects the editor's Play button; drop
+# `pie` for a shipping build.
+
 serde = { version = "1", features = ["derive"] }
 # Loads authored scenes (assets/*.bsn). `terrain` draws authored terrain and
 # `pie` connects the editor's Play button; drop `pie` for a shipping build.

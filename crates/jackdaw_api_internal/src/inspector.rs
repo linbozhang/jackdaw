@@ -25,7 +25,7 @@ pub struct InspectorCategory {
 ///
 /// Spawned by [`crate::ExtensionContext::register_inspector_chip`] as a child
 /// of the extension, so the toggle goes away when the extension unloads.
-#[derive(Component, Clone, Debug)]
+#[derive(Component, Clone, Debug, PartialEq, Eq)]
 pub struct InspectorChip {
     /// The category whose header shows the toggle.
     pub category: Cow<'static, str>,
@@ -199,6 +199,7 @@ pub fn seed_default_categories(r: &mut InspectorRegistry) {
         // Reflection Probe entities (Add menu) are the same kind of
         // "what this entity is" component.
         ("jackdaw_scene_types::types::ReflectionProbe", "object"),
+        ("bevy_sprite::sprite::Sprite", "object"),
         // Brush geometry lives in the Mesh tab. The real reflect path is
         // jackdaw_scene_types::types::Brush; the short alias is seeded as well so
         // any lookup using the unqualified form also resolves correctly.

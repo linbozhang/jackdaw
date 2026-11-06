@@ -21,11 +21,20 @@ use syn::{
 /// - `modal`: `bool`, default `false`
 /// - `allows_undo`: `bool`, default `true`. When `false`, this operator never
 ///   creates an undo history entry.
+/// - `writes_disk`: `bool`, default `false`. The operator writes files outside
+///   the scene document, which no undo or rollback takes back.
+/// - `leaves_history`: `bool`, default `false`. The operator moves the editor
+///   off the history a batch records into: it opens, closes or switches a
+///   scene or project, or steps undo or redo.
 /// - `is_available`: path to a Bevy system returning `bool` that
 ///   decides whether the operator can run in the current editor
 ///   state. Runs before the execute system on every `World::operator`
 ///   call and via `World::is_operator_available`. If it returns
 ///   `false`, the operator returns an error without executing.
+/// - `unavailable_reason`: path to a `fn(&World) -> Option<String>` read
+///   only while the availability check fails. Its text replaces the
+///   description in the tooltip of a disabled button or menu row; `None`
+///   keeps the description.
 /// - `cancel`: path to a Bevy system invoked when the operator is
 ///   cancelled.
 /// - `name`: override the generated struct name. Default is
@@ -73,7 +82,10 @@ fn expand_operator(attr: TokenStream, item: TokenStream, api_crate: TokenStream2
     let mut description: Option<Expr> = None;
     let mut modal: bool = false;
     let mut allows_undo: bool = true;
+    let mut writes_disk: bool = false;
+    let mut leaves_history: bool = false;
     let mut remote_hidden: Option<String> = None;
+    let mut unavailable_reason: Option<Path> = None;
     let mut name_override: Option<String> = None;
     let mut is_available: Option<Path> = None;
     let mut cancel: Option<Path> = None;
@@ -111,6 +123,16 @@ fn expand_operator(attr: TokenStream, item: TokenStream, api_crate: TokenStream2
                             allows_undo = b.value;
                         }
                     }
+                    "writes_disk" => {
+                        if let Some(b) = as_lit_bool(&nv.value) {
+                            writes_disk = b.value;
+                        }
+                    }
+                    "leaves_history" => {
+                        if let Some(b) = as_lit_bool(&nv.value) {
+                            leaves_history = b.value;
+                        }
+                    }
                     "remote_hidden" => {
                         let Some(reason) = as_lit_str(&nv.value) else {
                             return syn::Error::new(
@@ -122,6 +144,17 @@ fn expand_operator(attr: TokenStream, item: TokenStream, api_crate: TokenStream2
                             .into();
                         };
                         remote_hidden = Some(reason.value());
+                    }
+                    "unavailable_reason" => {
+                        let Some(path) = as_path(&nv.value) else {
+                            return syn::Error::new(
+                                nv.value.span(),
+                                "`unavailable_reason` must be the path of a `fn(&World) -> Option<String>`",
+                            )
+                            .to_compile_error()
+                            .into();
+                        };
+                        unavailable_reason = Some(path);
                     }
                     "name" => {
                         if let Some(s) = as_lit_str(&nv.value) {
@@ -173,6 +206,12 @@ fn expand_operator(attr: TokenStream, item: TokenStream, api_crate: TokenStream2
             }
             Meta::Path(path) if path.is_ident("allows_undo") => {
                 allows_undo = true;
+            }
+            Meta::Path(path) if path.is_ident("writes_disk") => {
+                writes_disk = true;
+            }
+            Meta::Path(path) if path.is_ident("leaves_history") => {
+                leaves_history = true;
             }
             other => {
                 return syn::Error::new(
@@ -237,6 +276,13 @@ fn expand_operator(attr: TokenStream, item: TokenStream, api_crate: TokenStream2
         None => quote! { None },
     };
 
+    let unavailable_reason_impl = unavailable_reason.map(|path| {
+        quote! {
+            const UNAVAILABLE_REASON: ::core::option::Option<#api_crate::prelude::UnavailableReason> =
+                ::core::option::Option::Some(#path as #api_crate::prelude::UnavailableReason);
+        }
+    });
+
     let expanded = quote! {
         #[derive(::core::default::Default)]
         #vis struct #struct_name;
@@ -247,7 +293,10 @@ fn expand_operator(attr: TokenStream, item: TokenStream, api_crate: TokenStream2
             const DESCRIPTION: &'static str = #description;
             const MODAL: bool = #modal;
             const ALLOWS_UNDO: bool = #allows_undo;
+            const WRITES_DISK: bool = #writes_disk;
+            const LEAVES_HISTORY: bool = #leaves_history;
             const REMOTE_HIDDEN: Option<&'static str> = #remote_hidden_tokens;
+            #unavailable_reason_impl
 
             #parameters_const
 

@@ -230,6 +230,24 @@ mod tests {
     }
 
     #[test]
+    fn rewrite_dep_lines_points_a_module_crate_at_its_integration() {
+        let template = "jackdaw_avian_integration = { git = \"https://example.com/jackdaw\", rev = \"abc\" }\n";
+        let checkout = Path::new(env!("CARGO_MANIFEST_DIR")).join("../..");
+        let out = rewrite_dep_lines(template, &checkout).unwrap();
+        let path = out
+            .strip_prefix("jackdaw_avian_integration = { path = '")
+            .and_then(|rest| rest.strip_suffix("' }\n"))
+            .unwrap_or_else(|| panic!("got:\n{out}"));
+        assert_eq!(
+            Path::new(path),
+            checkout
+                .join("integrations")
+                .join("physics")
+                .join("jackdaw_avian_integration")
+        );
+    }
+
+    #[test]
     fn rewrite_dep_lines_is_idempotent() {
         let template = "jackdaw_runtime = { path = '/dev/checkout/crates/jackdaw_runtime' }\n";
         assert!(rewrite_dep_lines(template, Path::new("/dev/checkout")).is_none());

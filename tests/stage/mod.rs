@@ -1,0 +1,66 @@
+//! Authoring on the canvas and the stage: placement, snapping, guides,
+//! grouping, layout presets and the modelling tools.
+
+mod add_component;
+mod animation_library;
+mod asset_references;
+mod brush_ops;
+mod canvas_grid;
+mod canvas_guides;
+mod canvas_snap;
+mod definition_assets;
+mod extension_app_plugin;
+mod extension_reload;
+mod foliage;
+mod gltf_authoring;
+mod image_sampling;
+mod layered_surface;
+mod live_levels;
+mod lod_bar;
+mod lod_upgrade;
+mod material_overrides;
+mod material_row;
+mod model_lod;
+mod module_extensions;
+mod new_asset;
+mod pixel_canvas;
+mod play_controls;
+mod play_open_scene;
+mod project_definitions;
+mod project_startup;
+mod project_window;
+mod recipe_picker;
+mod reflection_probe;
+mod remote_placement;
+mod save_before_play;
+mod scene_environment;
+mod scene_wind;
+mod selection_undo;
+mod sprite_drop;
+mod sprite_gizmo;
+mod sprite_picking;
+mod sprite_snap;
+<<<<<<< HEAD:tests/stage/main.rs
+=======
+mod sprite_sort;
+mod status_line;
+>>>>>>> github/main:tests/stage/mod.rs
+mod synthetic_input;
+mod tilemap_guard;
+mod tilemap_ops;
+mod ui_align;
+mod ui_asset_drop;
+mod ui_drag_readout;
+mod ui_grouping;
+mod ui_layout_presets;
+mod ui_lock;
+mod ui_marquee;
+mod ui_stage_manipulation;
+mod ui_text_edit;
+mod view_ops;
+mod water;
+mod world_guides;
+<<<<<<< HEAD:tests/stage/main.rs
+=======
+mod world_units;
+>>>>>>> github/main:tests/stage/mod.rs

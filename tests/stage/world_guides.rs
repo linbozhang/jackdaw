@@ -17,11 +17,11 @@ use jackdaw::{
 use jackdaw_api::prelude::*;
 use jackdaw_scene_types::{CanvasGuides, Scene2dRoot};
 
-use crate::sprite_gizmo::{
+use crate::stage::sprite_gizmo::{
     Scene, add_panel, drag, history_len, near, pointer, run, select, settle, transform, undo,
     world_app, world_app_sized,
 };
-use crate::sprite_snap::{ghost, handle, highlights, snap_only};
+use crate::stage::sprite_snap::{ghost, handle, highlights, snap_only};
 use crate::util::{self, OperatorResultExt as _};
 
 /// World y inside the top ruler's gutter under the test view: the area's top
@@ -362,7 +362,7 @@ fn window_pointer(app: &mut App, panel: Entity, at: Vec2, action: &str) {
 /// A UI scene open beside the 2D world scene, with a second panel. The UI
 /// root is routed to one panel, which shows it; the other shows the world.
 /// Returns the UI root and the panels showing the UI and the world.
-fn mixed_document(app: &mut App, scene: &Scene) -> (Entity, Entity, Entity) {
+pub(crate) fn mixed_document(app: &mut App, scene: &Scene) -> (Entity, Entity, Entity) {
     let second = add_panel(app, 1200.0);
     let ui_root = jackdaw::ui_palette::seed_ui_scene_root(app.world_mut());
     settle(app);

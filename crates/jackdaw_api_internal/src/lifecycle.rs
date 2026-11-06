@@ -94,7 +94,10 @@ pub struct OperatorEntity {
     pub(crate) cancel: Option<SystemId<()>>,
     pub(crate) modal: bool,
     pub(crate) allows_undo: bool,
+    pub(crate) writes_disk: bool,
+    pub(crate) leaves_history: bool,
     pub(crate) remote_hidden: Option<&'static str>,
+    pub(crate) unavailable_reason: Option<crate::operator::UnavailableReason>,
 }
 
 impl OperatorEntity {
@@ -137,10 +140,32 @@ impl OperatorEntity {
         self.allows_undo
     }
 
+    /// Mirrors [`crate::Operator::WRITES_DISK`].
+    pub fn writes_disk(&self) -> bool {
+        self.writes_disk
+    }
+
+    /// Mirrors [`crate::Operator::LEAVES_HISTORY`].
+    pub fn leaves_history(&self) -> bool {
+        self.leaves_history
+    }
+
     /// Why a scripted caller is not offered this operator, or `None`
     /// when it is. Mirrors [`crate::Operator::REMOTE_HIDDEN`].
     pub fn remote_hidden(&self) -> Option<&'static str> {
         self.remote_hidden
+    }
+
+    /// Mirrors [`crate::Operator::UNAVAILABLE_REASON`]. Meaningful only while
+    /// the operator's availability check fails.
+    pub fn unavailable_reason(&self, world: &World) -> Option<String> {
+        self.unavailable_reason.and_then(|reason| reason(world))
+    }
+
+    /// The reason function itself, for callers that read it once and call it
+    /// per button.
+    pub fn unavailable_reason_fn(&self) -> Option<crate::operator::UnavailableReason> {
+        self.unavailable_reason
     }
 }
 

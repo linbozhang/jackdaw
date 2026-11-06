@@ -27,7 +27,7 @@
 use std::path::{Path, PathBuf};
 use std::process::{Command, ExitCode};
 
-use jackdaw_env::rust_env_command;
+use jackdaw_env::sdk_toolchain_command;
 use jackdaw_project_build::plan::SdkManifest;
 use jackdaw_project_build::sdk_paths::SdkPaths;
 
@@ -295,7 +295,7 @@ fn run_tool(cmd: &mut Command) -> Result<(), String> {
 /// The pinned toolchain's target lib dir, where the dynamic `libstd`
 /// lives. Uses the SDK's channel so it matches what the dylibs link.
 fn target_libdir(sdk: &SdkPaths) -> Option<PathBuf> {
-    let mut cmd = rust_env_command("rustc");
+    let mut cmd = sdk_toolchain_command("rustc");
     if let Some(channel) = &sdk.toolchain {
         cmd.arg(format!("+{channel}"));
     }
@@ -315,7 +315,7 @@ fn target_libdir(sdk: &SdkPaths) -> Option<PathBuf> {
 /// obsolete ABI beside the one the SDK imports. Rust metadata names the exact
 /// dependency crate identifier, which is also the dylib's hashed basename.
 fn copy_rust_dependency_dylib(sdk: &SdkPaths, to: &Path, crate_name: &str) -> Result<(), String> {
-    let mut cmd = rust_env_command("rustc");
+    let mut cmd = sdk_toolchain_command("rustc");
     if let Some(channel) = &sdk.toolchain {
         cmd.arg(format!("+{channel}"));
     }
@@ -420,9 +420,17 @@ fn package(workspace: &Path, out: &Path, artifacts: Option<&Path>) -> Result<Str
     create_dir(&deps_out)?;
     create_dir(&host_deps_out)?;
 
-    // The SDK dylib itself.
+    // The SDK dylib itself, and its crate hash beside it, which extensions
+    // built against it embed and the installed editor matches them by.
     copy_into(&sdk.dylib, &triple_out)?;
     copy_import_lib(&sdk.dylib, &triple_out)?;
+    let staged_dylib = triple_out.join(
+        sdk.dylib
+            .file_name()
+            .ok_or_else(|| format!("{} has no file name", sdk.dylib.display()))?,
+    );
+    jackdaw_project_build::linkage::record_sdk_svh(&staged_dylib, sdk.toolchain.as_deref())
+        .map_err(|e| format!("recording the SDK's crate hash: {e}"))?;
 
     // Runtime-closure rlibs, plus a manifest that names them by basename
     // only so the plan resolves them against this install's `deps/`.

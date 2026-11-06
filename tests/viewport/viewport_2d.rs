@@ -30,11 +30,11 @@ use jackdaw::{
     ui_stage::UiSelectionOverlay,
     viewport::{ActiveViewport, VIEWPORT_WINDOW_ID, ViewportPanelHost},
     viewport_2d::{
-        DEFAULT_UI_GRID, MAX_UI_GRID, MAX_ZOOM, MIN_UI_GRID, MIN_ZOOM, Scene2dViewport, Ui2dView,
-        Viewport2dCamera, Viewport2dGridReadout, Viewport2dGridStep, Viewport2dMode,
-        Viewport2dModeSegment, Viewport2dPanelHost, Viewport2dTitle, Viewport2dZoomReadout,
-        build_viewport_2d_panel, cursor_area_offset, cursor_stage_offset, fit_view, pan_by,
-        request_2d_fit, stepped_ui_grid, target_pixels_per_stage_pixel, world_at, zoom_toward,
+        DEFAULT_UI_GRID, MAX_UI_GRID, MAX_ZOOM, MIN_UI_GRID, MIN_ZOOM, PixelGrid, Scene2dViewport,
+        Ui2dView, Viewport2dCamera, Viewport2dMode, Viewport2dModeSegment, Viewport2dPanelHost,
+        build_viewport_2d_panel, cursor_area_offset, cursor_stage_offset, fit_view, fit_world_rect,
+        pan_by, pixel_perfect_view, request_2d_fit, stepped_ui_grid, target_pixels_per_stage_pixel,
+        world_at, zoom_range, zoom_toward,
     },
     viewport_host::{ViewportHost, ViewportMode},
 };
@@ -147,7 +147,7 @@ fn zoom_steps_scale_the_projection_and_keep_the_cursor_point_fixed() {
     let view = Ui2dView::default();
     let cursor = Vec2::new(100.0, 50.0);
 
-    let after = zoom_toward(view, cursor, 1.0);
+    let after = zoom_toward(view, cursor, 1.0, 1.0);
     assert!(
         after.zoom > view.zoom,
         "a positive tick zooms in: {} -> {}",
@@ -162,7 +162,7 @@ fn zoom_steps_scale_the_projection_and_keep_the_cursor_point_fixed() {
         "the world point under the cursor must not move: {before:?} -> {anchored:?}",
     );
 
-    let out = zoom_toward(view, cursor, -1.0);
+    let out = zoom_toward(view, cursor, -1.0, 1.0);
     assert!(out.zoom < view.zoom, "a negative tick zooms out");
     assert!((world_at(view, cursor) - world_at(out, cursor)).length() < 1e-3);
 }
@@ -322,7 +322,7 @@ fn the_zoom_anchor_holds_over_repeated_ticks_at_a_non_unit_scale_factor() {
 
     let mut zoomed = view;
     for _ in 0..8 {
-        zoomed = zoom_toward(zoomed, offset, 1.0);
+        zoomed = zoom_toward(zoomed, offset, 1.0, 1.0);
         let now = world_at(zoomed, offset);
         assert!(
             (now - anchored).length() < 1e-3,
@@ -335,9 +335,9 @@ fn the_zoom_anchor_holds_over_repeated_ticks_at_a_non_unit_scale_factor() {
 #[test]
 fn zoom_is_clamped_to_the_usable_range() {
     let cursor = Vec2::new(-30.0, 12.0);
-    let far_in = zoom_toward(Ui2dView::default(), cursor, 1000.0);
+    let far_in = zoom_toward(Ui2dView::default(), cursor, 1000.0, 1.0);
     assert_eq!(far_in.zoom, MAX_ZOOM);
-    let far_out = zoom_toward(Ui2dView::default(), cursor, -1000.0);
+    let far_out = zoom_toward(Ui2dView::default(), cursor, -1000.0, 1.0);
     assert_eq!(far_out.zoom, MIN_ZOOM);
 }
 
@@ -1597,7 +1597,7 @@ fn the_grid_stepper_walks_the_power_of_two_ladder() {
 
 /// The grid is per panel, and rides with the tab's view state from there.
 #[test]
-fn the_header_stepper_edits_its_own_panels_grid() {
+fn the_grid_rows_edit_their_own_panels_grid() {
     let mut app = util::editor_test_app();
     let first = fit_panel(&mut app);
     let second = fit_panel(&mut app);
@@ -1611,7 +1611,7 @@ fn the_header_stepper_edits_its_own_panels_grid() {
     assert_eq!(
         view_of(&app, second).grid,
         DEFAULT_UI_GRID,
-        "one panel's stepper never moves another panel's canvas",
+        "one panel's grid row never moves another panel's canvas",
     );
     app.update();
     assert_eq!(grid_text(&mut app, first), "16 px", "the readout follows");
@@ -1709,42 +1709,41 @@ fn the_per_panel_operators_reach_every_open_panel() {
     }
 }
 
-fn grid_text(app: &mut App, panel: Entity) -> String {
-    let mut query = app.world_mut().query::<(&Viewport2dGridReadout, &Text)>();
-    let found: Vec<String> = query
-        .iter(app.world())
-        .filter(|(readout, _)| readout.host == panel)
-        .map(|(_, text)| text.0.clone())
-        .collect();
-    assert_eq!(found.len(), 1, "one grid readout per panel");
-    found[0].clone()
+/// The heading of the panel's canvas view menu that starts with `title`.
+fn view_heading(app: &App, panel: Entity, title: &str) -> String {
+    jackdaw::viewport_2d::view_menu_rows(app.world(), panel)
+        .into_iter()
+        .find_map(|(action, _)| {
+            action
+                .strip_prefix(&format!("##{title}: "))
+                .map(str::to_string)
+        })
+        .unwrap_or_else(|| panic!("the canvas view menu has a {title} heading"))
 }
 
-/// Click one end of a panel's grid stepper, the way a user does.
+fn grid_text(app: &mut App, panel: Entity) -> String {
+    view_heading(app, panel, "Grid")
+}
+
+/// Run the panel's canvas view row that steps the grid finer or coarser, the
+/// way a user picks it.
 fn click_grid_step(app: &mut App, panel: Entity, steps: i32) {
-    let mut query = app.world_mut().query::<(Entity, &Viewport2dGridStep)>();
-    let found: Vec<Entity> = query
-        .iter(app.world())
-        .filter(|(_, step)| step.host == panel && step.steps == steps)
-        .map(|(entity, _)| entity)
-        .collect();
-    assert_eq!(found.len(), 1, "one stepper end per direction per panel");
-    let camera = camera_of(app, panel);
-    let target = window_target(app);
-    app.world_mut().trigger(PointerClick {
-        entity: found[0],
-        pointer: Pointer::new(
-            PointerId::Mouse,
-            Location {
-                target,
-                position: Vec2::ZERO,
-            },
-        ),
-        button: PointerButton::Primary,
-        hit: HitData::new(camera, 0.0, None, None),
-        duration: core::time::Duration::ZERO,
-        count: 1,
-    });
+    let label = if steps < 0 { "Finer" } else { "Coarser" };
+    let action = jackdaw::viewport_2d::view_menu_rows(app.world(), panel)
+        .into_iter()
+        .find(|(_, row)| row == label)
+        .map(|(action, _)| action)
+        .expect("the canvas view menu steps the grid");
+    let call = jackdaw_feathers::button::ButtonOperatorCall::try_from(action.as_str())
+        .expect("the row calls an operator");
+    let mut dispatch = app.world_mut().operator(call.id.to_string());
+    for (key, value) in &call.params {
+        dispatch = dispatch.param(key.to_string(), value.clone());
+    }
+    dispatch
+        .call()
+        .expect("the row dispatches")
+        .assert_finished();
 }
 
 fn window_target(app: &mut App) -> NormalizedRenderTarget {
@@ -1872,6 +1871,193 @@ fn fitting_sizes_the_canvas_to_the_smaller_axis_of_the_area() {
     assert!(fit_view(Ui2dView::default(), UVec2::new(1600, 900), Vec2::ZERO).zoom >= MIN_ZOOM);
 }
 
+/// A world fit centres on the rect and zooms to the tighter axis.
+#[test]
+fn fitting_a_world_rect_centres_it_and_zooms_to_the_tighter_axis() {
+    let rect = Rect::from_corners(Vec2::new(-100.0, 0.0), Vec2::new(300.0, 100.0));
+    let view = fit_world_rect(Ui2dView::default(), rect, Vec2::new(800.0, 800.0), 1.0);
+    assert_eq!(view.pan, Vec2::new(100.0, 50.0));
+    assert!(view.zoom < 2.0, "width binds and leaves a margin");
+    assert!(
+        view.zoom > 1.8,
+        "and the margin is small, got {}",
+        view.zoom
+    );
+
+    let tall = fit_world_rect(Ui2dView::default(), rect, Vec2::new(8000.0, 200.0), 1.0);
+    assert!(tall.zoom < 2.0, "height binds when the area is short");
+
+    let kept = fit_world_rect(
+        Ui2dView {
+            grid: 16.0,
+            ..default()
+        },
+        rect,
+        Vec2::splat(800.0),
+        1.0,
+    );
+    assert_eq!(kept.grid, 16.0, "the grid rides through a fit");
+}
+
+#[test]
+fn fitting_a_world_rect_stays_inside_the_zoom_range() {
+    let point = Rect::from_corners(Vec2::splat(5.0), Vec2::splat(5.0));
+    assert_eq!(
+        fit_world_rect(Ui2dView::default(), point, Vec2::splat(800.0), 1.0).zoom,
+        MAX_ZOOM,
+        "a lone point frames at the closest zoom, not an infinite one",
+    );
+    let vast = Rect::from_corners(Vec2::splat(-1.0e7), Vec2::splat(1.0e7));
+    assert_eq!(
+        fit_world_rect(Ui2dView::default(), vast, Vec2::splat(800.0), 1.0).zoom,
+        MIN_ZOOM,
+    );
+    assert!(fit_world_rect(Ui2dView::default(), vast, Vec2::ZERO, 1.0).zoom >= MIN_ZOOM);
+}
+
+fn grid(texels_per_unit: f32, scale_factor: f32) -> PixelGrid {
+    PixelGrid {
+        texels_per_unit,
+        scale_factor,
+        ..default()
+    }
+}
+
+fn zoomed(zoom: f32) -> Ui2dView {
+    Ui2dView { zoom, ..default() }
+}
+
+#[test]
+fn pixel_perfect_snaps_zoom_to_whole_texel_multiples_and_pan_to_texels() {
+    let view = Ui2dView {
+        pan: Vec2::new(10.4, -3.6),
+        zoom: 2.6,
+        grid: 8.0,
+    };
+    let snapped = pixel_perfect_view(view, PixelGrid::default());
+    assert_eq!(snapped.zoom, 3.0);
+    assert_eq!(snapped.pan, Vec2::new(10.0, -4.0));
+    assert_eq!(snapped.grid, 8.0);
+
+    let sixteen = pixel_perfect_view(
+        Ui2dView {
+            pan: Vec2::new(1.01, 0.03),
+            zoom: 26.0,
+            ..default()
+        },
+        grid(16.0, 1.0),
+    );
+    assert_eq!(sixteen.zoom, 32.0, "two pixels a texel at 16 to the unit");
+    assert_eq!(sixteen.pan, Vec2::new(1.0, 0.0), "pan lands on 1/16 steps");
+
+    assert_eq!(
+        pixel_perfect_view(zoomed(0.2), PixelGrid::default()).zoom,
+        1.0,
+        "zoomed out snaps up to one pixel per texel",
+    );
+}
+
+#[test]
+fn pixel_perfect_zoom_stays_a_multiple_inside_the_range() {
+    let four = pixel_perfect_view(zoomed(60.0), grid(16.0, 1.0));
+    assert_eq!(four.zoom, 64.0, "four pixels a texel at 16 to the unit");
+
+    let over = pixel_perfect_view(zoomed(600.0), grid(16.0, 1.0));
+    assert_eq!(
+        over.zoom,
+        MAX_ZOOM * 16.0,
+        "the largest multiple in range, not the first past it"
+    );
+
+    let tiny = pixel_perfect_view(zoomed(0.2), grid(0.01, 1.0));
+    assert!((tiny.zoom - 0.2).abs() < 1e-3, "got {}", tiny.zoom);
+    assert!(
+        ((tiny.zoom / 0.01).round() * 0.01 - tiny.zoom).abs() < 1e-3,
+        "still whole texels"
+    );
+
+    let huge = pixel_perfect_view(zoomed(1.0), grid(100.0, 1.0));
+    assert_eq!(huge.zoom, 100.0, "one pixel a texel at the least");
+}
+
+#[test]
+fn the_zoom_range_counts_screen_pixels_per_texel() {
+    assert_eq!(zoom_range(1.0), (MIN_ZOOM, MAX_ZOOM));
+    assert_eq!(zoom_range(16.0), (MIN_ZOOM * 16.0, MAX_ZOOM * 16.0));
+    assert_eq!(
+        zoom_range(0.0),
+        (MIN_ZOOM, MAX_ZOOM),
+        "a bad ppu reads as 1"
+    );
+    let far_in = zoom_toward(Ui2dView::default(), Vec2::ZERO, 1000.0, 16.0);
+    assert_eq!(far_in.zoom, MAX_ZOOM * 16.0);
+}
+
+#[test]
+fn pixel_perfect_zoom_is_whole_physical_pixels_per_texel() {
+    for scale in [1.0_f32, 1.25, 2.0] {
+        for zoom in [0.7_f32, 1.3, 2.6, 5.1] {
+            let snapped = pixel_perfect_view(zoomed(zoom), grid(1.0, scale));
+            let pixels = snapped.zoom * scale;
+            assert!(
+                (pixels - pixels.round()).abs() < 1e-4 && pixels >= 1.0,
+                "zoom {zoom} at {scale}x gave {pixels} physical pixels a texel",
+            );
+        }
+    }
+    assert_eq!(pixel_perfect_view(zoomed(1.3), grid(1.0, 2.0)).zoom, 1.5);
+    assert_eq!(pixel_perfect_view(zoomed(2.6), grid(1.0, 1.25)).zoom, 2.4);
+    assert_eq!(pixel_perfect_view(zoomed(32.0), grid(1.0, 2.0)).zoom, 32.0);
+}
+
+#[test]
+fn pixel_perfect_pan_puts_texel_edges_on_pixel_edges_for_odd_sizes() {
+    let view = Ui2dView {
+        pan: Vec2::new(10.4, -3.6),
+        zoom: 3.0,
+        ..default()
+    };
+    let odd = pixel_perfect_view(
+        view,
+        PixelGrid {
+            area_odd: BVec2::new(true, false),
+            ..default()
+        },
+    );
+    assert!(
+        (odd.pan.x - (10.0 + 1.0 / 6.0)).abs() < 1e-5,
+        "got {}",
+        odd.pan.x
+    );
+    assert_eq!(odd.pan.y, -4.0, "an even axis stays on the texel");
+    assert_eq!(
+        pixel_perfect_view(
+            odd,
+            PixelGrid {
+                area_odd: BVec2::new(true, false),
+                ..default()
+            }
+        ),
+        odd
+    );
+
+    let canvas = pixel_perfect_view(
+        Ui2dView {
+            pan: Vec2::new(0.4, 0.0),
+            ..default()
+        },
+        PixelGrid {
+            canvas_odd: BVec2::new(true, false),
+            ..default()
+        },
+    );
+    assert_eq!(
+        canvas.pan,
+        Vec2::new(0.5, 0.0),
+        "an odd canvas has edges at halves"
+    );
+}
+
 /// Shown at 100% instead, a 1920x1080 reference in a small dock leaf gives
 /// the user the top-left corner of their scene and nothing else.
 #[test]
@@ -1982,21 +2168,15 @@ fn the_frame_op_returns_a_panned_and_zoomed_panel_to_the_fit() {
     );
 }
 
-/// The dock tab already says "Viewport", so the header names the scene being
-/// edited and reads the zoom back instead.
+/// The header reads the zoom back, whatever scene is open.
 #[test]
-fn the_header_names_the_scene_and_reads_the_zoom_back() {
+fn the_header_reads_the_zoom_back() {
     use jackdaw::scenes::{SceneTab, Scenes};
 
     let mut app = util::editor_test_app();
     let parent = fit_panel(&mut app);
     app.update();
 
-    assert_eq!(
-        title_text(&mut app),
-        "Viewport",
-        "with no UI scene open the header falls back to the panel's name",
-    );
     assert_eq!(zoom_text(&mut app, parent), "100%");
 
     {
@@ -2028,7 +2208,6 @@ fn the_header_names_the_scene_and_reads_the_zoom_back() {
         app.update();
     }
 
-    assert_eq!(title_text(&mut app), "main-menu");
     assert_eq!(
         zoom_text(&mut app, parent),
         "250%",
@@ -2110,6 +2289,278 @@ fn the_screenshot_ops_aim_at_the_window_and_the_panel_and_write_pngs() {
         );
     }
     let _ = std::fs::remove_dir_all(&dir);
+}
+
+/// A frame the size of the panel's render target, the way a readback returns it.
+fn target_sized_frame(app: &App, panel: Entity) -> Image {
+    let size = app
+        .world()
+        .get::<Viewport2dPanelHost>(panel)
+        .expect("host on panel parent")
+        .target_size;
+    Image::new_fill(
+        size.to_extents(),
+        TextureDimension::D2,
+        &[255, 0, 0, 255],
+        TextureFormat::Rgba8UnormSrgb,
+        default(),
+    )
+}
+
+type Params = Vec<(&'static str, jackdaw_scene_types::PropertyValue)>;
+
+fn region_params(x: f64, y: f64, w: f64, h: f64, space: Option<&'static str>) -> Params {
+    let mut params: Params = vec![
+        ("region_x", x.into()),
+        ("region_y", y.into()),
+        ("region_w", w.into()),
+        ("region_h", h.into()),
+    ];
+    if let Some(space) = space {
+        params.push(("region_space", space.into()));
+    }
+    params
+}
+
+/// Call `viewport2d.screenshot`, expecting it to finish or to cancel, and
+/// return where it was asked to write.
+fn queue_region(app: &mut App, name: &str, params: Params, finishes: bool) -> std::path::PathBuf {
+    let path =
+        std::env::temp_dir().join(format!("jackdaw-region-{}-{name}.png", std::process::id()));
+    let _ = std::fs::remove_file(&path);
+    let mut call = app
+        .world_mut()
+        .operator("viewport2d.screenshot")
+        .param("path", path.to_string_lossy().to_string());
+    for (key, value) in params {
+        call = call.param(key, value);
+    }
+    let result = call.call().expect("viewport2d.screenshot dispatches");
+    if finishes {
+        result.assert_finished();
+    } else {
+        result.assert_cancelled();
+    }
+    app.update();
+    path
+}
+
+/// Land a synthetic frame on every queued capture, as the readback would.
+fn land_frames(app: &mut App, panel: Entity) {
+    let queued: Vec<Entity> = app
+        .world_mut()
+        .query_filtered::<Entity, With<Screenshot>>()
+        .iter(app.world())
+        .collect();
+    for entity in queued {
+        let image = target_sized_frame(app, panel);
+        app.world_mut()
+            .trigger(ScreenshotCaptured { entity, image });
+        app.world_mut().despawn(entity);
+    }
+}
+
+fn written_size(path: &std::path::Path) -> Option<(u32, u32)> {
+    path.exists()
+        .then(|| ::image::image_dimensions(path).expect("a readable PNG"))
+}
+
+fn logged_size(app: &App, path: &std::path::Path) -> Option<(u32, u32)> {
+    app.world()
+        .resource::<jackdaw::screenshot::CaptureLog>()
+        .size_of(path)
+}
+
+fn queued_captures(app: &mut App) -> usize {
+    app.world_mut()
+        .query_filtered::<Entity, With<Screenshot>>()
+        .iter(app.world())
+        .count()
+}
+
+fn zoomed_view(app: &mut App, panel: Entity, zoom: f32) {
+    hold_view(app, panel);
+    app.world_mut()
+        .get_mut::<Viewport2dPanelHost>(panel)
+        .expect("host on panel parent")
+        .set_view(Ui2dView {
+            pan: Vec2::new(5.0, 0.0),
+            zoom,
+            ..default()
+        });
+}
+
+#[test]
+fn a_pixel_region_crops_the_written_png_and_the_capture_log() {
+    let mut app = util::editor_test_app();
+    let parent = fit_panel(&mut app);
+    app.update();
+
+    let path = queue_region(
+        &mut app,
+        "pixels",
+        region_params(10.0, 20.0, 30.0, 12.0, Some("pixels")),
+        true,
+    );
+    land_frames(&mut app, parent);
+    assert_eq!(
+        written_size(&path),
+        Some((30, 12)),
+        "the PNG is the region, not the frame",
+    );
+    assert_eq!(
+        logged_size(&app, &path),
+        Some((30, 12)),
+        "the log records the cropped size",
+    );
+    let _ = std::fs::remove_file(&path);
+}
+
+#[test]
+fn a_world_region_is_resolved_through_the_panel_view() {
+    let mut app = util::editor_test_app();
+    let parent = fit_panel(&mut app);
+    app.update();
+    zoomed_view(&mut app, parent, 2.0);
+
+    let path = queue_region(
+        &mut app,
+        "world",
+        region_params(-3.0, -4.0, 16.0, 8.0, None),
+        true,
+    );
+    land_frames(&mut app, parent);
+    assert_eq!(
+        written_size(&path),
+        Some((32, 16)),
+        "16 by 8 world units at zoom 2, with world as the default space",
+    );
+    assert_eq!(logged_size(&app, &path), Some((32, 16)));
+    let _ = std::fs::remove_file(&path);
+}
+
+#[test]
+fn a_world_region_follows_the_view_the_panel_has_when_the_frame_lands() {
+    let mut app = util::editor_test_app();
+    let parent = fit_panel(&mut app);
+    app.update();
+    zoomed_view(&mut app, parent, 2.0);
+
+    let path = queue_region(
+        &mut app,
+        "moved",
+        region_params(-3.0, -4.0, 16.0, 8.0, None),
+        true,
+    );
+    zoomed_view(&mut app, parent, 1.0);
+    land_frames(&mut app, parent);
+    assert_eq!(
+        written_size(&path),
+        Some((16, 8)),
+        "the crop follows the zoom the panel has by readback, not the one at queue time",
+    );
+    let _ = std::fs::remove_file(&path);
+}
+
+#[test]
+fn a_region_partly_outside_is_clamped_and_one_wholly_outside_is_refused() {
+    let mut app = util::editor_test_app();
+    let parent = fit_panel(&mut app);
+    app.update();
+
+    let partial = queue_region(
+        &mut app,
+        "partial",
+        region_params(-10.0, -10.0, 30.0, 25.0, Some("pixels")),
+        true,
+    );
+    land_frames(&mut app, parent);
+    assert_eq!(
+        written_size(&partial),
+        Some((20, 15)),
+        "the part inside the image is kept",
+    );
+    let _ = std::fs::remove_file(&partial);
+
+    let outside = queue_region(
+        &mut app,
+        "outside",
+        region_params(99999.0, 0.0, 10.0, 10.0, Some("pixels")),
+        false,
+    );
+    assert_eq!(
+        queued_captures(&mut app),
+        0,
+        "a refused region queues nothing"
+    );
+    assert!(!outside.exists());
+}
+
+#[test]
+fn a_ui_scene_capture_takes_pixel_regions_and_refuses_world_ones() {
+    let mut app = util::editor_test_app();
+    let parent = fit_panel(&mut app);
+    app.world_mut().spawn((
+        UiSceneRoot {
+            reference_size: UVec2::new(1280, 720),
+        },
+        Node {
+            width: percent(100),
+            height: percent(100),
+            ..default()
+        },
+    ));
+    for _ in 0..3 {
+        app.update();
+    }
+    assert!(
+        app.world()
+            .get::<Viewport2dPanelHost>(parent)
+            .expect("host on panel parent")
+            .shows_ui_scene,
+        "the panel reports the canvas it shows",
+    );
+
+    let default_space = queue_region(
+        &mut app,
+        "ui-default",
+        region_params(100.0, 50.0, 300.0, 120.0, None),
+        true,
+    );
+    land_frames(&mut app, parent);
+    assert_eq!(
+        written_size(&default_space),
+        Some((300, 120)),
+        "a UI scene's region is in authored pixels by default",
+    );
+    let _ = std::fs::remove_file(&default_space);
+
+    let world = queue_region(
+        &mut app,
+        "ui-world",
+        region_params(0.0, 0.0, 10.0, 10.0, Some("world")),
+        false,
+    );
+    assert_eq!(queued_captures(&mut app), 0);
+    assert!(!world.exists());
+}
+
+#[test]
+fn an_incomplete_or_malformed_region_cancels_the_operator() {
+    let mut app = util::editor_test_app();
+    fit_panel(&mut app);
+    app.update();
+
+    let bad: [Params; 4] = [
+        vec![("region_x", 1.0.into())],
+        vec![("region_space", "pixels".into())],
+        region_params(1.0, 1.0, 0.0, 5.0, None),
+        region_params(1.0, 1.0, 5.0, 5.0, Some("screen")),
+    ];
+    for (index, params) in bad.into_iter().enumerate() {
+        queue_region(&mut app, &format!("bad{index}"), params, false);
+        assert_eq!(queued_captures(&mut app), 0);
+    }
 }
 
 /// Session restore opens its scenes before it has a workspace to show them
@@ -2568,24 +3019,8 @@ fn stage_and_area(app: &App, panel: Entity) -> (Entity, Entity) {
         .expect("host on panel parent")
 }
 
-fn title_text(app: &mut App) -> String {
-    let mut query = app
-        .world_mut()
-        .query_filtered::<&Text, With<Viewport2dTitle>>();
-    let found: Vec<String> = query.iter(app.world()).map(|text| text.0.clone()).collect();
-    assert_eq!(found.len(), 1, "one title per panel");
-    found[0].clone()
-}
-
 fn zoom_text(app: &mut App, panel: Entity) -> String {
-    let mut query = app.world_mut().query::<(&Viewport2dZoomReadout, &Text)>();
-    let found: Vec<String> = query
-        .iter(app.world())
-        .filter(|(readout, _)| readout.host == panel)
-        .map(|(_, text)| text.0.clone())
-        .collect();
-    assert_eq!(found.len(), 1, "one zoom readout per panel");
-    found[0].clone()
+    view_heading(app, panel, "Zoom")
 }
 
 /// A view nobody moved is not a framing the tab chose. Capturing it as one

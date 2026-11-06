@@ -1,0 +1,732 @@
+pub(crate) mod add_header;
+pub(crate) mod anchor_presets;
+pub(crate) mod anim_diamond;
+mod animation_graph_card;
+pub mod asset_row;
+pub mod bindings_card;
+pub(crate) mod category_strip;
+pub mod component_display;
+pub mod component_picker;
+pub(crate) mod component_tooltip;
+mod custom_props_display;
+mod definition_card;
+pub mod file_card;
+mod live_edit_dots;
+pub(crate) mod material_card_routing;
+mod material_display;
+pub(crate) mod material_row;
+pub(crate) mod missing_list;
+mod modifier_display;
+pub mod node_card;
+pub(crate) mod ops;
+mod pixel_canvas_card;
+pub mod prefab_field_dots;
+pub(crate) mod prefab_menu;
+pub(crate) mod project_component_display;
+pub mod recipe_card;
+#[doc(hidden)]
+pub mod reflect_fields;
+pub(crate) mod resource_commands;
+pub(crate) mod resource_ops;
+pub mod resource_panel;
+pub(crate) mod schema_fields;
+pub mod sprite_card;
+pub mod type_metadata_pane;
+pub mod unavailable;
+pub mod val_field;
+
+use crate::EditorEntity;
+
+use bevy::prelude::*;
+use jackdaw_api::op::{Operator, OperatorCommandsExt as _};
+
+const MAX_REFLECT_DEPTH: usize = 4;
+
+/// Fills a component's inspector card body: the world, the inspected entity
+/// and the card body to fill.
+pub type ComponentCardFill = fn(&mut World, Entity, Entity);
+
+/// Component cards a feature supplies for its own components, keyed by the
+/// component's type. A registered card replaces the reflected fields.
+#[derive(Resource, Default)]
+pub struct ComponentCardRegistry {
+    cards: std::collections::HashMap<std::any::TypeId, ComponentCardFill>,
+    leading: std::collections::HashMap<std::any::TypeId, ComponentCardFill>,
+}
+
+impl ComponentCardRegistry {
+    pub fn register<C: Component>(&mut self, fill: ComponentCardFill) {
+        self.cards.insert(std::any::TypeId::of::<C>(), fill);
+    }
+
+    pub fn get(&self, type_id: std::any::TypeId) -> Option<ComponentCardFill> {
+        self.cards.get(&type_id).copied()
+    }
+
+    /// Put `fill` at the head of the component's card, above its reflected
+    /// fields, which still show.
+    pub fn register_leading<C: Component>(&mut self, fill: ComponentCardFill) {
+        self.leading.insert(std::any::TypeId::of::<C>(), fill);
+    }
+
+    pub fn leading(&self, type_id: std::any::TypeId) -> Option<ComponentCardFill> {
+        self.leading.get(&type_id).copied()
+    }
+}
+
+/// Systems that decorate inspector field rows (an `InspectorFieldRow` gaining
+/// a `FieldRowDecoration` child), run before the row gutters are reserved.
+#[derive(SystemSet, Debug, Clone, PartialEq, Eq, Hash)]
+pub struct InspectorFieldDecorationSystems;
+
+/// The pass that rebuilds the inspector's cards for the current selection.
+#[derive(SystemSet, Debug, Clone, PartialEq, Eq, Hash)]
+pub struct InspectorSyncSystems;
+
+/// Remembers each inspector card's collapsed state across rebuilds, keyed by
+/// the card's display name. A name not present defaults to collapsed.
+#[derive(Resource, Default)]
+pub struct InspectorCollapseState(pub(crate) std::collections::HashMap<String, bool>);
+
+impl InspectorCollapseState {
+    /// Collapsed state for `name`; unknown names default to collapsed (true).
+    pub(crate) fn collapsed(&self, name: &str) -> bool {
+        self.0.get(name).copied().unwrap_or(true)
+    }
+}
+
+// Editor display metadata as Bevy reflect custom attributes.
+// Newtypes live in `jackdaw_scene_types`, re-exported here via `jackdaw_runtime`.
+pub use jackdaw_runtime::{
+    EditorCategory, EditorDescription, EditorHidden, EditorPreview, SkipSerialization,
+};
+
+#[reflect_trait]
+pub trait Displayable {
+    fn display(&self, entity: &mut EntityCommands, source: Entity);
+}
+
+/// Marker for Name field `text_edit` inputs in the inspector.
+#[derive(Component)]
+struct NameFieldInput(Entity);
+
+impl Displayable for Name {
+    fn display(&self, entity: &mut EntityCommands, source: Entity) {
+        entity
+            .insert(jackdaw_feathers::text_edit::text_edit(
+                jackdaw_feathers::text_edit::TextEditProps::default()
+                    .with_placeholder("Name...")
+                    .with_default_value(self.to_string())
+                    .allow_empty(),
+            ))
+            .insert(NameFieldInput(source));
+    }
+}
+
+#[derive(Component)]
+#[require(EditorEntity)]
+pub struct Inspector;
+
+pub struct InspectorPlugin;
+
+impl Plugin for InspectorPlugin {
+    fn build(&self, app: &mut App) {
+        app.world_mut().get_resource_or_insert_with(|| {
+            let mut r = jackdaw_api_internal::inspector::InspectorRegistry::default();
+            jackdaw_api_internal::inspector::seed_default_categories(&mut r);
+            r
+        });
+
+        app.init_resource::<category_strip::ActiveInspectorCategory>();
+        app.init_resource::<InspectorCollapseState>();
+        app.init_resource::<bindings_card::BindingsCardEcho>();
+        app.init_resource::<PendingInspectorRebuild>();
+        app.init_resource::<ComponentCardRegistry>();
+        app.configure_sets(
+            Update,
+            InspectorFieldDecorationSystems
+                .after(component_display::sync_inspector_to_selection)
+                .run_if(in_state(crate::AppState::Editor)),
+        );
+        app.init_resource::<reflect_fields::OpenColorRows>();
+        app.init_resource::<unavailable::UnavailableTypes>();
+
+        let mut denylist = component_picker::PickerDenylist::default();
+        component_picker::populate_module_picker_denylist(&mut denylist);
+        app.insert_resource(denylist);
+        app.add_observer(add_header::on_component_chip_click);
+        resource_panel::plugin(app);
+
+        app.register_type_data::<Name, ReflectDisplayable>()
+            .add_plugins(component_tooltip::plugin)
+            .add_plugins(file_card::plugin)
+            .add_plugins(recipe_card::plugin)
+            .add_plugins(sprite_card::plugin)
+            .add_plugins(missing_list::plugin)
+            .add_plugins(prefab_menu::plugin)
+            .add_plugins(type_metadata_pane::plugin)
+            .add_observer(material_card_routing::on_refresh_inspector_card_body)
+            .add_observer(component_picker::on_add_component_button_click)
+            .add_observer(reflect_fields::on_checkbox_commit)
+            .add_observer(reflect_fields::on_text_edit_commit)
+            .add_observer(reflect_fields::on_numeric_value_change_f64)
+            .add_observer(reflect_fields::mark_length_fields)
+            .add_observer(reflect_fields::on_numeric_value_change_i64)
+            .add_observer(reflect_fields::on_color_plane_change)
+            .add_observer(reflect_fields::on_color_slider_change)
+            .add_observer(val_field::on_val_number_change)
+            .add_observer(val_field::on_val_unit_change)
+            .add_observer(node_card::on_node_enum_change)
+            .add_observer(node_card::on_optional_number_change)
+            .add_observer(node_card::on_optional_number_mode_change)
+            .add_observer(bindings_card::on_binding_combobox_change)
+            .add_observer(bindings_card::on_binding_button_click)
+            .add_observer(reflect_fields::on_reflect_list_button_click)
+            .add_observer(bindings_card::on_binding_checkbox_change)
+            .add_observer(bindings_card::on_binding_text_commit)
+            .add_observer(custom_props_display::on_custom_property_checkbox_commit)
+            .add_observer(custom_props_display::on_custom_property_text_commit)
+            .add_observer(on_name_field_commit)
+            .add_observer(anim_diamond::on_diamond_click)
+            .add_observer(anchor_presets::on_anchor_preset_change)
+            .init_resource::<live_edit_dots::LiveEditMenuTarget>()
+            .add_observer(live_edit_dots::on_live_edit_menu_action)
+            .add_observer(on_category_strip_mount_added)
+            .add_observer(add_header::on_add_header_mount_added)
+            .add_observer(add_header::on_material_new_click)
+            .add_observer(asset_row::on_asset_row_button)
+            .add_systems(
+                Update,
+                (
+                    apply_pending_inspector_rebuild,
+                    flag_inspector_dirty_on_modifier_stack_change,
+                    component_display::sync_inspector_to_selection.in_set(InspectorSyncSystems),
+                )
+                    .chain()
+                    .before(category_strip::resolve_active_on_rebuild),
+            )
+            .add_systems(
+                Update,
+                (
+                    unavailable::track_unavailable_types,
+                    unavailable::update_unavailable_notice,
+                )
+                    .chain(),
+            )
+            .add_systems(
+                Update,
+                (
+                    reflect_fields::refresh_inspector_fields,
+                    reflect_fields::refresh_enum_variants,
+                    reflect_fields::refresh_enum_menus,
+                    val_field::refresh_val_fields,
+                    // The structured cards' refresh passes, which pull each
+                    // card back in line with the component behind it.
+                    (
+                        node_card::paint_node_segments,
+                        node_card::refresh_node_enum_combos,
+                        node_card::refresh_node_optional_numbers,
+                        anchor_presets::paint_anchor_presets,
+                        bindings_card::refresh_bindings_card_on_change,
+                        definition_card::keep_unsaved_marker_in_step,
+                        definition_card::keep_broken_marker_in_step,
+                        asset_row::refresh_asset_rows,
+                        asset_row::poll_asset_browse_pick,
+                        material_row::follow_the_material_the_entity_wears,
+                    ),
+                    category_strip::resolve_active_on_rebuild,
+                    component_display::filter_inspector_components
+                        .after(category_strip::resolve_active_on_rebuild),
+                    prefab_field_dots::decorate_prefab_field_rows,
+                    prefab_field_dots::refresh_prefab_field_dots,
+                    live_edit_dots::refresh_live_edit_field_dots,
+                    // After the three passes that spawn and remove the marks.
+                    // Their spawns are deferred, so the gutter follows a new
+                    // mark on the next pass rather than the same one.
+                    jackdaw_feathers::field_row::reserve_decoration_gutters
+                        .after(InspectorFieldDecorationSystems)
+                        .after(prefab_field_dots::decorate_prefab_field_rows)
+                        .after(live_edit_dots::refresh_live_edit_field_dots),
+                    refresh_name_field,
+                    category_strip::paint_category_tabs
+                        .after(category_strip::resolve_active_on_rebuild),
+                    add_header::rebuild_add_header.after(category_strip::resolve_active_on_rebuild),
+                    persist_inspector_collapse,
+                )
+                    .after(component_display::sync_inspector_to_selection)
+                    .run_if(in_state(crate::AppState::Editor)),
+            )
+            // Kept out of the tuple above (which is already at the max
+            // system arity): reads what `resolve_active_on_rebuild` writes,
+            // so it runs right after it in the same frame.
+            .add_systems(
+                Update,
+                category_strip::update_active_category_label
+                    .after(category_strip::resolve_active_on_rebuild)
+                    .run_if(in_state(crate::AppState::Editor)),
+            );
+    }
+}
+
+/// Write back each card's collapsed state when it changes so the next rebuild
+/// can restore it.
+fn persist_inspector_collapse(
+    mut state: ResMut<InspectorCollapseState>,
+    changed: Query<
+        (
+            &ComponentName,
+            &jackdaw_widgets::collapsible::CollapsibleSection,
+        ),
+        Changed<jackdaw_widgets::collapsible::CollapsibleSection>,
+    >,
+) {
+    for (name, section) in &changed {
+        state.0.insert(name.0.clone(), section.collapsed);
+    }
+}
+
+/// Keep the Name field's text input in sync with the underlying Name component.
+/// Needed so that undo/redo and external edits are reflected in the UI without
+/// having to deselect and reselect the entity.
+fn refresh_name_field(world: &mut World) {
+    use bevy::input_focus::InputFocus;
+    use jackdaw_feathers::text_edit::{TextEditDragging, TextEditValue, set_text_input_value};
+
+    // Gather (outer, source_entity, current_value) tuples.
+    let mut targets: Vec<(Entity, Entity, String)> = Vec::new();
+    let mut query = world.query::<(Entity, &NameFieldInput, &TextEditValue)>();
+    for (outer, input, value) in query.iter(world) {
+        targets.push((outer, input.0, value.0.clone()));
+    }
+    if targets.is_empty() {
+        return;
+    }
+
+    let input_focus = world.resource::<InputFocus>().get();
+
+    for (outer, source, current) in targets {
+        let Some(name) = world.get::<Name>(source) else {
+            continue;
+        };
+        let expected = name.as_str().to_string();
+        if current == expected {
+            continue;
+        }
+        // Walk outer -> children (and grandchildren) to find the wrapper.
+        let Some((wrapper_entity, inner_entity)) = find_text_edit_entities_local(world, outer)
+        else {
+            continue;
+        };
+        // Skip if the user is currently dragging or typing in this field.
+        if world.get::<TextEditDragging>(wrapper_entity).is_some() {
+            continue;
+        }
+        if input_focus == Some(inner_entity) {
+            continue;
+        }
+        if let Some(mut editable) = world.get_mut::<bevy::text::EditableText>(inner_entity) {
+            set_text_input_value(&mut editable, expected);
+        }
+    }
+}
+
+fn find_text_edit_entities_local(world: &World, outer_entity: Entity) -> Option<(Entity, Entity)> {
+    use jackdaw_feathers::text_edit::TextEditWrapper;
+    let children = world.get::<Children>(outer_entity)?;
+    for child in children.iter() {
+        if let Some(wrapper) = world.get::<TextEditWrapper>(child) {
+            return Some((child, wrapper.0));
+        }
+        if let Some(grandchildren) = world.get::<Children>(child) {
+            for gc in grandchildren.iter() {
+                if let Some(wrapper) = world.get::<TextEditWrapper>(gc) {
+                    return Some((gc, wrapper.0));
+                }
+            }
+        }
+    }
+    None
+}
+
+/// Handle `TextEditCommitEvent` for Name field inputs.
+/// Commits through `entity.rename`.
+fn on_name_field_commit(
+    event: On<jackdaw_feathers::text_edit::TextEditCommitEvent>,
+    name_inputs: Query<&NameFieldInput>,
+    child_of_query: Query<&ChildOf>,
+    names: Query<&Name>,
+    mut commands: Commands,
+) {
+    // Walk up from the committed entity to find a NameFieldInput
+    let mut current = event.entity;
+    let mut source = None;
+    for _ in 0..4 {
+        let Ok(child_of) = child_of_query.get(current) else {
+            break;
+        };
+        if let Ok(name_input) = name_inputs.get(child_of.parent()) {
+            source = Some(name_input.0);
+            break;
+        }
+        current = child_of.parent();
+    }
+
+    let Some(source_entity) = source else {
+        return;
+    };
+
+    let current = names.get(source_entity).map_or("", Name::as_str);
+    if current == event.text {
+        return;
+    }
+    commands
+        .operator(crate::remote_ops::EntityRenameOp::ID)
+        .param("entity", source_entity)
+        .param("name", event.text.clone())
+        .call();
+}
+
+#[derive(Component)]
+pub struct ComponentDisplay;
+
+#[derive(Component)]
+pub(super) struct ComponentDisplayBody;
+
+#[derive(Component)]
+pub struct AddComponentButton;
+
+/// Marker for the "Save to Scene" button in the inspector header. Visible
+/// only in Live (PIE) mode; promotes the selected running entity's current
+/// component values into its authored scene node. See
+/// `crate::pie::save_live_entity_to_scene`.
+#[derive(Component)]
+pub struct SaveToSceneButton;
+
+/// The component picker panel
+#[derive(Component)]
+pub(super) struct ComponentPicker(pub Entity);
+
+/// Marker for the search input in the inspector.
+#[derive(Component)]
+pub(super) struct InspectorSearch;
+
+/// Stores the component short name on a `ComponentDisplay` for search filtering.
+#[derive(Component)]
+pub(crate) struct ComponentName(pub(crate) String);
+
+/// Stores the reflect type path on a `ComponentDisplay` card so category
+/// filters can call `InspectorRegistry::category_for` without re-deriving
+/// the path from the archetype.
+#[derive(Component)]
+pub(crate) struct ComponentDisplayTypePath(pub(crate) String);
+
+/// Marker for a group section (the `CollapsibleSection` that wraps a group header + body).
+#[derive(Component)]
+pub struct InspectorGroupSection;
+
+/// Tracks which inspector field entity maps to which source entity + component + field path.
+#[derive(Component)]
+pub(super) struct FieldBinding {
+    pub(super) source_entity: Entity,
+    pub(super) type_path: String,
+    pub(super) field_path: String,
+}
+
+/// Marks a number field that holds a length shown in the project's length
+/// unit, one of [`crate::world_units::LENGTH_FIELDS`]. The scale is read live
+/// from the entity's place in the scene each time the field is read or written.
+#[derive(Component, Clone, Copy)]
+pub(super) struct LengthField;
+
+/// The component path and field path a widget edits, or `None` when it
+/// edits nothing. Addresses a control by the field it writes rather than
+/// by its position in a section.
+pub fn field_edited_by(world: &World, widget: Entity) -> Option<(&str, &str)> {
+    world
+        .get::<FieldBinding>(widget)
+        .map(|binding| (binding.type_path.as_str(), binding.field_path.as_str()))
+}
+
+/// The text the always-on category header above the card list shows, or
+/// `None` while the inspector panel has not spawned its content column.
+pub fn active_category_label(world: &mut World) -> Option<String> {
+    let mut labels = world.query_filtered::<&Text, With<category_strip::ActiveCategoryLabel>>();
+    labels.iter(world).next().map(|text| text.0.clone())
+}
+
+/// The `(title, description)` hover-tooltip pair each category tab carries,
+/// in no particular order. Empty while the strip has not spawned. Tests
+/// match it against the seeded category table as a set.
+pub fn category_tab_tooltips(world: &mut World) -> Vec<(String, String)> {
+    let mut tabs = world.query_filtered::<
+        &jackdaw_feathers::tooltip::Tooltip,
+        With<category_strip::InspectorCategoryTab>,
+    >();
+    tabs.iter(world)
+        .map(|tip| (tip.title.clone(), tip.description.clone()))
+        .collect()
+}
+
+/// The entity a field control was built for, or `None` when the entity is no
+/// field control. The panel-rebuild invariant: every live control binds an
+/// entity that is still selected.
+pub fn field_binding_entity(world: &World, widget: Entity) -> Option<Entity> {
+    world
+        .get::<FieldBinding>(widget)
+        .map(|binding| binding.source_entity)
+}
+
+/// The component path and field path an enum field's variant picker edits,
+/// or `None` when the entity hosts no enum field.
+pub fn enum_field_shown_by(world: &World, host: Entity) -> Option<(&str, &str)> {
+    world
+        .get::<EnumVariantHost>(host)
+        .map(|host| (host.type_path.as_str(), host.field_path.as_str()))
+}
+
+/// The list a control edits, as the type path and field path of that list, or
+/// `None` when the entity is no list control. Addresses Add, Remove and the
+/// move arrows by the list they act on rather than by their position.
+pub fn list_edited_by(world: &World, control: Entity) -> Option<(&str, &str)> {
+    world
+        .get::<reflect_fields::ReflectListControl>(control)
+        .map(reflect_fields::ReflectListControl::list)
+}
+
+/// The asset type a row names, and the field path it writes, or `None` when
+/// the entity is no asset row. Addresses an asset row by the field it writes.
+pub fn asset_field_shown_by(world: &World, row: Entity) -> Option<(&str, &str)> {
+    world
+        .get::<asset_row::AssetFieldRow>(row)
+        .map(|row| (row.asset_type_path.as_str(), row.field_path.as_str()))
+}
+
+/// A field name as a row label: `cell_size` reads "Cell size".
+#[doc(hidden)]
+pub fn sentence(name: &str) -> String {
+    let words = name.replace('_', " ");
+    let mut chars = words.chars();
+    chars.next().map_or_else(String::new, |first| {
+        first.to_uppercase().chain(chars).collect()
+    })
+}
+
+/// The components the inspector is showing a card for, as their type paths.
+pub fn component_cards_showing(world: &mut World) -> Vec<String> {
+    let mut cards = world.query::<&ComponentDisplayTypePath>();
+    cards.iter(world).map(|card| card.0.clone()).collect()
+}
+
+/// The resources the Resources panel is listing, as their short names in
+/// display order (a name the search filter hides is absent).
+pub fn resource_panel_rows(world: &mut World) -> Vec<String> {
+    let mut mounts = world.query_filtered::<&Children, With<resource_panel::ResourceListMount>>();
+    let Some(children) = mounts
+        .iter(world)
+        .next()
+        .map(|children| children.iter().collect::<Vec<Entity>>())
+    else {
+        return Vec::new();
+    };
+    let mut buttons = world.query::<&resource_panel::ResourceRowButton>();
+    let mut rows: Vec<(usize, String)> = children
+        .iter()
+        .enumerate()
+        .filter_map(|(index, child)| {
+            buttons
+                .get(world, *child)
+                .ok()
+                .map(|button| (index, button.short_name.clone()))
+        })
+        .collect();
+    rows.sort_by_key(|(index, _)| *index);
+    rows.into_iter().map(|(_, name)| name).collect()
+}
+
+/// Every line of text under the resource card for `type_path`, which is
+/// what a person reading the card sees.
+pub fn resource_card_text(world: &mut World, type_path: &str) -> Vec<String> {
+    let mut cards = world.query::<(Entity, &resource_panel::ResourceCard)>();
+    let roots: Vec<Entity> = cards
+        .iter(world)
+        .filter(|(_, card)| card.type_path == type_path)
+        .map(|(entity, _)| entity)
+        .collect();
+    let mut lines = Vec::new();
+    let mut stack = roots;
+    while let Some(entity) = stack.pop() {
+        if let Some(text) = world.get::<Text>(entity) {
+            lines.push(text.0.clone());
+        }
+        if let Some(children) = world.get::<Children>(entity) {
+            stack.extend(children.iter());
+        }
+    }
+    lines
+
+/// The component a card shows, as its type path, or `None` when the entity is
+/// no component card.
+pub fn component_card_type_path(world: &World, card: Entity) -> Option<&str> {
+    world
+        .get::<ComponentDisplayTypePath>(card)
+        .map(|card| card.0.as_str())
+}
+
+/// Every line of text under the card for `type_path`, which is what a person
+/// reading the card sees.
+pub fn component_card_text(world: &mut World, type_path: &str) -> Vec<String> {
+    let mut cards = world.query::<(Entity, &ComponentDisplayTypePath)>();
+    let roots: Vec<Entity> = cards
+        .iter(world)
+        .filter(|(_, card)| card.0 == type_path)
+        .map(|(entity, _)| entity)
+        .collect();
+    let mut lines = Vec::new();
+    let mut stack = roots;
+    while let Some(entity) = stack.pop() {
+        if let Some(text) = world.get::<Text>(entity) {
+            lines.push(text.0.clone());
+        }
+        if let Some(children) = world.get::<Children>(entity) {
+            stack.extend(children.iter());
+        }
+    }
+    lines
+}
+
+/// What the open card's header says about the references it cannot reach, or
+/// `None` while every row names a file the project holds.
+pub fn broken_reference_notice(world: &mut World) -> Option<String> {
+    let mut markers =
+        world.query_filtered::<&Text, With<definition_card::BrokenReferencesMarker>>();
+    markers
+        .iter(world)
+        .map(|text| text.0.clone())
+        .find(|notice| !notice.is_empty())
+}
+
+/// The control an asset row draws the file it names on, or `None` when the
+/// entity is no asset row. Clicking it is what opens the row's picker.
+pub fn asset_field_value_of(world: &World, row: Entity) -> Option<Entity> {
+    world
+        .get::<asset_row::AssetFieldRow>(row)
+        .and_then(|row| row.path_text)
+}
+
+/// Marker on the row-level container of a labeled inspector field,
+/// carrying the **root** `(component_type_path, field_path)` for the
+/// row regardless of how many scalar inputs sit inside it.
+///
+/// For scalar fields (e.g. `f32 intensity`) the row has one
+/// `FieldBinding` with the same path as this marker. For composite
+/// fields like `Vec3 translation` the row contains three axis
+/// `FieldBinding`s with paths `translation.x` / `.y` / `.z`, but
+/// there's still only one `InspectorFieldRow` on the outer column ;
+/// so per-field decorations (like the animation keyframe diamond)
+/// can hang off this marker without being duplicated per axis.
+#[derive(Component)]
+pub struct InspectorFieldRow {
+    pub source_entity: Entity,
+    pub type_path: String,
+    pub field_path: String,
+}
+
+/// Marker on the container that holds an enum select menu + its current
+/// variant's field rows. `refresh_enum_variants` polls these and rebuilds the
+/// subtree (menu + field rows) in place whenever the ECS variant changes.
+#[derive(Component)]
+pub struct EnumVariantHost {
+    pub(super) source_entity: Entity,
+    pub(super) type_path: String,
+    pub(super) field_path: String,
+    pub(super) depth: usize,
+    pub(super) current_variant: String,
+    /// The field's name, shown beside the variant menu; empty for an enum
+    /// that is the whole component.
+    pub(super) label: String,
+}
+
+/// Tracks a custom property field binding (property name + source entity).
+#[derive(Component)]
+pub(super) struct CustomPropertyBinding {
+    pub(super) source_entity: Entity,
+    pub(super) property_name: String,
+}
+
+/// Marker for the "Add Property" row container.
+#[derive(Component)]
+pub(super) struct CustomPropertyAddRow;
+
+/// Marker for the type selector `ComboBox` in the "Add Property" row.
+#[derive(Component)]
+pub(super) struct CustomPropertyTypeSelector;
+
+/// Marker for the property name text input in the "Add Property" row.
+#[derive(Component)]
+pub(super) struct CustomPropertyNameInput;
+
+/// Stores the entity currently being inspected.
+#[derive(Component)]
+pub(crate) struct InspectorTarget(pub Entity);
+
+/// Marker inserted on a selected entity to signal the inspector needs rebuilding.
+#[derive(Component)]
+pub struct InspectorDirty;
+
+/// Force inspector rebuild by marking the source entity dirty.
+pub(super) fn rebuild_inspector(world: &mut World, source_entity: Entity) {
+    world.entity_mut(source_entity).insert(InspectorDirty);
+}
+
+/// A source whose inspector has to be rebuilt, one frame from now.
+///
+/// A control that changes the shape of its own card -- a list row added or
+/// taken away -- cannot rebuild the card inside the click: the rebuild
+/// despawns the button the click came from, and the hover and cursor commands
+/// already queued for it that frame then land on an entity that is gone. A
+/// frame's delay lets those finish first.
+#[derive(Resource, Default)]
+#[doc(hidden)]
+pub struct PendingInspectorRebuild(pub Option<Entity>);
+
+fn apply_pending_inspector_rebuild(
+    mut pending: ResMut<PendingInspectorRebuild>,
+    mut commands: Commands,
+) {
+    if let Some(source) = pending.0.take() {
+        commands.entity(source).try_insert(InspectorDirty);
+    }
+}
+
+/// Flag the inspector dirty when the displayed entity's `ModifierStack`
+/// changes in-place. Mutations such as adding or removing modifiers do not
+/// change the entity's components, which is all the inspector watches for
+/// itself. This system catches those in-place `Changed` ticks and inserts
+/// `InspectorDirty` so the inspector rebuilds on the same frame.
+fn flag_inspector_dirty_on_modifier_stack_change(
+    inspectors: Query<&InspectorTarget, With<Inspector>>,
+    changed: Query<(), Changed<jackdaw_geometry::ModifierStack>>,
+    mut commands: Commands,
+) {
+    for target in &inspectors {
+        if changed.contains(target.0) {
+            commands.entity(target.0).insert(InspectorDirty);
+        }
+    }
+}
+
+/// When an `InspectorCategoryStripMount` entity is added to the world,
+/// spawn the category tab rail as a child.
+fn on_category_strip_mount_added(
+    trigger: On<Add<category_strip::InspectorCategoryStripMount>>,
+    registry: Res<jackdaw_api_internal::inspector::InspectorRegistry>,
+    icon_font: Res<jackdaw_feathers::icons::IconFont>,
+    mut commands: Commands,
+) {
+    category_strip::spawn_category_strip(
+        &mut commands,
+        trigger.event_target(),
+        &registry,
+        &icon_font.0,
+    );
+}

@@ -156,13 +156,18 @@ fn the_clipboard_chord_is_shared_by_the_entity_and_keyframe_operators() {
 
     assert_eq!(
         operators_on(&defaults, &PresetInput::key("KeyC").ctrl_or_super()),
-        vec!["clip.copy_keyframes".to_string(), "entity.copy".to_string()],
+        vec![
+            "clip.copy_keyframes".to_string(),
+            "entity.copy".to_string(),
+            "tilemap.selection.copy".to_string()
+        ],
     );
     assert_eq!(
         operators_on(&defaults, &PresetInput::key("KeyV").ctrl_or_super()),
         vec![
             "clip.paste_keyframes".to_string(),
-            "entity.paste".to_string()
+            "entity.paste".to_string(),
+            "tilemap.stamp.paste".to_string()
         ],
     );
     assert_eq!(
@@ -204,6 +209,19 @@ fn home_and_escape_are_preset_entries() {
             .contains(&"selection.clear".to_string()),
         "Escape drops the selection",
     );
+}
+
+/// Page Up and Page Down step a sprite's z on a 2D world scene.
+#[test]
+fn the_page_keys_step_sprite_z() {
+    let mut app = crate::headless_app();
+    let defaults = classic(&mut app);
+    for (key, operator) in [("PageUp", "sprite.z_up"), ("PageDown", "sprite.z_down")] {
+        assert!(
+            operators_on(&defaults, &PresetInput::key(key)).contains(&operator.to_string()),
+            "{key} runs {operator}",
+        );
+    }
 }
 
 /// Two actions on one chord co-fire and let `is_available` arbitrate, so a shared
@@ -264,8 +282,16 @@ fn the_authoring_chords_claim_what_they_were_meant_to() {
     let mut app = crate::headless_app();
     let defaults = classic(&mut app);
 
+    assert_eq!(
+        operators_on(&defaults, &PresetInput::key("KeyX").ctrl_or_super()),
+        vec![
+            "entity.cut".to_string(),
+            "tilemap.selection.cut".to_string()
+        ],
+        "cut is shared only with the tile selection",
+    );
+
     for (input, operator) in [
-        (PresetInput::key("KeyX").ctrl_or_super(), "entity.cut"),
         (
             PresetInput::key("ArrowUp").ctrl_or_super(),
             "entity.move_up",
@@ -289,7 +315,6 @@ fn the_authoring_chords_claim_what_they_were_meant_to() {
 
     let conflicts = find_conflicts(&defaults);
     for operator in [
-        "entity.cut",
         "entity.move_up",
         "entity.move_down",
         "ui.group_into",
@@ -311,5 +336,221 @@ fn the_authoring_chords_claim_what_they_were_meant_to() {
             .iter()
             .any(|line| line.contains("entity.paste") && line.contains("clip.paste_keyframes")),
         "the shared paste chord should be reported, advisory: {conflicts:?}",
+    );
+}
+
+/// The tile tool keys live on the tile edit context, which stays inactive
+/// until tile edit mode starts; only L and I are shared, with Core. Digit1,
+/// which enters the mode, is shared with vertex mode only.
+#[test]
+fn the_tile_tool_keys_claim_only_their_tools() {
+    let mut app = crate::headless_app();
+    let defaults = classic(&mut app);
+    assert_eq!(
+        operators_on(&defaults, &PresetInput::key("Digit1")),
+        vec![
+            "edit_mode.vertex".to_string(),
+            "tilemap.edit_mode".to_string()
+        ],
+        "Digit1 is shared only with vertex mode, split by is_available",
+    );
+    for (key, operator) in [
+        ("KeyB", "tilemap.brush"),
+        ("KeyD", "tilemap.eraser"),
+        ("KeyU", "tilemap.rectangle"),
+        ("KeyG", "tilemap.bucket"),
+    ] {
+        assert_eq!(
+            operators_on(&defaults, &PresetInput::key(key)),
+            vec![operator.to_string()],
+        );
+        assert!(
+            !find_conflicts(&defaults)
+                .iter()
+                .any(|line| line.contains(operator)),
+            "{operator} collided with something already bound",
+        );
+    }
+    // X, Y and Z turn a loaded tile; the modal axis keys share them only in
+    // the modal context, so no conflict is reported.
+    for (key, tile, modal) in [
+        ("KeyX", "tilemap.brush.flip_x", "modal.axis_x"),
+        ("KeyY", "tilemap.brush.flip_y", "modal.axis_y"),
+        ("KeyZ", "tilemap.brush.rotate", "modal.axis_z"),
+    ] {
+        assert_eq!(
+            operators_on(&defaults, &PresetInput::key(key)),
+            vec![modal.to_string(), tile.to_string()],
+        );
+        assert!(
+            !find_conflicts(&defaults)
+                .iter()
+                .any(|line| line.contains(tile)),
+            "{tile} collided with something already bound",
+        );
+    }
+    // L and I are shared with Core chords; the tile context sits above Core
+    // and consumes them while tile edit mode is on.
+    for (key, tile, core) in [
+        ("KeyL", "tilemap.line", "gizmo.space.toggle"),
+        ("KeyI", "tilemap.picker", "brush.mesh.inset"),
+    ] {
+        assert_eq!(
+            operators_on(&defaults, &PresetInput::key(key)),
+            vec![core.to_string(), tile.to_string()],
+        );
+        let shared: Vec<String> = find_conflicts(&defaults)
+            .into_iter()
+            .filter(|line| line.contains(tile))
+            .collect();
+        assert_eq!(shared.len(), 1, "{shared:?}");
+        assert!(shared[0].contains(core), "{shared:?}");
+    }
+
+    let contexts: Vec<bool> = app
+        .world_mut()
+        .query::<(
+            &jackdaw_api_internal::lifecycle::OperatorAction,
+            &jackdaw_input::ActionOf,
+        )>()
+        .iter(app.world())
+        .filter(|(action, _)| action.0 == "tilemap.brush")
+        .map(|(_, of)| of.0)
+        .collect::<Vec<_>>()
+        .into_iter()
+        .map(|context| {
+            app.world()
+                .get::<jackdaw_editor_tile::tile_tools::TileEditInputContext>(context)
+                .is_some()
+                && !app
+                    .world()
+                    .get::<jackdaw_input::ContextActivity>(context)
+                    .is_some_and(|active| active.0)
+        })
+        .collect();
+    assert_eq!(
+        contexts,
+        vec![true],
+        "one action, on the inactive tile context"
+    );
+}
+
+/// M chooses the Select tool on the tile edit context, shared with Core's grid
+/// snap. Delete, Escape and the Ctrl clipboard chords act on a tile selection
+/// from a context above Core that is active only while cells are selected, so
+/// they hide the same chords from the entity operators.
+#[test]
+fn the_tile_selection_keys_sit_above_core() {
+    let mut app = crate::headless_app();
+    let defaults = classic(&mut app);
+    assert_eq!(
+        operators_on(&defaults, &PresetInput::key("KeyM")),
+        vec!["snap.toggle".to_string(), "tilemap.select".to_string()],
+    );
+    let shared: Vec<String> = find_conflicts(&defaults)
+        .into_iter()
+        .filter(|line| line.contains("tilemap.select,") || line.ends_with("tilemap.select"))
+        .collect();
+    assert_eq!(shared.len(), 1, "{shared:?}");
+    assert!(shared[0].contains("snap.toggle"), "{shared:?}");
+
+    for (input, tile, core) in [
+        (
+            PresetInput::key("Delete"),
+            "tilemap.selection.erase",
+            "entity.delete",
+        ),
+        (
+            PresetInput::key("Escape"),
+            "tilemap.selection.clear",
+            "selection.clear",
+        ),
+        (
+            PresetInput::key("KeyC").ctrl_or_super(),
+            "tilemap.selection.copy",
+            "entity.copy",
+        ),
+        (
+            PresetInput::key("KeyX").ctrl_or_super(),
+            "tilemap.selection.cut",
+            "entity.cut",
+        ),
+    ] {
+        let on = operators_on(&defaults, &input);
+        assert!(on.contains(&tile.to_string()), "{input:?}: {on:?}");
+        assert!(on.contains(&core.to_string()), "{input:?}: {on:?}");
+    }
+
+    let world = app.world_mut();
+    let contexts: Vec<(String, Entity)> = world
+        .query::<(
+            &jackdaw_api_internal::lifecycle::OperatorAction,
+            &jackdaw_input::ActionOf,
+        )>()
+        .iter(world)
+        .filter(|(action, _)| action.0.starts_with("tilemap.selection."))
+        .map(|(action, of)| (action.0.to_string(), of.0))
+        .collect();
+    assert_eq!(contexts.len(), 4, "{contexts:?}");
+    for (operator, context) in contexts {
+        assert!(
+            world
+                .get::<jackdaw_editor_tile::tile_select::TileSelectionInputContext>(context)
+                .is_some(),
+            "{operator} is on the selection context"
+        );
+        assert!(
+            !world
+                .get::<jackdaw_input::ContextActivity>(context)
+                .is_some_and(|active| active.0),
+            "inactive with nothing selected"
+        );
+        let priority = world
+            .get::<jackdaw_input::ContextPriority>(context)
+            .map(|p| p.0);
+        assert!(priority > Some(0), "{operator} sits above Core");
+    }
+}
+
+/// N names a new terrain from the selected sheet tile. It lives on the
+/// Tileset window's own context, inactive until a tileset tab has the
+/// keyboard, and no other command claims a bare N.
+#[test]
+fn n_in_the_tileset_window_claims_only_the_new_terrain_command() {
+    let mut app = crate::headless_app();
+    let defaults = classic(&mut app);
+    let operator = "tileset.terrain.from_tile";
+    assert_eq!(
+        operators_on(&defaults, &PresetInput::key("KeyN")),
+        vec![operator.to_string()],
+    );
+    let conflicts = find_conflicts(&defaults);
+    assert!(
+        !conflicts.iter().any(|line| line.contains(operator)),
+        "{conflicts:?}"
+    );
+
+    let world = app.world_mut();
+    let contexts: Vec<Entity> = world
+        .query::<(
+            &jackdaw_api_internal::lifecycle::OperatorAction,
+            &jackdaw_input::ActionOf,
+        )>()
+        .iter(world)
+        .filter(|(action, _)| action.0 == operator)
+        .map(|(_, of)| of.0)
+        .collect();
+    assert_eq!(contexts.len(), 1, "{contexts:?}");
+    let context = contexts[0];
+    assert!(
+        world
+            .get::<jackdaw_editor_tile::tileset_dock::TilesetDockInputContext>(context)
+            .is_some()
+    );
+    assert!(
+        !world
+            .get::<jackdaw_input::ContextActivity>(context)
+            .is_some_and(|active| active.0),
+        "inactive while no tileset tab has the keyboard"
     );
 }

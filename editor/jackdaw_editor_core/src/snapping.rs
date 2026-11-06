@@ -1,0 +1,137 @@
+use bevy::{
+    dev_tools::infinite_grid::{InfiniteGrid, InfiniteGridSettings},
+    input::mouse::{MouseScrollUnit, MouseWheel},
+    prelude::*,
+};
+use jackdaw_api::op::{Operator, OperatorCommandsExt as _};
+
+use crate::default_style;
+
+pub struct SnappingPlugin;
+
+impl Plugin for SnappingPlugin {
+    fn build(&self, app: &mut App) {
+        app.init_resource::<SnapSettings>()
+            .init_resource::<GridSettings>()
+            .add_systems(
+                Update,
+                handle_grid_size_scroll
+                    // The hover pass is what tells this frame's scroll which
+                    // panel it is over and what that panel is showing.
+                    .after(crate::viewport::update_active_viewport)
+                    .in_set(crate::EditorInteractionSystems),
+            )
+            .add_systems(
+                Update,
+                sync_grid_settings
+                    .after(handle_grid_size_scroll)
+                    .run_if(in_state(crate::AppState::Editor)),
+            );
+    }
+}
+
+/// Editor-wide infinite grid appearance. Wraps [`InfiniteGridSettings`] so
+/// the same value can be stored as a resource and copied onto grid entities.
+#[derive(Resource, Clone, Copy, Deref, DerefMut)]
+pub struct GridSettings(pub InfiniteGridSettings);
+
+impl Default for GridSettings {
+    fn default() -> Self {
+        Self(InfiniteGridSettings {
+            scale: 4.0,
+            major_line_color: default_style::GRID_MAJOR_LINE,
+            minor_line_color: default_style::GRID_MINOR_LINE,
+            x_axis_color: default_style::AXIS_X,
+            z_axis_color: default_style::AXIS_Z,
+            fadeout_distance: 100.0,
+            ..Default::default()
+        })
+    }
+}
+
+pub(crate) fn sync_grid_settings(
+    snap: Res<SnapSettings>,
+    mut grid: ResMut<GridSettings>,
+    mut grids: Query<
+        &mut InfiniteGridSettings,
+        (With<InfiniteGrid>, Without<crate::canvas_grid::CanvasGrid>),
+    >,
+) {
+    // Sync grid scale from snap settings whenever snap changes.
+    // InfiniteGrid scale is lines-per-unit (density), so use the reciprocal of cell size.
+    if snap.is_changed() {
+        grid.scale = 1.0 / snap.grid_size();
+    }
+    if !grid.is_changed() {
+        return;
+    }
+    for mut settings in &mut grids {
+        *settings = grid.0;
+    }
+}
+
+pub use jackdaw_snap::{GRID_POWER_MAX, GRID_POWER_MIN};
+
+/// Bevy resource wrapper over the engine-agnostic [`jackdaw_snap::SnapSettings`].
+/// Derefs to the inner value, so reads, the `snap_*` methods, and field access
+/// resolve through `Deref`/`DerefMut` unchanged. The snapping math lives in
+/// `jackdaw_snap`; this newtype is the editor's adapter.
+#[derive(Resource, Clone, PartialEq, Default, Deref, DerefMut)]
+pub struct SnapSettings(pub jackdaw_snap::SnapSettings);
+
+/// Scroll-wheel grid size control. Continuous-input, so it stays as a
+/// system rather than an operator. The actual power bump is delegated
+/// to `grid_ops::GridIncreaseOp` / `grid_ops::GridDecreaseOp` (also bound to
+/// the bracket keys) so the clamp + translate-increment refresh live in one
+/// place. Named rather than linked: this system is public for tests and those
+/// operators are not.
+///
+/// Raw wheel read kept: grid-size stepping is gated behind a held modifier
+/// chord and predates the keymap engine; migrates with the binding-layer
+/// follow-up.
+///
+/// This grid is the 3D world's, so the wheel is ignored while the hovered
+/// viewport shows its 2D canvas, where the same chord zooms instead. Public so
+/// tests can run it directly.
+pub fn handle_grid_size_scroll(
+    keyboard: Res<ButtonInput<KeyCode>>,
+    keybind_focus: crate::keybind_focus::KeybindFocus,
+    modal: Res<crate::modal_transform::ModalTransformState>,
+    terrain_edit_mode: Res<crate::terrain_mode::TerrainEditMode>,
+    active_viewport: Res<crate::viewport::ActiveViewport>,
+    mut scroll_events: MessageReader<MouseWheel>,
+    mut commands: Commands,
+) {
+    let over_canvas = active_viewport.mode == Some(crate::viewport_host::ViewportMode::TwoD);
+    if keybind_focus.keyboard_is_spoken_for() || modal.active.is_some() || over_canvas {
+        return;
+    }
+
+    let ctrl = keyboard.any_pressed([KeyCode::ControlLeft, KeyCode::ControlRight]);
+    let alt = keyboard.any_pressed([KeyCode::AltLeft, KeyCode::AltRight]);
+    let shift = keyboard.any_pressed([KeyCode::ShiftLeft, KeyCode::ShiftRight]);
+
+    // Shift+Scroll is used for brush resize when terrain sculpt or paint
+    // is active; only allow grid resize via Shift+Scroll when neither is.
+    let shift_grid = shift && !terrain_edit_mode.brush_active();
+
+    if !((ctrl && alt) || shift_grid) {
+        return;
+    }
+
+    for event in scroll_events.read() {
+        let delta = match event.unit {
+            MouseScrollUnit::Line => event.y,
+            MouseScrollUnit::Pixel => event.y * 0.01,
+        };
+        if delta > 0.0 {
+            commands
+                .operator(crate::grid_ops::GridIncreaseOp::ID)
+                .call();
+        } else if delta < 0.0 {
+            commands
+                .operator(crate::grid_ops::GridDecreaseOp::ID)
+                .call();
+        }
+    }
+}

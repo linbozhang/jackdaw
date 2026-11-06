@@ -4404,12 +4404,7 @@ dependencies = [
  "avian3d",
  "base64 0.22.1",
  "bevy",
- "bevy_window_chrome",
- "dirs",
  "dunce",
- "flate2",
- "fontique",
- "half",
  "image",
  "jackdaw_animation",
  "jackdaw_animation_runtime",
@@ -4418,21 +4413,21 @@ dependencies = [
  "jackdaw_avian_integration",
  "jackdaw_bind",
  "jackdaw_bsn",
- "jackdaw_camera",
- "jackdaw_camera_rig",
  "jackdaw_commands",
- "jackdaw_csg",
+ "jackdaw_editor_animation",
+ "jackdaw_editor_core",
+ "jackdaw_editor_launcher",
+ "jackdaw_editor_modelling",
+ "jackdaw_editor_remote",
+ "jackdaw_editor_terrain",
+ "jackdaw_editor_tile",
  "jackdaw_env",
  "jackdaw_feathers",
  "jackdaw_geometry",
- "jackdaw_hull",
  "jackdaw_input",
  "jackdaw_jsn",
  "jackdaw_loader",
- "jackdaw_localization",
- "jackdaw_material",
  "jackdaw_multiplayer",
- "jackdaw_multiplayer_editor",
  "jackdaw_node_graph",
  "jackdaw_package",
  "jackdaw_panels",
@@ -4448,21 +4443,16 @@ dependencies = [
  "jackdaw_scaffold",
  "jackdaw_scene_types",
  "jackdaw_schema",
- "jackdaw_sdk",
- "jackdaw_select",
  "jackdaw_snap",
  "jackdaw_surface",
  "jackdaw_terrain",
+ "jackdaw_tilemap",
+ "jackdaw_tileset",
  "jackdaw_uv",
  "jackdaw_widgets",
  "jackdaw_widgets_runtime",
- "libc",
  "libloading",
- "notify",
  "path-slash",
- "pathdiff",
- "regex",
- "rfd",
  "serde",
  "serde_json",
  "tempfile",
@@ -4576,6 +4566,7 @@ dependencies = [
  "nom",
  "path-slash",
  "pathdiff",
+ "serde",
  "smol_str",
  "tempfile",
  "thiserror 2.0.21",
@@ -4625,6 +4616,10 @@ dependencies = [
 ]
 
 [[package]]
+name = "jackdaw_data_path"
+version = "0.21.0-dev"
+
+[[package]]
 name = "jackdaw_dylib"
 version = "0.21.0-dev"
 dependencies = [
@@ -4638,6 +4633,234 @@ name = "jackdaw_editor"
 version = "0.21.0-dev"
 dependencies = [
  "jackdaw",
+]
+
+[[package]]
+name = "jackdaw_editor_animation"
+version = "0.21.0-dev"
+dependencies = [
+ "bevy",
+ "jackdaw_animation",
+ "jackdaw_animation_runtime",
+ "jackdaw_api",
+ "jackdaw_api_internal",
+ "jackdaw_bsn",
+ "jackdaw_commands",
+ "jackdaw_editor_core",
+ "jackdaw_feathers",
+ "jackdaw_input",
+ "jackdaw_node_graph",
+ "jackdaw_runtime",
+ "jackdaw_scene_types",
+ "serde_json",
+ "tempfile",
+]
+
+[[package]]
+name = "jackdaw_editor_core"
+version = "0.21.0-dev"
+dependencies = [
+ "anyhow",
+ "async-channel",
+ "base64 0.22.1",
+ "bevy",
+ "bevy_window_chrome",
+ "dirs",
+ "dunce",
+ "flate2",
+ "fontique",
+ "half",
+ "image",
+ "jackdaw_animation",
+ "jackdaw_animation_runtime",
+ "jackdaw_api",
+ "jackdaw_api_internal",
+ "jackdaw_bind",
+ "jackdaw_bsn",
+ "jackdaw_camera",
+ "jackdaw_camera_rig",
+ "jackdaw_commands",
+ "jackdaw_csg",
+ "jackdaw_env",
+ "jackdaw_feathers",
+ "jackdaw_geometry",
+ "jackdaw_hull",
+ "jackdaw_input",
+ "jackdaw_jsn",
+ "jackdaw_loader",
+ "jackdaw_localization",
+ "jackdaw_material",
+ "jackdaw_multiplayer",
+ "jackdaw_multiplayer_editor",
+ "jackdaw_node_graph",
+ "jackdaw_panels",
+ "jackdaw_pick",
+ "jackdaw_pie_protocol",
+ "jackdaw_prefab",
+ "jackdaw_project_build",
+ "jackdaw_recipe",
+ "jackdaw_remote",
+ "jackdaw_runtime",
+ "jackdaw_rustc_wrapper",
+ "jackdaw_scaffold",
+ "jackdaw_scene_types",
+ "jackdaw_schema",
+ "jackdaw_sdk",
+ "jackdaw_select",
+ "jackdaw_snap",
+ "jackdaw_surface",
+ "jackdaw_terrain",
+ "jackdaw_tilemap",
+ "jackdaw_tileset",
+ "jackdaw_uv",
+ "jackdaw_widgets",
+ "jackdaw_widgets_runtime",
+ "libc",
+ "notify",
+ "path-slash",
+ "pathdiff",
+ "regex",
+ "rfd",
+ "serde",
+ "serde_json",
+ "tempfile",
+ "toml",
+ "windows-sys 0.61.2",
+ "winit",
+]
+
+[[package]]
+name = "jackdaw_editor_launcher"
+version = "0.21.0-dev"
+dependencies = [
+ "bevy",
+ "bevy_window_chrome",
+ "dirs",
+ "dunce",
+ "jackdaw_api",
+ "jackdaw_api_internal",
+ "jackdaw_editor_core",
+ "jackdaw_env",
+ "jackdaw_feathers",
+ "jackdaw_package",
+ "jackdaw_project_build",
+ "jackdaw_releases",
+ "jackdaw_scaffold",
+ "jackdaw_scene_types",
+ "rfd",
+ "serde_json",
+ "tempfile",
+ "toml",
+ "toml_edit",
+]
+
+[[package]]
+name = "jackdaw_editor_modelling"
+version = "0.21.0-dev"
+dependencies = [
+ "bevy",
+ "jackdaw_api",
+ "jackdaw_api_internal",
+ "jackdaw_bsn",
+ "jackdaw_commands",
+ "jackdaw_editor_core",
+ "jackdaw_feathers",
+ "jackdaw_geometry",
+ "jackdaw_input",
+ "jackdaw_pick",
+ "jackdaw_runtime",
+ "jackdaw_scene_types",
+ "jackdaw_select",
+ "jackdaw_uv",
+ "jackdaw_widgets",
+ "serde_json",
+ "tempfile",
+]
+
+[[package]]
+name = "jackdaw_editor_remote"
+version = "0.21.0-dev"
+dependencies = [
+ "anyhow",
+ "async-channel",
+ "base64 0.22.1",
+ "bevy",
+ "image",
+ "jackdaw_api",
+ "jackdaw_api_internal",
+ "jackdaw_bsn",
+ "jackdaw_commands",
+ "jackdaw_editor_core",
+ "jackdaw_env",
+ "jackdaw_feathers",
+ "jackdaw_geometry",
+ "jackdaw_panels",
+ "jackdaw_pie_protocol",
+ "jackdaw_prefab",
+ "jackdaw_remote",
+ "jackdaw_runtime",
+ "jackdaw_scene_types",
+ "jackdaw_select",
+ "jackdaw_terrain",
+ "jackdaw_widgets",
+ "path-slash",
+ "serde",
+ "serde_json",
+ "tempfile",
+]
+
+[[package]]
+name = "jackdaw_editor_terrain"
+version = "0.21.0-dev"
+dependencies = [
+ "bevy",
+ "dunce",
+ "image",
+ "jackdaw_api",
+ "jackdaw_api_internal",
+ "jackdaw_bsn",
+ "jackdaw_commands",
+ "jackdaw_editor_core",
+ "jackdaw_feathers",
+ "jackdaw_panels",
+ "jackdaw_prefab",
+ "jackdaw_remote",
+ "jackdaw_runtime",
+ "jackdaw_scene_types",
+ "jackdaw_terrain",
+ "jackdaw_widgets",
+ "path-slash",
+ "rfd",
+ "serde",
+ "serde_json",
+ "tempfile",
+]
+
+[[package]]
+name = "jackdaw_editor_tile"
+version = "0.21.0-dev"
+dependencies = [
+ "bevy",
+ "dunce",
+ "image",
+ "jackdaw_api",
+ "jackdaw_api_internal",
+ "jackdaw_bsn",
+ "jackdaw_commands",
+ "jackdaw_editor_core",
+ "jackdaw_feathers",
+ "jackdaw_input",
+ "jackdaw_panels",
+ "jackdaw_prefab",
+ "jackdaw_runtime",
+ "jackdaw_scene_types",
+ "jackdaw_tilemap",
+ "jackdaw_tileset",
+ "jackdaw_widgets",
+ "path-slash",
+ "serde",
+ "serde_json",
+ "tempfile",
 ]
 
 [[package]]
@@ -4768,6 +4991,7 @@ dependencies = [
  "schemars",
  "serde",
  "serde_json",
+ "tempfile",
  "tokio",
 ]
 
@@ -4883,6 +5107,7 @@ version = "0.21.0-dev"
 dependencies = [
  "dunce",
  "jackdaw_env",
+ "jackdaw_package",
  "jackdaw_schema",
  "libc",
  "path-slash",
@@ -4896,6 +5121,10 @@ dependencies = [
  "toml_edit",
  "tracing",
 ]
+
+[[package]]
+name = "jackdaw_recipe"
+version = "0.21.0-dev"
 
 [[package]]
 name = "jackdaw_releases"
@@ -4940,6 +5169,8 @@ dependencies = [
  "jackdaw_schema",
  "jackdaw_surface",
  "jackdaw_terrain",
+ "jackdaw_tilemap",
+ "jackdaw_tileset",
  "jackdaw_widgets_runtime",
  "serde",
  "serde_json",
@@ -5050,6 +5281,7 @@ dependencies = [
  "bevy",
  "bevy_math",
  "bytemuck",
+ "jackdaw_data_path",
  "jackdaw_scene_types",
  "noise",
  "path-slash",

@@ -37,6 +37,8 @@ cargo run --features dylib
 
 ### Improving compile times
 
+`cargo run` and `cargo test` resolve the same features, so they reuse one build of the editor crate and of Bevy. Tests that load extension dylibs need the split runtime and run with `--features dylib`, as CI does.
+
 If you intend to contribute significantly to Jackdaw, you'll likely want to make some changes to improve compile times when iterating. Jackdaw is not, by default, set up for some of these, as they conflict with other features like SDK dynamic linking.
 
 #### `Cargo.toml`
@@ -82,6 +84,8 @@ cargo clippy --workspace -- -D warnings
 cargo test --workspace --lib
 ```
 
+The editor-app integration tests live in theme directories under `tests/` (`stage`, `operators`, `inspector` and so on). Each directory is a module of one `editor` test binary, so the editor links once for all of them: `cargo nextest run --test editor -E 'test(/^stage::/)'` runs one theme. A new theme directory needs a `mod.rs` and a line in `tests/editor/main.rs`. Test types are registered under paths that start with `editor::`, and every reflected type in the binary shares one registry, so give a test type a name no other module uses. The keymap tests are the exception and stay a binary of their own, since they redirect the config directory for the whole process.
+
 ### CI
 
 ```sh
@@ -95,7 +99,7 @@ cargo xtask integration
 cargo doc --locked --workspace --document-private-items --no-deps
 
 # Doctests
-cargo test --locked --workspace --doc --features bevy/dynamic_linking
+cargo test --locked --workspace --doc --features dylib
 ```
 
 ## Pull Requests

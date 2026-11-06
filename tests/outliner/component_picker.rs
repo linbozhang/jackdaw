@@ -176,7 +176,7 @@ fn category_default_is_empty_when_unset() {
 fn denylisted_path_filters_component() {
     let registry = registry_with_test_types();
     let mut denylist = PickerDenylist::default();
-    denylist.deny_path("outliner::component_picker::WithDefault");
+    denylist.deny_path("editor::outliner::component_picker::WithDefault");
     let pickables = enumerate(&registry, &HashSet::new(), &denylist);
     assert!(
         find(&pickables, "WithDefault").is_none(),
@@ -194,7 +194,7 @@ fn denylisted_path_filters_component() {
 fn denylisted_prefix_filters_component() {
     let registry = registry_with_test_types();
     let mut denylist = PickerDenylist::default();
-    denylist.deny_prefix("outliner::component_picker::");
+    denylist.deny_prefix("editor::outliner::component_picker::");
     let pickables = enumerate(&registry, &HashSet::new(), &denylist);
     assert!(
         find(&pickables, "WithDefault").is_none(),
@@ -212,15 +212,24 @@ fn denylisted_prefix_filters_component() {
 fn avian_paths_fall_back_to_physics_category() {
     let chrome = TypeChrome::default();
     assert_eq!(
-        chrome.group("avian3d::dynamics::rigid_body::RigidBody"),
+        chrome.group(
+            "avian3d::dynamics::rigid_body::RigidBody",
+            &jackdaw::project_types::ProjectTypes::default()
+        ),
         "Avian3d",
     );
     assert_eq!(
-        chrome.group("avian3d::collision::collider::Collider"),
+        chrome.group(
+            "avian3d::collision::collider::Collider",
+            &jackdaw::project_types::ProjectTypes::default()
+        ),
         "Avian3d",
     );
     assert_eq!(
-        chrome.group("jackdaw_avian_integration::AvianCollider"),
+        chrome.group(
+            "jackdaw_avian_integration::AvianCollider",
+            &jackdaw::project_types::ProjectTypes::default()
+        ),
         "Avian3d",
     );
 }
@@ -229,8 +238,20 @@ fn avian_paths_fall_back_to_physics_category() {
 #[test]
 fn non_avian_paths_have_no_category_fallback() {
     let chrome = TypeChrome::default();
-    assert_eq!(chrome.group("my_game::PlayerSpawn"), "");
-    assert_eq!(chrome.group("outliner::component_picker::WithDefault"), "");
+    assert_eq!(
+        chrome.group(
+            "my_game::PlayerSpawn",
+            &jackdaw::project_types::ProjectTypes::default()
+        ),
+        ""
+    );
+    assert_eq!(
+        chrome.group(
+            "editor::outliner::component_picker::WithDefault",
+            &jackdaw::project_types::ProjectTypes::default()
+        ),
+        ""
+    );
 }
 
 /// `populate_module_picker_denylist` hides solver / cache types whatever the
@@ -319,14 +340,14 @@ fn metadata_overlay_hides_and_recategorizes() {
     let registry = registry_with_test_types();
     let mut metadata = TypeMetadata::default();
     metadata.entries.insert(
-        "outliner::component_picker::WithDefault".into(),
+        "editor::outliner::component_picker::WithDefault".into(),
         TypeMeta {
             hidden: Some(true),
             ..Default::default()
         },
     );
     metadata.entries.insert(
-        "outliner::component_picker::NoDefault".into(),
+        "editor::outliner::component_picker::NoDefault".into(),
         TypeMeta {
             category: Some("Gameplay".into()),
             ..Default::default()

@@ -1,0 +1,356 @@
+//! The editor binary's entry point, shared with binaries that bundle
+//! extensions with the editor.
+
+use crate::prelude::*;
+use bevy::{
+    asset::AssetPlugin,
+    ecs::error::ErrorContext,
+    image::{ImageAddressMode, ImagePlugin, ImageSamplerDescriptor},
+    prelude::*,
+};
+
+/// Run the editor as the `jackdaw` binary does, calling `extend` on the
+/// `App` after the editor's plugins are added and before it runs.
+///
+/// A binary that bundles extensions with the editor registers them in
+/// `extend`, for example with `app.register_extension::<MyExtension>()`.
+pub fn run(extend: impl FnOnce(&mut App)) -> AppExit {
+    run_with(LaunchCommands::default(), extend)
+}
+
+/// Runs a subcommand with the arguments after its name.
+pub type LaunchCommand = fn(&[String]) -> AppExit;
+
+/// Subcommands the core names but a feature crate carries out.
+#[derive(Default, Clone, Copy)]
+pub struct LaunchCommands {
+    /// `export-terrain`, from the terrain editor.
+    pub export_terrain: Option<LaunchCommand>,
+}
+
+/// [`run`], with the subcommands `commands` carries out.
+pub fn run_with(commands: LaunchCommands, extend: impl FnOnce(&mut App)) -> AppExit {
+    let args: Vec<String> = std::env::args().collect();
+    let launch = crate::cli::decide(&args);
+    if launch != crate::cli::Launch::Editor {
+        #[cfg(all(windows, not(debug_assertions)))]
+        attach_parent_console();
+    }
+    match launch {
+        crate::cli::Launch::Editor => {}
+        crate::cli::Launch::Help => {
+            #[expect(clippy::print_stdout, reason = "--help reports to stdout")]
+            {
+                println!("{}", crate::cli::USAGE);
+            }
+            return AppExit::Success;
+        }
+        crate::cli::Launch::Version => {
+            #[expect(clippy::print_stdout, reason = "--version reports to stdout")]
+            {
+                println!(
+                    "jackdaw {} (targets bevy {})",
+                    jackdaw_project_build::build_name(),
+                    jackdaw_project_build::bevy_description()
+                );
+            }
+            return AppExit::Success;
+        }
+        // `jd export-terrain` runs here: reading a scene needs this binary's
+        // Bevy types, which `jd` does not link.
+        crate::cli::Launch::ExportTerrain(rest) => {
+            let Some(export_terrain) = commands.export_terrain else {
+                #[expect(clippy::print_stderr, reason = "usage errors report to stderr")]
+                {
+                    eprintln!("jackdaw: this build has no terrain editor to export with");
+                }
+                return AppExit::from_code(2);
+            };
+            return export_terrain(rest);
+        }
+        crate::cli::Launch::CheckExtensions(rest) => return check_extensions(rest),
+        crate::cli::Launch::Unknown(flag) => {
+            #[expect(clippy::print_stderr, reason = "usage errors report to stderr")]
+            {
+                eprintln!("jackdaw: unknown option `{flag}`\n\n{}", crate::cli::USAGE);
+            }
+            return AppExit::from_code(2);
+        }
+    }
+
+    // Claim the IO task pool before `TaskPoolPlugin` can, so scenes
+    // with hundreds of models get a stack their nested glTF loads fit
+    // in. Has to run before the app is built.
+    crate::io_pool::init();
+
+    // The asset root is fixed at startup, so it has to agree with the
+    // project this process will actually open. `jd open <path>` names
+    // one explicitly; without this, opening anything other than the
+    // most recent project would root the asset server at a different
+    // project's asset folder.
+    let project_root = crate::project::requested_project()
+        .or_else(crate::project::read_last_project)
+        .unwrap_or_else(|| std::env::current_dir().unwrap_or_default());
+    let assets_dir = crate::project::project_assets_dir(&project_root);
+
+    // Picker is the default landing screen on every launch. The
+    // user clicks the project they want from recents (or scaffolds
+    // a new one), which then triggers the build + handoff. Two
+    // exceptions:
+    //
+    // - Respawn after a scaffold/install: the parent process did
+    //   the build already, so we skip straight to the editor view
+    //   for the just-scaffolded project.
+    // - `JACKDAW_AUTO_OPEN=1` env var: opt in to "re-open last
+    //   project on launch" for power users who prefer that flow.
+    //
+    // The picker comes first otherwise: a static game project needs a
+    // 5-10 minute build on first run, so auto-opening one leaves the
+    // user staring at an idle-looking launcher.
+    let respawn_skip_build = std::env::var_os(crate::restart::ENV_SKIP_INITIAL_BUILD).is_some();
+    let auto_open_opt_in = std::env::var_os("JACKDAW_AUTO_OPEN").is_some();
+    let auto_open = if respawn_skip_build {
+        crate::project::read_last_project().map(|path| crate::launcher_mode::PendingAutoOpen {
+            path,
+            skip_build: true,
+        })
+    } else if let Some(path) = crate::project::requested_project() {
+        // `jd open <path>` names the project explicitly rather than
+        // reordering the recents file to make it the most recent.
+        Some(crate::launcher_mode::PendingAutoOpen {
+            path,
+            skip_build: false,
+        })
+    } else if auto_open_opt_in {
+        crate::project::read_last_project()
+            .filter(|p| p.is_dir() && p.join("Cargo.toml").is_file())
+            .map(|path| crate::launcher_mode::PendingAutoOpen {
+                path,
+                skip_build: false,
+            })
+    } else {
+        None
+    };
+
+    // The editor's renderer is built from explicit wgpu settings:
+    // `render_backend` picks the backend (DX12 by default on Windows, so a
+    // GL driver crash cannot take the editor down; `WGPU_BACKEND` still
+    // wins for diagnostics runs) and folds in the GPU timestamp features a
+    // diagnostics run has to ask for before the device exists.
+    let render_plugin = bevy::render::RenderPlugin {
+        render_creation: crate::render_backend::wgpu_settings().into(),
+        ..default()
+    };
+
+    let default_plugins = DefaultPlugins
+        .set(AssetPlugin {
+            file_path: assets_dir.to_string_lossy().to_string(),
+            ..default()
+        })
+        .set(ImagePlugin {
+            default_sampler: ImageSamplerDescriptor {
+                address_mode_u: ImageAddressMode::Repeat,
+                address_mode_v: ImageAddressMode::Repeat,
+                address_mode_w: ImageAddressMode::Repeat,
+                ..ImageSamplerDescriptor::linear()
+            },
+            // Bevy 0.19 processed PNGs only; JPEGs stay raw as before.
+            default_compressed_image_processor_extensions: vec!["png".into()],
+        })
+        // `editor_window_plugin` disables Bevy's default
+        // window-close -> AppExit wiring so `intercept_window_close`
+        // in ScenesPlugin owns the exit path, and it honors
+        // `JACKDAW_WINDOW_SIZE`. Spelling its fields out here instead
+        // would drop that override.
+        .set(editor_window_plugin())
+        .set(render_plugin)
+        // The editor is not a speaker: authored audio belongs to Play and the
+        // game process, so an open scene with a BGM never starts singing in
+        // the editing viewport and PIE never doubles the sound. The engine
+        // multiplies `GlobalVolume` into every sink once, when it is created
+        // (`play_queued_audio_system`), so zero here silences the editor's
+        // sinks without touching the authored volumes and needs no gate
+        // system and no AppState ordering.
+        .set(bevy::audio::AudioPlugin {
+            global_volume: bevy::audio::GlobalVolume::from(bevy::audio::Volume::Linear(0.0)),
+            ..default()
+        });
+    // Without a console nothing reads stderr, so the log goes to a file.
+    // A shadowing `let` (rather than `+=` assignment) so the binding needs
+    // no `mut` on debug builds, where this block is compiled out.
+    #[cfg(all(windows, not(debug_assertions)))]
+    let default_plugins = default_plugins.set(bevy::log::LogPlugin {
+        fmt_layer: |_| {
+            let path = crate::editor_log::log_file()?;
+            let layer = crate::editor_log::file_layer(&path).ok()?;
+            Some(Box::new(layer))
+        },
+        ..default()
+    });
+    #[cfg(all(windows, not(debug_assertions)))]
+    crate::editor_log::log_panics();
+
+    let mut app = App::new();
+    app.register_asset_source(
+        bevy::asset::io::AssetSourceId::Default,
+        jackdaw_runtime::texture_import::with_texture_imports(
+            bevy::asset::io::AssetSourceBuilder::platform_default(
+                &assets_dir.to_string_lossy(),
+                None,
+            ),
+            crate::texture_import::cache_dir(&project_root),
+        ),
+    );
+    app
+        // The default error handler panics, which we never *ever*
+        // want to happen to the editor. Log an error instead.
+        .set_error_handler(error_handler)
+        .add_plugins(default_plugins);
+    app.add_plugins(editor_plugins);
+    extend(&mut app);
+
+    // The resolved asset root, so the open flow can tell whether a requested project is
+    // the one this process reads assets for.
+    app.insert_resource(crate::restart::AssetProjectRoot(project_root));
+
+    if let Some(pending) = auto_open {
+        app.insert_resource(pending);
+    }
+
+    let exit = app.run();
+
+    // Opening another project asks for a process rooted at it. The request outlives the
+    // world, so it is honored here.
+    if let Some(project) = crate::restart::take_project_relaunch() {
+        crate::restart::relaunch_into_project(&project);
+    }
+
+    exit
+}
+
+/// Gives a console-less build the console it was started from, if any, so
+/// `--version` and `--help` print there. Output already redirected is left alone.
+#[cfg(all(windows, not(debug_assertions)))]
+fn attach_parent_console() {
+    use windows_sys::Win32::Foundation::INVALID_HANDLE_VALUE;
+    use windows_sys::Win32::System::Console::{
+        ATTACH_PARENT_PROCESS, AttachConsole, GetStdHandle, STD_OUTPUT_HANDLE,
+    };
+    // SAFETY: both calls only query or attach the process's console.
+    unsafe {
+        let stdout = GetStdHandle(STD_OUTPUT_HANDLE);
+        if stdout.is_null() || stdout == INVALID_HANDLE_VALUE {
+            AttachConsole(ATTACH_PARENT_PROCESS);
+        }
+    }
+}
+
+/// Build the editor plugin for the prebuilt `jackdaw` binary.
+///
+/// Prebuilt releases use the shared SDK and can safely load native
+/// extension bundles. Self-contained source installs remain useful as
+/// editors and project scaffolders, but cannot load Rust dylibs because
+/// they do not share a type graph with those libraries.
+fn editor_plugins(app: &mut App) {
+    app.add_plugins(JackdawEditorPlugins::default());
+    #[cfg(feature = "dylib")]
+    {
+        jackdaw_loader::set_running_sdk(running_sdk_svh());
+        app.add_plugins(DylibLoaderPlugin);
+    }
+}
+
+/// The crate hash of the SDK this editor builds and loads extensions
+/// against, or why it cannot be read.
+#[cfg(feature = "dylib")]
+fn running_sdk_svh() -> Result<String, String> {
+    let sdk = crate::sdk_paths::SdkPaths::compute();
+    if !sdk.dylib_exists() {
+        return Err(format!("no SDK at {}", sdk.dylib.display()));
+    }
+    crate::project_build::linkage::sdk_svh(&sdk.dylib, sdk.toolchain.as_deref())
+        .map_err(|error| error.to_string())
+}
+
+#[track_caller]
+#[inline]
+fn error_handler(error: BevyError, ctx: ErrorContext) {
+    let msg = format!("{error}");
+    if msg.contains("Note that interacting with a despawned entity is the most common cause of this error but there are others") {
+        // TODO: Ideally these should not happen. But as-is, we get a lot of them and they are benign, so let's not flood the logs
+        bevy::ecs::error::debug(error, ctx);
+        return;
+    }
+    bevy::ecs::error::error(error, ctx);
+}
+
+/// `jackdaw check-extensions [--expect <id,id>]`: load every extension shipped
+/// with this editor and every installed one once, and report each. Fails when
+/// one does not load, or when an id named by `--expect` is not among them.
+#[expect(
+    clippy::print_stdout,
+    clippy::print_stderr,
+    reason = "a command-line check reports to the terminal"
+)]
+fn check_extensions(args: &[String]) -> AppExit {
+    use jackdaw_loader::package;
+
+    let expected: Vec<String> = args
+        .iter()
+        .position(|arg| arg == "--expect")
+        .and_then(|index| args.get(index + 1))
+        .map(|list| list.split(',').map(str::to_string).collect())
+        .unwrap_or_default();
+    #[cfg(feature = "dylib")]
+    jackdaw_loader::set_running_sdk(running_sdk_svh());
+    let mut found = Vec::new();
+    let mut failed = false;
+    for (origin, listed) in [
+        ("shipped", package::list_bundled()),
+        ("installed", package::list_installed()),
+    ] {
+        let extensions = match listed {
+            Ok(extensions) => extensions,
+            Err(error) => {
+                eprintln!("{origin} extensions: {error}");
+                failed = true;
+                continue;
+            }
+        };
+        for extension in extensions {
+            let manifest = &extension.manifest;
+            match jackdaw_loader::probe(&extension.library_path) {
+                Ok(id) if id == manifest.id => {
+                    println!("{id} {} ({origin}): loads", manifest.version);
+                    found.push(id);
+                }
+                Ok(id) => {
+                    eprintln!(
+                        "{} ({origin}): the library registers as `{id}`",
+                        manifest.id
+                    );
+                    failed = true;
+                }
+                Err(error) => {
+                    eprintln!(
+                        "{} ({origin}): {} does not load: {error}",
+                        manifest.id,
+                        extension.library_path.display()
+                    );
+                    failed = true;
+                }
+            }
+        }
+    }
+    for id in &expected {
+        if !found.contains(id) {
+            eprintln!("{id}: not found");
+            failed = true;
+        }
+    }
+    if failed {
+        AppExit::from_code(1)
+    } else {
+        AppExit::Success
+    }
+}

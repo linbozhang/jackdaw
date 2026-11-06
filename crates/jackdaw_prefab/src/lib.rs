@@ -17,7 +17,9 @@ pub mod model;
 pub mod resolve;
 pub mod source;
 
-pub use components::{ISA_TYPE, IsA, PREFAB_ENTITY_ID_TYPE, PREFAB_TYPE, Prefab, PrefabEntityId};
+pub use components::{
+    ISA_TYPE, IsA, PREFAB_ENTITY_ID_TYPE, PREFAB_TYPE, Prefab, PrefabEntityId, owning_source,
+};
 pub use model::{PrefabModel, prefab_model};
 pub use resolve::{
     CycleError, MAX_PREFAB_DEPTH, PrefabLookup, ResolveError, clone_scene, read_isa_deleted,
@@ -26,7 +28,8 @@ pub use resolve::{
 };
 pub use source::{
     absolutize_isa_sources, isa_value, normalize_as_prefab_source, normalize_path,
-    read_prefab_document, relativize_isa_sources, relativize_isa_sources_under, source_path,
+    prepare_prefab_document, read_prefab_document, relativize_isa_sources,
+    relativize_isa_sources_under, source_path,
 };
 
 use bevy::prelude::*;

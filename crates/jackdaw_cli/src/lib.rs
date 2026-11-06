@@ -35,7 +35,6 @@
 use std::path::{Path, PathBuf};
 use std::process::ExitCode;
 
-use jackdaw_env::rust_env_command;
 use jackdaw_project_build::bootstrap::{self, SetupProgress};
 use jackdaw_project_build::build_tools::CheckStatus;
 use jackdaw_project_build::cargo_meta::{self, CargoMeta};
@@ -88,8 +87,8 @@ fn cmd_setup() -> ExitCode {
             bootstrap::SDK_BUILD_ESTIMATE
         );
     }
-    // Print phase headers; cargo's own progress reaches the terminal on
-    // inherited stderr, so per-crate events are left for the editor's bar.
+    // Print phase headers; cargo's own progress is echoed to the terminal,
+    // so per-crate events are left for the editor's bar.
     let report = |event: SetupProgress| {
         if let SetupProgress::Phase(phase) = event {
             println!("jd setup: {phase}");
@@ -426,7 +425,7 @@ fn report_project(root: &Path) -> bool {
     // compiler, so every other check above can pass while nothing
     // builds. This is the one check that exercises the manifest a
     // scaffold or import actually produced.
-    match resolve_dependencies(root) {
+    match jackdaw_project_build::cargo_meta::resolve_dependencies(root) {
         Ok(()) => pass("dependencies: resolve".to_string()),
         Err(detail) => {
             ok = false;
@@ -1001,6 +1000,11 @@ struct BuildOutcome {
 /// Returns what the build produced, so `jd run --config` can launch
 /// the binary and `jd export` can check how it linked.
 fn build_project(root: &Path, target: Option<&CargoTarget>) -> Result<BuildOutcome, ExitCode> {
+
+/// Build the project at `root`: a game as its own binary with its schema
+/// persisted, a project that is only an extension against the SDK. Returns
+/// the game's binary, or `None` for an extension.
+fn build_project(root: &Path) -> Result<Option<PathBuf>, ExitCode> {
     let spec = match jackdaw_project_build::shim_spec_for_project(root) {
         Ok(spec) => spec,
         Err(error) => {

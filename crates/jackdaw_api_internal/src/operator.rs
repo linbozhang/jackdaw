@@ -63,6 +63,10 @@ pub(super) fn plugin(app: &mut App) {
 /// a global observer that, on `ButtonClickEvent`, calls
 /// [`OperatorWorldExt::operator`] with the stored id; so no per-button
 /// click handler is needed.
+/// Explains why an operator is unavailable in the current world, or `None`
+/// when it has nothing more specific to say than its description.
+pub type UnavailableReason = fn(&World) -> Option<String>;
+
 pub trait Operator: 'static {
     const ID: &'static str;
     const LABEL: &'static str;
@@ -78,6 +82,16 @@ pub trait Operator: 'static {
     /// so this should usually be `true`.
     const ALLOWS_UNDO: bool = true;
 
+    /// Whether this operator writes files outside the scene document. No undo
+    /// or rollback takes such a write back, so a batch that has to be able to
+    /// roll back refuses the call.
+    const WRITES_DISK: bool = false;
+
+    /// Whether this operator moves the editor off the history a batch records
+    /// into: it opens, closes or switches a scene or project, or steps undo or
+    /// redo. A batch that has to be able to roll back refuses the call.
+    const LEAVES_HISTORY: bool = false;
+
     /// Why this operator is out of reach of a scripted or remote caller, or
     /// `None` when it is not.
     ///
@@ -85,6 +99,11 @@ pub trait Operator: 'static {
     /// without a person at the pointer. The reason is required so hiding one is
     /// an argument on the record.
     const REMOTE_HIDDEN: Option<&'static str> = None;
+
+    /// Why the operator is unavailable right now, read only while its
+    /// availability check fails. Shown in place of the description on a
+    /// disabled button or menu row; `None` keeps the description.
+    const UNAVAILABLE_REASON: Option<UnavailableReason> = None;
 
     /// Modal operators stay active across frames.
     ///
@@ -181,6 +200,25 @@ impl OperatorParameters {
     pub fn as_str(&self, key: &str) -> Option<&str> {
         match self.get(key)? {
             PropertyValue::String(s) => Some(s.as_ref()),
+            _ => None,
+        }
+    }
+
+    /// Read a `Vec3` parameter, given as a vector or as `x,y,z` text.
+    pub fn as_vec3(&self, key: &str) -> Option<Vec3> {
+        match self.get(key)? {
+            PropertyValue::Vec3(value) => Some(*value),
+            PropertyValue::String(text) => {
+                let parts = text
+                    .split(',')
+                    .map(|part| part.trim().parse::<f32>())
+                    .collect::<Result<Vec<_>, _>>()
+                    .ok()?;
+                match parts[..] {
+                    [x, y, z] => Some(Vec3::new(x, y, z)),
+                    _ => None,
+                }
+            }
             _ => None,
         }
     }
@@ -461,7 +499,10 @@ impl<'a> OperatorCallBuilder<'a, Commands<'_, '_>> {
     /// itself.
     pub fn call(self) {
         self.world_commands.queue(move |world: &mut World| {
-            world.run_system_cached_with(dispatch_operator, (self.id, self.params, self.settings))
+            let id = self.id.clone();
+            if let Err(err) = dispatch_operator(world, (self.id, self.params, self.settings)) {
+                debug!("{id}: {err}");
+            }
         });
     }
 
@@ -481,28 +522,20 @@ impl<'a> OperatorCallBuilder<'a, World> {
     /// Whether this operator is declared `modal = true`. Returns
     /// `Err(UnknownId)` if the id doesn't resolve.
     pub fn is_modal(self) -> Result<bool, CallOperatorError> {
-        fn is_modal_inner(
-            In(id): In<Cow<'static, str>>,
-            world: &mut World,
-        ) -> Result<bool, CallOperatorError> {
-            let Some(op_entity) = world
-                .resource::<OperatorIndex>()
-                .by_id
-                .get(id.as_ref())
-                .copied()
-            else {
-                return Err(CallOperatorError::UnknownId(id));
-            };
-            let Some(op) = world.get::<OperatorEntity>(op_entity) else {
-                return Err(CallOperatorError::UnknownId(id));
-            };
-            Ok(op.modal)
-        }
-        self.world_commands
-            .run_system_cached_with(is_modal_inner, self.id.clone())
-            .map_err(BevyError::from)
-            .map_err(CallOperatorError::from)
-            .flatten()
+        let world = self.world_commands;
+        let id = self.id;
+        let Some(op_entity) = world
+            .resource::<OperatorIndex>()
+            .by_id
+            .get(id.as_ref())
+            .copied()
+        else {
+            return Err(CallOperatorError::UnknownId(id));
+        };
+        let Some(op) = world.get::<OperatorEntity>(op_entity) else {
+            return Err(CallOperatorError::UnknownId(id));
+        };
+        Ok(op.modal)
     }
 
     /// Whether the operator would run in the current editor state.
@@ -510,7 +543,7 @@ impl<'a> OperatorCallBuilder<'a, World> {
     /// ids.
     pub fn is_available(self) -> Result<bool, CallOperatorError> {
         fn is_available_inner(
-            In(id): In<Cow<'static, str>>,
+            id: Cow<'static, str>,
             world: &mut World,
             active: &mut SystemState<ActiveModalQuery>,
         ) -> Result<bool, CallOperatorError> {
@@ -528,6 +561,9 @@ impl<'a> OperatorCallBuilder<'a, World> {
             if op.modal && active.get(world).ok().is_some_and(|a| a.is_modal_running()) {
                 return Err(CallOperatorError::ModalAlreadyActive(op.id));
             }
+            if op.leaves_history && HistoryHold::reason(world).is_some() {
+                return Ok(false);
+            }
             let Some(check) = op.availability_check else {
                 return Ok(true);
             };
@@ -535,41 +571,25 @@ impl<'a> OperatorCallBuilder<'a, World> {
                 .run_system(check)
                 .map_err(|_| CallOperatorError::NotAvailable)
         }
-        self.world_commands
-            .run_system_cached_with(is_available_inner, self.id.clone())
-            .map_err(BevyError::from)
-            .map_err(CallOperatorError::from)
-            .flatten()
+        let id = self.id;
+        with_modal_query(self.world_commands, |world, active| {
+            is_available_inner(id, world, active)
+        })
     }
 
     /// Call an operator by id. The availability check runs before the
     /// invoke system, so validation logic lives only on the operator
     /// itself.
     pub fn call(self) -> Result<OperatorResult, CallOperatorError> {
-        let result = self
-            .world_commands
-            .run_system_cached_with(dispatch_operator, (self.id, self.params, self.settings));
-        match result {
-            Ok(result) => result,
-            Err(_) => Err(CallOperatorError::ExecuteFailed),
-        }
+        dispatch_operator(self.world_commands, (self.id, self.params, self.settings))
     }
 
     /// Checks if an operator is the currently running modal operator.
     pub fn is_running(self) -> bool {
-        let result = self
-            .world_commands
-            .run_system_cached_with(is_op_running, self.id.clone());
-        match result {
-            Ok(result) => result,
-            Err(_) => {
-                error!(
-                    "Failed to check if operator is running: {}, treating as `false`",
-                    self.id
-                );
-                false
-            }
-        }
+        let id = self.id;
+        with_modal_query(self.world_commands, |world, active| {
+            active.get(world).ok().is_some_and(|a| a.is_operator(id))
+        })
     }
 
     /// Calls an operator's cancel system, if one is defined, and stops the execution if it is running as a modal.
@@ -580,14 +600,6 @@ impl<'a> OperatorCallBuilder<'a, World> {
             .run_system_cached_with(cancel_operator, self.id)
             .map_err(From::from)
     }
-}
-
-fn is_op_running(
-    In(id): In<Cow<'static, str>>,
-    world: &mut World,
-    active: &mut SystemState<ActiveModalQuery>,
-) -> bool {
-    active.get(world).ok().is_some_and(|a| a.is_operator(id))
 }
 
 /// Fired once whenever an operator runs through `dispatch_operator`,
@@ -605,8 +617,92 @@ fn is_op_running(
 #[derive(Event)]
 pub struct RefreshOperatorButtons;
 
+/// The modal queries dispatches and availability checks read, kept between
+/// calls. Each call takes one out and puts it back when done, holding no
+/// resource while it runs, so a check or a dispatch can start another from
+/// inside an operator's system or an availability check.
+#[derive(Resource, Default)]
+struct ModalQueryStates(Vec<SystemState<ActiveModalQuery<'static, 'static>>>);
+
+fn with_modal_query<R>(
+    world: &mut World,
+    body: impl FnOnce(&mut World, &mut SystemState<ActiveModalQuery<'static, 'static>>) -> R,
+) -> R {
+    let mut active = world
+        .get_resource_mut::<ModalQueryStates>()
+        .and_then(|mut states| states.0.pop())
+        .unwrap_or_else(|| SystemState::new(world));
+    let out = body(world, &mut active);
+    world
+        .get_resource_or_init::<ModalQueryStates>()
+        .0
+        .push(active);
+    out
+}
+
+/// Functions run around every operator call that neither another operator nor
+/// a running modal made, while the resource is present: `before` with the call
+/// as given, `after` with how it ended, `None` when it failed to dispatch.
+/// Every `before` gets its `after`, even when the call removes the resource.
+#[derive(Resource, Clone, Copy)]
+pub struct TopLevelCallHook {
+    pub before: fn(&mut World, &str, &OperatorParameters),
+    pub after: fn(&mut World, &str, Option<OperatorResult>),
+}
+
+/// How many dispatches and modal ticks are under way.
+#[derive(Resource, Default)]
+struct DispatchDepth(u32);
+
 fn dispatch_operator(
-    In((id, params, settings)): In<(Cow<'static, str>, OperatorParameters, CallOperatorSettings)>,
+    world: &mut World,
+    call: (Cow<'static, str>, OperatorParameters, CallOperatorSettings),
+) -> Result<OperatorResult, CallOperatorError> {
+    let depth = {
+        let mut depth = world.get_resource_or_init::<DispatchDepth>();
+        depth.0 += 1;
+        depth.0
+    };
+    let watched = (depth == 1)
+        .then(|| world.get_resource::<TopLevelCallHook>().copied())
+        .flatten()
+        .map(|hook| (hook, call.0.clone()));
+    if let Some((hook, id)) = &watched {
+        (hook.before)(world, id, &call.1);
+    }
+    let result = with_modal_query(world, |world, active| {
+        dispatch_operator_reported(call, world, active)
+    });
+    world.get_resource_or_init::<DispatchDepth>().0 -= 1;
+    if let Some((hook, id)) = &watched {
+        (hook.after)(world, id, result.as_ref().ok().copied());
+    }
+    result
+}
+
+fn dispatch_operator_reported(
+    call: (Cow<'static, str>, OperatorParameters, CallOperatorSettings),
+    world: &mut World,
+    active: &mut SystemState<ActiveModalQuery>,
+) -> Result<OperatorResult, CallOperatorError> {
+    let outer = world.get_resource_or_init::<OperatorOutcome>().enter();
+    let outer_replaced = world.get_resource_or_init::<OperatorReplacements>().enter();
+    let outer_boolean = world
+        .get_resource_or_init::<OperatorBooleanReport>()
+        .enter();
+    let result = dispatch_operator_scoped(call, world, active);
+    world
+        .get_resource_or_init::<OperatorBooleanReport>()
+        .leave(outer_boolean);
+    world
+        .get_resource_or_init::<OperatorReplacements>()
+        .leave(outer_replaced);
+    world.get_resource_or_init::<OperatorOutcome>().leave(outer);
+    result
+}
+
+fn dispatch_operator_scoped(
+    (id, params, settings): (Cow<'static, str>, OperatorParameters, CallOperatorSettings),
     world: &mut World,
     active: &mut SystemState<ActiveModalQuery>,
 ) -> Result<OperatorResult, CallOperatorError> {
@@ -631,10 +727,30 @@ fn dispatch_operator(
         return Err(CallOperatorError::ModalAlreadyActive(active_op.id));
     }
 
+    if op.leaves_history
+        && let Some(reason) = HistoryHold::reason(world)
+    {
+        let refusal = format!("{id}: {reason}");
+        warn!("{refusal}");
+        world
+            .get_resource_or_init::<OperatorWarnings>()
+            .0
+            .push(refusal);
+        set_outcome(world, Outcome::Unchanged);
+        return Ok(OperatorResult::Cancelled);
+    }
+
     if let Some(check) = op.availability_check {
-        let available = world
-            .run_system(check)
-            .map_err(|_| CallOperatorError::NotAvailable)?;
+        let previous = world.remove_resource::<AvailabilityParams>();
+        if !params.is_empty() {
+            world.insert_resource(AvailabilityParams(params.clone()));
+        }
+        let checked = world.run_system(check);
+        world.remove_resource::<AvailabilityParams>();
+        if let Some(previous) = previous {
+            world.insert_resource(previous);
+        }
+        let available = checked.map_err(|_| CallOperatorError::NotAvailable)?;
         if !available {
             // FIXME: this should read
             // return Err(CallOperatorError::NotAvailable);
@@ -642,7 +758,11 @@ fn dispatch_operator(
             // we need to manually move this to `debug` on the error handler.
             // Which I leave as an exercise for the reader.
             // Until then, this erroneously returns `Ok()` :)
-            debug!("Availability check failed for operator: {id}");
+            match op.unavailable_reason(world) {
+                Some(reason) => debug!("Availability check failed for operator {id}: {reason}"),
+                None => debug!("Availability check failed for operator: {id}"),
+            }
+            set_outcome(world, Outcome::Unchanged);
             return Ok(OperatorResult::Cancelled);
         }
     }
@@ -764,6 +884,240 @@ pub fn report_to_caller(world: &mut World, message: impl Into<String>) {
         .push(message);
 }
 
+/// The parameters of the call whose availability check is running, so a gate
+/// can let a call through that names its own operands. Present only during the
+/// check of a dispatch that carries parameters; a plain
+/// [`OperatorCallBuilder::is_available`] query, as a button asks, sees none.
+#[derive(Resource, Debug)]
+pub struct AvailabilityParams(pub OperatorParameters);
+
+/// What a parametric call made of the scene.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum Outcome {
+    Changed,
+    /// The call did what was asked and nothing was left of the result.
+    Empty,
+    Unchanged,
+    /// The parameters were refused before anything was touched.
+    Invalid,
+}
+
+impl Outcome {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::Changed => "changed",
+            Self::Empty => "empty",
+            Self::Unchanged => "unchanged",
+            Self::Invalid => "invalid",
+        }
+    }
+}
+
+/// The scene entities the operator that just ran removed and the ones it made
+/// in their place, for a caller that cannot see which ids went away. Scoped
+/// like [`OperatorOutcome`]: every top-level dispatch starts it empty, and a
+/// call made from inside another operator leaves the outer call's lists as it
+/// found them.
+#[derive(Resource, Default, Debug)]
+pub struct OperatorReplacements {
+    removed: Vec<Entity>,
+    created: Vec<Entity>,
+    depth: usize,
+}
+
+/// The lists a dispatch set aside on entering, for [`OperatorReplacements::leave`].
+pub type ReplacedLists = (Vec<Entity>, Vec<Entity>);
+
+impl OperatorReplacements {
+    pub fn removed(&self) -> &[Entity] {
+        &self.removed
+    }
+
+    pub fn created(&self) -> &[Entity] {
+        &self.created
+    }
+
+    /// Start a call: the lists it replaces, for [`Self::leave`].
+    pub fn enter(&mut self) -> ReplacedLists {
+        self.depth += 1;
+        (
+            std::mem::take(&mut self.removed),
+            std::mem::take(&mut self.created),
+        )
+    }
+
+    /// End a call begun with [`Self::enter`].
+    pub fn leave(&mut self, outer: ReplacedLists) {
+        self.depth = self.depth.saturating_sub(1);
+        if self.depth > 0 {
+            (self.removed, self.created) = outer;
+        }
+    }
+
+    /// Hand over the outermost call's lists.
+    pub fn take(&mut self) -> ReplacedLists {
+        (
+            std::mem::take(&mut self.removed),
+            std::mem::take(&mut self.created),
+        )
+    }
+}
+
+/// Tells whoever dispatched the running operator which entities it removed
+/// and which it created.
+pub fn report_replaced(world: &mut World, removed: &[Entity], created: &[Entity]) {
+    let mut replaced = world.get_resource_or_init::<OperatorReplacements>();
+    replaced.removed.extend_from_slice(removed);
+    replaced.created.extend_from_slice(created);
+}
+
+/// What a boolean made, or would make on a dry run, measured so a caller can
+/// confirm the cut without reading the scene.
+#[derive(Clone, Debug, PartialEq)]
+pub struct BooleanReport {
+    pub outcome: Outcome,
+    /// Brushes the result is made of.
+    pub fragments: usize,
+    /// Volume of the brushes cut, before and after.
+    pub volume_before: f32,
+    pub volume_after: f32,
+    /// World-space `(min, max)` around every fragment; `None` when nothing is left.
+    pub bounds: Option<(Vec3, Vec3)>,
+    /// Every edge of every fragment is shared by exactly two faces.
+    pub watertight: bool,
+    /// Faces the cut created.
+    pub cut_faces: usize,
+    /// Cutter faces lying on a face plane of the brush they cut.
+    pub coplanar: usize,
+    /// Sliver faces and fragments too thin to be solid, dropped from the result.
+    pub degenerate: usize,
+}
+
+/// The [`BooleanReport`] of the operator that just ran, scoped like
+/// [`OperatorOutcome`]. An operator measures one only when a caller asked
+/// with [`Self::request`], so a click from the UI does not pay for it.
+#[derive(Resource, Default, Debug)]
+pub struct OperatorBooleanReport {
+    current: Option<BooleanReport>,
+    depth: usize,
+    wanted: bool,
+}
+
+impl OperatorBooleanReport {
+    pub fn get(&self) -> Option<&BooleanReport> {
+        self.current.as_ref()
+    }
+
+    /// Ask the next call to measure its boolean; [`Self::take`] ends the ask.
+    pub fn request(&mut self) {
+        self.wanted = true;
+    }
+
+    pub fn wanted(&self) -> bool {
+        self.wanted
+    }
+
+    /// Start a call: the report it replaces, for [`Self::leave`].
+    pub fn enter(&mut self) -> Option<BooleanReport> {
+        self.depth += 1;
+        self.current.take()
+    }
+
+    /// End a call begun with [`Self::enter`].
+    pub fn leave(&mut self, outer: Option<BooleanReport>) {
+        self.depth = self.depth.saturating_sub(1);
+        if self.depth > 0 {
+            self.current = outer;
+        }
+    }
+
+    /// Hand over the outermost call's report.
+    pub fn take(&mut self) -> Option<BooleanReport> {
+        self.wanted = false;
+        self.current.take()
+    }
+}
+
+/// Tells whoever dispatched the running operator what its boolean made.
+pub fn report_boolean(world: &mut World, report: BooleanReport) {
+    world
+        .get_resource_or_init::<OperatorBooleanReport>()
+        .current = Some(report);
+}
+
+/// The [`Outcome`] the operator that just ran declared, if it declares one.
+/// Every dispatch starts it empty; a call made from inside another operator
+/// leaves the outer call's value as it found it.
+#[derive(Resource, Default, Debug)]
+pub struct OperatorOutcome {
+    current: Option<Outcome>,
+    depth: usize,
+}
+
+impl OperatorOutcome {
+    pub fn get(&self) -> Option<Outcome> {
+        self.current
+    }
+
+    pub fn set(&mut self, outcome: Outcome) {
+        self.current = Some(outcome);
+    }
+
+    /// Start a call: the value it replaces, for [`Self::leave`].
+    pub fn enter(&mut self) -> Option<Outcome> {
+        self.depth += 1;
+        self.current.take()
+    }
+
+    /// End a call begun with [`Self::enter`].
+    pub fn leave(&mut self, outer: Option<Outcome>) {
+        self.depth = self.depth.saturating_sub(1);
+        if self.depth > 0 {
+            self.current = outer;
+        }
+    }
+
+    /// Hand over the outermost call's value.
+    pub fn take(&mut self) -> Option<Outcome> {
+        self.current.take()
+    }
+}
+
+/// Declares what the running operator made of the scene.
+pub fn set_outcome(world: &mut World, outcome: Outcome) {
+    world.get_resource_or_init::<OperatorOutcome>().set(outcome);
+}
+
+/// Runs `body` with the reports of the operator call under way set aside, so
+/// the calls `body` makes report to their caller as top-level calls do: each
+/// one's outcome, replacements, boolean report, warnings and receipts are its
+/// own. The outer call's are put back afterwards.
+pub fn with_outer_call_reports_set_aside<R>(
+    world: &mut World,
+    body: impl FnOnce(&mut World) -> R,
+) -> R {
+    let outcome = world.remove_resource::<OperatorOutcome>();
+    let replaced = world.remove_resource::<OperatorReplacements>();
+    let boolean = world.remove_resource::<OperatorBooleanReport>();
+    let warnings = world.remove_resource::<OperatorWarnings>();
+    let reports = world.remove_resource::<OperatorReports>();
+    let out = body(world);
+    fn put_back<T: Resource>(world: &mut World, held: Option<T>) {
+        match held {
+            Some(held) => world.insert_resource(held),
+            None => {
+                world.remove_resource::<T>();
+            }
+        }
+    }
+    put_back(world, outcome);
+    put_back(world, replaced);
+    put_back(world, boolean);
+    put_back(world, warnings);
+    put_back(world, reports);
+    out
+}
+
 /// Runs `body` as one undo entry labelled `label`.
 ///
 /// A single operator call already gets its own entry and nested calls collapse
@@ -788,22 +1142,173 @@ pub fn with_history_span<R>(
 }
 
 /// Run `body` as one undo entry holding one scene snapshot pair, for a caller
-/// that dispatches its operators without history of their own. The entry has
-/// the shape a single history dispatch leaves: the commands the operators
-/// pushed, then the change from before `body` to after it.
-pub fn with_batch_snapshot<R>(
+/// that dispatches its operators without history of their own. `body`
+/// answers its result and whether to keep what it did.
+///
+/// Kept, the work is one undo entry: the commands the operators pushed, then
+/// the change from before `body` to after it, which runs last both ways. The
+/// change sets each node it names to one side, so it settles whatever the
+/// commands did to the same nodes; run first, a deletion's undo would bring
+/// back a second copy of what the change had already put back.
+///
+/// Not kept, that same entry is undone and dropped, the selection is put back,
+/// and the history reads as if `body` never ran. The undo touches only what
+/// `body` changed, so other nodes keep their entity ids, and the commands'
+/// undo takes back what they did outside the scene document.
+///
+/// `may_roll_back` sets the redo stack aside while `body` runs, so a rollback
+/// can put it back; a body that may roll back must not step undo or redo.
+pub fn with_batch_transaction<R>(
     world: &mut World,
     label: impl Into<String>,
-    body: impl FnOnce(&mut World) -> R,
+    may_roll_back: bool,
+    body: impl FnOnce(&mut World) -> (R, bool),
 ) -> R {
-    let label = label.into();
-    let span = world.resource_mut::<CommandHistory>().begin_span();
-    let before = world
-        .resource_scope(|world, snapshotter: Mut<ActiveSnapshotter>| snapshotter.0.capture(world));
-    let out = body(world);
-    push_snapshot_diff(world, label.clone(), before);
-    world.resource_mut::<CommandHistory>().end_span(span, label);
+    let transaction = BatchTransaction::begin(world, label, may_roll_back);
+    let (out, keep) = body(world);
+    transaction.finish(world, keep);
     out
+}
+
+/// Why the history may not be stepped or swapped right now, while something
+/// holds an undo entry open across frames. While held, every operator that
+/// leaves the history (undo, redo, opening, closing or switching a scene or
+/// project) is unavailable and refused with this reason.
+#[derive(Resource, Default, Debug)]
+pub struct HistoryHold(Option<String>);
+
+impl HistoryHold {
+    /// Hold the history, saying why.
+    pub fn hold(&mut self, reason: impl Into<String>) {
+        self.0 = Some(reason.into());
+    }
+
+    /// Let the history go.
+    pub fn release(&mut self) {
+        self.0 = None;
+    }
+
+    /// Why the history is held, if it is.
+    pub fn reason(world: &World) -> Option<String> {
+        world.get_resource::<Self>().and_then(|hold| hold.0.clone())
+    }
+}
+
+/// [`with_batch_transaction`] held open across frames: [`Self::begin`] where
+/// the body would start and [`Self::finish`] where it ends. Whatever reaches
+/// the history in between joins the one entry.
+pub struct BatchTransaction {
+    label: String,
+    redo: Option<Vec<Box<dyn EditorCommand>>>,
+    span: jackdaw_commands::HistorySpan,
+    before: Box<dyn SceneSnapshot>,
+}
+
+impl BatchTransaction {
+    /// Open the transaction; see [`with_batch_transaction`] for
+    /// `may_roll_back`.
+    pub fn begin(world: &mut World, label: impl Into<String>, may_roll_back: bool) -> Self {
+        let redo = may_roll_back
+            .then(|| std::mem::take(&mut world.resource_mut::<CommandHistory>().redo_stack));
+        let span = world.resource_mut::<CommandHistory>().begin_span();
+        let before = world.resource_scope(|world, snapshotter: Mut<ActiveSnapshotter>| {
+            snapshotter.0.capture(world)
+        });
+        Self {
+            label: label.into(),
+            redo,
+            span,
+            before,
+        }
+    }
+
+    /// Close the transaction as one undo entry, or take everything in it back
+    /// when `keep` is false.
+    pub fn finish(self, world: &mut World, keep: bool) {
+        let Self {
+            label,
+            redo,
+            span,
+            before,
+        } = self;
+        let mut commands = world.resource_mut::<CommandHistory>().take_span(span);
+        let change = world.resource_scope(|world, snapshotter: Mut<ActiveSnapshotter>| {
+            let after = snapshotter.0.capture(world);
+            snapshotter
+                .0
+                .history_entry(before.clone_box(), after, label.clone())
+        });
+        if !keep {
+            BatchEntry {
+                commands,
+                change,
+                label,
+            }
+            .undo(world);
+            before.restore_selection(world);
+            if let Some(redo) = redo {
+                world.resource_mut::<CommandHistory>().redo_stack = redo;
+            }
+            return;
+        }
+        let entry: Option<Box<dyn EditorCommand>> = match (commands.len(), change) {
+            (0, None) => None,
+            (0, Some(change)) => Some(change),
+            (1, None) => commands.pop(),
+            (_, change) => Some(Box::new(BatchEntry {
+                commands,
+                change,
+                label,
+            })),
+        };
+        let mut history = world.resource_mut::<CommandHistory>();
+        match (entry, redo) {
+            (Some(entry), _) => history.push_executed(entry),
+            (None, Some(redo)) => history.redo_stack = redo,
+            (None, None) => {}
+        }
+    }
+}
+
+/// A batch as one undo entry: the commands its calls pushed, then the scene
+/// change, which runs last in both directions.
+struct BatchEntry {
+    commands: Vec<Box<dyn EditorCommand>>,
+    change: Option<Box<dyn EditorCommand>>,
+    label: String,
+}
+
+impl EditorCommand for BatchEntry {
+    fn execute(&mut self, world: &mut World) {
+        for command in &mut self.commands {
+            command.execute(world);
+        }
+        if let Some(change) = &mut self.change {
+            change.execute(world);
+        }
+    }
+
+    fn undo(&mut self, world: &mut World) {
+        for command in self.commands.iter_mut().rev() {
+            command.undo(world);
+        }
+        if let Some(change) = &mut self.change {
+            change.undo(world);
+        }
+    }
+
+    fn description(&self) -> &str {
+        &self.label
+    }
+
+    fn heap_bytes(&self) -> usize {
+        self.commands
+            .iter()
+            .chain(&self.change)
+            .map(|command| command.heap_bytes())
+            .sum::<usize>()
+            + self.label.capacity()
+    }
 }
 
 /// One undo entry. Swaps the active scene snapshot on execute / undo.
@@ -841,7 +1346,10 @@ pub(crate) fn tick_modal_operator(world: &mut World, active: &mut SystemState<Ac
     else {
         return;
     };
-    let result = match world.run_system_with(op.invoke, default()) {
+    world.get_resource_or_init::<DispatchDepth>().0 += 1;
+    let result = world.run_system_with(op.invoke, default());
+    world.get_resource_or_init::<DispatchDepth>().0 -= 1;
+    let result = match result {
         Ok(r) => r,
         Err(err) => {
             error!("Modal operator's invoke system failed: {err:?}; cancelling");
@@ -959,6 +1467,73 @@ fn finalize_modal(
 #[cfg(test)]
 mod parameter_tests {
     use super::*;
+
+    #[test]
+    fn a_vec3_reads_from_a_vector_or_from_three_numbers_as_text() {
+        let given = Vec3::new(1.0, -2.0, 3.5);
+        assert_eq!(
+            params("pos", PropertyValue::Vec3(given)).as_vec3("pos"),
+            Some(given)
+        );
+        assert_eq!(
+            params("pos", PropertyValue::String("1, -2, 3.5".into())).as_vec3("pos"),
+            Some(given)
+        );
+        for text in ["1,2", "1,2,3,4", "1,x,3", ""] {
+            assert_eq!(
+                params("pos", PropertyValue::String(text.into())).as_vec3("pos"),
+                None,
+                "{text}"
+            );
+        }
+    }
+
+    #[test]
+    fn a_nested_call_never_replaces_the_outer_calls_replacements() {
+        let outer_entity = Entity::from_raw_u32(1).expect("a valid index");
+        let inner_entity = Entity::from_raw_u32(2).expect("a valid index");
+        let mut replaced = OperatorReplacements::default();
+        replaced.removed.push(inner_entity);
+        let outer = replaced.enter();
+        assert!(
+            replaced.removed().is_empty(),
+            "a call starts with empty lists"
+        );
+        replaced.removed.push(outer_entity);
+        let inner = replaced.enter();
+        replaced.created.push(inner_entity);
+        replaced.leave(inner);
+        assert_eq!(replaced.removed(), [outer_entity]);
+        assert!(
+            replaced.created().is_empty(),
+            "the nested call's lists are dropped"
+        );
+        replaced.leave(outer);
+        assert_eq!(replaced.take(), (vec![outer_entity], Vec::new()));
+    }
+
+    #[test]
+    fn a_nested_call_never_replaces_the_outer_calls_outcome() {
+        let mut outcome = OperatorOutcome::default();
+        outcome.set(Outcome::Invalid);
+        let outer = outcome.enter();
+        assert_eq!(outcome.get(), None, "a call starts with no outcome");
+        outcome.set(Outcome::Unchanged);
+        let inner = outcome.enter();
+        outcome.set(Outcome::Changed);
+        outcome.leave(inner);
+        assert_eq!(
+            outcome.get(),
+            Some(Outcome::Unchanged),
+            "the inner one is dropped"
+        );
+        outcome.leave(outer);
+        assert_eq!(
+            outcome.get(),
+            Some(Outcome::Unchanged),
+            "the outermost one stays"
+        );
+    }
 
     fn params(key: &str, value: PropertyValue) -> OperatorParameters {
         OperatorParameters([(key.to_string(), value)].into_iter().collect())

@@ -1,0 +1,611 @@
+//! The `Sprite` card: the sprite's own fields, its anchor as a preset with a
+//! custom offset beside it, flip X and Y as one row, a row that sizes it from
+//! the pixels per unit its art was drawn at, its draw order, and how its image
+//! is sampled.
+
+use bevy::{ecs::system::SystemState, prelude::*, sprite::Anchor, ui_widgets::ValueChange};
+use jackdaw_api::prelude::*;
+use jackdaw_feathers::{
+    button::{
+        ButtonClickEvent, ButtonOperatorCall, ButtonProps, ButtonSize, IconButtonProps, button,
+        icon_button,
+    },
+    combobox::{
+        ComboBoxChangeEvent, ComboBoxOptionData, ComboBoxSelectedIndex, combobox_with_selected,
+    },
+    field_row::{FieldRowProps, spawn_field_row},
+    icons::{EditorFont, Icon, IconFont},
+    number_input::{NumberInputPrecision, ScrubNumberInput, ScrubNumberInputValue},
+};
+
+use crate::commands::FieldWritten;
+use crate::image_sampling::{ImageSetSamplingOp, ProjectSampling2d, Sampling, sampling_target};
+use crate::operator_tooltip::OperatorTooltip;
+use crate::remote_mode::RemoteEntityProxy;
+use crate::sprite_props::{
+    ANCHOR_PRESETS, SpriteSetAnchorOp, SpriteSetPixelsPerUnitOp, SpriteYSortOp, SpriteZDownOp,
+    SpriteZUpOp,
+};
+
+/// Combo index of the Custom option, after the presets.
+pub const CUSTOM_ANCHOR: usize = ANCHOR_PRESETS.len();
+
+/// One row of the card.
+#[derive(Clone, Copy, PartialEq)]
+enum CardRow<'a> {
+    /// A `Sprite` field, by name.
+    Field(&'a str),
+    /// The anchor preset combo and its custom offset.
+    Anchor,
+    /// Size from pixels per unit.
+    SizeFromPpu,
+    /// How the sprite's image is sampled.
+    Sampling,
+    /// Flip X and flip Y as one pair.
+    Flip,
+    /// Z step buttons and the Y-sort toggle.
+    DrawOrder,
+}
+
+impl<'a> CardRow<'a> {
+    /// The `Sprite` fields the row edits, which get no row of their own.
+    fn fields(&self) -> &[&'a str] {
+        match self {
+            CardRow::Field(name) => std::slice::from_ref(name),
+            CardRow::Flip => &["flip_x", "flip_y"],
+            _ => &[],
+        }
+    }
+}
+
+/// The card's rows top to bottom; `Sprite` fields it does not name follow.
+const ROW_ORDER: [CardRow<'static>; 11] = [
+    CardRow::Field("image"),
+    CardRow::Sampling,
+    CardRow::Anchor,
+    CardRow::Flip,
+    CardRow::Field("custom_size"),
+    CardRow::SizeFromPpu,
+    CardRow::Field("color"),
+    CardRow::DrawOrder,
+    CardRow::Field("rect"),
+    CardRow::Field("texture_atlas"),
+    CardRow::Field("image_mode"),
+];
+
+/// Sprites whose anchor the card's own offset row is writing, so the write it
+/// announces keeps the combo on Custom.
+#[derive(Resource, Default)]
+struct OwnOffsetEdits(bevy::platform::collections::HashSet<Entity>);
+
+/// The anchor preset combo of the card showing `source`.
+#[derive(Component)]
+pub struct SpriteAnchorCombo {
+    pub source: Entity,
+}
+
+/// The row holding the custom anchor offset, shown while the combo reads
+/// Custom.
+#[derive(Component)]
+pub struct SpriteCustomAnchor {
+    pub source: Entity,
+}
+
+/// The pixels per unit the size row applies, before it is applied.
+#[derive(Component)]
+pub struct SpritePpuInput;
+
+/// The button that sizes the card's sprite from the number beside it.
+#[derive(Component)]
+pub struct SpritePpuApply {
+    pub input: Entity,
+    pub source: Entity,
+}
+
+/// The sampling combo of the card showing `source`, built while its sprite
+/// drew `image`.
+#[derive(Component)]
+pub struct SpriteSamplingCombo {
+    pub source: Entity,
+    pub image: AssetId<Image>,
+}
+
+/// The Y-sort checkbox of the card showing `source`.
+#[derive(Component)]
+pub struct SpriteYSortToggle {
+    pub source: Entity,
+}
+
+/// The sampling combo's choices, in order, as `image.set_sampling` names them.
+const SAMPLING_CHOICES: [&str; 3] = ["project", "linear", "nearest"];
+
+pub(crate) fn plugin(app: &mut App) {
+    app.init_resource::<OwnOffsetEdits>()
+        .add_observer(on_anchor_pick)
+        .add_observer(mark_own_offset_edit)
+        .add_observer(follow_anchor_write)
+        .add_observer(on_ppu_number)
+        .add_observer(on_ppu_apply)
+        .add_observer(on_sampling_pick)
+        .add_observer(on_y_sort_toggle)
+        .add_observer(follow_image_write);
+}
+
+fn anchor_type_path() -> &'static str {
+    <Anchor as bevy::reflect::TypePath>::type_path()
+}
+
+/// The combo index showing `anchor`: its preset, or Custom.
+pub fn anchor_index(anchor: Anchor) -> usize {
+    ANCHOR_PRESETS
+        .iter()
+        .position(|(_, preset)| *preset == anchor)
+        .unwrap_or(CUSTOM_ANCHOR)
+}
+
+/// `bottom_left` as the combo shows it, `Bottom Left`.
+fn preset_label(name: &str) -> String {
+    name.split('_')
+        .map(|word| {
+            let mut letters = word.chars();
+            letters.next().map_or_else(String::new, |first| {
+                first.to_ascii_uppercase().to_string() + letters.as_str()
+            })
+        })
+        .collect::<Vec<_>>()
+        .join(" ")
+}
+
+fn custom_display(index: usize) -> Display {
+    if index == CUSTOM_ANCHOR {
+        Display::Flex
+    } else {
+        Display::None
+    }
+}
+
+/// Fill the `Sprite` card body for `source` from the live components.
+/// World-exclusive and deferred by the caller.
+pub(crate) fn fill_sprite_card_body(world: &mut World, source: Entity, body: Entity) {
+    if world.get_entity(body).is_err() {
+        return;
+    }
+    let Some(sprite) = world.get::<Sprite>(source).cloned() else {
+        return;
+    };
+    let anchor = world.get::<Anchor>(source).copied();
+    let y_sorted = world.get::<jackdaw_scene_types::YSort>(source).is_some();
+    let icon_font = world
+        .get_resource::<IconFont>()
+        .map(|font| font.0.clone())
+        .unwrap_or_default();
+    let editor_font = world
+        .get_resource::<EditorFont>()
+        .map(|font| font.0.clone())
+        .unwrap_or_default();
+    let registry = world
+        .get_resource::<AppTypeRegistry>()
+        .cloned()
+        .unwrap_or_default();
+    let sprite_path = <Sprite as bevy::reflect::TypePath>::type_path();
+    let (project, own) = sampling_state(world, source, &sprite);
+    let ppu = f64::from(world.resource::<crate::world_units::WorldUnits>().ppu());
+
+    let mut state: SystemState<(Commands, Query<&Name>)> = SystemState::new(world);
+    if let Ok((mut commands, names)) = state.get_mut(world) {
+        let row = |commands: &mut Commands,
+                   parent: Entity,
+                   label: &str,
+                   value: &dyn PartialReflect,
+                   path: &str,
+                   type_path: &str| {
+            super::reflect_fields::spawn_card_field_row(
+                commands,
+                parent,
+                label,
+                value,
+                path,
+                source,
+                type_path,
+                &names,
+                &registry,
+                &editor_font,
+                &icon_font,
+            );
+        };
+        let unlisted = (0..sprite.field_len())
+            .filter_map(|index| sprite.name_at(index))
+            .filter(|name| {
+                !(ROW_ORDER.iter()).any(|row| row.fields().iter().any(|field| field == name))
+            })
+            .map(CardRow::Field);
+        let listed = ROW_ORDER.iter().copied();
+        for card_row in listed.chain(unlisted) {
+            if card_row == CardRow::Anchor {
+                if let Some(anchor) = anchor {
+                    let custom = spawn_anchor_rows(&mut commands, body, source, anchor);
+                    row(
+                        &mut commands,
+                        custom,
+                        "Offset",
+                        &anchor.0,
+                        ".0",
+                        anchor_type_path(),
+                    );
+                }
+            } else if card_row == CardRow::SizeFromPpu {
+                spawn_ppu_row(&mut commands, body, source, ppu);
+            } else if card_row == CardRow::Sampling {
+                let combo = SpriteSamplingCombo {
+                    source,
+                    image: sprite.image.id(),
+                };
+                spawn_sampling_row(&mut commands, body, combo, project, own);
+            } else if card_row == CardRow::Flip {
+                let row = spawn_field_row(&mut commands, body, FieldRowProps::new("Flip"));
+                spaced_controls(&mut commands, row.control);
+                for (caption, value, field) in [
+                    ("X", sprite.flip_x, "flip_x"),
+                    ("Y", sprite.flip_y, "flip_y"),
+                ] {
+                    super::reflect_fields::spawn_bound_checkbox(
+                        &mut commands,
+                        row.control,
+                        Some(caption),
+                        value,
+                        field,
+                        source,
+                        sprite_path,
+                    );
+                }
+            } else if card_row == CardRow::DrawOrder {
+                spawn_draw_order_row(&mut commands, body, source, y_sorted, &icon_font);
+            } else if let CardRow::Field(name) = card_row
+                && let Some(value) = sprite.field(name)
+            {
+                let label = super::sentence(name);
+                row(&mut commands, body, &label, value, name, sprite_path);
+            }
+        }
+    }
+    state.apply(world);
+    world.flush();
+}
+
+/// The preset combo, and the container the custom offset row goes in.
+fn spawn_anchor_rows(
+    commands: &mut Commands,
+    body: Entity,
+    source: Entity,
+    anchor: Anchor,
+) -> Entity {
+    let index = anchor_index(anchor);
+    let row = spawn_field_row(commands, body, FieldRowProps::new("Anchor"));
+    let options: Vec<ComboBoxOptionData> = ANCHOR_PRESETS
+        .iter()
+        .map(|(name, _)| ComboBoxOptionData::new(preset_label(name)))
+        .chain([ComboBoxOptionData::new("Custom")])
+        .collect();
+    commands
+        .spawn((combobox_with_selected(options, index), ChildOf(row.control)))
+        .insert((SpriteAnchorCombo { source }, ComboBoxSelectedIndex(index)));
+    commands
+        .spawn((
+            SpriteCustomAnchor { source },
+            Node {
+                display: custom_display(index),
+                flex_direction: FlexDirection::Column,
+                width: percent(100.0),
+                ..default()
+            },
+            ChildOf(body),
+        ))
+        .id()
+}
+
+/// A preset sets the anchor through `sprite.set_anchor`; Custom only opens the
+/// offset row.
+fn on_anchor_pick(
+    pick: On<ComboBoxChangeEvent>,
+    combos: Query<&SpriteAnchorCombo>,
+    proxies: Query<(), With<RemoteEntityProxy>>,
+    mut custom: Query<(&SpriteCustomAnchor, &mut Node)>,
+    mut commands: Commands,
+) {
+    let Ok(combo) = combos.get(pick.entity) else {
+        return;
+    };
+    let source = combo.source;
+    if proxies.contains(source) {
+        return;
+    }
+    commands
+        .entity(pick.entity)
+        .insert(ComboBoxSelectedIndex(pick.selected));
+    for (row, mut node) in &mut custom {
+        if row.source == source {
+            node.display = custom_display(pick.selected);
+        }
+    }
+    let Some((name, _)) = ANCHOR_PRESETS.get(pick.selected) else {
+        return;
+    };
+    commands
+        .operator(SpriteSetAnchorOp::ID)
+        .param("entity", source)
+        .param("preset", *name)
+        .call();
+}
+
+/// Remember that the offset row is about to write `source`'s anchor.
+fn mark_own_offset_edit(
+    change: On<ValueChange<f64>>,
+    bindings: Query<&super::FieldBinding>,
+    mut own: ResMut<OwnOffsetEdits>,
+) {
+    if let Ok(binding) = bindings.get(change.source)
+        && binding.type_path == anchor_type_path()
+    {
+        own.0.insert(binding.source_entity);
+    }
+}
+
+/// Show the anchor any write left on the sprite: a preset, an undo or redo, a
+/// script or another card. Only the offset row's own edit keeps the combo on
+/// Custom when it lands on a preset value, so the row being typed in stays
+/// open.
+fn follow_anchor_write(
+    written: On<FieldWritten>,
+    anchors: Query<&Anchor>,
+    mut own: ResMut<OwnOffsetEdits>,
+    mut combos: Query<(&SpriteAnchorCombo, &mut ComboBoxSelectedIndex)>,
+    mut custom: Query<(&SpriteCustomAnchor, &mut Node)>,
+) {
+    if written.type_path != anchor_type_path() {
+        return;
+    }
+    let from_offset_row = own.0.remove(&written.entity) && !written.undo;
+    let Ok(anchor) = anchors.get(written.entity) else {
+        return;
+    };
+    let index = anchor_index(*anchor);
+    for (combo, mut shown) in &mut combos {
+        if combo.source != written.entity
+            || (shown.0 == CUSTOM_ANCHOR && from_offset_row)
+            || shown.0 == index
+        {
+            continue;
+        }
+        shown.0 = index;
+        for (row, mut node) in &mut custom {
+            if row.source == written.entity {
+                node.display = custom_display(index);
+            }
+        }
+    }
+}
+
+fn spawn_ppu_row(commands: &mut Commands, body: Entity, source: Entity, ppu: f64) {
+    let row = spawn_field_row(commands, body, FieldRowProps::new("Size from PPU"));
+    let input = commands
+        .spawn_scene(bsn! { @ScrubNumberInput })
+        .insert((
+            ScrubNumberInputValue::F64(ppu),
+            NumberInputPrecision(3),
+            SpritePpuInput,
+            ChildOf(row.control),
+        ))
+        .id();
+    commands.spawn((
+        button(ButtonProps::new("Apply")),
+        SpritePpuApply { input, source },
+        ChildOf(row.control),
+    ));
+}
+
+fn on_ppu_number(
+    change: On<ValueChange<f64>>,
+    inputs: Query<(), With<SpritePpuInput>>,
+    mut commands: Commands,
+) {
+    if inputs.contains(change.source) {
+        commands
+            .entity(change.source)
+            .insert(ScrubNumberInputValue::F64(change.value));
+    }
+}
+
+/// Size the sprite the card shows from the number beside the button.
+fn on_ppu_apply(
+    click: On<ButtonClickEvent>,
+    applies: Query<&SpritePpuApply>,
+    values: Query<&ScrubNumberInputValue>,
+    proxies: Query<(), With<RemoteEntityProxy>>,
+    mut commands: Commands,
+) {
+    let Ok(apply) = applies.get(click.entity) else {
+        return;
+    };
+    if proxies.contains(apply.source) {
+        return;
+    }
+    let mut call = commands
+        .operator(SpriteSetPixelsPerUnitOp::ID)
+        .param("entity", apply.source);
+    if let Ok(ScrubNumberInputValue::F64(ppu)) = values.get(apply.input) {
+        call = call.param("ppu", *ppu);
+    }
+    call.call();
+}
+
+/// The project's 2D sampling, and the override of the image `sprite` draws:
+/// `None` when that image's sampling cannot be set here, or the sprite is a
+/// running game's.
+fn sampling_state(
+    world: &World,
+    source: Entity,
+    sprite: &Sprite,
+) -> (Sampling, Option<Option<Sampling>>) {
+    let project = world
+        .get_resource::<ProjectSampling2d>()
+        .map(|sampling| sampling.0)
+        .unwrap_or_default();
+    let target = sprite
+        .image
+        .path()
+        .zip(world.get_resource::<crate::project::ProjectRoot>())
+        .filter(|_| world.get::<RemoteEntityProxy>(source).is_none())
+        .and_then(|(path, root)| sampling_target(&root.assets_dir(), path));
+    (project, target.map(|target| target.own_sampling()))
+}
+
+/// The sampling row, hidden while the sprite draws no image `image.set_sampling`
+/// can set: none at all, a labelled part of a file, another asset source, a
+/// path outside the assets, or a file whose meta is another loader's; and for
+/// a running game's sprite. It stays built so a later change of image rebuilds
+/// the card.
+fn spawn_sampling_row(
+    commands: &mut Commands,
+    body: Entity,
+    combo: SpriteSamplingCombo,
+    project: Sampling,
+    own: Option<Option<Sampling>>,
+) {
+    let row = spawn_field_row(commands, body, FieldRowProps::new("Sampling"));
+    if own.is_none() {
+        commands
+            .entity(row.row)
+            .entry::<Node>()
+            .and_modify(|mut node| node.display = Display::None);
+    }
+    let index = match own.flatten() {
+        None => 0,
+        Some(Sampling::Linear) => 1,
+        Some(Sampling::Nearest) => 2,
+    };
+    let project_label = match project {
+        Sampling::Linear => "Project (Linear)",
+        Sampling::Nearest => "Project (Nearest)",
+    };
+    let options = [project_label, "Linear", "Nearest"]
+        .map(ComboBoxOptionData::new)
+        .to_vec();
+    commands
+        .spawn((combobox_with_selected(options, index), ChildOf(row.control)))
+        .insert((combo, ComboBoxSelectedIndex(index)));
+}
+
+/// A pick on the sampling combo sets the override of the image the sprite
+/// draws now through `image.set_sampling`. The card is rebuilt after, so the
+/// combo shows what the meta holds whether the operator took the pick or not.
+fn on_sampling_pick(
+    pick: On<ComboBoxChangeEvent>,
+    combos: Query<&SpriteSamplingCombo>,
+    sprites: Query<&Sprite>,
+    proxies: Query<(), With<RemoteEntityProxy>>,
+    mut rebuild: ResMut<super::PendingInspectorRebuild>,
+    mut commands: Commands,
+) {
+    let Ok(combo) = combos.get(pick.entity) else {
+        return;
+    };
+    rebuild.0 = Some(combo.source);
+    if proxies.contains(combo.source) {
+        return;
+    }
+    let Some(mode) = SAMPLING_CHOICES.get(pick.selected) else {
+        return;
+    };
+    let Some(path) = sprites
+        .get(combo.source)
+        .ok()
+        .and_then(|sprite| sprite.image.path())
+    else {
+        warn!("the sprite draws no image file to set the sampling of");
+        return;
+    };
+    commands
+        .operator(ImageSetSamplingOp::ID)
+        .param("path", path.to_string())
+        .param("mode", *mode)
+        .call();
+}
+
+/// Rebuild the card once its sprite draws another image, so the sampling row
+/// reads that image's.
+fn follow_image_write(
+    written: On<FieldWritten>,
+    combos: Query<&SpriteSamplingCombo>,
+    sprites: Query<&Sprite>,
+    mut rebuild: ResMut<super::PendingInspectorRebuild>,
+) {
+    let Ok(sprite) = sprites.get(written.entity) else {
+        return;
+    };
+    if combos
+        .iter()
+        .any(|combo| combo.source == written.entity && combo.image != sprite.image.id())
+    {
+        rebuild.0 = Some(written.entity);
+    }
+}
+
+/// Send backward and bring forward, the buttons for the page keys, then the
+/// Y-sort toggle.
+fn spawn_draw_order_row(
+    commands: &mut Commands,
+    body: Entity,
+    source: Entity,
+    y_sorted: bool,
+    icon_font: &Handle<Font>,
+) {
+    let row = spawn_field_row(commands, body, FieldRowProps::new("Draw order"));
+    spaced_controls(commands, row.control);
+    for (icon, op) in [
+        (Icon::SendToBack, SpriteZDownOp::ID),
+        (Icon::BringToFront, SpriteZUpOp::ID),
+    ] {
+        let props = IconButtonProps::new(icon).with_size(ButtonSize::IconSM);
+        commands.spawn((
+            icon_button(props, icon_font),
+            ButtonOperatorCall::new(op).with_param("entity", source),
+            ChildOf(row.control),
+        ));
+    }
+    let toggle =
+        super::reflect_fields::spawn_checkbox(commands, row.control, Some("Y-sort"), y_sorted);
+    commands.entity(toggle).insert((
+        SpriteYSortToggle { source },
+        OperatorTooltip(SpriteYSortOp::ID),
+    ));
+}
+
+/// Sort the card's sprite by y, or stop, through `sprite.y_sort`. The card is
+/// rebuilt when the tag comes or goes, so the box shows what the sprite holds.
+fn on_y_sort_toggle(
+    change: On<ValueChange<bool>>,
+    toggles: Query<&SpriteYSortToggle>,
+    proxies: Query<(), With<RemoteEntityProxy>>,
+    mut commands: Commands,
+) {
+    let Ok(toggle) = toggles.get(change.source) else {
+        return;
+    };
+    if proxies.contains(toggle.source) {
+        return;
+    }
+    commands
+        .operator(SpriteYSortOp::ID)
+        .param("entity", toggle.source)
+        .param("on", change.value)
+        .call();
+}
+
+/// Space a row's controls a group apart, so each checkbox caption reads with
+/// its own box.
+fn spaced_controls(commands: &mut Commands, control: Entity) {
+    commands
+        .entity(control)
+        .entry::<Node>()
+        .and_modify(|mut node| node.column_gap = px(jackdaw_feathers::tokens::SPACING_MD));
+}

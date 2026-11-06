@@ -24,11 +24,25 @@ pub use topology::{
 
 pub mod halfedge;
 
+pub mod hash;
+pub use hash::splitmix64;
+
 pub mod newell;
 pub use newell::newell_normal;
 
+pub mod polygon2d;
+pub use polygon2d::{polygon_self_intersects, signed_area};
+
 pub mod ray;
 pub use ray::{ray_axis_param, ray_plane_intersection};
+
+pub mod randomize;
+pub use randomize::{Jitter, jitter_offsets};
+
+pub mod revolve;
+pub use revolve::{
+    RevolveAxis, RevolveCaps, RevolveError, RevolveOptions, RevolvedSolid, revolve_profile,
+};
 
 pub mod triangulate;
 pub use triangulate::{

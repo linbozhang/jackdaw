@@ -25,14 +25,15 @@ pub mod writer;
 pub use catalog::{
     CatalogAssetRef, CatalogEntry, LoadedBsnScene, adopt_asset_roots, append_assets_to_ast,
     asset_roots, asset_value_from_root, entity_roots, is_asset_root, load_asset_root,
-    load_bsn_assets, load_bsn_scene, serialize_assets_to_bsn, serialize_assets_to_bsn_reporting,
+    load_bsn_assets, load_bsn_assets_onto, load_bsn_document, load_bsn_scene,
+    serialize_assets_to_bsn, serialize_assets_to_bsn_reporting,
 };
 
 pub use header::{
-    ASSET_HEADER, AssetFileError, PREFAB_TYPE, StemIndex, asset_file_type, asset_stem,
-    asset_text_type, document_type_path, path_stem, read_asset_file, read_asset_header,
-    root_type_path, walk_asset_files, walk_document_files, walk_files_with_extensions,
-    with_asset_header,
+    ASSET_HEADER, AssetFileError, DocumentOpening, PREFAB_TYPE, StemIndex, asset_file_type,
+    asset_stem, asset_text_type, document_type_path, path_stem, read_asset_file, read_asset_header,
+    read_asset_text, read_document_opening, root_type_path, walk_asset_files, walk_document_files,
+    walk_files_with_extensions, with_asset_header,
 };
 
 pub use binary::{BinaryError, DecodedDocument, is_binary};
@@ -51,21 +52,24 @@ pub use delta::{apply_deltas, bsn_value_eq, shallow_diff};
 
 pub use document::{
     AstNodeRef, BsnAssetContext, BsnField, BsnPatch, BsnPatches, BsnStructData, BsnStructFields,
-    BsnTupleStructData, BsnValue, MAX_AST_DEPTH, SceneBsnAst, bsn_value_as_int, clone_node_into,
-    clone_subtree_into, component_to_bsn_patch, component_to_bsn_patch_with_assets,
+    BsnTupleStructData, BsnValue, MAX_AST_DEPTH, SceneBsnAst, TypeDefaults, UnencodableValue,
+    bsn_value_as_int, clone_node_into, clone_subtree_into, compact_document,
+    component_to_bsn_patch, component_to_bsn_patch_in_pass, component_to_bsn_patch_with_assets,
     is_enum_variant_of, patch_type_path, type_paths_include,
 };
 pub use emitter::{
-    emit_entities, emit_entity, emit_entity_without_children, emit_scene, emit_value_text,
+    UnparsableEmit, brush_text_len, emit_entities, emit_entity, emit_entity_without_children,
+    emit_scene, emit_scene_checked, emit_value_text, parse_emitted,
 };
-pub use loader::{BsnLoadError, parse_bsn_text};
+pub use loader::{BsnLoadError, parse_bsn_text, parses_on_this_thread};
 pub use retired::{RETIRED_UI_PREFIX, RetiredUiComponents, reject_retired_ui_components};
 
 pub use apply::{
     AstDirty, BindingIssue, BindingIssueKind, BindingIssues, BsnApplyAssets, BsnAssetPaths,
-    BsnProjectAssets, BsnSceneAssets, DocumentOnlyTypes, UnresolvedTypes, apply_ast_to_ecs,
-    apply_component_patch, apply_dirty_ast_patches, apply_reference_map, bsn_value_to_reflect,
-    get_bsn_field, remove_bsn_field, set_bsn_field, spawn_ast_node, spawn_from_ast,
+    BsnProjectAssets, BsnSceneAssets, DocumentOnlyTypes, FieldWriteError, UnresolvedTypes,
+    apply_ast_to_ecs, apply_component_patch, apply_dirty_ast_patches, apply_reference_map,
+    bsn_value_to_reflect, get_bsn_field, held_bsn_field, omitted_list_field, remove_bsn_field,
+    set_bsn_field, spawn_ast_node, spawn_from_ast, try_set_bsn_field, whole_value_write,
 };
 
 pub use sync::{
