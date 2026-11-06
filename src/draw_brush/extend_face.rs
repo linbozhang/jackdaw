@@ -13,7 +13,7 @@ use bevy::{
 };
 use jackdaw_geometry::{
     brush_planes_to_world, clean_degenerate_faces, compute_brush_geometry_from_planes,
-    compute_brush_topology,
+    compute_brush_topology, point_inside_all_planes,
 };
 use jackdaw_scene_types::{Brush, BrushFaceData, BrushPlane};
 
@@ -67,7 +67,11 @@ fn can_run_extend_face(
                    Availability (`can_run_extend_face`) is false when neither \
                    entry path applies. The Object-mode path additionally \
                    tries to resolve a hovered face via raycast once invoked; \
-                   if that also fails it returns `Cancelled`.",
+                   if that also fails it returns `Cancelled`.\n\
+                   Refuses with a toast when the primary brush is concave: \
+                   the extension rebuild is the intersection of the face \
+                   half-spaces, which would collapse the concave shape into \
+                   its convex hull.",
     is_available = can_run_extend_face,
     allows_undo = false,
 )]
@@ -80,7 +84,7 @@ pub(crate) fn brush_extend_face_to_brush(
     mut ray_cast: MeshRayCast,
     brush_chunks: Query<&BrushMeshChunk>,
     brush_caches: Query<&BrushMeshCache>,
-    brush_query: Query<(), With<Brush>>,
+    brush_query: Query<&Brush>,
     mut commands: Commands,
 ) -> Option<OperatorResult> {
     // Resolve (primary, face_index, targets) depending on edit mode
@@ -139,6 +143,19 @@ pub(crate) fn brush_extend_face_to_brush(
     } else {
         return None;
     };
+
+    // Refuse a concave primary before any state changes: the rebuild in the
+    // impl recasts the brush as the intersection of its face half-spaces,
+    // which would collapse a concave shape into its convex hull. This sits
+    // before the face-mode exit, so a refusal leaves the editor state
+    // exactly as it was.
+    if let Ok(primary_brush) = brush_query.get(primary)
+        && !brush_is_convex(primary_brush)
+    {
+        warn!("{CONCAVE_EXTEND_REFUSAL}");
+        commands.queue(move |world: &mut World| toast_brush_notice(world, CONCAVE_EXTEND_REFUSAL));
+        return None;
+    }
 
     // If we were in face mode, exit it (geometry is about to change, indices become invalid)
     if *edit_mode == crate::brush::EditMode::BrushEdit(crate::brush::BrushEditMode::Face) {
@@ -201,6 +218,63 @@ fn find_hovered_face_on_brush(
     None
 }
 
+/// The refusal message when the primary brush is concave, carried to the
+/// log by `warn!` and to the screen by [`toast_brush_notice`].
+const CONCAVE_EXTEND_REFUSAL: &str = "Extend to Brush refused: the primary brush is concave, \
+    and the extension rebuilds the brush as the intersection of its face planes, which \
+    would collapse it into a convex hull.";
+
+/// Whether the brush's authored vertices all sit on or inside every authored
+/// face plane — the definition of a convex brush.
+///
+/// `Extend to Brush` rebuilds the primary as the intersection of its face
+/// half-spaces, which only reproduces convex brushes: a concave brush has
+/// hull corners poking past its re-entrant walls (a vertex strictly outside
+/// some face plane), and the rebuild would silently recast it as its convex
+/// hull. Checked in local space — convexity is rigid-transform invariant, so
+/// a rotated brush needs no world conversion to judge.
+///
+/// Tolerance is [`jackdaw_geometry::EPSILON`] (1e-4), the same tolerance the
+/// plane intersection itself and extend's no-op comparison use, so float
+/// residue on a convex brush is not misread as concavity.
+///
+/// A legacy plane-only brush (empty topology) has no authored vertices; its
+/// shape IS the half-space intersection, so it counts as convex.
+fn brush_is_convex(brush: &Brush) -> bool {
+    brush
+        .topology
+        .vertices
+        .iter()
+        .all(|vert| point_inside_all_planes(vert.position, &brush.faces))
+}
+
+/// Puts a brush notice on screen as well as in the log.
+///
+/// The brush-domain equivalent of `crate::terrain::toast_terrain_notice`,
+/// which is the terrain channel's wrapper over the same feathers toast;
+/// kept local to this file because the extend refusal is the one brush-domain
+/// op that declines today. A no-op without the editor's fonts, which is the
+/// headless case tests run in.
+fn toast_brush_notice(world: &mut World, message: &str) {
+    let (Some(editor_font), Some(icon_font)) = (
+        world
+            .get_resource::<jackdaw_feathers::icons::EditorFont>()
+            .map(|f| f.0.clone()),
+        world
+            .get_resource::<jackdaw_feathers::icons::IconFont>()
+            .map(|f| f.0.clone()),
+    ) else {
+        return;
+    };
+    world.spawn(jackdaw_feathers::toast::toast(
+        jackdaw_feathers::toast::ToastVariant::Error,
+        message,
+        jackdaw_feathers::toast::DEFAULT_TOAST_DURATION,
+        &editor_font,
+        &icon_font,
+    ));
+}
+
 /// Core logic for Extend Face to Brush.
 ///
 /// Removes the specified face from the primary brush, adds all target brush faces,
@@ -217,6 +291,16 @@ pub(crate) fn extend_face_to_brush_impl(
         return;
     };
     let old_brush = primary_brush.clone();
+    // Defense in depth beside the operator's entry guard: a concave primary
+    // cannot survive the rebuild below (it recasts the brush as the
+    // intersection of its face half-spaces, collapsing a concave shape into
+    // its convex hull), so refuse before any geometry, AST or undo state
+    // changes.
+    if !brush_is_convex(&old_brush) {
+        warn!("{CONCAVE_EXTEND_REFUSAL}");
+        toast_brush_notice(world, CONCAVE_EXTEND_REFUSAL);
+        return;
+    }
     if face_index >= old_brush.faces.len() {
         return;
     }
@@ -345,4 +429,247 @@ pub(crate) fn extend_face_to_brush_impl(
     };
     let mut history = world.resource_mut::<CommandHistory>();
     history.push_executed(Box::new(cmd));
+}
+
+#[cfg(test)]
+mod extend_face_tests {
+    use super::*;
+    use jackdaw_csg::{BooleanOp, CsgInput, brush_boolean};
+
+    /// Cuboid of half extent `half` moved so it sits centred on `center`
+    /// (the R7 test construction).
+    fn translated_cuboid(half: f32, center: Vec3) -> Brush {
+        let mut brush = Brush::cuboid(half, half, half);
+        for v in &mut brush.topology.vertices {
+            v.position += center;
+        }
+        for f in &mut brush.faces {
+            f.plane.distance += f.plane.normal.dot(center);
+        }
+        brush
+    }
+
+    /// L-shaped concave brush: unit cube minus an overlapping corner cube,
+    /// the R7 red-evidence construction (subtract leaves a concave brush
+    /// the convex plane rebuild recasts as its hull).
+    fn concave_l_brush() -> Brush {
+        let base = Brush::cuboid(1.0, 1.0, 1.0);
+        let corner = translated_cuboid(0.5, Vec3::new(0.75, 0.75, 0.75));
+        let result = brush_boolean(
+            &CsgInput::new(&base.faces, &base.topology),
+            &CsgInput::new(&corner.faces, &corner.topology),
+            BooleanOp::Difference,
+        )
+        .expect("corner subtract should produce the concave L");
+        Brush {
+            faces: result.faces,
+            topology: result.topology,
+        }
+    }
+
+    /// Face index of the re-entrant +Y bite wall (normal +Y at the bite
+    /// depth 0.25, not the original +Y face plane at 1.0): removing it opens
+    /// the bite, and the half-space rebuild then recasts the brush as a box.
+    fn reentrant_plus_y_face(brush: &Brush) -> usize {
+        brush
+            .faces
+            .iter()
+            .position(|f| f.plane.normal.dot(Vec3::Y) > 0.9 && f.plane.distance < 0.4)
+            .expect("the L should keep a re-entrant +Y bite wall")
+    }
+
+    /// A wall squared to the extension direction: its oblique faces are the
+    /// "angled" constraints the extend resolves against (the construction the
+    /// extend undo guard drives through the full editor).
+    fn rotated_wall_gt(translation: Vec3) -> GlobalTransform {
+        GlobalTransform::from(
+            Transform::from_translation(translation)
+                .with_rotation(Quat::from_rotation_y(std::f32::consts::FRAC_PI_4)),
+        )
+    }
+
+    /// A bare world holding the extend impl's collaborators: the undo
+    /// history, the AST-sync type registry, and the editor fonts so the
+    /// refusal toast is observable (the headless editor runs keep the fonts
+    /// out, which is the toast's no-op guard).
+    fn extend_world(
+        primary: Brush,
+        primary_tf: GlobalTransform,
+        target: Brush,
+        target_tf: GlobalTransform,
+    ) -> (World, Entity, Entity) {
+        let mut world = World::new();
+        world.insert_resource(CommandHistory::default());
+        world.insert_resource(AppTypeRegistry::default());
+        world.insert_resource(jackdaw_feathers::icons::EditorFont(
+            Handle::<Font>::default(),
+        ));
+        world.insert_resource(jackdaw_feathers::icons::IconFont(Handle::<Font>::default()));
+        let primary = world.spawn((primary, primary_tf)).id();
+        let target = world.spawn((target, target_tf)).id();
+        (world, primary, target)
+    }
+
+    /// Exact shape snapshot: the authored face data (via Debug, covering
+    /// plane + material + UV fields) and the authored vertex positions.
+    fn shape_signature(brush: &Brush) -> (String, Vec<Vec3>) {
+        (
+            format!("{:?}", brush.faces),
+            brush.topology.vertices.iter().map(|v| v.position).collect(),
+        )
+    }
+
+    fn toast_count(world: &mut World) -> usize {
+        world
+            .query::<&jackdaw_feathers::toast::EditorToast>()
+            .iter(world)
+            .count()
+    }
+
+    /// The R8 bug: extending off a concave brush ran the rebuild and
+    /// silently recast the shape. The fix refuses instead — geometry,
+    /// history and everything else exactly as they were, plus a toast.
+    #[test]
+    fn extend_refuses_a_concave_primary_and_touches_nothing() {
+        let l = concave_l_brush();
+        let face = reentrant_plus_y_face(&l);
+        let (mut world, primary, target) = extend_world(
+            l,
+            GlobalTransform::IDENTITY,
+            Brush::cuboid(0.5, 0.5, 0.5),
+            rotated_wall_gt(Vec3::new(3.0, 0.0, 0.0)),
+        );
+        let (before_faces, before_verts) = shape_signature(world.get::<Brush>(primary).unwrap());
+        let before_undo = world.resource::<CommandHistory>().undo_stack.len();
+
+        extend_face_to_brush_impl(&mut world, primary, &[target], face);
+
+        let (after_faces, after_verts) = shape_signature(world.get::<Brush>(primary).unwrap());
+        assert_eq!(
+            after_faces, before_faces,
+            "a refused extend must leave every face untouched"
+        );
+        assert_eq!(
+            after_verts, before_verts,
+            "a refused extend must leave every vertex untouched"
+        );
+        assert_eq!(
+            world.resource::<CommandHistory>().undo_stack.len(),
+            before_undo,
+            "a refused extend must not push an undo entry"
+        );
+        assert_eq!(
+            toast_count(&mut world),
+            1,
+            "the refusal is reported on the brush toast channel"
+        );
+    }
+
+    /// The verdict must not care how the brush sits in the world: convexity
+    /// is rigid-transform invariant and the check runs in the brush's local
+    /// space, so a rotated concave brush is refused the same way.
+    #[test]
+    fn extend_refuses_a_rotated_concave_primary() {
+        let l = concave_l_brush();
+        let face = reentrant_plus_y_face(&l);
+        let (mut world, primary, target) = extend_world(
+            l,
+            // 90° about Z: local +Y points along world -X.
+            GlobalTransform::from_rotation(Quat::from_rotation_z(std::f32::consts::FRAC_PI_2)),
+            Brush::cuboid(0.5, 0.5, 0.5),
+            rotated_wall_gt(Vec3::new(3.0, 0.0, 0.0)),
+        );
+        let (before_faces, before_verts) = shape_signature(world.get::<Brush>(primary).unwrap());
+
+        extend_face_to_brush_impl(&mut world, primary, &[target], face);
+
+        let (after_faces, after_verts) = shape_signature(world.get::<Brush>(primary).unwrap());
+        assert_eq!(
+            after_faces, before_faces,
+            "a rotated concave primary must be left untouched"
+        );
+        assert_eq!(
+            after_verts, before_verts,
+            "a rotated concave primary must keep its vertices"
+        );
+        assert_eq!(
+            world.resource::<CommandHistory>().undo_stack.len(),
+            0,
+            "a refused extend must not push an undo entry"
+        );
+    }
+
+    /// The D3 anchor: a convex primary extends exactly as before — the
+    /// rebuild runs, pushes its one SetBrush entry, and reports no refusal.
+    #[test]
+    fn extend_still_rebuilds_a_convex_primary() {
+        let (mut world, primary, target) = extend_world(
+            Brush::cuboid(0.5, 0.5, 0.5),
+            GlobalTransform::IDENTITY,
+            Brush::cuboid(0.5, 0.5, 0.5),
+            rotated_wall_gt(Vec3::new(3.0, 0.0, 0.0)),
+        );
+        let (before_faces, before_verts) = shape_signature(world.get::<Brush>(primary).unwrap());
+
+        // Face 0 of `Brush::cuboid` is the +X face — the wall the extend
+        // opens toward the target at +X (the pick the extend undo guard
+        // drives through the full editor).
+        extend_face_to_brush_impl(&mut world, primary, &[target], 0);
+
+        assert_eq!(
+            world.resource::<CommandHistory>().undo_stack.len(),
+            1,
+            "the convex extend still pushes exactly its own SetBrush entry"
+        );
+        let (after_faces, after_verts) = shape_signature(world.get::<Brush>(primary).unwrap());
+        assert_ne!(
+            (after_faces, after_verts),
+            (before_faces, before_verts),
+            "the convex extend still rebuilds the brush"
+        );
+        assert_eq!(
+            toast_count(&mut world),
+            0,
+            "a successful extend reports no refusal"
+        );
+    }
+
+    #[test]
+    fn convexity_helper_tells_the_l_from_the_cuboid() {
+        assert!(
+            !brush_is_convex(&concave_l_brush()),
+            "the corner-bitten L is concave: its hull corners poke past the bite walls"
+        );
+        assert!(
+            brush_is_convex(&Brush::cuboid(1.0, 1.0, 1.0)),
+            "the cuboid is convex: every vertex sits on every face plane"
+        );
+    }
+
+    /// Below the epsilon a drifted vertex is float residue, not concavity;
+    /// past it, a real poke-out.
+    #[test]
+    fn convexity_eps_ignores_subepsilon_poke_out() {
+        let drifted = |past: f32| {
+            let mut brush = Brush::cuboid(1.0, 1.0, 1.0);
+            let xi = brush
+                .topology
+                .vertices
+                .iter()
+                .enumerate()
+                .max_by(|(_, a), (_, b)| a.position.x.total_cmp(&b.position.x))
+                .map(|(i, _)| i)
+                .expect("the cuboid has vertices");
+            brush.topology.vertices[xi].position.x += past;
+            brush
+        };
+        assert!(
+            brush_is_convex(&drifted(0.5 * jackdaw_geometry::EPSILON)),
+            "a sub-epsilon poke-out stays inside the tolerance"
+        );
+        assert!(
+            !brush_is_convex(&drifted(10.0 * jackdaw_geometry::EPSILON)),
+            "a poke-out past the epsilon reads as concave"
+        );
+    }
 }
