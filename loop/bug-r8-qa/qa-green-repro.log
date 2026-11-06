@@ -1,0 +1,14 @@
+   Compiling jackdaw v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw)
+    Finished `test` profile [optimized + debuginfo] target(s) in 13.86s
+     Running unittests src/lib.rs (target/debug/deps/jackdaw-8a72dd60f1d78351)
+
+running 5 tests
+test draw_brush::extend_face::extend_face_tests::convexity_eps_ignores_subepsilon_poke_out ... ok
+test draw_brush::extend_face::extend_face_tests::convexity_helper_tells_the_l_from_the_cuboid ... ok
+test draw_brush::extend_face::extend_face_tests::extend_still_rebuilds_a_convex_primary ... ok
+test draw_brush::extend_face::extend_face_tests::extend_refuses_a_rotated_concave_primary ... ok
+test draw_brush::extend_face::extend_face_tests::extend_refuses_a_concave_primary_and_touches_nothing ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 1291 filtered out; finished in 0.00s
+
+GREEN_EXIT=0
