@@ -59,11 +59,12 @@
   修复方向：nudge 改走 `apply_vertex_deltas`（半边优先、hull 仅 legacy 兜底），与 vertex drag 共用路径。
   （2026-11-06 修复：nudge 改走与 vertex drag/numeric transform/gizmo 共用的 `apply_vertex_deltas` 半边路径，新核心 `apply_nudge_to_brush`（世界 Y 网格步经 `broadcast_drag_to_captures` 同构换算；旋转笔刷语义从 brush local Y 变为世界 Y=裁定口径，红证测试锁定）；D3=凸包 `old_to_new` remap 整体删除（半边路径面索引天然稳定）；legacy 无半边组件笔刷仍落凸包兜底（hull.rs 零改动）。红证：L 形 9 面/14 顶点被毁为 7 面/10。QA 真机复跑（工具=为补 Face 拾取缺口新立的 `brush.selection.set_faces` operator，MCP 优先原则）：L 形保形 9→9/14→14 且逐顶点世界系恰 +0.25 无漂移、undo 恰一条、凸笔刷 6→6/8→8 回归锚；libtests 3117=3113+4。程序 `88301659`（原 971cf7c9 rebase）、QA `ef86915e`+`7bcc20cf`、合入 main `93a588af`；QA `loop/reports/bug-r7-qa.md` §七 PASS。附记：undo「推进栈但不还原几何」为既有框架疑缺陷→A26；凸包退化面合并缺陷→A24；Face 拾取真鼠标链路→A25。）
 
-- [ ] **R8. Extend-to-Brush 用凸半空间交集重建，凹主笔刷被凸化**
+- [x] **R8. Extend-to-Brush 用凸半空间交集重建，凹主笔刷被凸化**
   `src/draw_brush/extend_face.rs:288-329`（`compute_brush_geometry_from_planes` + `clean_degenerate_faces` + `compute_brush_topology` 凸范式路径）。
   问题：subtract 侧（`csg_ops.rs:253-259`、`preview_mesh.rs:587-591`）注释已明确该路径"把凹笔刷坍缩成凸包或空拓扑"并刻意绕开，extend 仍在用。
   后果：凹主笔刷执行 Extend 后几何被静默重铸为凸体。
   修复方向：迁移到 mesh-CSG，或检测到非凸时拒绝执行并提示。
+  （2026-11-06 修复（B 案=检测非凸拒绝，A 案 mesh-CSG 迁移留 roadmap 候选）：`brush_is_convex` 逐顶点×逐面 plane 本地空间判定（刚体变换不变，eps=1e-4 与重建容差一致，plane-only legacy 构造性凸放行）+**双重守卫**（operator 入口 Face 模式退出之前=拒绝零副作用不退模式不清选择 / impl 内 world_faces 构造前深防御=单测 seam）+`toast_brush_notice`（镜像 `toast_terrain_notice` 唯一先例）诚实文案。红证：L 形 9 面被凸化 6 面+垃圾 undo+无 toast；摘闸复红 2 FAILED 复现。QA 真机：拒绝+零副作用铁证（`bsn_identical=True faces=9 verts=14 undo_delta=0`、Face 模式/选择未扰动=同场对照实验）；toast 链由 headless user-path 探针补证全绿（BRP 实体参数链修前同样不可达=已披露 selection 门权衡的更深形态→A29）。libtests 3122=3117+5。程序 `ed35c781`、QA `cdfbffd6`、合入 main `d1dc6e7b`；QA `loop/reports/bug-r8-qa.md` PASS。凸路径零触碰；顺带立票 A27（斜墙退化产物）/A28（stage 套件预存失败）/A29（BRP 实体参数链）。）
 
 - [x] **R9. Build 日志面板永远空白（ScrollPosition 从未插入）**
   `src/scrolling_log.rs:62-99`（`spawn()` bundle 无 `ScrollPosition`）、`:101-105`（`refresh_scrolling_logs` query 要求它）。
@@ -584,6 +585,15 @@
 - [ ] **A26. brush nudge undo 推进栈但几何不还原（疑似直改型 operator 无 EditorCommand 快照；复现先行）**（2026-11-06 R7 QA 复跑发现；主控裁定=既有框架疑缺陷非 R7 回归，立票）
   真机实测（两轮复测一致）：`history.undo` 正常推进（53→52→51、label "Nudge Up"、delta=1）但 translation/顶点零还原——nudge 为直改型 operator，undo 命令快照疑似不捕获 brush 几何；修前凸包路径为同一 push 形态，疑似既有缺陷（真机无法回修前实证，headless 双态验证=A26 首步）。证据：`loop/reports/bug-r7-qa.md` §七断言②+`loop/bug-r7-qa/r8c-*.bsn.txt` 三态归档。
   修复方向：对照 R1（关键帧 undo 绕过文档 AST，已修）的 EditorCommand 包装模式补几何快照；范围含 vertex drag/numeric transform/gizmo 共用路径的 undo 还原核验（若 drag 同病则整族修复）。
+- [ ] **A27. Extend-to-Brush 对斜墙目标产退化几何且入 undo（🟡，凸笔刷形态，R8 程序探针发现）**（2026-11-06 R8 程序偏差 3 探针观察+主控批准立账）
+  cuboid 向斜墙 extend 产物为退化几何（6 面/2 顶点）且 push undo——凸路径现状语义既有缺陷；R8 锚按现状锁定未改。证据：`loop/reports/bug-r8-report.md` 偏差 3。
+  修复方向：extend 产物退化检测（顶点/面坍缩阈值）→拒绝或回退；与 R8 A 案（mesh-CSG 迁移）同域可并批。
+- [ ] **A28. stage 套件 7 用例本机预存失败（launcher/new_project/extension_app_plugin，需外部编辑器进程派生；复现先行）**（2026-11-06 R8 程序门禁发现+纯净 main 同失败核实；主控批准立账）
+  `cargo test` stage 套件中 launcher/new_project/extension_app_plugin 7 用例在本机失败（需派生外部编辑器进程），stash 后纯净 main 同族测试同样失败——环境性预存问题非回归（Mac 1 时代 stage 572 全绿，疑似 Mac 2 环境缺口：进程派生依赖缺失或路径/权限差异）。证据：`loop/reports/bug-r8-report.md` 偏差 4。
+  修复方向：先在本机复现并归档失败形态→判定环境缺口（补依赖/env）或真缺陷；不动 R4-R8 已闭环面。
+- [ ] **A29. BRP 显式传参调 operator 的实体参数链对部分 op 不可达（extend 实证；已披露 selection 门权衡的更深形态；复现先行）**（2026-11-06 R8 QA 真机发现；主控批准立账——MCP 优先原则家族）
+  真机 BRP 调 `brush.extend_face_to_brush`（含 headless 同参数）：operator 体执行但 `return None` 发生在 resolve 段，凸凹无关——BRP 传参实体解析不达 op 上下文（修前同样不可达）；feature-01 已披露「is_available 面板选中门会挡脚本/远程显式传参调用」的权衡，本条为其更深形态（resolve 段）。R5 terrain.erode、R7 set_faces 的 BRP 传参可达——非普遍性。证据：`loop/reports/bug-r8-qa.md`+`loop/bug-r8-qa/r8qa-debug-boot-*`。
+  修复方向：复现先行圈定受影响 op 清单（extend/face.drag 等双实体或子选择类 op）→判定统一修（BRP 传参直注 op 上下文）或逐 op 文档化绕行（user-path 等价通道）。
 - [ ] **LT8. Live Changes badge 点击不展开托盘（⚪，T25-T1 探针发现，只记不修）**（2026-11-03 T25-T1 可达性探针三窗实证；主控批准立账）
   hierarchy 头部 badge click `clicked:true` 但不 spawn 托盘面板（live_edits_ui.rs badge 观察器无展开行为）；托盘开行现成路线=停止→StopPrompt「Review」键交接（即 C4 链本体，零产品改动）。
   修复方向（候裁）：badge click 补托盘 spawn（一行级观察器）或 book 注记「badge 是计数器，开托盘走 Review/结构树」；T25-T3 book 轮顺手裁定。
