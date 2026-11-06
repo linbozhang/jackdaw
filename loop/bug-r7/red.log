@@ -1,0 +1,43 @@
+   Compiling jackdaw v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw)
+    Finished `test` profile [optimized + debuginfo] target(s) in 44.96s
+     Running unittests src/lib.rs (target/debug/deps/jackdaw-8a72dd60f1d78351)
+
+running 4 tests
+test brush_element_ops::nudge_tests::face_nudge_on_a_convex_brush_keeps_cuboid_shape ... ok
+test brush_element_ops::nudge_tests::nudge_offset_follows_world_y_through_brush_rotation ... FAILED
+test brush_element_ops::nudge_tests::face_nudge_on_concave_brush_preserves_the_shape ... FAILED
+test brush_element_ops::nudge_tests::vertex_nudge_on_concave_brush_preserves_the_shape ... FAILED
+
+failures:
+
+---- brush_element_ops::nudge_tests::nudge_offset_follows_world_y_through_brush_rotation stdout ----
+
+thread 'brush_element_ops::nudge_tests::nudge_offset_follows_world_y_through_brush_rotation' (1631637) panicked at src/brush_element_ops.rs:606:9:
+assertion `left == right` failed: face count must not change
+  left: 7
+ right: 6
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- brush_element_ops::nudge_tests::face_nudge_on_concave_brush_preserves_the_shape stdout ----
+
+thread 'brush_element_ops::nudge_tests::face_nudge_on_concave_brush_preserves_the_shape' (1631636) panicked at src/brush_element_ops.rs:523:9:
+assertion `left == right` failed: face count must not change
+  left: 7
+ right: 9
+
+---- brush_element_ops::nudge_tests::vertex_nudge_on_concave_brush_preserves_the_shape stdout ----
+
+thread 'brush_element_ops::nudge_tests::vertex_nudge_on_concave_brush_preserves_the_shape' (1631638) panicked at src/brush_element_ops.rs:536:9:
+assertion `left == right` failed: vertex count must not change
+  left: 10
+ right: 14
+
+
+failures:
+    brush_element_ops::nudge_tests::face_nudge_on_concave_brush_preserves_the_shape
+    brush_element_ops::nudge_tests::nudge_offset_follows_world_y_through_brush_rotation
+    brush_element_ops::nudge_tests::vertex_nudge_on_concave_brush_preserves_the_shape
+
+test result: FAILED. 1 passed; 3 failed; 0 ignored; 0 measured; 1278 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `--lib`

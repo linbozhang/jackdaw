@@ -8,6 +8,7 @@
 
 use std::collections::HashSet;
 
+use bevy::math::Affine3A;
 use bevy::prelude::*;
 use jackdaw_api::prelude::*;
 use jackdaw_api_internal::keymap::PresetInput;
@@ -19,8 +20,9 @@ use jackdaw_scene_types::Brush;
 
 use crate::brush::{
     BrushDragState, BrushEditMode, BrushHalfedge, BrushMeshCache, BrushSelection, EdgeDragState,
-    EditMode, VertexDragState, rebuild_brush_from_vertices,
+    EditMode, VertexDragState,
 };
+use crate::brush_drag_ops::apply_vertex_deltas;
 use crate::core_extension::CoreExtensionInputContext;
 use crate::keybind_focus::KeybindFocus;
 
@@ -239,6 +241,8 @@ pub(crate) fn brush_nudge_up(
     mut brush_selection: ResMut<BrushSelection>,
     brushes: Query<&mut Brush>,
     brush_caches: Query<&BrushMeshCache>,
+    halfedges: Query<&mut BrushHalfedge>,
+    transforms: Query<&GlobalTransform>,
     snap: Res<crate::snapping::SnapSettings>,
 ) -> OperatorResult {
     nudge_brush_element(
@@ -247,6 +251,8 @@ pub(crate) fn brush_nudge_up(
         &mut brush_selection,
         brushes,
         brush_caches,
+        halfedges,
+        transforms,
         snap,
     )
 }
@@ -265,6 +271,8 @@ pub(crate) fn brush_nudge_down(
     mut brush_selection: ResMut<BrushSelection>,
     brushes: Query<&mut Brush>,
     brush_caches: Query<&BrushMeshCache>,
+    halfedges: Query<&mut BrushHalfedge>,
+    transforms: Query<&GlobalTransform>,
     snap: Res<crate::snapping::SnapSettings>,
 ) -> OperatorResult {
     nudge_brush_element(
@@ -273,6 +281,8 @@ pub(crate) fn brush_nudge_down(
         &mut brush_selection,
         brushes,
         brush_caches,
+        halfedges,
+        transforms,
         snap,
     )
 }
@@ -283,6 +293,8 @@ fn nudge_brush_element(
     brush_selection: &mut BrushSelection,
     mut brushes: Query<&mut Brush>,
     brush_caches: Query<&BrushMeshCache>,
+    mut halfedges: Query<&mut BrushHalfedge>,
+    transforms: Query<&GlobalTransform>,
     snap: Res<crate::snapping::SnapSettings>,
 ) -> OperatorResult {
     let EditMode::BrushEdit(mode) = *edit_mode else {
@@ -293,8 +305,6 @@ fn nudge_brush_element(
     struct NudgePlan {
         entity: Entity,
         affected_verts: HashSet<usize>,
-        // Face nudge needs the remapped face list after rebuild.
-        nudge_faces: Vec<usize>,
     }
 
     let offset = Vec3::new(0.0, direction * snap.grid_size(), 0.0);
@@ -329,7 +339,6 @@ fn nudge_brush_element(
         plans.push(NudgePlan {
             entity: e,
             affected_verts: affected,
-            nudge_faces: sub.faces.clone(),
         });
     }
 
@@ -345,29 +354,22 @@ fn nudge_brush_element(
         let Ok(mut brush) = brushes.get_mut(plan.entity) else {
             continue;
         };
-        let authored_verts = cache.authored_vertices();
-        let authored_faces = cache.authored_face_polygons();
-        let mut new_verts = authored_verts.to_vec();
-        for &vi in &plan.affected_verts {
-            if vi < new_verts.len() {
-                new_verts[vi] += offset;
-            }
-        }
-        let Some((new_brush, old_to_new)) =
-            rebuild_brush_from_vertices(&brush, authored_verts, authored_faces, &new_verts)
-        else {
-            continue;
+        let mut halfedge = halfedges.get_mut(plan.entity).ok();
+        let world_from_local = match transforms.get(plan.entity) {
+            Ok(global) => global.affine(),
+            Err(_) => continue,
         };
-        *brush = new_brush;
-        if matches!(mode, BrushEditMode::Face) {
-            // Face indices may be remapped during rebuild.
-            if let Some(sub) = brush_selection.brushes.get_mut(&plan.entity) {
-                sub.faces = plan
-                    .nudge_faces
-                    .iter()
-                    .filter_map(|&fi| old_to_new.get(fi).copied())
-                    .collect();
-            }
+        let affected: Vec<usize> = plan.affected_verts.into_iter().collect();
+        if !apply_nudge_to_brush(
+            &mut brush,
+            halfedge.as_deref_mut(),
+            offset,
+            &world_from_local,
+            &affected,
+            cache.authored_vertices(),
+            cache.authored_face_polygons(),
+        ) {
+            continue;
         }
         any_modified = true;
     }
@@ -376,5 +378,313 @@ fn nudge_brush_element(
         OperatorResult::Finished
     } else {
         OperatorResult::Cancelled
+    }
+}
+
+/// Apply one nudge step to a single brush: move `affected_verts` (authored
+/// vertex indices) by the world-space `offset`, re-expressed in the brush's
+/// own local space through `world_from_local`. Returns true when the brush
+/// changed.
+///
+/// A missing `halfedge` (a legacy plane-only brush with no lifted edit mesh)
+/// falls back to the convex-hull rebuild through `apply_vertex_deltas`'s
+/// legacy path, matching the pre-topology behaviour.
+fn apply_nudge_to_brush(
+    brush: &mut Brush,
+    halfedge: Option<&mut BrushHalfedge>,
+    offset: Vec3,
+    world_from_local: &Affine3A,
+    affected_verts: &[usize],
+    all_vertices: &[Vec3],
+    face_polygons: &[Vec<usize>],
+) -> bool {
+    // Mirror the drag-tail conversion (`broadcast_drag_to_captures`): lift
+    // the authored start positions to world space, add the world offset, and
+    // re-express each destination in the brush's own local space, so a nudge
+    // of one grid step travels along the world axis regardless of the
+    // brush's rotation, exactly like a vertex drag.
+    let world_to_local = world_from_local.inverse();
+    let new_positions: Vec<Vec3> = affected_verts
+        .iter()
+        .map(|&vi| {
+            let local_start = all_vertices.get(vi).copied().unwrap_or(Vec3::ZERO);
+            let start_world = world_from_local.transform_point3(local_start);
+            world_to_local.transform_point3(start_world + offset)
+        })
+        .collect();
+    // Report a modification only when at least one vertex actually moves, so
+    // a zero-step or out-of-range selection keeps the operator's undo state
+    // untouched.
+    let moved = affected_verts
+        .iter()
+        .zip(&new_positions)
+        .any(|(&vi, next)| {
+            all_vertices
+                .get(vi)
+                .is_some_and(|start| (*start - *next).length_squared() > 1e-12)
+        });
+    if !moved {
+        return false;
+    }
+    let start_brush = brush.clone();
+    // The halfedge path mutates the lifted edit mesh in place and keeps the
+    // face list index-stable, preserving concave topology. With `halfedge`
+    // None (legacy plane-only brush, no lifted mesh) `apply_vertex_deltas`
+    // falls back to its convex-hull rebuild, matching the pre-topology
+    // behaviour. Mirror clipping stays out of the nudge path: the rebuild it
+    // replaces had no mirror semantics either.
+    apply_vertex_deltas(
+        brush,
+        halfedge,
+        None,
+        &start_brush,
+        all_vertices,
+        face_polygons,
+        affected_verts,
+        &new_positions,
+    );
+    true
+}
+
+#[cfg(test)]
+mod nudge_tests {
+    use super::*;
+    use jackdaw_csg::{BooleanOp, CsgInput, brush_boolean};
+
+    const STEP: f32 = 0.25;
+    const OFFSET: Vec3 = Vec3::new(0.0, STEP, 0.0);
+
+    /// Unit cuboid moved so it sits centred on `center`.
+    fn translated_cuboid(half: f32, center: Vec3) -> Brush {
+        let mut brush = Brush::cuboid(half, half, half);
+        for v in &mut brush.topology.vertices {
+            v.position += center;
+        }
+        for f in &mut brush.faces {
+            f.plane.distance += f.plane.normal.dot(center);
+        }
+        brush
+    }
+
+    /// L-shaped concave brush: unit cube minus an overlapping corner cube —
+    /// the same CSG shape the bug report describes (subtract leaves a
+    /// concave brush that the convex-hull rebuild then destroys).
+    fn concave_l_brush() -> Brush {
+        let base = Brush::cuboid(1.0, 1.0, 1.0);
+        let corner = translated_cuboid(0.5, Vec3::new(0.75, 0.75, 0.75));
+        let result = brush_boolean(
+            &CsgInput::new(&base.faces, &base.topology),
+            &CsgInput::new(&corner.faces, &corner.topology),
+            BooleanOp::Difference,
+        )
+        .expect("corner subtract should produce the concave L");
+        Brush {
+            faces: result.faces,
+            topology: result.topology,
+        }
+    }
+
+    /// Vertex indices of the first face whose ring has more than four verts
+    /// (the L-shaped end cap of the subtracted brush): the vertex set a
+    /// face-mode nudge of that face would move.
+    fn concave_face_verts(brush: &Brush) -> Vec<usize> {
+        brush
+            .topology
+            .polygons
+            .iter()
+            .find(|p| p.loop_total > 4)
+            .map(|p| {
+                let start = p.loop_start as usize;
+                let count = p.loop_total as usize;
+                (0..count)
+                    .map(|i| brush.topology.loops[start + i].vert as usize)
+                    .collect()
+            })
+            .expect("concave L should have a >4-vert ring")
+    }
+
+    /// Authored vertex positions read the same way the nudge plan reads
+    /// `BrushMeshCache::authored_vertices` (identity for an unmodified brush).
+    fn authored_vertices(brush: &Brush) -> Vec<Vec3> {
+        brush.topology.vertices.iter().map(|v| v.position).collect()
+    }
+
+    /// Authored face polygons read the same way the nudge plan reads
+    /// `BrushMeshCache::authored_face_polygons`.
+    fn authored_face_polygons(brush: &Brush) -> Vec<Vec<usize>> {
+        brush
+            .topology
+            .polygons
+            .iter()
+            .map(|p| {
+                let start = p.loop_start as usize;
+                let count = p.loop_total as usize;
+                (0..count)
+                    .map(|i| brush.topology.loops[start + i].vert as usize)
+                    .collect()
+            })
+            .collect()
+    }
+
+    /// Run one nudge step through the same core the operator uses, with a
+    /// freshly lifted edit mesh (the live halfedge component).
+    fn nudge_once(brush: &Brush, affected: &[usize]) -> Brush {
+        let mut nudged = brush.clone();
+        let mut halfedge = crate::brush::BrushHalfedge::from_topology(&brush.topology);
+        let ok = super::apply_nudge_to_brush(
+            &mut nudged,
+            Some(&mut halfedge),
+            OFFSET,
+            &Affine3A::IDENTITY,
+            affected,
+            &authored_vertices(brush),
+            &authored_face_polygons(brush),
+        );
+        assert!(ok, "nudge should report a modification");
+        nudged
+    }
+
+    /// Per-index shape assertion: face / polygon / vertex counts unchanged,
+    /// affected verts moved by exactly the world offset, every other vert
+    /// bit-identical.
+    fn assert_shape_preserved(before: &Brush, after: &Brush, affected: &[usize]) {
+        assert_eq!(
+            after.faces.len(),
+            before.faces.len(),
+            "face count must not change"
+        );
+        assert_eq!(
+            after.topology.polygons.len(),
+            before.topology.polygons.len(),
+            "polygon count must not change"
+        );
+        let before_verts: Vec<Vec3> = before
+            .topology
+            .vertices
+            .iter()
+            .map(|v| v.position)
+            .collect();
+        let after_verts: Vec<Vec3> = after.topology.vertices.iter().map(|v| v.position).collect();
+        assert_eq!(
+            after_verts.len(),
+            before_verts.len(),
+            "vertex count must not change"
+        );
+        for (i, before) in before_verts.iter().enumerate() {
+            let after = after_verts[i];
+            if affected.contains(&i) {
+                assert_eq!(
+                    after,
+                    *before + OFFSET,
+                    "vert {i} should move by exactly the offset"
+                );
+            } else {
+                assert_eq!(
+                    (after - *before).length_squared(),
+                    0.0,
+                    "vert {i} must not move"
+                );
+            }
+        }
+    }
+
+    #[test]
+    fn face_nudge_on_concave_brush_preserves_the_shape() {
+        let brush = concave_l_brush();
+        let affected = concave_face_verts(&brush);
+        assert!(
+            affected.len() > 4,
+            "the selected face ring should be concave (>4 verts), got {}",
+            affected.len()
+        );
+
+        let nudged = nudge_once(&brush, &affected);
+        assert_shape_preserved(&brush, &nudged, &affected);
+    }
+
+    #[test]
+    fn vertex_nudge_on_concave_brush_preserves_the_shape() {
+        let brush = concave_l_brush();
+        // Nudge a single vert of the concave ring, the vertex-mode selection.
+        let affected = vec![concave_face_verts(&brush)[0]];
+
+        let nudged = nudge_once(&brush, &affected);
+        assert_shape_preserved(&brush, &nudged, &affected);
+    }
+
+    #[test]
+    fn nudge_offset_follows_world_y_through_brush_rotation() {
+        let brush = Brush::cuboid(1.0, 1.0, 1.0);
+        // Rotate the brush frame 90 degrees about Z: local +Y points along
+        // world -X, so a world-Y step arrives as a local-X step.
+        let world_from_local = Affine3A::from_rotation_translation(
+            Quat::from_rotation_z(core::f32::consts::FRAC_PI_2),
+            Vec3::ZERO,
+        );
+        let affected = vec![0usize];
+
+        let mut nudged = brush.clone();
+        let mut halfedge = crate::brush::BrushHalfedge::from_topology(&brush.topology);
+        let ok = super::apply_nudge_to_brush(
+            &mut nudged,
+            Some(&mut halfedge),
+            OFFSET,
+            &world_from_local,
+            &affected,
+            &authored_vertices(&brush),
+            &authored_face_polygons(&brush),
+        );
+        assert!(ok, "nudge should report a modification");
+
+        let before_world = world_from_local.transform_point(authored_vertices(&brush)[0]);
+        let after_world = world_from_local.transform_point(nudged.topology.vertices[0].position);
+        assert_eq!(
+            nudged.faces.len(),
+            brush.faces.len(),
+            "face count must not change"
+        );
+        assert!(
+            (after_world.y - (before_world.y + STEP)).abs() < 1e-4,
+            "the nudged vert should rise one grid step in WORLD Y, got {} -> {}",
+            before_world.y,
+            after_world.y
+        );
+    }
+
+    #[test]
+    fn face_nudge_on_a_convex_brush_keeps_cuboid_shape() {
+        let brush = Brush::cuboid(1.0, 1.0, 1.0);
+        // +Y face ring: verts 2, 3, 6, 7 in the canonical cuboid layout.
+        let affected = vec![2usize, 3, 6, 7];
+        let before_faces = brush.faces.len();
+
+        let nudged = nudge_once(&brush, &affected);
+
+        assert_eq!(
+            nudged.faces.len(),
+            before_faces,
+            "a convex brush must keep every face"
+        );
+        assert_eq!(nudged.topology.vertices.len(), 8, "cuboid keeps 8 verts");
+        // Position multiset: the four bottom verts are untouched, the top
+        // ring is lifted. Compare as sorted multisets with an epsilon so the
+        // assertion stays order-independent.
+        let mut before: Vec<Vec3> = authored_vertices(&brush);
+        let mut after: Vec<Vec3> = authored_vertices(&nudged);
+        let lift = |v: &mut Vec3| {
+            if v.y > 0.0 {
+                *v += OFFSET;
+            }
+        };
+        before.iter_mut().for_each(lift);
+        let near = |a: &Vec3, b: &Vec3| (*a - *b).length_squared() < 1e-8;
+        for vb in &before {
+            match after.iter_mut().find(|va| near(va, vb)) {
+                Some(va) => {
+                    *va = Vec3::NAN; // consume the match
+                }
+                None => panic!("nudged cuboid lost a vertex near {vb:?}; got {after:?}"),
+            }
+        }
     }
 }
