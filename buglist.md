@@ -47,10 +47,11 @@
   修复方向：kernel 开头 `if resolution < 4 { return; }`，或 op 里拒绝 `grid_resolution() < 4`。
   （2026-11-06 修复：双层守卫——op 层 `terrain_erode` 对 `resolution < 4` 拒绝+toast（严格沿用 `terrain_generate` refused 分支形态：不写 undo/不置 dirty/不重建，规避「新旧 heights 全等的垃圾 undo 记录」）；kernel 层 `hydraulic_erosion` 开头 `if resolution < 4 { return; }` 兜底。红证双腿 panic 于 `erosion.rs:75:29 cannot sample empty range` 与票面逐字一致；QA 真机三断言：进程存活 0 panic / toast 实拍渲染（截图 `loop/bug-r5-qa/live-erode-toast-async.png`）/ undo 栈零新增（`undo_len` 恒 1、top=Add Terrain）。libtests 3098=3095+3。程序 `740c48b4`、QA `393225ae`、合入 main `cbd6daf5`；QA `loop/reports/bug-r5-qa.md` PASS。A20 二次实证：Generation tab 首点被按钮中心越窗缘阻断，QA 走 `terrain.panel.tab` operator 绕过。）
 
-- [ ] **R6. Scatter placement 坐标无界，一个远点撑爆稠密网格导致编辑器 abort**
+- [x] **R6. Scatter placement 坐标无界，一个远点撑爆稠密网格导致编辑器 abort**
   `crates/jackdaw_terrain/src/sidecar.rs:1431-1441`（`add_placement`）、`region.rs:622-628`（`stored_extent` 平方化）、`src/terrain/scatter.rs:744-753`（import 无范围检查）。
   问题：坐标只有 region 总量上限（1024），无位置边界；远处坐标分配 region 后 `stored_extent` 包围盒平方化至 ~100 万格/轴，`sync_terrain_surface` 每帧 `sample_grid_heights_into` 的 `reserve(resolution²)` 达 TB 级 → 下一帧分配失败 abort，撤销救不回来。
   修复方向：`add_placement` 拒绝超出当前 regions 包围盒合理余量（如 2 倍跨度）的坐标，import/adopt 报"落在地形外"。
+  （2026-11-06 修复：`add_placement` 单咽喉位置闸 `placement_within_extent`（`ensure_region` 之前、仅拦需新 region 的点，既有 ground 短路放行）+ `try_add_placement -> Result<_, PlacementRefusal{NoRoom, OutsideExtent}>`（判定顺序满仓先于越界；`add_placement` 保持 Option 委托零调用方破坏）。口径经主控裁定由票面「2 倍跨度」改为**绝对上限 4096 格/轴 + 空文档首点种子窗**——纯比例会复利（递远点序列爬回同一 abort）且做不到绿证两序口径；QA 推演核验 **4096 ≥ 最大合法 extent 1024**（4 倍余量，`ensure_extent(1024)` 为唯一生产分配点，合法地形永不误拒）。红证：摘闸复红 4 FAILED + extent 爆表 1000192² 格/轴 ≈3TiB 复现；真机四断言（存活 3 轮 idle RSS +2.9MB / 远点拒且 `"1 fell outside the terrain"` ui_tree+日志双取证 / 正常点 `imported 2` / 负方向远点同拒）。libtests 3104=3098+6。程序 `db31900a`、QA `e53c02de`、合入 main `8d2953da`；QA `loop/reports/bug-r6-qa.md` PASS。顺带立票 A23（stored_extent i64 溢出加固）。）
 
 - [ ] **R7. Nudge（PageUp/PageDown）走凸包重建，直接摧毁凹多面体笔刷**
   `src/brush_element_ops.rs:356-357`（`rebuild_brush_from_vertices`，实现在 `src/brush/hull.rs:18`，内部为 `jackdaw_hull` 凸包）。
@@ -195,6 +196,7 @@
 - [ ] **Y20. "fell outside the terrain" 提示与实际行为相反**
   `src/terrain/scatter.rs:758-762`：`add_placement` 的 None 只在 region 总量达上限时返回；落在地形外的 placement 会成功存储并分配新地面（见 R6），达上限被拒的反被报为 "fell outside"。
   修复方向：import/stamp 前做地形范围检查；达上限时报 "region cap"。
+  （2026-11-06 R6 注：R6 已修「地形外 placement 成功存储并分配新地面」半边（单咽喉位置闸，见 R6 条修复注记）；剩「达上限被拒误报 fell outside」半边——R6 程序/QA 双核实满仓拒绝仍复用该句式，本票范围收敛为此，修复时与 A23 饱和家族同批可顺手。）
 
 ### 几何 / CSG / 拾取（7）
 
@@ -569,6 +571,9 @@
 - [ ] **A22. Remote Entities 窗口无 operator/命令面板/菜单入口（工具层）**（2026-11-06 R4 QA 真机轮发现；主控批准立账——MCP 优先原则：窗口开关 operator）
   `jackdaw.remote.entities` 窗口无 operator、无命令面板命令、无菜单项（Window 菜单 y<40 禁触区，手册 7.5），QA 只能经 `project.json` 布局持久化让面板默认打开（改前备份收尾还原）。证据：`loop/reports/bug-r4-qa.md` §6.5。
   修复方向：补窗口开关 operator（窗面 operator 家族），顺带盘点其他 chrome 窗口的 operator 可达性。
+- [ ] **A23. `region.rs` `stored_extent()` 在 legacy 极端坐标下 i64 乘法可溢出（加固票，⚪ 低优先）**（2026-11-06 R6 程序/QA 双核实成立；主控批准立账）
+  `stored_extent()` 的 span 乘法在 legacy 导入（`from_legacy_v1` 可产 extent>4096）等极端坐标下 i64 可溢出；R6 修复面内 `placement_within_extent` 已用 i128 宽乘自防，本票收 `region.rs` 本体的同型隐患。证据：`loop/reports/bug-r6-report.md` §六.4+`bug-r6-qa.md` 推演节。
+  修复方向：span 计算改 i128 或饱和运算+上限断言；与 Y6/Y17 饱和转换家族同批处理可顺手。
 - [ ] **LT8. Live Changes badge 点击不展开托盘（⚪，T25-T1 探针发现，只记不修）**（2026-11-03 T25-T1 可达性探针三窗实证；主控批准立账）
   hierarchy 头部 badge click `clicked:true` 但不 spawn 托盘面板（live_edits_ui.rs badge 观察器无展开行为）；托盘开行现成路线=停止→StopPrompt「Review」键交接（即 C4 链本体，零产品改动）。
   修复方向（候裁）：badge click 补托盘 spawn（一行级观察器）或 book 注记「badge 是计数器，开托盘走 Review/结构树」；T25-T3 book 轮顺手裁定。
