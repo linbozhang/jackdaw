@@ -283,6 +283,9 @@ pub(crate) fn terrain_generate(
 /// Uses the erosion settings from the Terrain panel's Generation section
 /// ([`TerrainGenerateState::erosion`]).
 ///
+/// A terrain whose grid is below four vertices a side — an unsculpted one
+/// included — is refused with a notice, and nothing is written.
+///
 /// Like [`terrain_generate`], this pushes its own [`SetTerrainHeights`]
 /// entry and so declares `allows_undo = false`; the empty snapshot diff of
 /// today is not a contract to lean on.
@@ -300,6 +303,7 @@ pub(crate) fn terrain_erode(
     mut store: ResMut<TerrainDataStore>,
     gen_state: Res<TerrainGenerateState>,
     mut history: ResMut<CommandHistory>,
+    mut commands: Commands,
 ) -> Option<OperatorResult> {
     let entity = selection.primary()?;
     let (terrain, mut dirty) = terrains.get_mut(entity).ok()?;
@@ -308,6 +312,24 @@ pub(crate) fn terrain_erode(
     // Erosion strides the document's heights, so this is the grid those
     // heights are stored on.
     let resolution = data.document().grid_resolution();
+    // Below four vertices a side the erosion kernel has no interior to
+    // erode over: its droplet spawn range is empty or reversed. An
+    // unsculpted terrain holds no regions and reads as zero, so this is
+    // what refusing an empty terrain's erode looks like.
+    let mut refused = None;
+    if resolution < 4 {
+        refused = Some(format!(
+            "this terrain's grid is {resolution} vertices a side and erosion needs at least \
+             4; nothing was eroded and no ground was changed"
+        ));
+    }
+    if let Some(message) = refused {
+        warn!("{message}");
+        commands.queue(move |world: &mut World| {
+            crate::terrain::toast_terrain_notice(world, &message);
+        });
+        return None;
+    }
 
     let old_heights = data.heights().to_vec();
     let mut new_heights = old_heights.clone();
@@ -407,5 +429,48 @@ mod tests {
         );
         // A kilometre a side at the default cell size.
         assert_eq!(shape.size.x, (shape.resolution - 1) as f32);
+    }
+
+    /// An unsculpted terrain holds no regions, so its grid reads as zero
+    /// vertices a side and the erosion kernel has nothing to stride over.
+    /// Eroding it is refused: no heights written, no chunk rebuild marked,
+    /// and no undo entry left behind.
+    #[test]
+    fn eroding_an_empty_terrain_is_refused_without_undo_or_dirty() {
+        let mut world = World::new();
+        world.init_resource::<Selection>();
+        world.init_resource::<TerrainDataStore>();
+        world.init_resource::<TerrainGenerateState>();
+        world.init_resource::<CommandHistory>();
+
+        let terrain_component = jackdaw_scene_types::Terrain {
+            data_path: "zone.terrain-0.jdterrain".to_string(),
+            ..default()
+        };
+        let terrain = world
+            .spawn((terrain_component, TerrainDirtyChunks::default()))
+            .id();
+        world.resource_mut::<Selection>().entities = vec![terrain];
+
+        let result = world
+            .run_system_cached_with(terrain_erode, OperatorParameters::default())
+            .expect("system runs");
+
+        assert!(result.is_none(), "the empty terrain's erode is refused");
+        let store = world.resource::<TerrainDataStore>();
+        assert_eq!(
+            store.grid_resolution("zone.terrain-0.jdterrain"),
+            0,
+            "the refusal writes no heights, so the grid stays empty",
+        );
+        let dirty = world
+            .get::<TerrainDirtyChunks>(terrain)
+            .expect("the terrain carries its dirty chunks");
+        assert!(!dirty.rebuild_all, "a refusal marks no chunk rebuild");
+        let history = world.resource::<CommandHistory>();
+        assert!(
+            history.undo_stack.is_empty(),
+            "a refusal leaves no undo entry behind",
+        );
     }
 }

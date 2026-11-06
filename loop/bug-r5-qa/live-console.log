@@ -1,0 +1,42 @@
+[15:32:20] boot: editor pid=91183 project=/Users/linbo.zhang/workspace/jackdaw/tests/fixtures/bsn_game binary=709968757 Nov 6
+[15:32:43] project face null after boot; trying a direct scene.open
+{"project":null,"scene":null}
+[15:32:46] EDITOR_READY pid=91183
+[15:32:46] === R5 TERRAIN LEG BEGIN ===
+[15:32:46] status: {"project":null,"scene":null,"pie":"stopped"}
+[15:32:46] operators present: 
+[15:32:46] history baseline: {"undo_len":0,"redo_len":0,"top":null}
+[15:32:47] history after add: {"undo_len":1,"redo_len":0,"top":"Add Terrain"}
+[15:32:47] terrain entity lookup: {"jsonrpc":"2.0","id":1,"result":{"bsn":"#Terrain\nbevy_transform::components::global_transform::GlobalTransform(glam::Affine3A { matrix3: glam::Mat3A { x_axis: glam::Vec3A { x: 1.0, y: 0.0, z: 0.0 }, y_axis: glam::Vec3A { x: 0.0, y: 1.0, z: 0.0 }, z_axis: glam::Vec3A { x: 0.0, y: 0.0, z: 1.0 } }, t
+[15:32:47] filtered walk missed the Erode button; full walk fallback
+[15:32:47] erode button node: 
+[15:32:47] click form A: {"jsonrpc":"2.0","id":1,"error":{"code":-32602,"message":"no control matches text \"Erode\""}}
+[15:32:47] toast not caught after click; retrying with operator form B
+[15:32:47] ASSERT2_TOAST_MISSING both forms (headless-font deviation candidate)
+[15:32:55] screenshot: NONE file=
+[15:32:55] ASSERT1_ALIVE editor process alive
+[15:32:55] ASSERT1_NO_PANIC no 'panicked' line in editor log
+[15:32:55] REFUSAL_WARN_MISSING refusal warn line NOT in editor log
+[15:32:55] history after erode: {"undo_len":1,"redo_len":0,"top":"Add Terrain"}
+[15:32:56] === R5 TERRAIN LEG END ===
+[15:36:28] no setup dialog present (project may already be open)
+[15:39:22] === R5 TERRAIN LEG BEGIN ===
+[15:39:22] status: {"project":"/Users/linbo.zhang/workspace/jackdaw/tests/fixtures/bsn_game","scene":"/Users/linbo.zhang/workspace/jackdaw/tests/fixtures/bsn_game/assets/scene.bsn","pie":"stopped"}
+[15:39:22] operators present: 
+[15:39:22] history baseline: {"undo_len":0,"redo_len":0,"top":null}
+[15:40:28] history after add: {"undo_len":1,"redo_len":0,"top":"Add Terrain"}
+[15:40:28] terrain entity lookup: {"jsonrpc":"2.0","id":1,"error":{"code":-32602,"message":"`Terrain` names no entity in this scene, or two"}}
+[15:40:28] ERODE_READY terrain.erode available:true
+[{"entity":8589930116,"name":"Terrain"}]
+[15:40:28] filtered walk missed the Erode button; full walk fallback
+[15:40:28] erode button node: 
+[15:40:28] click form A: {"jsonrpc":"2.0","id":1,"error":{"code":-32602,"message":"no control matches text \"Erode\""}}
+[15:40:49] toast not caught after click; retrying with operator form B
+[15:40:49] ASSERT2_TOAST_FOUND (form B operator)
+[15:40:58] screenshot: NONE file=
+[15:40:58] ASSERT1_ALIVE editor process alive
+[15:40:58] ASSERT1_NO_PANIC no 'panicked' line in editor log
+[15:40:58] REFUSAL_WARN_IN_LOG the refusal warn line reached the editor log
+48:[2m2026-11-06T07:40:49.746388Z[0m [33m WARN[0m [2mjackdaw::terrain::ops[0m[2m:[0m this terrain's grid is 0 vertices a side and erosion needs at least 4; nothing was eroded and no ground was changed
+[15:40:58] history after erode: {"undo_len":1,"redo_len":0,"top":"Add Terrain"}
+[15:40:58] === R5 TERRAIN LEG END ===

@@ -1,0 +1,47 @@
+    Finished `test` profile [optimized + debuginfo] target(s) in 0.27s
+     Running unittests src/lib.rs (target/debug/deps/jackdaw_terrain-00dc8dc176359b43)
+
+running 4 tests
+test erosion::tests::a_pathological_iteration_count_is_clamped ... ok
+test erosion::tests::ordinary_iteration_counts_are_left_alone ... ok
+test erosion::tests::a_well_sized_grid_is_eroded_into_finite_heights ... ok
+test erosion::tests::grids_below_four_vertices_a_side_are_refused_without_touching_heights ... FAILED
+
+failures:
+
+---- erosion::tests::grids_below_four_vertices_a_side_are_refused_without_touching_heights stdout ----
+
+thread 'erosion::tests::grids_below_four_vertices_a_side_are_refused_without_touching_heights' (1453128) panicked at crates/jackdaw_terrain/src/erosion.rs:75:29:
+cannot sample empty range
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    erosion::tests::grids_below_four_vertices_a_side_are_refused_without_touching_heights
+
+test result: FAILED. 3 passed; 1 failed; 0 ignored; 0 measured; 529 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `-p jackdaw_terrain --lib`
+OP-LEG-EXIT=101
+   Compiling jackdaw v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw)
+    Finished `test` profile [optimized + debuginfo] target(s) in 24.77s
+     Running unittests src/lib.rs (target/debug/deps/jackdaw-8a72dd60f1d78351)
+
+running 1 test
+test terrain::ops::tests::eroding_an_empty_terrain_is_refused_without_undo_or_dirty ... FAILED
+
+failures:
+
+---- terrain::ops::tests::eroding_an_empty_terrain_is_refused_without_undo_or_dirty stdout ----
+
+thread 'terrain::ops::tests::eroding_an_empty_terrain_is_refused_without_undo_or_dirty' (1454334) panicked at crates/jackdaw_terrain/src/erosion.rs:75:29:
+cannot sample empty range
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    terrain::ops::tests::eroding_an_empty_terrain_is_refused_without_undo_or_dirty
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1277 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `-p jackdaw --lib`

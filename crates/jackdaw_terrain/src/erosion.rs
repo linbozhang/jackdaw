@@ -64,6 +64,13 @@ impl Default for ErosionParams {
 /// `resolution`: vertices per edge (same in X and Z).
 /// `params`: erosion parameters.
 pub fn hydraulic_erosion(heights: &mut [f32], resolution: u32, params: &ErosionParams) {
+    // Below four vertices a side there is no interior to erode: the droplet
+    // spawn range `1.0..(res - 2)` is empty or reversed and the gradient
+    // reads neighbours past the grid. Sampling it would panic, so refuse
+    // the whole run and leave the heights as they came.
+    if resolution < 4 {
+        return;
+    }
     let res = resolution as i32;
     let mut rng = rand::rng();
     let iterations = clamp_iterations(params.iterations);
@@ -255,6 +262,58 @@ fn erode_at(
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    /// A droplet budget small enough that a green run stays instant; only
+    /// `iterations` and `max_lifetime` matter to the refusal and anchor
+    /// tests, so the rest ride on the defaults.
+    fn droplet_params() -> ErosionParams {
+        ErosionParams {
+            iterations: 16,
+            max_lifetime: 8,
+            ..ErosionParams::default()
+        }
+    }
+
+    /// Below four vertices a side the droplet spawn range `1.0..(res - 2)`
+    /// is empty or reversed, which used to panic inside `rng.random_range`
+    /// before a single droplet ran. The kernel must refuse such a grid by
+    /// returning at once, leaving the heights it was handed untouched.
+    #[test]
+    fn grids_below_four_vertices_a_side_are_refused_without_touching_heights() {
+        let params = droplet_params();
+        for resolution in 0u32..4 {
+            let mut heights = vec![1.0_f32; (resolution * resolution) as usize];
+            hydraulic_erosion(&mut heights, resolution, &params);
+            assert!(
+                heights.iter().all(|&h| h == 1.0),
+                "resolution {resolution}: a refused erode leaves the heights alone",
+            );
+        }
+    }
+
+    /// The refusal floor is not a blanket clamp: a grid the kernel accepts
+    /// is actually eroded, and stays finite cell by cell.
+    #[test]
+    fn a_well_sized_grid_is_eroded_into_finite_heights() {
+        let resolution = 64;
+        // A tilted plane: every droplet finds a downhill and carves.
+        let mut heights: Vec<f32> = (0..resolution * resolution)
+            .map(|i| {
+                let x = (i % resolution) as f32;
+                let z = (i / resolution) as f32;
+                0.01 * x + 0.005 * z
+            })
+            .collect();
+        let before = heights.clone();
+
+        hydraulic_erosion(&mut heights, resolution, &droplet_params());
+
+        assert!(
+            heights.iter().all(|h| h.is_finite()),
+            "erosion writes finite heights",
+        );
+        assert_ne!(heights, before, "droplets on a slope move sediment");
+    }
 
     #[test]
     fn a_pathological_iteration_count_is_clamped() {

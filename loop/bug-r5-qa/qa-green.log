@@ -1,0 +1,41 @@
+=== GREEN LEG 1: kernel targeted ===
+   Compiling jackdaw_terrain v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_terrain)
+    Finished `test` profile [optimized + debuginfo] target(s) in 7.57s
+     Running unittests src/lib.rs (target/debug/deps/jackdaw_terrain-00dc8dc176359b43)
+
+running 4 tests
+test erosion::tests::ordinary_iteration_counts_are_left_alone ... ok
+test erosion::tests::a_pathological_iteration_count_is_clamped ... ok
+test erosion::tests::grids_below_four_vertices_a_side_are_refused_without_touching_heights ... ok
+test erosion::tests::a_well_sized_grid_is_eroded_into_finite_heights ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 529 filtered out; finished in 0.00s
+
+KERNEL-GREEN-EXIT=0
+=== GREEN LEG 2: op targeted ===
+   Compiling jackdaw_terrain v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_terrain)
+   Compiling jackdaw_project_build v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_project_build)
+   Compiling jackdaw_scaffold v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_scaffold)
+   Compiling jackdaw_api_internal v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_api_internal)
+   Compiling jackdaw_runtime v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_runtime)
+   Compiling jackdaw_loader v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_loader)
+   Compiling jackdaw_avian_integration v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/integrations/physics/jackdaw_avian_integration)
+   Compiling jackdaw_dylib v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_dylib)
+   Compiling jackdaw_api v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_api)
+   Compiling jackdaw_extension v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_extension)
+   Compiling jackdaw_physics v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/integrations/physics/jackdaw_physics)
+   Compiling jackdaw_multiplayer_editor v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_multiplayer_editor)
+   Compiling test_fixture_extension v0.0.0 (/Users/linbo.zhang/workspace/jackdaw/tests/fixtures/test_fixture_extension)
+   Compiling jackdaw v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw)
+    Finished `test` profile [optimized + debuginfo] target(s) in 45.66s
+     Running unittests src/lib.rs (target/debug/deps/jackdaw-8a72dd60f1d78351)
+
+running 4 tests
+test terrain::ops::tests::palette_keybinds_use_alt_not_plain_digits ... ok
+test terrain::ops::tests::generating_on_a_fresh_terrain_lays_down_ground ... ok
+test terrain::ops::tests::eroding_an_empty_terrain_is_refused_without_undo_or_dirty ... ok
+test terrain::ops::tests::exit_to_select_is_unavailable_mid_stroke ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 1274 filtered out; finished in 0.00s
+
+OP-GREEN-EXIT=0
