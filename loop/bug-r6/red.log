@@ -1,0 +1,38 @@
+   Compiling jackdaw_terrain v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_terrain)
+    Finished `test` profile [optimized + debuginfo] target(s) in 8.46s
+     Running unittests src/lib.rs (target/debug/deps/jackdaw_terrain-00dc8dc176359b43)
+
+running 5 tests
+test sidecar::tests::a_point_just_past_the_stored_ground_still_claims_the_region_under_it ... ok
+test sidecar::tests::a_terrain_at_the_region_cap_keeps_its_no_room_meaning ... ok
+test sidecar::tests::a_far_point_after_near_ones_is_refused_and_the_extent_stays_bounded ... FAILED
+test sidecar::tests::a_far_point_that_arrives_first_is_refused_and_near_ground_still_stores ... FAILED
+test sidecar::tests::a_point_landing_the_extent_on_the_cap_stores_and_one_past_it_is_refused ... FAILED
+
+failures:
+
+---- sidecar::tests::a_far_point_after_near_ones_is_refused_and_the_extent_stays_bounded stdout ----
+
+thread 'sidecar::tests::a_far_point_after_near_ones_is_refused_and_the_extent_stays_bounded' (1563953) panicked at crates/jackdaw_terrain/src/sidecar.rs:3845:9:
+the far point is refused, not stored
+
+---- sidecar::tests::a_far_point_that_arrives_first_is_refused_and_near_ground_still_stores stdout ----
+
+thread 'sidecar::tests::a_far_point_that_arrives_first_is_refused_and_near_ground_still_stores' (1563954) panicked at crates/jackdaw_terrain/src/sidecar.rs:3873:9:
+the far first point is refused
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- sidecar::tests::a_point_landing_the_extent_on_the_cap_stores_and_one_past_it_is_refused stdout ----
+
+thread 'sidecar::tests::a_point_landing_the_extent_on_the_cap_stores_and_one_past_it_is_refused' (1563956) panicked at crates/jackdaw_terrain/src/sidecar.rs:3918:9:
+one region past the cap is refused
+
+
+failures:
+    sidecar::tests::a_far_point_after_near_ones_is_refused_and_the_extent_stays_bounded
+    sidecar::tests::a_far_point_that_arrives_first_is_refused_and_near_ground_still_stores
+    sidecar::tests::a_point_landing_the_extent_on_the_cap_stores_and_one_past_it_is_refused
+
+test result: FAILED. 2 passed; 3 failed; 0 ignored; 0 measured; 533 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `-p jackdaw_terrain --lib`

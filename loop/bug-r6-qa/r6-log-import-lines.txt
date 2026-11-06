@@ -1,0 +1,3 @@
+[2m2026-11-06T08:37:54.799226Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m terrain.scatter: imported 2 into 'r6probe' (1 fell outside the terrain)
+[2m2026-11-06T08:38:08.041761Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m terrain.scatter: imported 0 into 'r6probe2' (1 fell outside the terrain)
+[2m2026-11-06T08:38:09.092287Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m terrain.scatter: imported 2 into 'r6qa-near'

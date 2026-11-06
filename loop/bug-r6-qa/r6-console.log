@@ -1,0 +1,28 @@
+2f489e1cb110253a788cdbcf74b45c842db0dae9a86209412452b712e88b671f  /Users/linbo.zhang/workspace/jackdaw/tests/fixtures/bsn_game/assets/scene.bsn
+[16:36:43] boot: editor pid=3754 project=/Users/linbo.zhang/workspace/jackdaw/tests/fixtures/bsn_game binary=710010453 Nov 6
+[16:37:02] setup dialog up; clicking Open without setup
+[16:37:48] PROJECT_OPEN
+{"project":"/Users/linbo.zhang/workspace/jackdaw/tests/fixtures/bsn_game","scene":null,"selection":[]}
+[16:37:48] EDITOR_READY pid=3754
+[16:37:48] === R6 SCATTER LEG BEGIN ===
+[16:37:48] status: {"project":"/Users/linbo.zhang/workspace/jackdaw/tests/fixtures/bsn_game","scene":null,"pie":"stopped"}
+[16:37:51] terrain entity lookup: {"jsonrpc":"2.0","id":1,"result":{"bsn":"#Terrain\nbevy_transform::components::global_transform::GlobalTransform(glam::Affine3A { matrix3: glam::Mat3A { x_axis: glam::Vec3A { x: 1.0, y: 0.0, z: 0.0 },
+[16:37:51] generate reply: {"jsonrpc":"2.0","id":1,"result":{"entities":[],"id":"terrain.generate","result":"finished","warnings":[]}}
+[16:37:54] layout files written:      178 bytes (probe),      113 bytes (near-only)
+[16:37:54] RSS before import: 744976 KB
+[16:37:54] IMPORT PROBE reply: {"jsonrpc":"2.0","id":1,"result":{"entities":[],"id":"terrain.scatter.import","reports":["terrain.scatter: imported 2 into 'r6probe' (1 fell outside the terrain)"],"result":"finished","warnings":[]}}
+[16:37:55] ASSERT1_ALIVE right after import
+[16:37:55] probe reports: terrain.scatter: imported 2 into 'r6probe' (1 fell outside the terrain)|
+[16:37:59] SURVIVE settle 1: idle ok
+[16:38:03] SURVIVE settle 2: idle ok
+[16:38:07] SURVIVE settle 3: idle ok
+[16:38:07] RSS after import+watch: 747872 KB (before: 744976)
+[16:38:08] ASSERT2_UI: summary visible in the UI tree
+[16:38:08] FAR-ONLY import reply: {"jsonrpc":"2.0","id":1,"result":{"entities":[],"id":"terrain.scatter.import","reports":["terrain.scatter: imported 0 into 'r6probe2' (1 fell outside the terrain)"],"result":"finished","warnings":[]}}
+[16:38:09] NEAR-ONLY import reply: {"jsonrpc":"2.0","id":1,"result":{"entities":[],"id":"terrain.scatter.import","reports":["terrain.scatter: imported 2 into 'r6qa-near'"],"result":"finished","warnings":[]}}
+[16:38:12] ASSERT1_LOG: panicked/abort/allocation-failure lines in editor log = 0 (expect 0)
+[16:38:12] editor log import lines: [2m2026-11-06T08:37:54.799226Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m terrain.scatter: imported 2 into 'r6probe' (1 fell outside the terrain)|[2m2026-11-06T08:38:08.041761Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m terrain.scatter: imported 0 into 'r6probe2' (1 fell outside the terrain)|[2m2026-11-06T08:38:09.092287Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m terrain.scatter: imported 2 into 'r6qa-near'|
+[16:38:12] SCENE_UNCHANGED: scene.bsn SHA matches before/after
+[16:38:12] FINAL_ALIVE
+[16:38:12] === R6 SCATTER LEG END ===
+[16:38:15] TEARDOWN: layout files removed
