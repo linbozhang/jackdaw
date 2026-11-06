@@ -1,0 +1,8 @@
+   Compiling jackdaw_project_build v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_project_build)
+    Checking jackdaw_scaffold v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_scaffold)
+    Checking jackdaw_cli_internal v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_cli)
+    Checking jackdaw v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw)
+    Checking jd v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jd)
+    Checking jackdaw_editor v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_editor)
+    Finished `dev` profile [optimized + debuginfo] target(s) in 16.87s
+CLIPPY_EXIT=0

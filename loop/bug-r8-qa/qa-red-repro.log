@@ -1,0 +1,98 @@
+   Compiling bevy_dylib v0.20.0 (/Users/linbo.zhang/workspace/bevy-fork-pinned/crates/bevy_dylib)
+   Compiling bevy v0.20.0 (/Users/linbo.zhang/workspace/bevy-fork-pinned)
+   Compiling jackdaw_geometry v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_geometry)
+   Compiling jackdaw_commands v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_commands)
+   Compiling jackdaw_input v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_input)
+   Compiling jackdaw_localization v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_localization)
+   Compiling jackdaw_bsn v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_bsn)
+   Compiling jackdaw_widgets_runtime v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_widgets_runtime)
+   Compiling jackdaw_bind v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_bind)
+   Compiling bevy_transform_interpolation v0.6.0
+   Compiling jackdaw_pie_protocol v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_pie_protocol)
+   Compiling jackdaw_camera v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_camera)
+   Compiling bevy_window_chrome v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/bevy_window_chrome)
+   Compiling jackdaw_widgets v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_widgets)
+   Compiling jackdaw_scene_types v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_scene_types)
+   Compiling jackdaw_prefab v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_prefab)
+   Compiling avian3d v0.8.0
+   Compiling jackdaw_animation_runtime v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_animation_runtime)
+   Compiling jackdaw_csg v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_csg)
+   Compiling jackdaw_uv v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_uv)
+   Compiling jackdaw_feathers v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_feathers)
+   Compiling jackdaw_terrain v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_terrain)
+   Compiling jackdaw_schema v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_schema)
+   Compiling jackdaw_camera_rig v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_camera_rig)
+   Compiling jackdaw_surface v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_surface)
+   Compiling jackdaw_project_build v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_project_build)
+   Compiling jackdaw_multiplayer v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_multiplayer)
+   Compiling jackdaw_jsn v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_jsn)
+   Compiling jackdaw_hull v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_hull)
+   Compiling jackdaw_pick v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_pick)
+   Compiling jackdaw_runtime v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_runtime)
+   Compiling jackdaw_panels v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_panels)
+   Compiling jackdaw_node_graph v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_node_graph)
+   Compiling jackdaw_scaffold v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_scaffold)
+   Compiling jackdaw_select v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_select)
+   Compiling jackdaw_remote v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_remote)
+   Compiling jackdaw_api_internal v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_api_internal)
+   Compiling jackdaw_avian_integration v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/integrations/physics/jackdaw_avian_integration)
+   Compiling jackdaw_animation v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_animation)
+   Compiling jackdaw_loader v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_loader)
+   Compiling jackdaw_dylib v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_dylib)
+   Compiling jackdaw_api v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_api)
+   Compiling jackdaw_extension v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_extension)
+   Compiling jackdaw_multiplayer_editor v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_multiplayer_editor)
+   Compiling jackdaw_physics v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/integrations/physics/jackdaw_physics)
+   Compiling test_fixture_extension v0.0.0 (/Users/linbo.zhang/workspace/jackdaw/tests/fixtures/test_fixture_extension)
+   Compiling jackdaw v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw)
+warning: constant `CONCAVE_EXTEND_REFUSAL` is never used
+   --> src/draw_brush/extend_face.rs:212:7
+    |
+212 | const CONCAVE_EXTEND_REFUSAL: &str = "Extend to Brush refused: the primary brush is concave, \
+    |       ^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: function `toast_brush_notice` is never used
+   --> src/draw_brush/extend_face.rs:247:4
+    |
+247 | fn toast_brush_notice(world: &mut World, message: &str) {
+    |    ^^^^^^^^^^^^^^^^^^
+
+warning: `jackdaw` (lib test) generated 2 warnings
+    Finished `test` profile [optimized + debuginfo] target(s) in 1m 18s
+     Running unittests src/lib.rs (target/debug/deps/jackdaw-8a72dd60f1d78351)
+
+running 5 tests
+test draw_brush::extend_face::extend_face_tests::convexity_eps_ignores_subepsilon_poke_out ... ok
+test draw_brush::extend_face::extend_face_tests::convexity_helper_tells_the_l_from_the_cuboid ... ok
+test draw_brush::extend_face::extend_face_tests::extend_still_rebuilds_a_convex_primary ... ok
+test draw_brush::extend_face::extend_face_tests::extend_refuses_a_rotated_concave_primary ... FAILED
+test draw_brush::extend_face::extend_face_tests::extend_refuses_a_concave_primary_and_touches_nothing ... FAILED
+
+failures:
+
+---- draw_brush::extend_face::extend_face_tests::extend_refuses_a_rotated_concave_primary stdout ----
+
+thread 'draw_brush::extend_face::extend_face_tests::extend_refuses_a_rotated_concave_primary' (1997737) panicked at src/draw_brush/extend_face.rs:567:9:
+assertion `left == right` failed: a rotated concave primary must be left untouched
+  left: "[BrushFaceData { plane: BrushPlane { normal: Vec3(-0.9999999, -3.5527137e-15, 0.0), distance: 1.0 }, material: UuidHandle<StandardMaterial>(97128bb1-2588-480b-bdc6-87b4adbec477), uv_offset: Vec2(0.0, 0.0), uv_scale: Vec2(1.0, 1.0), uv_rotation: 0.0, uv_u_axis: Vec3(0.0, 0.0, -1.0), uv_v_axis: Vec3(1.0, -5.960465e-8, 0.0), is_cap: false }, BrushFaceData { plane: BrushPlane { normal: Vec3(3.5527137e-15, -0.9999999, 0.0), distance: 1.0 }, material: UuidHandle<StandardMaterial>(97128bb1-2588-480b-bdc6-87b4adbec477), uv_offset: Vec2(0.0, 0.0), uv_scale: Vec2(1.0, 1.0), uv_rotation: 0.0, uv_u_axis: Vec3(-5.960465e-8, -1.0, 0.0), uv_v_axis: Vec3(0.0, 0.0, -1.0), is_cap: false }, BrushFaceData { plane: BrushPlane { normal: Vec3(0.0, 0.0, -0.9999999), distance: 1.0 }, material: UuidHandle<StandardMaterial>(97128bb1-2588-480b-bdc6-87b4adbec477), uv_offset: Vec2(0.0, 0.0), uv_scale: Vec2(1.0, 1.0), uv_rotation: 0.0, uv_u_axis: Vec3(5.960465e-8, 1.0, 0.0), uv_v_axis: Vec3(1.0, -5.960465e-8, 0.0), is_cap: false }, BrushFaceData { plane: BrushPlane { normal: Vec3(-3.5527137e-15, 0.9999999, 0.0), distance: 1.0 }, material: UuidHandle<StandardMaterial>(97128bb1-2588-480b-bdc6-87b4adbec477), uv_offset: Vec2(0.0, 0.0), uv_scale: Vec2(1.0, 1.0), uv_rotation: 0.0, uv_u_axis: Vec3(5.960465e-8, 1.0, 0.0), uv_v_axis: Vec3(0.0, 0.0, -1.0), is_cap: false }, BrushFaceData { plane: BrushPlane { normal: Vec3(0.9999999, 3.5527137e-15, 0.0), distance: 0.25 }, material: UuidHandle<StandardMaterial>(97128bb1-2588-480b-bdc6-87b4adbec477), uv_offset: Vec2(0.0, 0.0), uv_scale: Vec2(1.0, 1.0), uv_rotation: 0.0, uv_u_axis: Vec3(0.0, 0.0, -1.0), uv_v_axis: Vec3(1.0, -5.960465e-8, 0.0), is_cap: false }, BrushFaceData { plane: BrushPlane { normal: Vec3(0.0, 0.0, 0.9999999), distance: 0.25 }, material: UuidHandle<StandardMaterial>(97128bb1-2588-480b-bdc6-87b4adbec477), uv_offset: Vec2(0.0, 0.0), uv_scale: Vec2(1.0, 1.0), uv_rotation: 0.0, uv_u_axis: Vec3(5.960465e-8, 1.0, 0.0), uv_v_axis: Vec3(1.0, -5.960465e-8, 0.0), is_cap: false }]"
+ right: "[BrushFaceData { plane: BrushPlane { normal: Vec3(-1.0, 0.0, 0.0), distance: 1.0 }, material: UuidHandle<StandardMaterial>(97128bb1-2588-480b-bdc6-87b4adbec477), uv_offset: Vec2(0.0, 0.0), uv_scale: Vec2(1.0, 1.0), uv_rotation: 0.0, uv_u_axis: Vec3(0.0, 0.0, -1.0), uv_v_axis: Vec3(-0.0, -1.0, -0.0), is_cap: false }, BrushFaceData { plane: BrushPlane { normal: Vec3(0.0, -1.0, 0.0), distance: 1.0 }, material: UuidHandle<StandardMaterial>(97128bb1-2588-480b-bdc6-87b4adbec477), uv_offset: Vec2(0.0, 0.0), uv_scale: Vec2(1.0, 1.0), uv_rotation: 0.0, uv_u_axis: Vec3(-1.0, 0.0, 0.0), uv_v_axis: Vec3(-0.0, -0.0, -1.0), is_cap: false }, BrushFaceData { plane: BrushPlane { normal: Vec3(0.0, 0.0, -1.0), distance: 1.0 }, material: UuidHandle<StandardMaterial>(97128bb1-2588-480b-bdc6-87b4adbec477), uv_offset: Vec2(0.0, 0.0), uv_scale: Vec2(1.0, 1.0), uv_rotation: 0.0, uv_u_axis: Vec3(1.0, -0.0, 0.0), uv_v_axis: Vec3(0.0, -1.0, -0.0), is_cap: false }, BrushFaceData { plane: BrushPlane { normal: Vec3(0.0, 1.0, 0.0), distance: 1.0 }, material: UuidHandle<StandardMaterial>(97128bb1-2588-480b-bdc6-87b4adbec477), uv_offset: Vec2(0.0, 0.0), uv_scale: Vec2(1.0, 1.0), uv_rotation: 0.0, uv_u_axis: Vec3(1.0, 0.0, 0.0), uv_v_axis: Vec3(0.0, 0.0, -1.0), is_cap: false }, BrushFaceData { plane: BrushPlane { normal: Vec3(0.0, 0.0, 1.0), distance: 1.0 }, material: UuidHandle<StandardMaterial>(97128bb1-2588-480b-bdc6-87b4adbec477), uv_offset: Vec2(0.0, 0.0), uv_scale: Vec2(1.0, 1.0), uv_rotation: 0.0, uv_u_axis: Vec3(-1.0, 0.0, 0.0), uv_v_axis: Vec3(0.0, -1.0, 0.0), is_cap: false }, BrushFaceData { plane: BrushPlane { normal: Vec3(1.0, 0.0, 0.0), distance: 1.0 }, material: UuidHandle<StandardMaterial>(97128bb1-2588-480b-bdc6-87b4adbec477), uv_offset: Vec2(0.0, 0.0), uv_scale: Vec2(1.0, 1.0), uv_rotation: 0.0, uv_u_axis: Vec3(0.0, 0.0, 1.0), uv_v_axis: Vec3(0.0, -1.0, 0.0), is_cap: false }, BrushFaceData { plane: BrushPlane { normal: Vec3(1.0, 0.0, 0.0), distance: 0.25 }, material: UuidHandle<StandardMaterial>(97128bb1-2588-480b-bdc6-87b4adbec477), uv_offset: Vec2(0.0, 0.0), uv_scale: Vec2(1.0, 1.0), uv_rotation: 0.0, uv_u_axis: Vec3(0.0, 0.0, -1.0), uv_v_axis: Vec3(-0.0, -1.0, -0.0), is_cap: false }, BrushFaceData { plane: BrushPlane { normal: Vec3(0.0, 1.0, 0.0), distance: 0.25 }, material: UuidHandle<StandardMaterial>(97128bb1-2588-480b-bdc6-87b4adbec477), uv_offset: Vec2(0.0, 0.0), uv_scale: Vec2(1.0, 1.0), uv_rotation: 0.0, uv_u_axis: Vec3(-1.0, 0.0, 0.0), uv_v_axis: Vec3(-0.0, -0.0, -1.0), is_cap: false }, BrushFaceData { plane: BrushPlane { normal: Vec3(0.0, 0.0, 1.0), distance: 0.25 }, material: UuidHandle<StandardMaterial>(97128bb1-2588-480b-bdc6-87b4adbec477), uv_offset: Vec2(0.0, 0.0), uv_scale: Vec2(1.0, 1.0), uv_rotation: 0.0, uv_u_axis: Vec3(1.0, -0.0, 0.0), uv_v_axis: Vec3(0.0, -1.0, -0.0), is_cap: false }]"
+
+---- draw_brush::extend_face::extend_face_tests::extend_refuses_a_concave_primary_and_touches_nothing stdout ----
+
+thread 'draw_brush::extend_face::extend_face_tests::extend_refuses_a_concave_primary_and_touches_nothing' (1997736) panicked at src/draw_brush/extend_face.rs:528:9:
+assertion `left == right` failed: a refused extend must leave every face untouched
+  left: "[BrushFaceData { plane: BrushPlane { normal: Vec3(-1.0, 0.0, 0.0), distance: 1.0 }, material: UuidHandle<StandardMaterial>(97128bb1-2588-480b-bdc6-87b4adbec477), uv_offset: Vec2(0.0, 0.0), uv_scale: Vec2(1.0, 1.0), uv_rotation: 0.0, uv_u_axis: Vec3(0.0, 0.0, -1.0), uv_v_axis: Vec3(0.0, -1.0, 0.0), is_cap: false }, BrushFaceData { plane: BrushPlane { normal: Vec3(0.0, 0.0, -1.0), distance: 1.0 }, material: UuidHandle<StandardMaterial>(97128bb1-2588-480b-bdc6-87b4adbec477), uv_offset: Vec2(0.0, 0.0), uv_scale: Vec2(1.0, 1.0), uv_rotation: 0.0, uv_u_axis: Vec3(1.0, 0.0, 0.0), uv_v_axis: Vec3(0.0, -1.0, 0.0), is_cap: false }, BrushFaceData { plane: BrushPlane { normal: Vec3(0.0, 1.0, 0.0), distance: 1.0 }, material: UuidHandle<StandardMaterial>(97128bb1-2588-480b-bdc6-87b4adbec477), uv_offset: Vec2(0.0, 0.0), uv_scale: Vec2(1.0, 1.0), uv_rotation: 0.0, uv_u_axis: Vec3(1.0, 0.0, 0.0), uv_v_axis: Vec3(0.0, 0.0, -1.0), is_cap: false }, BrushFaceData { plane: BrushPlane { normal: Vec3(1.0, 0.0, 0.0), distance: 0.25 }, material: UuidHandle<StandardMaterial>(97128bb1-2588-480b-bdc6-87b4adbec477), uv_offset: Vec2(0.0, 0.0), uv_scale: Vec2(1.0, 1.0), uv_rotation: 0.0, uv_u_axis: Vec3(0.0, 0.0, -1.0), uv_v_axis: Vec3(0.0, -1.0, 0.0), is_cap: false }, BrushFaceData { plane: BrushPlane { normal: Vec3(0.0, 0.0, 1.0), distance: 0.25 }, material: UuidHandle<StandardMaterial>(97128bb1-2588-480b-bdc6-87b4adbec477), uv_offset: Vec2(0.0, 0.0), uv_scale: Vec2(1.0, 1.0), uv_rotation: 0.0, uv_u_axis: Vec3(1.0, 0.0, 0.0), uv_v_axis: Vec3(0.0, -1.0, 0.0), is_cap: false }, BrushFaceData { plane: BrushPlane { normal: Vec3(0.0, -1.0, 0.0), distance: -0.5 }, material: UuidHandle<StandardMaterial>(97128bb1-2588-480b-bdc6-87b4adbec477), uv_offset: Vec2(0.0, 0.0), uv_scale: Vec2(1.0, 1.0), uv_rotation: 0.0, uv_u_axis: Vec3(0.7071067, 0.0, -0.7071068), uv_v_axis: Vec3(-0.7071068, 0.0, -0.7071067), is_cap: false }]"
+ right: "[BrushFaceData { plane: BrushPlane { normal: Vec3(-1.0, 0.0, 0.0), distance: 1.0 }, material: UuidHandle<StandardMaterial>(97128bb1-2588-480b-bdc6-87b4adbec477), uv_offset: Vec2(0.0, 0.0), uv_scale: Vec2(1.0, 1.0), uv_rotation: 0.0, uv_u_axis: Vec3(0.0, 0.0, -1.0), uv_v_axis: Vec3(-0.0, -1.0, -0.0), is_cap: false }, BrushFaceData { plane: BrushPlane { normal: Vec3(0.0, -1.0, 0.0), distance: 1.0 }, material: UuidHandle<StandardMaterial>(97128bb1-2588-480b-bdc6-87b4adbec477), uv_offset: Vec2(0.0, 0.0), uv_scale: Vec2(1.0, 1.0), uv_rotation: 0.0, uv_u_axis: Vec3(-1.0, 0.0, 0.0), uv_v_axis: Vec3(-0.0, -0.0, -1.0), is_cap: false }, BrushFaceData { plane: BrushPlane { normal: Vec3(0.0, 0.0, -1.0), distance: 1.0 }, material: UuidHandle<StandardMaterial>(97128bb1-2588-480b-bdc6-87b4adbec477), uv_offset: Vec2(0.0, 0.0), uv_scale: Vec2(1.0, 1.0), uv_rotation: 0.0, uv_u_axis: Vec3(1.0, -0.0, 0.0), uv_v_axis: Vec3(0.0, -1.0, -0.0), is_cap: false }, BrushFaceData { plane: BrushPlane { normal: Vec3(0.0, 1.0, 0.0), distance: 1.0 }, material: UuidHandle<StandardMaterial>(97128bb1-2588-480b-bdc6-87b4adbec477), uv_offset: Vec2(0.0, 0.0), uv_scale: Vec2(1.0, 1.0), uv_rotation: 0.0, uv_u_axis: Vec3(1.0, 0.0, 0.0), uv_v_axis: Vec3(0.0, 0.0, -1.0), is_cap: false }, BrushFaceData { plane: BrushPlane { normal: Vec3(0.0, 0.0, 1.0), distance: 1.0 }, material: UuidHandle<StandardMaterial>(97128bb1-2588-480b-bdc6-87b4adbec477), uv_offset: Vec2(0.0, 0.0), uv_scale: Vec2(1.0, 1.0), uv_rotation: 0.0, uv_u_axis: Vec3(-1.0, 0.0, 0.0), uv_v_axis: Vec3(0.0, -1.0, 0.0), is_cap: false }, BrushFaceData { plane: BrushPlane { normal: Vec3(1.0, 0.0, 0.0), distance: 1.0 }, material: UuidHandle<StandardMaterial>(97128bb1-2588-480b-bdc6-87b4adbec477), uv_offset: Vec2(0.0, 0.0), uv_scale: Vec2(1.0, 1.0), uv_rotation: 0.0, uv_u_axis: Vec3(0.0, 0.0, 1.0), uv_v_axis: Vec3(0.0, -1.0, 0.0), is_cap: false }, BrushFaceData { plane: BrushPlane { normal: Vec3(1.0, 0.0, 0.0), distance: 0.25 }, material: UuidHandle<StandardMaterial>(97128bb1-2588-480b-bdc6-87b4adbec477), uv_offset: Vec2(0.0, 0.0), uv_scale: Vec2(1.0, 1.0), uv_rotation: 0.0, uv_u_axis: Vec3(0.0, 0.0, -1.0), uv_v_axis: Vec3(-0.0, -1.0, -0.0), is_cap: false }, BrushFaceData { plane: BrushPlane { normal: Vec3(0.0, 1.0, 0.0), distance: 0.25 }, material: UuidHandle<StandardMaterial>(97128bb1-2588-480b-bdc6-87b4adbec477), uv_offset: Vec2(0.0, 0.0), uv_scale: Vec2(1.0, 1.0), uv_rotation: 0.0, uv_u_axis: Vec3(-1.0, 0.0, 0.0), uv_v_axis: Vec3(-0.0, -0.0, -1.0), is_cap: false }, BrushFaceData { plane: BrushPlane { normal: Vec3(0.0, 0.0, 1.0), distance: 0.25 }, material: UuidHandle<StandardMaterial>(97128bb1-2588-480b-bdc6-87b4adbec477), uv_offset: Vec2(0.0, 0.0), uv_scale: Vec2(1.0, 1.0), uv_rotation: 0.0, uv_u_axis: Vec3(1.0, -0.0, 0.0), uv_v_axis: Vec3(0.0, -1.0, -0.0), is_cap: false }]"
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    draw_brush::extend_face::extend_face_tests::extend_refuses_a_concave_primary_and_touches_nothing
+    draw_brush::extend_face::extend_face_tests::extend_refuses_a_rotated_concave_primary
+
+test result: FAILED. 3 passed; 2 failed; 0 ignored; 0 measured; 1291 filtered out; finished in 0.01s
+
+error: test failed, to rerun pass `--lib`
+RED_EXIT=101
