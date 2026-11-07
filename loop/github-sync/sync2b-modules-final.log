@@ -1,0 +1,19 @@
+===MODULE operators===
+test result: ok. 417 passed; 0 failed; 0 ignored; 0 measured; 2062 filtered out; finished in 142.29s
+===MODULE stage===
+test stage::gltf_authoring::a_model_queued_beside_the_scene_survives_the_scene_being_taken_down ... FAILED
+test stage::gltf_authoring::gltf_source_derives_world_asset_root_and_stays_out_of_the_document ... FAILED
+test stage::gltf_authoring::undo_redo_restores_a_loadable_gltf ... FAILED
+test stage::project_startup::the_footer_names_the_scene_it_is_opening_before_it_opens_it ... FAILED
+test result: FAILED. 577 passed; 4 failed; 0 ignored; 0 measured; 1898 filtered out; finished in 253.78s
+===MODULE scenes===
+test scenes::scenes_swap::a_map_pasted_from_another_scene_takes_a_copy_of_its_cells ... FAILED
+test result: FAILED. 331 passed; 1 failed; 0 ignored; 0 measured; 2147 filtered out; finished in 231.00s
+===MODULE viewport===
+test viewport::viewport_settings_menu::a_preset_picked_in_the_quality_menu_holds_and_the_menu_shows_it ... FAILED
+test result: FAILED. 182 passed; 1 failed; 0 ignored; 0 measured; 2296 filtered out; finished in 45.61s
+===MODULE inspector===
+test result: ok. 235 passed; 0 failed; 0 ignored; 0 measured; 2244 filtered out; finished in 96.08s
+===MODULE prefabs===
+test result: ok. 110 passed; 0 failed; 0 ignored; 0 measured; 2369 filtered out; finished in 37.24s
+FINAL_MODULES_DONE

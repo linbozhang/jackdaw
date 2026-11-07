@@ -1,0 +1,19 @@
+===MODULE operators===
+test operators::authoring_ops::every_entity_taking_operator_is_classified ... FAILED
+thread 'operators::authoring_ops::every_entity_taking_operator_is_classified' (3961091) panicked at tests/editor/../operators/authoring_ops.rs:668:5:
+test result: FAILED. 416 passed; 1 failed; 0 ignored; 0 measured; 2062 filtered out; finished in 130.86s
+===MODULE stage===
+test stage::project_startup::the_footer_names_the_scene_it_is_opening_before_it_opens_it ... FAILED
+test stage::save_before_play::play_saves_the_edited_scene_before_the_game_starts ... FAILED
+thread 'stage::project_startup::the_footer_names_the_scene_it_is_opening_before_it_opens_it' (3987956) panicked at tests/editor/../stage/project_startup.rs:106:5:
+thread 'stage::save_before_play::play_saves_the_edited_scene_before_the_game_starts' (3990528) panicked at tests/editor/../stage/save_before_play.rs:77:5:
+test result: FAILED. 579 passed; 2 failed; 0 ignored; 0 measured; 1898 filtered out; finished in 235.62s
+===MODULE prefabs===
+test prefabs::prefab_lifecycle::prefab_file_change_triggers_reload ... FAILED
+thread 'prefabs::prefab_lifecycle::prefab_file_change_triggers_reload' (4000928) panicked at tests/editor/../prefabs/prefab_lifecycle.rs:714:5:
+test result: FAILED. 109 passed; 1 failed; 0 ignored; 0 measured; 2369 filtered out; finished in 34.69s
+===MODULE viewport===
+test viewport::viewport_settings_menu::a_preset_picked_in_the_quality_menu_holds_and_the_menu_shows_it ... FAILED
+thread 'viewport::viewport_settings_menu::a_preset_picked_in_the_quality_menu_holds_and_the_menu_shows_it' (4006804) panicked at tests/editor/../viewport/viewport_settings_menu.rs:193:5:
+test result: FAILED. 182 passed; 1 failed; 0 ignored; 0 measured; 2296 filtered out; finished in 42.70s
+NAMES_DONE

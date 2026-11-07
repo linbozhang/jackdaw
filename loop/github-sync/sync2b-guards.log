@@ -1,0 +1,26 @@
+[2m2026-11-07T09:46:52.103193Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.multiplayer
+[2m2026-11-07T09:46:52.103205Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.remote_editor
+[2m2026-11-07T09:46:52.103224Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.animation_editor
+[2m2026-11-07T09:46:52.103350Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.game_panel
+[2m2026-11-07T09:46:52.103357Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.ui_palette
+[2m2026-11-07T09:46:52.103401Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.test_input
+[2m2026-11-07T09:46:52.103419Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.terrain
+[2m2026-11-07T09:46:52.103550Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.modelling
+[2m2026-11-07T09:46:52.103719Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.launcher
+[2m2026-11-07T09:46:52.103790Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core_windows
+[2m2026-11-07T09:46:52.103803Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.timeline
+[2m2026-11-07T09:46:52.103809Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core
+[2m2026-11-07T09:46:52.105568Z[0m [33m WARN[0m [2mjackdaw_api_internal::keymap::apply[0m[2m:[0m preset 'classic' has 17 chords claimed by more than one action: ["Home (Press, Operators): viewport2d.frame, clip.timeline.jump_start, view.frame_all", "PageUp (Press, Operators): sprite.z_up, brush.nudge_up", "PageDown (Press, Operators): sprite.z_down, brush.nudge_down", "Enter (Press, Operators): tileset.layout.apply, viewport.draw_brush.commit_polygon, brush.clip.apply", "Digit1 (Press, Operators): tilemap.edit_mode, edit_mode.vertex", "KeyL (Press, Operators): tilemap.line, gizmo.space.toggle", "KeyI (Press, Operators): tilemap.picker, brush.mesh.inset", "Escape (Press, Operators): tilemap.edit_mode.exit, tilemap.selection.clear, terrain.tool.exit_to_select, brush.exit_edit_mode, selection.clear, brush.clip.clear", "KeyM (Press, Operators): tilemap.select, snap.toggle", "Super+KeyV (Press, Operators): tilemap.stamp.paste, clip.paste_keyframes, entity.paste", "Delete (Press, Operators): tilemap.selection.erase, clip.delete_keyframes, brush.delete_element, entity.delete", "Super+KeyC (Press, Operators): tilemap.selection.copy, clip.copy_keyframes, entity.copy", "Super+KeyX (Press, Operators): tilemap.selection.cut, entity.cut", "Backspace (Press, Operators): clip.delete_keyframes, brush.delete_element, viewport.draw_brush.remove_last_vertex", "Super+KeyB (Press, Operators): brush.mesh.edge_bevel, brush.mesh.vertex_bevel", "KeyE (Press, Operators): brush.mesh.extrude, tool.rotate", "Tab (Press, Operators): viewport.draw_brush.toggle_mode, brush.clip.cycle_mode"]
+[2m2026-11-07T09:46:52.105582Z[0m [32m INFO[0m [2mjackdaw_editor_core::extension_lifecycle[0m[2m:[0m applied keymap preset 'classic': 136 entries, 136 bindings, 0 user rows
+[2m2026-11-07T09:46:52.623546Z[0m [32m INFO[0m [2mjackdaw_editor_core::asset_index[0m[2m:[0m asset index: walking /var/folders/k_/lh9sxzr534g6d1h3_jqczqgm9_f177/T/jackdaw-stop-restore-hN1Uck/assets recursively
+[2m2026-11-07T09:46:52.623635Z[0m [32m INFO[0m [2mjackdaw_editor_core::asset_catalog[0m[2m:[0m No asset catalog found, starting with empty catalog
+[2m2026-11-07T09:46:52.682998Z[0m [32m INFO[0m [2mjackdaw_editor_core::material_browser[0m[2m:[0m update_material_browser_ui: rebuilding with 1 entries
+[2m2026-11-07T09:46:52.722571Z[0m [33m WARN[0m [2mjackdaw_editor_core::project_build[0m[2m:[0m PIE: cannot build /var/folders/k_/lh9sxzr534g6d1h3_jqczqgm9_f177/T/jackdaw-stop-restore-hN1Uck: cargo could not read /var/folders/k_/lh9sxzr534g6d1h3_jqczqgm9_f177/T/jackdaw-stop-restore-hN1Uck: error: could not find `Cargo.toml` in `/private/var/folders/k_/lh9sxzr534g6d1h3_jqczqgm9_f177/T/jackdaw-stop-restore-hN1Uck` or any parent directory
+[2m2026-11-07T09:46:52.788631Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: scene.open
+[2m2026-11-07T09:46:53.020497Z[0m [32m INFO[0m [2mjackdaw_editor_core::asset_index[0m[2m:[0m asset index: walk landed (documents 2, typed 2, referencing 0)
+[2m2026-11-07T09:46:53.020541Z[0m [32m INFO[0m [2mjackdaw_editor_core::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 0)
+test guards::stop_restore::stop_touches_neither_document_nor_disk ... ok
+
+test result: ok. 383 passed; 0 failed; 0 ignored; 0 measured; 2096 filtered out; finished in 205.97s
+
+GUARDS_DONE

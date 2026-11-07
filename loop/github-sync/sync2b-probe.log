@@ -1,0 +1,34 @@
+===PREFAB===
+test prefabs::prefab_lifecycle::prefab_file_change_triggers_reload ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2478 filtered out; finished in 1.97s
+
+===SAVEPLAY1===
+---- stage::save_before_play::play_saves_the_edited_scene_before_the_game_starts stdout ----
+
+thread 'stage::save_before_play::play_saves_the_edited_scene_before_the_game_starts' (4056897) panicked at tests/editor/../stage/save_before_play.rs:77:5:
+and the tab reads saved
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    stage::save_before_play::play_saves_the_edited_scene_before_the_game_starts
+
+test result: FAILED. 8 passed; 1 failed; 0 ignored; 0 measured; 2470 filtered out; finished in 9.60s
+
+error: test failed, to rerun pass `-p jackdaw --test editor`
+===SAVEPLAY2===
+---- stage::save_before_play::play_saves_the_edited_scene_before_the_game_starts stdout ----
+
+thread 'stage::save_before_play::play_saves_the_edited_scene_before_the_game_starts' (4058746) panicked at tests/editor/../stage/save_before_play.rs:77:5:
+and the tab reads saved
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    stage::save_before_play::play_saves_the_edited_scene_before_the_game_starts
+
+test result: FAILED. 8 passed; 1 failed; 0 ignored; 0 measured; 2470 filtered out; finished in 11.23s
+
+error: test failed, to rerun pass `-p jackdaw --test editor`
+PROBE_DONE

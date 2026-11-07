@@ -1,0 +1,17 @@
+===MODULE inspector===
+test result: ok. 235 passed; 0 failed; 0 ignored; 0 measured; 2244 filtered out; finished in 90.55s
+===MODULE operators===
+test result: FAILED. 416 passed; 1 failed; 0 ignored; 0 measured; 2062 filtered out; finished in 131.12s
+===MODULE stage===
+test result: FAILED. 575 passed; 6 failed; 0 ignored; 0 measured; 1898 filtered out; finished in 237.82s
+===MODULE scenes===
+test scenes::scenes_swap::a_map_pasted_from_another_scene_takes_a_copy_of_its_cells ... FAILED
+---- scenes::scenes_swap::a_map_pasted_from_another_scene_takes_a_copy_of_its_cells stdout ----
+thread 'scenes::scenes_swap::a_map_pasted_from_another_scene_takes_a_copy_of_its_cells' (3948889) panicked at tests/editor/../scenes/scenes_swap.rs:2925:5:
+    scenes::scenes_swap::a_map_pasted_from_another_scene_takes_a_copy_of_its_cells
+test result: FAILED. 331 passed; 1 failed; 0 ignored; 0 measured; 2147 filtered out; finished in 216.22s
+===MODULE prefabs===
+test result: FAILED. 109 passed; 1 failed; 0 ignored; 0 measured; 2369 filtered out; finished in 34.68s
+===MODULE viewport===
+test result: FAILED. 182 passed; 1 failed; 0 ignored; 0 measured; 2296 filtered out; finished in 42.72s
+MODULES_ALL_DONE
