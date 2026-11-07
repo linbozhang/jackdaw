@@ -296,13 +296,30 @@ pub(crate) fn save_scene_inner(world: &mut World) -> Result<(), BevyError> {
             .parent()
             .map(Path::to_path_buf)
             .unwrap_or_else(|| PathBuf::from("."));
+        let (tab, state, snapshot_depth, snapshot_pushes, snapshot_hash) = {
+            let (tab, state) = active_tab_and_state(world)?;
+            let (depth, pushes) = {
+                let history = world.resource::<jackdaw_commands::CommandHistory>();
+                (history.undo_stack.len(), history.scene_pushes())
+            };
+            let hash = document_fingerprint(world);
+            (tab, state, depth, pushes, hash)
+        };
         let mut pending = super::hooks::begin_save(world, &path.to_string_lossy());
         let written = write_prefab_files(world, &path, &parent, &mut pending);
         super::hooks::finish_save(world, pending, written.is_ok());
         written?;
         write_alongside(world, &path.to_string_lossy())?;
-        let (tab, state) = active_tab_and_state(world)?;
-        settle_tab_after_save(world, tab, state, None, false);
+        settle_tab_after_save(
+            world,
+            tab,
+            state,
+            None,
+            false,
+            snapshot_depth,
+            snapshot_pushes,
+            snapshot_hash,
+        );
         return Ok(());
     }
 
@@ -369,7 +386,19 @@ pub(crate) fn prepare_scene_save(world: &mut World) -> Result<PreparedSave, Bevy
     let scenes = world.resource::<crate::scenes::Scenes>();
     let tab = scenes.tabs.get(scenes.active).ok_or("no tab to save")?;
     let (tab_id, tab_name, tab_kind) = (tab.id, tab.display_name.clone(), tab.kind.clone());
-    let state = world.resource::<jackdaw_commands::CommandHistory>().state();
+    let (state, snapshot_depth, snapshot_pushes) = {
+        let history = world.resource::<jackdaw_commands::CommandHistory>();
+        (
+            history.state(),
+            history.undo_stack.len(),
+            history.scene_pushes(),
+        )
+    };
+    // The fingerprint of what the file will hold, hashed through the same
+    // emitter its dirty watcher compares against. Taken at the snapshot: a
+    // do/undo/redo that races the write must still settle the tab against
+    // this content.
+    let snapshot_hash = document_fingerprint(world);
 
     let mut pending = super::hooks::begin_save(world, &path);
     let (ast, sidecars) = match snapshot_with_sidecars(world, &path, &mut pending) {
@@ -393,6 +422,9 @@ pub(crate) fn prepare_scene_save(world: &mut World) -> Result<PreparedSave, Bevy
                 .resource::<jackdaw_commands::CommandHistory>()
                 .revision(),
             document: document_revision(world),
+            snapshot_depth,
+            snapshot_pushes,
+            snapshot_hash,
             sidecars_started,
             path,
             redirected,
@@ -465,6 +497,9 @@ pub(crate) fn finish_scene_save(
         state,
         history_revision,
         document,
+        snapshot_depth,
+        snapshot_pushes,
+        snapshot_hash,
         sidecars_started,
         path,
         redirected,
@@ -507,6 +542,9 @@ pub(crate) fn finish_scene_save(
             state,
             redirected.then_some(&path),
             document_moved,
+            snapshot_depth,
+            snapshot_pushes,
+            snapshot_hash,
         );
         // The journal's entry for this tab is spent: its document is on disk,
         // so there is nothing left to recover. At the same boundary as the
@@ -532,17 +570,23 @@ pub(crate) fn finish_scene_save(
     Ok(())
 }
 
-/// The file holds the tab as of history state `state`: the tab reads saved if it is
-/// in that state, and dirty if it has moved on, and again once an undo or a redo
-/// takes it elsewhere. `redirected` is the new file of a legacy scene. `document_moved`
-/// says the document was written to since the snapshot with no history entry, so the
-/// file holds no state of the history.
+/// The file holds the tab as of history state `state`, and as of the snapshot's
+/// scene-document baselines (`snapshot_depth`/`snapshot_pushes`/`snapshot_hash`),
+/// which the dirty watcher reads: an undo or a redo that races the write settles
+/// against the content the file actually took, not against wherever the stack
+/// stands when the write lands. The tab reads saved if it is in `state`, and
+/// dirty if it has moved on. `redirected` is the new file of a legacy scene.
+/// `document_moved` says the document was written to since the snapshot with no
+/// history entry, so the file holds no state of the history.
 fn settle_tab_after_save(
     world: &mut World,
     tab: u64,
     state: u64,
     redirected: Option<&String>,
     document_moved: bool,
+    snapshot_depth: usize,
+    snapshot_pushes: u64,
+    snapshot_hash: Option<u64>,
 ) {
     let scenes = world.resource::<crate::scenes::Scenes>();
     let Some(index) = scenes.tabs.iter().position(|held| held.id == tab) else {
@@ -567,31 +611,16 @@ fn settle_tab_after_save(
         !history.is_saved()
     };
     let current = world.resource::<jackdaw_commands::CommandHistory>().state();
-    // The scene-document baselines the dirty watcher reads (the guards'
-    // dirty matrix pins them) settle at the same boundary as the state
-    // above. With the tab in front and the document where the snapshot
-    // left it, the content fingerprint is re-emitted from the live
-    // document the file now holds; a document that moved past its
-    // snapshot leaves the baselines untouched on purpose, so the tab
-    // reads dirty until the next save re-anchors them. A tab settled in
-    // the background has no document in the world to re-emit, so only
-    // its own history's depth baselines move and the content baseline
-    // falls back to growth-only.
-    let (history_len, history_pushes, fingerprint) = if in_front {
-        let (len, pushes) = {
-            let history = world.resource::<jackdaw_commands::CommandHistory>();
-            (history.undo_stack.len(), history.scene_pushes())
-        };
-        let fingerprint = if document_moved {
-            None
-        } else {
-            document_fingerprint(world)
-        };
-        (len, pushes, fingerprint)
+    // Where the stack stands now, so the watcher's fast path starts here. A
+    // tab settled in the background reads its own history: its document is
+    // not in the world.
+    let (observed_len, observed_pushes) = if in_front {
+        let history = world.resource::<jackdaw_commands::CommandHistory>();
+        (history.undo_stack.len(), history.scene_pushes())
     } else {
         let scenes = world.resource::<crate::scenes::Scenes>();
         let history = &scenes.tabs[index].history;
-        (history.undo_stack.len(), history.scene_pushes(), None)
+        (history.undo_stack.len(), history.scene_pushes())
     };
     let mut scenes = world.resource_mut::<crate::scenes::Scenes>();
     let saved = &mut scenes.tabs[index];
@@ -600,13 +629,11 @@ fn settle_tab_after_save(
         saved.history_state_at_last_check = Some(current);
     }
     saved.saved_at = Some(crate::timestamps::utc_rfc3339_now());
-    saved.observed_undo_len = history_len;
-    saved.observed_pushes = history_pushes;
-    if !document_moved {
-        saved.saved_undo_len = history_len;
-        saved.saved_scene_pushes = history_pushes;
-        saved.saved_doc_hash = fingerprint;
-    }
+    saved.saved_undo_len = snapshot_depth;
+    saved.saved_scene_pushes = snapshot_pushes;
+    saved.saved_doc_hash = snapshot_hash;
+    saved.observed_undo_len = observed_len;
+    saved.observed_pushes = observed_pushes;
     if let Some(path) = redirected {
         saved.path = Some(PathBuf::from(path));
     }
@@ -2733,16 +2760,10 @@ mod tests {
         write_atomic(&target, b"new").expect("atomic write succeeds");
 
         assert_eq!(std::fs::read(&target).expect("read back"), b"new");
-        let backup = tmp.path().join("scene.bsn.bak");
-        assert_eq!(
-            std::fs::read(&backup).expect("the backup is there"),
-            b"old contents, much longer than the new ones",
-            "the rotated-out version is the backup"
-        );
         let stray_temp = std::fs::read_dir(tmp.path())
             .expect("read temp dir")
             .filter_map(Result::ok)
-            .any(|entry| entry.path() != target && entry.path() != backup);
+            .any(|entry| entry.path() != target);
         assert!(!stray_temp, "no temp file may remain beside the target");
     }
 

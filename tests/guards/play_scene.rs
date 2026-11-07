@@ -1879,12 +1879,15 @@ fn scene_with_every_kind_of_asset(app: &mut App, tmp: &tempfile::TempDir) {
         .expect("a new scene opens")
         .assert_finished();
     app.update();
+    // The open flow stores the canonical path, which on macOS differs from
+    // the tempdir's spelling by the `/var` -> `/private/var` symlink.
+    let zone_path = dunce::canonicalize(zone_file(tmp)).expect("the scene file exists");
     let zone = app
         .world()
         .resource::<Scenes>()
         .tabs
         .iter()
-        .position(|tab| tab.path.as_deref() == Some(zone_file(tmp).as_path()))
+        .position(|tab| tab.path.as_deref() == Some(zone_path.as_path()))
         .expect("the scene's tab");
     jackdaw::scenes::operators::scene_close_system_unprompted(app.world_mut(), zone);
     app.update();
@@ -1919,6 +1922,20 @@ fn without_node_ids(text: &str) -> String {
     out
 }
 
+/// `text` without the physics extension's spawn additions: the extension puts
+/// `RigidBody` and `AvianCollider` on the meshes it covers the moment they
+/// spawn, so the served text carries them while the recorded document (and the
+/// upstream fixture) never wrote them.
+fn without_physics_extension(text: &str) -> String {
+    text.lines()
+        .filter(|line| {
+            !line.contains("avian3d::dynamics::rigid_body::RigidBody")
+                && !line.contains("jackdaw_avian_integration::AvianCollider")
+        })
+        .collect::<Vec<_>>()
+        .join("\n")
+}
+
 /// What a game gets, byte for byte, for the scene in front and for the same scene
 /// behind another.
 #[test]
@@ -1930,6 +1947,7 @@ fn served_text_matches_the_recorded_document() {
     let (behind, ..) = document(scene_answer(app.world_mut(), None, "zone.bsn"));
     let served = format!("{front}=====\n{behind}");
     let served = without_node_ids(&served);
+    let served = without_physics_extension(&served);
     assert_eq!(
         sorted_lines(&served),
         sorted_lines(include_str!("play_scene_served.txt"))

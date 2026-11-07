@@ -102,12 +102,13 @@ pub fn load_bsn_assets_onto(
         // what the pass is for. A handle `held` already answers for the
         // name is replaced in place when its type matches, so everything
         // holding it sees the new value; only a fresh entry gets a new one.
-        let stood_up = bsn_value_to_reflect(&asset_value, type_id, &reg, None).map(|value| {
-            let replaced = held(&name)
-                .filter(|handle| handle.type_id() == type_id)
-                .filter(|handle| reflect_asset.insert(world, handle.id(), &*value).is_ok());
-            replaced.unwrap_or_else(|| reflect_asset.add(world, &*value))
-        });
+        let stood_up =
+            bsn_value_to_reflect(&asset_value, type_id, &reg, assets_ctx.as_ref()).map(|value| {
+                let replaced = held(&name)
+                    .filter(|handle| handle.type_id() == type_id)
+                    .filter(|handle| reflect_asset.insert(world, handle.id(), &*value).is_ok());
+                replaced.unwrap_or_else(|| reflect_asset.add(world, &*value))
+            });
         if let Some(handle) = stood_up {
             parsed.push((name, handle, type_id, asset_value));
         }
@@ -132,6 +133,7 @@ pub fn load_bsn_assets_onto(
             let assets_ctx = crate::BsnApplyAssets {
                 server,
                 local: Some(&local),
+                unresolved: None,
             };
             if let Some(reflect_asset) = registration.data::<ReflectAsset>()
                 && let Some(value) =

@@ -83,8 +83,8 @@ pub fn intercept_window_close(
         return;
     }
 
-    let any_dirty = scenes.tabs.iter().any(|t| t.dirty)
-        || asset_edits.iter().any(|edit| edit.dirty);
+    let any_dirty =
+        scenes.tabs.iter().any(|t| t.dirty) || asset_edits.iter().any(|edit| edit.dirty);
     if !any_dirty {
         exit.write(bevy::app::AppExit::Success);
         return;
@@ -398,42 +398,52 @@ pub fn track_active_dirty_from_history(
     let was_dirty = tab.dirty;
     let grew = current_pushes > tab.observed_pushes;
 
-    let dirty = match saved_doc_hash {
-        Some(saved_hash) if current_len == saved_undo_len => {
-            // Back at the saved depth: equal content means clean, anything
-            // else (a different edit at the same depth) means dirty. Decided
-            // by a queued emit, so this system stays out of the schedule's
-            // way. If the emit is impossible the flag stays where it is.
-            commands.queue(move |world: &mut World| {
-                let Some(current) = crate::scene_io::document_fingerprint(world) else {
-                    return;
-                };
-                let Some(mut scenes) = world.get_resource_mut::<Scenes>() else {
-                    return;
-                };
-                if scenes.tabs.len() <= active {
-                    return;
-                }
-                scenes.set_changed();
-                scenes.tabs[active].dirty = current != saved_hash;
-            });
-            was_dirty
+    let dirty = if history.forgotten() {
+        // The files hold no state on this history (a save failed after its
+        // sidecars landed, an outside edit was kept as its own file): dirty
+        // until the next save, whatever the undo stack does.
+        true
+    } else {
+        match saved_doc_hash {
+            Some(saved_hash) if current_len == saved_undo_len => {
+                // Back at the saved depth: equal content means clean, anything
+                // else (a different edit at the same depth) means dirty. Decided
+                // by a queued emit, so this system stays out of the schedule's
+                // way. If the emit is impossible the flag stays where it is.
+                commands.queue(move |world: &mut World| {
+                    if world.resource::<CommandHistory>().forgotten() {
+                        return;
+                    }
+                    let Some(current) = crate::scene_io::document_fingerprint(world) else {
+                        return;
+                    };
+                    let Some(mut scenes) = world.get_resource_mut::<Scenes>() else {
+                        return;
+                    };
+                    if scenes.tabs.len() <= active {
+                        return;
+                    }
+                    scenes.set_changed();
+                    scenes.tabs[active].dirty = current != saved_hash;
+                });
+                was_dirty
+            }
+            Some(_) => {
+                // Away from the saved depth — unsaved edits above it, an undo
+                // past it, or a snapshot the document has since moved past.
+                // Above the saved depth, only scene-document pushes can have
+                // moved the document: a stack that climbed on asset-field or
+                // session-resource entries alone (scene_pushes still at its
+                // saved baseline) leaves the tab clean. Below it, an undo
+                // withdrew a scene command, which changed the document — dirty.
+                let below = current_len < saved_undo_len;
+                let scene_grew_since_save = current_pushes > saved_scene_pushes;
+                below || scene_grew_since_save || was_dirty
+            }
+            // No baseline (a fresh untitled tab): growth dirties and nothing
+            // cleans, the pre-existing behaviour.
+            None => grew || was_dirty,
         }
-        Some(_) => {
-            // Away from the saved depth — unsaved edits above it, an undo
-            // past it, or a snapshot the document has since moved past.
-            // Above the saved depth, only scene-document pushes can have
-            // moved the document: a stack that climbed on asset-field or
-            // session-resource entries alone (scene_pushes still at its
-            // saved baseline) leaves the tab clean. Below it, an undo
-            // withdrew a scene command, which changed the document — dirty.
-            let below = current_len < saved_undo_len;
-            let scene_grew_since_save = current_pushes > saved_scene_pushes;
-            below || scene_grew_since_save || was_dirty
-        }
-        // No baseline (a fresh untitled tab): growth dirties and nothing
-        // cleans, the pre-existing behaviour.
-        None => grew || was_dirty,
     };
     let tab = &mut scenes.bypass_change_detection().tabs[active];
     tab.dirty = dirty;

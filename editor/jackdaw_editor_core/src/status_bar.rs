@@ -242,7 +242,6 @@ fn update_status_center(
     let project_changed = project.as_ref().is_some_and(Res::is_changed) || had != project.is_some();
     if !scene_path.is_changed() && !scenes.as_ref().is_some_and(Res::is_changed) && !project_changed
     {
-    {
         return;
     }
     let Ok(mut text) = text_query.single_mut() else {

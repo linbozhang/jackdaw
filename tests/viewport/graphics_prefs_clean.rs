@@ -208,11 +208,13 @@ fn the_viewport_preferences_leave_the_scene_document_untouched() {
         app.world().resource::<CommandHistory>().undo_stack.len(),
     );
 
-    // Re-dirty the file on disk. The save below must rewrite it; if it
-    // silently did not, the junk would survive and fail this test.
-    std::fs::write(&scene, "// clobbered\n").expect("the scene is re-dirtied");
-
+    // The save below must land the same bytes. (The old re-dirty-by-clobber
+    // probe went with the synchronous save; the worker pipeline refuses a
+    // write that would replace bytes the editor does not know of, so an
+    // external clobber now reads as the designed outside-edit refusal, not
+    // as a save that silently did not happen.)
     user_op(&mut app, "scene.save");
+    jackdaw::scene_io::wait_for_saves(app.world_mut());
     let after = std::fs::read(&scene).expect("the saved scene is on disk");
     assert_eq!(
         after, before,

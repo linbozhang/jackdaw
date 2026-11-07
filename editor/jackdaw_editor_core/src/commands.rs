@@ -3650,7 +3650,7 @@ mod set_bsn_field_tests {
             "the whole gesture is one entry: previews leave nothing"
         );
         app.world_mut()
-            .run_system_cached(crate::scenes::mark_active_dirty_on_history_growth)
+            .run_system_cached(crate::scenes::track_active_dirty_from_history)
             .expect("the dirty watcher runs");
         let scenes = app.world().resource::<crate::scenes::Scenes>();
         assert!(

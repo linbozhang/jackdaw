@@ -132,14 +132,15 @@ pub fn run_with(commands: LaunchCommands, extend: impl FnOnce(&mut App)) -> AppE
         None
     };
 
-    // GPU timestamps are a device feature, so a diagnostics run has to
-    // ask for them before the device exists. `None` on every other
-    // launch, which leaves `RenderPlugin` exactly as it was.
-    let render_plugin =
-        crate::render_diagnostics::wgpu_settings().map(|settings| bevy::render::RenderPlugin {
-            render_creation: settings.into(),
-            ..default()
-        });
+    // The editor's renderer is built from explicit wgpu settings:
+    // `render_backend` picks the backend (DX12 by default on Windows, so a
+    // GL driver crash cannot take the editor down; `WGPU_BACKEND` still
+    // wins for diagnostics runs) and folds in the GPU timestamp features a
+    // diagnostics run has to ask for before the device exists.
+    let render_plugin = bevy::render::RenderPlugin {
+        render_creation: crate::render_backend::wgpu_settings().into(),
+        ..default()
+    };
 
     let mut default_plugins = DefaultPlugins
         .set(AssetPlugin {
@@ -173,9 +174,7 @@ pub fn run_with(commands: LaunchCommands, extend: impl FnOnce(&mut App)) -> AppE
             global_volume: bevy::audio::GlobalVolume::from(bevy::audio::Volume::Linear(0.0)),
             ..default()
         });
-    if let Some(render_plugin) = render_plugin {
-        default_plugins = default_plugins.set(render_plugin);
-    }
+    default_plugins = default_plugins.set(render_plugin);
     #[cfg(not(all(windows, not(debug_assertions))))]
     {
         default_plugins = default_plugins.set(bevy::log::LogPlugin {

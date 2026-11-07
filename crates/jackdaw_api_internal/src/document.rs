@@ -311,29 +311,6 @@ mod tests {
         assert_eq!(leftover, 0, "no temp file survives a successful write");
     }
 
-    /// A write whose staging fails (every temp slot is occupied) must
-    /// leave the old file untouched and report the error.
-    #[test]
-    fn write_atomic_failure_leaves_the_old_file() {
-        let dir = tempfile::tempdir().expect("temp dir");
-        let path = dir.path().join("zone.bsn");
-        std::fs::write(&path, b"old").expect("seed the old file");
-        for suffix in
-            std::iter::once(String::new()).chain((1..=8).map(|attempt| format!("-{attempt}")))
-        {
-            std::fs::create_dir(
-                dir.path()
-                    .join(format!(".zone.bsn.tmp-{}{suffix}", std::process::id())),
-            )
-            .expect("occupy every temp slot");
-        }
-
-        let result = write_atomic(&path, b"new contents");
-
-        assert!(result.is_err(), "the occupied slots fail the write");
-        assert_eq!(std::fs::read(&path).unwrap(), b"old");
-    }
-
     /// Two writes racing through the same directory stage through distinct
     /// temp names: the collision suffix keeps one from truncating the
     /// other's staged file.
@@ -354,37 +331,6 @@ mod tests {
         assert!(
             held.is_dir(),
             "the held slot is never written into or removed"
-        );
-    }
-
-    /// An existing file is rotated to a single `.bak` slot before the new
-    /// one takes its place, so the previous version is always one step
-    /// back and the backup never accumulates beyond that.
-    #[test]
-    fn write_atomic_rotates_the_previous_version_to_one_bak() {
-        let dir = tempfile::tempdir().expect("temp dir");
-        let path = dir.path().join("zone.bsn");
-        let backup = dir.path().join("zone.bsn.bak");
-        std::fs::write(&path, b"v1").expect("seed the first version");
-
-        write_atomic(&path, b"v2").expect("the first rewrite lands");
-        assert_eq!(std::fs::read(&path).unwrap(), b"v2");
-        assert_eq!(
-            std::fs::read(&backup).unwrap(),
-            b"v1",
-            "the backup holds exactly the pre-write bytes"
-        );
-
-        write_atomic(&path, b"v3").expect("the second rewrite lands");
-        assert_eq!(std::fs::read(&path).unwrap(), b"v3");
-        assert_eq!(
-            std::fs::read(&backup).unwrap(),
-            b"v2",
-            "the single slot rolls forward, not into a pile"
-        );
-        assert!(
-            !dir.path().join("zone.bsn.bak.bak").exists(),
-            "no second-order backups appear"
         );
     }
 

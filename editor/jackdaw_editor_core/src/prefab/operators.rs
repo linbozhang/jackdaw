@@ -1125,7 +1125,11 @@ pub fn save_scene_as_prefab(world: &mut World, target_path: &Path) {
     let (state, history_len, history_pushes) = {
         let mut history = world.resource_mut::<jackdaw_commands::CommandHistory>();
         history.mark_current_saved();
-        (history.state(), history.undo_stack.len(), history.scene_pushes())
+        (
+            history.state(),
+            history.undo_stack.len(),
+            history.scene_pushes(),
+        )
     };
     let fingerprint = crate::scene_io::document_fingerprint(world);
     if let Some(mut scenes) = world.get_resource_mut::<crate::scenes::Scenes>() {

@@ -253,6 +253,14 @@ pub(crate) struct WaitingSave {
     /// The live document's revision when the snapshot was taken, which also moves on
     /// edits that leave no history entry.
     pub(crate) document: Option<u32>,
+    /// The scene-document baselines of the snapshot, which the dirty watcher
+    /// reads: the undo-stack depth, the scene-document push counter, and the
+    /// fingerprint of what the file will hold. Captured at the snapshot so a
+    /// do/undo/redo that races the write settles the tab against the content
+    /// the file actually takes, not against wherever the stack stands later.
+    pub(crate) snapshot_depth: usize,
+    pub(crate) snapshot_pushes: u64,
+    pub(crate) snapshot_hash: Option<u64>,
     pub(crate) sidecars_started: Arc<AtomicBool>,
     pub(crate) path: String,
     pub(crate) redirected: bool,
@@ -276,6 +284,13 @@ struct RunningSave {
 }
 
 /// What waits for every save to be over.
+// The local `RunConfig` grew the `Play` variant past the lint's bound (the
+// launch axis and cargo-target fields); the enum sits in one short-lived
+// slot, so the copy cost is not worth reshaping the pipeline around.
+#[expect(
+    clippy::large_enum_variant,
+    reason = "the local RunConfig grew the Play variant; the enum lives in one short-lived slot"
+)]
 pub(crate) enum AfterSaves {
     /// Ask again whether the editor can quit.
     CloseWindow,

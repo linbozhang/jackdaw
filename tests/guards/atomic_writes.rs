@@ -25,13 +25,17 @@ use crate::util::{self, OperatorResultExt as _};
 /// plus all eight collision-suffix retries are held: a write that cannot
 /// stage must fail, not write around the staging step.
 fn occupy_temp_slot(parent: &Path, file: &str) -> std::path::PathBuf {
-    let mut first = None;
-    for suffix in std::iter::once(String::new()).chain((1..=8).map(|n| format!("-{n}"))) {
-        let slot = parent.join(format!(".{file}.tmp-{}{suffix}", std::process::id()));
-        std::fs::create_dir(&slot).expect("occupy the temp slot");
-        first.get_or_insert(slot);
-    }
-    first.expect("at least the base slot")
+    // The staged write goes through `temporary_path` (upstream's single
+    // `.jackdaw-tmp-` slot); occupying that path with a directory makes the
+    // staging `File::create` fail, which is what these tests want.
+    let slot = parent.join(
+        jackdaw_api_internal::document::temporary_path(&parent.join(file))
+            .expect("a temp path")
+            .file_name()
+            .expect("a file name"),
+    );
+    std::fs::create_dir(&slot).expect("occupy the temp slot");
+    slot
 }
 
 /// An editor on a project holding a saved scene (open in front) and a

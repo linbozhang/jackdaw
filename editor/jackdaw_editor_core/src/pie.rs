@@ -917,7 +917,7 @@ pub fn insert_build_in_progress(world: &mut World) {
     let task = AsyncComputeTaskPool::get_or_init(bevy::tasks::TaskPool::new)
         .spawn(std::future::pending::<io::Result<GameBuildResult>>());
     world.non_send_mut::<PieSession>().builds.insert(
-        root,
+        (root, None),
         BuildState::Running {
             task,
             pending: Vec::new(),
@@ -1263,8 +1263,7 @@ fn start_instance(
     }
 
     info!("PIE: building the game for {key}");
-    let (task, progress) =
-        spawn_game_build(&root, spec, build.1.clone(), BuildLoad::Foreground);
+    let (task, progress) = spawn_game_build(&root, spec, build.1.clone(), BuildLoad::Foreground);
     let mut session = world.non_send_mut::<PieSession>();
     session.builds.insert(
         build,
@@ -1438,10 +1437,11 @@ pub(crate) fn save_scenes_before_launch(world: &mut World, action: &str) -> Resu
     if untitled_in_front && crate::scenes::operators::active_tab_modified(world) {
         return Err(format!("Save the scene before {action}"));
     }
-    let mut failures: Vec<String> = crate::scenes::operators::save_modified_scenes(world)
-        .into_iter()
-        .map(|failure| failure.message)
-        .collect();
+    let mut failures: Vec<String> =
+        crate::scenes::operators::save_tabs(world, &crate::scenes::operators::modified_tabs(world))
+            .into_iter()
+            .map(|failure| failure.message)
+            .collect();
     // Definition assets edited in the editor are part of what a launch
     // runs (the game reads their files): dirty cards save on the same
     // chain, and one that cannot write blocks the launch rather than

@@ -924,6 +924,7 @@ fn a_live_edit_lands_on_the_scene_node() {
         baseline: None,
         live_value: json!(null),
         label: String::new(),
+        kind: jackdaw::live_edits::LiveEditKind::Field,
     };
     let ast = app.world().resource::<SceneBsnAst>();
     assert_eq!(

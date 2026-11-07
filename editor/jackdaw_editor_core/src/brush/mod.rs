@@ -512,7 +512,7 @@ pub(crate) fn sync_changed_brushes_to_ast(
 /// The tick a sync system last read `T` at, so a write made after it can be
 /// found once the system will not run again for the entity.
 #[derive(Resource)]
-struct SyncedThrough<T> {
+pub(crate) struct SyncedThrough<T> {
     tick: Tick,
     component: std::marker::PhantomData<fn() -> T>,
 }

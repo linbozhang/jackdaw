@@ -193,6 +193,13 @@ impl CommandHistory {
         self.saved = None;
     }
 
+    /// Whether [`forget_saved`](Self::forget_saved) has stripped the file's
+    /// state: nothing an undo or a redo reaches makes the document read saved
+    /// again until the next [`mark_saved`](Self::mark_saved).
+    pub fn forgotten(&self) -> bool {
+        self.saved.is_none()
+    }
+
     /// Whether the document is in the state its file holds.
     pub fn is_saved(&self) -> bool {
         self.saved == Some(self.state())

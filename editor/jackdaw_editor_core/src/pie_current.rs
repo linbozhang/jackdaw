@@ -286,10 +286,13 @@ pub(crate) fn resolve_override_for_launch(
         if named {
             crate::pie::save_scenes_before_launch(world, action)?;
         } else {
-            let mut failures: Vec<String> = crate::scenes::operators::save_modified_scenes(world)
-                .into_iter()
-                .map(|failure| failure.message)
-                .collect();
+            let mut failures: Vec<String> = crate::scenes::operators::save_tabs(
+                world,
+                &crate::scenes::operators::modified_tabs(world),
+            )
+            .into_iter()
+            .map(|failure| failure.message)
+            .collect();
             failures.extend(crate::definition_assets::save_dirty_assets(world));
             if !failures.is_empty() {
                 return Err(format!(

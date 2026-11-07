@@ -738,10 +738,15 @@ fn apply_ast_to_entity(world: &mut World, entity: Entity, references: Option<&Sc
     // Names go in before the component patches, so a warn a later patch
     // raises can name its holder even when the document spells the #Name
     // after the component it flags.
-    for patch in &patch_data {
-        if let BsnPatch::Name(name) = patch {
-            world.entity_mut(entity).insert(Name::new(name.clone()));
-        }
+    let front_names: Vec<String> = patch_entities
+        .iter()
+        .filter_map(|&pe| match ast.get_patch(pe) {
+            Some(BsnPatch::Name(name)) => Some(name.clone()),
+            _ => None,
+        })
+        .collect();
+    for name in &front_names {
+        world.entity_mut(entity).insert(Name::new(name.clone()));
     }
 
     for pe in patch_entities {
@@ -4431,7 +4436,7 @@ mod binding_issue_tests {
             fields: fields(&["nonexistent_field"]),
         };
 
-        apply_struct_patch(&mut world, entity, &data);
+        apply_struct_patch(&mut world, entity, &data, None);
 
         let issues = world.resource::<BindingIssues>();
         assert_eq!(issues.len(), 1, "one row: {issues:?}");
@@ -4448,7 +4453,7 @@ mod binding_issue_tests {
 
         // The same on-site again — a reload, a second apply — is still one
         // row, and speaks nothing new (the lock the panel relies on).
-        apply_struct_patch(&mut world, entity, &data);
+        apply_struct_patch(&mut world, entity, &data, None);
         assert_eq!(
             world.resource::<BindingIssues>().len(),
             1,
@@ -4478,7 +4483,7 @@ mod binding_issue_tests {
             fields: fields(&[]),
         };
 
-        apply_struct_patch(&mut world, entity, &data);
+        apply_struct_patch(&mut world, entity, &data, None);
 
         let issues = world.resource::<BindingIssues>();
         assert_eq!(issues.len(), 1, "the drop is a row: {issues:?}");
@@ -4558,7 +4563,7 @@ mod binding_issue_tests {
             fields: fields(&[]),
         };
 
-        apply_struct_patch(&mut world, entity, &data);
+        apply_struct_patch(&mut world, entity, &data, None);
 
         let issues = world.resource::<BindingIssues>();
         assert_eq!(issues.len(), 1, "the bare name is a row: {issues:?}");

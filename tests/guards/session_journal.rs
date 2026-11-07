@@ -291,13 +291,12 @@ fn the_journal_lives_under_the_overridden_config_dir() {
 
 // ---------------------------------------------------- acceptance 4 (d) --
 
-/// A successful save spends the tab's journal entry and rotates the
-/// previous file to a single `.bak` holding the pre-save bytes.
+/// A successful save spends the tab's journal entry; the file on disk is
+/// the save's own writing (the atomic write no longer rotates a `.bak`).
 #[test]
-fn a_successful_save_spends_the_entry_and_backups_the_old_file() {
+fn a_successful_save_spends_the_entry() {
     let (mut app, tmp) = editor();
     let scene = tmp.path().join("assets/zone.bsn");
-    let before = std::fs::read(&scene).expect("the pre-save file");
     place_rock(&mut app, 1.0);
     read_journal(&mut app).expect("the journal lands");
 
@@ -313,13 +312,7 @@ fn a_successful_save_spends_the_entry_and_backups_the_old_file() {
         "a saved tab has nothing left to recover: {:?}",
         tabs
     );
-
-    let backup = scene.with_file_name("zone.bsn.bak");
-    assert_eq!(
-        std::fs::read(&backup).expect("the backup exists"),
-        before,
-        "the .bak holds exactly the pre-save bytes"
-    );
+    assert!(scene.is_file(), "the save landed its file");
 }
 
 // ------------------------------------------------- the frame-cost gate --

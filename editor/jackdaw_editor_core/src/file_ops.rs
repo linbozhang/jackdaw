@@ -128,16 +128,24 @@ fn ask_to_delete(world: &mut World, path: PathBuf, forced: bool) {
             return;
         }
         if !close_open_holders(world, &path) {
-            warn_caller(
-                world,
-                format!(
-                    "file.delete: {} is {} and closing it would close the last open tab, \
-                     so nothing was deleted; close it first",
-                    path.display(),
-                    holder
-                ),
-            );
-            return;
+            // Closing would take the last open tab. A folder whose holders all
+            // stand inside it stays refused (N3: the tabs' next saves would
+            // write the deleted files back). A single file the strip will not
+            // close goes ahead anyway: the delete lands the saves writing it
+            // first, so the one tab left standing is clean and nothing
+            // rewrites the deleted path behind it.
+            if path.is_dir() {
+                warn_caller(
+                    world,
+                    format!(
+                        "file.delete: {} is {} and closing it would close the last open tab, \
+                         so nothing was deleted; close it first",
+                        path.display(),
+                        holder
+                    ),
+                );
+                return;
+            }
         }
     }
     if forced {
