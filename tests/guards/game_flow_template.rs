@@ -393,7 +393,7 @@ fn rendered(name: &str) -> String {
     let raw = std::fs::read_to_string(format!("{path}{name}.template"))
         .or_else(|_| std::fs::read_to_string(format!("{path}{name}")))
         .unwrap_or_else(|error| panic!("the template ships {name}: {error}"));
-    raw.replace("{{crate_name}}", "guards::game_flow_template")
+    raw.replace("{{crate_name}}", "editor::guards::game_flow_template")
         .replace("{{project-name | title_case}}", "Guards")
 }
 

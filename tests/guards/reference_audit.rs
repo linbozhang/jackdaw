@@ -19,7 +19,7 @@ struct Signboard {
     board: Handle<StandardMaterial>,
 }
 
-const SIGNBOARD: &str = "guards::reference_audit::Signboard";
+const SIGNBOARD: &str = "editor::guards::reference_audit::Signboard";
 
 fn write(root: &std::path::Path, relative: &str, text: &str) {
     let path = root.join("assets").join(relative);

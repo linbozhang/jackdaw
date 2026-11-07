@@ -143,7 +143,7 @@ fn flow_app(dir: &std::path::Path) -> App {
 const MENU_BSN: &str = r#"
 #MenuRoot
 jackdaw_scene_types::UiSceneRoot
-guards::game_flow::MenuRoot
+editor::guards::game_flow::MenuRoot
 bevy_ui::ui_node::Node {
     width: bevy_ui::geometry::Val::Percent(100.0),
     height: bevy_ui::geometry::Val::Percent(100.0),
@@ -161,12 +161,12 @@ bevy_ecs::hierarchy::Children [
     jackdaw_widgets_runtime::Progress {
         value: 1.0,
     }
-    jackdaw_bind::types::Bindings([jackdaw_bind::types::Binding::Field { read: [jackdaw_bind::types::BindPath { raw: "guards::game_flow::PlayerHealth.current" }, jackdaw_bind::types::BindPath { raw: "guards::game_flow::PlayerHealth.max" }], via: core::option::Option::Some("ratio"), write: jackdaw_bind::types::BindPath { raw: "jackdaw_widgets_runtime::Progress.value" }, as_percent: false }])
+    jackdaw_bind::types::Bindings([jackdaw_bind::types::Binding::Field { read: [jackdaw_bind::types::BindPath { raw: "editor::guards::game_flow::PlayerHealth.current" }, jackdaw_bind::types::BindPath { raw: "editor::guards::game_flow::PlayerHealth.max" }], via: core::option::Option::Some("ratio"), write: jackdaw_bind::types::BindPath { raw: "jackdaw_widgets_runtime::Progress.value" }, as_percent: false }])
     --
     #HealthText
     bevy_ui::widget::text::Text("100 / 100")
     bevy_feathers::theme::ThemedText
-    jackdaw_bind::types::Bindings([jackdaw_bind::types::Binding::Text { format: "{} / {}", args: [jackdaw_bind::types::BindPath { raw: "guards::game_flow::PlayerHealth.current" }, jackdaw_bind::types::BindPath { raw: "guards::game_flow::PlayerHealth.max" }] }])
+    jackdaw_bind::types::Bindings([jackdaw_bind::types::Binding::Text { format: "{} / {}", args: [jackdaw_bind::types::BindPath { raw: "editor::guards::game_flow::PlayerHealth.current" }, jackdaw_bind::types::BindPath { raw: "editor::guards::game_flow::PlayerHealth.max" }] }])
     --
     #StartButton
     bevy_ui::ui_node::Node {
@@ -174,7 +174,7 @@ bevy_ecs::hierarchy::Children [
         min_height: bevy_ui::geometry::Val::Px(32.0),
     }
     bevy_ui_widgets::button::Button
-    jackdaw_bind::types::Bindings([jackdaw_bind::types::Binding::Action { event: "guards::game_flow::ScreenPressed", fields: [], literals: [["button", "start"]] }])
+    jackdaw_bind::types::Bindings([jackdaw_bind::types::Binding::Action { event: "editor::guards::game_flow::ScreenPressed", fields: [], literals: [["button", "start"]] }])
     bevy_ecs::hierarchy::Children [
         #StartCaption
         bevy_ui::widget::text::Text("Start")
@@ -185,7 +185,7 @@ bevy_ecs::hierarchy::Children [
 
 const LEVEL_BSN: &str = r#"
 #LevelRoot
-guards::game_flow::LevelMarker
+editor::guards::game_flow::LevelMarker
 bevy_ecs::hierarchy::Children [
     #LevelPickup
     bevy_transform::components::transform::Transform {
@@ -202,7 +202,7 @@ bevy_ecs::hierarchy::Children [
 const GAMEOVER_BSN: &str = r#"
 #GameOverRoot
 jackdaw_scene_types::UiSceneRoot
-guards::game_flow::GameOverRoot
+editor::guards::game_flow::GameOverRoot
 bevy_ui::ui_node::Node {
     width: bevy_ui::geometry::Val::Percent(100.0),
     height: bevy_ui::geometry::Val::Percent(100.0),
@@ -218,7 +218,7 @@ bevy_ecs::hierarchy::Children [
         min_height: bevy_ui::geometry::Val::Px(32.0),
     }
     bevy_ui_widgets::button::Button
-    jackdaw_bind::types::Bindings([jackdaw_bind::types::Binding::Action { event: "guards::game_flow::ScreenPressed", fields: [], literals: [["button", "restart"]] }])
+    jackdaw_bind::types::Bindings([jackdaw_bind::types::Binding::Action { event: "editor::guards::game_flow::ScreenPressed", fields: [], literals: [["button", "restart"]] }])
 ]
 "#;
 

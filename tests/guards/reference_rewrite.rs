@@ -15,7 +15,7 @@ use jackdaw_api_internal::operator::{OperatorReports, OperatorWarnings};
 
 use crate::util::{self, OperatorResultExt as _};
 
-const SIGNPOST: &str = "guards::reference_rewrite::Signpost";
+const SIGNPOST: &str = "editor::guards::reference_rewrite::Signpost";
 
 /// A component naming a material, with a plain string beside it that is made
 /// to spell the very same path: the rewrite must touch the one and not the

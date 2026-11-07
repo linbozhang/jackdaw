@@ -293,7 +293,7 @@ fn hud_seed() -> String {
     );
     std::fs::read_to_string(path)
         .unwrap_or_else(|error| panic!("the template ships the hud seed: {error}"))
-        .replace("{{crate_name}}", "guards::game_ui")
+        .replace("{{crate_name}}", "editor::guards::game_ui")
         .replace("{{project-name | title_case}}", "Guards")
 }
 
@@ -896,8 +896,8 @@ fn a_typoed_field_fails_loudly_and_a_fix_lands_quietly() {
             BindContext(player),
             jackdaw_bind::Bindings(vec![jackdaw_bind::Binding::Field {
                 read: vec![
-                    jackdaw_bind::BindPath::new("guards::game_ui::PlayerHealth.currrent"),
-                    jackdaw_bind::BindPath::new("guards::game_ui::PlayerHealth.max"),
+                    jackdaw_bind::BindPath::new("editor::guards::game_ui::PlayerHealth.currrent"),
+                    jackdaw_bind::BindPath::new("editor::guards::game_ui::PlayerHealth.max"),
                 ],
                 via: Some("ratio".to_owned()),
                 write: jackdaw_bind::BindPath::new("jackdaw_widgets_runtime::Progress.value"),
@@ -931,8 +931,8 @@ fn a_typoed_field_fails_loudly_and_a_fix_lands_quietly() {
         .unwrap()
         .0[0] = jackdaw_bind::Binding::Field {
         read: vec![
-            jackdaw_bind::BindPath::new("guards::game_ui::PlayerHealth.current"),
-            jackdaw_bind::BindPath::new("guards::game_ui::PlayerHealth.max"),
+            jackdaw_bind::BindPath::new("editor::guards::game_ui::PlayerHealth.current"),
+            jackdaw_bind::BindPath::new("editor::guards::game_ui::PlayerHealth.max"),
         ],
         via: Some("ratio".to_owned()),
         write: jackdaw_bind::BindPath::new("jackdaw_widgets_runtime::Progress.value"),
