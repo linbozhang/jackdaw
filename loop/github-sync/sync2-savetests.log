@@ -1,0 +1,40 @@
+   Compiling jackdaw_commands v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_commands)
+   Compiling jackdaw_bsn v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_bsn)
+   Compiling jackdaw_terrain v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_terrain)
+   Compiling jackdaw_api_macros v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_api_macros)
+   Compiling jackdaw_project_build v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_project_build)
+   Compiling jackdaw_widgets v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_widgets)
+   Compiling jackdaw_scaffold v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_scaffold)
+   Compiling jackdaw_prefab v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_prefab)
+   Compiling jackdaw_animation_runtime v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_animation_runtime)
+   Compiling jackdaw_jsn v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_jsn)
+   Compiling jackdaw_remote v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_remote)
+   Compiling jackdaw_runtime v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_runtime)
+   Compiling jackdaw_feathers v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_feathers)
+   Compiling jackdaw_avian_integration v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/integrations/physics/jackdaw_avian_integration)
+   Compiling jackdaw_panels v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_panels)
+   Compiling jackdaw_node_graph v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_node_graph)
+   Compiling jackdaw_api_internal v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_api_internal)
+   Compiling jackdaw_animation v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_animation)
+   Compiling jackdaw_api v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_api)
+   Compiling jackdaw_loader v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_loader)
+   Compiling jackdaw_physics v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/integrations/physics/jackdaw_physics)
+   Compiling jackdaw_multiplayer_editor v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_multiplayer_editor)
+   Compiling jackdaw_editor_core v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/editor/jackdaw_editor_core)
+    Finished `test` profile [optimized + debuginfo] target(s) in 1m 21s
+     Running unittests src/lib.rs (target/debug/deps/jackdaw_editor_core-14e57f15d691b497)
+
+running 10 tests
+test scene_io::save::tests::write_atomic_leaves_the_destination_untouched_on_failure ... ok
+test scene_io::save::tests::write_atomic_replaces_existing_content_and_cleans_up_its_temp_file ... ok
+test scene_io::save::tests::a_large_scene_is_told_about_once_until_it_grows_well_past_that ... ok
+test scene_io::save::tests::a_named_save_renames_the_tab_it_saves ... ok
+test scene_io::save::tests::an_overlaid_entity_takes_a_live_reference_the_document_lacks ... ok
+test scene_io::save::tests::live_mode_save_uses_authored_values_not_live_overlays ... ok
+test scene_io::save::tests::failed_authoritative_write_keeps_the_scene_dirty ... ok
+test scene_io::save::tests::save_scene_with_outcome_reports_failed_on_a_blocked_write ... ok
+test scene_io::save::tests::save_scene_with_outcome_reports_saved_on_success ... ok
+test scene_io::save::tests::successful_scene_write_finishes_before_the_tab_becomes_clean ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 1060 filtered out; finished in 0.01s
+

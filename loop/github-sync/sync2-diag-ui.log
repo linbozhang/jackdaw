@@ -1,0 +1,18 @@
+    Finished `test` profile [optimized + debuginfo] target(s) in 0.36s
+     Running tests/editor/main.rs (target/debug/deps/editor-ed24af6816fce2cd)
+
+running 1 test
+
+thread 'guards::game_ui::the_hud_is_the_only_ui_and_it_loads_with_its_bindings_resolved' (3442459) panicked at tests/editor/../guards/game_ui.rs:401:5:
+the authored marker loaded
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test guards::game_ui::the_hud_is_the_only_ui_and_it_loads_with_its_bindings_resolved ... FAILED
+
+failures:
+
+failures:
+    guards::game_ui::the_hud_is_the_only_ui_and_it_loads_with_its_bindings_resolved
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 2478 filtered out; finished in 1.20s
+
+error: test failed, to rerun pass `-p jackdaw --test editor`

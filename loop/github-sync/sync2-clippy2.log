@@ -1,0 +1,88 @@
+    Checking jackdaw_bsn v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_bsn)
+    Checking jackdaw_feathers v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_feathers)
+   Compiling jackdaw_project_build v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_project_build)
+    Checking jackdaw_material v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_material)
+    Checking jackdaw_multiplayer v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_multiplayer)
+    Checking bevy_window_chrome v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/bevy_window_chrome)
+    Checking jackdaw_rustc_wrapper v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_rustc_wrapper)
+    Checking jackdaw_hull v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_hull)
+    Checking jackdaw_localization v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_localization)
+    Checking jackdaw_package v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_package)
+    Checking jackdaw_pie_protocol v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_pie_protocol)
+    Checking jackdaw_geometry v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_geometry)
+    Checking jackdaw_scaffold v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_scaffold)
+    Checking jackdaw_animation_runtime v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_animation_runtime)
+    Checking jackdaw_prefab v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_prefab)
+    Checking jackdaw_panels v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_panels)
+    Checking jackdaw_node_graph v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_node_graph)
+    Checking jackdaw_jsn v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_jsn)
+    Checking jackdaw_remote v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_remote)
+    Checking jackdaw_cli_internal v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_cli)
+    Checking jackdaw_runtime v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_runtime)
+    Checking jackdaw_api_internal v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_api_internal)
+    Checking jackdaw_animation v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_animation)
+    Checking jd v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jd)
+    Checking jackdaw_avian_integration v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/integrations/physics/jackdaw_avian_integration)
+    Checking jackdaw_dylib v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_dylib)
+    Checking jackdaw_loader v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_loader)
+    Checking jackdaw_api v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_api)
+    Checking jackdaw_multiplayer_editor v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_multiplayer_editor)
+    Checking jackdaw_physics v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/integrations/physics/jackdaw_physics)
+    Checking jackdaw_extension v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_extension)
+    Checking jackdaw_sdk v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_sdk)
+    Checking test_fixture_extension v0.0.0 (/Users/linbo.zhang/workspace/jackdaw/tests/fixtures/test_fixture_extension)
+    Checking dynamic_extension v0.1.0 (/Users/linbo.zhang/workspace/jackdaw/examples/extension/dynamic_extension)
+    Checking viewable_camera_extension v0.1.0 (/Users/linbo.zhang/workspace/jackdaw/examples/extension/viewable_camera_extension)
+    Checking jackdaw_editor_core v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/editor/jackdaw_editor_core)
+error[E0425]: cannot find value `mark_active_dirty_on_history_growth` in module `crate::scenes`
+    --> editor/jackdaw_editor_core/src/commands.rs:3653:47
+     |
+3653 |             .run_system_cached(crate::scenes::mark_active_dirty_on_history_growth)
+     |                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in `crate::scenes`
+
+    Checking jackdaw_camera_rig v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_camera_rig)
+    Checking jackdaw_surface v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_surface)
+    Checking jackdaw_schema v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_schema)
+    Checking jackdaw_bind v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_bind)
+    Checking jackdaw_select v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_select)
+    Checking jackdaw_tileset v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_tileset)
+    Checking jackdaw_scene_types v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_scene_types)
+    Checking jackdaw_uv v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_uv)
+    Checking jackdaw_pick v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_pick)
+    Checking jackdaw_camera v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_camera)
+error: large size difference between variants
+   --> editor/jackdaw_editor_core/src/scene_io/save_worker.rs:279:1
+    |
+279 | /  pub(crate) enum AfterSaves {
+280 | |      /// Ask again whether the editor can quit.
+281 | |      CloseWindow,
+282 | |      /// Ask again whether the project can be left.
+...   |
+285 | |      CloseTab(u64),
+    | |      ------------- the second-largest variant contains at least 8 bytes
+...   |
+291 | |/     Play {
+292 | ||         key: InstanceKey,
+293 | ||         run: RunConfig,
+294 | ||         /// The tab in front when Play was asked for, by id.
+295 | ||         tab: Option<u64>,
+296 | ||     },
+    | ||_____- the largest variant contains at least 272 bytes
+297 | |  }
+    | |__^ the entire enum is at least 272 bytes
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#large_enum_variant
+    = note: `-D clippy::large-enum-variant` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::large_enum_variant)]`
+help: consider boxing the large fields or introducing indirection in some other way to reduce the total size of the enum
+    |
+293 -         run: RunConfig,
+293 +         run: Box<RunConfig>,
+    |
+
+    Checking jackdaw_fuzzy v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_fuzzy)
+    Checking jackdaw_widgets_runtime v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_widgets_runtime)
+error: could not compile `jackdaw_editor_core` (lib) due to 1 previous error
+warning: build failed, waiting for other jobs to finish...
+For more information about this error, try `rustc --explain E0425`.
+error: could not compile `jackdaw_editor_core` (lib test) due to 1 previous error

@@ -1,0 +1,32 @@
+warning: output filename collision at /Users/linbo.zhang/workspace/jackdaw/target/debug/jackdaw-rustc-wrapper
+  |
+  = note: the bin target `jackdaw-rustc-wrapper` in package `jackdaw_rustc_wrapper v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_rustc_wrapper)` has the same output filename as the bin target `jackdaw-rustc-wrapper` in package `jackdaw v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw)`
+  = note: this may become a hard error in the future; see <https://github.com/rust-lang/cargo/issues/6313>
+  = help: consider changing their names to be unique or compiling them separately
+warning: output filename collision at /Users/linbo.zhang/workspace/jackdaw/target/debug/jackdaw-rustc-wrapper.dSYM
+  |
+  = note: the bin target `jackdaw-rustc-wrapper` in package `jackdaw_rustc_wrapper v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_rustc_wrapper)` has the same output filename as the bin target `jackdaw-rustc-wrapper` in package `jackdaw v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw)`
+  = note: this may become a hard error in the future; see <https://github.com/rust-lang/cargo/issues/6313>
+  = help: consider changing their names to be unique or compiling them separately
+   Compiling jackdaw_api_macros v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_api_macros)
+   Compiling jackdaw_commands v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_commands)
+   Compiling jackdaw_bsn v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_bsn)
+   Compiling jackdaw_terrain v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_terrain)
+   Compiling jackdaw_project_build v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_project_build)
+error[E0425]: cannot find value `patch_data` in this scope
+   --> crates/jackdaw_bsn/src/apply.rs:741:19
+    |
+741 |     for patch in &patch_data {
+    |                   ^^^^^^^^^^ not found in this scope
+
+   Compiling jackdaw_widgets v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_widgets)
+error[E0063]: missing field `unresolved` in initializer of `BsnApplyAssets<'_>`
+   --> crates/jackdaw_bsn/src/catalog.rs:132:30
+    |
+132 |             let assets_ctx = crate::BsnApplyAssets {
+    |                              ^^^^^^^^^^^^^^^^^^^^^ missing `unresolved`
+
+Some errors have detailed explanations: E0063, E0425.
+For more information about an error, try `rustc --explain E0063`.
+error: could not compile `jackdaw_bsn` (lib) due to 2 previous errors
+warning: build failed, waiting for other jobs to finish...

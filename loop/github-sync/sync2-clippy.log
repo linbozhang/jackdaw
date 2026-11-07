@@ -1,0 +1,103 @@
+    Checking tempfile v3.27.0
+    Checking jackdaw_bsn v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_bsn)
+    Checking jackdaw_commands v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_commands)
+   Compiling jackdaw_api_macros v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_api_macros)
+    Checking jackdaw_terrain v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_terrain)
+   Compiling jackdaw_project_build v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_project_build)
+    Checking jackdaw_tilemap_collision v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_tilemap_collision)
+    Checking jackdaw_csg v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_csg)
+    Checking jackdaw_env v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_env)
+    Checking jackdaw_mcp v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_mcp)
+    Checking jackdaw_widgets v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_widgets)
+    Checking jackdaw_releases v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_releases)
+error: unused variable: `assets_ctx`
+  --> crates/jackdaw_bsn/src/catalog.rs:76:9
+   |
+76 |     let assets_ctx = server.as_ref().map(|s| crate::BsnApplyAssets {
+   |         ^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_assets_ctx`
+   |
+   = note: `-D unused-variables` implied by `-D warnings`
+   = help: to override `-D warnings` add `#[allow(unused_variables)]`
+
+    Checking jackdaw_scaffold v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_scaffold)
+    Checking jackdaw_cli_internal v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_cli)
+error: could not compile `jackdaw_bsn` (lib) due to 1 previous error
+warning: build failed, waiting for other jobs to finish...
+error[E0061]: this function takes 4 arguments but 3 arguments were supplied
+    --> crates/jackdaw_bsn/src/apply.rs:4439:9
+     |
+4439 |         apply_struct_patch(&mut world, entity, &data);
+     |         ^^^^^^^^^^^^^^^^^^--------------------------- argument #4 of type `std::option::Option<&bevy::bevy_platform::collections::HashMap<std::string::String, bevy::bevy_asset::UntypedHandle>>` is missing
+     |
+note: function defined here
+    --> crates/jackdaw_bsn/src/apply.rs:1197:4
+     |
+1197 | fn apply_struct_patch(
+     |    ^^^^^^^^^^^^^^^^^^
+...
+1201 |     references: Option<&SceneReferences>,
+     |     ------------------------------------
+help: provide the argument
+     |
+4439 |         apply_struct_patch(&mut world, entity, &data, /* Option<&HashMap<String, UntypedHandle>> */);
+     |                                                     +++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0061]: this function takes 4 arguments but 3 arguments were supplied
+    --> crates/jackdaw_bsn/src/apply.rs:4456:9
+     |
+4456 |         apply_struct_patch(&mut world, entity, &data);
+     |         ^^^^^^^^^^^^^^^^^^--------------------------- argument #4 of type `std::option::Option<&bevy::bevy_platform::collections::HashMap<std::string::String, bevy::bevy_asset::UntypedHandle>>` is missing
+     |
+note: function defined here
+    --> crates/jackdaw_bsn/src/apply.rs:1197:4
+     |
+1197 | fn apply_struct_patch(
+     |    ^^^^^^^^^^^^^^^^^^
+...
+1201 |     references: Option<&SceneReferences>,
+     |     ------------------------------------
+help: provide the argument
+     |
+4456 |         apply_struct_patch(&mut world, entity, &data, /* Option<&HashMap<String, UntypedHandle>> */);
+     |                                                     +++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0061]: this function takes 4 arguments but 3 arguments were supplied
+    --> crates/jackdaw_bsn/src/apply.rs:4486:9
+     |
+4486 |         apply_struct_patch(&mut world, entity, &data);
+     |         ^^^^^^^^^^^^^^^^^^--------------------------- argument #4 of type `std::option::Option<&bevy::bevy_platform::collections::HashMap<std::string::String, bevy::bevy_asset::UntypedHandle>>` is missing
+     |
+note: function defined here
+    --> crates/jackdaw_bsn/src/apply.rs:1197:4
+     |
+1197 | fn apply_struct_patch(
+     |    ^^^^^^^^^^^^^^^^^^
+...
+1201 |     references: Option<&SceneReferences>,
+     |     ------------------------------------
+help: provide the argument
+     |
+4486 |         apply_struct_patch(&mut world, entity, &data, /* Option<&HashMap<String, UntypedHandle>> */);
+     |                                                     +++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0061]: this function takes 4 arguments but 3 arguments were supplied
+    --> crates/jackdaw_bsn/src/apply.rs:4566:9
+     |
+4566 |         apply_struct_patch(&mut world, entity, &data);
+     |         ^^^^^^^^^^^^^^^^^^--------------------------- argument #4 of type `std::option::Option<&bevy::bevy_platform::collections::HashMap<std::string::String, bevy::bevy_asset::UntypedHandle>>` is missing
+     |
+note: function defined here
+    --> crates/jackdaw_bsn/src/apply.rs:1197:4
+     |
+1197 | fn apply_struct_patch(
+     |    ^^^^^^^^^^^^^^^^^^
+...
+1201 |     references: Option<&SceneReferences>,
+     |     ------------------------------------
+help: provide the argument
+     |
+4566 |         apply_struct_patch(&mut world, entity, &data, /* Option<&HashMap<String, UntypedHandle>> */);
+     |                                                     +++++++++++++++++++++++++++++++++++++++++++++++
+
+For more information about this error, try `rustc --explain E0061`.
+error: could not compile `jackdaw_bsn` (lib test) due to 5 previous errors

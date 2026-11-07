@@ -1,0 +1,80 @@
+    Checking jackdaw_editor_core v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/editor/jackdaw_editor_core)
+    Checking jackdaw_input v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_input)
+    Checking jackdaw_tilemap_collision v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_tilemap_collision)
+    Checking jackdaw_commands v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_commands)
+    Checking jackdaw_bind v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_bind)
+    Checking jackdaw_tilemap v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_tilemap)
+    Checking jackdaw_snap v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_snap)
+    Checking jackdaw_rustc_wrapper v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_rustc_wrapper)
+    Checking jackdaw_data_path v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_data_path)
+    Checking jackdaw_recipe v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_recipe)
+error: #[allow] attribute found
+   --> editor/jackdaw_editor_core/src/scene_io/save_worker.rs:282:3
+    |
+282 | #[allow(clippy::large_enum_variant)]
+    |   ^^^^^ help: replace it with: `expect`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#allow_attributes
+    = note: `-D clippy::allow-attributes` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::allow_attributes)]`
+
+error: `allow` attribute without specifying a reason
+   --> editor/jackdaw_editor_core/src/scene_io/save_worker.rs:282:1
+    |
+282 | #[allow(clippy::large_enum_variant)]
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = help: try adding a reason at the end with `, reason = ".."`
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#allow_attributes_without_reason
+    = note: `-D clippy::allow-attributes-without-reason` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::allow_attributes_without_reason)]`
+
+error: could not compile `jackdaw_editor_core` (lib) due to 2 previous errors
+warning: build failed, waiting for other jobs to finish...
+error: item in documentation is missing backticks
+   --> editor/jackdaw_editor_core/src/draw_brush/extend_face.rs:603:38
+    |
+603 |     /// rebuild runs, pushes its one SetBrush entry, and reports no refusal.
+    |                                      ^^^^^^^^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#doc_markdown
+    = note: `-D clippy::doc-markdown` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::doc_markdown)]`
+help: try
+    |
+603 -     /// rebuild runs, pushes its one SetBrush entry, and reports no refusal.
+603 +     /// rebuild runs, pushes its one `SetBrush` entry, and reports no refusal.
+    |
+
+error: this assertion has a constant value
+   --> editor/jackdaw_editor_core/src/edit_mode_ops.rs:720:9
+    |
+720 |         assert!(!BrushSelectionSetFacesOp::ALLOWS_UNDO);
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = help: consider moving this into a const block: `const { assert!(..) }`
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#assertions_on_constants
+    = note: `-D clippy::assertions-on-constants` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::assertions_on_constants)]`
+
+error: items after a test module
+   --> editor/jackdaw_editor_core/src/remote_ops.rs:346:1
+    |
+346 |   mod tests {
+    |   ^^^^^^^^^
+...
+586 | / fn apply_component_set(
+587 | |     world: &mut World,
+588 | |     entity: Entity,
+589 | |     type_path: &str,
+590 | |     field_path: &str,
+591 | |     value: serde_json::Value,
+592 | | ) {
+    | |_^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#items_after_test_module
+    = note: `-D clippy::items-after-test-module` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::items_after_test_module)]`
+    = help: move the items to before the test module was defined
+
+error: could not compile `jackdaw_editor_core` (lib test) due to 5 previous errors

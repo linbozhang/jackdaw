@@ -1,0 +1,122 @@
+   Compiling jackdaw v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw)
+    Finished `test` profile [optimized + debuginfo] target(s) in 11.48s
+     Running tests/editor/main.rs (target/debug/deps/editor-ed24af6816fce2cd)
+
+running 2 tests
+[2m2026-11-07T08:37:01.882768Z[0m [31mERROR[0m [2mbevy_log[0m[2m:[0m Could not set global logger and tracing subscriber as they are already set. Consider disabling LogPlugin.
+[2m2026-11-07T08:37:01.883880Z[0m [32m INFO[0m [2mbevy_diagnostic::system_information_diagnostics_plugin::internal[0m[2m:[0m SystemInfo { os: "macOS 26.3 Tahoe", kernel: "25.3.0", cpu: "Apple M2 Pro", core_count: "12", memory: "32.0 GiB" }
+[2m2026-11-07T08:37:01.883875Z[0m [32m INFO[0m [2mbevy_diagnostic::system_information_diagnostics_plugin::internal[0m[2m:[0m SystemInfo { os: "macOS 26.3 Tahoe", kernel: "25.3.0", cpu: "Apple M2 Pro", core_count: "12", memory: "32.0 GiB" }
+[2m2026-11-07T08:37:01.884929Z[0m [32m INFO[0m [2mbevy_app::terminal_ctrl_c_handler[0m[2m:[0m Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+[2m2026-11-07T08:37:02.085691Z[0m [31mERROR[0m [2mbevy_extract::extract_resource[0m[2m:[0m Sub app did not exist when trying to add `extract_resource` for <bevy_camera::clear_color::ClearColor>.
+[2m2026-11-07T08:37:03.031702Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+[2m2026-11-07T08:37:03.031703Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+[2m2026-11-07T08:37:03.104655Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw_editor_core::test_input::plugin` of extension `jackdaw.test_input`
+[2m2026-11-07T08:37:03.104806Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw_editor_core::test_input::plugin` of extension `jackdaw.test_input`
+[2m2026-11-07T08:37:03.105673Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw_physics::PhysicsEditorPlugin` of extension `jackdaw.physics`
+[2m2026-11-07T08:37:03.105712Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw_physics::PhysicsEditorPlugin` of extension `jackdaw.physics`
+[2m2026-11-07T08:37:03.120026Z[0m [33m WARN[0m [2mbevy_render::texture[0m[2m:[0m CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+[2m2026-11-07T08:37:03.120034Z[0m [33m WARN[0m [2mbevy_render::texture[0m[2m:[0m CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+[2m2026-11-07T08:37:03.120170Z[0m [33m WARN[0m [2mbevy_gltf[0m[2m:[0m CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+[2m2026-11-07T08:37:03.120170Z[0m [33m WARN[0m [2mbevy_gltf[0m[2m:[0m CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+[2m2026-11-07T08:37:03.124587Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core_windows
+[2m2026-11-07T08:37:03.124587Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.physics
+[2m2026-11-07T08:37:03.124720Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.ui_palette
+[2m2026-11-07T08:37:03.124780Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.remote_editor
+[2m2026-11-07T08:37:03.124817Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.build_panel
+[2m2026-11-07T08:37:03.124831Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.multiplayer
+[2m2026-11-07T08:37:03.124857Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.tiles
+[2m2026-11-07T08:37:03.124958Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.tiles
+[2m2026-11-07T08:37:03.125562Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.modelling
+[2m2026-11-07T08:37:03.125575Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.game_panel
+[2m2026-11-07T08:37:03.125602Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.animation_editor
+[2m2026-11-07T08:37:03.125866Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.inspector
+[2m2026-11-07T08:37:03.125907Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.project_window
+[2m2026-11-07T08:37:03.125908Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.animation_graph
+[2m2026-11-07T08:37:03.125935Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.viewport_panel
+[2m2026-11-07T08:37:03.125939Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core_windows
+[2m2026-11-07T08:37:03.125971Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.animation_graph
+[2m2026-11-07T08:37:03.125989Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.viewport_panel
+[2m2026-11-07T08:37:03.126147Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.physics
+[2m2026-11-07T08:37:03.126148Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.game_panel
+[2m2026-11-07T08:37:03.126172Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.ui_palette
+[2m2026-11-07T08:37:03.126212Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.launcher
+[2m2026-11-07T08:37:03.126236Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.project_window
+[2m2026-11-07T08:37:03.126248Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.modelling
+[2m2026-11-07T08:37:03.126347Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.terrain
+[2m2026-11-07T08:37:03.126406Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core
+[2m2026-11-07T08:37:03.126691Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.inspector
+[2m2026-11-07T08:37:03.126716Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.build_panel
+[2m2026-11-07T08:37:03.126727Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.animation_editor
+[2m2026-11-07T08:37:03.126837Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.multiplayer
+[2m2026-11-07T08:37:03.126863Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core
+[2m2026-11-07T08:37:03.127904Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.test_input
+[2m2026-11-07T08:37:03.127909Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.remote_editor
+[2m2026-11-07T08:37:03.127928Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.terrain
+[2m2026-11-07T08:37:03.127949Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.timeline
+[2m2026-11-07T08:37:03.127960Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.test_input
+[2m2026-11-07T08:37:03.128093Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.launcher
+[2m2026-11-07T08:37:03.128164Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.timeline
+[2m2026-11-07T08:37:03.129906Z[0m [33m WARN[0m [2mjackdaw_api_internal::keymap::apply[0m[2m:[0m preset 'classic' has 17 chords claimed by more than one action: ["Enter (Press, Operators): tileset.layout.apply, viewport.draw_brush.commit_polygon, brush.clip.apply", "Digit1 (Press, Operators): tilemap.edit_mode, edit_mode.vertex", "KeyL (Press, Operators): tilemap.line, gizmo.space.toggle", "KeyI (Press, Operators): tilemap.picker, brush.mesh.inset", "Escape (Press, Operators): tilemap.edit_mode.exit, tilemap.selection.clear, terrain.tool.exit_to_select, brush.exit_edit_mode, selection.clear, brush.clip.clear", "KeyM (Press, Operators): tilemap.select, snap.toggle", "Super+KeyV (Press, Operators): tilemap.stamp.paste, clip.paste_keyframes, entity.paste", "Delete (Press, Operators): tilemap.selection.erase, brush.delete_element, clip.delete_keyframes, entity.delete", "Super+KeyC (Press, Operators): tilemap.selection.copy, clip.copy_keyframes, entity.copy", "Super+KeyX (Press, Operators): tilemap.selection.cut, entity.cut", "Super+KeyB (Press, Operators): brush.mesh.edge_bevel, brush.mesh.vertex_bevel", "KeyE (Press, Operators): brush.mesh.extrude, tool.rotate", "Backspace (Press, Operators): brush.delete_element, clip.delete_keyframes, viewport.draw_brush.remove_last_vertex", "PageUp (Press, Operators): brush.nudge_up, sprite.z_up", "PageDown (Press, Operators): brush.nudge_down, sprite.z_down", "Home (Press, Operators): viewport2d.frame, clip.timeline.jump_start, view.frame_all", "Tab (Press, Operators): viewport.draw_brush.toggle_mode, brush.clip.cycle_mode"]
+[2m2026-11-07T08:37:03.129915Z[0m [33m WARN[0m [2mjackdaw_api_internal::keymap::apply[0m[2m:[0m preset 'classic' has 17 chords claimed by more than one action: ["Enter (Press, Operators): tileset.layout.apply, viewport.draw_brush.commit_polygon, brush.clip.apply", "Digit1 (Press, Operators): tilemap.edit_mode, edit_mode.vertex", "KeyL (Press, Operators): tilemap.line, gizmo.space.toggle", "KeyI (Press, Operators): tilemap.picker, brush.mesh.inset", "Escape (Press, Operators): tilemap.edit_mode.exit, tilemap.selection.clear, brush.exit_edit_mode, selection.clear, brush.clip.clear, terrain.tool.exit_to_select", "KeyM (Press, Operators): tilemap.select, snap.toggle", "Super+KeyV (Press, Operators): tilemap.stamp.paste, clip.paste_keyframes, entity.paste", "Delete (Press, Operators): tilemap.selection.erase, clip.delete_keyframes, brush.delete_element, entity.delete", "Super+KeyC (Press, Operators): tilemap.selection.copy, clip.copy_keyframes, entity.copy", "Super+KeyX (Press, Operators): tilemap.selection.cut, entity.cut", "Backspace (Press, Operators): clip.delete_keyframes, brush.delete_element, viewport.draw_brush.remove_last_vertex", "Home (Press, Operators): clip.timeline.jump_start, viewport2d.frame, view.frame_all", "PageUp (Press, Operators): sprite.z_up, brush.nudge_up", "PageDown (Press, Operators): sprite.z_down, brush.nudge_down", "Super+KeyB (Press, Operators): brush.mesh.edge_bevel, brush.mesh.vertex_bevel", "KeyE (Press, Operators): brush.mesh.extrude, tool.rotate", "Tab (Press, Operators): viewport.draw_brush.toggle_mode, brush.clip.cycle_mode"]
+[2m2026-11-07T08:37:03.129928Z[0m [32m INFO[0m [2mjackdaw_editor_core::extension_lifecycle[0m[2m:[0m applied keymap preset 'classic': 136 entries, 136 bindings, 0 user rows
+[2m2026-11-07T08:37:03.129938Z[0m [32m INFO[0m [2mjackdaw_editor_core::extension_lifecycle[0m[2m:[0m applied keymap preset 'classic': 136 entries, 136 bindings, 0 user rows
+[2m2026-11-07T08:37:03.824810Z[0m [32m INFO[0m [2mjackdaw_editor_core::asset_index[0m[2m:[0m asset index: walking /var/folders/k_/lh9sxzr534g6d1h3_jqczqgm9_f177/T/.tmpy6pPWB/assets recursively
+[2m2026-11-07T08:37:03.825037Z[0m [32m INFO[0m [2mjackdaw_editor_core::asset_catalog[0m[2m:[0m No asset catalog found, starting with empty catalog
+[2m2026-11-07T08:37:03.888541Z[0m [32m INFO[0m [2mjackdaw_editor_core::material_browser[0m[2m:[0m update_material_browser_ui: rebuilding with 1 entries
+[2m2026-11-07T08:37:04.147221Z[0m [32m INFO[0m [2mjackdaw_editor_core::asset_index[0m[2m:[0m asset index: walking /var/folders/k_/lh9sxzr534g6d1h3_jqczqgm9_f177/T/.tmpzQfBQu/assets recursively
+[2m2026-11-07T08:37:04.147351Z[0m [32m INFO[0m [2mjackdaw_editor_core::asset_catalog[0m[2m:[0m No asset catalog found, starting with empty catalog
+[2m2026-11-07T08:37:04.207091Z[0m [32m INFO[0m [2mjackdaw_editor_core::material_browser[0m[2m:[0m update_material_browser_ui: rebuilding with 1 entries
+[2m2026-11-07T08:37:04.922432Z[0m [33m WARN[0m [2mjackdaw_editor_core::project_build[0m[2m:[0m PIE: cannot build /var/folders/k_/lh9sxzr534g6d1h3_jqczqgm9_f177/T/.tmpy6pPWB: cargo could not read /var/folders/k_/lh9sxzr534g6d1h3_jqczqgm9_f177/T/.tmpy6pPWB: error: could not find `Cargo.toml` in `/private/var/folders/k_/lh9sxzr534g6d1h3_jqczqgm9_f177/T/.tmpy6pPWB` or any parent directory
+[2m2026-11-07T08:37:04.922432Z[0m [33m WARN[0m [2mjackdaw_editor_core::project_build[0m[2m:[0m PIE: cannot build /var/folders/k_/lh9sxzr534g6d1h3_jqczqgm9_f177/T/.tmpzQfBQu: cargo could not read /var/folders/k_/lh9sxzr534g6d1h3_jqczqgm9_f177/T/.tmpzQfBQu: error: could not find `Cargo.toml` in `/private/var/folders/k_/lh9sxzr534g6d1h3_jqczqgm9_f177/T/.tmpzQfBQu` or any parent directory
+[2m2026-11-07T08:37:04.961136Z[0m [33m WARN[0m [2mbevy_ui::ui_node[0m[2m:[0m Two or more Entities with IsDefaultUiCamera found when only one Camera with this marker is allowed.
+[2m2026-11-07T08:37:05.036371Z[0m [32m INFO[0m [2mjackdaw_editor_core::asset_index[0m[2m:[0m asset index: walk landed (documents 0, typed 0, referencing 0)
+[2m2026-11-07T08:37:05.036483Z[0m [32m INFO[0m [2mjackdaw_editor_core::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 0)
+[2m2026-11-07T08:37:05.036544Z[0m [32m INFO[0m [2mjackdaw_editor_core::asset_index[0m[2m:[0m asset index: walk landed (documents 0, typed 0, referencing 0)
+[2m2026-11-07T08:37:05.036607Z[0m [32m INFO[0m [2mjackdaw_editor_core::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 0)
+[2m2026-11-07T08:37:05.289965Z[0m [32m INFO[0m [2mjackdaw_editor_core::asset_index[0m[2m:[0m asset index: walking /var/folders/k_/lh9sxzr534g6d1h3_jqczqgm9_f177/T/.tmpzQfBQu/assets recursively
+[2m2026-11-07T08:37:05.306770Z[0m [32m INFO[0m [2mjackdaw_editor_core::asset_index[0m[2m:[0m asset index: walk landed (documents 1, typed 0, referencing 0)
+[2m2026-11-07T08:37:05.306842Z[0m [32m INFO[0m [2mjackdaw_editor_core::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 0)
+[2m2026-11-07T08:37:05.343983Z[0m [32m INFO[0m [1msave[0m[2m:[0m[1msave.finish[0m[2m:[0m [2mjackdaw_editor_core::scene_io::save[0m[2m:[0m Scene saved to /private/var/folders/k_/lh9sxzr534g6d1h3_jqczqgm9_f177/T/.tmpzQfBQu/assets/valley.bsn
+[2m2026-11-07T08:37:05.344813Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: viewport.quality.preset
+[2m2026-11-07T08:37:05.355699Z[0m [32m INFO[0m [2mjackdaw_editor_core::asset_index[0m[2m:[0m asset index: walking /var/folders/k_/lh9sxzr534g6d1h3_jqczqgm9_f177/T/.tmpzQfBQu/assets recursively
+[2m2026-11-07T08:37:05.358701Z[0m [32m INFO[0m [2mjackdaw_editor_core::asset_index[0m[2m:[0m asset index: walk landed (documents 1, typed 0, referencing 0)
+[2m2026-11-07T08:37:05.358744Z[0m [32m INFO[0m [2mjackdaw_editor_core::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 0)
+[2m2026-11-07T08:37:05.377303Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: viewport.quality.preset
+[2m2026-11-07T08:37:05.404393Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: viewport.quality.set
+[2m2026-11-07T08:37:05.432912Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: viewport.show.toggle
+[2m2026-11-07T08:37:05.461650Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: viewport.show.toggle
+[2m2026-11-07T08:37:05.489260Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: viewport.show.toggle
+[2m2026-11-07T08:37:05.508855Z[0m [32m INFO[0m [2mjackdaw_editor_core::asset_index[0m[2m:[0m asset index: walking /var/folders/k_/lh9sxzr534g6d1h3_jqczqgm9_f177/T/.tmpy6pPWB/assets recursively
+[2m2026-11-07T08:37:05.518676Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: viewport.show.toggle
+[2m2026-11-07T08:37:05.533921Z[0m [32m INFO[0m [2mjackdaw_editor_core::asset_index[0m[2m:[0m asset index: walk landed (documents 1, typed 0, referencing 0)
+[2m2026-11-07T08:37:05.534014Z[0m [32m INFO[0m [2mjackdaw_editor_core::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 0)
+[2m2026-11-07T08:37:05.559912Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: viewport.show.toggle
+[2m2026-11-07T08:37:05.586298Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: selection.select
+[2m2026-11-07T08:37:05.603046Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: viewport.show.toggle
+[2m2026-11-07T08:37:05.634452Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: viewport.show.toggle
+[2m2026-11-07T08:37:05.664018Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: viewport.show.toggle
+[2m2026-11-07T08:37:05.705380Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: viewport.ssao.set
+[2m2026-11-07T08:37:05.734964Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: component.add
+[2m2026-11-07T08:37:05.735059Z[0m [32m INFO[0m [2mjackdaw_editor_core::commands[0m[2m:[0m AddComponent::execute entered: type_path=jackdaw_scene_types::environment::Environment, type_id=TypeId(0x071c771c7f98b33873c7f9f4ca2cd950), component_id=ComponentId(1883), entity=5204v0
+[2m2026-11-07T08:37:05.735113Z[0m [32m INFO[0m [2mjackdaw_editor_core::commands[0m[2m:[0m AddComponent: inserting `jackdaw_scene_types::environment::Environment` (type_id TypeId(0x071c771c7f98b33873c7f9f4ca2cd950), component_id ComponentId(1883)) on entity 5204v0
+[2m2026-11-07T08:37:05.735155Z[0m [32m INFO[0m [2mjackdaw_editor_core::commands[0m[2m:[0m AddComponent: post-insert, entity 5204v0 has component_id ComponentId(1883): true
+[2m2026-11-07T08:37:05.746576Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: viewport.sharpen.set
+[2m2026-11-07T08:37:05.778335Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: viewport.realtime.toggle
+[2m2026-11-07T08:37:05.826839Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: viewport.stats.toggle
+[2m2026-11-07T08:37:05.856219Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: environment.set
+[2m2026-11-07T08:37:05.872509Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: viewport.stats.graph.toggle
+[2m2026-11-07T08:37:05.917107Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: scene.save
+[2m2026-11-07T08:37:05.928804Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: scene.save
+[2m2026-11-07T08:37:05.931031Z[0m [32m INFO[0m [2mjackdaw_editor_core::asset_index[0m[2m:[0m asset index: walking /var/folders/k_/lh9sxzr534g6d1h3_jqczqgm9_f177/T/.tmpzQfBQu/assets recursively
+[2m2026-11-07T08:37:05.944032Z[0m [32m INFO[0m [2mjackdaw_editor_core::asset_index[0m[2m:[0m asset index: walk landed (documents 1, typed 0, referencing 0)
+[2m2026-11-07T08:37:05.944271Z[0m [32m INFO[0m [2mjackdaw_editor_core::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 0)
+[2m2026-11-07T08:37:05.950045Z[0m [32m INFO[0m [1msave.finish[0m[2m:[0m [2mjackdaw_editor_core::scene_io::save[0m[2m:[0m Scene saved to /private/var/folders/k_/lh9sxzr534g6d1h3_jqczqgm9_f177/T/.tmpzQfBQu/assets/valley.bsn
+[2m2026-11-07T08:37:05.959979Z[0m [32m INFO[0m [1msave.finish[0m[2m:[0m [2mjackdaw_editor_core::scene_io::save[0m[2m:[0m Scene saved to /private/var/folders/k_/lh9sxzr534g6d1h3_jqczqgm9_f177/T/.tmpy6pPWB/assets/valley.bsn
+[2m2026-11-07T08:37:05.961062Z[0m [32m INFO[0m [2mjackdaw_editor_core::asset_index[0m[2m:[0m asset index: walking /var/folders/k_/lh9sxzr534g6d1h3_jqczqgm9_f177/T/.tmpy6pPWB/assets recursively
+[2m2026-11-07T08:37:05.970633Z[0m [32m INFO[0m [2mjackdaw_editor_core::asset_index[0m[2m:[0m asset index: walk landed (documents 1, typed 0, referencing 0)
+[2m2026-11-07T08:37:05.970674Z[0m [32m INFO[0m [2mjackdaw_editor_core::asset_index[0m[2m:[0m asset index: applied with nothing added (removed 0, reloaded 0)
+test viewport::graphics_prefs_clean::the_viewport_preferences_leave_the_scene_document_untouched ... ok
+test viewport::graphics_prefs_clean::the_prep_chain_authors_an_environment_through_the_operators ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 2477 filtered out; finished in 4.24s
+

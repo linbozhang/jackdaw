@@ -1,0 +1,13 @@
+    Finished `test` profile [optimized + debuginfo] target(s) in 0.63s
+     Running tests/editor/main.rs (target/debug/deps/editor-ed24af6816fce2cd)
+
+running 1 test
+[2m2026-11-07T08:37:47.492637Z[0m [32m INFO[0m [2mbevy_diagnostic::system_information_diagnostics_plugin::internal[0m[2m:[0m SystemInfo { os: "macOS 26.3 Tahoe", kernel: "25.3.0", cpu: "Apple M2 Pro", core_count: "12", memory: "32.0 GiB" }
+[2m2026-11-07T08:37:47.688179Z[0m [31mERROR[0m [2mbevy_extract::extract_resource[0m[2m:[0m Sub app did not exist when trying to add `extract_resource` for <bevy_camera::clear_color::ClearColor>.
+[2m2026-11-07T08:37:48.527901Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+[2m2026-11-07T08:37:48.533487Z[0m [32m INFO[0m [1mopen.finish_load[0m[2m:[0m [2mjackdaw_editor_core::scene_io::load[0m[2m:[0m Converted legacy scene to /var/folders/k_/lh9sxzr534g6d1h3_jqczqgm9_f177/T/.tmp0nfIKM/s.bsn; original kept as .jsn.bak
+[2m2026-11-07T08:37:48.533771Z[0m [32m INFO[0m [1mopen.finish_load[0m[2m:[0m [2mjackdaw_editor_core::scene_io::load[0m[2m:[0m Scene loaded from /var/folders/k_/lh9sxzr534g6d1h3_jqczqgm9_f177/T/.tmp0nfIKM/s.bsn (1 entities, 0 embedded assets)
+test prefabs::prefab_lifecycle::prefab_file_change_triggers_reload ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2478 filtered out; finished in 1.81s
+

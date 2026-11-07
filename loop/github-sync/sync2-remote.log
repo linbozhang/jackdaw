@@ -1,0 +1,45 @@
+   Compiling jackdaw v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw)
+    Finished `test` profile [optimized + debuginfo] target(s) in 10.87s
+     Running tests/editor/main.rs (target/debug/deps/editor-ed24af6816fce2cd)
+
+running 1 test
+[2m2026-11-07T08:40:46.832166Z[0m [32m INFO[0m [2mbevy_diagnostic::system_information_diagnostics_plugin::internal[0m[2m:[0m SystemInfo { os: "macOS 26.3 Tahoe", kernel: "25.3.0", cpu: "Apple M2 Pro", core_count: "12", memory: "32.0 GiB" }
+[2m2026-11-07T08:40:47.036355Z[0m [31mERROR[0m [2mbevy_extract::extract_resource[0m[2m:[0m Sub app did not exist when trying to add `extract_resource` for <bevy_camera::clear_color::ClearColor>.
+[2m2026-11-07T08:40:47.860856Z[0m [33m WARN[0m [2mbevy_gizmos_render[0m[2m:[0m bevy_render feature is enabled but RenderApp was not detected. Are you sure you loaded GizmoPlugin after RenderPlugin?
+[2m2026-11-07T08:40:47.923712Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw_editor_core::test_input::plugin` of extension `jackdaw.test_input`
+[2m2026-11-07T08:40:47.924376Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Adding the App plugin `jackdaw_physics::PhysicsEditorPlugin` of extension `jackdaw.physics`
+[2m2026-11-07T08:40:47.937909Z[0m [33m WARN[0m [2mbevy_render::texture[0m[2m:[0m CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+[2m2026-11-07T08:40:47.938058Z[0m [33m WARN[0m [2mbevy_gltf[0m[2m:[0m CompressedImageFormatSupport resource not found. It should either be initialized in finish() of RenderPlugin, or manually if not using the RenderPlugin or the WGPU backend.
+[2m2026-11-07T08:40:47.942103Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.animation_editor
+[2m2026-11-07T08:40:47.942560Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.modelling
+[2m2026-11-07T08:40:47.942868Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.timeline
+[2m2026-11-07T08:40:47.942929Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.build_panel
+[2m2026-11-07T08:40:47.942944Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.tiles
+[2m2026-11-07T08:40:47.943521Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.multiplayer
+[2m2026-11-07T08:40:47.943554Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.remote_editor
+[2m2026-11-07T08:40:47.943576Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core_windows
+[2m2026-11-07T08:40:47.943604Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.animation_graph
+[2m2026-11-07T08:40:47.943619Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.test_input
+[2m2026-11-07T08:40:47.943674Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.terrain
+[2m2026-11-07T08:40:47.943930Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.core
+[2m2026-11-07T08:40:47.945401Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.ui_palette
+[2m2026-11-07T08:40:47.945461Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.physics
+[2m2026-11-07T08:40:47.945553Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.viewport_panel
+[2m2026-11-07T08:40:47.945607Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.inspector
+[2m2026-11-07T08:40:47.945627Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.launcher
+[2m2026-11-07T08:40:47.945763Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.project_window
+[2m2026-11-07T08:40:47.945776Z[0m [32m INFO[0m [2mjackdaw_api_internal::lifecycle[0m[2m:[0m Loading extension: jackdaw.game_panel
+[2m2026-11-07T08:40:47.947520Z[0m [33m WARN[0m [2mjackdaw_api_internal::keymap::apply[0m[2m:[0m preset 'classic' has 17 chords claimed by more than one action: ["Delete (Press, Operators): clip.delete_keyframes, brush.delete_element, tilemap.selection.erase, entity.delete", "Backspace (Press, Operators): clip.delete_keyframes, brush.delete_element, viewport.draw_brush.remove_last_vertex", "Home (Press, Operators): clip.timeline.jump_start, view.frame_all, viewport2d.frame", "Super+KeyC (Press, Operators): clip.copy_keyframes, tilemap.selection.copy, entity.copy", "Super+KeyV (Press, Operators): clip.paste_keyframes, tilemap.stamp.paste, entity.paste", "Super+KeyB (Press, Operators): brush.mesh.edge_bevel, brush.mesh.vertex_bevel", "KeyE (Press, Operators): brush.mesh.extrude, tool.rotate", "KeyI (Press, Operators): brush.mesh.inset, tilemap.picker", "PageUp (Press, Operators): brush.nudge_up, sprite.z_up", "PageDown (Press, Operators): brush.nudge_down, sprite.z_down", "Enter (Press, Operators): tileset.layout.apply, viewport.draw_brush.commit_polygon, brush.clip.apply", "Digit1 (Press, Operators): tilemap.edit_mode, edit_mode.vertex", "KeyL (Press, Operators): tilemap.line, gizmo.space.toggle", "Escape (Press, Operators): tilemap.edit_mode.exit, tilemap.selection.clear, terrain.tool.exit_to_select, brush.exit_edit_mode, selection.clear, brush.clip.clear", "KeyM (Press, Operators): tilemap.select, snap.toggle", "Super+KeyX (Press, Operators): tilemap.selection.cut, entity.cut", "Tab (Press, Operators): viewport.draw_brush.toggle_mode, brush.clip.cycle_mode"]
+[2m2026-11-07T08:40:47.947549Z[0m [32m INFO[0m [2mjackdaw_editor_core::extension_lifecycle[0m[2m:[0m applied keymap preset 'classic': 136 entries, 136 bindings, 0 user rows
+[2m2026-11-07T08:40:48.051044Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: scene.new
+[2m2026-11-07T08:40:48.058080Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: prefab.spawn_instance
+[2m2026-11-07T08:40:48.255717Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: scene.save
+[2m2026-11-07T08:40:48.272424Z[0m [32m INFO[0m [1msave.wait[0m[2m:[0m[1msave.finish[0m[2m:[0m [2mjackdaw_editor_core::scene_io::save[0m[2m:[0m Scene saved to /var/folders/k_/lh9sxzr534g6d1h3_jqczqgm9_f177/T/.tmpqT6e7r/assets/zone_probe.bsn
+[2m2026-11-07T08:40:48.273334Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: scene.new
+[2m2026-11-07T08:40:48.470792Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: prefab.spawn_instance
+[2m2026-11-07T08:40:48.475739Z[0m [32m INFO[0m [2mjackdaw_api_internal::operator[0m[2m:[0m OPERATOR: scene.save
+[2m2026-11-07T08:40:48.489269Z[0m [32m INFO[0m [1msave.wait[0m[2m:[0m[1msave.finish[0m[2m:[0m [2mjackdaw_editor_core::scene_io::save[0m[2m:[0m Scene saved to /var/folders/k_/lh9sxzr534g6d1h3_jqczqgm9_f177/T/.tmpqT6e7r/assets/scratch/probe.bsn
+test stage::remote_placement::a_scene_in_a_folder_spells_its_prefab_source_as_the_zone_beside_it_does ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2478 filtered out; finished in 1.71s
+
