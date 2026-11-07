@@ -428,34 +428,45 @@ pub(crate) fn apply_confirm_quit_action(world: &mut World, action: ConfirmQuitBu
 
     match action {
         ConfirmQuitButton::SaveAll => {
-            // Scenes first, then the definition-asset cards holding
-            // unsaved edits: both are authored state a quit would drop.
-            let scenes_saved = crate::scenes::operators::scene_save_all_system(world);
-            let assets_saved = if scenes_saved {
-                crate::definition_assets::save_dirty_assets(world)
+            // The scenes save in the background and the leave waits for them
+            // (`LeaveIfSaved`). The definition-asset cards holding unsaved
+            // edits are authored state a quit would drop too; they save here,
+            // and a card that cannot save holds the leave the way a failed
+            // scene save does.
+            let assets_failed = crate::definition_assets::save_dirty_assets(world);
+            if assets_failed.is_empty() {
+                crate::scene_io::save_worker::after_saves(
+                    world,
+                    crate::scene_io::save_worker::AfterSaves::LeaveIfSaved { leaving_project },
+                );
+                crate::scenes::operators::save_all_in_background(world);
             } else {
-                Vec::new()
-            };
-            if scenes_saved && assets_saved.is_empty() {
-                confirmed_leave(world, leaving_project);
-            } else {
-                if !assets_saved.is_empty() {
-                    warn!(
-                        "leaving cancelled because assets could not be saved: {}",
-                        assets_saved.join(", ")
-                    );
-                } else {
-                    warn!("leaving cancelled because one or more scenes could not be saved");
-                }
+                warn!(
+                    "leaving cancelled because assets could not be saved: {}",
+                    assets_failed.join(", ")
+                );
                 // A failed save leaves the editor where it was, so it disarms what
                 // the confirmed path would have acted on.
                 disarm_leave(world);
-                report_save_failure(world);
+                error_toast(world, "Could not save every scene. Nothing was closed.");
             }
         }
         ConfirmQuitButton::DiscardAll => confirmed_leave(world, leaving_project),
         ConfirmQuitButton::Cancel => disarm_leave(world),
     }
+}
+
+/// The quit dialog's Save All is over: leave, or stay where the editor was.
+pub(crate) fn leave_if_saved(world: &mut World, leaving_project: bool, saved: bool) {
+    if saved {
+        confirmed_leave(world, leaving_project);
+        return;
+    }
+    warn!("leaving cancelled because one or more scenes could not be saved");
+    // A failed save leaves the editor where it was, so it disarms what
+    // the confirmed path would have acted on.
+    disarm_leave(world);
+    error_toast(world, "Could not save every scene. Nothing was closed.");
 }
 
 /// Clear what the dialog armed: the project the user picked would otherwise
@@ -468,9 +479,9 @@ fn disarm_leave(world: &mut World) {
     }
 }
 
-/// Report that nothing was saved. The dialog is gone by the time a save is
-/// attempted, so without a toast the user reads its disappearance as success.
-fn report_save_failure(world: &mut World) {
+/// Report that something was not saved. The dialog or the user's attention has gone
+/// by the time a save has failed, so without a toast its absence reads as success.
+pub(crate) fn error_toast(world: &mut World, message: &str) {
     let (Some(editor_font), Some(icon_font)) = (
         world.get_resource::<EditorFont>().map(|f| f.0.clone()),
         world
@@ -481,7 +492,7 @@ fn report_save_failure(world: &mut World) {
     };
     world.spawn(jackdaw_feathers::toast::toast(
         jackdaw_feathers::toast::ToastVariant::Error,
-        "Could not save every scene. Nothing was closed.",
+        message,
         jackdaw_feathers::toast::DEFAULT_TOAST_DURATION,
         &editor_font,
         &icon_font,
@@ -510,6 +521,13 @@ fn confirmed_leave(world: &mut World, leaving_project: bool) {
 /// Both ways out of a project (Home and Open Recent) go through here, since
 /// leaving clears the live scene either way.
 pub fn leave_project_or_confirm(world: &mut World) -> bool {
+    if crate::scene_io::saves_in_flight(world) {
+        crate::scene_io::save_worker::after_saves(
+            world,
+            crate::scene_io::save_worker::AfterSaves::LeaveProject,
+        );
+        return false;
+    }
     let any_dirty = world
         .get_resource::<crate::scenes::Scenes>()
         .is_some_and(|scenes| scenes.tabs.iter().any(|tab| tab.dirty));
@@ -599,13 +617,14 @@ pub fn apply_confirm_dialog_action(world: &mut World, action: ConfirmDialogButto
                 // ignore it.
                 world.resource_mut::<PendingTabClose>().tab_index = None;
 
-                if crate::scene_io::save_scene(world) {
-                    // The save boundary cleared dirty state only after
-                    // every authoritative file reached disk.
-                    crate::scenes::operators::scene_close_system_unprompted(world, target);
-                } else {
-                    warn!("confirm_dialog: save failed; keeping tab {target} open");
-                }
+                // The tab closes once its file is on disk and the save has cleared
+                // its dirty state, and stays open otherwise.
+                let id = world.resource::<crate::scenes::Scenes>().tabs[target].id;
+                crate::scene_io::save_worker::after_saves(
+                    world,
+                    crate::scene_io::save_worker::AfterSaves::CloseTabIfSaved(id),
+                );
+                crate::scene_io::save_worker::save_active_tab_in_background(world);
             } else {
                 // Untitled tab: Save means give it a path first, through the
                 // Save As dialog. The close the user confirmed is deferred

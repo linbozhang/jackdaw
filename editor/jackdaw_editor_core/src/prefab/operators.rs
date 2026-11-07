@@ -244,12 +244,13 @@ fn back_up_legacy_prefab(original: &Path) {
 /// `replace` says whether a file already at the path may be written over;
 /// the refusal is the open itself rather than a prior `exists()`.
 fn write_prefab_doc(
-    world: &World,
+    world: &mut World,
     target_path: &Path,
     prefab: &SceneBsnAst,
     op_id: &str,
     replace: bool,
 ) -> Option<PathBuf> {
+    crate::scene_io::save_worker::land_saves(world);
     let path = prefab_bsn_path(target_path);
     let mut out = crate::prefab::resolver_bsn::clone_scene(prefab);
     crate::prefab::save_load::relativize_for_file(
@@ -272,7 +273,7 @@ fn write_prefab_doc(
     }
     let text = crate::asset_files::asset_file_text(crate::prefab::resolver_bsn::PREFAB_TYPE, &body);
     let written = if replace {
-        std::fs::write(&path, text)
+        crate::scene_io::save::write_atomic(&path, text.as_bytes())
     } else {
         std::fs::OpenOptions::new()
             .write(true)
@@ -495,15 +496,21 @@ fn write_prefab_from_roots(
                 continue;
             };
             let mut patches = copy_component_patches(live, node, true);
+            // An undo brings the packed nodes back, and an instance of the file
+            // must not repeat their ids.
+            patches.retain(|patch| {
+                patch_type_path(patch).is_none_or(|path| !path.ends_with("SceneNodeId"))
+            });
+            patches.push(crate::scene_nodes::node_id_patch(SceneNodeId::next()));
             patches.push(peid_patch((i + 1) as u32));
             let prefab_node = prefab.create_entity_node(patches);
             ecs_to_prefab.insert(entity, prefab_node);
         }
     }
 
-    // The copied patches hold what the live document holds, and for a handle
-    // (a brush face's material) that is the asset-blind placeholder its ECS
-    // mirror stored. Name the assets from the live values, as a save does.
+    // The copied patches hold what the live document holds, which has no name
+    // for an asset held only in memory. Name the assets from the live values,
+    // as a save does.
     for (&entity, &node) in &ecs_to_prefab {
         prefab.link(entity, node);
     }
@@ -1013,6 +1020,7 @@ pub fn unbundle_instance(world: &mut World, instance_root_node: Entity) {
 /// the active tab so its content, kind, path, and `display_name` reflect the
 /// new prefab.
 pub fn save_scene_as_prefab(world: &mut World, target_path: &Path) {
+    crate::scene_io::save_worker::land_saves(world);
     // Prefabs persist as BSN text, so the cache entry, tab path, and file
     // path all use the `.bsn` form of the target.
     let bsn_target = prefab_bsn_path(target_path);
@@ -1108,21 +1116,23 @@ pub fn save_scene_as_prefab(world: &mut World, target_path: &Path) {
             tab.kind = crate::scenes::TabKind::Prefab;
             tab.content = crate::scenes::TabContent::Prefab(canonical);
             tab.display_name = display_name;
-            tab.dirty = false;
         }
     }
 
     if let Some(mut spath) = world.get_resource_mut::<crate::scene_io::SceneFilePath>() {
         spath.path = Some(target_path.to_string_lossy().into_owned());
     }
-    let (history_len, history_pushes) = {
-        let history = world.resource::<jackdaw_commands::CommandHistory>();
-        (history.undo_stack.len(), history.scene_pushes())
+    let (state, history_len, history_pushes) = {
+        let mut history = world.resource_mut::<jackdaw_commands::CommandHistory>();
+        history.mark_current_saved();
+        (history.state(), history.undo_stack.len(), history.scene_pushes())
     };
     let fingerprint = crate::scene_io::document_fingerprint(world);
     if let Some(mut scenes) = world.get_resource_mut::<crate::scenes::Scenes>() {
         let active = scenes.active;
         if let Some(tab) = scenes.tabs.get_mut(active) {
+            tab.dirty = false;
+            tab.history_state_at_last_check = Some(state);
             tab.saved_undo_len = history_len;
             tab.saved_scene_pushes = history_pushes;
             tab.saved_doc_hash = fingerprint;
@@ -2194,7 +2204,7 @@ pub fn save_prefab_to_disk(world: &mut World, prefab_path: &Path) -> std::io::Re
     // The prefab is authoritative authored data: it lands through the same
     // temp-and-rename write the scene text uses, so an interrupted save
     // cannot truncate the file the project already has.
-    jackdaw_api_internal::document::write_atomic(&write_path, text.as_bytes())?;
+    crate::scene_io::save::write_atomic(&write_path, text.as_bytes())?;
 
     let fingerprint = crate::prefab::cache::compute_file_fingerprint(&write_path)?;
     world

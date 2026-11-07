@@ -86,6 +86,10 @@ impl std::error::Error for ResolveError {}
 /// document.
 pub type PrefabLookup<'a> = dyn Fn(&Path) -> Option<&'a SceneBsnAst> + 'a;
 
+/// The name a string in a document goes by instead, when it is a reference that
+/// has one.
+pub type ReferenceSpelling<'a> = dyn Fn(&str) -> Option<String> + 'a;
+
 /// Resolve all `IsA` instances in `scene` against `get_prefab`. Returns a
 /// new document where every instance has its inherited subtree
 /// materialized, with sparse overrides applied.
@@ -325,10 +329,12 @@ fn merge_descendant_overrides(
             }
         }
 
+        let file_id = prefab_match_id_value(prefab, prefab_match);
         let overrides: Vec<(String, BsnValue)> = ast
             .component_type_paths(node)
             .into_iter()
             .filter(|tp| tp != PREFAB_ENTITY_ID_TYPE && tp != ISA_TYPE)
+            .filter(|tp| !(file_id.is_some() && tp.ends_with("SceneNodeId")))
             .filter_map(|tp| get_bsn_field(ast, node, &tp, "").map(|delta| (tp, delta)))
             .collect();
         for (type_path, delta) in overrides {
@@ -339,6 +345,12 @@ fn merge_descendant_overrides(
                 apply_deltas(&mut merged, &delta);
                 set_whole_component(ast, node, &type_path, merged);
             }
+        }
+
+        if let Some((type_path, value)) = file_id
+            && ast.stable_id_patch(node).is_some()
+        {
+            set_whole_component(ast, node, &type_path, value);
         }
 
         // The name is a reference patch, not a component patch, so the
@@ -355,13 +367,31 @@ fn merge_descendant_overrides(
     }
 }
 
+/// The `SceneNodeId` component of a prefab node by type path and value, when the
+/// file numbers it.
+fn prefab_match_id_value(prefab: &SceneBsnAst, node: Entity) -> Option<(String, BsnValue)> {
+    prefab.stable_id_of(node)?;
+    let type_path = prefab
+        .component_type_paths(node)
+        .into_iter()
+        .find(|tp| tp.ends_with("SceneNodeId"))?;
+    let value = get_bsn_field(prefab, node, &type_path, "")?;
+    Some((type_path, value))
+}
+
 /// Reduce inherited descendants of prefab instances to sparse override entries
 /// by stripping components that match the prefab entry's baseline. A node
 /// qualifies when it carries a `PrefabEntityId`, does not carry `IsA`, and has an
 /// `IsA` ancestor resolving to a known prefab. `PrefabEntityId` is always kept.
 ///
-/// The capture-path inverse of [`resolve_scene`].
-pub fn sparsify_inherited_descendants(ast: &mut SceneBsnAst, get_prefab: &PrefabLookup) {
+/// The capture-path inverse of [`resolve_scene`]. `filed_name` says what a
+/// reference is called once its file is known, so a baseline spelling an asset by
+/// `@name` matches an instance that names the same asset by its path.
+pub fn sparsify_inherited_descendants(
+    ast: &mut SceneBsnAst,
+    get_prefab: &PrefabLookup,
+    filed_name: &ReferenceSpelling,
+) {
     let mut nodes: Vec<Entity> = Vec::new();
     for &root in &ast.roots {
         nodes.push(root);
@@ -383,7 +413,7 @@ pub fn sparsify_inherited_descendants(ast: &mut SceneBsnAst, get_prefab: &Prefab
         // the inverse those values read as authored overrides and prefab root
         // edits never propagate.
         if ast.find_patch_by_type_path(node, ISA_TYPE).is_some() {
-            sparsify_instance_root(ast, node, get_prefab);
+            sparsify_instance_root(ast, node, get_prefab, filed_name);
             continue;
         }
         let Some(peid) = read_prefab_entity_id(ast, node) else {
@@ -413,7 +443,24 @@ pub fn sparsify_inherited_descendants(ast: &mut SceneBsnAst, get_prefab: &Prefab
             continue;
         };
 
-        sparsify_node_against_baseline(ast, node, prefab, prefab_match, &[PREFAB_ENTITY_ID_TYPE]);
+        sparsify_node_against_baseline(
+            ast,
+            node,
+            prefab,
+            prefab_match,
+            &[PREFAB_ENTITY_ID_TYPE],
+            filed_name,
+        );
+        // A file that names the node owns its id, so one left over from before
+        // the file was written again is not an override.
+        if prefab.stable_id_of(prefab_match).is_some()
+            && let Some(patch) = ast.stable_id_patch(node)
+        {
+            if let Some(patches) = ast.get_patches_mut(node) {
+                patches.0.retain(|&held| held != patch);
+            }
+            ast.world.despawn(patch);
+        }
     }
 }
 
@@ -427,6 +474,7 @@ fn sparsify_node_against_baseline(
     prefab: &SceneBsnAst,
     prefab_match: Entity,
     keep: &[&str],
+    filed_name: &ReferenceSpelling,
 ) {
     enum Action {
         Remove,
@@ -437,8 +485,10 @@ fn sparsify_node_against_baseline(
         .into_iter()
         .filter(|tp| !keep.contains(&tp.as_str()))
         .filter_map(|tp| {
-            let value = get_bsn_field(ast, node, &tp, "")?;
-            let base = get_bsn_field(prefab, prefab_match, &tp, "")?;
+            let mut value = get_bsn_field(ast, node, &tp, "")?;
+            let mut base = get_bsn_field(prefab, prefab_match, &tp, "")?;
+            respell_references(&mut value, filed_name);
+            respell_references(&mut base, filed_name);
             match shallow_diff(&base, &value) {
                 None => Some((tp, Action::Remove)),
                 Some(delta) => Some((tp, Action::Replace(delta))),
@@ -464,7 +514,12 @@ fn sparsify_node_against_baseline(
 /// Strip an instance root's components (and inherited name) that still match
 /// its prefab root's baseline. `IsA` and `PrefabEntityId` are kept
 /// unconditionally.
-fn sparsify_instance_root(ast: &mut SceneBsnAst, node: Entity, get_prefab: &PrefabLookup) {
+fn sparsify_instance_root(
+    ast: &mut SceneBsnAst,
+    node: Entity,
+    get_prefab: &PrefabLookup,
+    filed_name: &ReferenceSpelling,
+) {
     let Some(source) = read_isa_source(ast, node) else {
         return;
     };
@@ -486,7 +541,40 @@ fn sparsify_instance_root(ast: &mut SceneBsnAst, node: Entity, get_prefab: &Pref
         prefab,
         prefab_root,
         &[ISA_TYPE, PREFAB_ENTITY_ID_TYPE],
+        filed_name,
     );
+}
+
+/// Write each string `filed_name` has another name for under that name.
+fn respell_references(value: &mut BsnValue, filed_name: &ReferenceSpelling) {
+    match value {
+        BsnValue::String(reference) => {
+            if let Some(name) = filed_name(reference) {
+                *reference = name;
+            }
+        }
+        BsnValue::Struct(data) => {
+            for field in &mut data.fields.0 {
+                respell_references(&mut field.value, filed_name);
+            }
+        }
+        BsnValue::TupleStruct(data) => {
+            for item in &mut data.values {
+                respell_references(item, filed_name);
+            }
+        }
+        BsnValue::List(items) => {
+            for item in items {
+                respell_references(item, filed_name);
+            }
+        }
+        BsnValue::Map(entries) => {
+            for (_, item) in entries {
+                respell_references(item, filed_name);
+            }
+        }
+        _ => {}
+    }
 }
 
 /// Remove the name-reference patch from `node`, if it has one.
@@ -899,7 +987,7 @@ mod tests {
         let resolved = resolve_scene(&scene, &get).expect("resolves");
 
         let mut stripped = clone_scene(&resolved);
-        sparsify_inherited_descendants(&mut stripped, &get);
+        sparsify_inherited_descendants(&mut stripped, &get, &|_| None);
 
         // The stripped inherited child kept only its PrefabEntityId (its
         // Transform and Mesh matched the baseline).

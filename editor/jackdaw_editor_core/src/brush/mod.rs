@@ -12,6 +12,8 @@ pub mod modifier_bake;
 pub mod preview;
 pub mod topology_migration;
 
+use bevy::ecs::change_detection::Tick;
+use bevy::ecs::system::SystemChangeTick;
 use bevy::prelude::*;
 
 use crate::commands::EditorCommand;
@@ -410,14 +412,31 @@ fn apply_brush(world: &mut World, entity: Entity, target: &Brush) {
         *brush = target.clone();
     }
     sync_brush_to_ast(world, entity, target);
-    if world.get::<BrushHalfedge>(entity).is_some() && !target.topology.polygons.is_empty() {
-        let halfedge = BrushHalfedge::from_topology(&target.topology);
-        if let Ok(mut ec) = world.get_entity_mut(entity) {
-            ec.insert(halfedge);
-        }
-    }
+    relift_halfedge(world, entity);
     if let Ok(mut ec) = world.get_entity_mut(entity) {
         ec.insert(crate::inspector::InspectorDirty);
+    }
+}
+
+/// Lift `entity`'s live half-edge mesh again from its brush, when it holds one:
+/// the mesh rebuild reads that mesh instead of the brush during an element edit.
+/// A brush without topology drops it, so edit mode lifts it once migrated.
+pub(crate) fn relift_halfedge(world: &mut World, entity: Entity) {
+    if world.get::<BrushHalfedge>(entity).is_none() {
+        return;
+    }
+    let Some(brush) = world.get::<Brush>(entity) else {
+        return;
+    };
+    if brush.topology.polygons.is_empty() {
+        if let Ok(mut entity) = world.get_entity_mut(entity) {
+            entity.remove::<BrushHalfedge>();
+        }
+        return;
+    }
+    let halfedge = BrushHalfedge::from_topology(&brush.topology);
+    if let Ok(mut entity) = world.get_entity_mut(entity) {
+        entity.insert(halfedge);
     }
 }
 
@@ -435,19 +454,12 @@ pub(crate) fn replace_brush(world: &mut World, entity: Entity, brush: &Brush) {
     }
 }
 
+/// The reflected type path of [`Brush`], the key of its document patch.
+const BRUSH_TYPE_PATH: &str = "jackdaw_scene_types::types::Brush";
+
 /// Write a Brush component into the live scene document.
 pub fn sync_brush_to_ast(world: &mut World, entity: Entity, brush: &Brush) {
-    // `jackdaw_scene_types::types::Brush` is the canonical reflected type
-    // path (Brush lives directly in the crate's `types` module, not a
-    // `types::brush` submodule; getting this string wrong leaves the
-    // document with a `types::brush::Brush` key the loader skips with an
-    // `Unknown type` warning, silently losing the Brush on reload).
-    crate::commands::sync_component_to_ast(
-        world,
-        entity,
-        "jackdaw_scene_types::types::Brush",
-        brush,
-    );
+    crate::commands::sync_component_to_ast(world, entity, BRUSH_TYPE_PATH, brush);
 }
 
 /// Watch for any `Changed<Brush>` and mirror the new state into the
@@ -464,21 +476,179 @@ pub fn sync_brush_to_ast(world: &mut World, entity: Entity, brush: &Brush) {
 /// taken the moment the operator returns, before this system's next
 /// scheduled run -- already sees the edited brush in the AST.
 ///
+/// A value the game streamed stays out, so the document keeps what the editor
+/// authored; a change made after that write is the editor's and goes in. A
+/// value the document itself just wrote stays out as well, so a load or an undo
+/// leaves the patches of everything else untouched.
+///
 /// Cloning the Brush per change is cheap (a small `Vec<BrushFaceData>`),
 /// and in practice `Changed<Brush>` is near-empty every frame.
 pub(crate) fn sync_changed_brushes_to_ast(
-    changed: Query<(Entity, &Brush), Changed<Brush>>,
+    changed: Query<(Entity, Ref<Brush>), Changed<Brush>>,
+    live: Option<Res<jackdaw_bsn::SceneBsnAst>>,
+    projection: Option<Res<crate::pie_projection::PieProjection>>,
+    ticks: SystemChangeTick,
+    mut synced: ResMut<SyncedThrough<Brush>>,
     mut commands: Commands,
 ) {
-    let entries: Vec<(Entity, Brush)> = changed.iter().map(|(e, b)| (e, b.clone())).collect();
+    synced.set(ticks.this_run());
+    if changed.is_empty() {
+        return;
+    }
+    let _span = info_span!("brush.sync_back").entered();
+    let entries: Vec<(Entity, Brush)> = changed
+        .iter()
+        .filter(|(entity, brush)| {
+            brush_needs_sync(*entity, brush, live.as_deref(), projection.as_deref())
+        })
+        .map(|(e, b)| (e, (*b).clone()))
+        .collect();
     if entries.is_empty() {
         return;
     }
-    commands.queue(move |world: &mut World| {
-        for (entity, brush) in entries {
-            sync_brush_to_ast(world, entity, &brush);
+    commands.queue(move |world: &mut World| write_brushes_to_document(world, entries));
+}
+
+/// The tick a sync system last read `T` at, so a write made after it can be
+/// found once the system will not run again for the entity.
+#[derive(Resource)]
+struct SyncedThrough<T> {
+    tick: Tick,
+    component: std::marker::PhantomData<fn() -> T>,
+}
+
+impl<T> Default for SyncedThrough<T> {
+    fn default() -> Self {
+        Self {
+            tick: Tick::default(),
+            component: std::marker::PhantomData,
         }
-    });
+    }
+}
+
+impl<T> SyncedThrough<T> {
+    fn set(&mut self, tick: Tick) {
+        self.tick = tick;
+    }
+}
+
+fn brush_needs_sync(
+    entity: Entity,
+    brush: &Ref<Brush>,
+    live: Option<&jackdaw_bsn::SceneBsnAst>,
+    projection: Option<&crate::pie_projection::PieProjection>,
+) -> bool {
+    if projection.is_some_and(|projection| {
+        projection.stream_wrote(entity, BRUSH_TYPE_PATH, brush.last_changed())
+    }) {
+        return false;
+    }
+    let waits_on_a_name = brush
+        .faces
+        .iter()
+        .any(|face| jackdaw_bsn::is_placeholder(&face.material));
+    waits_on_a_name
+        || !live.is_some_and(|live| applied_from_document(live, entity, BRUSH_TYPE_PATH, brush))
+}
+
+fn write_brushes_to_document(world: &mut World, mut entries: Vec<(Entity, Brush)>) {
+    let _span = info_span!("brush.sync_back_apply").entered();
+    for (entity, brush) in &mut entries {
+        if crate::scene_io::asset_names::relink_brush_faces(world, brush)
+            && let Some(mut live) = world.get_mut::<Brush>(*entity)
+        {
+            *live = brush.clone();
+        }
+    }
+    let patches: Vec<_> = {
+        let references = crate::scene_io::asset_names::AssetReferences::new(world);
+        let registry = world.resource::<AppTypeRegistry>().read();
+        let mut defaults = jackdaw_bsn::TypeDefaults::new(&registry);
+        entries
+            .iter()
+            .filter_map(|(entity, brush)| {
+                let patch =
+                    references.document_patch_in_pass(*entity, brush, &registry, &mut defaults)?;
+                Some((*entity, patch))
+            })
+            .collect()
+    };
+    for (entity, patch) in patches {
+        crate::commands::upsert_bsn_patch(world, entity, BRUSH_TYPE_PATH, patch);
+    }
+}
+
+/// Write into the document what the sync systems have not read yet, for a capture
+/// about to take the document from its entities. An entity holding game state is
+/// left out: what it holds is not an authored value, even once restored.
+pub(crate) fn sync_pending_writes_to_document(world: &mut World) {
+    let _span = info_span!("brush.sync_pending").entered();
+    let this_run = world.read_change_tick();
+    let overlaid = |world: &World, entity: Entity| {
+        world
+            .get_resource::<crate::pie_projection::PieProjection>()
+            .is_some_and(|projection| projection.overlaid.contains(&entity))
+    };
+
+    if let Some(synced) = world.get_resource::<SyncedThrough<Brush>>().map(|s| s.tick) {
+        let brushes: Vec<(Entity, Brush)> = world
+            .query::<(Entity, Ref<Brush>)>()
+            .iter(world)
+            .filter(|(entity, brush)| {
+                brush.last_changed().is_newer_than(synced, this_run)
+                    && !overlaid(world, *entity)
+                    && brush_needs_sync(
+                        *entity,
+                        brush,
+                        world.get_resource::<jackdaw_bsn::SceneBsnAst>(),
+                        world.get_resource::<crate::pie_projection::PieProjection>(),
+                    )
+            })
+            .map(|(entity, brush)| (entity, (*brush).clone()))
+            .collect();
+        if !brushes.is_empty() {
+            write_brushes_to_document(world, brushes);
+        }
+    }
+
+    type Stack = jackdaw_geometry::ModifierStack;
+    if let Some(synced) = world.get_resource::<SyncedThrough<Stack>>().map(|s| s.tick) {
+        let type_path = <Stack as bevy::reflect::TypePath>::type_path();
+        let stacks: Vec<(Entity, Stack)> = world
+            .query::<(Entity, Ref<Stack>)>()
+            .iter(world)
+            .filter(|(entity, stack)| {
+                stack.last_changed().is_newer_than(synced, this_run)
+                    && !overlaid(world, *entity)
+                    && stack_needs_sync(
+                        *entity,
+                        stack,
+                        world.get_resource::<jackdaw_bsn::SceneBsnAst>(),
+                        world.get_resource::<crate::pie_projection::PieProjection>(),
+                    )
+            })
+            .map(|(entity, stack)| (entity, (*stack).clone()))
+            .collect();
+        let removed: Vec<Entity> = world
+            .removed::<Stack>()
+            .filter(|entity| !overlaid(world, *entity))
+            .collect();
+        write_stacks_to_document(world, type_path, stacks, removed);
+    }
+}
+
+/// Whether `component` is still what applying `entity`'s document node inserted:
+/// not written since it was added, under a node holding a patch for its type.
+fn applied_from_document<T: Component>(
+    live: &jackdaw_bsn::SceneBsnAst,
+    entity: Entity,
+    type_path: &str,
+    component: &Ref<T>,
+) -> bool {
+    component.added() == component.last_changed()
+        && live
+            .ast_for(entity)
+            .is_some_and(|node| live.find_patch_by_type_path(node, type_path).is_some())
 }
 
 /// Mirror `ModifierStack` changes and removals into the scene AST, the same
@@ -490,15 +660,25 @@ pub(crate) fn sync_changed_brushes_to_ast(
 /// the stack is added or removed.
 fn sync_changed_modifier_stacks_to_ast(
     changed: Query<
-        (Entity, &jackdaw_geometry::ModifierStack),
+        (Entity, Ref<jackdaw_geometry::ModifierStack>),
         Changed<jackdaw_geometry::ModifierStack>,
     >,
     mut removed: RemovedComponents<jackdaw_geometry::ModifierStack>,
+    live: Option<Res<jackdaw_bsn::SceneBsnAst>>,
+    projection: Option<Res<crate::pie_projection::PieProjection>>,
+    ticks: SystemChangeTick,
+    mut synced: ResMut<SyncedThrough<jackdaw_geometry::ModifierStack>>,
     mut commands: Commands,
 ) {
+    synced.set(ticks.this_run());
     let type_path = <jackdaw_geometry::ModifierStack as bevy::reflect::TypePath>::type_path();
-    let entries: Vec<(Entity, jackdaw_geometry::ModifierStack)> =
-        changed.iter().map(|(e, s)| (e, s.clone())).collect();
+    let entries: Vec<(Entity, jackdaw_geometry::ModifierStack)> = changed
+        .iter()
+        .filter(|(entity, stack)| {
+            stack_needs_sync(*entity, stack, live.as_deref(), projection.as_deref())
+        })
+        .map(|(e, s)| (e, (*s).clone()))
+        .collect();
     let removed_entities: Vec<Entity> = removed.read().collect();
     if entries.is_empty() && removed_entities.is_empty() {
         return;
@@ -513,16 +693,45 @@ fn sync_changed_modifier_stacks_to_ast(
         }
     }
     commands.queue(move |world: &mut World| {
-        for (entity, stack) in entries {
-            crate::commands::sync_component_to_ast(world, entity, type_path, &stack);
-        }
-        for entity in removed_entities {
-            let mut ast = world.resource_mut::<jackdaw_bsn::SceneBsnAst>();
-            if let Some(node) = ast.ast_for(entity) {
-                ast.remove_component_patch(node, type_path);
-            }
-        }
+        write_stacks_to_document(world, type_path, entries, removed_entities);
     });
+}
+
+fn stack_needs_sync(
+    entity: Entity,
+    stack: &Ref<jackdaw_geometry::ModifierStack>,
+    live: Option<&jackdaw_bsn::SceneBsnAst>,
+    projection: Option<&crate::pie_projection::PieProjection>,
+) -> bool {
+    let type_path = <jackdaw_geometry::ModifierStack as bevy::reflect::TypePath>::type_path();
+    !projection
+        .is_some_and(|projection| projection.stream_wrote(entity, type_path, stack.last_changed()))
+        && !live.is_some_and(|live| applied_from_document(live, entity, type_path, stack))
+}
+
+fn write_stacks_to_document(
+    world: &mut World,
+    type_path: &'static str,
+    entries: Vec<(Entity, jackdaw_geometry::ModifierStack)>,
+    removed: Vec<Entity>,
+) {
+    for (entity, stack) in entries {
+        crate::commands::sync_component_to_ast(world, entity, type_path, &stack);
+    }
+    for entity in removed {
+        if world
+            .get::<jackdaw_geometry::ModifierStack>(entity)
+            .is_some()
+        {
+            continue;
+        }
+        let Some(mut ast) = world.get_resource_mut::<jackdaw_bsn::SceneBsnAst>() else {
+            return;
+        };
+        if let Some(node) = ast.ast_for(entity) {
+            ast.remove_component_patch(node, type_path);
+        }
+    }
 }
 
 pub struct BrushPlugin;
@@ -605,6 +814,8 @@ impl Plugin for BrushPlugin {
                     .chain()
                     .in_set(crate::JackdawDrawSystems),
             )
+            .init_resource::<SyncedThrough<Brush>>()
+            .init_resource::<SyncedThrough<jackdaw_geometry::ModifierStack>>()
             .add_systems(
                 Update,
                 sync_changed_brushes_to_ast.run_if(in_state(crate::AppState::Editor)),

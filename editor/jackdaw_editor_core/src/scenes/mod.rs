@@ -31,14 +31,19 @@ impl Plugin for ScenesPlugin {
         app.add_systems(
             Update,
             (
-                mark_active_dirty_on_history_growth,
+                track_active_dirty_from_history,
                 persist_tabs_to_project_config,
                 ui::rebuild_scene_tab_strip,
                 ui::update_scene_tab_visuals,
                 ui::update_scene_tab_label_abbreviation,
                 ui::show_scene_tab_close_on_hover,
                 intercept_window_close,
+                swap::report_read_back_checks.run_if(resource_exists::<swap::ReadBackChecks>),
             ),
+        );
+        app.add_systems(
+            First,
+            ui::run_pending_tab_switch.run_if(resource_exists::<ui::PendingTabSwitch>),
         );
         app.add_observer(ui::on_scene_tab_context_action);
         app.add_plugins(external_watch::ExternalSceneWatchPlugin);
@@ -56,6 +61,7 @@ pub fn intercept_window_close(
     asset_edits: Query<&crate::definition_assets::DefinitionAssetEdit>,
     mut commands: Commands,
     mut pending: ResMut<confirm_dialog::PendingQuit>,
+    saves: Option<Res<crate::scene_io::save_worker::SceneSaves>>,
 ) {
     let mut close_requested = false;
     for _ in close_events.read() {
@@ -65,8 +71,20 @@ pub fn intercept_window_close(
         return;
     }
 
-    let any_dirty =
-        scenes.tabs.iter().any(|t| t.dirty) || asset_edits.iter().any(|edit| edit.dirty);
+    // The tab being saved may read dirty only until the file lands, and leaving now
+    // would lose the file.
+    if saves.is_some_and(|saves| !saves.idle()) {
+        commands.queue(|world: &mut World| {
+            crate::scene_io::save_worker::after_saves(
+                world,
+                crate::scene_io::save_worker::AfterSaves::CloseWindow,
+            );
+        });
+        return;
+    }
+
+    let any_dirty = scenes.tabs.iter().any(|t| t.dirty)
+        || asset_edits.iter().any(|edit| edit.dirty);
     if !any_dirty {
         exit.write(bevy::app::AppExit::Success);
         return;
@@ -82,6 +100,21 @@ pub fn intercept_window_close(
     commands.queue(|world: &mut World| {
         confirm_dialog::spawn_confirm_quit_dialog(world);
     });
+}
+
+/// [`intercept_window_close`] again, once the saves it waited for are over.
+pub(crate) fn ask_to_quit(world: &mut World) {
+    if !world.resource::<Scenes>().tabs.iter().any(|t| t.dirty) {
+        world.write_message(bevy::app::AppExit::Success);
+        return;
+    }
+    let mut pending = world.resource_mut::<confirm_dialog::PendingQuit>();
+    if pending.active {
+        return;
+    }
+    pending.active = true;
+    pending.leaving_project = false;
+    confirm_dialog::spawn_confirm_quit_dialog(world);
 }
 
 #[derive(Resource, Default)]
@@ -131,6 +164,8 @@ impl Default for TabContent {
 }
 
 pub struct SceneTab {
+    /// Which tab this is, whatever index it has moved to.
+    pub id: u64,
     pub path: Option<PathBuf>,
     pub display_name: String,
     pub dirty: bool,
@@ -178,6 +213,11 @@ pub struct SceneTab {
     /// string. `None` until a save does (the crash journal reports it, so
     /// a recovery preview can say how far back the journaled edit is).
     pub saved_at: Option<String>,
+    /// `CommandHistory::state` as of the last time the dirty-tracking system ran
+    /// or the tab was saved, and `None` until it first runs with this tab in
+    /// front. `dirty` follows the history whenever the state has moved on from
+    /// this.
+    pub history_state_at_last_check: Option<u64>,
     /// Why the tab is in front without its contents in the world, if it is.
     /// Set, the world is not the file's contents and must not be written back.
     pub refusal: Option<TabRefusal>,
@@ -189,15 +229,13 @@ pub struct SceneTab {
 pub enum TabRefusal {
     /// The document names vocabulary this build will not spawn.
     Rejected(String),
-    /// The spawn was attempted and failed.
-    SpawnFailed(String),
 }
 
 impl TabRefusal {
     /// The message shown for a save this refusal blocks.
     pub fn reason(&self) -> &str {
         match self {
-            Self::Rejected(reason) | Self::SpawnFailed(reason) => reason,
+            Self::Rejected(reason) => reason,
         }
     }
 }
@@ -209,7 +247,9 @@ impl SceneTab {
     }
 
     pub fn new_untitled(n: u32) -> Self {
+        static NEXT_ID: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64::new(0);
         Self {
+            id: NEXT_ID.fetch_add(1, std::sync::atomic::Ordering::Relaxed),
             path: None,
             display_name: format!("untitled-{n}"),
             dirty: false,
@@ -225,6 +265,7 @@ impl SceneTab {
             saved_scene_pushes: 0,
             saved_doc_hash: None,
             saved_at: None,
+            history_state_at_last_check: None,
             refusal: None,
         }
     }
@@ -310,35 +351,24 @@ pub fn persist_tabs_to_project_config(
     }
 }
 
-/// Per-frame system: keep the active tab's `dirty` flag in step with its
-/// history.
+/// Per-frame system: when the active tab's history has moved to another state, the
+/// tab is dirty unless that is the state its file holds. An edit makes it dirty, and
+/// an undo or a redo back to the saved state clean. A tab just brought forward keeps
+/// its flag, which can say more than its history: a document that needed its ids
+/// healed on opening is unsaved with no edit.
 ///
-/// The fast path compares the stack's length and the history's monotonic
-/// push counter against what the tab last observed; when neither moved, the
-/// frame costs nothing. When either moved, the flag is re-decided:
-///
-/// - With a save baseline (`saved_doc_hash`), the flag is `len !=
-///   saved_undo_len`, or — when the stack sits exactly at the saved depth —
-///   a content comparison: the document is emitted the way a save emits it
-///   and hashed against the fingerprint the save left. Undoing back to the
-///   saved content reads clean; undoing *past* a save, or landing on the
-///   same depth with different content, reads dirty. The emit only happens
-///   on the frame the stack arrived at the saved depth, so the steady state
-///   stays O(1).
-/// - Without a baseline (a fresh untitled tab), growth alone decides: new
-///   pushes dirty the tab and nothing undirties it, the pre-existing
-///   behaviour.
-///
-/// The push counter, not the length, is what growth is read from, so budget
-/// trimming dropping the oldest entries can never hide a real edit. And the
-/// baseline lives on the tab, so a tab switch can never judge one tab's
-/// stack against another tab's save point.
-///
-/// The content comparison needs `&mut World` (the emit suspends preview
-/// writes), so it runs in a queued command at the frame's sync point rather
-/// than making this system exclusive; an exclusive system would reshape the
-/// whole Update schedule for every unrelated system.
-pub fn mark_active_dirty_on_history_growth(
+/// The decision reads the scene-document counters on the tab's save baseline, not
+/// the history alone: an asset-field or session-resource entry shares the history
+/// and moves the stack and the state with it, but it is not a scene edit, so it
+/// leaves a scene tab clean. With a save baseline (`saved_doc_hash`), a stack
+/// sitting exactly at the saved depth is decided by a content comparison — the
+/// document is emitted the way a save emits it and hashed against the fingerprint
+/// the save left, so undoing back to the saved content reads clean while a
+/// different edit at the same depth reads dirty. The emit only happens on the
+/// frame the stack arrived at the saved depth, so the steady state stays O(1); the
+/// emit needs `&mut World` (it suspends preview writes), so it runs in a queued
+/// command at the frame's sync point rather than making this system exclusive.
+pub fn track_active_dirty_from_history(
     history: Res<CommandHistory>,
     mut scenes: ResMut<Scenes>,
     mut commands: Commands,
@@ -347,14 +377,19 @@ pub fn mark_active_dirty_on_history_growth(
         return;
     }
     let active = scenes.active;
+    let state = history.state();
     let current_len = history.undo_stack.len();
     // The scene-document counter: an asset-field or session-resource
-    // entry shares this history and moves the stack, but it is not a
-    // scene edit and must not flip this tab's dirty flag.
+    // entry shares this history and moves the stack and the state with
+    // it, but it is not a scene edit and must not flip a scene tab's
+    // dirty flag.
     let current_pushes = history.scene_pushes();
     let tab = scenes.bypass_change_detection().tabs.get_mut(active);
     let Some(tab) = tab else { return };
-    if current_len == tab.observed_undo_len && current_pushes == tab.observed_pushes {
+    if tab.history_state_at_last_check == Some(state)
+        && tab.observed_undo_len == current_len
+        && tab.observed_pushes == current_pushes
+    {
         return;
     }
     let saved_undo_len = tab.saved_undo_len;
@@ -363,56 +398,66 @@ pub fn mark_active_dirty_on_history_growth(
     let was_dirty = tab.dirty;
     let grew = current_pushes > tab.observed_pushes;
 
-    if let Some(saved_hash) = saved_doc_hash
-        && current_len == saved_undo_len
-    {
-        // Back at the saved depth: equal content means clean, anything else
-        // (a different edit at the same depth) means dirty. Decided by a
-        // queued emit, so this system stays out of the schedule's way. If
-        // the emit is impossible the flag stays where it is.
-        commands.queue(move |world: &mut World| {
-            let Some(current) = crate::scene_io::document_fingerprint(world) else {
-                return;
-            };
-            let Some(mut scenes) = world.get_resource_mut::<Scenes>() else {
-                return;
-            };
-            if scenes.tabs.len() <= active {
-                return;
-            }
-            scenes.set_changed();
-            scenes.tabs[active].dirty = current != saved_hash;
-        });
-        scenes.bypass_change_detection().tabs[active].observed_undo_len = current_len;
-        scenes.bypass_change_detection().tabs[active].observed_pushes = current_pushes;
-        return;
-    }
-
-    // Away from the saved depth — unsaved edits above it, an undo past it,
-    // or no baseline at all (where growth dirties and nothing cleans).
-    // Above the saved depth, only scene-document pushes can have moved
-    // the document: a stack that climbed on asset-field or
-    // session-resource entries alone (scene_pushes still at its saved
-    // baseline) leaves the tab clean. Below it, an undo withdrew a
-    // scene command, which changed the document — dirty.
-    let needs_dirty_flip = match saved_doc_hash {
+    let dirty = match saved_doc_hash {
+        Some(saved_hash) if current_len == saved_undo_len => {
+            // Back at the saved depth: equal content means clean, anything
+            // else (a different edit at the same depth) means dirty. Decided
+            // by a queued emit, so this system stays out of the schedule's
+            // way. If the emit is impossible the flag stays where it is.
+            commands.queue(move |world: &mut World| {
+                let Some(current) = crate::scene_io::document_fingerprint(world) else {
+                    return;
+                };
+                let Some(mut scenes) = world.get_resource_mut::<Scenes>() else {
+                    return;
+                };
+                if scenes.tabs.len() <= active {
+                    return;
+                }
+                scenes.set_changed();
+                scenes.tabs[active].dirty = current != saved_hash;
+            });
+            was_dirty
+        }
         Some(_) => {
+            // Away from the saved depth — unsaved edits above it, an undo
+            // past it, or a snapshot the document has since moved past.
+            // Above the saved depth, only scene-document pushes can have
+            // moved the document: a stack that climbed on asset-field or
+            // session-resource entries alone (scene_pushes still at its
+            // saved baseline) leaves the tab clean. Below it, an undo
+            // withdrew a scene command, which changed the document — dirty.
             let below = current_len < saved_undo_len;
             let scene_grew_since_save = current_pushes > saved_scene_pushes;
-            (below || scene_grew_since_save) && !was_dirty
+            below || scene_grew_since_save || was_dirty
         }
-        None => grew && !was_dirty,
+        // No baseline (a fresh untitled tab): growth dirties and nothing
+        // cleans, the pre-existing behaviour.
+        None => grew || was_dirty,
     };
-    if !needs_dirty_flip {
-        scenes.bypass_change_detection().tabs[active].observed_undo_len = current_len;
-        scenes.bypass_change_detection().tabs[active].observed_pushes = current_pushes;
-        return;
-    }
-    scenes.set_changed();
-    let tab = &mut scenes.tabs[active];
-    tab.dirty = true;
+    let tab = &mut scenes.bypass_change_detection().tabs[active];
+    tab.dirty = dirty;
     tab.observed_undo_len = current_len;
     tab.observed_pushes = current_pushes;
+    tab.history_state_at_last_check = Some(state);
+    if dirty != was_dirty {
+        scenes.set_changed();
+    }
+}
+
+/// Record that the files of tab `index` hold no state on its history: it reads dirty,
+/// and no undo or redo makes it read clean before the next save.
+pub(crate) fn mark_tab_unsaved(world: &mut World, index: usize) {
+    let in_front = world.resource::<Scenes>().active == index;
+    if in_front {
+        world.resource_mut::<CommandHistory>().forget_saved();
+    }
+    if let Some(tab) = world.resource_mut::<Scenes>().tabs.get_mut(index) {
+        if !in_front {
+            tab.history.forget_saved();
+        }
+        tab.dirty = true;
+    }
 }
 
 #[derive(Default, Clone)]

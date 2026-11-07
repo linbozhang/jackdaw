@@ -9,11 +9,13 @@ use bevy::ecs::reflect::AppTypeRegistry;
 use bevy::prelude::*;
 
 pub(crate) mod asset_fields;
+pub(crate) mod asset_names;
 pub mod hooks;
 mod legacy;
 mod load;
 mod registration;
 pub mod save;
+pub mod save_worker;
 pub mod session_journal;
 pub mod stamp;
 
@@ -34,6 +36,7 @@ pub use save::{
     save_scene_with_outcome,
 };
 pub(crate) use save::{emit_bsn_entities_with_inline_assets, save_scene_inner};
+pub use save_worker::{save_in_background, saves_in_flight, wait_for_saves};
 
 use load::poll_scene_dialog;
 
@@ -325,11 +328,27 @@ pub(crate) fn resync_entity_from_ast(world: &mut World, entity: Entity) {
     jackdaw_bsn::apply_ast_to_ecs(world, entity);
 }
 
+/// Forget the references left unresolved, which name assets of the project being
+/// left.
+pub fn forget_unresolved_references(world: &World) {
+    if let Some(unresolved) = world.get_resource::<jackdaw_bsn::UnresolvedReferences>() {
+        unresolved.clear();
+    }
+}
+
 pub struct SceneIoPlugin;
 
 impl Plugin for SceneIoPlugin {
     fn build(&self, app: &mut App) {
+        save_worker::plugin(app);
         app.init_resource::<SceneFilePath>()
+            .init_resource::<jackdaw_bsn::UnresolvedReferences>()
+            .init_resource::<asset_names::EmbeddedNames>()
+            .add_systems(
+                Update,
+                asset_names::relink_arrived_references
+                    .run_if(resource_exists_and_changed::<jackdaw_bsn::BsnSceneAssets>),
+            )
             .init_resource::<hooks::DocumentIoHooks>()
             .add_systems(
                 Update,
@@ -368,17 +387,17 @@ fn deactivate_document_cameras(
     }
 }
 
-/// Returns `true` when the scene has unsaved changes.
-///
-/// The active tab's `dirty` flag is the one source of truth — the flag the
-/// tab strip, the close prompts and the save-all sweep read. This is the
-/// same answer expressed for callers that hold a world rather than the
-/// `Scenes` resource, so no second, drift-prone dirty track exists.
+/// Returns `true` when the scene in front has unsaved changes.
 pub fn is_scene_dirty(world: &World) -> bool {
-    world
+    let has_tab = world
         .get_resource::<crate::scenes::Scenes>()
-        .and_then(|scenes| scenes.tabs.get(scenes.active))
-        .is_some_and(|tab| tab.dirty)
+        .is_some_and(|scenes| scenes.tabs.get(scenes.active).is_some());
+    if has_tab {
+        return crate::scenes::operators::active_tab_modified(world);
+    }
+    world
+        .get_resource::<jackdaw_commands::CommandHistory>()
+        .is_some_and(|history| !history.is_saved())
 }
 
 pub use jackdaw_api_internal::document::{SceneFilePath, SceneMetadata};

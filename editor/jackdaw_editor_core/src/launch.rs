@@ -132,17 +132,16 @@ pub fn run_with(commands: LaunchCommands, extend: impl FnOnce(&mut App)) -> AppE
         None
     };
 
-    // The editor's renderer is built from explicit wgpu settings:
-    // `render_backend` picks the backend (DX12 by default on Windows, so a
-    // GL driver crash cannot take the editor down; `WGPU_BACKEND` still
-    // wins for diagnostics runs) and folds in the GPU timestamp features a
-    // diagnostics run has to ask for before the device exists.
-    let render_plugin = bevy::render::RenderPlugin {
-        render_creation: crate::render_backend::wgpu_settings().into(),
-        ..default()
-    };
+    // GPU timestamps are a device feature, so a diagnostics run has to
+    // ask for them before the device exists. `None` on every other
+    // launch, which leaves `RenderPlugin` exactly as it was.
+    let render_plugin =
+        crate::render_diagnostics::wgpu_settings().map(|settings| bevy::render::RenderPlugin {
+            render_creation: settings.into(),
+            ..default()
+        });
 
-    let default_plugins = DefaultPlugins
+    let mut default_plugins = DefaultPlugins
         .set(AssetPlugin {
             file_path: assets_dir.to_string_lossy().to_string(),
             ..default()
@@ -163,7 +162,6 @@ pub fn run_with(commands: LaunchCommands, extend: impl FnOnce(&mut App)) -> AppE
         // `JACKDAW_WINDOW_SIZE`. Spelling its fields out here instead
         // would drop that override.
         .set(editor_window_plugin())
-        .set(render_plugin)
         // The editor is not a speaker: authored audio belongs to Play and the
         // game process, so an open scene with a BGM never starts singing in
         // the editing viewport and PIE never doubles the sound. The engine
@@ -175,20 +173,30 @@ pub fn run_with(commands: LaunchCommands, extend: impl FnOnce(&mut App)) -> AppE
             global_volume: bevy::audio::GlobalVolume::from(bevy::audio::Volume::Linear(0.0)),
             ..default()
         });
+    if let Some(render_plugin) = render_plugin {
+        default_plugins = default_plugins.set(render_plugin);
+    }
+    #[cfg(not(all(windows, not(debug_assertions))))]
+    {
+        default_plugins = default_plugins.set(bevy::log::LogPlugin {
+            custom_layer: |_| crate::span_log::layer(),
+            ..default()
+        });
+    }
     // Without a console nothing reads stderr, so the log goes to a file.
-    // A shadowing `let` (rather than `+=` assignment) so the binding needs
-    // no `mut` on debug builds, where this block is compiled out.
     #[cfg(all(windows, not(debug_assertions)))]
-    let default_plugins = default_plugins.set(bevy::log::LogPlugin {
-        fmt_layer: |_| {
-            let path = crate::editor_log::log_file()?;
-            let layer = crate::editor_log::file_layer(&path).ok()?;
-            Some(Box::new(layer))
-        },
-        ..default()
-    });
-    #[cfg(all(windows, not(debug_assertions)))]
-    crate::editor_log::log_panics();
+    {
+        default_plugins = default_plugins.set(bevy::log::LogPlugin {
+            custom_layer: |_| crate::span_log::layer(),
+            fmt_layer: |_| {
+                let path = crate::editor_log::log_file()?;
+                let layer = crate::editor_log::file_layer(&path).ok()?;
+                Some(Box::new(layer))
+            },
+            ..default()
+        });
+        crate::editor_log::log_panics();
+    }
 
     let mut app = App::new();
     app.register_asset_source(

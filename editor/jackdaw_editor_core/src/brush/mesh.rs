@@ -249,6 +249,10 @@ pub fn regenerate_brush_meshes(
     palette: Res<BrushMaterialPalette>,
     halfedge_q: Query<&crate::brush::BrushHalfedge>,
 ) {
+    if changed_brushes.is_empty() {
+        return;
+    }
+    let _span = info_span!("brush.mesh_rebuild").entered();
     for (entity, brush, stack, children) in &changed_brushes {
         // Despawn all Mesh3d children from previous regen cycles.
         if let Some(children) = children {
@@ -367,7 +371,7 @@ pub fn regenerate_brush_meshes(
         let mut chunk_entities = Vec::with_capacity(chunks.len());
 
         for chunk in chunks {
-            let uses_default = chunk.material == Handle::default();
+            let uses_default = jackdaw_bsn::holds_no_asset(&chunk.material);
             let mut mesh = Mesh::new(PrimitiveTopology::TriangleList, default());
             mesh.insert_attribute(Mesh::ATTRIBUTE_POSITION, chunk.positions);
             mesh.insert_attribute(Mesh::ATTRIBUTE_NORMAL, chunk.normals);

@@ -2,6 +2,7 @@
 //! deep cloning.
 
 use bevy::ecs::entity::Entity;
+use bevy::ecs::query::{Or, With};
 
 use super::{BsnPatch, BsnPatches, SceneBsnAst};
 
@@ -36,6 +37,13 @@ impl SceneBsnAst {
     pub fn link(&mut self, ecs_entity: Entity, ast_entity: Entity) {
         self.ecs_to_ast.insert(ecs_entity, ast_entity);
         self.ast_to_ecs.insert(ast_entity, ecs_entity);
+    }
+
+    /// Forget every entity this document was spawned as. A document nobody is
+    /// showing has none, and an id kept past its despawn can be handed out again.
+    pub fn clear_links(&mut self) {
+        self.ecs_to_ast.clear();
+        self.ast_to_ecs.clear();
     }
 
     /// Remove an ECS entity mapping.
@@ -258,6 +266,7 @@ impl SceneBsnAst {
     /// the linked ECS entities carry over. Useful for read-only emission or
     /// resolution passes that must not mutate the live document.
     pub fn deep_clone(&self) -> SceneBsnAst {
+        let _span = bevy::log::info_span!("doc.clone").entered();
         let mut dst = SceneBsnAst::default();
         for &root in &self.roots {
             let new_root = clone_subtree_into(&mut dst, self, root, None);
@@ -267,6 +276,34 @@ impl SceneBsnAst {
             link_cloned_subtree(&mut dst, self, root, new_root);
         }
         dst
+    }
+
+    /// Free every node and patch no root reaches, so that a walk over all the
+    /// patches sees only what the document says, as it would after a parse.
+    pub fn drop_unreachable(&mut self) {
+        let mut reached = bevy::platform::collections::HashSet::new();
+        let mut pending = self.roots.clone();
+        while let Some(node) = pending.pop() {
+            if !reached.insert(node) {
+                continue;
+            }
+            if let Some(patches) = self.get_patches(node) {
+                reached.extend(patches.0.iter().copied());
+            }
+            pending.extend(self.get_children_ast(node));
+        }
+        let unreached: Vec<Entity> = self
+            .world
+            .query_filtered::<Entity, Or<(With<BsnPatch>, With<BsnPatches>)>>()
+            .iter(&self.world)
+            .filter(|entity| !reached.contains(entity))
+            .collect();
+        for entity in unreached {
+            self.world.despawn(entity);
+            if let Some(ecs) = self.ast_to_ecs.remove(&entity) {
+                self.ecs_to_ast.remove(&ecs);
+            }
+        }
     }
 
     /// Clone `node`'s component patches into a fresh vector, dropping the

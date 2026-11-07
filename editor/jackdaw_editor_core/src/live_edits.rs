@@ -162,10 +162,8 @@ pub fn record_live_edit(
     if world
         .get::<crate::pie_projection::PieEphemeral>(preview)
         .is_none()
-        && let Some(mut projection) =
-            world.get_resource_mut::<crate::pie_projection::PieProjection>()
     {
-        projection.overlaid.insert(preview);
+        crate::pie_projection::mark_streamed(world, preview, type_path);
     }
     let node_id = node_id_for_entity(world, preview);
     let key = LiveEditKey {
@@ -301,7 +299,7 @@ pub fn resolve_entry_entity(
     entry: &LiveEditEntry,
 ) -> Option<Entity> {
     if let Some(node_id) = entry.node_id
-        && let Some(entity) = ast.entity_for_stable_id(node_id)
+        && let Some(entity) = crate::scene_nodes::unit_entity_for_stable_id(ast, node_id)
     {
         return Some(entity);
     }

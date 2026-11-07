@@ -8,7 +8,10 @@ use std::any::TypeId;
 use bevy::ecs::reflect::{AppTypeRegistry, ReflectComponent};
 use bevy::prelude::*;
 
-use crate::{AstNodeRef, SceneBsnAst, component_to_bsn_patch};
+use crate::{
+    AssetNames, AstNodeRef, BsnAssetContext, SceneBsnAst, component_to_bsn_patch,
+    component_to_bsn_patch_with_assets,
+};
 
 /// After modifying an ECS component, sync its current value to the BSN AST.
 ///
@@ -19,36 +22,71 @@ pub fn sync_to_ast(world: &mut World, entity: Entity, component_type_id: TypeId)
         return;
     };
     let patches_entity = ast_ref.patches_entity;
-
-    let registry = world.resource::<AppTypeRegistry>().clone();
-    let registry = registry.read();
-
-    let Some(registration) = registry.get(component_type_id) else {
+    let Some((type_path, patch)) = component_patch(world, entity, component_type_id, None) else {
         return;
     };
-    let Some(reflect_component) = registration.data::<ReflectComponent>() else {
-        return;
-    };
-    let Some(reflected) = reflect_component.reflect(world.entity(entity)) else {
-        return;
-    };
+    let mut ast = world.resource_mut::<SceneBsnAst>();
+    write_patch(&mut ast, patches_entity, &type_path, patch);
+}
 
-    let patch = component_to_bsn_patch(reflected, &registry);
+/// Write `entity`'s component into `node` of `ast`, a document that need not be
+/// the world's, with handles written as asset paths or as what `names` calls
+/// them. With no asset server a handle has nothing to read a path from, and
+/// `names` alone is not asked.
+pub fn component_to_node(
+    world: &World,
+    entity: Entity,
+    component_type_id: TypeId,
+    names: &dyn AssetNames,
+    ast: &mut SceneBsnAst,
+    node: Entity,
+) {
+    if let Some((type_path, patch)) = component_patch(world, entity, component_type_id, Some(names))
+    {
+        write_patch(ast, node, &type_path, patch);
+    }
+}
+
+/// The component's type path and its value as a patch.
+fn component_patch(
+    world: &World,
+    entity: Entity,
+    component_type_id: TypeId,
+    names: Option<&dyn AssetNames>,
+) -> Option<(String, crate::BsnPatch)> {
+    let registry = world.resource::<AppTypeRegistry>().read();
+    let reflect_component = registry
+        .get(component_type_id)?
+        .data::<ReflectComponent>()?;
+    let reflected = reflect_component.reflect(world.get_entity(entity).ok()?)?;
+
+    let server = world.get_resource::<AssetServer>();
+    let patch = match names.zip(server) {
+        Some((names, asset_server)) => component_to_bsn_patch_with_assets(
+            reflected,
+            &registry,
+            &BsnAssetContext {
+                asset_server,
+                parent_path: std::path::Path::new(""),
+                asset_names: Some(names),
+            },
+        ),
+        None => component_to_bsn_patch(reflected, &registry),
+    };
 
     let type_path = reflected
         .get_represented_type_info()
         .map(|info| info.type_path().to_string())
         .unwrap_or_default();
+    Some((type_path, patch))
+}
 
-    drop(registry);
-
-    let mut ast = world.resource_mut::<SceneBsnAst>();
-
-    if let Some(existing) = ast.find_patch_by_type_path(patches_entity, &type_path) {
+fn write_patch(ast: &mut SceneBsnAst, node: Entity, type_path: &str, patch: crate::BsnPatch) {
+    if let Some(existing) = ast.find_patch_by_type_path(node, type_path) {
         ast.set_patch(existing, patch);
     } else {
         let patch_entity = ast.world.spawn(patch).id();
-        if let Some(patches) = ast.get_patches_mut(patches_entity) {
+        if let Some(patches) = ast.get_patches_mut(node) {
             patches.0.push(patch_entity);
         }
     }

@@ -15,7 +15,6 @@ use crate::EditorEntity;
 
 use super::SceneFilePath;
 use super::registration::{register_entities_in_ast, register_entity_in_ast};
-use super::save::save_scene_inner;
 
 pub(crate) fn prefab_cache_epoch(world: &World) -> Option<u64> {
     world
@@ -133,6 +132,8 @@ pub fn load_scene_from_file_with_outcome(
 }
 
 fn finish_load_scene(world: &mut World, chosen: &std::path::Path) -> LoadOutcome {
+    let _span = info_span!("open.finish_load").entered();
+    super::save_worker::land_saves(world);
     let mut path = chosen.to_string_lossy().to_string();
 
     let bytes = match std::fs::read(&path) {
@@ -324,7 +325,16 @@ fn finish_load_scene(world: &mut World, chosen: &std::path::Path) -> LoadOutcome
             let cache = world.resource::<crate::prefab::PrefabAstCache>();
             let get_prefab = |p: &Path| cache.get(p);
             match crate::prefab::resolver_bsn::resolve_scene(&authored, &get_prefab) {
-                Ok(resolved) => Some(resolved),
+                Ok(mut resolved) => {
+                    if !crate::scenes::operators::document_is_prefab(&authored) {
+                        let registry = world.resource::<AppTypeRegistry>().clone();
+                        crate::scene_nodes::separate_from_inherited_ids(
+                            &mut resolved,
+                            &registry.read(),
+                        );
+                    }
+                    Some(resolved)
+                }
                 Err(e) => {
                     warn!("prefab resolution failed: {e}; spawning unresolved scene");
                     None
@@ -447,6 +457,9 @@ fn finish_load_scene(world: &mut World, chosen: &std::path::Path) -> LoadOutcome
     // this fresh load: depth zero, and a content fingerprint taken from the
     // same emitter a save uses, so undoing back to what the file says reads
     // clean.
+    world
+        .resource_mut::<jackdaw_commands::CommandHistory>()
+        .mark_current_saved();
     let fingerprint = super::save::document_fingerprint(world);
     let pushes = world
         .get_resource::<jackdaw_commands::CommandHistory>()
@@ -645,8 +658,10 @@ fn forget_drag_resource<R: Resource<Mutability = bevy::ecs::component::Mutable> 
 
 /// Remove scene entities from the world (named non-editor entities + their descendants).
 pub(crate) fn clear_scene_entities(world: &mut World) {
-    if world.contains_resource::<jackdaw_bsn::SceneBsnAst>() {
-        world.insert_resource(jackdaw_bsn::SceneBsnAst::default());
+    let _span = info_span!("scene.clear").entered();
+    super::save_worker::land_saves(world);
+    if let Some(mut live) = world.get_resource_mut::<jackdaw_bsn::SceneBsnAst>() {
+        jackdaw_bsn::drop_document(std::mem::take(&mut *live));
     }
 
     // Extensions' per-scene state belongs to the scene being cleared, not to the tab it was
@@ -658,7 +673,9 @@ pub(crate) fn clear_scene_entities(world: &mut World) {
         .entities
         .clear();
 
-    if let Err(err) = world.run_system_cached(crate::hierarchy::clear_all_tree_rows) {
+    let rows = info_span!("outliner.clear")
+        .in_scope(|| world.run_system_cached(crate::hierarchy::clear_all_tree_rows));
+    if let Err(err) = rows {
         error!("Failed to clear tree rows: {err}");
     }
     // The rows the outliner was still waiting on, and the ones it gave up on,
@@ -691,6 +708,7 @@ pub(crate) fn clear_scene_entities(world: &mut World) {
 /// carries a name, so an instance that inherited nothing leaves with its
 /// scene rather than standing in the next one.
 pub(crate) fn despawn_scene_entities(world: &mut World) -> Result<(), BevyError> {
+    let _span = info_span!("scene.despawn").entered();
     forget_dragged_entities(world);
     let editor_set = world.run_system_cached(collect_editor_entities)?;
 
@@ -801,18 +819,18 @@ pub(super) fn poll_scene_dialog(world: &mut World) {
                     &path,
                 );
 
-                match save_scene_inner(world) {
-                    Ok(()) => {
-                        // A close-confirm Save on an untitled tab deferred
-                        // its close to this moment: the document now has a
-                        // path and is on disk, so the close happens.
-                        crate::scenes::confirm_dialog::finish_pending_save_as_close(world);
-                    }
-                    Err(err) => {
-                        error!("scene save (after Save As dialog) failed: {err}");
-                        crate::scenes::confirm_dialog::cancel_pending_save_as_close(world);
-                    }
-                }
+                // The save runs in the background; the close the user
+                // confirmed through this dialog is held by the worker and
+                // released when the save is over: the tab closes if the
+                // save landed clean, and a failed save keeps it open and
+                // dirty (and releases the pending marker).
+                let scenes = world.resource::<crate::scenes::Scenes>();
+                let id = scenes.tabs[scenes.active].id;
+                crate::scene_io::save_worker::after_saves(
+                    world,
+                    crate::scene_io::save_worker::AfterSaves::CloseTabIfSaved(id),
+                );
+                super::save_worker::save_active_tab_in_background(world);
             } else {
                 // Dismissed without a path: a deferred close is released
                 // back to "open and dirty", exactly where it started.

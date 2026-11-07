@@ -2132,7 +2132,7 @@ fn scene_save_on_prefab_tab_clears_dirty_state() {
     }
     jackdaw::scenes::swap::activate_tab(app.world_mut(), 0);
 
-    // Drift `undo_len_at_save` so the status bar would otherwise show unsaved.
+    // An edit, so the status bar would otherwise show unsaved.
     struct NoOpCommand;
     impl jackdaw_commands::EditorCommand for NoOpCommand {
         fn execute(&mut self, _world: &mut bevy::prelude::World) {}
@@ -2165,10 +2165,10 @@ fn scene_save_on_prefab_tab_clears_dirty_state() {
 
     let _ = app
         .world_mut()
-        .run_system_cached(jackdaw::scenes::mark_active_dirty_on_history_growth);
+        .run_system_cached(jackdaw::scenes::track_active_dirty_from_history);
     assert!(
         !app.world().resource::<jackdaw::scenes::Scenes>().tabs[0].dirty,
-        "mark_active_dirty_on_history_growth must not re-dirty the tab post-save"
+        "track_active_dirty_from_history must not re-dirty the tab post-save"
     );
 
     // The cache-epoch driver preserves the command history; the save

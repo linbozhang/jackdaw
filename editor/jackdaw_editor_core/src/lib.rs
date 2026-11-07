@@ -172,6 +172,7 @@ pub mod sdk_paths;
 pub mod sdk_setup;
 pub mod selection;
 pub mod snapping;
+mod span_log;
 pub mod sprite_atlas;
 pub mod sprite_gizmo;
 pub mod sprite_ops;
@@ -218,6 +219,7 @@ pub mod viewport_settings_menu;
 pub mod viewport_util;
 pub mod views;
 pub mod windowing;
+mod worker_task;
 pub mod workspace_dropdown;
 pub mod world_units;
 pub mod worn_material;
@@ -444,6 +446,7 @@ impl Plugin for EditorCorePlugin {
             (
                 sdk_setup::SdkSetupPlugin,
                 scrolling_log::ScrollingLogPlugin,
+                span_log::SpanLogPlugin,
                 inspector::InspectorPlugin,
                 hierarchy::HierarchyPlugin,
                 viewport::ViewportPlugin,
@@ -850,8 +853,9 @@ fn auto_hide_internal_entities(
                 continue;
             }
 
+            // Something later this frame may despawn a transient entity.
             if let Ok(mut ec) = commands.get_entity(entity) {
-                ec.insert(EditorHidden);
+                ec.try_insert(EditorHidden);
             }
         }
     }

@@ -198,6 +198,7 @@ pub struct ProjectConversionReport {
 /// `project.jsn`, and existing `.jsn.bak` backups. Failures leave the source
 /// untouched and are collected in the report.
 pub fn convert_project(world: &mut World, root: &Path) -> ProjectConversionReport {
+    crate::scene_io::save_worker::land_saves(world);
     let mut report = ProjectConversionReport::default();
     let mut files = Vec::new();
     collect_jsn_files(root, &mut files);
@@ -297,11 +298,14 @@ pub fn convert_scene_file_pending(
 /// Write an accepted conversion out: the `.bsn` sibling, the original kept
 /// as `.jsn.bak`, and any legacy prefabs the scene inherits from.
 pub fn commit_conversion(world: &mut World, pending: PendingConversion) -> Result<(), BevyError> {
+    // A save still in flight could hold the file this conversion renames:
+    // wait for it first.
+    crate::scene_io::save_worker::land_saves(world);
     // The converted scene is authoritative authored data: it lands through
     // the atomic write the editor's own save uses, stamped with the same
     // provenance line that save records at its disk boundary.
     let stamped = crate::scene_io::stamp::with_stamp(&pending.scene_bsn);
-    jackdaw_api_internal::document::write_atomic(&pending.bsn_path, stamped.as_bytes())?;
+    crate::scene_io::save::write_atomic(&pending.bsn_path, stamped.as_bytes())?;
     std::fs::rename(&pending.source, backup_path(&pending.source))?;
     convert_prefab_dependencies(world, &pending);
     Ok(())

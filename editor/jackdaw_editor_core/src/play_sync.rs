@@ -369,7 +369,7 @@ fn collect(
     let registry = world.resource::<AppTypeRegistry>().clone();
     let registry = registry.read();
     let project = world.get_resource::<ProjectTypes>();
-    let mut references = AssetReferences::with(world, names);
+    let mut references = PlayReferences::with(world, names);
     let touched: Vec<Touched> = authored
         .into_iter()
         .map(|(id, node, patches)| {
@@ -622,7 +622,7 @@ fn authored_patches(ast: &SceneBsnAst, node: Entity) -> Authored {
 fn fold_in_references(
     world: &World,
     registry: &TypeRegistry,
-    references: &mut AssetReferences,
+    references: &mut PlayReferences,
     names: &mut crate::play_scene::PlayAssetNames,
     entity: Entity,
     node: Entity,
@@ -832,17 +832,22 @@ impl Unsent {
 /// asset path, the catalog's `@Name`, or the one `#Name` the Play session gave a
 /// runtime asset (see [`crate::play_scene::PlayAssetNames`]). Served text and
 /// edits read names from the same place.
-pub(crate) struct AssetReferences {
+pub(crate) struct PlayReferences {
     fixed: HashMap<UntypedAssetId, String>,
     session: HashMap<UntypedAssetId, String>,
     /// The assets named since this was made, none of which need looking at again.
     current: HashSet<UntypedAssetId>,
 }
 
-impl AssetReferences {
+impl PlayReferences {
     pub(crate) fn with(world: &World, names: &crate::play_scene::PlayAssetNames) -> Self {
         let mut fixed = crate::scene_io::save::asset_reference_seed(world);
-        fixed.retain(|_, reference| !reference.starts_with('#'));
+        let unresolved = world.get_resource::<jackdaw_bsn::UnresolvedReferences>();
+        fixed.retain(|id, reference| {
+            !reference.starts_with('#')
+                && !jackdaw_bsn::is_placeholder_id(*id)
+                && !unresolved.is_some_and(|unresolved| unresolved.is_retired(*id))
+        });
         let session = names.iter().map(|(id, name)| (*id, name.clone())).collect();
         Self {
             fixed,
@@ -1014,7 +1019,7 @@ fn held_component<'w>(
 fn component_value(
     world: &World,
     registry: &TypeRegistry,
-    references: &mut AssetReferences,
+    references: &mut PlayReferences,
     names: &mut crate::play_scene::PlayAssetNames,
     used: &mut UsedAssets,
     entity: Entity,
@@ -1039,14 +1044,14 @@ fn component_value(
 }
 
 /// Serialize a component for the game. An asset handle goes as the reference
-/// the game's scene loader resolves (see [`AssetReferences`]), or `null` for
+/// the game's scene loader resolves (see [`PlayReferences`]), or `null` for
 /// the type's default handle. A value holding a handle with no such
 /// reference, or an entity reference, has no meaning in the game and is
 /// refused, naming the field.
 fn game_value(
     value: &dyn PartialReflect,
     registry: &TypeRegistry,
-    references: &AssetReferences,
+    references: &PlayReferences,
 ) -> Result<serde_json::Value, Unsent> {
     let mut field = String::new();
     if let Some(reason) = first_unsendable(value, registry, references, &mut field) {
@@ -1065,7 +1070,7 @@ fn game_value(
 fn first_unsendable(
     value: &dyn PartialReflect,
     registry: &TypeRegistry,
-    references: &AssetReferences,
+    references: &PlayReferences,
     field: &mut String,
 ) -> Option<&'static str> {
     if let Some(value) = value.try_as_reflect() {
@@ -1074,7 +1079,9 @@ fn first_unsendable(
             let handle = reflect_handle.downcast_handle_untyped(value.as_any());
             let default = UntypedHandle::default_for_type(reflect_handle.asset_type_id());
             let sendable = handle.is_some_and(|handle| {
-                handle.id() == default.id() || references.reference(&handle).is_some()
+                handle.id() == default.id()
+                    || jackdaw_bsn::is_placeholder_id(handle.id())
+                    || references.reference(&handle).is_some()
             });
             return (!sendable).then_some("holds an asset that cannot be embedded for the game");
         }
@@ -1129,7 +1136,7 @@ fn first_unsendable(
 }
 
 struct GameValueProcessor<'a> {
-    references: &'a AssetReferences,
+    references: &'a PlayReferences,
 }
 
 impl ReflectSerializerProcessor for GameValueProcessor<'_> {
@@ -1333,6 +1340,60 @@ mod tests {
             std::thread::yield_now();
         }
         panic!("no answer arrived");
+    }
+
+    /// Asked for a scene, the editor's main thread parses nothing and goes on: the
+    /// text is written on a worker, and an edit made meanwhile reaches the game
+    /// behind the answer, however late that is.
+    #[test]
+    fn an_answer_comes_from_a_worker_ahead_of_edits_made_while_it_is_written() {
+        let dir = tempfile::tempdir().expect("a temp dir");
+        bevy::tasks::AsyncComputeTaskPool::get_or_init(bevy::tasks::TaskPool::new);
+        let (mut world, entity) = editor_world();
+        serving(&mut world, dir.path());
+        let (editor_end, mut game) = link();
+        let mut session = PieSession::default();
+        session.insert_test_live(key(1), child(), editor_end);
+        world.insert_non_send(session);
+        sync_document_to_game(&mut world);
+
+        let parses = jackdaw_bsn::parses_on_this_thread();
+        let request = jackdaw_pie_protocol::StateEvent::RequestScene {
+            request: 7,
+            path: "zone.bsn".to_string(),
+        };
+        game.send(
+            jackdaw_pie_protocol::PieChannel::Reliable,
+            &jackdaw_pie_protocol::event::to_bytes(&request).expect("encode"),
+        );
+        let deadline = Instant::now() + Duration::from_secs(30);
+        while world.non_send::<PieSession>().answers_being_written() == 0 {
+            assert!(Instant::now() < deadline, "the request was never taken up");
+            crate::pie::drain_game_events(&mut world);
+            std::thread::yield_now();
+        }
+        move_to(&mut world, entity, 6.0);
+        sync_document_to_game(&mut world);
+
+        let mut order = Vec::new();
+        while order.len() < 2 {
+            assert!(Instant::now() < deadline, "got only {order:?}");
+            crate::pie::drain_game_events(&mut world);
+            for (_, bytes) in game.drain_received() {
+                match from_bytes(&bytes) {
+                    Ok(ControlEvent::SceneDocument { .. }) => order.push("answer"),
+                    Ok(ControlEvent::NodeComponents { .. }) => order.push("edit"),
+                    _ => {}
+                }
+            }
+            std::thread::yield_now();
+        }
+        assert_eq!(order, ["answer", "edit"]);
+        assert_eq!(
+            jackdaw_bsn::parses_on_this_thread(),
+            parses,
+            "nothing is parsed on the main thread"
+        );
     }
 
     /// An instance launched while another runs gets the edits made while it

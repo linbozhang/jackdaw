@@ -3,12 +3,16 @@ use std::path::{Path, PathBuf};
 
 use bevy::asset::{ReflectAsset, ReflectHandle, UntypedAssetId};
 use bevy::ecs::component::ComponentId;
+use bevy::platform::cell::SyncCell;
 use bevy::reflect::{TypeInfo, TypeRegistry};
 use bevy::{ecs::reflect::AppTypeRegistry, prelude::*, tasks::AsyncComputeTaskPool};
 
 use super::asset_fields::AbsoluteAssetField;
+use super::asset_names::AssetReferences;
 use super::load::SceneDialogTask;
+use super::save_worker::{PreparedSave, SceneWrite, WaitingSave, WrittenScene};
 use super::{SceneFilePath, doc_skip_type_ids, should_skip_component};
+use jackdaw_bsn::AssetNames as _;
 
 pub use jackdaw_api_internal::document::write_atomic;
 
@@ -139,6 +143,22 @@ pub fn save_scene(world: &mut World) -> bool {
 /// Save the active scene, distinguishing an opened Save As dialog from
 /// an outright failure. See [`SaveOutcome`].
 pub fn save_scene_with_outcome(world: &mut World) -> SaveOutcome {
+    if let Some(outcome) = ready_to_save(world) {
+        return outcome;
+    }
+    match save_scene_inner(world) {
+        Ok(()) => SaveOutcome::Saved,
+        Err(err) => {
+            error!("scene save failed: {err}");
+            crate::status_bar::notify_error(world, format!("Not saved: {err}"));
+            SaveOutcome::Failed
+        }
+    }
+}
+
+/// Point the global scene path at the active tab, or say why there is nothing to
+/// write: a refused tab, or an untitled one, for which Save As has been opened.
+pub(crate) fn ready_to_save(world: &mut World) -> Option<SaveOutcome> {
     // The active scene tab is the source of truth for which file to
     // save to. Re-sync the global `SceneFilePath` from it so a stale
     // path from a previous tab can never cause us to overwrite the
@@ -154,7 +174,7 @@ pub fn save_scene_with_outcome(world: &mut World) -> SaveOutcome {
             world,
             "Not saved: this tab's scene was not loaded".to_string(),
         );
-        return SaveOutcome::Failed;
+        return Some(SaveOutcome::Failed);
     }
 
     let active_tab_path: Option<String> = world
@@ -168,17 +188,9 @@ pub fn save_scene_with_outcome(world: &mut World) -> SaveOutcome {
     let has_path = world.resource::<SceneFilePath>().path.is_some();
     if !has_path {
         save_scene_as(world);
-        return SaveOutcome::DialogOpened;
+        return Some(SaveOutcome::DialogOpened);
     }
-
-    match save_scene_inner(world) {
-        Ok(()) => SaveOutcome::Saved,
-        Err(err) => {
-            error!("scene save failed: {err}");
-            crate::status_bar::notify_error(world, format!("Not saved: {err}"));
-            SaveOutcome::Failed
-        }
-    }
+    None
 }
 
 /// Point the active tab, and the global scene path, at `path`.
@@ -187,6 +199,7 @@ pub fn save_scene_with_outcome(world: &mut World) -> SaveOutcome {
 /// save writes there, and everything that lives beside a scene follows it. A
 /// relative path names a file in the project and is refused when it leaves it.
 pub fn retarget_active_scene(world: &mut World, path: &str) -> Result<(), String> {
+    super::save_worker::land_saves(world);
     let path = crate::scenes::operators::project_scene_path(world, Path::new(path))?;
     let display_name = path
         .file_stem()
@@ -236,27 +249,14 @@ pub(crate) fn active_tab_refusal(world: &World) -> Option<String> {
         .map(|refusal| refusal.reason().to_string())
 }
 
-/// Save the active tab's scene text and terrain sidecars, synchronously,
-/// on the calling (main) thread.
+/// Save the active tab's scene text and terrain sidecars, the file on disk and the
+/// tab settled when this returns. Waits for any save still being written first.
 ///
-/// The write is not spawned onto an async task, because ordering has to
-/// hold across the whole boundary -- sidecars before scene text, dirty
-/// state cleared only after every authoritative write lands (see the
-/// ordering comments below) -- and that is far simpler to
-/// reason about, and to keep correct under future edits, as a single
-/// synchronous call than as a task whose completion has to be raced
-/// against the next save, the next tab swap, or the app closing mid-write.
-///
-/// The tradeoff: this blocks the main thread for the duration of the
-/// write, and `scene.save_all` (`scenes/operators.rs`) calls this once
-/// per dirty tab in a loop, so the block time is `O(tabs)`, not `O(1)`.
-/// Scene text and terrain sidecars are not sized to make that
-/// noticeable in practice, but a project with many large open tabs is
-/// the case to watch. If it ever needs revisiting, the fix is a
-/// different concurrency shape for `scene.save_all` specifically, not an
-/// async version of this function -- the ordering argument above applies
-/// to any single save.
+/// The steps are those of a background save, see
+/// [`super::save_worker`], with the write run here and not forced to the disk.
 pub(crate) fn save_scene_inner(world: &mut World) -> Result<(), BevyError> {
+    let _span = info_span!("save").entered();
+    super::save_worker::land_saves(world);
     // Every write of the world to the active tab's file ends here, so the
     // refusal is enforced here too; callers check only for a better message.
     if let Some(reason) = active_tab_refusal(world) {
@@ -296,44 +296,50 @@ pub(crate) fn save_scene_inner(world: &mut World) -> Result<(), BevyError> {
             .parent()
             .map(Path::to_path_buf)
             .unwrap_or_else(|| PathBuf::from("."));
-        let pending = super::hooks::begin_save(world, &path.to_string_lossy());
-        let text = emit_bsn_scene_with_inline_assets(world, &parent);
-        let written = write_prefab_files(world, &path, &parent, &pending);
+        let mut pending = super::hooks::begin_save(world, &path.to_string_lossy());
+        let written = write_prefab_files(world, &path, &parent, &mut pending);
         super::hooks::finish_save(world, pending, written.is_ok());
         written?;
         write_alongside(world, &path.to_string_lossy())?;
-        // Clear the dirty bit and record the save baseline: the stack depth
-        // and the content fingerprint the dirty watcher compares against
-        // when the stack returns to that depth.
-        let (history_len, history_pushes) = {
-            let history = world.resource::<jackdaw_commands::CommandHistory>();
-            (history.undo_stack.len(), history.scene_pushes())
-        };
-        let fingerprint = document_hash(&text);
-        if let Some(mut scenes) = world.get_resource_mut::<crate::scenes::Scenes>() {
-            let active = scenes.active;
-            if let Some(tab) = scenes.tabs.get_mut(active) {
-                tab.dirty = false;
-                tab.saved_undo_len = history_len;
-                tab.saved_scene_pushes = history_pushes;
-                tab.saved_doc_hash = Some(fingerprint);
-                tab.saved_at = Some(crate::timestamps::utc_rfc3339_now());
-                tab.observed_undo_len = history_len;
-                tab.observed_pushes = history_pushes;
-            }
-        }
-        // The journal's entry for this tab is spent: its document is on
-        // disk, so there is nothing left to recover.
-        super::session_journal::on_tab_saved(world, &path);
+        let (tab, state) = active_tab_and_state(world)?;
+        settle_tab_after_save(world, tab, state, None, false);
         return Ok(());
     }
 
+    let mut prepared = prepare_scene_save(world)?;
+    prepared.write.expect_known_file(world);
+    let written = prepared.write.write();
+    finish_scene_save(world, prepared.waiting, written)
+}
+
+fn active_tab_and_state(world: &World) -> Result<(u64, u64), BevyError> {
+    let scenes = world.resource::<crate::scenes::Scenes>();
+    let tab = scenes.tabs.get(scenes.active).ok_or("no tab to save")?;
+    let history = world.resource::<jackdaw_commands::CommandHistory>();
+    Ok((tab.id, history.state()))
+}
+
+/// Whether the tab in front holds a prefab, which saves through its cache.
+pub(crate) fn active_tab_is_prefab(world: &World) -> bool {
+    let scenes = world.resource::<crate::scenes::Scenes>();
+    scenes
+        .tabs
+        .get(scenes.active)
+        .is_some_and(|tab| matches!(tab.content, crate::scenes::TabContent::Prefab(_)))
+}
+
+/// The part of a scene save that needs the world: the moment the file will hold,
+/// and the sidecars of that moment, encoded. It writes nothing.
+///
+/// Sidecars land once the document has read back, ahead of its rename. There is no
+/// rollback across files: when the rename then fails, the sidecars stay updated, no
+/// state on the tab's history counts as saved, so the tab reads dirty until the next
+/// save writes both.
+pub(crate) fn prepare_scene_save(world: &mut World) -> Result<PreparedSave, BevyError> {
+    let _span = info_span!("save.prepare").entered();
     let path = {
         let scene_path = world.resource::<SceneFilePath>();
-        scene_path
-            .path
-            .clone()
-            .expect("save_scene_inner called without a path set")
+        scene_path.path.clone().ok_or("no file to save to")?
     };
 
     // Scenes persist as BSN text. A legacy `.jsn` path redirects to its
@@ -360,56 +366,250 @@ pub(crate) fn save_scene_inner(world: &mut World) -> Result<(), BevyError> {
         scene_path.metadata.name = "Untitled".to_string();
     }
 
-    let pending = super::hooks::begin_save(world, &path);
-    let written = write_scene_files(world, &path, legacy_backup.as_deref(), &pending);
-    super::hooks::finish_save(world, pending, written.is_ok());
-    let fingerprint = written?;
+    let scenes = world.resource::<crate::scenes::Scenes>();
+    let tab = scenes.tabs.get(scenes.active).ok_or("no tab to save")?;
+    let (tab_id, tab_name, tab_kind) = (tab.id, tab.display_name.clone(), tab.kind.clone());
+    let state = world.resource::<jackdaw_commands::CommandHistory>().state();
 
-    world.trigger(jackdaw_api_internal::document::SceneSaved {
-        path: PathBuf::from(&path),
-    });
-
-    write_alongside(world, &path)?;
-
-    // The authoritative scene and sidecars are now on disk. Only now clear
-    // dirty state and retarget a redirected tab at its new `.bsn` path. The
-    // save baseline records the stack depth and a fingerprint of the emitted
-    // body, so the dirty watcher can tell "undo back to the saved content"
-    // (clean) from "a different edit at the same depth" (dirty).
-    let (history_len, history_pushes) = {
-        let history = world.resource::<jackdaw_commands::CommandHistory>();
-        (history.undo_stack.len(), history.scene_pushes())
+    let mut pending = super::hooks::begin_save(world, &path);
+    let (ast, sidecars) = match snapshot_with_sidecars(world, &path, &mut pending) {
+        Ok(snapshot) => snapshot,
+        Err(err) => {
+            super::hooks::finish_save(world, pending, false);
+            return Err(err);
+        }
     };
-    // The fingerprint rides out of `write_scene_files`, hashed from the emitted body.
-    if legacy_backup.is_some() {
-        world.resource_mut::<SceneFilePath>().path = Some(path.clone());
-    }
-    if let Some(mut scenes) = world.get_resource_mut::<crate::scenes::Scenes>() {
-        let active = scenes.active;
-        if let Some(tab) = scenes.tabs.get_mut(active) {
-            tab.dirty = false;
-            tab.saved_undo_len = history_len;
-            tab.saved_scene_pushes = history_pushes;
-            tab.saved_doc_hash = Some(fingerprint);
-            tab.saved_at = Some(crate::timestamps::utc_rfc3339_now());
-            tab.observed_undo_len = history_len;
-            tab.observed_pushes = history_pushes;
-            if legacy_backup.is_some() {
-                tab.path = Some(PathBuf::from(&path));
-            }
+    let redirected = legacy_backup.is_some();
+    let write = SceneWrite::new(ast, path.clone(), legacy_backup, sidecars);
+    let sidecars_started = write.sidecars_started.clone();
+    Ok(PreparedSave {
+        write,
+        waiting: WaitingSave {
+            tab: tab_id,
+            tab_name,
+            tab_kind,
+            state,
+            history_revision: world
+                .resource::<jackdaw_commands::CommandHistory>()
+                .revision(),
+            document: document_revision(world),
+            sidecars_started,
+            path,
+            redirected,
+            hooks: SyncCell::new(pending),
+        },
+    })
+}
+
+/// Stands for the live document's contents: it moves when anything writes to the
+/// document, history or not.
+pub(crate) fn document_revision(world: &World) -> Option<u32> {
+    world
+        .get_resource_ref::<jackdaw_bsn::SceneBsnAst>()
+        .map(|ast| ast.last_changed().get())
+}
+
+/// The live document as the file at `path` will hold it, and its sidecars.
+fn snapshot_with_sidecars(
+    world: &mut World,
+    path: &str,
+    pending: &mut super::hooks::PendingSave,
+) -> Result<
+    (
+        Option<jackdaw_bsn::SceneBsnAst>,
+        Vec<super::hooks::SidecarWrite>,
+    ),
+    BevyError,
+> {
+    let parent_path = Path::new(path)
+        .parent()
+        .map(Path::to_path_buf)
+        .unwrap_or_default();
+    let held = crate::preview_context::suspend_preview_writes(world);
+    let authored = authored_document(world, &parent_path, SourceSpelling::RelativeToFile);
+    crate::preview_context::resume_preview_writes(world, held);
+    if let Some(ast) = &authored {
+        let registry = world.resource::<AppTypeRegistry>().clone();
+        let named = absolute_fields(world, ast, &registry);
+        if !named.is_empty() {
+            let refusal = crate::scene_io::asset_fields::refusal(&named);
+            return Err(BevyError::from(format!("cannot save {path}: {refusal}")));
         }
     }
-    // The journal's entry for this tab is spent: its document is on disk,
-    // so there is nothing left to recover. At the same boundary as the
-    // baseline above, so the two never disagree.
-    super::session_journal::on_tab_saved(world, Path::new(&path));
+
+    // A folder that cannot be made fails the writes below, which say which.
+    // Only a project's own folders are made.
+    if let Some(folder) = Path::new(path).parent()
+        && world.contains_resource::<crate::project::ProjectRoot>()
+        && crate::scenes::operators::resolve_scene_path(world, folder).is_ok()
+        && let Err(err) = std::fs::create_dir_all(folder)
+    {
+        warn!("cannot make the folder for {path}: {err}");
+    }
+    let sidecars = info_span!("save.sidecars")
+        .in_scope(|| super::hooks::encode_sidecars(world, path, pending))?;
+    Ok((authored, sidecars))
+}
+
+/// The last part of a scene save, on the main thread with the saved tab in front:
+/// note what is on disk, say so, and clear the tab's dirty state if nothing changed
+/// since the snapshot.
+pub(crate) fn finish_scene_save(
+    world: &mut World,
+    waiting: WaitingSave,
+    written: WrittenScene,
+) -> Result<(), BevyError> {
+    let _span = info_span!("save.finish").entered();
+    let WaitingSave {
+        tab,
+        state,
+        history_revision,
+        document,
+        sidecars_started,
+        path,
+        redirected,
+        hooks,
+        ..
+    } = waiting;
+    let landed = written.outcome.as_ref().ok().copied();
+    if let Some(hash) = landed {
+        // So the open-tab watcher does not read this write back as an outside edit.
+        crate::scenes::external_watch::note_known_hash(world, Path::new(&path), hash);
+    }
+    if let Err(err) = written.outcome {
+        if sidecars_started.load(std::sync::atomic::Ordering::Relaxed) {
+            let scenes = world.resource::<crate::scenes::Scenes>();
+            if let Some(index) = scenes.tabs.iter().position(|held| held.id == tab) {
+                crate::scenes::mark_tab_unsaved(world, index);
+            }
+        }
+        super::hooks::finish_save(world, SyncCell::to_inner(hooks), false);
+        return Err(BevyError::from(err));
+    }
+    info!("Scene saved to {path}");
+
+    if !jackdaw_bsn::is_binary_path(Path::new(&path)) {
+        note_brush_text_size(world, &path, written.brush_bytes);
+    }
+
+    // A step along the history writes to the document too, and the states say what
+    // that means. The document moving with the history still is an edit it never saw.
+    let document_moved = world
+        .resource::<jackdaw_commands::CommandHistory>()
+        .revision()
+        == history_revision
+        && document_revision(world) != document;
+    let alongside = info_span!("save.alongside").in_scope(|| write_alongside(world, &path));
+    if alongside.is_ok() {
+        settle_tab_after_save(
+            world,
+            tab,
+            state,
+            redirected.then_some(&path),
+            document_moved,
+        );
+        // The journal's entry for this tab is spent: its document is on disk,
+        // so there is nothing left to recover. At the same boundary as the
+        // settle above, so the two never disagree.
+        super::session_journal::on_tab_saved(world, Path::new(&path));
+    }
+
+    // Last of what says the save is over, the tab settled: either may save again.
+    super::hooks::finish_save(world, SyncCell::to_inner(hooks), true);
+    info_span!("save.saved_observers").in_scope(|| {
+        world.trigger(jackdaw_api_internal::document::SceneSaved {
+            path: PathBuf::from(&path),
+        });
+    });
+    alongside?;
 
     // Persist current editor layout to project.jsn
-    save_layout_to_project(world);
+    info_span!("save.layout").in_scope(|| save_layout_to_project(world));
 
-    crate::thumbnail::capture_scene_thumbnail(world, Path::new(&path));
+    info_span!("save.thumbnail")
+        .in_scope(|| crate::thumbnail::capture_scene_thumbnail(world, Path::new(&path)));
 
     Ok(())
+}
+
+/// The file holds the tab as of history state `state`: the tab reads saved if it is
+/// in that state, and dirty if it has moved on, and again once an undo or a redo
+/// takes it elsewhere. `redirected` is the new file of a legacy scene. `document_moved`
+/// says the document was written to since the snapshot with no history entry, so the
+/// file holds no state of the history.
+fn settle_tab_after_save(
+    world: &mut World,
+    tab: u64,
+    state: u64,
+    redirected: Option<&String>,
+    document_moved: bool,
+) {
+    let scenes = world.resource::<crate::scenes::Scenes>();
+    let Some(index) = scenes.tabs.iter().position(|held| held.id == tab) else {
+        return;
+    };
+    let in_front = index == scenes.active;
+    if redirected.is_some() && in_front {
+        world.resource_mut::<SceneFilePath>().path = redirected.cloned();
+    }
+    let dirty = if in_front {
+        let mut history = world.resource_mut::<jackdaw_commands::CommandHistory>();
+        if document_moved {
+            history.forget_saved();
+        } else {
+            history.mark_saved(state);
+        }
+        !history.is_saved()
+    } else {
+        let mut scenes = world.resource_mut::<crate::scenes::Scenes>();
+        let history = &mut scenes.tabs[index].history;
+        history.mark_saved(state);
+        !history.is_saved()
+    };
+    let current = world.resource::<jackdaw_commands::CommandHistory>().state();
+    // The scene-document baselines the dirty watcher reads (the guards'
+    // dirty matrix pins them) settle at the same boundary as the state
+    // above. With the tab in front and the document where the snapshot
+    // left it, the content fingerprint is re-emitted from the live
+    // document the file now holds; a document that moved past its
+    // snapshot leaves the baselines untouched on purpose, so the tab
+    // reads dirty until the next save re-anchors them. A tab settled in
+    // the background has no document in the world to re-emit, so only
+    // its own history's depth baselines move and the content baseline
+    // falls back to growth-only.
+    let (history_len, history_pushes, fingerprint) = if in_front {
+        let (len, pushes) = {
+            let history = world.resource::<jackdaw_commands::CommandHistory>();
+            (history.undo_stack.len(), history.scene_pushes())
+        };
+        let fingerprint = if document_moved {
+            None
+        } else {
+            document_fingerprint(world)
+        };
+        (len, pushes, fingerprint)
+    } else {
+        let scenes = world.resource::<crate::scenes::Scenes>();
+        let history = &scenes.tabs[index].history;
+        (history.undo_stack.len(), history.scene_pushes(), None)
+    };
+    let mut scenes = world.resource_mut::<crate::scenes::Scenes>();
+    let saved = &mut scenes.tabs[index];
+    saved.dirty = dirty;
+    if in_front {
+        saved.history_state_at_last_check = Some(current);
+    }
+    saved.saved_at = Some(crate::timestamps::utc_rfc3339_now());
+    saved.observed_undo_len = history_len;
+    saved.observed_pushes = history_pushes;
+    if !document_moved {
+        saved.saved_undo_len = history_len;
+        saved.saved_scene_pushes = history_pushes;
+        saved.saved_doc_hash = fingerprint;
+    }
+    if let Some(path) = redirected {
+        saved.path = Some(PathBuf::from(path));
+    }
 }
 
 /// The prefab tab's document, sidecars and file, for [`save_scene_inner`].
@@ -417,7 +617,7 @@ fn write_prefab_files(
     world: &mut World,
     path: &Path,
     parent: &Path,
-    pending: &super::hooks::PendingSave,
+    pending: &mut super::hooks::PendingSave,
 ) -> Result<(), BevyError> {
     let text = emit_bsn_scene_with_inline_assets(world, parent);
     let bsn = jackdaw_bsn::parse_emitted(&text)
@@ -426,9 +626,15 @@ fn write_prefab_files(
         .resource_mut::<crate::prefab::PrefabAstCache>()
         .insert(path, bsn);
     let sidecar_base = path.to_string_lossy();
-    super::hooks::export_sidecars(world, &sidecar_base, pending)?;
-    crate::prefab::operators::save_prefab_to_disk(world, path)
-        .map_err(|err| BevyError::from(format!("prefab save failed: {err}")))?;
+    let sidecars = super::hooks::encode_sidecars(world, &sidecar_base, pending)?;
+    super::hooks::write_sidecars(&sidecars, false)?;
+    if let Err(err) = crate::prefab::operators::save_prefab_to_disk(world, path) {
+        if !sidecars.is_empty() {
+            let active = world.resource::<crate::scenes::Scenes>().active;
+            crate::scenes::mark_tab_unsaved(world, active);
+        }
+        return Err(BevyError::from(format!("prefab save failed: {err}")));
+    }
     Ok(())
 }
 
@@ -472,77 +678,6 @@ fn brush_notice_possible(world: &World, path: &str, bytes: usize) -> bool {
 fn large_scene_message(bytes: usize) -> String {
     let megabytes = bytes as f64 / 1_000_000.0;
     format!("Large scene may be slow ({megabytes:.1} MB)")
-}
-
-/// The scene's sidecars and text, for [`save_scene_inner`]. Sidecars land
-/// first so a failed one leaves the tab dirty.
-fn write_scene_files(
-    world: &mut World,
-    path: &str,
-    legacy_backup: Option<&str>,
-    pending: &super::hooks::PendingSave,
-) -> Result<u64, BevyError> {
-    let (contents, fingerprint) = {
-        let parent_path = Path::new(&path)
-            .parent()
-            .map(Path::to_path_buf)
-            .unwrap_or_default();
-        let body = emit_bsn_scene_for_file(world, &parent_path)
-            .map_err(|refusal| BevyError::from(format!("cannot save {path}: {refusal}")))?;
-        let fingerprint = document_hash(&body);
-        let parsed = jackdaw_bsn::parse_emitted(&body)
-            .map_err(|err| BevyError::from(format!("cannot save {path}: {err}")))?;
-        if brush_notice_possible(world, path, body.len())
-            && !jackdaw_bsn::is_binary_path(Path::new(path))
-        {
-            note_brush_text_size(world, path, jackdaw_bsn::brush_text_len(&parsed));
-        }
-        // Record the jackdaw + Bevy version at the disk boundary only, so
-        // the in-memory undo / tab-swap snapshots from the same emitter stay
-        // stamp-free.
-        (crate::scene_io::stamp::with_stamp(&body), fingerprint)
-    };
-
-    // Sidecars (terrain heights and paint channels, tilemap data) are
-    // authoritative authored data. Complete those writes before the scene text is committed and before
-    // the tab is marked clean, so failures remain visible and repeated saves
-    // cannot finish out of order. Each write lands via write_atomic, so a
-    // sidecar failure partway through never truncates one that already
-    // landed; the scene text below is written the same way. There is no
-    // cross-file rollback if the scene text write fails after sidecars
-    // already landed -- the sidecars stay updated and the tab stays dirty,
-    // so the next save retries the scene text with the same sidecars.
-    // A folder that cannot be made fails the writes below, which say which.
-    // Only a project's own folders are made.
-    if let Some(folder) = Path::new(&path).parent()
-        && world.contains_resource::<crate::project::ProjectRoot>()
-        && crate::scenes::operators::resolve_scene_path(world, folder).is_ok()
-        && let Err(err) = std::fs::create_dir_all(folder)
-    {
-        warn!("cannot make the folder for {path}: {err}");
-    }
-    super::hooks::export_sidecars(world, path, pending)?;
-
-    // A redirected save renames the legacy source to `.jsn.bak` first so a
-    // stale `.jsn` cannot shadow the fresh `.bsn` on the next open.
-    if let Some(old_path) = legacy_backup.as_ref() {
-        let backup = format!("{old_path}.bak");
-        std::fs::rename(old_path, &backup).map_err(|err| {
-            BevyError::from(format!(
-                "could not back up legacy scene {old_path} to {backup}: {err}"
-            ))
-        })?;
-    }
-    let contents = jackdaw_bsn::document_bytes(Path::new(&path), &contents)
-        .map_err(|err| BevyError::from(format!("failed to write scene file {path}: {err}")))?;
-    write_atomic(Path::new(&path), &contents)
-        .map_err(|err| BevyError::from(format!("failed to write scene file {path}: {err}")))?;
-    info!("Scene saved to {path}");
-
-    // Record the written bytes so the open-tab watcher does not read this
-    // write back as an outside edit.
-    crate::scenes::external_watch::note_known_content(world, Path::new(&path), &contents);
-    Ok(fingerprint)
 }
 
 pub fn save_layout_to_project(world: &mut World) {
@@ -597,33 +732,15 @@ pub fn save_layout_to_project(world: &mut World) {
 ///
 /// An unsaved material is left out so it embeds inline: a name for it would
 /// resolve nowhere outside this editor run.
-pub(crate) fn asset_reference_seed(
+pub fn asset_reference_seed(
     world: &World,
 ) -> bevy::platform::collections::HashMap<UntypedAssetId, String> {
-    let mut seed: bevy::platform::collections::HashMap<UntypedAssetId, String> =
-        bevy::platform::collections::HashMap::default();
-    if let Some(paths) = world.get_resource::<jackdaw_bsn::BsnAssetPaths>() {
-        for (id, path) in &paths.0 {
-            seed.insert(*id, path.clone());
-        }
-    }
-    if let Some(scene_assets) = world.get_resource::<jackdaw_bsn::BsnSceneAssets>() {
-        for (reference, handle) in &scene_assets.0 {
-            if reference.starts_with('#') {
-                seed.entry(handle.id()).or_insert_with(|| reference.clone());
-            }
-        }
-    }
-    let ephemeral = crate::material_assets::ephemeral_material_ids(world);
-    if let Some(catalog) = world.get_resource::<crate::asset_catalog::AssetCatalog>() {
-        for (id, name) in &catalog.id_to_name {
-            if ephemeral.contains(id) {
-                continue;
-            }
-            seed.entry(*id).or_insert_with(|| name.clone());
-        }
-    }
-    seed
+    let references = AssetReferences::new(world);
+    references
+        .known_assets()
+        .into_iter()
+        .filter_map(|id| Some((id, references.name_of(id)?)))
+        .collect()
 }
 
 /// The runtime inline assets referenced by a BSN document's kept components,
@@ -637,8 +754,8 @@ pub(crate) struct BsnInlineAssetPass {
     /// excluded (they resolve through their existing roots or the catalog).
     refs: Vec<jackdaw_bsn::CatalogAssetRef>,
     /// The (entity, component type path) pairs whose patch carries at least one
-    /// asset `Handle<T>` field, so it must be re-derived with an asset context
-    /// for the reference to survive emission.
+    /// asset `Handle<T>` field, re-derived so the names this pass settled on reach
+    /// the emitted text.
     touched: Vec<(Entity, String)>,
 }
 
@@ -668,8 +785,8 @@ pub(crate) fn doc_entities_in_order(ast: &jackdaw_bsn::SceneBsnAst) -> Vec<Entit
 /// and scene-inline `#Name` entries); any handle found there is left alone.
 /// Pathless runtime handles that are not yet known get a fresh `#Name` and a
 /// [`jackdaw_bsn::CatalogAssetRef`] so they embed as document roots. Every
-/// component that references any asset handle is recorded in `touched`, since
-/// its patch was maintained without an asset context and must be re-derived.
+/// component that references any asset handle is recorded in `touched`, whose
+/// patch is derived again so an asset named just now reaches it.
 fn collect_bsn_inline_assets(
     world: &World,
     registry: &TypeRegistry,
@@ -1087,9 +1204,8 @@ fn replace_patch(
 /// Emit the live BSN document to text with runtime inline assets embedded and
 /// their handle references resolved.
 ///
-/// The editor maintains the document incrementally with plain component
-/// patches, so any asset `Handle<T>` field on a kept component was recorded
-/// without an asset context and resolves to an empty string on a bare
+/// The live document names the assets it can, but an asset held only in memory
+/// has no name and reads as an empty string on a bare
 /// [`jackdaw_bsn::emit_scene`]. This does a capture-time asset pass: it walks
 /// the document's entities for pathless runtime asset handles, embeds each as
 /// a `#Name` root, and re-derives the handle-bearing component patches so
@@ -1118,9 +1234,9 @@ pub fn emit_bsn_scene_for_file(world: &mut World, parent_path: &Path) -> Result<
     }
 }
 
-/// A document as text for a running game, written as a save would write it.
+/// A document for a running game, authored as a save authors it.
 pub(crate) struct GameDocument {
-    pub(crate) text: String,
+    pub(crate) ast: jackdaw_bsn::SceneBsnAst,
     /// The fields naming an asset by an absolute path, which a save would refuse
     /// and Play only warns about.
     pub(crate) absolute: Vec<AbsoluteAssetField>,
@@ -1129,26 +1245,21 @@ pub(crate) struct GameDocument {
     pub(crate) live_assets: bevy::platform::collections::HashMap<String, UntypedAssetId>,
 }
 
-/// The live document as text the game spawns in place of its file at
+/// The live document as the game spawns it in place of its file at
 /// `parent_path`. Writes nothing.
-pub(crate) fn emit_bsn_scene_for_game(world: &mut World, parent_path: &Path) -> GameDocument {
+pub(crate) fn live_document_for_game(world: &mut World, parent_path: &Path) -> GameDocument {
     let held = crate::preview_context::suspend_preview_writes(world);
     let authored = authored_live(world, parent_path, SourceSpelling::RelativeToFile);
     crate::preview_context::resume_preview_writes(world, held);
     let Some(authored) = authored else {
         return GameDocument {
-            text: String::new(),
+            ast: jackdaw_bsn::SceneBsnAst::default(),
             absolute: Vec::new(),
             live_assets: Default::default(),
         };
     };
     let registry = world.resource::<AppTypeRegistry>().clone();
-    let (text, absolute) = emitted(
-        world,
-        &authored.ast,
-        SourceSpelling::RelativeToFile,
-        &registry,
-    );
+    let absolute = absolute_fields(world, &authored.ast, &registry);
     let mut live_assets: bevy::platform::collections::HashMap<String, UntypedAssetId> = world
         .get_resource::<jackdaw_bsn::BsnSceneAssets>()
         .into_iter()
@@ -1159,16 +1270,16 @@ pub(crate) fn emit_bsn_scene_for_game(world: &mut World, parent_path: &Path) -> 
         .collect();
     live_assets.extend(authored.embedded);
     GameDocument {
-        text,
+        ast: authored.ast,
         absolute,
         live_assets,
     }
 }
 
-/// `document`, an inactive tab's snapshot, the way [`emit_bsn_scene_for_game`]
-/// writes the live one. Its handles were named when the tab was captured, and
+/// `document`, an inactive tab's snapshot, the way [`live_document_for_game`]
+/// makes the live one. Its handles were named when the tab was captured, and
 /// no store holds its assets under those names.
-pub(crate) fn emit_snapshot_for_game(
+pub(crate) fn snapshot_for_game(
     world: &World,
     document: &jackdaw_bsn::SceneBsnAst,
     parent_path: &Path,
@@ -1177,9 +1288,9 @@ pub(crate) fn emit_snapshot_for_game(
     crate::prefab::save_load::relativize_for_file(world, &mut ast, parent_path);
     drop_inherited_visibility(&mut ast);
     let registry = world.resource::<AppTypeRegistry>().clone();
-    let (text, absolute) = emitted(world, &ast, SourceSpelling::RelativeToFile, &registry);
+    let absolute = absolute_fields(world, &ast, &registry);
     GameDocument {
-        text,
+        ast,
         absolute,
         live_assets: Default::default(),
     }
@@ -1319,7 +1430,9 @@ fn emit_bsn_scene_authored(
         return (String::new(), Vec::new());
     };
     let registry = world.resource::<AppTypeRegistry>().clone();
-    emitted(world, &ast, spelling, &registry)
+    let text = emitted(world, &ast, spelling, &registry);
+    jackdaw_bsn::drop_document(ast);
+    text
 }
 
 /// The live document as a save writes it, held as a document rather than
@@ -1371,6 +1484,25 @@ pub(crate) struct AuthoredDocument {
     pub(crate) embedded: Vec<(String, UntypedAssetId)>,
 }
 
+/// The live document taken out of the world for a tab to hold while inactive,
+/// authored in place as an emission would author a copy: handles named, inherited
+/// prefab content sparse, values the world derives gone. It holds no links, since
+/// the entities are about to go. `None` when the world holds no document.
+pub(crate) fn take_live_document(
+    world: &mut World,
+    parent_path: &Path,
+) -> Option<jackdaw_bsn::SceneBsnAst> {
+    let held = crate::preview_context::suspend_preview_writes(world);
+    let live = world
+        .get_resource_mut::<jackdaw_bsn::SceneBsnAst>()
+        .map(|mut live| std::mem::take(&mut *live));
+    let authored = live.map(|ast| author(world, ast, parent_path, SourceSpelling::AsHeld).ast);
+    crate::preview_context::resume_preview_writes(world, held);
+    let mut authored = authored?;
+    authored.clear_links();
+    Some(authored)
+}
+
 fn authored_document(
     world: &mut World,
     parent_path: &Path,
@@ -1396,15 +1528,16 @@ fn author(
     parent_path: &Path,
     spelling: SourceSpelling,
 ) -> AuthoredDocument {
+    let _span = info_span!("doc.author").entered();
     let registry = world.resource::<AppTypeRegistry>().clone();
     normalize_derived_button_styles(world, &mut ast, &registry);
 
-    // Name the assets handle fields reference before sparsifying: the live
-    // document holds the asset-blind placeholder (`""`) an ECS mirror stored,
-    // and compared against a prefab baseline that names the asset, an unchanged
-    // inherited component would read as an override.
+    // Name the assets handle fields reference before sparsifying: compared
+    // against a prefab baseline that names the asset, an inherited component the
+    // live document holds no name for would read as an override.
     let entities = doc_entities_in_order(&ast);
-    let pass = name_handles_in(world, &mut ast, &entities, parent_path);
+    let pass = info_span!("author.name_handles")
+        .in_scope(|| name_handles_in(world, &mut ast, &entities, parent_path));
 
     // Reduce inherited prefab-instance content to sparse override entries
     // (`PrefabEntityId` plus only diverged fields). No-op when there is no
@@ -1413,6 +1546,7 @@ fn author(
         .get_resource::<crate::prefab::PrefabAstCache>()
         .is_some()
     {
+        let _sparsify = info_span!("author.sparsify").entered();
         let cache = world.resource::<crate::prefab::PrefabAstCache>();
         // The live document spells `IsA` sources absolutely, and legacy
         // scenes carry sources naming another machine's files (the load
@@ -1445,16 +1579,29 @@ fn author(
             }
             cache.get(p)
         };
-        crate::prefab::resolver_bsn::sparsify_inherited_descendants(&mut ast, &get_prefab);
+        let references = AssetReferences::new(world);
+        let scene = world.get_resource::<jackdaw_bsn::BsnSceneAssets>();
+        let filed_name = |reference: &str| {
+            let handle = scene?
+                .0
+                .get(reference.starts_with('@').then_some(reference)?)?;
+            jackdaw_bsn::AssetNames::name_of(&references, handle.id())
+        };
+        crate::prefab::resolver_bsn::sparsify_inherited_descendants(
+            &mut ast,
+            &get_prefab,
+            &filed_name,
+        );
     }
 
     // After sparsifying, which reads sources as the cache keys them.
     if spelling == SourceSpelling::RelativeToFile {
+        let _relativize = info_span!("author.relativize").entered();
         crate::prefab::save_load::relativize_for_file(world, &mut ast, parent_path);
         drop_inherited_visibility(&mut ast);
     }
 
-    normalize_runtime_derived_values(world, &mut ast);
+    info_span!("author.normalize").in_scope(|| normalize_runtime_derived_values(world, &mut ast));
     AuthoredDocument {
         ast,
         names_new_assets: !pass.refs.is_empty(),
@@ -1476,21 +1623,30 @@ fn emitted(
     registry: &AppTypeRegistry,
 ) -> (String, Vec<AbsoluteAssetField>) {
     let named = match spelling {
-        SourceSpelling::RelativeToFile => crate::scene_io::asset_fields::absolute_asset_fields(
-            ast,
-            &registry.read(),
-            world.get_resource::<crate::project_types::ProjectTypes>(),
-        ),
+        SourceSpelling::RelativeToFile => absolute_fields(world, ast, registry),
         SourceSpelling::AsHeld => Vec::new(),
     };
     (jackdaw_bsn::emit_scene(ast), named)
 }
 
+/// The fields of `ast` naming a file by an absolute path.
+fn absolute_fields(
+    world: &World,
+    ast: &jackdaw_bsn::SceneBsnAst,
+    registry: &AppTypeRegistry,
+) -> Vec<AbsoluteAssetField> {
+    info_span!("emit.absolute_fields").in_scope(|| {
+        crate::scene_io::asset_fields::absolute_asset_fields(
+            ast,
+            &registry.read(),
+            world.get_resource::<crate::project_types::ProjectTypes>(),
+        )
+    })
+}
+
 /// Name the assets `entities` reference in `ast`, a document other than the
-/// live one whose nodes are linked to those entities: embed the runtime assets
-/// they use and re-derive their handle-bearing patches with the asset context,
-/// the way a save does, so a `Handle<T>` field names its asset instead of the
-/// placeholder the live document's asset-blind mirror stored.
+/// live one whose nodes are linked to those entities, the way a save does: embed
+/// the runtime assets they use and re-derive their handle-bearing patches.
 pub(crate) fn name_handles_in(
     world: &World,
     ast: &mut jackdaw_bsn::SceneBsnAst,
@@ -1513,12 +1669,10 @@ pub(crate) fn name_handles_in(
     pass
 }
 
-/// Re-derive every component patch listed in `pass.touched` from its live ECS
-/// value with the asset context, so `Handle<T>` fields emit reference names
-/// or asset paths instead of the placeholder an asset-blind capture stored.
-/// An entity holding streamed game values keeps the values the document has
-/// and takes only the references its handle fields lack: a stream never carries
-/// a handle, so those are the editor's own.
+/// Re-derive every component patch in `pass.touched` from its live value, so
+/// `Handle<T>` fields emit names or paths. An entity holding streamed game values
+/// keeps what the document has and takes only the references its fields lack: a
+/// stream never carries a handle.
 fn rederive_handle_patches(
     world: &World,
     ast: &mut jackdaw_bsn::SceneBsnAst,
@@ -1535,7 +1689,6 @@ fn rederive_handle_patches(
         parent_path,
         asset_names: Some(&pass.names),
     };
-    let mut kept: Vec<String> = Vec::new();
     let mut defaults = jackdaw_bsn::TypeDefaults::new(&reg);
     for (entity, type_path) in &pass.touched {
         let Some(patches_entity) = ast.ast_for(*entity) else {
@@ -1571,62 +1724,36 @@ fn rederive_handle_patches(
             continue;
         }
         if let Some(authored) = ast.get_patch(patch_entity) {
-            keep_unresolved_references(
-                &reg,
-                registration.type_id(),
-                authored,
-                &mut new_patch,
-                &mut kept,
-            );
+            write_clears(&reg, registration.type_id(), authored, &mut new_patch);
         }
         ast.set_patch(patch_entity, new_patch);
     }
-    for reference in kept {
-        warn!("keeping the asset reference '{reference}', which this project does not resolve");
-    }
 }
 
-/// Keep a reference the editor could not resolve.
-///
-/// A handle field whose reference resolved to nothing holds the default handle,
-/// which re-derives as an empty string. What the file said is better than
-/// nothing: another project, or this one once the file is there, resolves it,
-/// so the authored string stays and is reported. The emitter elides a field
-/// left at its default, so a kept reference brings its field back with it, and
-/// a component whose every field elided comes back as a struct patch.
-fn keep_unresolved_references(
+/// Write a cleared handle field of `fresh` as `""` where `authored` spells the
+/// field, which overrides an inherited value where an omitted field would not. A
+/// list element is not inherited field by field, so it omits a cleared one.
+pub(super) fn write_clears(
     reg: &TypeRegistry,
     type_id: std::any::TypeId,
     authored: &jackdaw_bsn::BsnPatch,
     fresh: &mut jackdaw_bsn::BsnPatch,
-    kept: &mut Vec<String>,
 ) {
     use jackdaw_bsn::BsnPatch;
-    match (authored, &mut *fresh) {
-        (BsnPatch::Struct(authored), BsnPatch::Struct(fresh)) => {
-            keep_in_fields(
-                reg,
-                type_id,
-                &authored.fields,
-                &mut fresh.fields,
-                false,
-                kept,
-            );
+    let authored = match authored {
+        BsnPatch::Struct(data) => &data.fields,
+        BsnPatch::Template(_, Some(fields)) => fields,
+        _ => return,
+    };
+    match fresh {
+        BsnPatch::Struct(data) => {
+            let type_path = data.type_path.clone();
+            clears_in_fields(reg, type_id, &type_path, authored, &mut data.fields);
         }
-        (BsnPatch::TupleStruct(authored), BsnPatch::TupleStruct(fresh)) => {
-            keep_in_values(
-                reg,
-                type_id,
-                &authored.values,
-                &mut fresh.values,
-                false,
-                kept,
-            );
-        }
-        (BsnPatch::Struct(authored), BsnPatch::Type(type_path)) => {
+        BsnPatch::Type(type_path) => {
             let type_path = type_path.clone();
             let mut fields = jackdaw_bsn::BsnStructFields::default();
-            keep_in_fields(reg, type_id, &authored.fields, &mut fields, false, kept);
+            clears_in_fields(reg, type_id, &type_path, authored, &mut fields);
             if !fields.0.is_empty() {
                 *fresh = BsnPatch::Struct(jackdaw_bsn::BsnStructData { type_path, fields });
             }
@@ -1635,209 +1762,60 @@ fn keep_unresolved_references(
     }
 }
 
-fn keep_in_fields(
+fn clears_in_fields(
     reg: &TypeRegistry,
     type_id: std::any::TypeId,
+    type_path: &str,
     authored: &jackdaw_bsn::BsnStructFields,
     fresh: &mut jackdaw_bsn::BsnStructFields,
-    in_list: bool,
-    kept: &mut Vec<String>,
 ) {
-    let Some(TypeInfo::Struct(info)) = reg
-        .get(type_id)
-        .map(bevy::reflect::TypeRegistration::type_info)
-    else {
-        return;
-    };
-    for field in &mut fresh.0 {
-        let Some(field_type) = info
-            .field(&field.name)
-            .map(bevy::reflect::NamedField::type_id)
-        else {
-            continue;
-        };
-        let Some(was) = authored.0.iter().find(|other| other.name == field.name) else {
-            continue;
-        };
-        keep_in_value(reg, field_type, &was.value, &mut field.value, in_list, kept);
-    }
+    use jackdaw_bsn::BsnValue;
     for was in &authored.0 {
-        if fresh.0.iter().any(|field| field.name == was.name) {
-            continue;
-        }
-        let Some(field_type) = info
-            .field(&was.name)
-            .map(bevy::reflect::NamedField::type_id)
-        else {
+        let Some(field_type) = named_field_type(reg, type_id, type_path, &was.name) else {
             continue;
         };
-        // Only a list element leaves a struct out for being at its default, so
-        // only there can a reference be inside what the live value left out.
-        let references = match &was.value {
-            jackdaw_bsn::BsnValue::Struct(_) if !in_list => None,
-            value => only_references(reg, field_type, value),
-        };
-        let Some(references) = references else {
-            continue;
-        };
-        note_references(reg, field_type, &references, kept);
-        fresh.0.push(jackdaw_bsn::BsnField {
-            name: was.name.clone(),
-            value: references,
-        });
-    }
-}
-
-/// Add the references in `value`, the result of [`only_references`], to `kept`.
-fn note_references(
-    reg: &TypeRegistry,
-    type_id: std::any::TypeId,
-    value: &jackdaw_bsn::BsnValue,
-    kept: &mut Vec<String>,
-) {
-    use jackdaw_bsn::BsnValue;
-    match value {
-        BsnValue::String(reference) => {
-            if !reference.is_empty()
-                && crate::typed_values::takes_asset_path(reg, type_id)
-                && !kept.contains(reference)
+        match fresh.0.iter_mut().find(|field| field.name == was.name) {
+            None if matches!(was.value, BsnValue::String(_))
+                && crate::typed_values::takes_asset_path(reg, field_type) =>
             {
-                kept.push(reference.clone());
-            }
-        }
-        BsnValue::Struct(data) => {
-            for field in &data.fields.0 {
-                if let Some(field_type) =
-                    named_field_type(reg, type_id, &data.type_path, &field.name)
-                {
-                    note_references(reg, field_type, &field.value, kept);
-                }
-            }
-        }
-        BsnValue::TupleStruct(data) => {
-            for (index, item) in data.values.iter().enumerate() {
-                if let Some(item_type) = tuple_field_type(reg, type_id, &data.type_path, index)
-                    && only_references(reg, item_type, item).is_some()
-                {
-                    note_references(reg, item_type, item, kept);
-                }
-            }
-        }
-        BsnValue::List(items) => {
-            for (index, item) in items.iter().enumerate() {
-                if let Some(item_type) = list_item_type(reg, type_id, index)
-                    && only_references(reg, item_type, item).is_some()
-                {
-                    note_references(reg, item_type, item, kept);
-                }
-            }
-        }
-        _ => {}
-    }
-}
-
-fn keep_in_values(
-    reg: &TypeRegistry,
-    type_id: std::any::TypeId,
-    authored: &[jackdaw_bsn::BsnValue],
-    fresh: &mut [jackdaw_bsn::BsnValue],
-    in_list: bool,
-    kept: &mut Vec<String>,
-) {
-    let Some(TypeInfo::TupleStruct(info)) = reg
-        .get(type_id)
-        .map(bevy::reflect::TypeRegistration::type_info)
-    else {
-        return;
-    };
-    for (index, value) in fresh.iter_mut().enumerate() {
-        let Some(field_type) = info
-            .field_at(index)
-            .map(bevy::reflect::UnnamedField::type_id)
-        else {
-            continue;
-        };
-        let Some(was) = authored.get(index) else {
-            continue;
-        };
-        keep_in_value(reg, field_type, was, value, in_list, kept);
-    }
-}
-
-fn keep_in_value(
-    reg: &TypeRegistry,
-    type_id: std::any::TypeId,
-    authored: &jackdaw_bsn::BsnValue,
-    fresh: &mut jackdaw_bsn::BsnValue,
-    in_list: bool,
-    kept: &mut Vec<String>,
-) {
-    use jackdaw_bsn::BsnValue;
-    if crate::typed_values::takes_asset_path(reg, type_id) {
-        if let (BsnValue::String(was), BsnValue::String(now)) = (authored, &mut *fresh)
-            && now.is_empty()
-            && !was.is_empty()
-        {
-            now.clone_from(was);
-            if !kept.contains(was) {
-                kept.push(was.clone());
-            }
-        }
-        return;
-    }
-    match (authored, fresh) {
-        (BsnValue::Struct(authored), BsnValue::Struct(fresh)) => {
-            keep_in_fields(
-                reg,
-                type_id,
-                &authored.fields,
-                &mut fresh.fields,
-                in_list,
-                kept,
-            );
-        }
-        // A list element at its default comes back as its bare type.
-        (BsnValue::Struct(authored), fresh @ BsnValue::Type(_)) if matches!(&*fresh, BsnValue::Type(path) if *path == authored.type_path) =>
-        {
-            let mut fields = jackdaw_bsn::BsnStructFields::default();
-            keep_in_fields(reg, type_id, &authored.fields, &mut fields, in_list, kept);
-            if !fields.0.is_empty() {
-                *fresh = BsnValue::Struct(jackdaw_bsn::BsnStructData {
-                    type_path: authored.type_path.clone(),
-                    fields,
+                fresh.0.push(jackdaw_bsn::BsnField {
+                    name: was.name.clone(),
+                    value: BsnValue::String(String::new()),
                 });
             }
-        }
-        (BsnValue::TupleStruct(authored), BsnValue::TupleStruct(fresh)) => {
-            keep_in_values(
-                reg,
-                type_id,
-                &authored.values,
-                &mut fresh.values,
-                in_list,
-                kept,
-            );
-        }
-        (BsnValue::List(authored), BsnValue::List(fresh)) => {
-            if !lines_up_by_index(reg, type_id) {
-                return;
+            Some(jackdaw_bsn::BsnField {
+                value: BsnValue::Struct(now),
+                ..
+            }) => {
+                if let BsnValue::Struct(data) = &was.value
+                    && same_variant(reg, field_type, &data.type_path, &now.type_path)
+                {
+                    let path = now.type_path.clone();
+                    clears_in_fields(reg, field_type, &path, &data.fields, &mut now.fields);
+                }
             }
-            for (index, value) in fresh.iter_mut().enumerate() {
-                let (Some(item), Some(was)) =
-                    (list_item_type(reg, type_id, index), authored.get(index))
-                else {
-                    continue;
-                };
-                keep_in_value(reg, item, was, value, true, kept);
-            }
+            _ => {}
         }
-        _ => {}
     }
 }
 
-/// Give `document`, the patch of an entity holding streamed game values, the
-/// references `live` names where it has none. A stream never carries a handle,
-/// so a handle on such an entity is the editor's own, wherever the value holds it.
+/// Give `live`, a value read off an entity holding streamed values, the names
+/// `document` spells where it has none: a stream never carries a handle. An element
+/// of a list of another length takes the name of an element with the same content.
+/// The names left with no element to go on are returned.
+pub(crate) fn keep_document_names(
+    reg: &TypeRegistry,
+    type_id: std::any::TypeId,
+    document: &jackdaw_bsn::BsnValue,
+    live: &mut jackdaw_bsn::BsnValue,
+) -> Vec<String> {
+    let mut dropped = Vec::new();
+    take_in_value(reg, type_id, document, live, &mut dropped);
+    dropped
+}
+
+/// Give `document`, the patch of an entity holding streamed values, the
+/// references `live` names where it has none.
 fn take_live_references(
     reg: &TypeRegistry,
     type_id: std::any::TypeId,
@@ -1845,6 +1823,7 @@ fn take_live_references(
     document: &mut jackdaw_bsn::BsnPatch,
 ) {
     use jackdaw_bsn::BsnPatch;
+    let dropped = &mut Vec::new();
     match (live, &mut *document) {
         (BsnPatch::Struct(live), BsnPatch::Struct(document))
             if same_variant(reg, type_id, &live.type_path, &document.type_path) =>
@@ -1855,6 +1834,7 @@ fn take_live_references(
                 &live.type_path,
                 &live.fields,
                 &mut document.fields,
+                dropped,
             );
         }
         (BsnPatch::TupleStruct(live), BsnPatch::TupleStruct(document))
@@ -1866,6 +1846,7 @@ fn take_live_references(
                 &live.type_path,
                 &live.values,
                 &mut document.values,
+                dropped,
             );
         }
         (BsnPatch::Struct(live), BsnPatch::Type(type_path))
@@ -1873,7 +1854,14 @@ fn take_live_references(
         {
             let type_path = type_path.clone();
             let mut fields = jackdaw_bsn::BsnStructFields::default();
-            take_in_fields(reg, type_id, &live.type_path, &live.fields, &mut fields);
+            take_in_fields(
+                reg,
+                type_id,
+                &live.type_path,
+                &live.fields,
+                &mut fields,
+                dropped,
+            );
             if !fields.0.is_empty() {
                 *document = BsnPatch::Struct(jackdaw_bsn::BsnStructData { type_path, fields });
             }
@@ -1885,7 +1873,14 @@ fn take_live_references(
                 return;
             };
             let before = values.clone();
-            take_in_values(reg, type_id, &live.type_path, &live.values, &mut values);
+            take_in_values(
+                reg,
+                type_id,
+                &live.type_path,
+                &live.values,
+                &mut values,
+                dropped,
+            );
             if values != before {
                 *document = BsnPatch::TupleStruct(jackdaw_bsn::BsnTupleStructData {
                     type_path: type_path.clone(),
@@ -1989,6 +1984,7 @@ fn take_in_fields(
     type_path: &str,
     live: &jackdaw_bsn::BsnStructFields,
     document: &mut jackdaw_bsn::BsnStructFields,
+    dropped: &mut Vec<String>,
 ) {
     for field in &mut document.0 {
         let Some(field_type) = named_field_type(reg, type_id, type_path, &field.name) else {
@@ -1997,7 +1993,7 @@ fn take_in_fields(
         let Some(was) = live.0.iter().find(|other| other.name == field.name) else {
             continue;
         };
-        take_in_value(reg, field_type, &was.value, &mut field.value);
+        take_in_value(reg, field_type, &was.value, &mut field.value, dropped);
     }
     for was in &live.0 {
         if document.0.iter().any(|field| field.name == was.name) {
@@ -2016,11 +2012,9 @@ fn take_in_fields(
     }
 }
 
-/// `value`, a field the document leaves out, reduced to the references it holds:
-/// a struct names only the fields it sets, so its other fields keep reading back
-/// as their defaults. A tuple struct, array or tuple has no way to leave a place
-/// out, so its other places stay as `value` holds them. `None` when it holds no
-/// reference, or none that can be separated from the values around it.
+/// `value`, a field the document leaves out, reduced to the references in it. A
+/// struct names only the fields it sets. A tuple struct, array or tuple cannot
+/// leave a place out, so its other places stay. `None` when it holds no reference.
 fn only_references(
     reg: &TypeRegistry,
     type_id: std::any::TypeId,
@@ -2115,6 +2109,7 @@ fn take_in_values(
     type_path: &str,
     live: &[jackdaw_bsn::BsnValue],
     document: &mut [jackdaw_bsn::BsnValue],
+    dropped: &mut Vec<String>,
 ) {
     for (index, value) in document.iter_mut().enumerate() {
         let Some(field_type) = tuple_field_type(reg, type_id, type_path, index) else {
@@ -2123,7 +2118,7 @@ fn take_in_values(
         let Some(was) = live.get(index) else {
             continue;
         };
-        take_in_value(reg, field_type, was, value);
+        take_in_value(reg, field_type, was, value, dropped);
     }
 }
 
@@ -2132,6 +2127,7 @@ fn take_in_value(
     type_id: std::any::TypeId,
     live: &jackdaw_bsn::BsnValue,
     document: &mut jackdaw_bsn::BsnValue,
+    dropped: &mut Vec<String>,
 ) {
     use jackdaw_bsn::BsnValue;
     if crate::typed_values::takes_asset_path(reg, type_id) {
@@ -2159,6 +2155,7 @@ fn take_in_value(
                 &live.type_path,
                 &live.fields,
                 &mut document.fields,
+                dropped,
             );
         }
         (BsnValue::TupleStruct(live), BsnValue::TupleStruct(document))
@@ -2170,7 +2167,11 @@ fn take_in_value(
                 &live.type_path,
                 &live.values,
                 &mut document.values,
+                dropped,
             );
+        }
+        (BsnValue::List(live), BsnValue::List(document)) if live.len() != document.len() => {
+            take_by_content(reg, type_id, live, document, dropped);
         }
         (BsnValue::List(live), BsnValue::List(document)) => {
             for (index, value) in document.iter_mut().enumerate() {
@@ -2179,7 +2180,7 @@ fn take_in_value(
                 else {
                     continue;
                 };
-                take_in_value(reg, item, was, value);
+                take_in_value(reg, item, was, value, dropped);
             }
         }
         (BsnValue::Map(live), BsnValue::Map(document)) => {
@@ -2192,7 +2193,7 @@ fn take_in_value(
             let item = info.value_ty().id();
             for (key, value) in document {
                 if let Some((_, was)) = live.iter().find(|(other, _)| other == key) {
-                    take_in_value(reg, item, was, value);
+                    take_in_value(reg, item, was, value, dropped);
                 }
             }
         }
@@ -2200,14 +2201,107 @@ fn take_in_value(
     }
 }
 
-/// Whether the places of a value of `type_id` a document holds as a list keep
-/// their order, which a set's do not.
-fn lines_up_by_index(reg: &TypeRegistry, type_id: std::any::TypeId) -> bool {
-    matches!(
-        reg.get(type_id)
-            .map(bevy::reflect::TypeRegistration::type_info),
-        Some(TypeInfo::List(_) | TypeInfo::Array(_) | TypeInfo::Tuple(_))
-    )
+/// [`take_in_value`] for lists of different lengths, where a position means
+/// nothing: each element takes from an unclaimed one with the same content.
+fn take_by_content(
+    reg: &TypeRegistry,
+    type_id: std::any::TypeId,
+    live: &[jackdaw_bsn::BsnValue],
+    document: &mut [jackdaw_bsn::BsnValue],
+    dropped: &mut Vec<String>,
+) {
+    let Some(item) = list_item_type(reg, type_id, 0) else {
+        return;
+    };
+    let mut unclaimed: Vec<(jackdaw_bsn::BsnValue, Vec<String>, &jackdaw_bsn::BsnValue)> = live
+        .iter()
+        .map(|was| {
+            let mut names = Vec::new();
+            let content = without_references(reg, item, was, &mut names);
+            (content, names, was)
+        })
+        .collect();
+    if unclaimed.iter().all(|(_, names, _)| names.is_empty()) {
+        return;
+    }
+    for value in document.iter_mut() {
+        let content = without_references(reg, item, value, &mut Vec::new());
+        if let Some(at) = unclaimed.iter().position(|(other, ..)| *other == content) {
+            let (_, _, was) = unclaimed.remove(at);
+            take_in_value(reg, item, was, value, dropped);
+        }
+    }
+    dropped.extend(unclaimed.into_iter().flat_map(|(_, names, _)| names));
+}
+
+/// `value` with the references it holds taken out into `names`, for comparing
+/// what is left. A struct left with no fields reads as its bare type, as a list
+/// holds an element at its default.
+fn without_references(
+    reg: &TypeRegistry,
+    type_id: std::any::TypeId,
+    value: &jackdaw_bsn::BsnValue,
+    names: &mut Vec<String>,
+) -> jackdaw_bsn::BsnValue {
+    use jackdaw_bsn::BsnValue;
+    if crate::typed_values::takes_asset_path(reg, type_id) {
+        if let BsnValue::String(name) = value
+            && !name.is_empty()
+        {
+            names.push(name.clone());
+        }
+        return BsnValue::String(String::new());
+    }
+    match value {
+        BsnValue::Struct(data) => {
+            let mut fields = Vec::new();
+            for field in &data.fields.0 {
+                let field_type = named_field_type(reg, type_id, &data.type_path, &field.name);
+                let Some(field_type) = field_type else {
+                    fields.push(field.clone());
+                    continue;
+                };
+                let value = without_references(reg, field_type, &field.value, names);
+                if !crate::typed_values::takes_asset_path(reg, field_type) {
+                    fields.push(jackdaw_bsn::BsnField {
+                        name: field.name.clone(),
+                        value,
+                    });
+                }
+            }
+            if fields.is_empty() {
+                return BsnValue::Type(data.type_path.clone());
+            }
+            BsnValue::Struct(jackdaw_bsn::BsnStructData {
+                type_path: data.type_path.clone(),
+                fields: jackdaw_bsn::BsnStructFields(fields),
+            })
+        }
+        BsnValue::TupleStruct(data) => {
+            let values =
+                data.values.iter().enumerate().map(|(index, value)| {
+                    match tuple_field_type(reg, type_id, &data.type_path, index) {
+                        Some(field_type) => without_references(reg, field_type, value, names),
+                        None => value.clone(),
+                    }
+                });
+            BsnValue::TupleStruct(jackdaw_bsn::BsnTupleStructData {
+                type_path: data.type_path.clone(),
+                values: values.collect(),
+            })
+        }
+        BsnValue::List(items) => BsnValue::List(
+            items
+                .iter()
+                .enumerate()
+                .map(|(index, item)| match list_item_type(reg, type_id, index) {
+                    Some(item_type) => without_references(reg, item_type, item, names),
+                    None => item.clone(),
+                })
+                .collect(),
+        ),
+        other => other.clone(),
+    }
 }
 
 /// The type of item `index` of a value the document writes as a list: a list,
@@ -2463,7 +2557,7 @@ mod tests {
         );
     }
 
-    /// A sidecar whose write always fails.
+    /// A sidecar that always fails to encode.
     struct BlockedSidecar;
 
     impl BlockedSidecar {
@@ -2475,12 +2569,12 @@ mod tests {
             Box::new(())
         }
 
-        fn export_sidecars(
+        fn encode_sidecars(
             &self,
             _world: &mut World,
             _path: &str,
-            _state: &(dyn std::any::Any + Send),
-        ) -> Result<(), BevyError> {
+            _state: &mut (dyn std::any::Any + Send),
+        ) -> Result<Vec<super::super::hooks::SidecarWrite>, BevyError> {
             Err(BevyError::from(format!("cannot write {}", Self::NAME)))
         }
 
@@ -2564,13 +2658,10 @@ mod tests {
         assert!(!world.resource::<crate::scenes::Scenes>().tabs[0].dirty);
     }
 
-    /// C2: `write_atomic` must fully replace an existing file's content
-    /// (proving the write goes through a rename, not an in-place
-    /// truncate) and must not leave its temp file behind.
-    /// A field re-derived as something other than an empty reference says what the
-    /// entity holds, so a normal save leaves it. An overlaid entity's says nothing.
+    /// An overlaid entity's patch takes the reference its live field holds where
+    /// the document has none.
     #[test]
-    fn only_an_overlaid_entity_replaces_a_field_that_is_not_an_empty_reference() {
+    fn an_overlaid_entity_takes_a_live_reference_the_document_lacks() {
         use jackdaw_bsn::{BsnField, BsnPatch, BsnStructData, BsnStructFields, BsnValue};
 
         #[derive(Component, Reflect, Default)]
@@ -2581,7 +2672,6 @@ mod tests {
         let mut registry = TypeRegistry::default();
         registry.register::<Holder>();
         registry.register_type_data::<Handle<Image>, ReflectHandle>();
-        let type_id = std::any::TypeId::of::<Holder>();
         let patch = |value: BsnValue| {
             BsnPatch::Struct(BsnStructData {
                 type_path: "game::Holder".to_string(),
@@ -2592,19 +2682,14 @@ mod tests {
             })
         };
         let named = patch(BsnValue::String("#Stone".to_string()));
-        let bare = patch(BsnValue::Type("None".to_string()));
-
-        let mut fresh = bare.clone();
-        keep_unresolved_references(&registry, type_id, &named, &mut fresh, &mut Vec::new());
-        assert_eq!(format!("{fresh:?}"), format!("{bare:?}"), "a normal save");
-
-        let mut document = bare;
-        take_live_references(&registry, type_id, &named, &mut document);
-        assert_eq!(
-            format!("{document:?}"),
-            format!("{named:?}"),
-            "an overlaid entity"
+        let mut document = patch(BsnValue::Type("None".to_string()));
+        take_live_references(
+            &registry,
+            std::any::TypeId::of::<Holder>(),
+            &named,
+            &mut document,
         );
+        assert_eq!(format!("{document:?}"), format!("{named:?}"));
     }
 
     #[test]

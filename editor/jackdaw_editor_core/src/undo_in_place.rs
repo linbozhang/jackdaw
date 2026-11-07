@@ -218,12 +218,14 @@ fn carry_out_step(
     Some(entity)
 }
 
-/// The entity holding `node`: the one this edit just placed, or the live one.
+/// The entity holding the unit `node`: the one this edit just placed, or the
+/// live one. A prefab instance's inner nodes take their ids from its file, so
+/// they can repeat a unit's id and are never the unit, even as the only holder.
 fn live(world: &World, placed: &HashMap<SceneNodeId, Entity>, node: SceneNodeId) -> Option<Entity> {
-    placed
-        .get(&node)
-        .copied()
-        .or_else(|| world.get_resource::<SceneNodes>()?.entity(node))
+    if let Some(&entity) = placed.get(&node) {
+        return Some(entity);
+    }
+    world.get_resource::<SceneNodes>()?.unit(world, node)
 }
 
 /// Swap `entity`'s own patches in the document for `patches`, keeping its
@@ -254,6 +256,7 @@ fn replace_own_patches(world: &mut World, entity: Entity, patches: Vec<BsnPatch>
         }
     }
     crate::scene_io::resync_entity_from_ast(world, entity);
+    crate::brush::relift_halfedge(world, entity);
 }
 
 /// Graft `root` of `document` into the live document under `parent` and spawn

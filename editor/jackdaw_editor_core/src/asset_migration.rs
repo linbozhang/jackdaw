@@ -107,6 +107,7 @@ impl UnsavedEditChecks {
 }
 
 fn migrate(world: &mut World) {
+    crate::scene_io::save_worker::land_saves(world);
     let Some(assets) = assets_dir(world) else {
         report_to_caller(world, "migrate: no project is open");
         return;
@@ -778,6 +779,9 @@ mod tests {
             let active = scenes.active;
             scenes.tabs[active].dirty = true;
         }
+        app.world_mut()
+            .resource_mut::<jackdaw_commands::CommandHistory>()
+            .forget_saved();
 
         let reports = run(&mut app);
 

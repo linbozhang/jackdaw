@@ -20,8 +20,8 @@ pub(crate) mod serde_value;
 pub use compact::{TypeDefaults, compact_document};
 pub(crate) use compact::{compact_list_element, compact_value};
 pub use from_reflect::{
-    BsnAssetContext, UnencodableValue, component_to_bsn_patch, component_to_bsn_patch_in_pass,
-    component_to_bsn_patch_with_assets,
+    AssetNames, BsnAssetContext, UnencodableValue, component_to_bsn_patch,
+    component_to_bsn_patch_in_pass, component_to_bsn_patch_with_assets,
 };
 pub use mutate::{MAX_AST_DEPTH, clone_node_into, clone_subtree_into};
 pub use query::{bsn_value_as_int, is_enum_variant_of, patch_type_path, type_paths_include};
@@ -110,6 +110,23 @@ pub struct SceneBsnAst {
     pub ecs_to_ast: HashMap<Entity, Entity>,
     /// Maps AST patches entities to ECS scene entities (reverse of above).
     pub ast_to_ecs: HashMap<Entity, Entity>,
+    /// See [`SceneBsnAst::parent_walks`].
+    parent_walks: std::sync::atomic::AtomicU64,
+}
+
+/// How many entities a document must hold to be freed away from the caller.
+const LARGE_DOCUMENT_ENTITIES: u32 = 1024;
+
+/// Free `document`, on another thread when it is large: freeing one costs a large
+/// scene about as long as a frame budget ten times over.
+pub fn drop_document(document: SceneBsnAst) {
+    if document.world.entities().count_spawned() < LARGE_DOCUMENT_ENTITIES {
+        return;
+    }
+    // A thread that cannot start drops its closure, and the document with it, here.
+    let _ = std::thread::Builder::new()
+        .name("document-drop".to_string())
+        .spawn(move || drop(document));
 }
 
 /// Component on every ECS entity that was spawned from (or synced to) BSN.

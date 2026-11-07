@@ -616,6 +616,7 @@ pub fn transition_to_editor(world: &mut World, root: PathBuf) {
     crate::launcher::record_open(root.clone());
 
     world.insert_resource(ProjectRoot::new(root.clone(), config));
+    jackdaw_editor_core::scene_io::forget_unresolved_references(world);
     crate::launcher::apply_project_overrides(world, &root);
 
     // Despawn the launcher UI.

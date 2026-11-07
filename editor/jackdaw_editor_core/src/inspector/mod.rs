@@ -14,6 +14,8 @@ pub(crate) mod material_card_routing;
 mod material_display;
 pub(crate) mod material_row;
 pub(crate) mod missing_list;
+#[doc(hidden)]
+pub use material_row::material_path;
 mod modifier_display;
 pub mod node_card;
 pub(crate) mod ops;

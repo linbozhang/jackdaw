@@ -36,11 +36,12 @@ use crate::pie_current::{
     PiePlayCurrentOp, ProjectSetSaveBeforePlayOp, SaveBeforePlay, SceneOverrideLaunch,
 };
 use crate::pie_mirror::{PieInstances, PieViewMode};
-use crate::pie_outbox::{GameOutbox, NodeEdit};
+use crate::pie_outbox::{GameOutbox, NodeEdit, OutboxSlot};
 use crate::play_scene::LaunchScene;
 use crate::project_build::shim::ShimSpec;
 use crate::project_build::{BuildLoad, CargoTarget};
 use crate::run_config::RunConfigs;
+use crate::worker_task::{WorkerOutcome, WorkerTask};
 
 /// Savers feature crates register at plugin build: each saves its own
 /// authored state before a launch and returns the names of the states it
@@ -216,6 +217,43 @@ pub struct PieSession {
     /// entirely between two polls still satisfies the wait — observing
     /// the session while it is up is no longer the only proof it ran.
     launches: u64,
+    /// Scene answers being written on a worker.
+    serving: Vec<ServingScene>,
+}
+
+/// A scene answer on a worker, with its places in the instance's outbox.
+struct ServingScene {
+    key: InstanceKey,
+    slots: AnswerSlots,
+    waiting: crate::play_scene::WaitingAnswer,
+    task: WorkerTask<crate::play_scene::WrittenScene>,
+}
+
+/// The places an answer holds in an outbox, in send order.
+struct AnswerSlots {
+    files: OutboxSlot,
+    prefabs: OutboxSlot,
+    answer: OutboxSlot,
+}
+
+impl AnswerSlots {
+    fn fill(self, finished: crate::play_scene::FinishedScene) {
+        let encoded = |event: Option<ControlEvent>| {
+            let event = event?;
+            to_bytes(&event)
+                .inspect_err(|err| error!("PIE: failed to encode {event:?}: {err}"))
+                .ok()
+        };
+        if let Some(bytes) = encoded(finished.files) {
+            self.files.fill(bytes);
+        }
+        if let Some(bytes) = encoded(finished.prefabs) {
+            self.prefabs.fill(bytes);
+        }
+        if let Some(bytes) = finished.answer {
+            self.answer.fill(bytes);
+        }
+    }
 }
 
 impl Drop for PieSession {
@@ -235,6 +273,11 @@ impl Drop for PieSession {
 }
 
 impl PieSession {
+    /// How many scene answers are being written on a worker.
+    pub(crate) fn answers_being_written(&self) -> usize {
+        self.serving.len()
+    }
+
     /// Whether an instance is currently launched (connecting or live).
     pub fn is_running(&self, key: &InstanceKey) -> bool {
         self.children.contains_key(key)
@@ -512,6 +555,7 @@ fn record_scene_override(
 /// the dead key blocks the next session's auto-enter (focus is only
 /// established when none exists).
 fn cleanup_session_on_stop(world: &mut World) {
+    let _span = info_span!("play.cleanup").entered();
     {
         let mut session = world.non_send_mut::<PieSession>();
         remove_temp_copies(&mut session.temp_copies);
@@ -863,6 +907,43 @@ impl PieSession {
     }
 }
 
+/// Hold the open project's game build as in progress, for a test: a launch then
+/// joins the build's waiting list instead of running anything.
+#[doc(hidden)]
+pub fn insert_build_in_progress(world: &mut World) {
+    let Some(root) = project_root(world) else {
+        return;
+    };
+    let task = AsyncComputeTaskPool::get_or_init(bevy::tasks::TaskPool::new)
+        .spawn(std::future::pending::<io::Result<GameBuildResult>>());
+    world.non_send_mut::<PieSession>().builds.insert(
+        root,
+        BuildState::Running {
+            task,
+            pending: Vec::new(),
+            progress: Arc::default(),
+        },
+    );
+}
+
+/// The launches waiting on a game build, for a test.
+#[doc(hidden)]
+pub fn launches_waiting_on_build(
+    world: &World,
+) -> Vec<(RunConfig, Option<crate::play_scene::LaunchScene>)> {
+    world
+        .non_send::<PieSession>()
+        .builds
+        .values()
+        .filter_map(|build| match build {
+            BuildState::Running { pending, .. } => Some(pending),
+            _ => None,
+        })
+        .flatten()
+        .map(|spawn| (spawn.run.clone(), spawn.scene.clone()))
+        .collect()
+}
+
 /// Where a launched game's window lives. A launch records the mode it used, and
 /// running instances keep it; changing the setting only affects later launches.
 #[derive(Resource, Default, Debug, Clone, Copy, PartialEq, Eq)]
@@ -1053,24 +1134,73 @@ fn launch_instance_inner(
         return;
     }
 
-    // Read root before borrowing the session mutably below.
-    let Some(root) = project_root(world) else {
-        return;
+    let tab = {
+        let scenes = world.resource::<crate::scenes::Scenes>();
+        scenes.tabs.get(scenes.active).map(|tab| tab.id)
     };
+    // The startup-scene launch saves what it can first, on the worker, and
+    // continues once the saves land; a scene-override launch already applied
+    // the project's save policy in resolving the override, so saving here
+    // would double-apply it.
+    if scene_override.is_none() && saves_before_play(world) {
+        let _span = info_span!("play.save_before").entered();
+        crate::scene_io::save_worker::after_saves(
+            world,
+            crate::scene_io::save_worker::AfterSaves::Play { key, run, tab },
+        );
+        let modified = crate::scenes::operators::modified_tabs(world);
+        crate::scene_io::save_worker::save_tabs_front_last(world, &modified);
+        return;
+    }
+    start_instance(world, key, run, tab, scene_override);
+}
 
-    // The startup-scene launch saves what it can first, exactly as before;
-    // a scene-override launch already applied the project's save policy in
-    // resolving the override, so saving here would double-apply it.
-    if scene_override.is_none()
-        && let Err(reason) = save_before_play(world)
-    {
+/// Go on with Play, unless the saves it waited for say otherwise.
+pub(crate) fn launch_after_saves(
+    world: &mut World,
+    key: InstanceKey,
+    run: RunConfig,
+    tab: Option<u64>,
+    failures: &[crate::scenes::operators::TabSaveFailure],
+) {
+    if let Err(reason) = play_despite(world, failures) {
         warn!("PIE: not playing: {reason}");
         crate::status_bar::notify_error(world, reason);
         return;
     }
+    start_instance(world, key, run, tab, None);
+}
+
+/// Start the game for `key`, on the scene of the tab with id `tab` under the name it
+/// has by now, a save having possibly moved it to a new file. From a current binary
+/// or after a build.
+fn start_instance(
+    world: &mut World,
+    key: InstanceKey,
+    run: RunConfig,
+    tab: Option<u64>,
+    scene_override: Option<SceneOverrideLaunch>,
+) {
+    {
+        let session = world.non_send::<PieSession>();
+        if session.is_running(&key) || session.is_pending(&key) {
+            return;
+        }
+    }
+    // Read root before borrowing the session mutably below.
+    let Some(root) = project_root(world) else {
+        return;
+    };
     crate::play_overlay::notice_unsaved_model_settings(world);
-    let scene = crate::play_scene::launch_scene(world, &run);
-    let run = run_with_open_scene(world, run);
+    let tab = tab.and_then(|id| {
+        let scenes = world.resource::<crate::scenes::Scenes>();
+        scenes.tabs.iter().position(|tab| tab.id == id)
+    });
+    let scene = tab.and_then(|tab| crate::play_scene::launch_scene_of_tab(world, &run, tab));
+    let run = match tab {
+        Some(tab) => run_with_scene_of_tab(world, run, tab),
+        None => run,
+    };
 
     let build = build_key(&root, &run);
 
@@ -1097,6 +1227,18 @@ fn launch_instance_inner(
         world.non_send_mut::<PieSession>().builds.remove(&build);
     }
 
+    // Join an in-flight build's pending list, or start a new build.
+    if let Some(BuildState::Running { pending, .. }) =
+        world.non_send_mut::<PieSession>().builds.get_mut(&build)
+    {
+        pending.push(PendingSpawn {
+            key,
+            run,
+            scene_override,
+            scene,
+        });
+        return;
+    }
     let spec = match crate::project_build::shim_spec_for_project(&root) {
         Ok(spec) => spec,
         Err(error) => {
@@ -1120,37 +1262,23 @@ fn launch_instance_inner(
         return;
     }
 
-    // Join an in-flight build's pending list, or start a new build.
+    info!("PIE: building the game for {key}");
+    let (task, progress) =
+        spawn_game_build(&root, spec, build.1.clone(), BuildLoad::Foreground);
     let mut session = world.non_send_mut::<PieSession>();
-    match session.builds.get_mut(&build) {
-        Some(BuildState::Running { pending, .. }) => {
-            pending.push(PendingSpawn {
+    session.builds.insert(
+        build,
+        BuildState::Running {
+            task,
+            pending: vec![PendingSpawn {
                 key,
                 run,
                 scene_override,
-                scene: scene.clone(),
-            });
-        }
-        Some(BuildState::Done(_)) => unreachable!("handled above"),
-        Some(BuildState::Failed { .. }) | None => {
-            info!("PIE: building the game for {key}");
-            let (task, progress) =
-                spawn_game_build(&root, spec, build.1.clone(), BuildLoad::Foreground);
-            session.builds.insert(
-                build,
-                BuildState::Running {
-                    task,
-                    pending: vec![PendingSpawn {
-                        key,
-                        run,
-                        scene_override,
-                        scene,
-                    }],
-                    progress,
-                },
-            );
-        }
-    }
+                scene,
+            }],
+            progress,
+        },
+    );
 }
 
 /// Apply a game pick answer: resolve the bits through the projection and
@@ -1220,8 +1348,15 @@ pub(crate) const MAIN_SCENE: &str = "scene.bsn";
 /// `JACKDAW_PIE_REPLACES`, both paths inside the asset folder. Nothing is
 /// named when the main scene is in front, when the scene in front has no file
 /// in the asset folder, or when the run configuration already names a scene.
-pub fn run_with_open_scene(world: &World, mut run: RunConfig) -> RunConfig {
-    let Some(scene) = open_scene_asset_path(world) else {
+pub fn run_with_open_scene(world: &World, run: RunConfig) -> RunConfig {
+    match world.get_resource::<crate::scenes::Scenes>() {
+        Some(scenes) => run_with_scene_of_tab(world, run, scenes.active),
+        None => run,
+    }
+}
+
+fn run_with_scene_of_tab(world: &World, mut run: RunConfig, tab: usize) -> RunConfig {
+    let Some(scene) = scene_asset_path_of_tab(world, tab) else {
         return run;
     };
     if scene == MAIN_SCENE || run.env.contains_key("JACKDAW_PIE_SCENE") {
@@ -1234,9 +1369,11 @@ pub fn run_with_open_scene(world: &World, mut run: RunConfig) -> RunConfig {
     run
 }
 
-pub(crate) fn open_scene_asset_path(world: &World) -> Option<String> {
+/// The asset path of the scene in tab `tab`, if it is a scene with a file in the
+/// project.
+pub(crate) fn scene_asset_path_of_tab(world: &World, tab: usize) -> Option<String> {
     let scenes = world.get_resource::<crate::scenes::Scenes>()?;
-    let tab = scenes.tabs.get(scenes.active)?;
+    let tab = scenes.tabs.get(tab)?;
     if tab.kind != crate::scenes::TabKind::Scene {
         return None;
     }
@@ -1245,35 +1382,32 @@ pub(crate) fn open_scene_asset_path(world: &World) -> Option<String> {
         .to_asset_path(tab.path.as_deref()?)
 }
 
-/// Save the modified scenes a startup-scene launch may load, unless the
-/// project's save-before-play mode says otherwise. The mode is really the
-/// current-scene play's policy; for the startup-scene path it keeps its
-/// old shape: `save` (and `ask`, which has no dialog on this path and
-/// errs on the safe side) saves, `play_unsaved_copy` skips saving the way
-/// the pre-enum `false` did. A scene with no file is served to the game
-/// unsaved; so is one a save refuses for naming an asset by an absolute
-/// path, which warns. A current-scene launch never comes through here —
-/// it applies the policy itself before launching.
-fn save_before_play(world: &mut World) -> Result<(), String> {
-    let saves = world
+/// Whether Play saves the modified scenes the game may load first. The
+/// mode is the three-state enum: `save` and `ask` save (ask has no dialog
+/// on this path and errs on the safe side), `play_unsaved_copy` does not.
+fn saves_before_play(world: &World) -> bool {
+    world
         .get_resource::<crate::project_build::EditorBuildSettings>()
-        .is_none_or(|settings| settings.save_before_play != SaveBeforePlay::PlayUnsavedCopy);
-    if !saves {
-        return Ok(());
-    }
-    let (absolute, failures): (Vec<_>, Vec<_>) =
-        crate::scenes::operators::save_modified_scenes(world)
-            .into_iter()
-            .partition(|failure| {
-                failure.kind == crate::scenes::TabKind::Scene
-                    && failure
-                        .message
-                        .contains(crate::scene_io::asset_fields::ABSOLUTE_PATH_REFUSAL)
-            });
-    let messages = |failures: Vec<crate::scenes::operators::TabSaveFailure>| {
+        .is_none_or(|settings| settings.save_before_play != SaveBeforePlay::PlayUnsavedCopy)
+}
+
+/// What the saves ahead of Play mean for it. A scene with no file is served to the
+/// game unsaved. So is one a save refuses for naming an asset by an absolute path,
+/// which warns. A prefab that does not save stops Play.
+fn play_despite(
+    world: &mut World,
+    failures: &[crate::scenes::operators::TabSaveFailure],
+) -> Result<(), String> {
+    let (absolute, failures): (Vec<_>, Vec<_>) = failures.iter().partition(|failure| {
+        failure.kind == crate::scenes::TabKind::Scene
+            && failure
+                .message
+                .contains(crate::scene_io::asset_fields::ABSOLUTE_PATH_REFUSAL)
+    });
+    let messages = |failures: Vec<&crate::scenes::operators::TabSaveFailure>| {
         failures
             .into_iter()
-            .map(|failure| failure.message)
+            .map(|failure| failure.message.clone())
             .collect::<Vec<_>>()
             .join("; ")
     };
@@ -1511,6 +1645,13 @@ pub(crate) fn spawn_game_build(
 /// deadline and it is reaped now. The editor returns to authoring mode
 /// once no children remain.
 pub(crate) fn stop_instance(world: &mut World, key: &InstanceKey) {
+    world
+        .non_send_mut::<PieSession>()
+        .serving
+        .retain(|serving| serving.key != *key);
+    if let Some(mut names) = world.get_resource_mut::<crate::play_scene::PlayAssetNames>() {
+        names.retain_games(|held| held != key);
+    }
     let mut reap_connecting = false;
     {
         let mut session = world.non_send_mut::<PieSession>();
@@ -1560,6 +1701,7 @@ pub(crate) fn stop_instance(world: &mut World, key: &InstanceKey) {
 /// (building it if needed). From Paused, resumes every live child. No-op
 /// if already Playing or if the project has no run configurations.
 pub fn handle_play(world: &mut World) {
+    let _span = info_span!("play.start").entered();
     let current = world.resource::<State<PlayState>>().get().clone();
     match current {
         PlayState::Stopped => {
@@ -1609,6 +1751,7 @@ pub fn handle_pause(world: &mut World) {
 /// the stop prompt) follows the last reap, so it lands within the
 /// deadline bound after this call.
 pub fn handle_stop(world: &mut World) {
+    let _span = info_span!("play.stop").entered();
     let current = world.resource::<State<PlayState>>().get().clone();
 
     broadcast_control(world, ControlEvent::Stop);
@@ -1616,6 +1759,7 @@ pub fn handle_stop(world: &mut World) {
     let mut session = world.non_send_mut::<PieSession>();
     session.launch_modes.clear();
     session.launch_scenes.clear();
+    session.serving.clear();
     let mut kept: HashMap<InstanceKey, ChildStage> = HashMap::new();
     for (key, mut stage) in session.children.drain() {
         match &mut stage {
@@ -1665,6 +1809,7 @@ fn force_stop_all(world: &mut World) {
     let mut session = world.non_send_mut::<PieSession>();
     session.launch_modes.clear();
     session.launch_scenes.clear();
+    session.serving.clear();
     for (_key, mut stage) in session.children.drain() {
         stage.kill_and_reap();
     }
@@ -1679,27 +1824,104 @@ fn force_stop_all(world: &mut World) {
     }
 }
 
-/// Answer a scene root's request for its document. The reply goes through the
-/// instance's outbox, ahead of any edit sent after this.
+/// Answer a scene root's request for its document. Its place in the instance's
+/// outbox is held from here, ahead of any edit sent after this, and the text is
+/// written and read back on a worker, so the editor keeps running meanwhile.
 fn answer_scene_request(world: &mut World, key: &InstanceKey, request: u64, path: &str) {
+    let _span = info_span!("play.serve_scene").entered();
     let launch = world
         .non_send::<PieSession>()
         .launch_scenes
         .get(key)
         .cloned();
-    let served = crate::play_scene::serve_scene(world, key, launch.as_ref(), path);
-    crate::viewport_redraw::note_game_request(world);
-    for ahead in [served.files, served.prefabs].into_iter().flatten() {
-        send_control_to_instance(world, key, ahead);
-    }
-    send_control_to_instance(
-        world,
-        key,
-        ControlEvent::SceneDocument {
-            request,
-            answer: served.answer,
+    let prepared = crate::play_scene::prepare_scene(world, key, launch.as_ref(), path, request);
+    let slots = match world.non_send::<PieSession>().children.get(key) {
+        Some(ChildStage::Live { outbox, .. }) => AnswerSlots {
+            files: outbox.reserve(),
+            prefabs: outbox.reserve(),
+            answer: outbox.reserve(),
         },
-    );
+        _ => return,
+    };
+    let crate::play_scene::PreparedScene { job, waiting } = prepared;
+    world
+        .non_send_mut::<PieSession>()
+        .serving
+        .push(ServingScene {
+            key: key.clone(),
+            slots,
+            waiting,
+            task: write_on_worker(job),
+        });
+}
+
+/// `job` on a worker, unless it holds nothing worth one or there is no pool.
+fn write_on_worker(
+    job: crate::play_scene::WriteJob,
+) -> WorkerTask<crate::play_scene::WrittenScene> {
+    match AsyncComputeTaskPool::try_get().filter(|_| !job.is_immediate()) {
+        Some(pool) => WorkerTask::spawn(pool, move || job.write()),
+        None => WorkerTask::done(job.write()),
+    }
+}
+
+/// Finish the scene answers whose workers are done. An instance's answers finish in
+/// the order they were asked for, as the game reads them, whichever is written first.
+fn deliver_served_scenes(world: &mut World) {
+    use crate::play_scene::{Finishing, PreparedScene, WrittenScene, finish_scene};
+
+    let mut serving = std::mem::take(&mut world.non_send_mut::<PieSession>().serving);
+    let mut waiting_on: Vec<InstanceKey> = Vec::new();
+    let mut index = 0;
+    while index < serving.len() {
+        if waiting_on.contains(&serving[index].key) {
+            index += 1;
+            continue;
+        }
+        let written = match serving[index].task.outcome() {
+            WorkerOutcome::Running => {
+                waiting_on.push(serving[index].key.clone());
+                index += 1;
+                continue;
+            }
+            WorkerOutcome::Done(written) => written,
+            WorkerOutcome::Panicked => {
+                error!("PIE: the worker writing a scene for a game panicked");
+                WrittenScene::lost(&serving[index].waiting)
+            }
+        };
+        let ServingScene {
+            key,
+            slots,
+            waiting,
+            ..
+        } = serving.remove(index);
+        let mut later: Vec<&mut crate::play_scene::WaitingAnswer> = serving[index..]
+            .iter_mut()
+            .filter(|answer| answer.key == key)
+            .map(|answer| &mut answer.waiting)
+            .collect();
+        match finish_scene(world, Some(&key), waiting, written, &mut later) {
+            Finishing::Done(finished) => {
+                slots.fill(finished);
+                crate::viewport_redraw::note_game_request(world);
+            }
+            Finishing::Again(PreparedScene { job, waiting }) => {
+                waiting_on.push(key.clone());
+                serving.insert(
+                    index,
+                    ServingScene {
+                        key,
+                        slots,
+                        waiting,
+                        task: write_on_worker(job),
+                    },
+                );
+                index += 1;
+            }
+        }
+    }
+    world.non_send_mut::<PieSession>().serving = serving;
 }
 
 /// Queue a control message for one instance, if it is live.
@@ -1815,9 +2037,13 @@ pub(crate) fn can_save_live_to_scene(world: &World) -> bool {
 /// `AppTypeRegistry`, and paths matched by [`should_skip_component`](crate::scene_io::should_skip_component) are
 /// silently omitted. The result is sorted by type path for deterministic undo
 /// batching.
+///
+/// A handle the game's stream left without a name keeps the one the document
+/// spells; a name with nowhere left to go is added to `dropped`.
 fn preview_entity_components_as_bsn(
     world: &World,
     entity: Entity,
+    dropped: &mut Vec<String>,
 ) -> Vec<(String, jackdaw_bsn::BsnValue)> {
     use bevy::ecs::reflect::AppTypeRegistry;
 
@@ -1829,6 +2055,9 @@ fn preview_entity_components_as_bsn(
     };
 
     let skip_ids = crate::scene_io::doc_skip_type_ids();
+    let references = crate::scene_io::asset_names::AssetReferences::new(world);
+    let ast = world.resource::<jackdaw_bsn::SceneBsnAst>();
+    let node = ast.ast_for(entity);
 
     let mut out: Vec<(String, jackdaw_bsn::BsnValue)> = registry
         .iter()
@@ -1840,8 +2069,20 @@ fn preview_entity_components_as_bsn(
             }
             let reflect_component = reg.data::<ReflectComponent>()?;
             let component = reflect_component.reflect(entity_ref)?;
-            let value =
-                jackdaw_bsn::BsnValue::from_reflect(component.as_partial_reflect(), &registry);
+            let mut value = references
+                .document_value(component.as_partial_reflect(), &registry)
+                .inspect_err(|err| warn!("save to scene: leaving {type_path} out: {err}"))
+                .ok()?;
+            if let Some(authored) =
+                node.and_then(|node| jackdaw_bsn::get_bsn_field(ast, node, type_path, ""))
+            {
+                dropped.extend(crate::scene_io::save::keep_document_names(
+                    &registry,
+                    reg.type_id(),
+                    &authored,
+                    &mut value,
+                ));
+            }
             Some((type_path.to_string(), value))
         })
         .collect();
@@ -1869,7 +2110,7 @@ fn preview_entity_components_as_bsn(
 ///
 /// No-op with a `warn!` when nothing is selected, the preview entity is gone,
 /// or the entity carries neither a node binding nor `PieEphemeral`.
-pub(crate) fn save_live_entity_to_scene(world: &mut World) {
+pub fn save_live_entity_to_scene(world: &mut World) {
     use crate::pie_projection::PieEphemeral;
 
     if *world.resource::<PieViewMode>() != PieViewMode::Live {
@@ -1919,7 +2160,17 @@ fn promote_authored_overlay(world: &mut World, preview: Entity, bits: u64) {
         ast.stable_id_of(node).unwrap_or(0)
     };
 
-    let entries = preview_entity_components_as_bsn(world, preview);
+    let mut dropped = Vec::new();
+    let entries = preview_entity_components_as_bsn(world, preview, &mut dropped);
+    let mut held: Vec<(String, Box<dyn Reflect>)> = entries
+        .iter()
+        .filter_map(|(type_path, _)| {
+            Some((
+                type_path.clone(),
+                component_copy(world, preview, type_path)?,
+            ))
+        })
+        .collect();
 
     let mut sub_commands: Vec<Box<dyn EditorCommand>> = Vec::new();
     for (type_path, new_value) in entries {
@@ -1957,9 +2208,83 @@ fn promote_authored_overlay(world: &mut World, preview: Entity, bits: u64) {
     // the write, then count the write itself as already sent.
     crate::play_sync::sync_document_to_game(world);
     cmd.execute(world);
+    held.retain(|(type_path, held)| {
+        crate::pie_projection::restore_cleared_handles(world, preview, type_path, held.as_ref())
+    });
+    if !held.is_empty() {
+        cmd = Box::new(KeepingUnnamedHandles {
+            inner: cmd,
+            entity: preview,
+            held,
+        });
+    }
     world.resource_mut::<CommandHistory>().push_executed(cmd);
     crate::play_sync::absorb_document_changes(world);
     info!("save to scene: promoted runtime values into node {node_id}");
+    if !dropped.is_empty() {
+        let message = format!(
+            "save to scene dropped {}: no element matches it now",
+            dropped.join(", ")
+        );
+        warn!("{message}");
+        crate::status_bar::notify_warn(world, message);
+    }
+}
+
+fn component_copy(world: &World, entity: Entity, type_path: &str) -> Option<Box<dyn Reflect>> {
+    let registry = world.resource::<AppTypeRegistry>().read();
+    registry
+        .get_with_type_path(type_path)?
+        .data::<ReflectComponent>()?
+        .reflect(world.get_entity(entity).ok()?)?
+        .reflect_clone()
+        .ok()
+}
+
+/// A write of the live values into the document that leaves the handles it has no
+/// name for, such as an unsaved material, on the live entity. Applying the document
+/// clears them, so each step of the write puts them back.
+struct KeepingUnnamedHandles {
+    inner: Box<dyn crate::commands::EditorCommand>,
+    entity: Entity,
+    held: Vec<(String, Box<dyn Reflect>)>,
+}
+
+impl KeepingUnnamedHandles {
+    fn restore(&self, world: &mut World) {
+        let entity = crate::scene_nodes::live_entity(world, self.entity);
+        for (type_path, held) in &self.held {
+            crate::pie_projection::restore_cleared_handles(world, entity, type_path, held.as_ref());
+        }
+    }
+}
+
+impl crate::commands::EditorCommand for KeepingUnnamedHandles {
+    fn execute(&mut self, world: &mut World) {
+        self.inner.execute(world);
+        self.restore(world);
+    }
+
+    fn undo(&mut self, world: &mut World) {
+        self.inner.undo(world);
+        self.restore(world);
+    }
+
+    fn description(&self) -> &str {
+        self.inner.description()
+    }
+
+    fn sync_after_external_execute(&self, world: &mut World) {
+        self.inner.sync_after_external_execute(world);
+    }
+
+    fn heap_bytes(&self) -> usize {
+        self.inner.heap_bytes()
+    }
+
+    fn gone(&self, world: &World) -> Option<String> {
+        self.inner.gone(world)
+    }
 }
 
 /// Path B: preview entity has no AST node (game-spawned runtime entity).
@@ -2347,6 +2672,9 @@ fn poll_children(world: &mut World) {
     session
         .launch_scenes
         .retain(|key, _| survivors.contains_key(key));
+    session
+        .serving
+        .retain(|serving| survivors.contains_key(&serving.key));
     if let Some(mut names) = world.get_resource_mut::<crate::play_scene::PlayAssetNames>() {
         names.retain_games(|key| survivors.contains_key(key));
     }
@@ -2748,6 +3076,8 @@ fn report_stderr_tail(stderr_tail: &StderrTail) {
 /// toggle re-projects fresh data. Additionally, events from the focused instance
 /// are projected into the preview ECS via `project_event`, but only in Live mode.
 pub(crate) fn drain_game_events(world: &mut World) {
+    deliver_served_scenes(world);
+
     // Collect all pending (key, events) pairs without holding the session borrow.
     let mut per_instance: Vec<(InstanceKey, Vec<StateEvent>)> = Vec::new();
     let mut pixel_frames: Vec<(InstanceKey, Vec<u8>)> = Vec::new();
@@ -3669,6 +3999,7 @@ mod build_failure_tests {
 
 #[cfg(test)]
 mod control_outbox_tests {
+    use std::sync::atomic::{AtomicBool, Ordering};
     use std::sync::mpsc;
     use std::thread;
 
@@ -3850,6 +4181,8 @@ mod control_outbox_tests {
         let dir = tempfile::tempdir().expect("a temp dir");
         let assets = dir.path().to_path_buf();
         let (editor, mut game) = link();
+        let answered = Arc::new(AtomicBool::new(false));
+        let answered_in_game = answered.clone();
         let game_side = thread::spawn(move || {
             let state = StateEvent::ComponentChanged {
                 entity: 1,
@@ -3867,6 +4200,7 @@ mod control_outbox_tests {
                 for (_, bytes) in game.drain_received() {
                     if let Ok(ControlEvent::SceneDocument { request, answer }) = from_bytes(&bytes)
                     {
+                        answered.store(true, Ordering::Release);
                         return (request, answer);
                     }
                 }
@@ -3901,16 +4235,7 @@ mod control_outbox_tests {
             world.insert_resource(ast);
 
             let deadline = Instant::now() + GUARD;
-            while Instant::now() < deadline
-                && !world
-                    .resource::<PieInstances>()
-                    .buffers
-                    .contains_key(&key())
-            {
-                drain_game_events(&mut world);
-                thread::sleep(Duration::from_millis(1));
-            }
-            for _ in 0..100 {
+            while Instant::now() < deadline && !answered_in_game.load(Ordering::Acquire) {
                 drain_game_events(&mut world);
                 thread::sleep(Duration::from_millis(1));
             }
@@ -3925,6 +4250,312 @@ mod control_outbox_tests {
             panic!("the open scene answers with its document");
         };
         assert!(text.len() >= LARGE, "only {} bytes", text.len());
+    }
+
+    fn door(x: f32) -> String {
+        format!(
+            "#Door\n\
+             jackdaw::prefab::components::Prefab\n\
+             jackdaw::prefab::components::PrefabEntityId(0)\n\
+             bevy_transform::components::transform::Transform {{\n    \
+             translation: glam::Vec3 {{ x: {x:?}, y: 0.0, z: 0.0 }},\n\
+             }}\n"
+        )
+    }
+
+    /// An editor playing `zone.bsn`, which places the prefab `door.bsn`, with the
+    /// game's end of the link.
+    fn playing_a_scene_with_a_prefab() -> (World, IpcChannelTransport, tempfile::TempDir) {
+        let dir = tempfile::tempdir().expect("a temp dir");
+        std::fs::create_dir_all(dir.path().join("assets")).expect("assets");
+        std::fs::write(dir.path().join("assets/door.bsn"), door(1.0)).expect("a prefab");
+        let scene = "#Placed\n\
+                     jackdaw::prefab::components::IsA { source: \"door.bsn\", deleted: [] }\n\
+                     jackdaw::prefab::components::PrefabEntityId(0)\n";
+        std::fs::write(dir.path().join("assets/zone.bsn"), scene).expect("a scene");
+        AsyncComputeTaskPool::get_or_init(bevy::tasks::TaskPool::new);
+
+        let (editor, game) = link();
+        let mut world = world_with_game(editor);
+        world.insert_resource(AppTypeRegistry::default());
+        world.insert_resource(crate::project::ProjectRoot::new(
+            dir.path().to_path_buf(),
+            crate::project::ProjectConfig::default(),
+        ));
+        let mut tab = crate::scenes::SceneTab::new_untitled(1);
+        tab.path = Some(dir.path().join("assets/zone.bsn"));
+        world.insert_resource(crate::scenes::Scenes {
+            tabs: vec![tab],
+            active: 0,
+        });
+        world.init_resource::<crate::prefab::PrefabAstCache>();
+        world.init_resource::<crate::play_scene::PlayAssetNames>();
+        world.init_resource::<crate::status_bar::StatusNotice>();
+        world.insert_resource(jackdaw_bsn::parse_bsn_text(scene).expect("the scene parses"));
+        (world, game, dir)
+    }
+
+    fn set_unsaved_door(world: &mut World, dir: &std::path::Path, x: f32) {
+        let assets = dir.join("assets");
+        let full = assets.join("door.bsn");
+        let mut ast = jackdaw_bsn::parse_bsn_text(&door(x)).expect("the prefab parses");
+        jackdaw_prefab::prepare_prefab_document(&mut ast, &full, &assets);
+        world
+            .resource_mut::<crate::prefab::PrefabAstCache>()
+            .insert(&full, ast);
+    }
+
+    /// An answer whose worker writes only when released, and says when it has.
+    struct HeldAnswer {
+        release: mpsc::Sender<()>,
+        written: mpsc::Receiver<()>,
+    }
+
+    impl HeldAnswer {
+        fn write(self) {
+            self.release.send(()).expect("the worker waits");
+            self.written.recv_timeout(GUARD).expect("the worker writes");
+            thread::sleep(Duration::from_millis(50));
+        }
+    }
+
+    fn answer_when_released(world: &mut World, request: u64) -> HeldAnswer {
+        let prepared = crate::play_scene::prepare_scene(world, &key(), None, "zone.bsn", request);
+        let slots = reserve_answer_slots(world);
+        let (release, gate) = mpsc::channel();
+        let (done, written) = mpsc::channel();
+        let job = prepared.job;
+        let task = WorkerTask::spawn(AsyncComputeTaskPool::get(), move || {
+            gate.recv().ok();
+            let written = job.write();
+            done.send(()).ok();
+            written
+        });
+        world
+            .non_send_mut::<PieSession>()
+            .serving
+            .push(ServingScene {
+                key: key(),
+                slots,
+                waiting: prepared.waiting,
+                task,
+            });
+        HeldAnswer { release, written }
+    }
+
+    fn reserve_answer_slots(world: &mut World) -> AnswerSlots {
+        let session = world.non_send::<PieSession>();
+        let Some(ChildStage::Live { outbox, .. }) = session.children.get(&key()) else {
+            panic!("the instance is live");
+        };
+        AnswerSlots {
+            files: outbox.reserve(),
+            prefabs: outbox.reserve(),
+            answer: outbox.reserve(),
+        }
+    }
+
+    fn deliver_all(world: &mut World) {
+        let deadline = Instant::now() + GUARD;
+        while world.non_send::<PieSession>().answers_being_written() > 0 {
+            assert!(Instant::now() < deadline, "an answer never finished");
+            deliver_served_scenes(world);
+            thread::sleep(Duration::from_millis(1));
+        }
+    }
+
+    /// What the game read up to and including answer `last`.
+    fn read_until_answer(game: &mut IpcChannelTransport, last: u64) -> Vec<ControlEvent> {
+        let deadline = Instant::now() + GUARD;
+        let mut events = Vec::new();
+        while Instant::now() < deadline {
+            for (_, bytes) in game.drain_received() {
+                let event: ControlEvent = from_bytes(&bytes).expect("a control event");
+                let done = matches!(&event, ControlEvent::SceneDocument { request, .. } if *request == last);
+                events.push(event);
+                if done {
+                    return events;
+                }
+            }
+            thread::sleep(Duration::from_millis(1));
+        }
+        panic!("answer {last} did not arrive; read {events:?}");
+    }
+
+    /// The door text sent with `event`, if it carries the prefab's text or sends the
+    /// game back to the file.
+    fn door_files(events: &[ControlEvent]) -> Vec<Option<String>> {
+        events
+            .iter()
+            .filter_map(|event| match event {
+                ControlEvent::PrefabFiles { files } => Some(files),
+                _ => None,
+            })
+            .flatten()
+            .map(|(_, text)| text.clone())
+            .collect()
+    }
+
+    /// A small answer that overtakes a large one does not overtake it in the game:
+    /// the prefab's text goes ahead of the first answer that reaches it.
+    #[test]
+    fn a_prefab_two_answers_reach_goes_with_the_first_whichever_is_written_first() {
+        let (mut world, mut game, dir) = playing_a_scene_with_a_prefab();
+        set_unsaved_door(&mut world, dir.path(), 9.0);
+        let first = answer_when_released(&mut world, 1);
+        let second = answer_when_released(&mut world, 2);
+
+        second.write();
+        deliver_served_scenes(&mut world);
+        first.write();
+        deliver_all(&mut world);
+
+        let events = read_until_answer(&mut game, 2);
+        let order: Vec<&str> = events
+            .iter()
+            .map(|event| match event {
+                ControlEvent::PrefabFiles { .. } => "prefab",
+                ControlEvent::SceneDocument { request: 1, .. } => "first",
+                ControlEvent::SceneDocument { request: 2, .. } => "second",
+                _ => "other",
+            })
+            .collect();
+        assert_eq!(order, ["prefab", "first", "second"]);
+    }
+
+    /// Answers written out of order leave the editor recording the text the game
+    /// ends on, so a later answer has nothing to repeat.
+    #[test]
+    fn the_prefab_text_a_game_ends_on_is_the_one_recorded() {
+        let (mut world, mut game, dir) = playing_a_scene_with_a_prefab();
+        set_unsaved_door(&mut world, dir.path(), 7.0);
+        let first = answer_when_released(&mut world, 1);
+        set_unsaved_door(&mut world, dir.path(), 8.0);
+        let second = answer_when_released(&mut world, 2);
+
+        second.write();
+        deliver_served_scenes(&mut world);
+        first.write();
+        deliver_all(&mut world);
+
+        let texts = door_files(&read_until_answer(&mut game, 2));
+        let last = texts.last().expect("the text").as_deref().expect("text");
+        assert!(last.contains("8.0"), "{last}");
+        let again = crate::play_scene::serve_scene(&mut world, &key(), None, "zone.bsn");
+        assert!(again.prefabs.is_none(), "{:?}", again.prefabs);
+    }
+
+    /// A prefab saved between two answers goes back to its file with the later one,
+    /// though the earlier one, not yet finished then, gave the game its text.
+    #[test]
+    fn a_prefab_saved_between_two_answers_goes_back_to_its_file() {
+        let (mut world, mut game, dir) = playing_a_scene_with_a_prefab();
+        set_unsaved_door(&mut world, dir.path(), 9.0);
+        let first = answer_when_released(&mut world, 1);
+        crate::prefab::operators::save_prefab_to_disk(
+            &mut world,
+            &dir.path().join("assets/door.bsn"),
+        )
+        .expect("the prefab saves");
+        let second = answer_when_released(&mut world, 2);
+
+        first.write();
+        second.write();
+        deliver_all(&mut world);
+
+        let texts = door_files(&read_until_answer(&mut game, 2));
+        assert_eq!(texts.len(), 2, "{texts:?}");
+        assert!(texts[0].is_some());
+        assert_eq!(texts[1], None);
+    }
+
+    /// A game that exits during a write counts as holding nothing, so a new game
+    /// under the same key gets the prefab's text.
+    #[test]
+    fn a_game_gone_during_a_write_leaves_nothing_given_to_the_next() {
+        let (mut world, _game, dir) = playing_a_scene_with_a_prefab();
+        set_unsaved_door(&mut world, dir.path(), 9.0);
+        let held = answer_when_released(&mut world, 1);
+
+        let deadline = Instant::now() + GUARD;
+        while world.non_send::<PieSession>().is_running(&key()) {
+            assert!(Instant::now() < deadline, "the child never exited");
+            poll_children(&mut world);
+            thread::sleep(Duration::from_millis(5));
+        }
+        held.write();
+        deliver_served_scenes(&mut world);
+
+        assert_eq!(world.non_send::<PieSession>().answers_being_written(), 0);
+        let given = world
+            .resource::<crate::play_scene::PlayAssetNames>()
+            .given_prefabs(&key());
+        assert!(given.is_empty(), "{given:?}");
+    }
+
+    /// A worker that panics costs the game its unsaved edits, not the editor its
+    /// main thread: the game loads the file and the user is told.
+    #[test]
+    fn a_worker_that_panics_leaves_the_game_on_the_file() {
+        let (mut world, mut game, _dir) = playing_a_scene_with_a_prefab();
+        let prepared = crate::play_scene::prepare_scene(&mut world, &key(), None, "zone.bsn", 1);
+        let slots = reserve_answer_slots(&mut world);
+        drop(prepared.job);
+        let task = WorkerTask::spawn(AsyncComputeTaskPool::get(), || {
+            panic!("a worker that panics, as a test expects")
+        });
+        world
+            .non_send_mut::<PieSession>()
+            .serving
+            .push(ServingScene {
+                key: key(),
+                slots,
+                waiting: prepared.waiting,
+                task,
+            });
+        deliver_all(&mut world);
+
+        let events = read_until_answer(&mut game, 1);
+        let Some(ControlEvent::SceneDocument { answer, .. }) = events.last() else {
+            panic!("no answer: {events:?}");
+        };
+        assert!(
+            matches!(answer, jackdaw_pie_protocol::SceneAnswer::UseFile { path, .. } if path == "zone.bsn"),
+            "{answer:?}"
+        );
+        assert!(
+            world
+                .resource::<crate::status_bar::StatusNotice>()
+                .text()
+                .contains("zone.bsn")
+        );
+    }
+
+    /// With Realtime off, frames keep coming for as long as an answer is written,
+    /// and a little longer from when it goes out, for what the game asks next.
+    #[test]
+    fn frames_keep_coming_while_an_answer_is_written_and_just_after() {
+        use bevy::ecs::system::RunSystemOnce;
+        let is_busy = |world: &mut World| {
+            world
+                .run_system_once(
+                    |busy: crate::viewport_redraw::Busy, time: Res<Time<Real>>| {
+                        busy.any(time.elapsed())
+                    },
+                )
+                .expect("it runs")
+        };
+        let (mut world, _game, dir) = playing_a_scene_with_a_prefab();
+        world.init_resource::<Time<Real>>();
+        crate::viewport_redraw::init_game_request_window(&mut world);
+        set_unsaved_door(&mut world, dir.path(), 9.0);
+        assert!(!is_busy(&mut world), "nothing is asked for yet");
+
+        let held = answer_when_released(&mut world, 1);
+        assert!(is_busy(&mut world), "the answer is being written");
+        held.write();
+        deliver_all(&mut world);
+        assert!(is_busy(&mut world), "the game may ask for more");
     }
 
     #[test]

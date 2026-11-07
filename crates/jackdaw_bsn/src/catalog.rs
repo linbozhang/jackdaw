@@ -16,7 +16,7 @@ use bevy::ecs::reflect::AppTypeRegistry;
 use bevy::ecs::world::World;
 
 use crate::{
-    BsnAssetContext, BsnPatch, BsnPatches, BsnValue, SceneBsnAst, bsn_value_to_reflect,
+    AssetNames, BsnAssetContext, BsnPatch, BsnPatches, BsnValue, SceneBsnAst, bsn_value_to_reflect,
     component_to_bsn_patch, component_to_bsn_patch_with_assets, emit_scene, parse_bsn_text,
 };
 
@@ -73,6 +73,11 @@ pub fn load_bsn_assets_onto(
 
     let registry = world.resource::<AppTypeRegistry>().clone();
     let server = world.get_resource::<AssetServer>().cloned();
+    let assets_ctx = server.as_ref().map(|s| crate::BsnApplyAssets {
+        server: s,
+        local: None,
+        unresolved: None,
+    });
     let reg = registry.read();
 
     // What one root holds, and the handle the first pass stood it up under.
@@ -196,6 +201,8 @@ pub fn load_bsn_scene(world: &mut World, text: &str) -> Result<LoadedBsnScene, B
 /// [`load_bsn_scene`] for a document already parsed, so a caller can parse
 /// before clearing the scene it replaces.
 pub fn load_bsn_document(world: &mut World, mut ast: SceneBsnAst) -> LoadedBsnScene {
+    let _span = bevy::log::info_span!("doc.load").entered();
+    ast.clear_links();
     let registry = world.resource::<AppTypeRegistry>().clone();
     let mut assets = Vec::new();
     {
@@ -203,7 +210,8 @@ pub fn load_bsn_document(world: &mut World, mut ast: SceneBsnAst) -> LoadedBsnSc
         // A file written before list elements left out their defaults reads
         // the same as one written after, so values in it compare equal to the
         // values the live world writes back.
-        crate::compact_document(&mut ast, &reg);
+        bevy::log::info_span!("doc.compact").in_scope(|| crate::compact_document(&mut ast, &reg));
+        let _assets = bevy::log::info_span!("doc.load_assets").entered();
         for root in asset_roots(&ast, &reg) {
             let Some(name) = ast.get_name(root).map(str::to_owned) else {
                 continue;
@@ -245,8 +253,8 @@ pub fn load_bsn_document(world: &mut World, mut ast: SceneBsnAst) -> LoadedBsnSc
     if let Some(mut issues) = world.get_resource_mut::<crate::BindingIssues>() {
         issues.start_scene();
     }
-    let entities = crate::spawn_from_ast(world);
-    crate::apply_dirty_ast_patches(world);
+    let entities = bevy::log::info_span!("doc.spawn").in_scope(|| crate::spawn_from_ast(world));
+    bevy::log::info_span!("doc.apply").in_scope(|| crate::apply_dirty_ast_patches(world));
     report_unresolved_types(world);
 
     LoadedBsnScene { entities, assets }
@@ -391,6 +399,7 @@ fn load_asset_value(
     let assets_ctx = server.as_ref().map(|s| crate::BsnApplyAssets {
         server: s,
         local: embedded.as_ref(),
+        unresolved: None,
     });
     let value = bsn_value_to_reflect(asset_value, type_id, reg, assets_ctx.as_ref())?;
     Some(reflect_asset.add(world, &*value))
@@ -494,7 +503,7 @@ pub fn append_assets_to_ast(
             let ctx = BsnAssetContext {
                 asset_server: server,
                 parent_path: Path::new(""),
-                asset_names: paths.as_ref().map(|paths| &paths.0),
+                asset_names: paths.as_ref().map(|paths| &paths.0 as &dyn AssetNames),
             };
             component_to_bsn_patch_with_assets(asset_value.as_partial_reflect(), &reg, &ctx)
         } else {

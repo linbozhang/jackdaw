@@ -2,6 +2,7 @@
 //! tested independently of UI and operator wiring.
 
 use bevy::prelude::*;
+use bevy::tasks::AsyncComputeTaskPool;
 use jackdaw_api::prelude::*;
 
 use jackdaw_api_internal::operator::warn_caller;
@@ -9,14 +10,13 @@ use jackdaw_api_internal::operator::warn_caller;
 use crate::commands::CommandHistory;
 use crate::scene_io::clear_scene_entities;
 use crate::scenes::{Scenes, TabContent, ViewState};
+use crate::worker_task::{WorkerOutcome, WorkerTask};
 
 /// Switch the active tab to `target`, returning whether `target` is now
 /// active. No-op if `target == active`. Cancels any in-flight modal first to
 /// avoid corrupt per-frame state.
-///
-/// A scene that cannot be captured stays in front, untouched, with the reason
-/// in the status bar.
 pub fn swap_active_tab(world: &mut World, target: usize) -> bool {
+    let _span = info_span!("tab.swap").entered();
     let current = world.resource::<Scenes>().active;
     if current == target {
         return true;
@@ -30,12 +30,7 @@ pub fn swap_active_tab(world: &mut World, target: usize) -> bool {
     // Cancel any in-flight modal so per-frame state doesn't dangle.
     let _ = world.cancel_active_modal();
 
-    if let Err(err) = capture_active_tab(world) {
-        let message = format!("Cannot switch tabs: this scene could not be captured: {err}");
-        error!("{message}");
-        crate::status_bar::notify_error(world, message);
-        return false;
-    }
+    capture_active_tab(world);
     clear_scene_entities(world);
     activate_tab(world, target);
     // The respawn above replaced every authored entity, so any live game
@@ -54,44 +49,42 @@ pub fn reactivate_after_close(world: &mut World, target: usize) {
 }
 
 /// Re-spawn the active tab's authored scene from the live AST, reverting any
-/// overlaid live values. Equivalent to a tab switch to the same tab: captures
-/// the current AST, clears scene entities, then re-spawns from the captured
-/// snapshot. The AST itself is never mutated; it is the baseline that comes
-/// back after the clear.
+/// overlaid live values. Equivalent to a tab switch to the same tab: moves the
+/// document into the tab, clears scene entities, then re-spawns from it.
 ///
 /// Used by PIE stop to revert projected live state after the game process ends.
 /// Safe to call when nothing is projected (clear + respawn of an unchanged
 /// scene is harmless).
-///
-/// False when the document could not be captured, which leaves the scene as it is.
-pub(crate) fn respawn_scene_from_ast(world: &mut World) -> bool {
+pub(crate) fn respawn_scene_from_ast(world: &mut World) {
+    let _span = info_span!("tab.respawn").entered();
     let active = world.resource::<Scenes>().active;
     if world.resource::<Scenes>().tabs.is_empty() {
-        return true;
+        return;
     }
-    if let Err(err) = capture_active_tab(world) {
-        let message = format!("Scene not reverted: it could not be captured: {err}");
-        error!("{message}");
-        crate::status_bar::notify_error(world, message);
-        return false;
-    }
+    capture_active_tab(world);
     clear_scene_entities(world);
     activate_tab(world, active);
-    true
 }
 
-/// Capture the live scene document into the active tab and stash the
-/// per-tab history and view state. Pre-condition: a tab exists at
-/// `Scenes.active`.
+/// Move the live scene document into the active tab and stash the per-tab
+/// history and view state. Pre-condition: a tab exists at `Scenes.active`.
 ///
-/// A document whose text does not parse back is refused before anything is
-/// taken from the world, so the caller can leave the scene as it is.
-pub(crate) fn capture_active_tab(world: &mut World) -> Result<(), jackdaw_bsn::UnparsableEmit> {
+/// The document stays a document: text belongs to the disk boundary, where a
+/// save refuses a document that would not read back. A document that would not
+/// survives here and stays editable, and an edited one is checked on the side so
+/// the refusal does not come as a surprise.
+pub(crate) fn capture_active_tab(world: &mut World) {
+    let _span = info_span!("tab.capture").entered();
+    crate::scene_io::save_worker::land_saves(world);
     let active = world.resource::<Scenes>().active;
 
     // A refused tab never got its document into the world, so there is nothing
     // to snapshot; the rest of the capture still applies.
     let refused = world.resource::<Scenes>().tabs[active].is_refused();
+
+    if !refused {
+        crate::brush::sync_pending_writes_to_document(world);
+    }
 
     let (prefab_target, tab_path) = {
         let scenes = world.resource::<Scenes>();
@@ -103,10 +96,6 @@ pub(crate) fn capture_active_tab(world: &mut World) -> Result<(), jackdaw_bsn::U
         (prefab, tab.path.clone())
     };
 
-    // Both branches snapshot the live document through the inline-asset
-    // emit, which embeds runtime asset handles as `#Name` roots and
-    // reduces inherited prefab-instance descendants to sparse overrides,
-    // so re-activation re-resolves them against the prefab cache.
     let parent = tab_path
         .as_ref()
         .and_then(|p| p.parent().map(std::path::Path::to_path_buf))
@@ -114,9 +103,17 @@ pub(crate) fn capture_active_tab(world: &mut World) -> Result<(), jackdaw_bsn::U
     let snapshot = if refused {
         None
     } else {
-        let text = crate::scene_io::emit_bsn_scene_with_inline_assets(world, &parent);
-        Some(jackdaw_bsn::parse_emitted(&text)?)
+        crate::scene_io::save::take_live_document(world, &parent)
     };
+    if let Some(document) = &snapshot {
+        check_read_back_if_edited(world, active, document);
+    }
+    // What the history read last described this document's entities, and the
+    // document is leaving them.
+    if let Some(mut capture) = world.get_resource_mut::<crate::document_capture::DocumentCapture>()
+    {
+        capture.forget();
+    }
 
     let view_state = capture_view_state(world);
     let history = std::mem::take(&mut *world.resource_mut::<CommandHistory>());
@@ -149,12 +146,65 @@ pub(crate) fn capture_active_tab(world: &mut World) -> Result<(), jackdaw_bsn::U
         tab.terrain_data_store = terrain_data_store;
     }
     tab.scene_resources = scene_resources;
-    Ok(())
+}
+
+/// Parses still running for edited documents that left the world, by tab name.
+#[derive(Resource, Default)]
+pub struct ReadBackChecks(Vec<(String, WorkerTask<Option<String>>)>);
+
+/// Emit an edited tab's document and parse the text on a worker, so a document
+/// that a save would refuse is reported without holding up the switch.
+fn check_read_back_if_edited(world: &mut World, tab: usize, document: &jackdaw_bsn::SceneBsnAst) {
+    let Some(pool) = AsyncComputeTaskPool::try_get() else {
+        return;
+    };
+    let scene_tab = &world.resource::<Scenes>().tabs[tab];
+    if !scene_tab.dirty {
+        return;
+    }
+    let name = scene_tab.display_name.clone();
+    let mut checks = world.get_resource_or_init::<ReadBackChecks>();
+    if checks.0.iter().any(|(running, _)| *running == name) {
+        return;
+    }
+    let text = jackdaw_bsn::emit_scene(document);
+    let task = WorkerTask::spawn(pool, move || {
+        jackdaw_bsn::parse_emitted(&text)
+            .err()
+            .map(|err| err.to_string())
+    });
+    checks.0.push((name, task));
+}
+
+/// Warn about each finished check that failed; the log carries the detail.
+pub(crate) fn report_read_back_checks(world: &mut World) {
+    let mut checks = world.resource_mut::<ReadBackChecks>();
+    let mut failed = Vec::new();
+    checks.0.retain_mut(|(name, task)| match task.outcome() {
+        WorkerOutcome::Running => true,
+        WorkerOutcome::Done(None) => false,
+        WorkerOutcome::Done(Some(detail)) => {
+            failed.push((std::mem::take(name), detail));
+            false
+        }
+        WorkerOutcome::Panicked => {
+            failed.push((std::mem::take(name), "the check panicked".to_string()));
+            false
+        }
+    });
+    if checks.0.is_empty() {
+        world.remove_resource::<ReadBackChecks>();
+    }
+    for (name, detail) in failed {
+        warn!("{name} would not read back: {detail}");
+        crate::status_bar::notify_warn(world, format!("{name} will not save: unreadable text"));
+    }
 }
 
 /// Spawn the target tab's document into the live world and restore per-tab
 /// history and view state.
 pub fn activate_tab(world: &mut World, target: usize) {
+    let _span = info_span!("tab.activate").entered();
     let has_terrain_data_store = world.contains_resource::<crate::terrain_mode::TerrainDataStore>();
     let (mut content, view_state, history, tab_path, terrain_data_store, scene_resources) = {
         let mut scenes = world.resource_mut::<Scenes>();
@@ -212,6 +262,7 @@ pub fn activate_tab(world: &mut World, target: usize) {
         .is_some()
     {
         {
+            let _populate = info_span!("tab.prefab_cache").entered();
             let mut cache = world.resource_mut::<crate::prefab::PrefabAstCache>();
             crate::prefab::save_load::populate_cache_for_scene_bsn(
                 &new_doc,
@@ -230,38 +281,49 @@ pub fn activate_tab(world: &mut World, target: usize) {
         for complaint in missing {
             warn_caller(world, complaint);
         }
+        // Only an instance needs the resolver, which works on a copy of the document.
+        let holds_instances = !new_doc
+            .entities_with_component(crate::prefab::resolver_bsn::ISA_TYPE)
+            .is_empty();
         let cache = world.resource::<crate::prefab::PrefabAstCache>();
         let get_prefab = |p: &std::path::Path| cache.get(p);
-        match crate::prefab::resolver_bsn::resolve_scene(&new_doc, &get_prefab) {
-            Ok(resolved) => Some(resolved),
-            Err(e) => {
+        let resolved = holds_instances.then(|| {
+            info_span!("tab.resolve")
+                .in_scope(|| crate::prefab::resolver_bsn::resolve_scene(&new_doc, &get_prefab))
+        });
+        match resolved {
+            Some(Ok(mut resolved)) => {
+                if matches!(content, TabContent::Scene(_))
+                    && history.undo_stack.is_empty()
+                    && history.redo_stack.is_empty()
+                {
+                    let registry = world.resource::<AppTypeRegistry>().clone();
+                    crate::scene_nodes::separate_from_inherited_ids(
+                        &mut resolved,
+                        &registry.read(),
+                    );
+                }
+                Some(resolved)
+            }
+            Some(Err(e)) => {
                 warn!("activate_tab: prefab resolution failed: {e}; spawning unresolved");
                 None
             }
+            None => None,
         }
     } else {
         None
     };
     // The gate below reads the document about to spawn, not the one the tab
-    // captured: a base can pass retired vocabulary to an instance that never
-    // names it.
+    // holds: a base can pass retired vocabulary to an instance that never names
+    // it.
     let spawning = resolved.as_ref().unwrap_or(&new_doc);
 
     // Unlike `finish_load_scene` this cannot return early: the tab bookkeeping
     // below has to run, or the editor points at a tab it never finished
     // activating.
     let refusal = match jackdaw_bsn::reject_retired_ui_components(spawning) {
-        Ok(()) => {
-            let resolved_text = jackdaw_bsn::emit_scene(spawning);
-            crate::asset_index::index_files_named(world, &resolved_text);
-            match jackdaw_bsn::load_bsn_scene(world, &resolved_text) {
-                Ok(_) => None,
-                Err(err) => {
-                    error!("activate_tab: failed to spawn tab scene: {err}");
-                    Some(crate::scenes::TabRefusal::SpawnFailed(err.to_string()))
-                }
-            }
-        }
+        Ok(()) => None,
         Err(err) => {
             let name = tab_path
                 .as_ref()
@@ -269,6 +331,29 @@ pub fn activate_tab(world: &mut World, target: usize) {
             error!("Cannot activate '{name}': {err}");
             Some(crate::scenes::TabRefusal::Rejected(err.to_string()))
         }
+    };
+    // A refused tab keeps its document, and a later activation retries with it.
+    // One that spawns moves it, or the copy the resolver made, into the world.
+    let kept_doc = if refusal.is_some() {
+        Some(new_doc)
+    } else {
+        info_span!("tab.index_assets").in_scope(|| {
+            crate::asset_index::index_files_named_in(world, || {
+                std::borrow::Cow::Owned(jackdaw_bsn::emit_scene(
+                    resolved.as_ref().unwrap_or(&new_doc),
+                ))
+            });
+        });
+        match resolved {
+            Some(resolved) => {
+                jackdaw_bsn::load_bsn_document(world, resolved);
+                jackdaw_bsn::drop_document(new_doc);
+            }
+            None => {
+                jackdaw_bsn::load_bsn_document(world, new_doc);
+            }
+        }
+        None
     };
     crate::scene_io::forget_prefab_cache_bump(world, epoch_before);
     let spawned_ok = refusal.is_none();
@@ -293,13 +378,12 @@ pub fn activate_tab(world: &mut World, target: usize) {
     // is the canonical path; for `Scene` tabs the document is live in the
     // resource now, so the tab's own slot goes back to `Scene(None)`.
     // A refused tab keeps its document instead, since it is not live in the
-    // resource and a later activation retries with it.
+    // resource.
     {
         let mut scenes = world.resource_mut::<Scenes>();
         scenes.tabs[target].content = match content {
             TabContent::Prefab(p) => TabContent::Prefab(p),
-            TabContent::Scene(_) if refusal.is_some() => TabContent::Scene(Some(Box::new(new_doc))),
-            TabContent::Scene(_) => TabContent::Scene(None),
+            TabContent::Scene(_) => TabContent::Scene(kept_doc.map(Box::new)),
         };
         scenes.tabs[target].refusal = refusal;
     }
@@ -309,7 +393,7 @@ pub fn activate_tab(world: &mut World, target: usize) {
         *world.resource_mut::<CommandHistory>() = history;
         depths
     };
-    apply_view_state(world, &view_state, spawned_ok);
+    info_span!("tab.view_state").in_scope(|| apply_view_state(world, &view_state, spawned_ok));
 
     // Critical: sync the global `SceneFilePath` to whichever tab is now
     // active. Without this, `save_scene` sees the previous tab's path
@@ -336,7 +420,8 @@ pub fn activate_tab(world: &mut World, target: usize) {
             crate::scene_io::SidecarImport::RefreshChanged
         };
         let path = path.to_string_lossy();
-        crate::scene_io::hooks::import_sidecars(world, &path, mode);
+        info_span!("tab.sidecars")
+            .in_scope(|| crate::scene_io::hooks::import_sidecars(world, &path, mode));
     }
 
     let mut scenes = world.resource_mut::<Scenes>();
@@ -346,7 +431,10 @@ pub fn activate_tab(world: &mut World, target: usize) {
     // tab's save point, never the previous tab's.
     scenes.tabs[target].observed_undo_len = history_depth;
     scenes.tabs[target].observed_pushes = history_pushes;
-    world.trigger(jackdaw_api_internal::document::SceneOpened { path: tab_path });
+    scenes.tabs[target].history_state_at_last_check = None;
+    info_span!("tab.opened_observers").in_scope(|| {
+        world.trigger(jackdaw_api_internal::document::SceneOpened { path: tab_path });
+    });
 }
 
 /// Captures camera transform, edit mode, and selection as scene node ids.
@@ -408,7 +496,6 @@ fn apply_view_state(world: &mut World, view_state: &ViewState, spawned: bool) {
     use crate::selection::{Selected, Selection};
     use crate::viewport::MainViewportCamera;
     use crate::viewport_2d::Viewport2dPanelHost;
-    use jackdaw_scene_types::SceneNodeId;
 
     // Camera transform.
     let mut cam_q = world.query_filtered::<&mut Transform, With<MainViewportCamera>>();
@@ -448,14 +535,10 @@ fn apply_view_state(world: &mut World, view_state: &ViewState, spawned: bool) {
     }
 
     // Object selection: rebuild from scene node ids.
-    let mut nid_q = world.query::<(Entity, &SceneNodeId)>();
-    let nid_map: std::collections::HashMap<SceneNodeId, Entity> =
-        nid_q.iter(world).map(|(e, nid)| (*nid, e)).collect();
-
     let entities: Vec<Entity> = view_state
         .selection
         .iter()
-        .filter_map(|nid| nid_map.get(nid).copied())
+        .filter_map(|&nid| crate::scene_nodes::unit_holder(world, nid))
         .collect();
 
     if let Some(mut selection) = world.get_resource_mut::<Selection>() {
@@ -476,5 +559,35 @@ fn apply_view_state(world: &mut World, view_state: &ViewState, spawned: bool) {
         if let Ok(mut ec) = world.get_entity_mut(e) {
             ec.insert(Selected);
         }
+    }
+}
+
+#[cfg(test)]
+mod read_back_check_tests {
+    use std::time::{Duration, Instant};
+
+    use super::*;
+
+    /// A check that panics is reported like one that failed, on a main thread that
+    /// goes on.
+    #[test]
+    fn a_read_back_check_that_panics_is_reported() {
+        let pool = AsyncComputeTaskPool::get_or_init(bevy::tasks::TaskPool::new);
+        let mut world = World::new();
+        world.init_resource::<crate::status_bar::StatusNotice>();
+        let task = WorkerTask::spawn(pool, || -> Option<String> {
+            panic!("a check that panics, as a test expects")
+        });
+        world.insert_resource(ReadBackChecks(vec![("zone".to_string(), task)]));
+        let deadline = Instant::now() + Duration::from_secs(30);
+        while world.contains_resource::<ReadBackChecks>() {
+            assert!(Instant::now() < deadline, "the check never finished");
+            report_read_back_checks(&mut world);
+            std::thread::sleep(Duration::from_millis(1));
+        }
+        assert_eq!(
+            world.resource::<crate::status_bar::StatusNotice>().text(),
+            "zone will not save: unreadable text"
+        );
     }
 }
