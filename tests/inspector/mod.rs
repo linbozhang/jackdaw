@@ -11,7 +11,6 @@ mod field_targeting;
 
 mod card_header_width;
 mod colour_rows;
-mod definition_card;
 mod enum_menu;
 mod enum_rows;
 mod inspector_panel_width;

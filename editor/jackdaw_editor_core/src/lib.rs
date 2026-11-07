@@ -188,8 +188,6 @@ pub mod texture_files;
 pub mod texture_import;
 pub mod thumbnail;
 pub mod tile_mode;
-pub mod tilemap;
-pub mod tilemap_palette;
 pub mod timestamps;
 pub mod tool_ops;
 pub mod toolbar_2d;
@@ -488,12 +486,8 @@ impl Plugin for EditorCorePlugin {
         .add_plugins(terrain_mode::plugin)
         .add_plugins(jackdaw_runtime::MaterialOverridesPlugin)
         .add_plugins(jackdaw_runtime::LodPlugin)
-        // Loop 功能面：tilemap 调色板与 graphics 面板的挂接（本地 T22/T16 系）。
-        .add_plugins((
-            tilemap::plugin,
-            tilemap_palette::plugin,
-            graphics_panel::plugin,
-        ))
+        // Loop 功能面：graphics 面板的挂接（本地 T16 系）。
+        .add_plugins((graphics_panel::plugin,))
         .add_plugins((
             lod_group::plugin,
             model_lod::plugin,

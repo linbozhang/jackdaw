@@ -17,7 +17,7 @@ use crate::util::{self, OperatorResultExt as _};
 /// enough that a parallel pile of them pushes the binary's timing-sensitive
 /// tests (the journal write budget) over their limits. They share the
 /// binary-wide heavy-editor lock and run one at a time.
-use crate::HEAVY_EDITOR_LOCK as PLAY_CURRENT_LOCK;
+use super::HEAVY_EDITOR_LOCK as PLAY_CURRENT_LOCK;
 
 fn play_lock() -> std::sync::MutexGuard<'static, ()> {
     PLAY_CURRENT_LOCK

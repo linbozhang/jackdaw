@@ -23,7 +23,8 @@ use jackdaw_api::prelude::*;
 use jackdaw_feathers::{icons::EditorFont, tokens};
 use jackdaw_pie_protocol::manifest::RunConfig;
 
-use crate::pie::{EditorBuildSettings, InstanceKey, launch_instance_with_override};
+use crate::pie::{InstanceKey, launch_instance_with_override};
+use crate::project_build::EditorBuildSettings;
 use crate::scenes::{Scenes, TabKind};
 
 /// The directory under the project's `assets/` that holds temporary run
@@ -832,7 +833,7 @@ pub(crate) fn project_set_save_before_play(
     };
     commands.queue(move |world: &mut World| {
         world.resource_mut::<EditorBuildSettings>().save_before_play = mode;
-        crate::pie::persist_project_build_settings(world);
+        crate::project_build::persist_project_build_settings(world);
         info!("PIE: save before play set to {}", mode.as_log());
     });
     OperatorResult::Finished

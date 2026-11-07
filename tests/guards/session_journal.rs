@@ -347,7 +347,7 @@ fn the_journal_write_costs_no_more_than_five_milliseconds() {
     // binary's other editor-booting tests, running in parallel, can push
     // the write over the budget all by themselves. Take the heavy-editor
     // lock so the measurement runs the way the budget was set: alone.
-    let _heavy = crate::HEAVY_EDITOR_LOCK
+    let _heavy = super::HEAVY_EDITOR_LOCK
         .lock()
         .unwrap_or_else(std::sync::PoisonError::into_inner);
     for (name, scene_text) in [

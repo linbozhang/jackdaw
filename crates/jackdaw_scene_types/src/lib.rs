@@ -50,12 +50,7 @@ pub use mesh_rebuild::evaluate_brush_geometry;
 pub use node_id::{SCENE_NODE_ID_TYPE_PATH, SPARSE_MIN, SceneNodeId};
 pub use pixel_canvas::{CanvasScale, PIXEL_CANVAS_TYPE_PATH, PixelCanvas};
 pub use recipe_instance::{RECIPE_INSTANCE_TYPE_PATH, RecipeInstance};
-// The tile module's `TilemapLayer` deliberately stays off the crate root:
-// the root-level `TilemapLayer` below is the Loop's per-layer component,
-// and the tile module's consolidated layer keeps its saved type path
-// `jackdaw_scene_types::tilemap::TilemapLayer` (upstream documents spell
-// it that way). Reference the tile one by its module path.
-pub use tilemap::{LayerTerrainMatch, Tilemap, TilemapLayerKind};
+pub use tilemap::{LayerTerrainMatch, Tilemap, TilemapLayer, TilemapLayerKind};
 pub use types::{
     Brush, BrushFaceData, BrushPlane, BrushTopology, CustomProperties, DerivedFaceMesh,
     DetailLayer, DetailMesh, DetailPresser, DetailVariety, GltfSource, HIDDEN_IN_GAME_TYPE_PATH,
@@ -154,9 +149,6 @@ impl Plugin for SceneTypesPlugin {
             .register_type::<UiSceneRoot>()
             .register_type::<Scene2dRoot>()
             .register_type::<CanvasGuides>()
-            .register_type::<TilemapLayer>()
-            .register_type::<TileGridCell>()
-            .register_type::<TileCollisionMode>()
             .register_type::<Locked>()
             .register_type::<Tags>()
             .register_type::<PixelCanvas>()
@@ -274,107 +266,6 @@ pub struct Locked;
 /// Reflect type path for [`Locked`], for the paths that name a component
 /// by its path rather than by its type.
 pub const LOCKED_TYPE_PATH: &str = "jackdaw_scene_types::Locked";
-
-/// One authored tile-grid layer (T22 route C): a parent entity whose
-/// children are the tiles, each a `Sprite` cut from the layer's sheet with
-/// a [`TileGridCell`] naming its cell and sheet tile.
-///
-/// The layer carries the grid the tiles sit on — cell size, sheet cut and
-/// the sheet itself — and [`TileCollisionMode`], the per-layer collision
-/// tri-state the game resolves against. Lives here (rather than in the
-/// editor) for the same reason [`CanvasGuides`] does: the save filter drops
-/// every type path under `jackdaw::`, and a tilemap has to survive the
-/// document it was authored in — and a game's tilemap module builds its
-/// collision grid from it.
-#[derive(Component, Clone, Debug, Reflect, PartialEq)]
-#[reflect(Component, Default, @EditorCategory::new("Tilemap"))]
-pub struct TilemapLayer {
-    /// Edge length of one cell, in world units.
-    pub cell_size: Vec2,
-    /// Sheet columns; tile index `i` cuts `rect` at
-    /// `(i % columns, i / columns)`.
-    pub columns: u32,
-    /// Sheet rows.
-    pub rows: u32,
-    /// The sheet the tiles cut from.
-    pub image: Handle<Image>,
-    /// Draw order: tiles render at this z, so layers stack by it.
-    pub order: i32,
-}
-
-impl Default for TilemapLayer {
-    fn default() -> Self {
-        Self {
-            cell_size: Vec2::splat(32.0),
-            columns: 8,
-            rows: 4,
-            image: Handle::default(),
-            order: 0,
-        }
-    }
-}
-
-impl TilemapLayer {
-    /// The sheet rectangle tile `tile` cuts, in the sheet's pixels.
-    #[must_use]
-    pub fn tile_rect(&self, tile: u32) -> Rect {
-        let column = tile % self.columns;
-        let row = tile / self.columns;
-        Rect::new(
-            column as f32 * self.cell_size.x,
-            row as f32 * self.cell_size.y,
-            (column + 1) as f32 * self.cell_size.x,
-            (row + 1) as f32 * self.cell_size.y,
-        )
-    }
-
-    /// A cell's centre in the layer's local space (y up: cell row 0 at the
-    /// bottom, matching the collision grid the kernel builds from this).
-    #[must_use]
-    pub fn cell_center(&self, cell: IVec2) -> Vec2 {
-        (cell.as_vec2() + Vec2::splat(0.5)) * self.cell_size
-    }
-
-    /// The cell a point of the layer's local space falls in (floor
-    /// division, so it answers out-of-range cells too; the caller bounds).
-    #[must_use]
-    pub fn world_to_cell(&self, world: Vec2) -> IVec2 {
-        let local = world / self.cell_size;
-        IVec2::new(local.x.floor() as i32, local.y.floor() as i32)
-    }
-}
-
-/// One tile of a [`TilemapLayer`]: the cell it sits in and the sheet tile
-/// it cuts. Sits on the tile's `Sprite` child entity, next to
-/// `EditorHidden` and `Locked` — a tile is redrawn from the palette, not
-/// picked or gizmo'd (plan decision 5-A).
-#[derive(Component, Clone, Copy, Debug, Default, Reflect, PartialEq, Eq)]
-#[reflect(Component, Default, @EditorHidden)]
-pub struct TileGridCell {
-    /// Grid cell, layer-local; `(0, 0)` at the layer origin, y up.
-    pub cell: IVec2,
-    /// Index into the sheet cut: `row * columns + column`.
-    pub tile: u32,
-}
-
-/// The per-layer collision tri-state. Ports the semantics of the upstream
-/// `jackdaw_tilemap` kernel (`CollisionMode { Solid, Trigger, Passable }`,
-/// nightly-2026-10-27 `setup.rs:77-82`) and matches
-/// `jackdaw_tilemap_collision::CollisionMode` variant for variant — the
-/// game module converts one to the other when it builds its grid.
-///
-/// Sits on the [`TilemapLayer`] parent: one mode per layer, not per tile.
-#[derive(Component, Clone, Copy, Debug, Default, Reflect, PartialEq, Eq, Hash)]
-#[reflect(Component, Default, @EditorCategory::new("Tilemap"))]
-pub enum TileCollisionMode {
-    /// Open or decorative: bodies pass through, nothing is reported.
-    #[default]
-    Passable,
-    /// Floor and wall cells: the game's sweep never lets a body overlap.
-    Solid,
-    /// Region cells: bodies pass through while the game reports overlap.
-    Trigger,
-}
 
 /// Free-text labels on a scene node, so a script or a query can address every
 /// node carrying one (`#roof`) without knowing their ids. Kept sorted and

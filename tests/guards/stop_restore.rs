@@ -17,7 +17,7 @@ use crate::util::{self, OperatorResultExt as _};
 /// parallel pile of them pushes the binary's timing-sensitive tests (the
 /// journal write budget) over their limits. They share the binary-wide
 /// heavy-editor lock with the other editor-booting module.
-use crate::HEAVY_EDITOR_LOCK as STOP_RESTORE_LOCK;
+use super::HEAVY_EDITOR_LOCK as STOP_RESTORE_LOCK;
 
 fn stop_lock() -> std::sync::MutexGuard<'static, ()> {
     STOP_RESTORE_LOCK

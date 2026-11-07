@@ -352,16 +352,6 @@ name = "jackdaw-rustc-wrapper"
 path = "src/bin/jackdaw-rustc-wrapper.rs"
 doc = false
 
-# The guards suite's entry is `mod.rs` (the Loop's single-binary shape),
-# which cargo's auto-discovery does not pick up, so the target is declared
-# here. Upstream folds these themes into one `tests/editor` binary instead;
-# that shape collides twelve times across themes on the merged tree, so the
-# Loop keeps its own target and the tests spell their registered type paths
-# as `guards::…` rather than upstream's `editor::guards::…`.
-[[test]]
-name = "guards"
-path = "tests/guards/mod.rs"
-
 # One bevy for the whole workspace. The crates jackdaw writes take bevy from
 # the git main branch; avian takes bevy from the registry; and a dependency
 # of the math stack (glam_matrix_extras) takes bevy_reflect from the

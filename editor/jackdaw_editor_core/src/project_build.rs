@@ -49,7 +49,7 @@ impl Plugin for ProjectBuildPlugin {
 /// session, without re-running `cargo metadata` every frame.
 #[derive(Resource, Default)]
 pub struct PiePrebuildState {
-    attempted: bool,
+    pub(crate) attempted: bool,
 }
 
 /// Turns the open-time pre-build off when set to `0`, `false` or empty.
@@ -57,7 +57,7 @@ pub const ENV_PIE_PREBUILD: &str = "JACKDAW_PIE_PREBUILD";
 
 /// Whether [`ENV_PIE_PREBUILD`]'s value asks for the pre-build. Absent
 /// means yes.
-fn env_allows_prebuild(raw: Option<&str>) -> bool {
+pub(crate) fn env_allows_prebuild(raw: Option<&str>) -> bool {
     !raw.is_some_and(|value| matches!(value.trim(), "" | "0" | "false"))
 }
 
@@ -86,8 +86,28 @@ pub(crate) fn prebuild_play_target(world: &mut World) {
     if world.get_resource::<RunConfigs>().is_none() {
         return;
     }
+    // Pre-build the first run's target, so the first Play of that run
+    // finds its own warm artifact.
+    let first_run = world
+        .get_resource::<RunConfigs>()
+        .and_then(|runs| runs.manifest.runs.first().cloned());
+    let first_target = first_run.as_ref().and_then(crate::run_config::cargo_target);
     // Run configs are loaded; this is the one-shot attempt regardless of outcome.
     world.resource_mut::<PiePrebuildState>().attempted = true;
+    // A first run whose target cannot become a cargo command must not
+    // burn a background build into a key no launch will ever consume —
+    // launch refuses it at the door — so name the problem here instead,
+    // where the build status shows it.
+    if let Some(run) = &first_run
+        && let Some(target) = &run.target
+        && let Err(reason) = target.validate()
+    {
+        warn!("PIE: not pre-building '{}': {reason}", run.label());
+        if let Some(mut status) = world.get_resource_mut::<BuildStatus>() {
+            status.state = crate::build_status::BuildState::Blocked { reason };
+        }
+        return;
+    }
     let Some(root) = project_root(world) else {
         return;
     };
@@ -106,6 +126,13 @@ pub(crate) fn prebuild_play_target(world: &mut World) {
         crate::extension_build::start_extension_build(world, &root);
         return;
     }
+    // A warm (or in-flight) entry under the first run's key needs no new
+    // build, and no spec resolution either — which is why this check comes
+    // first: nothing left to resolve means nothing to report.
+    let key = (root.to_path_buf(), first_target.clone());
+    if world.non_send::<PieSession>().builds.contains_key(&key) {
+        return; // already built or building (the user may have hit Play already)
+    }
     let spec = match crate::project_build::shim_spec_for_project(&root) {
         Ok(spec) => spec,
         Err(error) => {
@@ -120,13 +147,20 @@ pub(crate) fn prebuild_play_target(world: &mut World) {
             return;
         }
     };
-    let mut session = world.non_send_mut::<PieSession>();
-    let key = (root.to_path_buf(), None);
-    if session.builds.contains_key(&key) {
-        return; // already built or building (the user may have hit Play already)
+    // The same existence check the launch door applies: a target naming
+    // a bin/example no package declares has nothing to warm.
+    if let Some(target) = &first_target
+        && let Err(reason) = preflight_run_target(&root, &spec.package_name, target)
+    {
+        warn!("PIE: not pre-building: {reason}");
+        if let Some(mut status) = world.get_resource_mut::<BuildStatus>() {
+            status.state = crate::build_status::BuildState::Blocked { reason };
+        }
+        return;
     }
+    let mut session = world.non_send_mut::<PieSession>();
     info!("PIE: pre-building the game in the background for a fast first Play");
-    let (task, progress) = spawn_game_build(&root, spec, None, BuildLoad::Background);
+    let (task, progress) = spawn_game_build(&root, spec, key.1.clone(), BuildLoad::Background);
     session.builds.insert(
         key,
         PieBuildState::Running {
@@ -135,6 +169,24 @@ pub(crate) fn prebuild_play_target(world: &mut World) {
             progress,
         },
     );
+}
+
+/// Whether the run's cargo target names a package and bin/example the
+/// project really has, per `cargo metadata`, before a build starts: the
+/// error lists the available names instead of failing a build in
+/// cargo's words. A metadata failure stands down — the build itself
+/// reports it — so the check can only refine errors, never cause one.
+pub(crate) fn preflight_run_target(
+    root: &Path,
+    spec_package: &str,
+    target: &CargoTarget,
+) -> Result<(), String> {
+    match crate::run_config::CargoMeta::load(root) {
+        Some(meta) => {
+            crate::project_build::cargo_meta::check_run_target(&meta, spec_package, target)
+        }
+        None => Ok(()),
+    }
 }
 
 /// Throttle so the edit-mode source scan runs about once a second
@@ -165,10 +217,11 @@ pub(crate) struct EditorBuildSettings {
     /// When true, the editor compiles the game once in the background as
     /// the project opens, so the first Play is instant. On by default.
     pub(crate) prebuild: bool,
-    /// When true, Play saves every modified scene that has a file before it
-    /// starts the game, so the game loads what the editor shows. On by
-    /// default.
-    pub(crate) save_before_play: bool,
+    /// What Play does with unsaved scene changes before starting the game:
+    /// save them, ask first, or play a temporary copy. `save` by default;
+    /// a pre-enum settings file's bool reads back as `true` = save and
+    /// `false` = play a copy.
+    pub(crate) save_before_play: crate::pie_current::SaveBeforePlay,
 }
 
 impl Default for EditorBuildSettings {
@@ -176,7 +229,7 @@ impl Default for EditorBuildSettings {
         Self {
             auto_build: false,
             prebuild: true,
-            save_before_play: true,
+            save_before_play: crate::pie_current::SaveBeforePlay::default(),
         }
     }
 }
@@ -422,7 +475,7 @@ mod tests {
         world.insert_resource(EditorBuildSettings {
             auto_build: false,
             prebuild,
-            save_before_play: true,
+            save_before_play: crate::pie_current::SaveBeforePlay::default(),
         });
         world.insert_resource(crate::project::ProjectRoot {
             root: std::env::temp_dir().join("jackdaw-prebuild-test-no-such-project"),

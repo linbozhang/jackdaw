@@ -44,7 +44,6 @@ mod sprite_sort;
 mod status_line;
 mod synthetic_input;
 mod tilemap_guard;
-mod tilemap_ops;
 mod ui_align;
 mod ui_asset_drop;
 mod ui_drag_readout;

@@ -82,10 +82,9 @@ pub use jackdaw_scene_types::{
     Brush, BrushFaceData, CustomProperties, DetailPresser, EditorCategory, EditorDescription,
     EditorHidden, EditorPreview, GltfSource, HIDDEN_IN_GAME_TYPE_PATH, HiddenInGame,
     NAVMESH_EXCLUDE_TYPE_PATH, NavmeshExclude, PropertyValue, ScatterGroup, ScatterInstance,
-    SkipSerialization, TileCollisionMode, TileGridCell, TilemapLayer,
+    SkipSerialization,
 };
 
-#[cfg(feature = "pie")]
 #[cfg(feature = "pie")]
 mod pie;
 #[cfg(feature = "pie")]

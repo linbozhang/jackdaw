@@ -1,0 +1,10 @@
+    Checking jackdaw_editor_core v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/editor/jackdaw_editor_core)
+    Checking jackdaw_editor_remote v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/editor/jackdaw_editor_remote)
+    Checking jackdaw_editor_launcher v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/editor/jackdaw_editor_launcher)
+    Checking jackdaw_editor_terrain v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/editor/jackdaw_editor_terrain)
+    Checking jackdaw_editor_animation v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/editor/jackdaw_editor_animation)
+    Checking jackdaw_editor_modelling v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/editor/jackdaw_editor_modelling)
+    Checking jackdaw_editor_tile v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/editor/jackdaw_editor_tile)
+    Checking jackdaw v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw)
+    Checking jackdaw_editor v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_editor)
+    Finished `dev` profile [optimized + debuginfo] target(s) in 28.33s

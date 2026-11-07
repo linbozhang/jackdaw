@@ -1,0 +1,30 @@
+test apply::apply_value_tests::map_of_enum_round_trips_through_apply ... ok
+test apply::apply_value_tests::an_entity_with_no_transform_gets_no_visibility ... ok
+test apply::field_navigation_matrix::a_list_element_that_does_not_fit_is_dropped_not_panicked_on ... ok
+test apply::field_navigation_matrix::bracket_key_reads_and_writes_map_entry ... ok
+test apply::field_navigation_matrix::get_field_empty_path_returns_whole_component ... ok
+test apply::field_navigation_matrix::get_field_bracket_index_reads_list_element ... ok
+test apply::field_navigation_matrix::get_field_missing_path_returns_none ... ok
+test apply::field_navigation_matrix::get_field_reads_named_struct_field ... ok
+test apply::apply_value_tests::a_placed_entity_saved_without_visibility_inherits_it ... ok
+--
+[2m2026-11-07T05:50:42.573797Z[0m [32m INFO[0m [2mjackdaw_editor_core::pie[0m[2m:[0m save to scene: promoted ephemeral 3v0 (bits 4637) to new authored node 381396027803201959
+test pie::promote_capture_tests::promoted_semantic_components_all_land_in_the_document ... ok
+test pie::prebuild_tests::a_first_run_without_a_target_reuses_the_default_build ... FAILED
+test pie::promote_capture_tests::the_entity_walk_is_scoped_to_known_avian_relationships ... ok
+test pie::save_before_launch_tests::a_dirty_asset_the_chain_cannot_save_refuses_the_launch ... ok
+test pie::save_before_launch_tests::a_saver_that_cannot_save_refuses_the_launch ... ok
+test pie::save_before_launch_tests::absent_or_content_savers_never_block_the_launch ... ok
+[2m2026-11-07T05:50:42.574075Z[0m [33m WARN[0m [2mjackdaw_editor_core::pie[0m[2m:[0m save to scene: selected entity 5v0 has no live projection entry
+test pie::save_to_scene_tests::no_projection_entry_is_noop ... ok
+--
+test pie_projection::tests::a_stop_leaves_no_dead_entity_selected ... ok
+test pie_projection::tests::a_stop_shrinks_a_list_the_game_grew ... ok
+test pie_projection::tests::absent_component_is_inserted_not_panicked ... ok
+test pie_outbox::tests::queueing_and_dropping_return_whatever_the_writer_is_doing ... ok
+test pie_projection::tests::camera_components_are_never_projected ... ok
+test pie_projection::tests::child_of_pends_until_parent_spawns ... ok
+test pie_projection::tests::child_of_remaps_to_projected_parent ... ok
+test pie_projection::tests::component_changed_child_of_reparents ... ok
+test pie_projection::tests::entity_despawned_removes_ephemeral_and_leaves_authored ... ok
+--

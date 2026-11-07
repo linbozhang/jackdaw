@@ -17,11 +17,11 @@ use crate::util;
 use crate::util::OperatorResultExt as _;
 
 use bevy::prelude::*;
-use jackdaw::measure_tool::MeasureToolState;
 use jackdaw::test_input::SyntheticInput;
 use jackdaw_api::prelude::*;
 use jackdaw_api_internal::lifecycle::ActiveModalOperator;
 use jackdaw_api_internal::tools::ToolStatus;
+use jackdaw_editor_modelling::measure_tool::MeasureToolState;
 
 /// True iff at least one entity in the world has `ActiveModalOperator`
 /// attached. Matches the dispatcher's view of "modal is running."

@@ -32,7 +32,6 @@ mod scene_op_ids;
 mod sprite_ops;
 
 mod spawn_param_ops;
-mod sprite_ops;
 mod tag_ops;
 mod view_camera_ops;
 mod workspace_switch;

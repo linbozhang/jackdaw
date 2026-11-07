@@ -16,7 +16,7 @@
 //! The pixel half of M14 (canvas tile pixels ≠ the whole sheet) is the
 //! real-machine L7 leg in T3; this is its headless half (H+FS).
 
-use crate::sprite_gizmo::{settle, sprite};
+use super::sprite_gizmo::{settle, sprite};
 use crate::util::{self, OperatorResultExt as _};
 
 use bevy::{image::TextureAtlas, prelude::*, sprite::Anchor};

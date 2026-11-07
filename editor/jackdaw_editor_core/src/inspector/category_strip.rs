@@ -276,17 +276,19 @@ pub(super) fn paint_category_tabs(
     }
 }
 
-/// After the inspector rebuilds, resolve the active category against the
-/// categories that HAVE cards (`applicable`), not merely the shown ones:
-/// a selection switch auto-leaves a category whose tab would be empty, so
-/// the panel lands on content instead of a bare filter row. The current
-/// category stays sticky whenever it still has a card, and manually
+/// After the inspector rebuilds — or the selection moves — resolve the active
+/// category against the categories that HAVE cards (`applicable`), not merely
+/// the shown ones: a selection switch auto-leaves a category whose tab would
+/// be empty, so the panel lands on content instead of a bare filter row. The
+/// current category stays sticky whenever it still has a card, and manually
 /// clicking an empty tab (e.g. Components to add a component) still works —
-/// clicks write the resource directly and do not trigger a rebuild. Writing
-/// the resource unconditionally also re-triggers the category filter for
-/// the new cards by marking it changed.
+/// clicks write the resource directly. A rebuild re-triggers the category
+/// filter for the new cards by writing the resource changed; a reselect of
+/// the entity already shown leaves the cards standing (upstream keeps them),
+/// so the selection change itself also runs this pass.
 pub(super) fn resolve_active_on_rebuild(
     registry: Res<InspectorRegistry>,
+    selection: Res<crate::selection::Selection>,
     cards: Query<
         &super::ComponentDisplayTypePath,
         (
@@ -297,16 +299,16 @@ pub(super) fn resolve_active_on_rebuild(
     added: Query<(), Added<super::ComponentDisplay>>,
     mut removed: RemovedComponents<super::ComponentDisplay>,
     mut active: ResMut<ActiveInspectorCategory>,
-    chips: Query<&jackdaw_api_internal::inspector::InspectorChip>,
 ) {
-    let changed = !added.is_empty() || removed.read().next().is_some();
+    let changed = !added.is_empty() || removed.read().next().is_some() || selection.is_changed();
     if !changed {
         return;
     }
+    // Resolve against `applicable` (categories with cards), never `shown`
+    // (which always lists object/components): a card-less tab auto-leaves,
+    // which is what lets a selection switch land on content.
     let applicable = applicable_categories(&registry, cards.iter().map(|t| t.0.as_str()));
-    let chip_categories: Vec<&str> = chips.iter().map(|chip| chip.category.as_ref()).collect();
-    let shown = shown_categories(&registry, &applicable, &chip_categories);
-    let resolved = resolve_active_category(active.0.as_ref(), &shown);
+    let resolved = resolve_active_category(active.0.as_ref(), &applicable);
     if resolved != active.0.as_ref() {
         active.0 = std::borrow::Cow::Owned(resolved.to_string());
     }
