@@ -700,8 +700,12 @@ fn prefab_file_change_triggers_reload() {
 
     write_bsn_prefab(&mut app, &prefab_path, &prefab_with_name("v2"));
 
-    // Filesystem event latency varies by OS; generous deadline to avoid flakes.
-    let deadline = std::time::Instant::now() + std::time::Duration::from_secs(3);
+    // Filesystem event latency varies by OS; generous deadline to avoid
+    // flakes. The suite runs a dozen tests in parallel, each building a
+    // full app, and on this host that contention pushes the watcher's
+    // event delivery past three seconds — the reload itself is correct
+    // (serial and standalone runs see v2 well inside the budget).
+    let deadline = std::time::Instant::now() + std::time::Duration::from_secs(15);
     while std::time::Instant::now() < deadline {
         app.update();
         if current_names(&mut app).iter().any(|n| n == "v2") {

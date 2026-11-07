@@ -67,6 +67,12 @@ fn play_saves_the_edited_scene_before_the_game_starts() {
 
     play(&mut app);
 
+    // The save-before-play dispatch writes on the worker thread; the two
+    // updates above may outrun it on a fast host, so the read waits for the
+    // writes (and the launch they hold) to land, the same primitive the
+    // scene.save tests use.
+    jackdaw::scene_io::wait_for_saves(app.world_mut());
+
     assert!(
         std::fs::read_to_string(&scene)
             .expect("scene read")
