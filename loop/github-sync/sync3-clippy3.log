@@ -1,0 +1,19 @@
+    Checking jackdaw_editor_core v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/editor/jackdaw_editor_core)
+error[E0609]: no field `key` on type `pie::InstanceKey`
+   --> editor/jackdaw_editor_core/src/pie.rs:457:33
+    |
+457 |         rows.sort_by(|a, b| a.0.key.cmp(&b.0.key).then(a.0.instance.cmp(&b.0.instance)));
+    |                                 ^^^ unknown field
+    |
+    = note: available fields are: `config`, `instance`
+
+error[E0609]: no field `key` on type `pie::InstanceKey`
+   --> editor/jackdaw_editor_core/src/pie.rs:457:46
+    |
+457 |         rows.sort_by(|a, b| a.0.key.cmp(&b.0.key).then(a.0.instance.cmp(&b.0.instance)));
+    |                                              ^^^ unknown field
+    |
+    = note: available fields are: `config`, `instance`
+
+For more information about this error, try `rustc --explain E0609`.
+error: could not compile `jackdaw_editor_core` (lib) due to 2 previous errors

@@ -10,11 +10,11 @@ mod custom_props_display;
 mod definition_card;
 pub mod file_card;
 pub mod live_values;
-pub mod runtime_card;
 pub(crate) mod material_card_routing;
 mod material_display;
 pub(crate) mod material_row;
 pub(crate) mod missing_list;
+pub mod runtime_card;
 #[doc(hidden)]
 pub use material_row::material_path;
 mod modifier_display;

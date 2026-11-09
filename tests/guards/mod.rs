@@ -5,7 +5,7 @@
 mod util;
 
 /// Serializes the modules that each boot a whole editor per test
-/// (`play_current_scene`, `stop_restore`): in parallel they saturate the
+/// (`stop_restore`): in parallel they saturate the
 /// machine enough to push this binary's timing-sensitive tests (the
 /// journal write budget) over their limits, so the heavy modules take
 /// turns — with each other, not just within themselves.
@@ -26,7 +26,6 @@ mod game_ui;
 mod keyframe_undo;
 mod numeric_transform_undo;
 mod physics_triggers;
-mod play_current_scene;
 mod player_controller;
 mod record_counts;
 mod recovery;

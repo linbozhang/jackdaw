@@ -40,8 +40,8 @@ use crate::game_output::{GameOutput, OutputCapture, plain_line};
 use crate::pie_outbox::{GameOutbox, NodeEdit, OutboxSlot};
 use crate::play_scene::LaunchScene;
 use crate::project_build::BuildLoad;
-use crate::project_build::shim::ShimSpec;
 use crate::project_build::CargoTarget;
+use crate::project_build::shim::ShimSpec;
 use crate::run_config::RunConfigs;
 use crate::worker_task::{WorkerOutcome, WorkerTask};
 
@@ -67,7 +67,7 @@ type BuildKey = (PathBuf, Option<CargoTarget>);
 
 /// Identifies one running instance: a config label plus its 1-based
 /// instance number.
-#[derive(Clone, PartialEq, Eq, Hash, Debug)]
+#[derive(Clone, PartialEq, Eq, Hash, Debug, PartialOrd, Ord)]
 pub struct InstanceKey {
     pub config: String,
     pub instance: u32,
@@ -167,7 +167,7 @@ enum ChildPoll {
 }
 
 /// One launched child and its connection progress.
-pub enum ChildStage {
+pub(crate) enum ChildStage {
     /// The child is launched and `IpcServerHandle::accept` is blocking
     /// on a task pool, waiting for it to connect. `since` bounds that
     /// wait so a child that never connects does not hang forever.
@@ -268,8 +268,6 @@ impl Drop for GameBuildTask {
 pub(crate) struct PendingSpawn {
     key: InstanceKey,
     run: RunConfig,
-    /// The cargo target this launch builds, so its cache entry is its own.
-    target: Option<CargoTarget>,
     scene: Option<LaunchScene>,
 }
 
@@ -285,10 +283,10 @@ pub struct PieInstances {
 pub struct PieSession {
     /// One entry per instance that has not been reaped, `pub` for the
     /// remote crate's structured play face.
-    pub children: HashMap<InstanceKey, ChildStage>,
+    pub(crate) children: HashMap<InstanceKey, ChildStage>,
     pub(crate) launch_modes: HashMap<InstanceKey, PieWindowMode>,
     /// The scene an instance plays in place of its usual one, recorded at press.
-    pub launch_scenes: HashMap<InstanceKey, LaunchScene>,
+    pub(crate) launch_scenes: HashMap<InstanceKey, LaunchScene>,
     pub(crate) builds: HashMap<BuildKey, BuildState>,
     /// Monotonic count of instances ever launched: the `pie_stopped`
     /// wait's session-proof baseline, so a stop that completed before a
@@ -436,6 +434,40 @@ impl PieSession {
     /// wait's session-proof baseline.
     pub fn launches(&self) -> u64 {
         self.launches
+    }
+
+    /// Bump the launch count without launching anything: a test's way of
+    /// standing in for a session that already came and went. `#[doc(hidden)]`
+    /// pub, not `cfg(test)`: the remote crate's BRP-face tests stand sessions
+    /// up through it.
+    #[doc(hidden)]
+    pub fn note_launch_for_test(&mut self) {
+        self.launches += 1;
+    }
+
+    /// One `(key, stage word, scene path)` row per instance that has not been
+    /// reaped, for the remote crate's structured play face.
+    pub fn instance_rows(&self) -> Vec<(InstanceKey, &'static str, Option<String>)> {
+        let mut rows: Vec<_> = self
+            .children
+            .iter()
+            .map(|(key, stage)| {
+                let word = match stage {
+                    ChildStage::Connecting { .. } => "connecting",
+                    ChildStage::Live { .. } => "live",
+                };
+                let scene = self
+                    .launch_scenes
+                    .get(key)
+                    .map(|launch| match &launch.scene {
+                        crate::play_scene::PlayScene::Path(path) => path.clone(),
+                        crate::play_scene::PlayScene::Untitled(name) => name.clone(),
+                    });
+                (key.clone(), word, scene)
+            })
+            .collect();
+        rows.sort_by(|a, b| a.0.cmp(&b.0));
+        rows
     }
 
     fn note_launch_scene(&mut self, key: &InstanceKey, scene: Option<LaunchScene>) {
@@ -1022,7 +1054,7 @@ impl PieSession {
         let task = AsyncComputeTaskPool::get_or_init(bevy::tasks::TaskPool::new)
             .spawn(std::future::pending::<io::Result<GameBuildResult>>());
         self.builds.insert(
-            PathBuf::from(format!("test-build-{key}")),
+            (PathBuf::from(format!("test-build-{key}")), None),
             BuildState::Running {
                 task: task.into(),
                 pending: vec![PendingSpawn {
@@ -1522,13 +1554,7 @@ fn launch_with(
     if let Some(BuildState::Running { pending, .. }) =
         world.non_send_mut::<PieSession>().builds.get_mut(&build)
     {
-        let target = crate::run_config::cargo_target(&run);
-        pending.push(PendingSpawn {
-            key,
-            run,
-            target,
-            scene,
-        });
+        pending.push(PendingSpawn { key, run, scene });
         return;
     }
     let spec = match crate::project_build::shim_spec_for_project(&root) {
@@ -1545,12 +1571,7 @@ fn launch_with(
         build,
         BuildState::Running {
             task,
-            pending: vec![PendingSpawn {
-                key,
-                run,
-                target,
-                scene,
-            }],
+            pending: vec![PendingSpawn { key, run, scene }],
             progress,
         },
     );
@@ -1612,8 +1633,8 @@ fn run_with_scene_of_tab(world: &World, mut run: RunConfig, tab: usize) -> RunCo
     run
 }
 
-/// The asset path of the scene in tab `tab`, if it is a scene with a file in the
-
+/// The asset path of the scene in tab `tab`, if it is a scene with a file in
+/// the project.
 pub(crate) fn scene_asset_path_of_tab(world: &World, tab: usize) -> Option<String> {
     let scenes = world.get_resource::<crate::scenes::Scenes>()?;
     let tab = scenes.tabs.get(tab)?;
@@ -1792,7 +1813,13 @@ pub(crate) fn spawn_game_build(
             }
         }
     });
-    (GameBuildTask { task: Some(task), cancel }, progress)
+    (
+        GameBuildTask {
+            task: Some(task),
+            cancel,
+        },
+        progress,
+    )
 }
 
 /// Stop one instance: ask a live child to exit, reap it, and drop it.
@@ -2226,6 +2253,7 @@ fn advance_pie_session(world: &mut World) {
     reconcile_focus(world);
     reconcile_play_state(world);
     reconcile_play_status(world);
+    crate::project_build::reconcile_build_status(world);
 }
 
 /// Poll each in-flight build. On success, spawn its pending instances
@@ -2784,7 +2812,7 @@ mod play_status_tests {
         world.init_resource::<State<PlayState>>();
         let mut session = PieSession::default();
         session.builds.insert(
-            PathBuf::from("project"),
+            (PathBuf::from("project"), None),
             BuildState::Failed { launch: true },
         );
         world.insert_non_send(session);
@@ -2797,7 +2825,7 @@ mod play_status_tests {
         world.init_resource::<State<PlayState>>();
         let mut session = PieSession::default();
         session.builds.insert(
-            PathBuf::from("project"),
+            (PathBuf::from("project"), None),
             BuildState::Failed { launch: false },
         );
         world.insert_non_send(session);
@@ -2967,7 +2995,7 @@ mod build_failure_tests {
         output.push_log("  --> src/lib.rs:40:13".to_string());
         let mut session = PieSession::default();
         session.builds.insert(
-            PathBuf::from("my-game"),
+            (PathBuf::from("my-game"), None),
             BuildState::Running {
                 task: task.into(),
                 pending: Vec::new(),
@@ -3004,7 +3032,7 @@ mod build_failure_tests {
         );
 
         world.non_send_mut::<PieSession>().builds.insert(
-            PathBuf::from("my-game"),
+            (PathBuf::from("my-game"), None),
             BuildState::Running {
                 task: AsyncComputeTaskPool::get()
                     .spawn(std::future::pending())
@@ -3771,7 +3799,7 @@ mod transport_tests {
         assert!(!cancel.load(Ordering::Relaxed));
         let mut session = PieSession::default();
         session.builds.insert(
-            PathBuf::from("game"),
+            (PathBuf::from("game"), None),
             BuildState::Running {
                 task,
                 pending: Vec::new(),

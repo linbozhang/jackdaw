@@ -2827,7 +2827,13 @@ pub(crate) fn on_text_edit_commit(
 
     let value_str = event.value.clone();
     commands.queue(move |world: &mut World| {
-        apply_field_json_with_undo(world, source_entity, &tp, &path, serde_json::Value::String(value_str));
+        apply_field_json_with_undo(
+            world,
+            source_entity,
+            &tp,
+            &path,
+            serde_json::Value::String(value_str),
+        );
     });
 }
 

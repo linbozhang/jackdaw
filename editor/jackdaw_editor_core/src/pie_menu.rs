@@ -23,8 +23,8 @@ use crate::pie::{
 };
 use crate::play_scene::PlayScene;
 use crate::play_settings::{PlayEdits, PlayEditsOp, PlaySettings};
-use jackdaw_pie_protocol::manifest::RunConfig;
 use crate::run_config::{CargoMeta, RunConfigs, read_run_configs, scaffold_manifest};
+use jackdaw_pie_protocol::manifest::RunConfig;
 
 const MENU_MIN_WIDTH: f32 = 220.0;
 
@@ -35,6 +35,7 @@ impl Plugin for PieMenuPlugin {
         app.init_resource::<PieMenuState>()
             .add_observer(on_menu_button_click)
             .add_observer(close_menu_on_item_activate)
+            .add_observer(on_startup_row_click)
             .add_observer(on_scaffold_row_click)
             .add_systems(Update, close_menu_on_outside_click);
     }
@@ -481,7 +482,7 @@ fn on_startup_row_click(
     // Play button used before "play the current scene" existed, with no
     // scene override in the child's environment.
     commands.queue(|world: &mut World| {
-        crate::pie::handle_play(world);
+        crate::pie::play_startup_scene(world);
         close_menu(world);
     });
 }

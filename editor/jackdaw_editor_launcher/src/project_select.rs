@@ -580,7 +580,7 @@ pub fn transition_to_editor(world: &mut World, root: PathBuf) {
         let swept_copies = std::fs::read_dir(&pie_copies)
             .map(|entries| {
                 entries
-                    .filter_map(|entry| entry.ok())
+                    .filter_map(std::result::Result::ok)
                     .filter(|entry| entry.path().is_file())
                     .filter_map(|entry| std::fs::remove_file(entry.path()).ok())
                     .count()

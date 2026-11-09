@@ -1,0 +1,164 @@
+    Checking jackdaw_commands v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_commands)
+    Checking jackdaw_scene_types v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_scene_types)
+    Checking jackdaw_bsn v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_bsn)
+    Checking jackdaw_pie_protocol v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_pie_protocol)
+   Compiling jackdaw_project_build v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_project_build)
+    Checking jackdaw_widgets v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_widgets)
+    Checking jackdaw_animation_runtime v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_animation_runtime)
+    Checking jackdaw_prefab v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_prefab)
+    Checking jackdaw_remote v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_remote)
+    Checking jackdaw_terrain v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_terrain)
+    Checking jackdaw_schema v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_schema)
+    Checking jackdaw_camera_rig v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_camera_rig)
+    Checking jackdaw_surface v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_surface)
+    Checking jackdaw_multiplayer v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_multiplayer)
+    Checking jackdaw_jsn v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_jsn)
+    Checking jackdaw_feathers v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_feathers)
+    Checking jackdaw_runtime v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_runtime)
+    Checking jackdaw_scaffold v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_scaffold)
+    Checking jackdaw_cli_internal v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_cli)
+    Checking jackdaw_panels v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_panels)
+    Checking jackdaw_node_graph v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_node_graph)
+    Checking jackdaw_avian_integration v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/integrations/physics/jackdaw_avian_integration)
+    Checking jd v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jd)
+    Checking jackdaw_api_internal v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_api_internal)
+    Checking jackdaw_animation v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_animation)
+    Checking jackdaw_dylib v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_dylib)
+    Checking jackdaw_loader v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_loader)
+    Checking jackdaw_api v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_api)
+    Checking jackdaw_physics v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/integrations/physics/jackdaw_physics)
+    Checking jackdaw_multiplayer_editor v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_multiplayer_editor)
+    Checking jackdaw_extension v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_extension)
+    Checking jackdaw_sdk v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_sdk)
+    Checking viewable_camera_extension v0.1.0 (/Users/linbo.zhang/workspace/jackdaw/examples/extension/viewable_camera_extension)
+    Checking dynamic_extension v0.1.0 (/Users/linbo.zhang/workspace/jackdaw/examples/extension/dynamic_extension)
+    Checking test_fixture_extension v0.0.0 (/Users/linbo.zhang/workspace/jackdaw/tests/fixtures/test_fixture_extension)
+    Checking jackdaw_editor_core v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/editor/jackdaw_editor_core)
+error: empty line after doc comment
+   --> editor/jackdaw_editor_core/src/game_export.rs:213:1
+    |
+213 | / /// be thousands of files.
+214 | |
+    | |_^
+...
+219 |   fn save_scenes_before_export(world: &mut World) -> Result<(), String> {
+    |   ---------------------------- the comment documents this function
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#empty_line_after_doc_comments
+    = note: `-D clippy::empty-line-after-doc-comments` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::empty_line_after_doc_comments)]`
+    = help: if the empty line is unintentional, remove it
+help: if the documentation should include the empty line include it in the comment
+    |
+214 | ///
+    |
+
+error: empty line after doc comment
+    --> editor/jackdaw_editor_core/src/pie.rs:1615:1
+     |
+1615 | / /// The asset path of the scene in tab `tab`, if it is a scene with a file in the
+1616 | |
+     | |_^
+1617 |   pub(crate) fn scene_asset_path_of_tab(world: &World, tab: usize) -> Option<String> {
+     |   ------------------------------------- the comment documents this function
+     |
+     = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#empty_line_after_doc_comments
+     = help: if the empty line is unintentional, remove it
+
+error: type `game_output::OutputCapture` is more private than the item `pie::ChildStage::Connecting::output`
+   --> editor/jackdaw_editor_core/src/pie.rs:177:9
+    |
+177 |         output: OutputCapture,
+    |         ^^^^^^^^^^^^^^^^^^^^^ field `pie::ChildStage::Connecting::output` is reachable at visibility `pub`
+    |
+note: but type `game_output::OutputCapture` is only usable at visibility `pub(crate)`
+   --> editor/jackdaw_editor_core/src/game_output.rs:411:1
+    |
+411 | pub(crate) struct OutputCapture {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    = note: `-D private-interfaces` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(private_interfaces)]`
+
+error: type `pie_outbox::GameOutbox` is more private than the item `pie::ChildStage::Live::outbox`
+   --> editor/jackdaw_editor_core/src/pie.rs:185:9
+    |
+185 |         outbox: GameOutbox,
+    |         ^^^^^^^^^^^^^^^^^^ field `pie::ChildStage::Live::outbox` is reachable at visibility `pub`
+    |
+note: but type `pie_outbox::GameOutbox` is only usable at visibility `pub(crate)`
+   --> editor/jackdaw_editor_core/src/pie_outbox.rs:48:1
+    |
+ 48 | pub(crate) struct GameOutbox {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: type `game_output::OutputCapture` is more private than the item `pie::ChildStage::Live::output`
+   --> editor/jackdaw_editor_core/src/pie.rs:186:9
+    |
+186 |         output: OutputCapture,
+    |         ^^^^^^^^^^^^^^^^^^^^^ field `pie::ChildStage::Live::output` is reachable at visibility `pub`
+    |
+note: but type `game_output::OutputCapture` is only usable at visibility `pub(crate)`
+   --> editor/jackdaw_editor_core/src/game_output.rs:411:1
+    |
+411 | pub(crate) struct OutputCapture {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: method `progress` is never used
+  --> editor/jackdaw_editor_core/src/game_export.rs:64:19
+   |
+61 | impl GameExports {
+   | ---------------- method in this implementation
+...
+64 |     pub(crate) fn progress(&self) -> Option<Arc<Mutex<BuildProgress>>> {
+   |                   ^^^^^^^^
+   |
+   = note: `-D dead-code` implied by `-D warnings`
+   = help: to override `-D warnings` add `#[expect(dead_code)]` or `#[allow(dead_code)]`
+
+error: method `progress` is never used
+   --> editor/jackdaw_editor_core/src/extension_build.rs:127:19
+    |
+125 | impl ExtensionBuild {
+    | ------------------- method in this implementation
+126 |     /// The progress of a build that has not finished, for the status bar.
+127 |     pub(crate) fn progress(&self) -> Option<Arc<Mutex<BuildProgress>>> {
+    |                   ^^^^^^^^
+
+error: field `target` is never read
+   --> editor/jackdaw_editor_core/src/pie.rs:272:5
+    |
+268 | pub(crate) struct PendingSpawn {
+    |                   ------------ field in this struct
+...
+272 |     target: Option<CargoTarget>,
+    |     ^^^^^^
+
+error: function `play_startup_scene` is never used
+    --> editor/jackdaw_editor_core/src/pie.rs:1431:15
+     |
+1431 | pub(crate) fn play_startup_scene(world: &mut World) {
+     |               ^^^^^^^^^^^^^^^^^^
+
+error: function `on_startup_row_click` is never used
+   --> editor/jackdaw_editor_core/src/pie_menu.rs:466:4
+    |
+466 | fn on_startup_row_click(
+    |    ^^^^^^^^^^^^^^^^^^^^
+
+error: constant `TRANSFORM_PATH` is never used
+   --> editor/jackdaw_editor_core/src/remote_ops.rs:255:11
+    |
+255 |     const TRANSFORM_PATH: &str = "bevy_transform::components::transform::Transform";
+    |           ^^^^^^^^^^^^^^
+
+error: this lint expectation is unfulfilled
+   --> editor/jackdaw_editor_core/src/scene_io/save_worker.rs:289:5
+    |
+289 |     clippy::large_enum_variant,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the local RunConfig grew the Play variant; the enum lives in one short-lived slot
+    = note: `-D unfulfilled-lint-expectations` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(unfulfilled_lint_expectations)]`
+
+error: could not compile `jackdaw_editor_core` (lib) due to 12 previous errors

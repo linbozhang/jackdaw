@@ -1644,6 +1644,7 @@ mod tests {
     fn drag_tick(world: &mut World, x: f64) {
         crate::commands::field_edit_preview(
             world,
+            None,
             TRANSFORM,
             "translation.x",
             &serde_json::json!(x),
@@ -1700,6 +1701,7 @@ mod tests {
 
         crate::commands::field_edit_commit(
             &mut world,
+            None,
             TRANSFORM,
             "translation.x",
             &serde_json::json!(5.0),
@@ -1727,6 +1729,7 @@ mod tests {
 
         crate::commands::field_edit_commit(
             &mut world,
+            None,
             TRANSFORM,
             "translation.x",
             &serde_json::json!(1.0),

@@ -4,6 +4,7 @@
 //! ([`jackdaw_project_build`]) at the editor's historical module path.
 
 use std::path::{Path, PathBuf};
+use std::sync::Arc;
 use std::time::Instant;
 
 use bevy::prelude::*;
@@ -512,5 +513,61 @@ mod tests {
         assert!(!env_allows_prebuild(Some("0")));
         assert!(!env_allows_prebuild(Some("false")));
         assert!(!env_allows_prebuild(Some(" ")));
+    }
+}
+
+/// Mirror the active game or extension build into the editor's
+/// `BuildStatus` so the footer shows what is compiling, and clear it once
+/// no build remains.
+pub(crate) fn reconcile_build_status(world: &mut World) {
+    let building = world
+        .non_send::<PieSession>()
+        .builds
+        .values()
+        .find_map(|build| match build {
+            PieBuildState::Running { progress, .. } => Some(Arc::clone(progress)),
+            _ => None,
+        })
+        .or_else(|| {
+            world
+                .get_resource::<crate::extension_build::ExtensionBuild>()
+                .and_then(crate::extension_build::ExtensionBuild::progress)
+        })
+        // An export's build shows in the footer the same way: it runs on
+        // the same machine and the same rule — one compiling project at a
+        // time is what the footer can say.
+        .or_else(|| {
+            world
+                .get_resource::<crate::game_export::GameExports>()
+                .and_then(crate::game_export::GameExports::progress)
+        });
+    let project = world
+        .get_resource::<crate::project::ProjectRoot>()
+        .map(|p| p.root.clone())
+        .unwrap_or_default();
+    let Some(mut status) = world.get_resource_mut::<BuildStatus>() else {
+        return;
+    };
+    match building {
+        Some(progress) => {
+            status.outcome = None;
+            status.failed_log = None;
+            status.state = crate::build_status::BuildState::Building {
+                project,
+                started: Instant::now(),
+                progress,
+            };
+        }
+        None => {
+            // A build ended with no outcome latched yet: go Idle.
+            // `poll_builds` (Failed) and `watch_project_schema` (Ready)
+            // set the real outcome the same or next frame.
+            if matches!(
+                &status.state,
+                crate::build_status::BuildState::Building { .. }
+            ) {
+                status.state = crate::build_status::BuildState::Idle;
+            }
+        }
     }
 }

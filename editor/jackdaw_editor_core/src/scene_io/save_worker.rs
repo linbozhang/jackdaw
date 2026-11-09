@@ -282,13 +282,6 @@ struct RunningSave {
 }
 
 /// What waits for every save to be over.
-// The local `RunConfig` grew the `Play` variant past the lint's bound (the
-// launch axis and cargo-target fields); the enum sits in one short-lived
-// slot, so the copy cost is not worth reshaping the pipeline around.
-#[expect(
-    clippy::large_enum_variant,
-    reason = "the local RunConfig grew the Play variant; the enum lives in one short-lived slot"
-)]
 pub(crate) enum AfterSaves {
     /// Ask again whether the editor can quit.
     CloseWindow,

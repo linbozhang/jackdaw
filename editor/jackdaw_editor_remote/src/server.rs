@@ -537,25 +537,10 @@ pub fn pie_handler(In(_): In<Option<Value>>, world: &mut World) -> BrpResult {
     let instances: Vec<Value> = world
         .get_non_send::<jackdaw_editor_core::pie::PieSession>()
         .map(|session| {
-            let mut faces: Vec<Value> = session
-                .children
-                .iter()
-                .map(|(key, stage)| {
-                    let stage = match stage {
-                        jackdaw_editor_core::pie::ChildStage::Connecting { .. } => "connecting",
-                        jackdaw_editor_core::pie::ChildStage::Live { .. } => "live",
-                    };
-                    let scene = session
-                        .launch_scenes
-                        .get(key)
-                        .map(|launch| match &launch.scene {
-                            jackdaw_editor_core::play_scene::PlayScene::Path(path) => {
-                                path.as_str()
-                            }
-                            jackdaw_editor_core::play_scene::PlayScene::Untitled(name) => {
-                                name.as_str()
-                            }
-                        });
+            session
+                .instance_rows()
+                .into_iter()
+                .map(|(key, stage, scene)| {
                     json!({
                         "key": key.to_string(),
                         "config": key.config,
@@ -564,17 +549,7 @@ pub fn pie_handler(In(_): In<Option<Value>>, world: &mut World) -> BrpResult {
                         "scene": scene,
                     })
                 })
-                .collect();
-            faces.sort_by(|a, b| {
-                let key = |face: &Value| {
-                    (
-                        face["config"].as_str().unwrap_or_default().to_string(),
-                        face["instance"].as_u64().unwrap_or(0),
-                    )
-                };
-                key(a).cmp(&key(b))
-            });
-            faces
+                .collect()
         })
         .unwrap_or_default();
 
@@ -2897,16 +2872,16 @@ mod tests {
     /// The selection face: set by bits, by name, and clear.
     #[test]
     fn selection_set_takes_bits_names_and_clears() {
-        let mut world = pie_face_world();
+        let mut world = World::new();
+        world.init_resource::<jackdaw_editor_core::selection::Selection>();
+        // A `Transform` makes the entity a scene node, which is what the
+        // by-name reference resolver accepts.
         let entity = world
-            .query_filtered::<Entity, With<bevy::prelude::Name>>()
-            .iter(&world)
-            .find(|e| {
-                world
-                    .get::<bevy::prelude::Name>(*e)
-                    .is_some_and(|n| n.as_str() == "Authored")
-            })
-            .expect("the authored entity");
+            .spawn((
+                bevy::prelude::Name::new("Authored"),
+                bevy::prelude::Transform::default(),
+            ))
+            .id();
 
         // By bits: the id `scene_tree` would report.
         let answer = selection_set_handler(

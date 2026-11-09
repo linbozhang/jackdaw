@@ -1,0 +1,19 @@
+    Checking jackdaw_editor_core v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/editor/jackdaw_editor_core)
+    Checking jackdaw_editor_terrain v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/editor/jackdaw_editor_terrain)
+    Checking jackdaw_editor_animation v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/editor/jackdaw_editor_animation)
+    Checking jackdaw_editor_modelling v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/editor/jackdaw_editor_modelling)
+    Checking jackdaw_editor_tile v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/editor/jackdaw_editor_tile)
+    Checking jackdaw_editor_remote v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/editor/jackdaw_editor_remote)
+    Checking jackdaw_editor_launcher v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/editor/jackdaw_editor_launcher)
+error: redundant closure
+   --> editor/jackdaw_editor_launcher/src/project_select.rs:583:33
+    |
+583 |                     .filter_map(|entry| entry.ok())
+    |                                 ^^^^^^^^^^^^^^^^^^ help: replace the closure with the method itself: `std::result::Result::ok`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#redundant_closure_for_method_calls
+    = note: `-D clippy::redundant-closure-for-method-calls` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::redundant_closure_for_method_calls)]`
+
+error: could not compile `jackdaw_editor_launcher` (lib) due to 1 previous error
+warning: build failed, waiting for other jobs to finish...

@@ -1,0 +1,32 @@
+    Checking jackdaw_editor_core v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/editor/jackdaw_editor_core)
+error[E0599]: `pie::InstanceKey` is not an iterator
+   --> editor/jackdaw_editor_core/src/pie.rs:457:33
+    |
+ 71 | pub struct InstanceKey {
+    | ---------------------- method `cmp` not found for this struct because it doesn't satisfy `pie::InstanceKey: std::iter::Iterator`
+...
+457 |         rows.sort_by(|a, b| a.0.cmp(&b.0));
+    |                                 ^^^ `pie::InstanceKey` is not an iterator
+    |
+    = note: the following trait bounds were not satisfied:
+            `pie::InstanceKey: std::iter::Iterator`
+            which is required by `&mut pie::InstanceKey: std::iter::Iterator`
+note: the trait `std::iter::Iterator` must be implemented
+   --> /rustc/b940084d7eb6a299eb4bfeb8e34901bc051e7ac4/library/core/src/iter/traits/iterator.rs:42:0
+    = help: items from traits can only be used if the trait is implemented and in scope
+    = note: the following traits define an item `cmp`, perhaps you need to implement one of them:
+            candidate #1: `rayon::iter::IndexedParallelIterator`
+            candidate #2: `std::cmp::Ord`
+            candidate #3: `std::iter::Iterator`
+
+error: unused variable: `target`
+    --> editor/jackdaw_editor_core/src/pie.rs:1545:13
+     |
+1545 |         let target = crate::run_config::cargo_target(&run);
+     |             ^^^^^^ help: if this is intentional, prefix it with an underscore: `_target`
+     |
+     = note: `-D unused-variables` implied by `-D warnings`
+     = help: to override `-D warnings` add `#[allow(unused_variables)]`
+
+For more information about this error, try `rustc --explain E0599`.
+error: could not compile `jackdaw_editor_core` (lib) due to 2 previous errors

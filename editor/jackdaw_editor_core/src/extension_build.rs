@@ -123,7 +123,8 @@ impl Stage {
 }
 
 impl ExtensionBuild {
-    /// The progress of a build that has not finished, for the status bar.
+    /// The progress of a build that has not finished, for the footer's
+    /// shared build status.
     pub(crate) fn progress(&self) -> Option<Arc<Mutex<BuildProgress>>> {
         match &self.stage {
             Stage::WaitingForSdk { progress, .. } | Stage::Running { progress, .. } => {

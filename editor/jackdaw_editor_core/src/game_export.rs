@@ -59,8 +59,8 @@ pub struct GameExports {
 }
 
 impl GameExports {
-    /// The progress sink, while an export runs. What
-    /// [`crate::pie::reconcile_build_status`] mirrors into the footer.
+    /// The progress sink, while an export runs. What the footer's shared
+    /// build status mirrors.
     pub(crate) fn progress(&self) -> Option<Arc<Mutex<BuildProgress>>> {
         self.progress.clone()
     }
@@ -207,11 +207,6 @@ fn start_game_export(world: &mut World) {
     }
 }
 
-/// The export's build-and-stage task: Play's own build pipeline with the
-/// release profile, then the staging and the dynamic-linking refusal
-/// `jd export` applies, all off the render loop — an `assets/` tree can
-/// be thousands of files.
-
 /// What an export saves before it builds: the modified tabs (the staged
 /// asset tree ships what is on disk) and every feature crate's registered
 /// savers, a state that could not save blocking the export like any other
@@ -253,6 +248,10 @@ fn save_scenes_before_export(world: &mut World) -> Result<(), String> {
     }
 }
 
+/// The export's build-and-stage task: Play's own build pipeline with the
+/// release profile, then the staging and the dynamic-linking refusal
+/// `jd export` applies, all off the render loop — an `assets/` tree can
+/// be thousands of files.
 fn spawn_export_task(
     root: PathBuf,
     spec: ShimSpec,
@@ -486,7 +485,7 @@ mod tests {
             );
             exports.progress = Some(Arc::new(Mutex::new(BuildProgress::default())));
         }
-        crate::pie::reconcile_build_status(&mut world);
+        crate::project_build::reconcile_build_status(&mut world);
         assert!(
             matches!(
                 world.resource::<BuildStatus>().state,
@@ -498,7 +497,7 @@ mod tests {
         // Once the export is gone the footer is free again: an export
         // ends by taking the task and its sink out together.
         *world.resource_mut::<GameExports>() = GameExports::default();
-        crate::pie::reconcile_build_status(&mut world);
+        crate::project_build::reconcile_build_status(&mut world);
         assert!(
             matches!(
                 world.resource::<BuildStatus>().state,
