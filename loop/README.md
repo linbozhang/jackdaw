@@ -15,6 +15,17 @@
 - 设计图: Bevy Editor Figma（README 内链接）
 - 本地已知缺口: book/src/developer-guide/open-challenges.md
 - 仓库约定: CONTRIBUTING.md（operator 模式、检查分级、PR 规范）
+- **框架验收规则（用户指令 2026-11-09，最高优先级约束）：`loop/rules/framework-rules.md`**——新增功能/修复/重构一律按 R0-R9 验收，不得突破框架限制；策划方案书须含「框架影响面」小节，QA 按规则逐条验收，例外必须显式记档。
+
+## 框架验收规则（2026-11-09 用户裁定新增）
+
+全部新增功能按 `loop/rules/framework-rules.md` 做**框架验收**：R0 圈层依赖方向、R1
+Operator 纪律（四声明+census 登记）、R2 AST 真理之源、R3 Extension 接线（禁止死模块）、
+R4 Runtime/Editor 独立、R5 并发与 IO（后台不摸 World/原子写/禁 sleep 等待）、R6 序列化
+与资源（sidecar/引用重写/settle 双臂）、R7 UI 纪律（feathers/算子入口/chrome 不泄漏）、
+R8 门禁底线（四门+六模块无新增红，已知红清单由台账维护）、R9 验收流程（策划→程序→QA→
+主控逐层背书，例外显式记档）。文档附程序提交前自检清单。守卫测试与规则一一对应；
+新增强制规则须同步新增守卫测试。
 
 ## 验收门（QA 每任务必跑，quick tier）
 
