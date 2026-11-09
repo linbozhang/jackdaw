@@ -537,79 +537,56 @@ pub fn pie_handler(In(_): In<Option<Value>>, world: &mut World) -> BrpResult {
     let instances: Vec<Value> = world
         .get_non_send::<jackdaw_editor_core::pie::PieSession>()
         .map(|session| {
-            session
-                .instance_faces()
-                .into_iter()
-                .map(|face| {
-                    let scene_source = match &face.scene_override {
-                        Some(override_launch) if override_launch.from_temp_copy => "unsaved-copy",
-                        Some(_) => "named",
-                        None => "none",
+            let mut faces: Vec<Value> = session
+                .children
+                .iter()
+                .map(|(key, stage)| {
+                    let stage = match stage {
+                        jackdaw_editor_core::pie::ChildStage::Connecting { .. } => "connecting",
+                        jackdaw_editor_core::pie::ChildStage::Live { .. } => "live",
                     };
+                    let scene = session
+                        .launch_scenes
+                        .get(key)
+                        .map(|launch| match &launch.scene {
+                            jackdaw_editor_core::play_scene::PlayScene::Path(path) => {
+                                path.as_str()
+                            }
+                            jackdaw_editor_core::play_scene::PlayScene::Untitled(name) => {
+                                name.as_str()
+                            }
+                        });
                     json!({
-                        "key": face.key.to_string(),
-                        "config": face.key.config,
-                        "instance": face.key.instance,
-                        "stage": face.stage,
-                        "scene_override": face
-                            .scene_override
-                            .as_ref()
-                            .map(|override_launch| &override_launch.assets_relative),
-                        "scene_source": scene_source,
+                        "key": key.to_string(),
+                        "config": key.config,
+                        "instance": key.instance,
+                        "stage": stage,
+                        "scene": scene,
                     })
                 })
-                .collect()
+                .collect();
+            faces.sort_by(|a, b| {
+                let key = |face: &Value| {
+                    (
+                        face["config"].as_str().unwrap_or_default().to_string(),
+                        face["instance"].as_u64().unwrap_or(0),
+                    )
+                };
+                key(a).cmp(&key(b))
+            });
+            faces
         })
         .unwrap_or_default();
 
-    let view_mode = world
-        .get_resource::<jackdaw_editor_core::pie_mirror::PieViewMode>()
-        .map(|mode| match *mode {
-            jackdaw_editor_core::pie_mirror::PieViewMode::Live => "live",
-            jackdaw_editor_core::pie_mirror::PieViewMode::Scene => "scene",
-        })
-        .unwrap_or("scene");
     let focused = world
-        .get_resource::<jackdaw_editor_core::pie_mirror::PieInstances>()
+        .get_resource::<jackdaw_editor_core::pie::PieInstances>()
         .and_then(|instances| instances.focused.as_ref())
         .map(std::string::ToString::to_string);
 
-    let (entities, authored) = world
-        .get_resource::<jackdaw_editor_core::pie_projection::PieProjection>()
-        .map(|projection| {
-            let mapped: Vec<Entity> = projection.by_bits.values().copied().collect();
-            let authored = mapped
-                .iter()
-                .filter(|entity| {
-                    world
-                        .get::<jackdaw_editor_core::pie_projection::PieEphemeral>(**entity)
-                        .is_none()
-                })
-                .count();
-            (mapped.len(), authored)
-        })
-        .unwrap_or((0, 0));
-    let ephemeral = world
-        .query_filtered::<Entity, With<jackdaw_editor_core::pie_projection::PieEphemeral>>()
-        .iter(world)
-        .count();
-
-    let live_edits = world
-        .get_resource::<jackdaw_editor_core::live_edits::LiveEditLog>()
-        .map(|log| log.entries.len())
-        .unwrap_or(0);
-
     Ok(json!({
         "status": jackdaw_editor_core::pie::play_status(world),
-        "view_mode": view_mode,
         "focused": focused,
         "instances": instances,
-        "projection": {
-            "entities": entities,
-            "authored": authored,
-            "ephemeral": ephemeral,
-        },
-        "live_edits": live_edits,
     }))
 }
 
@@ -2840,65 +2817,20 @@ mod tests {
     /// pending live edit, and a session that never launched anything.
     fn pie_face_world() -> World {
         let mut world = World::new();
-        world.init_resource::<jackdaw_editor_core::selection::Selection>();
-        world.init_resource::<jackdaw_editor_core::pie_projection::PieProjection>();
-        world.init_resource::<jackdaw_editor_core::pie_mirror::PieInstances>();
-        world.init_resource::<jackdaw_editor_core::pie_mirror::PieViewMode>();
-        world.init_resource::<jackdaw_editor_core::live_edits::LiveEditLog>();
-
-        let authored = world
-            .spawn((
-                bevy::prelude::Name::new("Authored"),
-                bevy::prelude::Transform::default(),
-            ))
-            .id();
-        world.spawn((
-            jackdaw_editor_core::pie_projection::PieEphemeral,
-            bevy::prelude::Name::new("GameActor"),
-        ));
-        let mut projection =
-            world.resource_mut::<jackdaw_editor_core::pie_projection::PieProjection>();
-        projection.by_bits.insert(0xA0, authored);
+        world.init_resource::<jackdaw_editor_core::pie::PieInstances>();
         world.insert_non_send(jackdaw_editor_core::pie::PieSession::default());
         world
     }
 
-    /// The face over a stopped session: stopped, no instances, and the
-    /// projection's shape counted from the world itself.
+    /// The face over a stopped session: stopped and no instances.
     #[test]
     fn pie_face_reports_a_stopped_session() {
         let mut world = pie_face_world();
-
-        // One pending live edit, so the count is exercised.
-        {
-            let key = jackdaw_editor_core::live_edits::LiveEditKey {
-                bits: 0xA0,
-                type_path: "T".to_string(),
-                field_path: String::new(),
-            };
-            let entry = jackdaw_editor_core::live_edits::LiveEditEntry {
-                node_id: None,
-                baseline: None,
-                live_value: serde_json::json!(null),
-                label: "probe".to_string(),
-                kind: jackdaw_editor_core::live_edits::LiveEditKind::Field,
-            };
-            world
-                .resource_mut::<jackdaw_editor_core::live_edits::LiveEditLog>()
-                .entries
-                .push((key, entry));
-        }
 
         let answer = pie_handler(In(None), &mut world).expect("the face answers");
         let face = answer.as_object().expect("an object");
         assert_eq!(face["status"], "stopped");
         assert_eq!(face["instances"].as_array().map(Vec::len), Some(0));
-        assert_eq!(face["live_edits"], 1);
-        let projection = face["projection"].as_object().expect("an object");
-        assert_eq!(projection["entities"], 1, "one mapped preview entity");
-        assert_eq!(projection["authored"], 1, "the mapped one is authored");
-        assert_eq!(projection["ephemeral"], 1, "one ephemeral, unmapped");
-        assert_eq!(face["view_mode"], "scene");
     }
 
     /// The export face's four states, driven the way the editor drives

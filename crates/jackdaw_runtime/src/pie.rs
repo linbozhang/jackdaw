@@ -79,9 +79,6 @@ pub fn attach_pie(app: &mut App, transport: IpcChannelTransport) {
             Err(direct) => Box::new(direct),
         };
     install_link(app, link);
-    // The game's log lines stream to the editor's Game panel (the relay half
-    // was planted by the LogPlugin custom layer `maybe_windowless` set up).
-    crate::pie_log::install(app);
 
     if crate::pie_windowless::windowless_active(app) {
         crate::pie_windowless::setup_windowless(app);

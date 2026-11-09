@@ -59,17 +59,7 @@ pub fn maybe_windowless(plugins: impl PluginGroup) -> PluginGroupBuilder {
     if crate::schema_extraction_requested() {
         return builder.disable::<bevy::winit::WinitPlugin>();
     }
-    // A PIE launch joins a log-relay layer onto the subscriber LogPlugin
-    // builds, so the game's own log lines stream to the editor's Game panel.
-    // Outside the editor the group is left exactly as the game configured it.
-    let builder = if crate::pie::pie_config().is_some() {
-        builder.set(bevy::log::LogPlugin {
-            custom_layer: crate::pie_log::pie_log_relayer,
-            ..Default::default()
-        })
-    } else {
-        builder
-    };
+    let builder = builder;
     if !windowless_requested() {
         return builder;
     }

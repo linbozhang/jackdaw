@@ -2022,7 +2022,7 @@ fn apply_fields_to_prefab(world: &mut World, writes: Vec<FieldWrite>) -> usize {
                 }
             });
         if results.iter().any(|(_, wrote)| *wrote) {
-            written_sources.push(source);
+            written_sources.push(source.clone());
         }
         for (write, wrote) in results {
             if wrote {
@@ -2403,6 +2403,7 @@ pub fn apply_all_overrides_to_source(world: &mut World, instance_root_node: Enti
                  entit(ies) of another prefab"
             ),
         );
+    }
 }
 
 /// A prefab document as text for the file at `path`. A prefab that instances

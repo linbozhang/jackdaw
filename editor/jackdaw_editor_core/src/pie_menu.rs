@@ -23,6 +23,7 @@ use crate::pie::{
 };
 use crate::play_scene::PlayScene;
 use crate::play_settings::{PlayEdits, PlayEditsOp, PlaySettings};
+use jackdaw_pie_protocol::manifest::RunConfig;
 use crate::run_config::{CargoMeta, RunConfigs, read_run_configs, scaffold_manifest};
 
 const MENU_MIN_WIDTH: f32 = 220.0;

@@ -1,0 +1,172 @@
+warning: output filename collision at /Users/linbo.zhang/workspace/jackdaw/target/debug/jackdaw-rustc-wrapper
+  |
+  = note: the bin target `jackdaw-rustc-wrapper` in package `jackdaw_rustc_wrapper v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_rustc_wrapper)` has the same output filename as the bin target `jackdaw-rustc-wrapper` in package `jackdaw v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw)`
+  = note: this may become a hard error in the future; see <https://github.com/rust-lang/cargo/issues/6313>
+  = help: consider changing their names to be unique or compiling them separately
+warning: output filename collision at /Users/linbo.zhang/workspace/jackdaw/target/debug/jackdaw-rustc-wrapper.dSYM
+  |
+  = note: the bin target `jackdaw-rustc-wrapper` in package `jackdaw_rustc_wrapper v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_rustc_wrapper)` has the same output filename as the bin target `jackdaw-rustc-wrapper` in package `jackdaw v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw)`
+  = note: this may become a hard error in the future; see <https://github.com/rust-lang/cargo/issues/6313>
+  = help: consider changing their names to be unique or compiling them separately
+   Compiling jackdaw_editor_core v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/editor/jackdaw_editor_core)
+error[E0425]: cannot find function `try_route_pie_live_field_edit` in module `crate::inspector::reflect_fields`
+   --> editor/jackdaw_editor_core/src/remote_ops.rs:267:46
+    |
+267 |         if crate::inspector::reflect_fields::try_route_pie_live_field_edit(
+    |                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in `crate::inspector::reflect_fields`
+
+error[E0603]: struct import `RunConfig` is private
+  --> editor/jackdaw_editor_core/src/pie_menu.rs:26:36
+   |
+26 | use crate::run_config::{CargoMeta, RunConfig, RunConfigs, read_run_configs, scaffold_manifest};
+   |                                    ^^^^^^^^^ private struct import
+   |
+note: the struct import `RunConfig` is defined here...
+  --> editor/jackdaw_editor_core/src/run_config.rs:6:48
+   |
+ 6 | use jackdaw_pie_protocol::manifest::{Manifest, RunConfig};
+   |                                                ^^^^^^^^^
+note: ...and refers to the struct `RunConfig` which is defined here
+  --> crates/jackdaw_pie_protocol/src/manifest.rs:18:1
+   |
+18 | pub struct RunConfig {
+   | ^^^^^^^^^^^^^^^^^^^^ you could import this directly
+
+error[E0599]: no method named `into_task` found for struct `GameBuildTask` in the current scope
+   --> editor/jackdaw_editor_core/src/game_export.rs:283:27
+    |
+283 |         let build = build.into_task().await.map_err(|err| err.to_string())?;
+    |                           ^^^^^^^^^
+    |
+   ::: editor/jackdaw_editor_core/src/pie.rs:236:1
+    |
+236 | pub(crate) struct GameBuildTask {
+    | ------------------------------- method `into_task` not found for this struct
+    |
+help: there is a method `into_raw` with a similar name
+    |
+283 -         let build = build.into_task().await.map_err(|err| err.to_string())?;
+283 +         let build = build.into_raw().await.map_err(|err| err.to_string())?;
+    |
+
+error[E0308]: mismatched types
+    --> editor/jackdaw_editor_core/src/pie.rs:1282:79
+     |
+1282 |     let binary = project_root(world).and_then(|root| match session.builds.get(&root) {
+     |                                                                           --- ^^^^^ expected `&(PathBuf, Option<CargoTarget>)`, found `&PathBuf`
+     |                                                                           |
+     |                                                                           arguments to this method are incorrect
+     |
+     = note: expected reference `&(PathBuf, std::option::Option<CargoTarget>)`
+                found reference `&PathBuf`
+note: method defined here
+    --> /rustc/b940084d7eb6a299eb4bfeb8e34901bc051e7ac4/library/std/src/collections/hash/map.rs:1034:11
+
+error[E0308]: mismatched types
+    --> editor/jackdaw_editor_core/src/pie.rs:1514:21
+     |
+1514 |             target: run.target.clone(),
+     |                     ^^^^^^^^^^^^^^^^^^ expected `Option<CargoTarget>`, found `Option<RunTarget>`
+     |
+     = note: expected enum `Option<CargoTarget>`
+                found enum `Option<RunTarget>`
+
+error[E0308]: mismatched types
+    --> editor/jackdaw_editor_core/src/pie.rs:1528:58
+     |
+1528 |     let (task, progress) = spawn_game_build(&root, spec, target, BuildLoad::Foreground);
+     |                            ----------------              ^^^^^^ expected `Option<CargoTarget>`, found `Option<RunTarget>`
+     |                            |
+     |                            arguments to this function are incorrect
+     |
+     = note: expected enum `Option<CargoTarget>`
+                found enum `Option<RunTarget>`
+note: function defined here
+    --> editor/jackdaw_editor_core/src/pie.rs:1691:15
+     |
+1691 | pub(crate) fn spawn_game_build(
+     |               ^^^^^^^^^^^^^^^^
+...
+1694 |     target: Option<CargoTarget>,
+     |     ---------------------------
+
+error[E0308]: mismatched types
+    --> editor/jackdaw_editor_core/src/pie.rs:1536:25
+     |
+1536 |                 target: run.target.clone(),
+     |                         ^^^^^^^^^^^^^^^^^^ expected `Option<CargoTarget>`, found `Option<RunTarget>`
+     |
+     = note: expected enum `Option<CargoTarget>`
+                found enum `Option<RunTarget>`
+
+error[E0599]: no method named `file_name` found for reference `&(PathBuf, std::option::Option<CargoTarget>)` in the current scope
+    --> editor/jackdaw_editor_core/src/pie.rs:2256:36
+     |
+2256 |                 let project = root.file_name().map_or_else(
+     |                                    ^^^^^^^^^ method not found in `&(PathBuf, std::option::Option<CargoTarget>)`
+     |
+help: one of the expressions' fields has a method of the same name
+     |
+2256 |                 let project = root.0.file_name().map_or_else(
+     |                                    ++
+
+error[E0599]: no method named `display` found for reference `&(PathBuf, std::option::Option<CargoTarget>)` in the current scope
+    --> editor/jackdaw_editor_core/src/pie.rs:2257:29
+     |
+2257 |                     || root.display().to_string(),
+     |                             ^^^^^^^
+     |
+     = help: items from traits can only be used if the trait is implemented and in scope
+note: `Displayable` defines an item `display`, perhaps you need to implement it
+    --> editor/jackdaw_editor_core/src/inspector/mod.rs:106:1
+     |
+ 106 | pub trait Displayable {
+     | ^^^^^^^^^^^^^^^^^^^^^
+help: one of the expressions' fields has a method of the same name
+     |
+2257 |                     || root.0.display().to_string(),
+     |                             ++
+help: there is a method `fmt_display` with a similar name
+     |
+2257 |                     || root.fmt_display().to_string(),
+     |                             ++++
+
+error[E0507]: cannot move out of `run_configs.manifest.runs` which is behind a shared reference
+    --> editor/jackdaw_editor_core/src/pie.rs:1423:23
+     |
+1423 |     let Some(first) = run_configs.manifest.runs.into_iter().next() else {
+     |                       ^^^^^^^^^^^^^^^^^^^^^^^^^ ----------- `run_configs.manifest.runs` moved due to this method call
+     |                       |
+     |                       move occurs because `run_configs.manifest.runs` has type `std::vec::Vec<RunConfig>`, which does not implement the `Copy` trait
+     |
+note: `std::iter::IntoIterator::into_iter` takes ownership of the receiver `self`, which moves `run_configs.manifest.runs`
+    --> /rustc/b940084d7eb6a299eb4bfeb8e34901bc051e7ac4/library/core/src/iter/traits/collect.rs:312:17
+help: consider cloning the value if the performance cost is acceptable
+     |
+1423 |     let Some(first) = run_configs.manifest.runs.clone().into_iter().next() else {
+     |                                                ++++++++
+
+error[E0382]: borrow of moved value: `source`
+    --> editor/jackdaw_editor_core/src/prefab/operators.rs:2035:21
+     |
+2005 |     for (source, group) in groups {
+     |          ------
+     |          |
+     |          this reinitialization might get skipped
+     |          move occurs because `source` has type `PathBuf`, which does not implement the `Copy` trait
+...
+2025 |             written_sources.push(source);
+     |                                  ------ value moved here
+...
+2035 |                     source.display()
+     |                     ^^^^^^ value borrowed here after move
+     |
+     = note: borrow occurs due to deref coercion to `std::path::Path`
+help: consider cloning the value if the performance cost is acceptable
+     |
+2025 |             written_sources.push(source.clone());
+     |                                        ++++++++
+
+Some errors have detailed explanations: E0308, E0382, E0425, E0507, E0599, E0603.
+For more information about an error, try `rustc --explain E0308`.
+error: could not compile `jackdaw_editor_core` (lib) due to 11 previous errors

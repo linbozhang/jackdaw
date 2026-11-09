@@ -1,0 +1,105 @@
+warning: output filename collision at /Users/linbo.zhang/workspace/jackdaw/target/debug/jackdaw-rustc-wrapper
+  |
+  = note: the bin target `jackdaw-rustc-wrapper` in package `jackdaw_rustc_wrapper v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_rustc_wrapper)` has the same output filename as the bin target `jackdaw-rustc-wrapper` in package `jackdaw v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw)`
+  = note: this may become a hard error in the future; see <https://github.com/rust-lang/cargo/issues/6313>
+  = help: consider changing their names to be unique or compiling them separately
+warning: output filename collision at /Users/linbo.zhang/workspace/jackdaw/target/debug/jackdaw-rustc-wrapper.dSYM
+  |
+  = note: the bin target `jackdaw-rustc-wrapper` in package `jackdaw_rustc_wrapper v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_rustc_wrapper)` has the same output filename as the bin target `jackdaw-rustc-wrapper` in package `jackdaw v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw)`
+  = note: this may become a hard error in the future; see <https://github.com/rust-lang/cargo/issues/6313>
+  = help: consider changing their names to be unique or compiling them separately
+   Compiling jackdaw_editor_core v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/editor/jackdaw_editor_core)
+warning: type `OutputCapture` is more private than the item `ChildStage::Connecting::output`
+   --> editor/jackdaw_editor_core/src/pie.rs:177:9
+    |
+177 |         output: OutputCapture,
+    |         ^^^^^^^^^^^^^^^^^^^^^ field `ChildStage::Connecting::output` is reachable at visibility `pub`
+    |
+note: but type `OutputCapture` is only usable at visibility `pub(crate)`
+   --> editor/jackdaw_editor_core/src/game_output.rs:411:1
+    |
+411 | pub(crate) struct OutputCapture {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    = note: `#[warn(private_interfaces)]` on by default
+
+warning: type `GameOutbox` is more private than the item `ChildStage::Live::outbox`
+   --> editor/jackdaw_editor_core/src/pie.rs:185:9
+    |
+185 |         outbox: GameOutbox,
+    |         ^^^^^^^^^^^^^^^^^^ field `ChildStage::Live::outbox` is reachable at visibility `pub`
+    |
+note: but type `GameOutbox` is only usable at visibility `pub(crate)`
+   --> editor/jackdaw_editor_core/src/pie_outbox.rs:48:1
+    |
+ 48 | pub(crate) struct GameOutbox {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: type `OutputCapture` is more private than the item `ChildStage::Live::output`
+   --> editor/jackdaw_editor_core/src/pie.rs:186:9
+    |
+186 |         output: OutputCapture,
+    |         ^^^^^^^^^^^^^^^^^^^^^ field `ChildStage::Live::output` is reachable at visibility `pub`
+    |
+note: but type `OutputCapture` is only usable at visibility `pub(crate)`
+   --> editor/jackdaw_editor_core/src/game_output.rs:411:1
+    |
+411 | pub(crate) struct OutputCapture {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: method `progress` is never used
+  --> editor/jackdaw_editor_core/src/game_export.rs:64:19
+   |
+61 | impl GameExports {
+   | ---------------- method in this implementation
+...
+64 |     pub(crate) fn progress(&self) -> Option<Arc<Mutex<BuildProgress>>> {
+   |                   ^^^^^^^^
+   |
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: method `progress` is never used
+   --> editor/jackdaw_editor_core/src/extension_build.rs:127:19
+    |
+125 | impl ExtensionBuild {
+    | ------------------- method in this implementation
+126 |     /// The progress of a build that has not finished, for the status bar.
+127 |     pub(crate) fn progress(&self) -> Option<Arc<Mutex<BuildProgress>>> {
+    |                   ^^^^^^^^
+
+warning: field `target` is never read
+   --> editor/jackdaw_editor_core/src/pie.rs:272:5
+    |
+268 | pub(crate) struct PendingSpawn {
+    |                   ------------ field in this struct
+...
+272 |     target: Option<CargoTarget>,
+    |     ^^^^^^
+
+warning: function `play_startup_scene` is never used
+    --> editor/jackdaw_editor_core/src/pie.rs:1431:15
+     |
+1431 | pub(crate) fn play_startup_scene(world: &mut World) {
+     |               ^^^^^^^^^^^^^^^^^^
+
+warning: function `on_startup_row_click` is never used
+   --> editor/jackdaw_editor_core/src/pie_menu.rs:466:4
+    |
+466 | fn on_startup_row_click(
+    |    ^^^^^^^^^^^^^^^^^^^^
+
+warning: constant `TRANSFORM_PATH` is never used
+   --> editor/jackdaw_editor_core/src/remote_ops.rs:255:11
+    |
+255 |     const TRANSFORM_PATH: &str = "bevy_transform::components::transform::Transform";
+    |           ^^^^^^^^^^^^^^
+
+   Compiling jackdaw_editor_remote v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/editor/jackdaw_editor_remote)
+   Compiling jackdaw_editor_launcher v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/editor/jackdaw_editor_launcher)
+   Compiling jackdaw_editor_terrain v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/editor/jackdaw_editor_terrain)
+   Compiling jackdaw_editor_animation v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/editor/jackdaw_editor_animation)
+   Compiling jackdaw_editor_modelling v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/editor/jackdaw_editor_modelling)
+   Compiling jackdaw_editor_tile v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/editor/jackdaw_editor_tile)
+   Compiling jackdaw v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw)
+   Compiling jackdaw_editor v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_editor)
+warning: `jackdaw_editor_core` (lib) generated 9 warnings
+    Finished `dev` profile [optimized + debuginfo] target(s) in 48.36s

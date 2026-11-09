@@ -575,7 +575,21 @@ pub fn transition_to_editor(world: &mut World, root: PathBuf) {
     // The same for the temporary run copies a killed editor left under
     // `assets/.jackdaw-pie/`: every copy is regenerable and named for the
     // editor pid that wrote it, so a fresh open owes them nothing.
-    jackdaw_editor_core::pie_current::sweep_orphan_pie_copies(&root);
+    let pie_copies = root.join("assets/.jackdaw-pie");
+    if pie_copies.is_dir() {
+        let swept_copies = std::fs::read_dir(&pie_copies)
+            .map(|entries| {
+                entries
+                    .filter_map(|entry| entry.ok())
+                    .filter(|entry| entry.path().is_file())
+                    .filter_map(|entry| std::fs::remove_file(entry.path()).ok())
+                    .count()
+            })
+            .unwrap_or(0);
+        if swept_copies > 0 {
+            info!("removed {swept_copies} orphan play copy(ies) left by a killed editor");
+        }
+    }
 
     // The crash journal's session starts with the project: a directory
     // under the state tree that periodic snapshots of dirty tabs fill and

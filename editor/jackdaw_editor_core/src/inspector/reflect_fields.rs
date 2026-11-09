@@ -3640,8 +3640,9 @@ pub(super) fn spawn_enum_menu(
                 };
                 let path = path.clone();
                 let tp = tp.clone();
+                let source = source_entity;
                 commands.queue(move |world: &mut World| {
-                    apply_enum_variant_with_undo(world, &tp, &path, &variant);
+                    apply_enum_variant_with_undo(world, source, &tp, &path, &variant);
                 });
             },
         );
@@ -3787,6 +3788,7 @@ pub(super) fn spawn_variant_contents(
 /// Apply an enum variant change with undo support.
 pub(super) fn apply_enum_variant_with_undo(
     world: &mut World,
+    source_entity: Entity,
     type_path: &str,
     field_path: &str,
     variant_name: &str,
@@ -3808,14 +3810,14 @@ pub(super) fn apply_enum_variant_with_undo(
 
     // A resource's enum field is editor-session state: write the resource,
     // never the document pipeline and never the PIE stream.
-    if super::resource_commands::is_resource_entity(world, _entity) {
+    if super::resource_commands::is_resource_entity(world, source_entity) {
         super::resource_commands::resource_field_commit(world, type_path, field_path, &new_json);
         return;
     }
 
     crate::commands::field_edit_commit(
         world,
-        None,
+        Some(source_entity),
         type_path,
         field_path,
         &new_json,

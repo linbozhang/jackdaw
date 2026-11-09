@@ -263,6 +263,8 @@ pub(crate) fn release_watch_under(world: &mut World, moved: &Path) {
         }
     }
     state.watched.retain(|watched| !leaving.contains(watched));
+}
+
 /// Ask whether to reload tab `tab`, for every file kept beside its document
 /// that changed on disk while the editor holds edits a save would write over
 /// it. A prompt already waiting on that tab takes the files on. Nothing is

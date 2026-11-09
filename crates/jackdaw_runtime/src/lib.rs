@@ -94,7 +94,6 @@ mod pie_audio;
 #[cfg(feature = "pie")]
 mod pie_frames;
 #[cfg(feature = "pie")]
-mod pie_log;
 #[cfg(feature = "pie")]
 mod pie_windowless;
 #[cfg(feature = "pie")]

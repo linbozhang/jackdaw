@@ -1,0 +1,327 @@
+warning: output filename collision at /Users/linbo.zhang/workspace/jackdaw/target/debug/jackdaw-rustc-wrapper
+  |
+  = note: the bin target `jackdaw-rustc-wrapper` in package `jackdaw_rustc_wrapper v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_rustc_wrapper)` has the same output filename as the bin target `jackdaw-rustc-wrapper` in package `jackdaw v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw)`
+  = note: this may become a hard error in the future; see <https://github.com/rust-lang/cargo/issues/6313>
+  = help: consider changing their names to be unique or compiling them separately
+warning: output filename collision at /Users/linbo.zhang/workspace/jackdaw/target/debug/jackdaw-rustc-wrapper.dSYM
+  |
+  = note: the bin target `jackdaw-rustc-wrapper` in package `jackdaw_rustc_wrapper v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_rustc_wrapper)` has the same output filename as the bin target `jackdaw-rustc-wrapper` in package `jackdaw v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw)`
+  = note: this may become a hard error in the future; see <https://github.com/rust-lang/cargo/issues/6313>
+  = help: consider changing their names to be unique or compiling them separately
+   Compiling jackdaw_editor_core v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/editor/jackdaw_editor_core)
+error[E0252]: the name `WorkerOutcome` is defined multiple times
+  --> editor/jackdaw_editor_core/src/pie.rs:55:26
+   |
+46 | use crate::worker_task::{WorkerOutcome, WorkerTask};
+   |                          ------------- previous import of the type `WorkerOutcome` here
+...
+55 | use crate::worker_task::{WorkerOutcome, WorkerTask};
+   |                          ^^^^^^^^^^^^^--
+   |                          |
+   |                          `WorkerOutcome` reimported here
+   |                          help: remove unnecessary import
+   |
+   = note: `WorkerOutcome` must be defined only once in the type namespace of this module
+
+error[E0252]: the name `WorkerTask` is defined multiple times
+  --> editor/jackdaw_editor_core/src/pie.rs:55:41
+   |
+46 | use crate::worker_task::{WorkerOutcome, WorkerTask};
+   |                                         ---------- previous import of the type `WorkerTask` here
+...
+55 | use crate::worker_task::{WorkerOutcome, WorkerTask};
+   |                                         ^^^^^^^^^^ `WorkerTask` reimported here
+   |
+   = note: `WorkerTask` must be defined only once in the type namespace of this module
+
+error[E0432]: unresolved import `crate::pie::launch_instance_with_override`
+  --> editor/jackdaw_editor_core/src/pie_current.rs:26:31
+   |
+26 | use crate::pie::{InstanceKey, launch_instance_with_override};
+   |                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ no `launch_instance_with_override` in `pie`
+
+error[E0425]: cannot find function `save_scenes_before_launch` in module `crate::pie`
+   --> editor/jackdaw_editor_core/src/game_export.rs:184:39
+    |
+184 |     if let Err(message) = crate::pie::save_scenes_before_launch(world, "exporting") {
+    |                                       ^^^^^^^^^^^^^^^^^^^^^^^^^ not found in `crate::pie`
+
+error[E0425]: cannot find value `_entity` in this scope
+    --> editor/jackdaw_editor_core/src/inspector/reflect_fields.rs:3811:60
+     |
+3811 |     if super::resource_commands::is_resource_entity(world, _entity) {
+     |                                                            ^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `source_entity` in this scope
+   --> editor/jackdaw_editor_core/src/inspector/val_field.rs:386:60
+    |
+386 |     if super::resource_commands::is_resource_entity(world, source_entity) {
+    |                                                            ^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `source_entity` in this scope
+   --> editor/jackdaw_editor_core/src/inspector/val_field.rs:397:18
+    |
+397 |             Some(source_entity),
+    |                  ^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `source_entity` in this scope
+   --> editor/jackdaw_editor_core/src/inspector/val_field.rs:406:18
+    |
+406 |             Some(source_entity),
+    |                  ^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `reconcile_build_status` in module `crate::project_build`
+    --> editor/jackdaw_editor_core/src/pie.rs:2215:27
+     |
+2215 |     crate::project_build::reconcile_build_status(world);
+     |                           ^^^^^^^^^^^^^^^^^^^^^^ not found in `crate::project_build`
+
+error[E0425]: cannot find function `save_scenes_before_launch` in module `crate::pie`
+   --> editor/jackdaw_editor_core/src/pie_current.rs:287:25
+    |
+287 |             crate::pie::save_scenes_before_launch(world, action)?;
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^ not found in `crate::pie`
+
+error[E0425]: cannot find function `modified_tabs` in module `crate::scenes::operators`
+   --> editor/jackdaw_editor_core/src/pie_current.rs:291:44
+    |
+291 |                 &crate::scenes::operators::modified_tabs(world),
+    |                                            ^^^^^^^^^^^^^ not found in `crate::scenes::operators`
+
+error[E0425]: cannot find type `RunConfig` in this scope
+   --> editor/jackdaw_editor_core/src/pie_menu.rs:380:23
+    |
+380 | fn target_badge(run: &RunConfig) -> Option<String> {
+    |                       ^^^^^^^^^
+    |
+   ::: editor/jackdaw_editor_core/src/run_config.rs:11:1
+    |
+ 11 | pub struct RunConfigs {
+    | --------------------- similarly named struct `RunConfigs` defined here
+    |
+help: a struct with a similar name exists
+    |
+380 | fn target_badge(run: &RunConfigs) -> Option<String> {
+    |                                +
+
+error[E0425]: cannot find function `try_route_pie_live_field_edit` in module `crate::inspector::reflect_fields`
+   --> editor/jackdaw_editor_core/src/remote_ops.rs:267:46
+    |
+267 |         if crate::inspector::reflect_fields::try_route_pie_live_field_edit(
+    |                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in `crate::inspector::reflect_fields`
+
+warning: unused imports: `WorkerOutcome` and `WorkerTask`
+  --> editor/jackdaw_editor_core/src/pie.rs:55:26
+   |
+55 | use crate::worker_task::{WorkerOutcome, WorkerTask};
+   |                          ^^^^^^^^^^^^^  ^^^^^^^^^^
+   |
+   = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+error[E0277]: `GameBuildTask` is not a future
+   --> editor/jackdaw_editor_core/src/game_export.rs:241:27
+    |
+241 |         let build = build.await.map_err(|err| err.to_string())?;
+    |                           ^^^^^ `GameBuildTask` is not a future
+    |
+help: the trait `std::future::Future` is not implemented for `GameBuildTask`
+   --> editor/jackdaw_editor_core/src/pie.rs:238:1
+    |
+238 | pub(crate) struct GameBuildTask {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    = note: GameBuildTask must be a future or must implement `IntoFuture` to be awaited
+    = note: required for `GameBuildTask` to implement `IntoFuture`
+help: remove the `.await`
+    |
+241 -         let build = build.await.map_err(|err| err.to_string())?;
+241 +         let build = build.map_err(|err| err.to_string())?;
+    |
+
+error[E0433]: cannot find module or crate `runtime_card` in this scope
+   --> editor/jackdaw_editor_core/src/inspector/mod.rs:241:25
+    |
+241 |                         runtime_card::sync_runtime_card
+    |                         ^^^^^^^^^^^^ use of unresolved module or unlinked crate `runtime_card`
+    |
+help: there is a crate or module with a similar name
+    |
+241 -                         runtime_card::sync_runtime_card
+241 +                         recipe_card::sync_runtime_card
+    |
+
+error[E0433]: cannot find module or crate `runtime_card` in this scope
+   --> editor/jackdaw_editor_core/src/inspector/mod.rs:242:37
+    |
+242 | ...                   .run_if(runtime_card::runtime_card_may_change),
+    |                               ^^^^^^^^^^^^ use of unresolved module or unlinked crate `runtime_card`
+    |
+help: there is a crate or module with a similar name
+    |
+242 -                             .run_if(runtime_card::runtime_card_may_change),
+242 +                             .run_if(recipe_card::runtime_card_may_change),
+    |
+
+error[E0308]: mismatched types
+    --> editor/jackdaw_editor_core/src/pie.rs:1099:17
+     |
+1099 |         .insert(root, BuildState::Done(binary));
+     |          ------ ^^^^ expected `(PathBuf, Option<CargoTarget>)`, found `PathBuf`
+     |          |
+     |          arguments to this method are incorrect
+     |
+     = note: expected tuple `(PathBuf, std::option::Option<CargoTarget>)`
+               found struct `PathBuf`
+note: method defined here
+    --> /rustc/b940084d7eb6a299eb4bfeb8e34901bc051e7ac4/library/std/src/collections/hash/map.rs:1332:11
+
+error[E0308]: mismatched types
+    --> editor/jackdaw_editor_core/src/pie.rs:1121:9
+     |
+1120 |     world.non_send_mut::<PieSession>().builds.insert(
+     |                                               ------ arguments to this method are incorrect
+1121 |         root,
+     |         ^^^^ expected `(PathBuf, Option<CargoTarget>)`, found `PathBuf`
+     |
+     = note: expected tuple `(PathBuf, std::option::Option<CargoTarget>)`
+               found struct `PathBuf`
+note: method defined here
+    --> /rustc/b940084d7eb6a299eb4bfeb8e34901bc051e7ac4/library/std/src/collections/hash/map.rs:1332:11
+
+error[E0308]: mismatched types
+    --> editor/jackdaw_editor_core/src/pie.rs:1284:79
+     |
+1284 |     let binary = project_root(world).and_then(|root| match session.builds.get(&root) {
+     |                                                                           --- ^^^^^ expected `&(PathBuf, Option<CargoTarget>)`, found `&PathBuf`
+     |                                                                           |
+     |                                                                           arguments to this method are incorrect
+     |
+     = note: expected reference `&(PathBuf, std::option::Option<CargoTarget>)`
+                found reference `&PathBuf`
+note: method defined here
+    --> /rustc/b940084d7eb6a299eb4bfeb8e34901bc051e7ac4/library/std/src/collections/hash/map.rs:1034:11
+
+error[E0308]: mismatched types
+    --> editor/jackdaw_editor_core/src/pie.rs:1516:21
+     |
+1516 |             target: run.target.clone(),
+     |                     ^^^^^^^^^^^^^^^^^^ expected `Option<CargoTarget>`, found `Option<RunTarget>`
+     |
+     = note: expected enum `Option<CargoTarget>`
+                found enum `Option<RunTarget>`
+
+error[E0308]: mismatched types
+    --> editor/jackdaw_editor_core/src/pie.rs:1530:58
+     |
+1530 |     let (task, progress) = spawn_game_build(&root, spec, target, BuildLoad::Foreground);
+     |                            ----------------              ^^^^^^ expected `Option<CargoTarget>`, found `Option<RunTarget>`
+     |                            |
+     |                            arguments to this function are incorrect
+     |
+     = note: expected enum `Option<CargoTarget>`
+                found enum `Option<RunTarget>`
+note: function defined here
+    --> editor/jackdaw_editor_core/src/pie.rs:1693:15
+     |
+1693 | pub(crate) fn spawn_game_build(
+     |               ^^^^^^^^^^^^^^^^
+...
+1696 |     target: Option<CargoTarget>,
+     |     ---------------------------
+
+error[E0308]: mismatched types
+    --> editor/jackdaw_editor_core/src/pie.rs:1538:25
+     |
+1538 |                 target: run.target.clone(),
+     |                         ^^^^^^^^^^^^^^^^^^ expected `Option<CargoTarget>`, found `Option<RunTarget>`
+     |
+     = note: expected enum `Option<CargoTarget>`
+                found enum `Option<RunTarget>`
+
+error[E0599]: no method named `file_name` found for reference `&(PathBuf, std::option::Option<CargoTarget>)` in the current scope
+    --> editor/jackdaw_editor_core/src/pie.rs:2259:36
+     |
+2259 |                 let project = root.file_name().map_or_else(
+     |                                    ^^^^^^^^^ method not found in `&(PathBuf, std::option::Option<CargoTarget>)`
+     |
+help: one of the expressions' fields has a method of the same name
+     |
+2259 |                 let project = root.0.file_name().map_or_else(
+     |                                    ++
+
+error[E0599]: no method named `display` found for reference `&(PathBuf, std::option::Option<CargoTarget>)` in the current scope
+    --> editor/jackdaw_editor_core/src/pie.rs:2260:29
+     |
+2260 |                     || root.display().to_string(),
+     |                             ^^^^^^^
+     |
+     = help: items from traits can only be used if the trait is implemented and in scope
+note: `Displayable` defines an item `display`, perhaps you need to implement it
+    --> editor/jackdaw_editor_core/src/inspector/mod.rs:105:1
+     |
+ 105 | pub trait Displayable {
+     | ^^^^^^^^^^^^^^^^^^^^^
+help: one of the expressions' fields has a method of the same name
+     |
+2260 |                     || root.0.display().to_string(),
+     |                             ++
+help: there is a method `fmt_display` with a similar name
+     |
+2260 |                     || root.fmt_display().to_string(),
+     |                             ++++
+
+error[E0609]: no field `save_before_play` on type `&EditorBuildSettings`
+   --> editor/jackdaw_editor_core/src/pie_current.rs:174:42
+    |
+174 |                 .map(|settings| settings.save_before_play)
+    |                                          ^^^^^^^^^^^^^^^^ unknown field
+    |
+    = note: available fields are: `auto_build`, `prebuild`
+
+error[E0609]: no field `save_before_play` on type `bevy::bevy_ecs::change_detection::Mut<'_, EditorBuildSettings>`
+   --> editor/jackdaw_editor_core/src/pie_current.rs:838:53
+    |
+838 |         world.resource_mut::<EditorBuildSettings>().save_before_play = mode;
+    |                                                     ^^^^^^^^^^^^^^^^ unknown field
+    |
+    = note: available fields are: `auto_build`, `prebuild`
+
+error[E0507]: cannot move out of `run_configs.manifest.runs` which is behind a shared reference
+    --> editor/jackdaw_editor_core/src/pie.rs:1425:23
+     |
+1425 |     let Some(first) = run_configs.manifest.runs.into_iter().next() else {
+     |                       ^^^^^^^^^^^^^^^^^^^^^^^^^ ----------- `run_configs.manifest.runs` moved due to this method call
+     |                       |
+     |                       move occurs because `run_configs.manifest.runs` has type `std::vec::Vec<RunConfig>`, which does not implement the `Copy` trait
+     |
+note: `std::iter::IntoIterator::into_iter` takes ownership of the receiver `self`, which moves `run_configs.manifest.runs`
+    --> /rustc/b940084d7eb6a299eb4bfeb8e34901bc051e7ac4/library/core/src/iter/traits/collect.rs:312:17
+help: consider cloning the value if the performance cost is acceptable
+     |
+1425 |     let Some(first) = run_configs.manifest.runs.clone().into_iter().next() else {
+     |                                                ++++++++
+
+error[E0382]: borrow of moved value: `source`
+    --> editor/jackdaw_editor_core/src/prefab/operators.rs:2035:21
+     |
+2005 |     for (source, group) in groups {
+     |          ------
+     |          |
+     |          this reinitialization might get skipped
+     |          move occurs because `source` has type `PathBuf`, which does not implement the `Copy` trait
+...
+2025 |             written_sources.push(source);
+     |                                  ------ value moved here
+...
+2035 |                     source.display()
+     |                     ^^^^^^ value borrowed here after move
+     |
+     = note: borrow occurs due to deref coercion to `std::path::Path`
+help: consider cloning the value if the performance cost is acceptable
+     |
+2025 |             written_sources.push(source.clone());
+     |                                        ++++++++
+
+Some errors have detailed explanations: E0252, E0277, E0308, E0382, E0425, E0432, E0433, E0507, E0599...
+For more information about an error, try `rustc --explain E0252`.
+warning: `jackdaw_editor_core` (lib) generated 1 warning
+error: could not compile `jackdaw_editor_core` (lib) due to 28 previous errors; 1 warning emitted

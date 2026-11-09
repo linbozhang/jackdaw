@@ -911,7 +911,12 @@ fn spawn_enum_combo(
 
 /// Write path shared by both enum controls, minting the same undo-backed
 /// commit the generic enum menu does.
-fn commit_variant(commands: &mut Commands, field: &'static NodeEnumField, index: usize) {
+fn commit_variant(
+    commands: &mut Commands,
+    source: Entity,
+    field: &'static NodeEnumField,
+    index: usize,
+) {
     let Some(variant) = field.variants.get(index).copied() else {
         warn!(
             "a variant pick on '{}' was dropped: no variant {index} of {}",
@@ -923,6 +928,7 @@ fn commit_variant(commands: &mut Commands, field: &'static NodeEnumField, index:
     commands.queue(move |world: &mut World| {
         super::reflect_fields::apply_enum_variant_with_undo(
             world,
+            source,
             node_type_path(),
             field.path,
             variant,
@@ -942,7 +948,7 @@ fn on_segment_change(
     if card_edit_skipped(Some(segment.source), &remote_proxies) {
         return;
     }
-    commit_variant(&mut commands, segment.field, segment.index);
+    commit_variant(&mut commands, segment.source, segment.field, segment.index);
 }
 
 pub(crate) fn on_node_enum_change(
@@ -957,7 +963,7 @@ pub(crate) fn on_node_enum_change(
     if card_edit_skipped(Some(combo.source), &remote_proxies) {
         return;
     }
-    commit_variant(&mut commands, combo.field, event.selected);
+    commit_variant(&mut commands, combo.source, combo.field, event.selected);
 }
 
 /// Keep the segmented controls showing what the component holds.

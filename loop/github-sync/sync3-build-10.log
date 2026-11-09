@@ -1,0 +1,80 @@
+warning: output filename collision at /Users/linbo.zhang/workspace/jackdaw/target/debug/jackdaw-rustc-wrapper
+  |
+  = note: the bin target `jackdaw-rustc-wrapper` in package `jackdaw_rustc_wrapper v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_rustc_wrapper)` has the same output filename as the bin target `jackdaw-rustc-wrapper` in package `jackdaw v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw)`
+  = note: this may become a hard error in the future; see <https://github.com/rust-lang/cargo/issues/6313>
+  = help: consider changing their names to be unique or compiling them separately
+warning: output filename collision at /Users/linbo.zhang/workspace/jackdaw/target/debug/jackdaw-rustc-wrapper.dSYM
+  |
+  = note: the bin target `jackdaw-rustc-wrapper` in package `jackdaw_rustc_wrapper v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_rustc_wrapper)` has the same output filename as the bin target `jackdaw-rustc-wrapper` in package `jackdaw v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw)`
+  = note: this may become a hard error in the future; see <https://github.com/rust-lang/cargo/issues/6313>
+  = help: consider changing their names to be unique or compiling them separately
+   Compiling jackdaw_editor_core v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/editor/jackdaw_editor_core)
+error[E0609]: no field `dylib_artifacts` on type `GameBuildResult`
+   --> editor/jackdaw_editor_core/src/game_export.rs:284:75
+    |
+284 |         if let Some(rejection) = export::dynamic_linking_rejection(&build.dylib_artifacts) {
+    |                                                                           ^^^^^^^^^^^^^^^ unknown field
+
+error[E0616]: field `binary` of struct `GameBuildResult` is private
+   --> editor/jackdaw_editor_core/src/game_export.rs:287:70
+    |
+287 |         let plan = export::plan_export(&root, EXPORT_PROFILE, &build.binary, None);
+    |                                                                      ^^^^^^ private field
+
+error[E0308]: mismatched types
+    --> editor/jackdaw_editor_core/src/pie.rs:1524:13
+     |
+1524 |             target,
+     |             ^^^^^^ expected `Option<CargoTarget>`, found `Option<RunTarget>`
+     |
+     = note: expected enum `Option<CargoTarget>`
+                found enum `Option<RunTarget>`
+
+error[E0308]: mismatched types
+    --> editor/jackdaw_editor_core/src/pie.rs:1537:58
+     |
+1537 |     let (task, progress) = spawn_game_build(&root, spec, target.clone(), BuildLoad::Foreground);
+     |                            ----------------              ^^^^^^^^^^^^^^ expected `Option<CargoTarget>`, found `Option<RunTarget>`
+     |                            |
+     |                            arguments to this function are incorrect
+     |
+     = note: expected enum `Option<CargoTarget>`
+                found enum `Option<RunTarget>`
+note: function defined here
+    --> editor/jackdaw_editor_core/src/pie.rs:1700:15
+     |
+1700 | pub(crate) fn spawn_game_build(
+     |               ^^^^^^^^^^^^^^^^
+...
+1703 |     target: Option<CargoTarget>,
+     |     ---------------------------
+
+error[E0308]: mismatched types
+    --> editor/jackdaw_editor_core/src/pie.rs:1545:17
+     |
+1545 |                 target,
+     |                 ^^^^^^ expected `Option<CargoTarget>`, found `Option<RunTarget>`
+     |
+     = note: expected enum `Option<CargoTarget>`
+                found enum `Option<RunTarget>`
+
+error[E0560]: struct `GameBuildResult` has no field named `dylib_artifacts`
+    --> editor/jackdaw_editor_core/src/pie.rs:1767:21
+     |
+1767 |                     dylib_artifacts: build.dylib_artifacts,
+     |                     ^^^^^^^^^^^^^^^ `GameBuildResult` does not have this field
+     |
+     = note: all struct fields are already assigned
+
+error[E0509]: cannot move out of type `GameBuildTask`, which implements the `Drop` trait
+   --> editor/jackdaw_editor_core/src/pie.rs:254:9
+    |
+254 |         self.task
+    |         ^^^^^^^^^
+    |         |
+    |         cannot move out of here
+    |         move occurs because `self.task` has type `Task<std::result::Result<GameBuildResult, std::io::Error>>`, which does not implement the `Copy` trait
+
+Some errors have detailed explanations: E0308, E0509, E0560, E0609, E0616.
+For more information about an error, try `rustc --explain E0308`.
+error: could not compile `jackdaw_editor_core` (lib) due to 7 previous errors

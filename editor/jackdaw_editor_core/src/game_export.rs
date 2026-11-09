@@ -181,7 +181,7 @@ fn start_game_export(world: &mut World) {
     }
     // This run's answer, whichever way it ends.
     world.resource_mut::<GameExports>().flow_warnings = flow_warnings.clone();
-    if let Err(message) = crate::pie::save_scenes_before_launch(world, "exporting") {
+    if let Err(message) = save_scenes_before_export(world) {
         crate::status_bar::notify_error(world, message);
         return;
     }
@@ -211,6 +211,48 @@ fn start_game_export(world: &mut World) {
 /// release profile, then the staging and the dynamic-linking refusal
 /// `jd export` applies, all off the render loop — an `assets/` tree can
 /// be thousands of files.
+
+/// What an export saves before it builds: the modified tabs (the staged
+/// asset tree ships what is on disk) and every feature crate's registered
+/// savers, a state that could not save blocking the export like any other
+/// refusal.
+fn save_scenes_before_export(world: &mut World) -> Result<(), String> {
+    let untitled_in_front = world
+        .get_resource::<crate::scenes::Scenes>()
+        .and_then(|scenes| scenes.tabs.get(scenes.active))
+        .is_some_and(|tab| tab.path.is_none());
+    if untitled_in_front && crate::scenes::operators::active_tab_modified(world) {
+        return Err("Save the scene before exporting".to_string());
+    }
+    let modified: Vec<usize> = world
+        .resource::<crate::scenes::Scenes>()
+        .tabs
+        .iter()
+        .enumerate()
+        .filter(|(_, tab)| tab.dirty && tab.path.is_some())
+        .map(|(index, _)| index)
+        .collect();
+    let mut failures: Vec<String> = crate::scenes::operators::save_tabs(world, &modified)
+        .into_iter()
+        .map(|failure| failure.message)
+        .collect();
+    failures.extend(crate::definition_assets::save_dirty_assets(world));
+    let savers = world
+        .get_resource::<crate::pie::LaunchAssetSavers>()
+        .map(|savers| savers.0.clone())
+        .unwrap_or_default();
+    for saver in savers {
+        failures.extend(saver(world));
+    }
+    if failures.is_empty() {
+        Ok(())
+    } else {
+        let message = format!("Not exporting: could not save {}", failures.join("; "));
+        crate::status_bar::notify_warn(world, message.clone());
+        Err(message)
+    }
+}
+
 fn spawn_export_task(
     root: PathBuf,
     spec: ShimSpec,
@@ -238,7 +280,7 @@ fn spawn_export_task(
     let task = AsyncComputeTaskPool::get().spawn(async move {
         // The build's own diagnostics already streamed into the progress
         // log this task shares; only the one-line summary travels on.
-        let build = build.await.map_err(|err| err.to_string())?;
+        let build = build.into_task().await.map_err(|err| err.to_string())?;
         if let Some(rejection) = export::dynamic_linking_rejection(&build.dylib_artifacts) {
             return Err(rejection);
         }

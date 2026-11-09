@@ -1,0 +1,134 @@
+warning: output filename collision at /Users/linbo.zhang/workspace/jackdaw/target/debug/jackdaw-rustc-wrapper
+  |
+  = note: the bin target `jackdaw-rustc-wrapper` in package `jackdaw_rustc_wrapper v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_rustc_wrapper)` has the same output filename as the bin target `jackdaw-rustc-wrapper` in package `jackdaw v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw)`
+  = note: this may become a hard error in the future; see <https://github.com/rust-lang/cargo/issues/6313>
+  = help: consider changing their names to be unique or compiling them separately
+warning: output filename collision at /Users/linbo.zhang/workspace/jackdaw/target/debug/jackdaw-rustc-wrapper.dSYM
+  |
+  = note: the bin target `jackdaw-rustc-wrapper` in package `jackdaw_rustc_wrapper v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_rustc_wrapper)` has the same output filename as the bin target `jackdaw-rustc-wrapper` in package `jackdaw v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw)`
+  = note: this may become a hard error in the future; see <https://github.com/rust-lang/cargo/issues/6313>
+  = help: consider changing their names to be unique or compiling them separately
+   Compiling jackdaw_editor_core v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/editor/jackdaw_editor_core)
+warning: method `progress` is never used
+  --> editor/jackdaw_editor_core/src/game_export.rs:64:19
+   |
+61 | impl GameExports {
+   | ---------------- method in this implementation
+...
+64 |     pub(crate) fn progress(&self) -> Option<Arc<Mutex<BuildProgress>>> {
+   |                   ^^^^^^^^
+   |
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: method `progress` is never used
+   --> editor/jackdaw_editor_core/src/extension_build.rs:127:19
+    |
+125 | impl ExtensionBuild {
+    | ------------------- method in this implementation
+126 |     /// The progress of a build that has not finished, for the status bar.
+127 |     pub(crate) fn progress(&self) -> Option<Arc<Mutex<BuildProgress>>> {
+    |                   ^^^^^^^^
+
+warning: field `target` is never read
+   --> editor/jackdaw_editor_core/src/pie.rs:272:5
+    |
+268 | pub(crate) struct PendingSpawn {
+    |                   ------------ field in this struct
+...
+272 |     target: Option<CargoTarget>,
+    |     ^^^^^^
+
+warning: function `play_startup_scene` is never used
+    --> editor/jackdaw_editor_core/src/pie.rs:1429:15
+     |
+1429 | pub(crate) fn play_startup_scene(world: &mut World) {
+     |               ^^^^^^^^^^^^^^^^^^
+
+warning: function `on_startup_row_click` is never used
+   --> editor/jackdaw_editor_core/src/pie_menu.rs:466:4
+    |
+466 | fn on_startup_row_click(
+    |    ^^^^^^^^^^^^^^^^^^^^
+
+warning: constant `TRANSFORM_PATH` is never used
+   --> editor/jackdaw_editor_core/src/remote_ops.rs:255:11
+    |
+255 |     const TRANSFORM_PATH: &str = "bevy_transform::components::transform::Transform";
+    |           ^^^^^^^^^^^^^^
+
+   Compiling jackdaw_editor_remote v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/editor/jackdaw_editor_remote)
+   Compiling jackdaw_editor_launcher v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/editor/jackdaw_editor_launcher)
+   Compiling jackdaw_editor_terrain v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/editor/jackdaw_editor_terrain)
+   Compiling jackdaw_editor_animation v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/editor/jackdaw_editor_animation)
+   Compiling jackdaw_editor_modelling v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/editor/jackdaw_editor_modelling)
+   Compiling jackdaw_editor_tile v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/editor/jackdaw_editor_tile)
+error[E0433]: cannot find `pie_current` in `jackdaw_editor_core`
+   --> editor/jackdaw_editor_launcher/src/project_select.rs:578:26
+    |
+578 |     jackdaw_editor_core::pie_current::sweep_orphan_pie_copies(&root);
+    |                          ^^^^^^^^^^^ could not find `pie_current` in `jackdaw_editor_core`
+
+error[E0433]: cannot find `pie_mirror` in `jackdaw_editor_core`
+   --> editor/jackdaw_editor_remote/src/server.rs:566:46
+    |
+566 |         .get_resource::<jackdaw_editor_core::pie_mirror::PieViewMode>()
+    |                                              ^^^^^^^^^^ could not find `pie_mirror` in `jackdaw_editor_core`
+
+error[E0433]: cannot find `pie_mirror` in `jackdaw_editor_core`
+   --> editor/jackdaw_editor_remote/src/server.rs:568:34
+    |
+568 |             jackdaw_editor_core::pie_mirror::PieViewMode::Live => "live",
+    |                                  ^^^^^^^^^^ could not find `pie_mirror` in `jackdaw_editor_core`
+
+error[E0433]: cannot find `pie_mirror` in `jackdaw_editor_core`
+   --> editor/jackdaw_editor_remote/src/server.rs:569:34
+    |
+569 |             jackdaw_editor_core::pie_mirror::PieViewMode::Scene => "scene",
+    |                                  ^^^^^^^^^^ could not find `pie_mirror` in `jackdaw_editor_core`
+
+error[E0433]: cannot find `pie_mirror` in `jackdaw_editor_core`
+   --> editor/jackdaw_editor_remote/src/server.rs:573:46
+    |
+573 |         .get_resource::<jackdaw_editor_core::pie_mirror::PieInstances>()
+    |                                              ^^^^^^^^^^ could not find `pie_mirror` in `jackdaw_editor_core`
+
+error[E0433]: cannot find `pie_projection` in `jackdaw_editor_core`
+   --> editor/jackdaw_editor_remote/src/server.rs:578:46
+    |
+578 |         .get_resource::<jackdaw_editor_core::pie_projection::PieProjection>()
+    |                                              ^^^^^^^^^^^^^^ could not find `pie_projection` in `jackdaw_editor_core`
+
+error[E0433]: cannot find `pie_projection` in `jackdaw_editor_core`
+   --> editor/jackdaw_editor_remote/src/server.rs:585:53
+    |
+585 |                         .get::<jackdaw_editor_core::pie_projection::PieEphemeral>(**entity)
+    |                                                     ^^^^^^^^^^^^^^ could not find `pie_projection` in `jackdaw_editor_core`
+
+error[E0433]: cannot find `pie_projection` in `jackdaw_editor_core`
+   --> editor/jackdaw_editor_remote/src/server.rs:593:61
+    |
+593 |         .query_filtered::<Entity, With<jackdaw_editor_core::pie_projection::PieEphemeral>>()
+    |                                                             ^^^^^^^^^^^^^^ could not find `pie_projection` in `jackdaw_editor_core`
+
+error[E0433]: cannot find `live_edits` in `jackdaw_editor_core`
+   --> editor/jackdaw_editor_remote/src/server.rs:598:46
+    |
+598 |         .get_resource::<jackdaw_editor_core::live_edits::LiveEditLog>()
+    |                                              ^^^^^^^^^^ could not find `live_edits` in `jackdaw_editor_core`
+
+error[E0599]: no method named `instance_faces` found for reference `&PieSession` in the current scope
+   --> editor/jackdaw_editor_remote/src/server.rs:541:18
+    |
+540 | /             session
+541 | |                 .instance_faces()
+    | |                 -^^^^^^^^^^^^^^ method not found in `&PieSession`
+    | |_________________|
+    |
+
+For more information about this error, try `rustc --explain E0433`.
+error: could not compile `jackdaw_editor_launcher` (lib) due to 1 previous error
+warning: build failed, waiting for other jobs to finish...
+Some errors have detailed explanations: E0433, E0599.
+For more information about an error, try `rustc --explain E0433`.
+error: could not compile `jackdaw_editor_remote` (lib) due to 9 previous errors
+warning: `jackdaw_editor_core` (lib) generated 6 warnings

@@ -1,0 +1,115 @@
+warning: output filename collision at /Users/linbo.zhang/workspace/jackdaw/target/debug/jackdaw-rustc-wrapper
+  |
+  = note: the bin target `jackdaw-rustc-wrapper` in package `jackdaw_rustc_wrapper v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_rustc_wrapper)` has the same output filename as the bin target `jackdaw-rustc-wrapper` in package `jackdaw v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw)`
+  = note: this may become a hard error in the future; see <https://github.com/rust-lang/cargo/issues/6313>
+  = help: consider changing their names to be unique or compiling them separately
+warning: output filename collision at /Users/linbo.zhang/workspace/jackdaw/target/debug/jackdaw-rustc-wrapper.dSYM
+  |
+  = note: the bin target `jackdaw-rustc-wrapper` in package `jackdaw_rustc_wrapper v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/crates/jackdaw_rustc_wrapper)` has the same output filename as the bin target `jackdaw-rustc-wrapper` in package `jackdaw v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw)`
+  = note: this may become a hard error in the future; see <https://github.com/rust-lang/cargo/issues/6313>
+  = help: consider changing their names to be unique or compiling them separately
+   Compiling jackdaw_editor_core v0.21.0-dev (/Users/linbo.zhang/workspace/jackdaw/editor/jackdaw_editor_core)
+error[E0308]: mismatched types
+   --> editor/jackdaw_editor_core/src/pie.rs:257:9
+    |
+256 |     pub(crate) fn into_task(self) -> Task<io::Result<GameBuildResult>> {
+    |                                      --------------------------------- expected `Task<std::result::Result<GameBuildResult, std::io::Error>>` because of return type
+257 |         self.task
+    |         ^^^^^^^^^ expected `Task<Result<GameBuildResult, Error>>`, found `Option<Task<Result<_, Error>>>`
+    |
+    = note: expected struct `Task<_>`
+                 found enum `std::option::Option<Task<_>>`
+help: consider using `Option::expect` to unwrap the `std::option::Option<Task<std::result::Result<GameBuildResult, std::io::Error>>>` value, panicking if the value is an `Option::None`
+    |
+257 |         self.task.expect("REASON")
+    |                  +++++++++++++++++
+
+error[E0308]: mismatched types
+    --> editor/jackdaw_editor_core/src/pie.rs:1526:21
+     |
+1526 |             target: run.target.clone(),
+     |                     ^^^^^^^^^^^^^^^^^^ expected `Option<CargoTarget>`, found `Option<RunTarget>`
+     |
+     = note: expected enum `Option<CargoTarget>`
+                found enum `Option<RunTarget>`
+
+error[E0308]: mismatched types
+    --> editor/jackdaw_editor_core/src/pie.rs:1540:58
+     |
+1540 |     let (task, progress) = spawn_game_build(&root, spec, target, BuildLoad::Foreground);
+     |                            ----------------              ^^^^^^ expected `Option<CargoTarget>`, found `Option<RunTarget>`
+     |                            |
+     |                            arguments to this function are incorrect
+     |
+     = note: expected enum `Option<CargoTarget>`
+                found enum `Option<RunTarget>`
+note: function defined here
+    --> editor/jackdaw_editor_core/src/pie.rs:1703:15
+     |
+1703 | pub(crate) fn spawn_game_build(
+     |               ^^^^^^^^^^^^^^^^
+...
+1706 |     target: Option<CargoTarget>,
+     |     ---------------------------
+
+error[E0308]: mismatched types
+    --> editor/jackdaw_editor_core/src/pie.rs:1548:25
+     |
+1548 |                 target: run.target.clone(),
+     |                         ^^^^^^^^^^^^^^^^^^ expected `Option<CargoTarget>`, found `Option<RunTarget>`
+     |
+     = note: expected enum `Option<CargoTarget>`
+                found enum `Option<RunTarget>`
+
+error[E0308]: mismatched types
+    --> editor/jackdaw_editor_core/src/pie.rs:1792:22
+     |
+1792 |     (GameBuildTask { task, cancel }, progress)
+     |                      ^^^^ expected `Option<Task<Result<_, Error>>>`, found `Task<Result<GameBuildResult, Error>>`
+     |
+     = note: expected enum `std::option::Option<Task<_>>`
+              found struct `Task<_>`
+help: try wrapping the expression in `Some`
+     |
+1792 |     (GameBuildTask { task: Some(task), cancel }, progress)
+     |                      +++++++++++    +
+
+error[E0277]: `std::option::Option<&mut Task<std::result::Result<GameBuildResult, std::io::Error>>>` is not a future
+    --> editor/jackdaw_editor_core/src/pie.rs:2247:50
+     |
+2247 |         match future::block_on(future::poll_once(task.task.as_mut())) {
+     |                                ----------------- ^^^^^^^^^^^^^^^^^^ `std::option::Option<&mut Task<std::result::Result<GameBuildResult, std::io::Error>>>` is not a future
+     |                                |
+     |                                required by a bound introduced by this call
+     |
+     = help: the trait `std::future::Future` is not implemented for `std::option::Option<&mut Task<std::result::Result<GameBuildResult, std::io::Error>>>`
+note: required by a bound in `poll_once`
+    --> /Users/linbo.zhang/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/futures-lite-2.6.1/src/future.rs:118:8
+     |
+ 116 | pub fn poll_once<T, F>(f: F) -> PollOnce<F>
+     |        --------- required by a bound in this function
+ 117 | where
+ 118 |     F: Future<Output = T>,
+     |        ^^^^^^^^^^^^^^^^^^ required by this bound in `poll_once`
+
+error[E0277]: `std::option::Option<&mut Task<std::result::Result<GameBuildResult, std::io::Error>>>` is not a future
+    --> editor/jackdaw_editor_core/src/pie.rs:2247:32
+     |
+2247 |         match future::block_on(future::poll_once(task.task.as_mut())) {
+     |               ---------------- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `std::option::Option<&mut Task<std::result::Result<GameBuildResult, std::io::Error>>>` is not a future
+     |               |
+     |               required by a bound introduced by this call
+     |
+     = help: the trait `std::future::Future` is not implemented for `std::option::Option<&mut Task<std::result::Result<GameBuildResult, std::io::Error>>>`
+     = note: required for `PollOnce<Option<&mut Task<Result<GameBuildResult, Error>>>>` to implement `std::future::Future`
+note: required by a bound in `bevy::bevy_tasks::futures_lite::future::block_on`
+    --> /Users/linbo.zhang/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/futures-lite-2.6.1/src/future.rs:53:33
+     |
+  53 | pub fn block_on<T>(future: impl Future<Output = T>) -> T {
+     |                                 ^^^^^^^^^^^^^^^^^^ required by this bound in `block_on`
+     = note: the full name for the type has been written to '/Users/linbo.zhang/workspace/jackdaw/target/debug/deps/jackdaw_editor_core-7165023314192be4.long-type-4726854263247886657.txt'
+     = note: consider using `--verbose` to print the full type name to the console
+
+Some errors have detailed explanations: E0277, E0308.
+For more information about an error, try `rustc --explain E0277`.
+error: could not compile `jackdaw_editor_core` (lib) due to 7 previous errors

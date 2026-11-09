@@ -52,8 +52,6 @@ const CONNECT_TIMEOUT: Duration = Duration::from_secs(30);
 /// The editor's remote control port variable, kept out of a launched game.
 const EDITOR_REMOTE_PORT_ENV: &str = "JACKDAW_REMOTE_PORT";
 
-use crate::worker_task::{WorkerOutcome, WorkerTask};
-
 /// Savers feature crates register at plugin build: each saves its own
 /// authored state before a launch and returns the names of the states it
 /// could not save, which block the launch like every other refusal.
@@ -169,7 +167,7 @@ enum ChildPoll {
 }
 
 /// One launched child and its connection progress.
-enum ChildStage {
+pub enum ChildStage {
     /// The child is launched and `IpcServerHandle::accept` is blocking
     /// on a task pool, waiting for it to connect. `since` bounds that
     /// wait so a child that never connects does not hang forever.
@@ -211,7 +209,10 @@ impl ChildStage {
 /// build itself and picked up by the editor's watcher, so it does not
 /// travel back through here.
 pub(crate) struct GameBuildResult {
-    binary: PathBuf,
+    pub(crate) binary: PathBuf,
+    /// The dylib crates the build produced, so the exporter can refuse a
+    /// build whose linkage the export layout cannot carry.
+    pub(crate) dylib_artifacts: Vec<String>,
 }
 
 /// An in-flight or finished build, deduped by project root. Instances
@@ -236,16 +237,24 @@ pub(crate) enum BuildState {
 /// A game build on the compute pool. Dropping it cancels the build, which kills
 /// cargo, so a launch stopped while building stops compiling too.
 pub(crate) struct GameBuildTask {
-    task: Task<io::Result<GameBuildResult>>,
+    task: Option<Task<io::Result<GameBuildResult>>>,
     cancel: Arc<AtomicBool>,
 }
 
 impl From<Task<io::Result<GameBuildResult>>> for GameBuildTask {
     fn from(task: Task<io::Result<GameBuildResult>>) -> Self {
         Self {
-            task,
+            task: Some(task),
             cancel: Arc::default(),
         }
+    }
+}
+
+impl GameBuildTask {
+    /// The bare task, for a caller that awaits the build itself (the
+    /// exporter); cancellation is not wired on that path.
+    pub(crate) fn into_task(mut self) -> Task<io::Result<GameBuildResult>> {
+        self.task.take().expect("a build task taken twice")
     }
 }
 
@@ -274,10 +283,12 @@ pub struct PieInstances {
 /// are `Send` but not `Sync`.
 #[derive(Default)]
 pub struct PieSession {
-    children: HashMap<InstanceKey, ChildStage>,
+    /// One entry per instance that has not been reaped, `pub` for the
+    /// remote crate's structured play face.
+    pub children: HashMap<InstanceKey, ChildStage>,
     pub(crate) launch_modes: HashMap<InstanceKey, PieWindowMode>,
     /// The scene an instance plays in place of its usual one, recorded at press.
-    pub(crate) launch_scenes: HashMap<InstanceKey, LaunchScene>,
+    pub launch_scenes: HashMap<InstanceKey, LaunchScene>,
     pub(crate) builds: HashMap<BuildKey, BuildState>,
     /// Monotonic count of instances ever launched: the `pie_stopped`
     /// wait's session-proof baseline, so a stop that completed before a
@@ -1096,7 +1107,7 @@ pub fn insert_built_game(world: &mut World, binary: PathBuf) {
     world
         .non_send_mut::<PieSession>()
         .builds
-        .insert(root, BuildState::Done(binary));
+        .insert((root, None), BuildState::Done(binary));
 }
 
 /// Give up on games that have not connected after `timeout`, for a test.
@@ -1118,7 +1129,7 @@ pub fn insert_build_in_progress(world: &mut World) {
     let task = AsyncComputeTaskPool::get_or_init(bevy::tasks::TaskPool::new)
         .spawn(std::future::pending::<io::Result<GameBuildResult>>());
     world.non_send_mut::<PieSession>().builds.insert(
-        root,
+        (root, None),
         BuildState::Running {
             task: task.into(),
             pending: Vec::new(),
@@ -1281,7 +1292,7 @@ fn plan_relaunch(world: &World, mode: PieWindowMode) -> Result<Option<RelaunchPl
         return Ok(None);
     }
     keys.sort_by(|a, b| a.config.cmp(&b.config).then(a.instance.cmp(&b.instance)));
-    let binary = project_root(world).and_then(|root| match session.builds.get(&root) {
+    let binary = project_root(world).and_then(|root| match session.builds.get(&(root, None)) {
         Some(BuildState::Done(binary)) => Some(binary.clone()),
         _ => None,
     });
@@ -1422,7 +1433,8 @@ pub(crate) fn play_startup_scene(world: &mut World) {
         warn!("PIE: run configurations not loaded");
         return;
     };
-    let Some(first) = run_configs.manifest.runs.into_iter().next() else {
+    let runs = run_configs.manifest.runs.clone();
+    let Some(first) = runs.into_iter().next() else {
         warn!("PIE: no run configurations");
         return;
     };
@@ -1510,10 +1522,11 @@ fn launch_with(
     if let Some(BuildState::Running { pending, .. }) =
         world.non_send_mut::<PieSession>().builds.get_mut(&build)
     {
+        let target = crate::run_config::cargo_target(&run);
         pending.push(PendingSpawn {
             key,
             run,
-            target: run.target.clone(),
+            target,
             scene,
         });
         return;
@@ -1526,8 +1539,8 @@ fn launch_with(
         }
     };
     info!("PIE: building the game for {key}");
-    let target = run.target.clone();
-    let (task, progress) = spawn_game_build(&root, spec, target, BuildLoad::Foreground);
+    let target = crate::run_config::cargo_target(&run);
+    let (task, progress) = spawn_game_build(&root, spec, target.clone(), BuildLoad::Foreground);
     world.non_send_mut::<PieSession>().builds.insert(
         build,
         BuildState::Running {
@@ -1535,7 +1548,7 @@ fn launch_with(
             pending: vec![PendingSpawn {
                 key,
                 run,
-                target: run.target.clone(),
+                target,
                 scene,
             }],
             progress,
@@ -1567,22 +1580,11 @@ fn spawn_from_binary(
 /// remembered tabs. No project setting names another.
 pub(crate) const MAIN_SCENE: &str = "scene.bsn";
 
-/// The asset path of the scene in tab `tab`, if it is a scene with a file in the
-/// project.
-        entity_mut.insert(crate::selection::Selected);
-    }
-}
-
 /// The key a run's build lives under: the project root plus the cargo
 /// target the run names. Runs without a target share the default build.
 fn build_key(root: &Path, run: &RunConfig) -> BuildKey {
     (root.to_path_buf(), crate::run_config::cargo_target(run))
 }
-
-/// The scene a game loads as its main one, inside the asset folder: what the
-/// game template loads and what the editor opens for a project with no
-/// remembered tabs. No project setting names another.
-pub(crate) const MAIN_SCENE: &str = "scene.bsn";
 
 /// `run` launching the scene open in front in place of the game's main scene:
 /// the game loads `JACKDAW_PIE_SCENE` wherever it asks for
@@ -1768,6 +1770,7 @@ pub(crate) fn spawn_game_build(
                 }
                 Ok(GameBuildResult {
                     binary: build.binary,
+                    dylib_artifacts: build.dylib_artifacts,
                 })
             }
             Err(err) => {
@@ -1789,7 +1792,7 @@ pub(crate) fn spawn_game_build(
             }
         }
     });
-    (GameBuildTask { task, cancel }, progress)
+    (GameBuildTask { task: Some(task), cancel }, progress)
 }
 
 /// Stop one instance: ask a live child to exit, reap it, and drop it.
@@ -2223,7 +2226,6 @@ fn advance_pie_session(world: &mut World) {
     reconcile_focus(world);
     reconcile_play_state(world);
     reconcile_play_status(world);
-    crate::project_build::reconcile_build_status(world);
 }
 
 /// Poll each in-flight build. On success, spawn its pending instances
@@ -2236,7 +2238,7 @@ fn poll_builds(world: &mut World) {
     let mut spawned: Vec<(InstanceKey, ChildStage, PieWindowMode, Option<LaunchScene>)> =
         Vec::new();
 
-    for (root, state) in builds.iter_mut() {
+    for (build, state) in builds.iter_mut() {
         let BuildState::Running {
             task,
             pending,
@@ -2245,7 +2247,7 @@ fn poll_builds(world: &mut World) {
         else {
             continue;
         };
-        match future::block_on(future::poll_once(&mut task.task)) {
+        match future::block_on(future::poll_once(task.task.as_mut().unwrap())) {
             None => {}
             Some(Ok(result)) => {
                 // The build persisted the project's type schema to
@@ -2267,8 +2269,9 @@ fn poll_builds(world: &mut World) {
             }
             Some(Err(err)) => {
                 let output = progress.lock().ok().map(|p| p.full_log.clone());
-                let project = root.file_name().map_or_else(
-                    || root.display().to_string(),
+                let project_root = &build.0;
+                let project = project_root.file_name().map_or_else(
+                    || project_root.display().to_string(),
                     |name| name.display().to_string(),
                 );
                 let keys: Vec<String> = pending.iter().map(|p| p.key.to_string()).collect();

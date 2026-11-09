@@ -262,7 +262,7 @@ fn spawn_val_cell(
     let tp = type_path.to_string();
     let path = field_path.clone();
     let commit = move |world: &mut World, val: Val, is_final: bool| {
-        commit_val_to_field(world, &tp, &path, val, is_final);
+        commit_val_to_field(world, source_entity, &tp, &path, val, is_final);
     };
     let unit = ValUnit::of(value);
     let magnitude = val_magnitude(value);
@@ -377,6 +377,7 @@ fn spawn_val_cell(
 /// previewing onto the resource.
 fn commit_val_to_field(
     world: &mut World,
+    source_entity: Entity,
     type_path: &str,
     field_path: &str,
     value: Val,

@@ -253,27 +253,6 @@ fn apply_computed_transform(
     new_transform: Transform,
 ) {
     const TRANSFORM_PATH: &str = "bevy_transform::components::transform::Transform";
-    {
-        let registry = world
-            .resource::<bevy::ecs::reflect::AppTypeRegistry>()
-            .clone();
-        let value_json = {
-            let registry = registry.read();
-            use bevy::reflect::serde::TypedReflectSerializer;
-            let serializer =
-                TypedReflectSerializer::new(new_transform.as_partial_reflect(), &registry);
-            serde_json::to_value(&serializer).unwrap_or(serde_json::Value::Null)
-        };
-        if crate::inspector::reflect_fields::try_route_pie_live_field_edit(
-            world,
-            entity,
-            TRANSFORM_PATH,
-            "",
-            value_json,
-        ) {
-            return;
-        }
-    }
     let mut cmd: Box<dyn EditorCommand> = Box::new(SetTransform {
         entity,
         old_transform: old,
@@ -578,11 +557,9 @@ mod tests {
     }
 }
 
-// Retained for the component.set live-routing tests: the operator face moved
-// to `try_field_edit_commit_on`, the ledger-recording body these tests drive
-// stays exactly as the Loop work wrote it.
+/// The operator face moved to [`crate::commands::field_edit_commit_on`]; the
+/// document write is what reaches a running game now (the play-sync channel).
 #[cfg(test)]
-/// the authored [`crate::commands::field_edit_commit_on`] path.
 fn apply_component_set(
     world: &mut World,
     entity: Entity,
@@ -590,15 +567,6 @@ fn apply_component_set(
     field_path: &str,
     value: serde_json::Value,
 ) {
-    if crate::inspector::reflect_fields::try_route_pie_live_field_edit(
-        world,
-        entity,
-        type_path,
-        field_path,
-        value.clone(),
-    ) {
-        return;
-    }
     if !crate::commands::field_edit_commit_on(world, entity, type_path, field_path, &value) {
         warn_caller(
             world,
