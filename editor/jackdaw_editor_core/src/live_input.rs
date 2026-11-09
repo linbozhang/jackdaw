@@ -2,14 +2,17 @@
 //! mouse input forwards to the focused game instance over the control
 //! channel instead of driving editor keybinds.
 //!
-//! Engage with a Play-mode click in the Game panel or the header button
-//! (`pie.play_input_toggle`); release with Shift+Esc. Plain Esc forwards,
-//! so the game's own menus keep working. Every release path synthesizes
-//! key-up and button-up events for whatever was held, so the game is never
-//! left with stuck input.
+//! Engage with a click in the Game panel or `pie.play_input_toggle`; a game
+//! Play launches takes input on its first frame unless the editor was used
+//! while it started. Release with Shift+Esc. Plain Esc forwards,
+//! so the game's own menus keep working. The keys bound to `pie.stop` (F8 by
+//! default) stop the game rather than forward, so Stop always works. Every
+//! release path synthesizes key-up and button-up events for whatever was
+//! held, so the game is never left with stuck input.
 
 use std::collections::HashMap;
 use std::collections::HashSet;
+use std::time::Instant;
 
 use bevy::input::ButtonState;
 use bevy::input::keyboard::{Key, KeyCode, KeyboardInput};
@@ -17,6 +20,8 @@ use bevy::input::mouse::{MouseButton, MouseButtonInput, MouseMotion, MouseScroll
 use bevy::prelude::*;
 use bevy::window::{CursorGrabMode, CursorMoved, CursorOptions, PrimaryWindow, WindowFocused};
 use jackdaw_api::prelude::*;
+use jackdaw_api_internal::lifecycle::OperatorAction;
+use jackdaw_input::{Binding, Bindings, ModKeys};
 use jackdaw_pie_protocol::{ControlEvent, PieInputEvent};
 
 use crate::live_frame::LiveFrameStream;
@@ -31,10 +36,98 @@ pub struct LiveInputCapture {
     pub(crate) held_keys: HashMap<KeyCode, Key>,
     pub(crate) held_buttons: HashSet<MouseButton>,
     pub(crate) panel_node: Option<Entity>,
+    /// A Stop key was pressed while capturing; [`stop_on_request`] runs Stop.
+    pub(crate) stop_requested: bool,
     /// The game's last reported cursor grab state. The cursor mirror reads
     /// these to match the editor window to the game while capturing.
     pub(crate) game_cursor_grabbed: bool,
     pub(crate) game_cursor_visible: bool,
+    /// When capture last engaged, for the release hint shown over the panel.
+    pub(crate) engaged_at: Option<Instant>,
+}
+
+/// Whether the game Play is launching takes input when its first frame
+/// arrives. Pressing Play arms it; a click, key press or scroll in the editor
+/// before that frame disarms it, and so does the editor window losing focus,
+/// so a long build never takes input from someone who went back to editing or
+/// to another app.
+#[derive(Resource, Default, Debug)]
+pub struct FirstFrameCapture {
+    armed: bool,
+    /// Set by arming: the frame Play was pressed in still holds the press
+    /// that pressed it, which is not a touch.
+    skip_frame: bool,
+}
+
+impl FirstFrameCapture {
+    pub fn is_armed(&self) -> bool {
+        self.armed
+    }
+
+    fn arm(&mut self) {
+        self.armed = true;
+        self.skip_frame = true;
+    }
+
+    /// Note a press in the editor, which disarms it.
+    fn touched(&mut self) {
+        self.armed = false;
+    }
+}
+
+/// Arm capture on the first frame of the game being launched.
+pub(crate) fn arm_first_frame_capture(world: &mut World) {
+    world.get_resource_or_init::<FirstFrameCapture>().arm();
+}
+
+/// Disarm first-frame capture on any key or mouse press or scroll in the
+/// editor, or the editor window losing focus.
+fn note_editor_touch(
+    mut first: ResMut<FirstFrameCapture>,
+    capture: Res<LiveInputCapture>,
+    mut keys: MessageReader<KeyboardInput>,
+    mut buttons: MessageReader<MouseButtonInput>,
+    mut wheels: MessageReader<MouseWheel>,
+    mut focus: MessageReader<WindowFocused>,
+    primary: Query<(), With<PrimaryWindow>>,
+) {
+    let key_pressed = keys.read().any(|key| key.state == ButtonState::Pressed);
+    let button_pressed = buttons
+        .read()
+        .any(|button| button.state == ButtonState::Pressed);
+    let scrolled = wheels.read().count() > 0;
+    let left = focus
+        .read()
+        .any(|event| !event.focused && primary.contains(event.window));
+    let pressed = key_pressed || button_pressed || scrolled || left;
+    if std::mem::take(&mut first.skip_frame) || capture.active {
+        return;
+    }
+    if pressed && first.armed {
+        first.touched();
+    }
+}
+
+/// Engage capture once the launched game shows a frame in the Game panel, if
+/// first-frame capture is still armed.
+fn capture_on_first_frame(world: &mut World) {
+    if !world
+        .get_resource::<FirstFrameCapture>()
+        .is_some_and(FirstFrameCapture::is_armed)
+    {
+        return;
+    }
+    let fresh = world
+        .get_resource::<LiveFrameStream>()
+        .is_some_and(LiveFrameStream::is_fresh);
+    if !fresh || crate::pie::focused_live_instance(world).is_none() {
+        return;
+    }
+    world.resource_mut::<FirstFrameCapture>().armed = false;
+    if world.resource::<LiveInputCapture>().active {
+        return;
+    }
+    engage_on_panel(world);
 }
 
 /// Events collected this frame, drained by `flush_forwards` and sent to the
@@ -53,6 +146,7 @@ pub(crate) fn engage_capture(world: &mut World, surface: Entity) {
         let mut capture = world.resource_mut::<LiveInputCapture>();
         capture.active = true;
         capture.panel_node = Some(surface);
+        capture.engaged_at = Some(Instant::now());
     }
     world
         .resource_mut::<bevy::input_focus::InputFocus>()
@@ -64,11 +158,46 @@ pub(crate) fn engage_capture(world: &mut World, surface: Entity) {
     apply_stored_cursor_state(world);
 }
 
+/// Whether pressing `key` with `held` down plays a keyboard chord bound to
+/// `pie.stop`.
+fn is_stop_chord(
+    key: KeyCode,
+    held: &HashMap<KeyCode, Key>,
+    actions: &Query<(&OperatorAction, &Bindings)>,
+    bindings: &Query<&Binding>,
+) -> bool {
+    actions
+        .iter()
+        .filter(|(action, _)| action.0 == crate::pie::PieStopOp::ID)
+        .flat_map(|(_, list)| list.iter())
+        .filter_map(|entity| bindings.get(entity).ok())
+        .any(|binding| match *binding {
+            Binding::Keyboard {
+                key: bound,
+                mod_keys,
+            } => bound == key && mods_held(mod_keys, held),
+            _ => false,
+        })
+}
+
+/// Whether `held` holds the modifiers `mod_keys` names. A chord naming none
+/// wants none held, so Ctrl+F8 is not a bare F8.
+fn mods_held(mod_keys: ModKeys, held: &HashMap<KeyCode, Key>) -> bool {
+    let holds = |pair: [KeyCode; 2]| pair.iter().any(|key| held.contains_key(key));
+    if mod_keys.is_empty() {
+        return !ModKeys::all().keys().any(holds);
+    }
+    mod_keys.keys().all(holds)
+}
+
 /// Forward keyboard and mouse input to the focused game while engaged. The
-/// Shift+Esc chord is swallowed and turned into a release request; plain Esc
-/// forwards so the game's own menus work.
+/// Shift+Esc chord is swallowed and turned into a release request, and a Stop
+/// chord into a release and a stop; plain Esc forwards so the game's own menus
+/// work.
 fn collect_forwards(
     mut capture: ResMut<LiveInputCapture>,
+    actions: Query<(&OperatorAction, &Bindings)>,
+    bindings: Query<&Binding>,
     mut keys: MessageReader<KeyboardInput>,
     mut buttons: MessageReader<MouseButtonInput>,
     mut wheel: MessageReader<MouseWheel>,
@@ -98,6 +227,11 @@ fn collect_forwards(
                 || capture.held_keys.contains_key(&KeyCode::ShiftRight))
         {
             capture.release_requested = true;
+            continue;
+        }
+        if pressed && is_stop_chord(key.key_code, &capture.held_keys, &actions, &bindings) {
+            capture.release_requested = true;
+            capture.stop_requested = true;
             continue;
         }
         if pressed {
@@ -237,6 +371,25 @@ pub(crate) fn apply_release_requests(world: &mut World) {
     restore_editor_cursor(world);
 }
 
+/// Run Stop for a Stop chord pressed while capturing. It runs after the
+/// release is flushed, so the game sees its keys come up before it stops.
+fn stop_on_request(world: &mut World) {
+    let requested = std::mem::take(&mut world.resource_mut::<LiveInputCapture>().stop_requested);
+    if !requested {
+        return;
+    }
+    let result = world
+        .operator(crate::pie::PieStopOp::ID)
+        .settings(CallOperatorSettings {
+            execution_context: ExecutionContext::Invoke,
+            creates_history_entry: false,
+        })
+        .call();
+    if let Err(err) = result {
+        error!("PIE: Stop from a captured key failed: {err}");
+    }
+}
+
 /// Send everything collected this frame to the focused game instance.
 pub(crate) fn flush_forwards(world: &mut World) {
     let events = std::mem::take(&mut world.resource_mut::<PendingForwards>().0);
@@ -296,10 +449,10 @@ pub fn restore_editor_cursor(world: &mut World) {
     }
 }
 
-/// Engage capture from the header button: bind to the Game panel surface and
-/// signal the game it gained focus. Returns without engaging when no surface
-/// is present.
-fn engage_from_header(world: &mut World) {
+/// Engage capture without a click: bind to the Game panel surface and signal
+/// the game it gained focus. Returns without engaging when no surface is
+/// present.
+fn engage_on_panel(world: &mut World) {
     let Some(surface) = world
         .query_filtered::<Entity, With<crate::game_panel::GamePanelSurface>>()
         .iter(world)
@@ -328,7 +481,7 @@ pub(crate) fn pie_play_input_toggle(
             apply_release_requests(world);
             flush_forwards(world);
         } else {
-            engage_from_header(world);
+            engage_on_panel(world);
         }
     });
     OperatorResult::Finished
@@ -340,13 +493,17 @@ impl Plugin for LiveInputPlugin {
     fn build(&self, app: &mut App) {
         app.init_resource::<LiveInputCapture>()
             .init_resource::<PendingForwards>()
+            .init_resource::<FirstFrameCapture>()
             .add_systems(
                 Update,
                 (
+                    note_editor_touch,
+                    capture_on_first_frame,
                     collect_forwards,
                     auto_release,
                     apply_release_requests,
                     flush_forwards,
+                    stop_on_request,
                 )
                     .chain(),
             );
@@ -409,6 +566,104 @@ mod tests {
             )),
             "the release chord itself is never forwarded"
         );
+    }
+
+    fn press(app: &mut App, key_code: KeyCode, logical_key: Key) {
+        let window = app.world_mut().spawn_empty().id();
+        app.world_mut().write_message(KeyboardInput {
+            key_code,
+            logical_key,
+            state: ButtonState::Pressed,
+            text: None,
+            repeat: false,
+            window,
+        });
+    }
+
+    fn bind_stop(app: &mut App, binding: jackdaw_input::Binding) {
+        app.world_mut().spawn((
+            OperatorAction(crate::pie::PieStopOp::ID),
+            jackdaw_input::bindings![(binding, jackdaw_input::Condition::Press)],
+        ));
+    }
+
+    fn forwarded(app: &App, key: KeyCode) -> bool {
+        app.world()
+            .resource::<PendingForwards>()
+            .0
+            .iter()
+            .any(|event| matches!(event, PieInputEvent::Key { key: held, .. } if *held == key))
+    }
+
+    #[test]
+    fn the_stop_key_stops_the_game_instead_of_forwarding() {
+        let mut app = capture_app();
+        bind_stop(
+            &mut app,
+            jackdaw_input::Binding::Keyboard {
+                key: KeyCode::F8,
+                mod_keys: ModKeys::empty(),
+            },
+        );
+        app.world_mut().resource_mut::<LiveInputCapture>().active = true;
+
+        press(&mut app, KeyCode::F8, Key::F8);
+        app.world_mut().run_system_cached(collect_forwards).unwrap();
+
+        let capture = app.world().resource::<LiveInputCapture>();
+        assert!(capture.stop_requested && capture.release_requested);
+        assert!(!forwarded(&app, KeyCode::F8), "the game never sees F8");
+    }
+
+    #[test]
+    fn a_bare_stop_key_with_a_modifier_held_goes_to_the_game() {
+        let mut app = capture_app();
+        bind_stop(
+            &mut app,
+            jackdaw_input::Binding::Keyboard {
+                key: KeyCode::F8,
+                mod_keys: ModKeys::empty(),
+            },
+        );
+        app.world_mut().resource_mut::<LiveInputCapture>().active = true;
+
+        press(&mut app, KeyCode::ControlLeft, Key::Control);
+        press(&mut app, KeyCode::F8, Key::F8);
+        app.world_mut().run_system_cached(collect_forwards).unwrap();
+
+        assert!(!app.world().resource::<LiveInputCapture>().stop_requested);
+        assert!(forwarded(&app, KeyCode::F8), "Ctrl+F8 is the game's");
+    }
+
+    #[test]
+    fn a_stop_chord_needs_its_modifiers_and_other_keys_still_forward() {
+        let mut app = capture_app();
+        bind_stop(
+            &mut app,
+            jackdaw_input::Binding::Keyboard {
+                key: KeyCode::KeyQ,
+                mod_keys: ModKeys::CONTROL,
+            },
+        );
+        app.world_mut().resource_mut::<LiveInputCapture>().active = true;
+
+        press(&mut app, KeyCode::F8, Key::F8);
+        press(&mut app, KeyCode::KeyQ, Key::Character("q".into()));
+        app.world_mut().run_system_cached(collect_forwards).unwrap();
+        assert!(!app.world().resource::<LiveInputCapture>().stop_requested);
+        assert!(
+            forwarded(&app, KeyCode::F8),
+            "F8 rebound away reaches the game"
+        );
+        assert!(
+            forwarded(&app, KeyCode::KeyQ),
+            "Q without Ctrl is the game's"
+        );
+
+        press(&mut app, KeyCode::ControlLeft, Key::Control);
+        press(&mut app, KeyCode::KeyQ, Key::Character("q".into()));
+        app.world_mut().run_system_cached(collect_forwards).unwrap();
+        assert!(app.world().resource::<LiveInputCapture>().stop_requested);
     }
 
     #[test]

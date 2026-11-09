@@ -486,7 +486,6 @@ pub fn sync_brush_to_ast(world: &mut World, entity: Entity, brush: &Brush) {
 pub(crate) fn sync_changed_brushes_to_ast(
     changed: Query<(Entity, Ref<Brush>), Changed<Brush>>,
     live: Option<Res<jackdaw_bsn::SceneBsnAst>>,
-    projection: Option<Res<crate::pie_projection::PieProjection>>,
     ticks: SystemChangeTick,
     mut synced: ResMut<SyncedThrough<Brush>>,
     mut commands: Commands,
@@ -498,9 +497,7 @@ pub(crate) fn sync_changed_brushes_to_ast(
     let _span = info_span!("brush.sync_back").entered();
     let entries: Vec<(Entity, Brush)> = changed
         .iter()
-        .filter(|(entity, brush)| {
-            brush_needs_sync(*entity, brush, live.as_deref(), projection.as_deref())
-        })
+        .filter(|(entity, brush)| brush_needs_sync(*entity, brush, live.as_deref()))
         .map(|(e, b)| (e, (*b).clone()))
         .collect();
     if entries.is_empty() {
@@ -536,13 +533,7 @@ fn brush_needs_sync(
     entity: Entity,
     brush: &Ref<Brush>,
     live: Option<&jackdaw_bsn::SceneBsnAst>,
-    projection: Option<&crate::pie_projection::PieProjection>,
 ) -> bool {
-    if projection.is_some_and(|projection| {
-        projection.stream_wrote(entity, BRUSH_TYPE_PATH, brush.last_changed())
-    }) {
-        return false;
-    }
     let waits_on_a_name = brush
         .faces
         .iter()
@@ -579,16 +570,10 @@ fn write_brushes_to_document(world: &mut World, mut entries: Vec<(Entity, Brush)
 }
 
 /// Write into the document what the sync systems have not read yet, for a capture
-/// about to take the document from its entities. An entity holding game state is
-/// left out: what it holds is not an authored value, even once restored.
+/// about to take the document from its entities.
 pub(crate) fn sync_pending_writes_to_document(world: &mut World) {
     let _span = info_span!("brush.sync_pending").entered();
     let this_run = world.read_change_tick();
-    let overlaid = |world: &World, entity: Entity| {
-        world
-            .get_resource::<crate::pie_projection::PieProjection>()
-            .is_some_and(|projection| projection.overlaid.contains(&entity))
-    };
 
     if let Some(synced) = world.get_resource::<SyncedThrough<Brush>>().map(|s| s.tick) {
         let brushes: Vec<(Entity, Brush)> = world
@@ -596,12 +581,10 @@ pub(crate) fn sync_pending_writes_to_document(world: &mut World) {
             .iter(world)
             .filter(|(entity, brush)| {
                 brush.last_changed().is_newer_than(synced, this_run)
-                    && !overlaid(world, *entity)
                     && brush_needs_sync(
                         *entity,
                         brush,
                         world.get_resource::<jackdaw_bsn::SceneBsnAst>(),
-                        world.get_resource::<crate::pie_projection::PieProjection>(),
                     )
             })
             .map(|(entity, brush)| (entity, (*brush).clone()))
@@ -619,20 +602,15 @@ pub(crate) fn sync_pending_writes_to_document(world: &mut World) {
             .iter(world)
             .filter(|(entity, stack)| {
                 stack.last_changed().is_newer_than(synced, this_run)
-                    && !overlaid(world, *entity)
                     && stack_needs_sync(
                         *entity,
                         stack,
                         world.get_resource::<jackdaw_bsn::SceneBsnAst>(),
-                        world.get_resource::<crate::pie_projection::PieProjection>(),
                     )
             })
             .map(|(entity, stack)| (entity, (*stack).clone()))
             .collect();
-        let removed: Vec<Entity> = world
-            .removed::<Stack>()
-            .filter(|entity| !overlaid(world, *entity))
-            .collect();
+        let removed: Vec<Entity> = world.removed::<Stack>().collect();
         write_stacks_to_document(world, type_path, stacks, removed);
     }
 }
@@ -665,7 +643,6 @@ fn sync_changed_modifier_stacks_to_ast(
     >,
     mut removed: RemovedComponents<jackdaw_geometry::ModifierStack>,
     live: Option<Res<jackdaw_bsn::SceneBsnAst>>,
-    projection: Option<Res<crate::pie_projection::PieProjection>>,
     ticks: SystemChangeTick,
     mut synced: ResMut<SyncedThrough<jackdaw_geometry::ModifierStack>>,
     mut commands: Commands,
@@ -674,9 +651,7 @@ fn sync_changed_modifier_stacks_to_ast(
     let type_path = <jackdaw_geometry::ModifierStack as bevy::reflect::TypePath>::type_path();
     let entries: Vec<(Entity, jackdaw_geometry::ModifierStack)> = changed
         .iter()
-        .filter(|(entity, stack)| {
-            stack_needs_sync(*entity, stack, live.as_deref(), projection.as_deref())
-        })
+        .filter(|(entity, stack)| stack_needs_sync(*entity, stack, live.as_deref()))
         .map(|(e, s)| (e, (*s).clone()))
         .collect();
     let removed_entities: Vec<Entity> = removed.read().collect();
@@ -701,12 +676,9 @@ fn stack_needs_sync(
     entity: Entity,
     stack: &Ref<jackdaw_geometry::ModifierStack>,
     live: Option<&jackdaw_bsn::SceneBsnAst>,
-    projection: Option<&crate::pie_projection::PieProjection>,
 ) -> bool {
     let type_path = <jackdaw_geometry::ModifierStack as bevy::reflect::TypePath>::type_path();
-    !projection
-        .is_some_and(|projection| projection.stream_wrote(entity, type_path, stack.last_changed()))
-        && !live.is_some_and(|live| applied_from_document(live, entity, type_path, stack))
+    !live.is_some_and(|live| applied_from_document(live, entity, type_path, stack))
 }
 
 fn write_stacks_to_document(

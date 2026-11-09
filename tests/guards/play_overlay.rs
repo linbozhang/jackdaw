@@ -9,6 +9,7 @@ use bevy::sprite_render::{TilemapChunkMaterial, TilemapChunkMeshCache};
 use jackdaw::boot_ops::{run_op_clause, run_op_clause_as_user};
 use jackdaw::pie::InstanceKey;
 use jackdaw::play_scene::{LaunchScene, PlayScene, ServedScene, launch_scene, serve_scene};
+use jackdaw::play_sync::{collect_changes_for, collect_node_changes};
 use jackdaw::scenes::Scenes;
 use jackdaw::scenes::confirm_dialog::{ConfirmDialogButton, apply_confirm_dialog_action};
 use jackdaw::terrain_mode::TerrainDataStore;
@@ -140,10 +141,6 @@ fn editor(files: &[(&str, &str)]) -> (App, tempfile::TempDir) {
             root: tmp.path().to_path_buf(),
             config: default(),
         });
-    run_op_clause(app.world_mut(), "project.toggle_save_before_play")
-        .expect("the toggle dispatches")
-        .assert_finished();
-    app.update();
     (app, tmp)
 }
 
@@ -377,6 +374,190 @@ fn sidecars_of(served: &ServedScene) -> Option<String> {
             sidecars.clone()
         }
     }
+}
+
+/// A door with a knob below it.
+fn door_with_knob() -> String {
+    "#Door\n\
+     jackdaw::prefab::components::Prefab\n\
+     jackdaw::prefab::components::PrefabEntityId(0)\n\
+     bevy_transform::components::transform::Transform\n\
+     bevy_ecs::hierarchy::Children [\n\
+     #Knob\n\
+     jackdaw::prefab::components::PrefabEntityId(1)\n\
+     bevy_transform::components::transform::Transform\n\
+     ]\n"
+    .to_string()
+}
+
+fn select_named(app: &mut App, name: &str) -> Entity {
+    let entity = named(app, name)[0];
+    app.world_mut()
+        .resource_mut::<jackdaw::selection::Selection>()
+        .entities = vec![entity];
+    entity
+}
+
+fn named(app: &mut App, name: &str) -> Vec<Entity> {
+    app.world_mut()
+        .query::<(Entity, &Name)>()
+        .iter(app.world())
+        .filter(|(_, held)| held.as_str() == name)
+        .map(|(entity, _)| entity)
+        .collect()
+}
+
+/// The served root of `game` plays `path`, as a root that asked the editor does.
+fn played_as(game: &mut App, path: &str) {
+    let root = game
+        .world_mut()
+        .query_filtered::<Entity, With<JackdawSceneRoot>>()
+        .iter(game.world())
+        .next()
+        .expect("the served root");
+    game.world_mut()
+        .entity_mut(root)
+        .insert(jackdaw_runtime::node_structure::PlayedAs(path.to_string()));
+}
+
+/// What the game boxes for the editor's selection.
+fn boxed(app: &App, game: &mut App) -> Vec<Entity> {
+    use jackdaw_pie_protocol::HighlightPlace;
+    use jackdaw_runtime::node_structure::{NodePlace, PlaceStart, entities_at};
+    let places: Vec<NodePlace> = jackdaw::live_highlight::highlight_places(app.world(), &key())
+        .into_iter()
+        .map(|place| match place {
+            HighlightPlace::Node { scene, node, inner } => NodePlace {
+                start: PlaceStart::Node { scene, node },
+                inner,
+            },
+            HighlightPlace::Instances { prefab, inner } => NodePlace {
+                start: PlaceStart::Instances { prefab },
+                inner,
+            },
+        })
+        .collect();
+    let mut found = entities_at(game.world_mut(), &places);
+    found.sort();
+    found
+}
+
+fn sorted(mut entities: Vec<Entity>) -> Vec<Entity> {
+    entities.sort();
+    entities
+}
+
+/// A game playing two instances of the door, spawned.
+fn two_doors_playing() -> (App, tempfile::TempDir, App) {
+    let scene = roots(&[instance_of("props/door.bsn"), {
+        "#Other\n\
+         jackdaw::prefab::components::IsA { source: \"props/door.bsn\", deleted: [] }\n\
+         jackdaw::prefab::components::PrefabEntityId(0)\n"
+            .to_string()
+    }]);
+    let (mut app, tmp) = editor(&[("props/door.bsn", &door_with_knob()), ("zone.bsn", &scene)]);
+    open(&mut app, "assets/zone.bsn");
+    let mut game = game_serving(&mut app, &tmp, "zone.bsn");
+    played_as(&mut game, "zone.bsn");
+    update_until(&mut game, "both knobs spawned", |game| {
+        named(game, "Knob").len() == 2
+    });
+    game.update();
+    (app, tmp, game)
+}
+
+/// A child inside an instance boxes that instance's child alone.
+#[test]
+fn selecting_a_child_inside_an_instance_boxes_it_in_the_game() {
+    let (mut app, _tmp, mut game) = two_doors_playing();
+    let placed = named(&mut game, "Placed")[0];
+    let in_placed: Vec<Entity> = named(&mut game, "Knob")
+        .into_iter()
+        .filter(|&knob| game.world().get::<ChildOf>(knob).map(ChildOf::parent) == Some(placed))
+        .collect();
+    assert_eq!(in_placed.len(), 1);
+
+    let in_editor = named(&mut app, "Placed")[0];
+    let knob = named(&mut app, "Knob")
+        .into_iter()
+        .find(|&knob| app.world().get::<ChildOf>(knob).map(ChildOf::parent) == Some(in_editor))
+        .expect("the editor's knob");
+    app.world_mut()
+        .resource_mut::<jackdaw::selection::Selection>()
+        .entities = vec![knob];
+    assert_eq!(boxed(&app, &mut game), in_placed);
+
+    select_named(&mut app, "Placed");
+    assert_eq!(boxed(&app, &mut game), vec![placed]);
+}
+
+/// A node in an open prefab tab boxes it in every instance the game plays.
+#[test]
+fn selecting_a_node_in_a_prefab_tab_boxes_every_instance_of_it() {
+    let (mut app, _tmp, mut game) = two_doors_playing();
+    open(&mut app, "assets/props/door.bsn");
+
+    select_named(&mut app, "Knob");
+    assert_eq!(boxed(&app, &mut game), sorted(named(&mut game, "Knob")));
+
+    select_named(&mut app, "Door");
+    let mut instances = named(&mut game, "Placed");
+    instances.extend(named(&mut game, "Other"));
+    assert_eq!(boxed(&app, &mut game), sorted(instances));
+}
+
+/// A prefab inside a prefab, selected from the scene and from the outer prefab's tab.
+#[test]
+fn selecting_inside_a_nested_instance_boxes_it_in_the_game() {
+    let outer = "#Gate\n\
+         jackdaw::prefab::components::Prefab\n\
+         jackdaw::prefab::components::PrefabEntityId(0)\n\
+         bevy_transform::components::transform::Transform\n\
+         bevy_ecs::hierarchy::Children [\n\
+         #Leaf\n\
+         jackdaw::prefab::components::PrefabEntityId(1)\n\
+         jackdaw::prefab::components::IsA { source: \"props/door.bsn\", deleted: [] }\n\
+         ]\n"
+    .to_string();
+    let scene = instance_of("gate.bsn");
+    let (mut app, tmp) = editor(&[
+        ("props/door.bsn", &door_with_knob()),
+        ("gate.bsn", &outer),
+        ("zone.bsn", &scene),
+    ]);
+    open(&mut app, "assets/zone.bsn");
+    let mut game = game_serving(&mut app, &tmp, "zone.bsn");
+    played_as(&mut game, "zone.bsn");
+    update_until(&mut game, "the knob spawned", |game| {
+        named(game, "Knob").len() == 1
+    });
+    game.update();
+    let knob = named(&mut game, "Knob");
+
+    select_named(&mut app, "Knob");
+    assert_eq!(boxed(&app, &mut game), knob);
+
+    open(&mut app, "assets/gate.bsn");
+    select_named(&mut app, "Knob");
+    assert_eq!(boxed(&app, &mut game), knob);
+}
+
+/// The selection boxes nothing in a game that plays another document.
+#[test]
+fn a_tab_the_game_does_not_play_boxes_nothing() {
+    let (mut app, _tmp, mut game) = two_doors_playing();
+    app.world_mut()
+        .resource_mut::<jackdaw::scenes::Scenes>()
+        .tabs
+        .push(jackdaw::scenes::SceneTab::new_untitled(9));
+    assert!(jackdaw::scenes::swap::swap_active_tab(app.world_mut(), 1));
+    app.update();
+    let lone = app.world_mut().spawn(Name::new("Lone")).id();
+    jackdaw::scene_io::register_entity_in_ast(app.world_mut(), lone);
+    app.world_mut()
+        .resource_mut::<jackdaw::selection::Selection>()
+        .entities = vec![lone];
+    assert!(boxed(&app, &mut game).is_empty());
 }
 
 #[test]
@@ -1405,4 +1586,168 @@ fn a_plain_run_never_reads_the_overlay() {
     let handle = game.world().resource::<AssetServer>().load("zone.bsn");
     game.world_mut().spawn(JackdawSceneRoot(handle));
     assert_eq!(door_x(&mut game), 1.0);
+}
+
+/// Terrain the scene inherits from a prefab no tab holds is edited in the scene's
+/// store. Play saves nothing, so the game takes those edits from a copy.
+#[test]
+fn unsaved_terrain_on_an_inherited_instance_reaches_the_game() {
+    let prop = format!(
+        "#Prop\n\
+         jackdaw::prefab::components::Prefab\n\
+         jackdaw::prefab::components::PrefabEntityId(0)\n\
+         jackdaw_scene_types::types::Terrain {{ data_path: \"{TERRAIN_FILE}\" }}\n"
+    );
+    let scene = instance_of("prop.bsn");
+    let (mut app, tmp) = editor(&[("prop.bsn", &prop), ("field.bsn", &scene)]);
+    write_in(
+        &tmp.path().join("assets"),
+        TERRAIN_FILE,
+        &sidecar::save(&terrain_data(1.0)).expect("encodes"),
+    );
+    let saved = asset_file(&tmp, TERRAIN_FILE);
+    open(&mut app, "assets/field.bsn");
+    app.world_mut()
+        .resource_mut::<TerrainDataStore>()
+        .insert(TERRAIN_FILE, terrain_data(6.0));
+
+    let mut game = game_serving(&mut app, &tmp, "field.bsn");
+    assert_eq!(terrain_height(&mut game), 6.0);
+    assert_eq!(asset_file(&tmp, TERRAIN_FILE), saved);
+}
+
+/// The same for a tilemap: its cells are keyed by the scene's document.
+#[test]
+fn unsaved_tiles_on_an_inherited_instance_reach_the_game() {
+    let prop = format!(
+        "#Prop\n\
+         jackdaw::prefab::components::Prefab\n\
+         jackdaw::prefab::components::PrefabEntityId(0)\n\
+         {}",
+        tilemap_component(TILES_FILE)
+    );
+    let scene = instance_of("prop.bsn");
+    let (mut app, tmp) = editor(&[("prop.bsn", &prop), ("field.bsn", &scene)]);
+    open(&mut app, "assets/field.bsn");
+    let map = map_entity(&mut app);
+    let edited = store_key_of(app.world_mut(), map).expect("a key");
+    app.world_mut()
+        .resource_mut::<TilemapDataStore>()
+        .insert(edited, tiles(&[(1, 1), (2, 2)]));
+
+    let served = serve(&mut app, "field.bsn");
+    assert!(
+        sidecars_of(&served).is_some(),
+        "the answer names the copies"
+    );
+    assert_eq!(copies_named(&tmp, TILES_FILE).len(), 1);
+}
+
+/// Two levels down: a prefab with a tab behind holds the instance, so its store holds
+/// the edit to the prefab below it.
+#[test]
+fn unsaved_terrain_inherited_through_a_prefab_tab_reaches_the_game() {
+    let field = format!(
+        "#Prop\n\
+         jackdaw::prefab::components::Prefab\n\
+         jackdaw::prefab::components::PrefabEntityId(0)\n\
+         jackdaw_scene_types::types::Terrain {{ data_path: \"{TERRAIN_FILE}\" }}\n"
+    );
+    let holder = format!(
+        "#Holder\n\
+         jackdaw::prefab::components::Prefab\n\
+         jackdaw::prefab::components::PrefabEntityId(0)\n\
+         bevy_ecs::hierarchy::Children [\n{}]\n",
+        instance_of("field.bsn")
+    );
+    let scene = instance_of("holder.bsn");
+    let (mut app, tmp) = editor(&[
+        ("field.bsn", &field),
+        ("holder.bsn", &holder),
+        ("level.bsn", &scene),
+    ]);
+    write_in(
+        &tmp.path().join("assets"),
+        TERRAIN_FILE,
+        &sidecar::save(&terrain_data(1.0)).expect("encodes"),
+    );
+    open(&mut app, "assets/holder.bsn");
+    app.world_mut()
+        .resource_mut::<TerrainDataStore>()
+        .insert(TERRAIN_FILE, terrain_data(6.0));
+    open(&mut app, "assets/level.bsn");
+
+    let mut game = game_serving(&mut app, &tmp, "level.bsn");
+    assert_eq!(terrain_height(&mut game), 6.0);
+}
+
+/// The scene's store names a file in the scene's folder, not the one beside a prefab
+/// elsewhere, whatever the two call it.
+#[test]
+fn a_scenes_terrain_does_not_reach_a_prefab_in_another_folder() {
+    let prop = format!(
+        "#Prop\n\
+         jackdaw::prefab::components::Prefab\n\
+         jackdaw::prefab::components::PrefabEntityId(0)\n\
+         jackdaw_scene_types::types::Terrain {{ data_path: \"{TERRAIN_FILE}\" }}\n"
+    );
+    let scene = instance_of("../prop.bsn");
+    let (mut app, tmp) = editor(&[("prop.bsn", &prop), ("levels/b.bsn", &scene)]);
+    write_in(
+        &tmp.path().join("assets"),
+        TERRAIN_FILE,
+        &sidecar::save(&terrain_data(1.0)).expect("encodes"),
+    );
+    open(&mut app, "assets/levels/b.bsn");
+    app.world_mut()
+        .resource_mut::<TerrainDataStore>()
+        .insert(TERRAIN_FILE, terrain_data(6.0));
+
+    let mut game = game_serving(&mut app, &tmp, "levels/b.bsn");
+    assert_eq!(terrain_height(&mut game), 1.0);
+}
+
+/// An instance added while playing reads its prefab as the editor holds it, which
+/// the game was not given when it asked for the scene.
+#[test]
+fn an_instance_spawned_while_playing_brings_its_unsaved_prefab_ahead_of_it() {
+    let scene = "#Lamp\nbevy_transform::components::transform::Transform\n";
+    let (mut app, tmp) = editor(&[("door.bsn", &door(1.0)), ("zone.bsn", scene)]);
+    open(&mut app, "assets/zone.bsn");
+    assert!(collect_node_changes(app.world_mut()).is_empty());
+    serve(&mut app, "zone.bsn");
+
+    set_cached_prefab(&mut app, &tmp, "door.bsn", &door(9.0));
+    app.world_mut()
+        .operator("prefab.spawn_instance")
+        .param("path", "door.bsn")
+        .param("pos_x", 0.0)
+        .param("pos_y", 0.0)
+        .param("pos_z", 0.0)
+        .call()
+        .expect("prefab.spawn_instance dispatches")
+        .assert_finished();
+    app.update();
+
+    let events: Vec<ControlEvent> = collect_changes_for(app.world_mut(), &[key()])
+        .into_iter()
+        .map(|(_, event)| event)
+        .collect();
+    let prefab = events
+        .iter()
+        .position(|event| matches!(event, ControlEvent::PrefabFiles { .. }))
+        .unwrap_or_else(|| panic!("the unsaved prefab goes: {events:?}"));
+    let spawn = events
+        .iter()
+        .position(|event| matches!(event, ControlEvent::SpawnNode { .. }))
+        .unwrap_or_else(|| panic!("the instance goes: {events:?}"));
+    assert!(prefab < spawn, "{events:?}");
+    let ControlEvent::PrefabFiles { files } = &events[prefab] else {
+        unreachable!();
+    };
+    assert!(
+        files.iter().any(|(path, text)| path == "door.bsn"
+            && text.as_deref().is_some_and(|text| text.contains("9.0"))),
+        "{files:?}"
+    );
 }

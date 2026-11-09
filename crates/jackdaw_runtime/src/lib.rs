@@ -86,7 +86,11 @@ pub use jackdaw_scene_types::{
 };
 
 #[cfg(feature = "pie")]
+mod game_query;
+#[cfg(feature = "pie")]
 mod pie;
+#[cfg(feature = "pie")]
+mod pie_audio;
 #[cfg(feature = "pie")]
 mod pie_frames;
 #[cfg(feature = "pie")]
@@ -149,6 +153,7 @@ pub mod frame_work;
 mod live_levels;
 #[cfg(feature = "render")]
 mod lod;
+pub mod node_structure;
 pub mod node_sync;
 pub mod play_overlay;
 #[cfg(feature = "render")]
@@ -192,8 +197,8 @@ mod fallback_camera;
 pub use fallback_camera::FallbackCamera2d;
 
 /// Marks what the runtime spawns for itself, such as the fallback camera and
-/// the pixel canvas helpers: never saved, never streamed to the editor and
-/// never taken for the game's own camera.
+/// the pixel canvas helpers: never saved and never taken for the game's own
+/// camera.
 #[derive(Component, Clone, Copy, Debug, Default)]
 pub struct RuntimeOnly;
 
@@ -207,8 +212,6 @@ mod pixel_canvas;
 pub use pixel_canvas::{
     CANVAS_ORDER, CanvasCursor, PixelCanvasExpanded, PixelCanvasHelper, PixelCanvasPlugin,
 };
-mod play_scene;
-pub use play_scene::PieSceneOverride;
 #[cfg(feature = "render")]
 mod sampling;
 #[cfg(feature = "render")]
@@ -234,9 +237,10 @@ pub mod prelude {
         ActiveCameraRig, CameraLook, CameraMode, CameraRig, ConfigLoader, ConfigPlugin,
         DetailPresser, EditorCategory, EditorDescription, EditorHidden, EditorPreview, GameActions,
         GameInputConfig, InputActionsPlugin, JackdawAssetSourcePlugin, JackdawCameraRigPlugin,
-        JackdawCatalog, JackdawCatalogPath, JackdawPlugin, JackdawSceneMember, JackdawSceneRoot,
-        SaveMigration, SavePlugin, SaveStatus, SaveStore, SceneRefused, SkipSerialization,
-        TriggerContact, TriggerEvents, TriggerPhase, save_dir,
+        JackdawCatalog, JackdawCatalogPath, JackdawPlugin, JackdawSceneMember, JackdawSceneReady,
+        JackdawSceneRoot, JackdawSceneSpawnFailed, JackdawSceneSpawned, SaveMigration, SavePlugin,
+        SaveStatus, SaveStore, SceneRefused, SkipSerialization, TriggerContact, TriggerEvents,
+        TriggerPhase, save_dir,
     };
     #[cfg(feature = "terrain")]
     pub use crate::{DetailPressers, DetailSettings, DetailViewer, TerrainViewer};
@@ -421,14 +425,6 @@ impl Plugin for JackdawPlugin {
         // and attach the PIE stream / control systems. A connect failure logs
         // and leaves the runtime untouched.
         #[cfg(feature = "pie")]
-        if let Some(play_scene) = play_scene::override_from_env() {
-            app.insert_resource(play_scene);
-        }
-        if app.world().contains_resource::<PieSceneOverride>() {
-            app.add_observer(play_scene::redirect_scene_root);
-        }
-
-        #[cfg(feature = "pie")]
         if let Some(cfg) = pie::pie_config() {
             match jackdaw_pie_protocol::connect(&cfg.server) {
                 Ok(transport) => pie::attach_pie(app, transport),
@@ -502,7 +498,7 @@ pub struct JackdawScene {
     parent_path: PathBuf,
     /// Source file stem (`starter` from `zones/starter.bsn`), captured at
     /// load time. Used to give the spawned scene root a readable `Name` so
-    /// the editor's Live tree shows the scene name instead of an entity id.
+    /// the scene root shows the scene name instead of an entity id.
     /// `None` when the asset was built without a source path.
     stem: Option<String>,
 }
@@ -600,6 +596,7 @@ pub struct JackdawSceneMember {
 #[derive(Component, Default)]
 struct SceneInstanceMembers(Vec<Entity>);
 
+/// Marks a root whose spawn pass has run, whether it spawned or was refused.
 #[derive(Component)]
 struct SceneSpawned;
 
@@ -609,6 +606,30 @@ struct SceneSpawned;
 /// live is a no-op rather than a teardown-and-rebuild of a running scene.
 #[derive(Component, Clone, Copy, Debug, PartialEq, Eq)]
 struct SpawnedSceneId(AssetId<JackdawScene>);
+
+/// Marks a [`JackdawSceneRoot`] whose scene has spawned, until a reload takes
+/// the scene down to spawn it again.
+#[derive(Component, Clone, Copy, Debug, PartialEq, Eq)]
+pub struct JackdawSceneReady;
+
+/// Triggered on a [`JackdawSceneRoot`] each time its scene has spawned, from a
+/// file or from the document the editor serves under Play, with the scene's
+/// authored entities already in the world. It fires in `Update` before
+/// `GlobalTransform` propagates, so read `Transform`, and models and sidecars
+/// such as terrain and tilemaps finish loading after it.
+#[derive(EntityEvent, Clone, Copy, Debug, PartialEq, Eq)]
+pub struct JackdawSceneSpawned {
+    pub entity: Entity,
+}
+
+/// Triggered on a [`JackdawSceneRoot`] when its scene was refused, alongside
+/// [`SceneRefused`].
+#[derive(EntityEvent, Clone, Debug, PartialEq, Eq)]
+pub struct JackdawSceneSpawnFailed {
+    pub entity: Entity,
+    /// Why the scene was refused.
+    pub error: String,
+}
 
 /// Marks a scene root spawned from the document the editor served under Play
 /// rather than from its file, so a change to the file does not respawn it: the
@@ -780,7 +801,7 @@ fn clear_scene_instance(
     }
     commands
         .entity(root_entity)
-        .remove::<SceneSpawned>()
+        .remove::<(SceneSpawned, JackdawSceneReady)>()
         .insert(SceneInstanceMembers::default());
 }
 
@@ -925,6 +946,7 @@ pub(crate) fn spawn_loaded_scenes(
     #[cfg(feature = "pie")]
     served_scene::begin_pass(world);
 
+    let mut outcomes = Vec::new();
     for (root_entity, handle) in to_spawn {
         // The reload path removes `SceneSpawned` when the document changes, so
         // the previous attempt's verdict does not carry over.
@@ -939,7 +961,13 @@ pub(crate) fn spawn_loaded_scenes(
             served_scene::Gate::Document { text, dir, stem } => {
                 world.entity_mut(root_entity).insert(ServedScene);
                 let document = parse_bsn_text(&text).map_err(|err| err.to_string());
-                spawn_scene_document(world, root_entity, document, Path::new(&dir), Some(stem));
+                outcomes.push(spawn_scene_document(
+                    world,
+                    root_entity,
+                    document,
+                    Path::new(&dir),
+                    Some(stem),
+                ));
                 continue;
             }
         }
@@ -960,25 +988,50 @@ pub(crate) fn spawn_loaded_scenes(
             // why. The failure names the scene's path, so a switch to a
             // target that cannot load says which target it lost.
             if let Some(err) = scene_load_failure(world, &handle) {
-                let path = world
-                    .resource::<AssetServer>()
-                    .get_path(handle.id())
-                    .map(|path| path.to_string())
-                    .unwrap_or_default();
-                warn!("Cannot spawn scene '{path}': {err}");
-                world.entity_mut(root_entity).insert((
-                    SceneSpawned,
-                    SceneRefused,
-                    SpawnedSceneId(handle.id()),
-                ));
+                warn!("Cannot spawn scene: {err}");
+                outcomes.push(refuse_scene(world, root_entity, err));
+                world
+                    .entity_mut(root_entity)
+                    .insert(SpawnedSceneId(handle.id()));
             }
             continue;
         };
-        spawn_scene_document(world, root_entity, document, &parent_path, stem);
+        outcomes.push(spawn_scene_document(
+            world,
+            root_entity,
+            document,
+            &parent_path,
+            stem,
+        ));
     }
 
     #[cfg(feature = "pie")]
     served_scene::end_pass(world);
+
+    // Observers run once every root has spawned, so one despawning another root
+    // cannot pull it out from under the pass.
+    for outcome in outcomes {
+        match outcome {
+            SpawnOutcome::Spawned(entity) => {
+                if world.get_entity(entity).is_ok() {
+                    world.trigger(JackdawSceneSpawned { entity });
+                    world.flush();
+                }
+            }
+            SpawnOutcome::Refused(entity, error) => {
+                if world.get_entity(entity).is_ok() {
+                    world.trigger(JackdawSceneSpawnFailed { entity, error });
+                    world.flush();
+                }
+            }
+        }
+    }
+}
+
+/// What a spawn attempt did with a root, reported to observers after the pass.
+enum SpawnOutcome {
+    Spawned(Entity),
+    Refused(Entity, String),
 }
 
 /// Whether a scene root has yet to spawn, for any reason: its file is loading,
@@ -996,15 +1049,12 @@ fn spawn_scene_document(
     document: Result<SceneBsnAst, String>,
     parent_path: &Path,
     stem: Option<String>,
-) {
+) -> SpawnOutcome {
     let mut ast = match document {
         Ok(ast) => ast,
         Err(err) => {
             warn!("Cannot read scene: {err}");
-            world
-                .entity_mut(root_entity)
-                .insert((SceneSpawned, SceneRefused));
-            return;
+            return refuse_scene(world, root_entity, err);
         }
     };
 
@@ -1039,10 +1089,7 @@ fn spawn_scene_document(
     // whose own file never names it.
     if let Err(err) = jackdaw_bsn::reject_retired_ui_components(&ast) {
         warn!("Cannot spawn scene '{scene_name}': {err}");
-        world
-            .entity_mut(root_entity)
-            .insert((SceneSpawned, SceneRefused));
-        return;
+        return refuse_scene(world, root_entity, format!("{scene_name}: {err}"));
     }
 
     let members = spawn_scene_entities(world, root_entity, &ast, parent_path, &expanded);
@@ -1055,7 +1102,7 @@ fn spawn_scene_document(
     navmesh::attach_navmesh(world, root_entity, parent_path, stem.as_deref());
 
     // Give the container root a readable name from the scene's file
-    // stem so the editor's Live tree shows the scene name instead of an
+    // stem so the scene root shows the scene name instead of an
     // entity id. Never overwrite an author-supplied name, and never
     // insert an empty one.
     if world.get::<Name>(root_entity).is_none()
@@ -1075,7 +1122,18 @@ fn spawn_scene_document(
             .insert(jackdaw_scene_types::SceneRootTag);
     }
 
-    world.entity_mut(root_entity).insert(SceneSpawned);
+    world
+        .entity_mut(root_entity)
+        .insert((SceneSpawned, JackdawSceneReady));
+    SpawnOutcome::Spawned(root_entity)
+}
+
+fn refuse_scene(world: &mut World, root_entity: Entity, error: String) -> SpawnOutcome {
+    world
+        .entity_mut(root_entity)
+        .remove::<JackdawSceneReady>()
+        .insert((SceneSpawned, SceneRefused));
+    SpawnOutcome::Refused(root_entity, error)
 }
 
 /// Materialize the prefab instances a scene document names.
@@ -1238,6 +1296,21 @@ fn spawn_scene_entities(
     }
     world.insert_resource(BsnSceneAssets(scene_assets));
 
+    spawn_document_nodes(world, root_entity, None, ast, parent_path, expanded)
+}
+
+/// Spawn `ast`'s entity roots parent-first, under `under` or at the top of the scene
+/// `root_entity`, along with what each entity reads beyond the document. Returns the
+/// entity of each root. The assets it names must be loaded already.
+pub(crate) fn spawn_document_nodes(
+    world: &mut World,
+    root_entity: Entity,
+    under: Option<Entity>,
+    ast: &SceneBsnAst,
+    parent_path: &Path,
+    expanded: &HashSet<PathBuf>,
+) -> Vec<Entity> {
+    let registry = world.resource::<AppTypeRegistry>().clone();
     let mut spawned: Vec<Entity> = Vec::new();
     let mut members: Vec<Entity> = Vec::new();
     for root in ast.roots.clone() {
@@ -1252,9 +1325,9 @@ fn spawn_scene_entities(
             world,
             ast,
             root,
+            under.unwrap_or(root_entity),
             root_entity,
-            root_entity,
-            true,
+            under.is_none(),
             &registry,
             &mut spawned,
         ) {

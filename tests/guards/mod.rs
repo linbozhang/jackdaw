@@ -39,6 +39,7 @@ mod stop_restore;
 
 mod play_overlay;
 mod play_scene;
+mod play_structure;
 mod play_sync;
 mod remote_batches;
 mod two_d_workspace;

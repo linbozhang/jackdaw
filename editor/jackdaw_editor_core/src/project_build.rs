@@ -18,9 +18,9 @@ use crate::run_config::RunConfigs;
 
 pub use jackdaw_project_build::{
     BuildEvent, BuildLoad, CargoTarget, ProjectBinaryBuild, ProjectBuild, ProjectBuildError,
-    TargetKind, build_project_binary, build_project_binary_with_load, build_project_dylib,
-    cargo_meta, detach_from_host_build, linkage, plan, prepare_game_command, project_manifest,
-    run_manifest, shim, shim_spec_for_project,
+    TargetKind, build_project_binary, build_project_binary_cancellable,
+    build_project_binary_with_load, build_project_dylib, cargo_meta, detach_from_host_build,
+    linkage, plan, prepare_game_command, project_manifest, shim, shim_spec_for_project,
 };
 
 pub struct ProjectBuildPlugin;
@@ -217,11 +217,6 @@ pub(crate) struct EditorBuildSettings {
     /// When true, the editor compiles the game once in the background as
     /// the project opens, so the first Play is instant. On by default.
     pub(crate) prebuild: bool,
-    /// What Play does with unsaved scene changes before starting the game:
-    /// save them, ask first, or play a temporary copy. `save` by default;
-    /// a pre-enum settings file's bool reads back as `true` = save and
-    /// `false` = play a copy.
-    pub(crate) save_before_play: crate::pie_current::SaveBeforePlay,
 }
 
 impl Default for EditorBuildSettings {
@@ -229,7 +224,6 @@ impl Default for EditorBuildSettings {
         Self {
             auto_build: false,
             prebuild: true,
-            save_before_play: crate::pie_current::SaveBeforePlay::default(),
         }
     }
 }
@@ -475,7 +469,6 @@ mod tests {
         world.insert_resource(EditorBuildSettings {
             auto_build: false,
             prebuild,
-            save_before_play: crate::pie_current::SaveBeforePlay::default(),
         });
         world.insert_resource(crate::project::ProjectRoot {
             root: std::env::temp_dir().join("jackdaw-prebuild-test-no-such-project"),

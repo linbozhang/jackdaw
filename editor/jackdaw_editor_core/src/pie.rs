@@ -2,21 +2,23 @@
 //!
 //! Builds the project with plain `cargo build`, launches the game's own
 //! executable as a child process, and drives it over an `ipc-channel`
-//! connection. Children stream `StateEvent`s back and respond to
-//! `ControlEvent`s (Pause / Resume / Stop). Stop reaps the children; the
-//! authored scene is never mutated. Messages to a child leave on its own
-//! writer thread (`GameOutbox`), so the main thread never waits on a game.
+//! connection. Children send `StateEvent`s back and respond to
+//! `ControlEvent`s (Pause / Resume / Step / Stop). Stop reaps the children and leaves
+//! the scene document as it stands, unless the project's Play settings ask for
+//! the edits made during Play to be undone (see [`crate::play_revert`]). Messages
+//! to a child leave on its own writer thread (`GameOutbox`), so the main thread
+//! never waits on a game.
 //!
 //! Instances are keyed by [`InstanceKey`] (config label plus 1-based
-//! instance number). Builds are keyed by [`BuildKey`]: the project root
-//! plus the cargo target a run names. Runs without a target share the
-//! root's default build; several instances wait on one build and spawn
-//! together when it finishes.
+//! instance number). All run configurations of a project share one
+//! build, keyed by the project root: several instances wait on one build
+//! and spawn together when it finishes.
 
-use std::collections::{HashMap, VecDeque};
-use std::io::{self, BufRead, BufReader};
+use std::collections::HashMap;
+use std::io;
 use std::path::{Path, PathBuf};
 use std::process::{Child, Command, Stdio};
+use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::{Arc, Mutex};
 use std::time::{Duration, Instant};
 
@@ -25,22 +27,31 @@ use bevy::prelude::*;
 use bevy::tasks::{AsyncComputeTaskPool, Task, futures_lite::future};
 use jackdaw_api::pie::PlayState;
 use jackdaw_api::prelude::*;
+use jackdaw_api_internal::keymap::PresetInput;
 use jackdaw_pie_protocol::event::{from_bytes, to_bytes};
 use jackdaw_pie_protocol::manifest::RunConfig;
 use jackdaw_pie_protocol::{
     ControlEvent, IpcChannelTransport, PieChannel, PieTransport, StateEvent, serve,
 };
 
+use crate::core_extension::CoreExtensionInputContext;
 use crate::ext_build::BuildProgress;
-use crate::pie_current::{
-    PiePlayCurrentOp, ProjectSetSaveBeforePlayOp, SaveBeforePlay, SceneOverrideLaunch,
-};
-use crate::pie_mirror::{PieInstances, PieViewMode};
+use crate::game_output::{GameOutput, OutputCapture, plain_line};
 use crate::pie_outbox::{GameOutbox, NodeEdit, OutboxSlot};
 use crate::play_scene::LaunchScene;
+use crate::project_build::BuildLoad;
 use crate::project_build::shim::ShimSpec;
-use crate::project_build::{BuildLoad, CargoTarget};
+use crate::project_build::CargoTarget;
 use crate::run_config::RunConfigs;
+use crate::worker_task::{WorkerOutcome, WorkerTask};
+
+/// How long to wait for a launched child to connect back before giving
+/// up on it.
+const CONNECT_TIMEOUT: Duration = Duration::from_secs(30);
+
+/// The editor's remote control port variable, kept out of a launched game.
+const EDITOR_REMOTE_PORT_ENV: &str = "JACKDAW_REMOTE_PORT";
+
 use crate::worker_task::{WorkerOutcome, WorkerTask};
 
 /// Savers feature crates register at plugin build: each saves its own
@@ -56,38 +67,6 @@ pub struct LaunchAssetSavers(pub Vec<fn(&mut World) -> Vec<String>>);
 /// (`None`), exactly the single build per project there always was.
 type BuildKey = (PathBuf, Option<CargoTarget>);
 
-/// How many trailing stderr lines to keep from a game process, so a
-/// crash can be reported without buffering unbounded output.
-const STDERR_TAIL_LINES: usize = 40;
-
-/// How long to wait for a launched child to connect back before giving
-/// up on it.
-const CONNECT_TIMEOUT: Duration = Duration::from_secs(30);
-
-/// How long a child asked to stop has to exit on its own before
-/// [`advance_child`] kills it. The graceful window is what makes the
-/// game-side `Stop` → `AppExit::Success` path reachable at all: without
-/// it, an immediate kill beats the message every time. The stop prompt
-/// and the return to authoring land when the last child is reaped, so
-/// both arrive within this bound after the stop is asked for.
-const GRACEFUL_STOP_DEADLINE: Duration = Duration::from_secs(2);
-
-/// Marker for the toolbar transport buttons. `PiePlugin` installs
-/// an `On<Add<PieButton>>` observer that wires each button's
-/// `PointerClick` to the corresponding handler.
-#[derive(Component, Clone, Copy, Debug, PartialEq, Eq)]
-pub enum PieButton {
-    Play,
-    Pause,
-    Stop,
-    Reload,
-    /// Rebuild the project so new or changed game code appears in the
-    /// editor. Distinct from `Reload` (which rebuilds and relaunches the
-    /// running game): `Rebuild` is the edit-mode refresh of the component
-    /// list, and dispatches `project.build`.
-    Rebuild,
-}
-
 /// Identifies one running instance: a config label plus its 1-based
 /// instance number.
 #[derive(Clone, PartialEq, Eq, Hash, Debug)]
@@ -102,9 +81,92 @@ impl std::fmt::Display for InstanceKey {
     }
 }
 
-/// Rolling buffer of a child's most recent stderr lines, filled by the
-/// per-child reader thread and read back when reporting a crash.
-type StderrTail = Arc<Mutex<VecDeque<String>>>;
+/// How many stderr lines a [`GameExit`] shows.
+const EXIT_STDERR_LINES: usize = 8;
+
+/// How many characters of one stderr line a [`GameExit`] keeps.
+const EXIT_STDERR_LINE_CHARS: usize = 200;
+
+/// Why a game went away without being stopped.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum GameExitReason {
+    /// Exited with a failure status after connecting, as "code N" or "signal N".
+    Crashed(String),
+    /// Exited before connecting, with its status.
+    ExitedBeforeConnecting(String),
+    /// Still unconnected at the connect timeout, so it was stopped.
+    NeverConnected,
+    /// The connection to it could not be set up.
+    ConnectFailed(String),
+}
+
+/// A game that went away on its own, with the end of its stderr.
+#[derive(Clone, Debug)]
+pub struct GameExit {
+    pub key: InstanceKey,
+    pub reason: GameExitReason,
+    /// The last few lines the game wrote to stderr, without escape sequences.
+    pub stderr: Vec<String>,
+}
+
+impl GameExit {
+    fn new(key: InstanceKey, reason: GameExitReason, output: OutputCapture) -> Self {
+        let lines = output.finish(EXIT_STDERR_LINES);
+        Self {
+            key,
+            reason,
+            stderr: lines
+                .iter()
+                .map(|line| plain_line(line, EXIT_STDERR_LINE_CHARS))
+                .collect(),
+        }
+    }
+}
+
+/// Why the last game went away, until Play or Stop is pressed or a game exits
+/// cleanly.
+#[derive(Resource, Default, Debug)]
+pub struct LastGameExit(pub Option<GameExit>);
+
+/// Record `failed` as the last exit, else forget a recorded exit of a game that
+/// has since exited cleanly.
+fn record_exits(last: &mut LastGameExit, failed: Option<GameExit>, exited: &[InstanceKey]) {
+    if failed.is_some() {
+        last.0 = failed;
+    } else if last
+        .0
+        .as_ref()
+        .is_some_and(|exit| exited.contains(&exit.key))
+    {
+        last.0 = None;
+    }
+}
+
+/// A child's exit status as "code N", or "signal N" for one killed by a signal.
+fn exit_status_text(status: std::process::ExitStatus) -> String {
+    if let Some(code) = status.code() {
+        return format!("code {code}");
+    }
+    #[cfg(unix)]
+    {
+        use std::os::unix::process::ExitStatusExt;
+        if let Some(signal) = status.signal() {
+            return format!("signal {signal}");
+        }
+    }
+    status.to_string()
+}
+
+/// What one poll of a child found.
+enum ChildPoll {
+    Running(ChildStage),
+    /// Exited with a success status.
+    Exited,
+    /// Dropped after its process could not be polled.
+    Lost,
+    /// Went away uncleanly.
+    Failed(GameExit),
+}
 
 /// One launched child and its connection progress.
 enum ChildStage {
@@ -114,21 +176,16 @@ enum ChildStage {
     Connecting {
         child: Child,
         accept: Task<io::Result<IpcChannelTransport>>,
-        stderr_tail: StderrTail,
+        output: OutputCapture,
         since: Instant,
     },
     /// The child is connected and running. Messages to it go through `outbox`;
-    /// `transport` receives from it. `stop_deadline` is set when it has been
-    /// asked to stop: until then (or its own exit) it keeps running, and past
-    /// it [`advance_child`] kills it, so a game that honors `Stop` gets to
-    /// flush and exit cleanly while one that ignores it cannot outlive the
-    /// window.
+    /// `transport` receives from it.
     Live {
         child: Child,
         transport: IpcChannelTransport,
         outbox: GameOutbox,
-        stderr_tail: StderrTail,
-        stop_deadline: Option<Instant>,
+        output: OutputCapture,
     },
 }
 
@@ -149,27 +206,22 @@ impl ChildStage {
     }
 }
 
-/// The product of a completed game build: the executable Play runs, plus
-/// what the build reported about how the game links — which an export
-/// needs and Play ignores. The extracted type schema is persisted to
-/// `.jackdaw/schema.json` by the build itself and picked up by the
-/// editor's watcher, so it does not travel back through here.
+/// The product of a completed game build: the executable Play runs. The
+/// extracted type schema is persisted to `.jackdaw/schema.json` by the
+/// build itself and picked up by the editor's watcher, so it does not
+/// travel back through here.
 pub(crate) struct GameBuildResult {
-    pub(crate) binary: PathBuf,
-    /// The `dylib` crates the build produced, the signal an export
-    /// refuses; empty for a statically linked (template-shaped) build.
-    pub(crate) dylib_artifacts: Vec<String>,
+    binary: PathBuf,
 }
 
-/// An in-flight or finished build, deduped by [`BuildKey`] (project root
-/// plus cargo target). Instances waiting on it are spawned when it
-/// finishes.
+/// An in-flight or finished build, deduped by project root. Instances
+/// waiting on it are spawned when it finishes.
 pub(crate) enum BuildState {
     /// `cargo build` is running on a task pool; `pending` lists the
     /// instances to spawn once the binary is ready. `progress` is the
     /// sink cargo writes compile progress into, surfaced in the footer.
     Running {
-        task: Task<io::Result<GameBuildResult>>,
+        task: GameBuildTask,
         pending: Vec<PendingSpawn>,
         progress: Arc<Mutex<BuildProgress>>,
     },
@@ -181,17 +233,41 @@ pub(crate) enum BuildState {
     Failed { launch: bool },
 }
 
+/// A game build on the compute pool. Dropping it cancels the build, which kills
+/// cargo, so a launch stopped while building stops compiling too.
+pub(crate) struct GameBuildTask {
+    task: Task<io::Result<GameBuildResult>>,
+    cancel: Arc<AtomicBool>,
+}
+
+impl From<Task<io::Result<GameBuildResult>>> for GameBuildTask {
+    fn from(task: Task<io::Result<GameBuildResult>>) -> Self {
+        Self {
+            task,
+            cancel: Arc::default(),
+        }
+    }
+}
+
+impl Drop for GameBuildTask {
+    fn drop(&mut self) {
+        self.cancel.store(true, Ordering::Relaxed);
+    }
+}
+
 /// One instance waiting for its build to finish before spawning.
 pub(crate) struct PendingSpawn {
     key: InstanceKey,
     run: RunConfig,
-    /// The scene override this launch carries through the build, handed to
-    /// the child through `JACKDAW_PIE_SCENE` when it spawns. `None` for a
-    /// startup-scene launch, whose save gate ran before the build instead.
-    scene_override: Option<SceneOverrideLaunch>,
-    /// The scene an instance plays in place of its usual one (the upstream
-    /// play-in-editor face of the same launch), recorded at press.
+    /// The cargo target this launch builds, so its cache entry is its own.
+    target: Option<CargoTarget>,
     scene: Option<LaunchScene>,
+}
+
+/// The running instance the Game panel shows and the selection highlights in.
+#[derive(Resource, Default, Debug)]
+pub struct PieInstances {
+    pub focused: Option<InstanceKey>,
 }
 
 /// Editor-side play orchestration. `NonSend` because ipc transports
@@ -199,26 +275,25 @@ pub(crate) struct PendingSpawn {
 #[derive(Default)]
 pub struct PieSession {
     children: HashMap<InstanceKey, ChildStage>,
-    pub(crate) builds: HashMap<BuildKey, BuildState>,
-    /// The scene override each launched instance runs with, recorded for
-    /// the launch log, stop cleanup, and the BRP face.
-    scene_overrides: HashMap<InstanceKey, SceneOverrideLaunch>,
-    /// The window mode an instance launched in, recorded at press so the
-    /// launch log and the stop cleanup see the same face the spawn did.
     pub(crate) launch_modes: HashMap<InstanceKey, PieWindowMode>,
     /// The scene an instance plays in place of its usual one, recorded at press.
     pub(crate) launch_scenes: HashMap<InstanceKey, LaunchScene>,
-    /// Temporary run copies this session wrote under
-    /// `<assets>/.jackdaw-pie/`, removed when play stops and swept at
-    /// project open when a crash beat the cleanup to it.
-    temp_copies: Vec<PathBuf>,
-    /// Monotonic count of instances ever launched. A `pie_stopped` wait
-    /// reads it as its baseline, so a session that began and ended
-    /// entirely between two polls still satisfies the wait — observing
-    /// the session while it is up is no longer the only proof it ran.
+    pub(crate) builds: HashMap<BuildKey, BuildState>,
+    /// Monotonic count of instances ever launched: the `pie_stopped`
+    /// wait's session-proof baseline, so a stop that completed before a
+    /// wait's first poll still reads as a session that ran.
     launches: u64,
+    /// Temporary run copies this session wrote, deleted when play stops.
+    /// Empty under the served-document model; the field stays for the
+    /// cleanup contract the remote wait face and tests rely on.
+    pub(crate) temp_copies: Vec<PathBuf>,
     /// Scene answers being written on a worker.
     serving: Vec<ServingScene>,
+    /// Replaces [`CONNECT_TIMEOUT`] when set.
+    connect_timeout: Option<Duration>,
+    /// A launch's build failed and the Build panel has not yet seen that
+    /// failure; the Game panel reports it instead.
+    pub(crate) launch_build_failure_unseen: bool,
 }
 
 /// A scene answer on a worker, with its places in the instance's outbox.
@@ -261,14 +336,11 @@ impl Drop for PieSession {
     /// so this resource; take the running games down with it. Hard kills that
     /// skip destructors (SIGKILL skips everything) are covered by the game
     /// itself, which exits once its link to the editor closes, and on Linux
-    /// and Windows by the kernel as well. The temporary run copies go the
-    /// same way; ones a hard kill stranded are swept at the next project
-    /// open.
+    /// and Windows by the kernel as well.
     fn drop(&mut self) {
         for (_key, mut stage) in self.children.drain() {
             stage.kill_and_reap();
         }
-        remove_temp_copies(&mut self.temp_copies);
     }
 }
 
@@ -281,11 +353,6 @@ impl PieSession {
     /// Whether an instance is currently launched (connecting or live).
     pub fn is_running(&self, key: &InstanceKey) -> bool {
         self.children.contains_key(key)
-    }
-
-    /// The scene override an instance was launched with, if it carried one.
-    pub fn scene_override(&self, key: &InstanceKey) -> Option<&SceneOverrideLaunch> {
-        self.scene_overrides.get(key)
     }
 
     /// The window mode an instance was launched with.
@@ -354,6 +421,12 @@ impl PieSession {
         }
     }
 
+    /// Monotonic count of instances ever launched, the `pie_stopped`
+    /// wait's session-proof baseline.
+    pub fn launches(&self) -> u64 {
+        self.launches
+    }
+
     fn note_launch_scene(&mut self, key: &InstanceKey, scene: Option<LaunchScene>) {
         match scene {
             Some(scene) => {
@@ -366,50 +439,11 @@ impl PieSession {
     }
 
     /// Whether the last thing a launch did was fail its build.
-    fn launch_failed(&self) -> bool {
+    pub(crate) fn launch_failed(&self) -> bool {
         self.builds
             .values()
             .any(|build| matches!(build, BuildState::Failed { launch: true }))
     }
-
-    /// Monotonic count of instances ever launched, the `pie_stopped`
-    /// wait's session-proof baseline.
-    pub fn launches(&self) -> u64 {
-        self.launches
-    }
-
-    /// Bump the launch count without launching anything: a test's way of
-    /// standing in for a session that already came and went. `pub`, not
-    /// `cfg(test)`: the remote crate's BRP-face tests stand sessions up
-    /// too, and a `cfg(test)` item is not reachable across crates.
-    pub fn note_launch_for_test(&mut self) {
-        self.launches += 1;
-    }
-
-    /// One launched instance as the BRP face summarizes it.
-    pub fn instance_faces(&self) -> Vec<PieInstanceFace> {
-        self.children
-            .iter()
-            .map(|(key, stage)| PieInstanceFace {
-                key: key.clone(),
-                stage: match stage {
-                    ChildStage::Connecting { .. } => "connecting",
-                    ChildStage::Live { .. } => "live",
-                },
-                scene_override: self.scene_overrides.get(key).cloned(),
-            })
-            .collect()
-    }
-}
-
-/// One launched instance, for the `jackdaw/pie` face.
-pub struct PieInstanceFace {
-    pub key: InstanceKey,
-    /// `connecting` or `live`.
-    pub stage: &'static str,
-    /// The scene override this instance runs with, when it plays the
-    /// editor's scene rather than the game's own startup scene.
-    pub scene_override: Option<SceneOverrideLaunch>,
 }
 
 /// Whether the running instances can take document edits; see
@@ -421,25 +455,21 @@ pub(crate) enum SyncTarget {
     Live,
 }
 
-/// What play-in-editor is doing: `building` while a launch waits on its
-/// cargo build, `running` once a game process is up (a paused game
-/// included), `failed` when a launch's build did not compile, `stopped`
-/// otherwise.
+/// What play-in-editor is doing, from its [`PlayPhase`]: `building` while a
+/// launch builds the game or waits for it to connect, `running`, `paused`,
+/// `failed` when a launch's build did not compile, `stopped` otherwise.
 pub fn play_status(world: &World) -> &'static str {
     let session = world.get_non_send::<PieSession>();
-    let playing = world
+    let state = world
         .get_resource::<State<PlayState>>()
-        .is_some_and(|state| *state.get() != PlayState::Stopped);
-    if playing || session.is_some_and(|session| !session.children.is_empty()) {
-        return "running";
+        .map_or(PlayState::Stopped, |state| state.get().clone());
+    match play_phase(&state, session) {
+        PlayPhase::Building => "building",
+        PlayPhase::Playing => "running",
+        PlayPhase::Paused => "paused",
+        PlayPhase::Stopped if session.is_some_and(PieSession::launch_failed) => "failed",
+        PlayPhase::Stopped => "stopped",
     }
-    if session.is_some_and(PieSession::is_launching) {
-        return "building";
-    }
-    if session.is_some_and(PieSession::launch_failed) {
-        return "failed";
-    }
-    "stopped"
 }
 
 pub struct PiePlugin;
@@ -448,172 +478,242 @@ impl Plugin for PiePlugin {
     fn build(&self, app: &mut App) {
         app.init_state::<PlayState>()
             .init_non_send::<PieSession>()
-            .init_resource::<PieViewMode>()
             .init_resource::<PieInstances>()
-            .init_resource::<crate::pie_projection::PieProjection>()
+            .init_resource::<PlayStatus>()
+            .init_resource::<LastGameExit>()
+            .init_resource::<GameOutput>()
             .init_resource::<crate::live_frame::LiveFrameStream>()
-            .init_resource::<crate::live_edits::LiveEditLog>()
             .init_resource::<crate::live_highlight::LastHighlight>()
             .init_resource::<PieWindowMode>()
-            .init_resource::<crate::pie_current::LastPlayCurrent>()
-            .init_resource::<crate::project_types::ProjectTypes>()
-            .init_resource::<crate::project_definitions::ProjectDefinitionKinds>()
             .init_resource::<crate::play_scene::PlayAssetNames>()
+            .init_resource::<crate::game_query::GameQueries>()
             // PIE is an editor-only subsystem; gate it to the editor state so it
             // never ticks in the launcher (`ProjectSelect`). Without this,
-            // `reconcile_build_status` resets the shared `crate::build_status::BuildStatus` from
+            // `reconcile_build_status` resets the shared `BuildStatus` from
             // `Building` to `Idle` every frame during the launcher's editor
             // build, so the build's completion handler drops the result and the
             // handoff never fires.
             .add_systems(
                 Update,
                 (
-                    advance_pie_session,
+                    (advance_pie_session, refresh_buttons_on_play_status).chain(),
                     drain_game_events,
                     crate::live_highlight::sync_selection_highlight,
+                    (
+                        crate::game_query::sync_watch,
+                        crate::game_query::expire_game_queries,
+                    ),
                 )
                     .run_if(in_state(crate::AppState::Editor)),
             )
             .add_systems(
                 OnEnter(PlayState::Stopped),
                 (
-                    reset_view_mode_on_stop,
                     cleanup_session_on_stop,
                     crate::live_frame::clear_stream,
-                    crate::live_edits_ui::open_stop_prompt_if_dirty,
                     crate::play_scene::forget_asset_names,
                     crate::play_overlay::clear_play_sidecars,
+                    crate::game_query::forget_game_queries,
                 ),
             )
             .add_systems(
                 OnExit(PlayState::Stopped),
-                (
-                    crate::live_edits_ui::review_handoff_on_replay,
-                    crate::play_overlay::clear_play_sidecars,
-                ),
-            )
-            .add_observer(wire_pie_button);
+                crate::play_overlay::clear_play_sidecars,
+            );
     }
 }
 
-/// Reset the outliner/inspector view back to Scene when play stops.
-fn reset_view_mode_on_stop(mut mode: ResMut<PieViewMode>) {
-    *mode = PieViewMode::Scene;
+/// Shared cleanup for every path into `Stopped`: the stop button, a crashed or
+/// self-exited child being reaped, and the last per-instance stop.
+fn cleanup_session_on_stop(world: &mut World) {
+    let _span = info_span!("play.cleanup").entered();
+    if let Some(mut instances) = world.get_resource_mut::<PieInstances>() {
+        instances.focused = None;
+    }
 }
 
-/// Delete every temporary run copy in `copies`, tolerating ones already
-/// gone (another editor on the same project may have swept them).
-fn remove_temp_copies(copies: &mut Vec<PathBuf>) {
-    for copy in copies.drain(..) {
-        match std::fs::remove_file(&copy) {
-            Ok(()) => info!("PIE: removed the temporary run copy {}", copy.display()),
-            Err(err) if err.kind() == std::io::ErrorKind::NotFound => {}
-            Err(err) => warn!(
-                "PIE: cannot remove the temporary run copy {}: {err}",
-                copy.display()
-            ),
+pub(crate) fn add_to_extension(ctx: &mut ExtensionContext) {
+    ctx.register_operator::<PiePlayOp>()
+        .register_operator::<PiePauseOp>()
+        .register_operator::<PieStepOp>()
+        .register_operator::<PieStopOp>()
+        .register_operator::<PieRestartOp>()
+        .register_operator::<PieToggleInstanceOp>()
+        .register_operator::<ProjectBuildOp>()
+        .register_operator::<ProjectToggleAutoBuildOp>()
+        .register_operator::<ProjectTogglePrebuildOp>()
+        .register_operator::<PieWindowModeToggleOp>()
+        .register_operator::<PiePopOutOp>()
+        .register_operator::<PieNextInstanceOp>()
+        .register_operator::<PieFocusInstanceOp>()
+        .register_operator::<crate::live_input::PiePlayInputToggleOp>();
+
+    ctx.bind_operator::<CoreExtensionInputContext, PiePlayOp>([PresetInput::key("F5")]);
+    ctx.bind_operator::<CoreExtensionInputContext, PieRestartOp>([
+        PresetInput::key("F5").ctrl_or_super()
+    ]);
+    ctx.bind_operator::<CoreExtensionInputContext, PiePauseOp>([PresetInput::key("F7")]);
+    ctx.bind_operator::<CoreExtensionInputContext, PieStopOp>([PresetInput::key("F8")]);
+    ctx.bind_operator::<CoreExtensionInputContext, PieStepOp>([PresetInput::key("F10")]);
+}
+
+/// What Play is doing, as the toolbar and the status bar show it.
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+pub enum PlayPhase {
+    #[default]
+    Stopped,
+    /// A launch is building the game or waiting for it to connect.
+    Building,
+    Playing,
+    Paused,
+}
+
+/// Which transport controls can be used in a [`PlayPhase`]. Play stays usable
+/// while playing so it shows the accent fill; pressing it then does nothing.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct TransportControls {
+    pub play: bool,
+    pub pause: bool,
+    pub step: bool,
+    pub stop: bool,
+    pub restart: bool,
+}
+
+impl PlayPhase {
+    pub fn controls(self) -> TransportControls {
+        let running = matches!(self, PlayPhase::Playing | PlayPhase::Paused);
+        TransportControls {
+            play: self != PlayPhase::Building,
+            pause: running,
+            step: self == PlayPhase::Paused,
+            stop: self != PlayPhase::Stopped,
+            restart: running,
+        }
+    }
+
+    /// What the Play button reads.
+    pub fn play_caption(self) -> &'static str {
+        match self {
+            PlayPhase::Stopped | PlayPhase::Playing => "Play",
+            PlayPhase::Building => "Building...",
+            PlayPhase::Paused => "Resume",
         }
     }
 }
 
-/// Record what one spawned launch overrode the game's startup scene with:
-/// the session's answer for stop cleanup and the BRP face, and the launch
-/// log line that says which scene the game was handed.
-fn record_scene_override(
-    world: &mut World,
-    key: &InstanceKey,
-    scene_override: Option<&SceneOverrideLaunch>,
-) {
-    let Some(scene_override) = scene_override else {
+/// The current [`PlayPhase`] and the name of the run configuration it is for,
+/// `None` for an unnamed one. Written only when either changes, so readers can
+/// rely on change detection.
+#[derive(Resource, Default, Clone, Debug, PartialEq, Eq)]
+pub struct PlayStatus {
+    pub phase: PlayPhase,
+    pub config: Option<String>,
+}
+
+/// Play moved from one [`PlayPhase`] to another.
+#[derive(Event, Clone, Copy, Debug, PartialEq, Eq)]
+pub struct PlayPhaseChanged {
+    pub from: PlayPhase,
+    pub to: PlayPhase,
+}
+
+/// The phase `state` and `session` add up to. Instances launched or waiting
+/// on a build while the state is still `Stopped` are starting up.
+pub(crate) fn play_phase(state: &PlayState, session: Option<&PieSession>) -> PlayPhase {
+    match state {
+        PlayState::Playing => PlayPhase::Playing,
+        PlayState::Paused => PlayPhase::Paused,
+        PlayState::Stopped => {
+            if session.is_some_and(|session| !session.children.is_empty() || session.is_launching())
+            {
+                PlayPhase::Building
+            } else {
+                PlayPhase::Stopped
+            }
+        }
+    }
+}
+
+/// The run configuration Play is for: the focused instance's, else the first
+/// launched or waiting one's.
+fn play_config(session: &PieSession, focused: Option<&InstanceKey>) -> Option<String> {
+    let mut waiting = session.builds.values().filter_map(|build| match build {
+        BuildState::Running { pending, .. } => pending.first().map(|spawn| &spawn.key),
+        _ => None,
+    });
+    focused
+        .or_else(|| {
+            session
+                .children
+                .keys()
+                .min_by_key(|key| (&key.config, key.instance))
+        })
+        .or_else(|| waiting.next())
+        .map(|key| key.config.clone())
+}
+
+fn reconcile_play_status(world: &mut World) {
+    let state = world.resource::<State<PlayState>>().get().clone();
+    let session = world.non_send::<PieSession>();
+    let phase = play_phase(&state, Some(session));
+    let focused = world
+        .get_resource::<PieInstances>()
+        .and_then(|instances| instances.focused.as_ref());
+    let named = |label: &String| {
+        world
+            .get_resource::<RunConfigs>()
+            .and_then(|configs| configs.manifest.run_by_name(label))
+            .is_some_and(|run| run.name.is_some())
+    };
+    let config = match phase {
+        PlayPhase::Stopped => None,
+        _ => play_config(session, focused).filter(named),
+    };
+    let status = PlayStatus { phase, config };
+    let Some(mut held) = world.get_resource_mut::<PlayStatus>() else {
         return;
     };
-    let mut session = world.non_send_mut::<PieSession>();
-    session
-        .scene_overrides
-        .insert(key.clone(), scene_override.clone());
-    if let Some(temp_copy) = &scene_override.temp_copy
-        && !session.temp_copies.contains(temp_copy)
-    {
-        session.temp_copies.push(temp_copy.clone());
+    let was = held.phase;
+    held.set_if_neq(status);
+    if was != phase {
+        world.trigger(PlayPhaseChanged {
+            from: was,
+            to: phase,
+        });
     }
-    let source = if scene_override.from_temp_copy {
-        "an unsaved copy"
-    } else {
-        "the editor's scene"
-    };
-    info!(
-        "PIE: {key} launched with scene override '{}' ({source})",
-        scene_override.assets_relative
-    );
 }
 
-/// Shared cleanup for every path into `Stopped`: the stop button, a crashed
-/// or self-exited child being reaped, and the last per-instance stop. Drops
-/// the buffered snapshots and focus, deletes this session's temporary run
-/// copies, then reverts the preview to the authored scene. Without this on
-/// the reap path, ghost previews and a dead focus key survive a crash, and
-/// the dead key blocks the next session's auto-enter (focus is only
-/// established when none exists).
-fn cleanup_session_on_stop(world: &mut World) {
-    let _span = info_span!("play.cleanup").entered();
-    {
-        let mut session = world.non_send_mut::<PieSession>();
-        remove_temp_copies(&mut session.temp_copies);
-        session.scene_overrides.clear();
+/// Re-check every operator button when Play changes phase: a build finishing
+/// or a game exiting changes what the transport controls can do without any
+/// operator running.
+fn refresh_buttons_on_play_status(status: Res<PlayStatus>, mut commands: Commands) {
+    if status.is_changed() {
+        commands.trigger(RefreshOperatorButtons);
     }
-    if let Some(mut instances) = world.get_resource_mut::<PieInstances>() {
-        instances.buffers.clear();
-        instances.focused = None;
-    }
-    crate::pie_projection::revert_preview(world);
 }
 
-/// Switch the outliner/inspector view to Live and project the focused
-/// instance's buffered state into the preview world.
-///
-/// Shared by the Scene/Live toggle and the auto-enter path that fires the
-/// moment a running instance first streams data. A no-op for the projection
-/// when no instance is focused yet. [`reset_view_mode_on_stop`] owns the
-/// revert when play stops.
-pub(crate) fn enter_live_view(world: &mut World) {
-    *world.resource_mut::<PieViewMode>() = PieViewMode::Live;
-    crate::pie_projection::reproject_view(world);
+fn phase_now(state: &State<PlayState>, session: Option<&NonSend<PieSession>>) -> PlayPhase {
+    play_phase(state.get(), session.map(|session| &**session))
 }
 
-pub(crate) fn add_to_extension(ctx: &mut ExtensionContext) {
-    use jackdaw_api_internal::keymap::PresetInput;
-    ctx.register_operator::<PiePlayOp>()
-        .register_operator::<PiePauseOp>()
-        .register_operator::<PieStopOp>()
-        .register_operator::<PieReloadOp>()
-        .register_operator::<ProjectBuildOp>()
-        .register_operator::<ProjectToggleAutoBuildOp>()
-        .register_operator::<ProjectTogglePrebuildOp>()
-        .register_operator::<ProjectToggleSaveBeforePlayOp>()
-        .register_operator::<ProjectSetSaveBeforePlayOp>()
-        .register_operator::<PieWindowModeToggleOp>()
-        .register_operator::<crate::live_input::PiePlayInputToggleOp>()
-        .register_operator::<crate::live_edits::PieLiveEditSaveOp>()
-        .register_operator::<crate::live_edits::PieLiveEditRevertOp>()
-        .register_operator::<crate::live_edits::PieLiveEditsApplyAllOp>()
-        .register_operator::<crate::live_edits::PieLiveEditsDiscardAllOp>()
-        .register_operator::<PiePlayCurrentOp>()
-        // F5 runs the scene in front, the main Play button's action. The
-        // startup-scene launch stays a dropdown pick (Shift+F5 can follow
-        // when someone asks for it).
-        .bind_operator_host::<PiePlayCurrentOp>([PresetInput::key("F5")]);
+fn can_play(state: Res<State<PlayState>>, session: Option<NonSend<PieSession>>) -> bool {
+    phase_now(&state, session.as_ref()).controls().play
 }
 
-fn play_is_stopped_or_paused(state: Res<State<PlayState>>) -> bool {
-    !matches!(state.get(), PlayState::Playing)
+fn can_pause(state: Res<State<PlayState>>, session: Option<NonSend<PieSession>>) -> bool {
+    phase_now(&state, session.as_ref()).controls().pause
 }
 
-fn play_is_playing(state: Res<State<PlayState>>) -> bool {
-    *state.get() == PlayState::Playing
+fn can_step(state: Res<State<PlayState>>, session: Option<NonSend<PieSession>>) -> bool {
+    phase_now(&state, session.as_ref()).controls().step
 }
 
-fn play_is_running(state: Res<State<PlayState>>) -> bool {
-    *state.get() != PlayState::Stopped
+fn can_stop(state: Res<State<PlayState>>, session: Option<NonSend<PieSession>>) -> bool {
+    phase_now(&state, session.as_ref()).controls().stop
+}
+
+fn can_restart(state: Res<State<PlayState>>, session: Option<NonSend<PieSession>>) -> bool {
+    phase_now(&state, session.as_ref()).controls().restart
 }
 
 /// Start the game. From Stopped, builds the project's game binary and
@@ -621,32 +721,44 @@ fn play_is_running(state: Res<State<PlayState>>) -> bool {
 #[operator(
     id = "pie.play", writes_disk = true,
     label = "Play",
-    description = "Start the game running in the editor.",
-    is_available = play_is_stopped_or_paused
+    description = "Start the game running in the editor, or resume a paused game.",
+    is_available = can_play
 )]
 pub(crate) fn pie_play(_: In<OperatorParameters>, mut commands: Commands) -> OperatorResult {
     commands.queue(handle_play);
     OperatorResult::Finished
 }
 
-/// Pause the running game.
+/// Pause the running game, or resume a paused one.
 #[operator(
     id = "pie.pause",
     label = "Pause",
-    description = "Pause the running game.",
-    is_available = play_is_playing
+    description = "Pause the running game, or resume it when paused.",
+    is_available = can_pause
 )]
 pub(crate) fn pie_pause(_: In<OperatorParameters>, mut commands: Commands) -> OperatorResult {
     commands.queue(handle_pause);
     OperatorResult::Finished
 }
 
-/// Stop the running game and return to authoring mode.
+/// Advance the paused game by one fixed tick.
+#[operator(
+    id = "pie.step",
+    label = "Step",
+    description = "Advance the paused game by one tick.",
+    is_available = can_step
+)]
+pub(crate) fn pie_step(_: In<OperatorParameters>, mut commands: Commands) -> OperatorResult {
+    commands.queue(handle_step);
+    OperatorResult::Finished
+}
+
+/// Stop the running game, or cancel a launch still building.
 #[operator(
     id = "pie.stop",
     label = "Stop",
-    description = "Stop the running game.",
-    is_available = play_is_running
+    description = "Stop the running game, or cancel a launch that is still building.",
+    is_available = can_stop
 )]
 pub(crate) fn pie_stop(_: In<OperatorParameters>, mut commands: Commands) -> OperatorResult {
     commands.queue(handle_stop);
@@ -655,13 +767,48 @@ pub(crate) fn pie_stop(_: In<OperatorParameters>, mut commands: Commands) -> Ope
 
 /// Rebuild and relaunch the running game.
 #[operator(
-    id = "pie.reload",
-    label = "Reload",
+    id = "pie.restart",
+    label = "Restart",
     description = "Rebuild and relaunch the running game.",
-    is_available = play_is_running
+    is_available = can_restart
 )]
-pub(crate) fn pie_reload(_: In<OperatorParameters>, mut commands: Commands) -> OperatorResult {
-    commands.queue(handle_reload);
+pub(crate) fn pie_restart(_: In<OperatorParameters>, mut commands: Commands) -> OperatorResult {
+    commands.queue(handle_restart);
+    OperatorResult::Finished
+}
+
+/// Launch one instance of a run configuration, or stop it if it is running.
+#[operator(
+    id = "pie.toggle_instance",
+    writes_disk = true,
+    label = "Toggle Game Instance",
+    description = "Launch one instance of a run configuration, or stop it when it is running.",
+    params(
+        config(String, doc = "The run configuration's name."),
+        instance(i64, default = 1, doc = "Which instance of it, counting from 1."),
+    )
+)]
+pub(crate) fn pie_toggle_instance(
+    params: In<OperatorParameters>,
+    mut commands: Commands,
+) -> OperatorResult {
+    let Some(config) = params.as_str("config").map(str::to_string) else {
+        return OperatorResult::Cancelled;
+    };
+    let Ok(instance) = u32::try_from(params.as_int("instance").unwrap_or(1)) else {
+        return OperatorResult::Cancelled;
+    };
+    let key = InstanceKey { config, instance };
+    commands.queue(move |world: &mut World| {
+        if world.non_send::<PieSession>().is_running(&key) {
+            stop_instance(world, &key);
+        } else if let Some(run) = world
+            .get_resource::<RunConfigs>()
+            .and_then(|configs| configs.manifest.run_by_name(&key.config).cloned())
+        {
+            launch_instance(world, key, run);
+        }
+    });
     OperatorResult::Finished
 }
 
@@ -745,35 +892,6 @@ pub(crate) fn project_toggle_prebuild(
     OperatorResult::Finished
 }
 
-/// Cycle how Play handles unsaved scene changes: save → ask → play an
-/// unsaved copy → save. Kept for the operator registry and older scripts;
-/// `project.set_save_before_play` names the mode directly.
-#[operator(
-    id = "project.toggle_save_before_play",
-    writes_disk = true,
-    label = "Toggle Save Before Play",
-    description = "Cycle how Play handles unsaved scenes: save, ask, or play an unsaved copy."
-)]
-pub(crate) fn project_toggle_save_before_play(
-    _: In<OperatorParameters>,
-    mut commands: Commands,
-) -> OperatorResult {
-    commands.queue(|world: &mut World| {
-        let next = {
-            let mut settings = world.resource_mut::<crate::project_build::EditorBuildSettings>();
-            settings.save_before_play = match settings.save_before_play {
-                SaveBeforePlay::Save => SaveBeforePlay::Ask,
-                SaveBeforePlay::Ask => SaveBeforePlay::PlayUnsavedCopy,
-                SaveBeforePlay::PlayUnsavedCopy => SaveBeforePlay::Save,
-            };
-            settings.save_before_play
-        };
-        crate::project_build::persist_project_build_settings(world);
-        info!("PIE: save before play set to {}", next.as_log());
-    });
-    OperatorResult::Finished
-}
-
 /// Input capture needs an embedded game with a focused instance and a fresh
 /// frame to forward to.
 pub(crate) fn focused_with_fresh_stream(
@@ -853,14 +971,14 @@ impl PieSession {
         transport: IpcChannelTransport,
     ) {
         let outbox = GameOutbox::new(&transport).expect("a writer thread");
+        let output = OutputCapture::detached(&key);
         self.children.insert(
             key,
             ChildStage::Live {
                 child,
                 transport,
                 outbox,
-                stderr_tail: StderrTail::default(),
-                stop_deadline: None,
+                output,
             },
         );
     }
@@ -869,12 +987,13 @@ impl PieSession {
     pub(crate) fn insert_test_connecting(&mut self, key: InstanceKey, child: Child) {
         let accept = AsyncComputeTaskPool::get_or_init(bevy::tasks::TaskPool::new)
             .spawn(std::future::pending::<io::Result<IpcChannelTransport>>());
+        let output = OutputCapture::detached(&key);
         self.children.insert(
             key,
             ChildStage::Connecting {
                 child,
                 accept,
-                stderr_tail: StderrTail::default(),
+                output,
                 since: Instant::now(),
             },
         );
@@ -892,19 +1011,101 @@ impl PieSession {
         let task = AsyncComputeTaskPool::get_or_init(bevy::tasks::TaskPool::new)
             .spawn(std::future::pending::<io::Result<GameBuildResult>>());
         self.builds.insert(
-            (PathBuf::from(format!("test-build-{key}")), None),
+            PathBuf::from(format!("test-build-{key}")),
             BuildState::Running {
-                task,
+                task: task.into(),
                 pending: vec![PendingSpawn {
                     key,
                     run: RunConfig::default(),
-                    scene_override: None,
                     scene: None,
                 }],
                 progress: Arc::default(),
             },
         );
     }
+}
+
+/// Connect `transport` as the live, focused game `key`, with `child` standing in
+/// for its process, for a test. Nothing reaps `child` until the session advances.
+#[doc(hidden)]
+pub fn connect_test_game(
+    world: &mut World,
+    key: InstanceKey,
+    mut child: Child,
+    transport: IpcChannelTransport,
+) -> io::Result<()> {
+    let outbox = GameOutbox::new(&transport)?;
+    let output = world
+        .get_resource_or_init::<GameOutput>()
+        .capture(&key, &mut child);
+    if !world.contains_non_send::<PieSession>() {
+        world.insert_non_send(PieSession::default());
+    }
+    world.non_send_mut::<PieSession>().children.insert(
+        key.clone(),
+        ChildStage::Live {
+            child,
+            transport,
+            outbox,
+            output,
+        },
+    );
+    let mode = world
+        .get_resource::<PieWindowMode>()
+        .copied()
+        .unwrap_or_default();
+    world
+        .non_send_mut::<PieSession>()
+        .launch_modes
+        .insert(key.clone(), mode);
+    greet_connected(world, &key);
+    world.get_resource_or_init::<PieInstances>().focused = Some(key);
+    Ok(())
+}
+
+/// Add `child` as game `key` that is still connecting and never connects, for a
+/// test.
+#[doc(hidden)]
+pub fn connecting_test_game(world: &mut World, key: InstanceKey, mut child: Child) {
+    if !world.contains_non_send::<PieSession>() {
+        world.insert_non_send(PieSession::default());
+    }
+    let accept = AsyncComputeTaskPool::get_or_init(bevy::tasks::TaskPool::new)
+        .spawn(std::future::pending::<io::Result<IpcChannelTransport>>());
+    let output = world
+        .get_resource_or_init::<GameOutput>()
+        .capture(&key, &mut child);
+    world.non_send_mut::<PieSession>().children.insert(
+        key,
+        ChildStage::Connecting {
+            child,
+            accept,
+            output,
+            since: Instant::now(),
+        },
+    );
+}
+
+/// Hold `binary` as the open project's built game, for a test: Play then
+/// launches it as it would a game it just built.
+#[doc(hidden)]
+pub fn insert_built_game(world: &mut World, binary: PathBuf) {
+    let Some(root) = project_root(world) else {
+        return;
+    };
+    world
+        .non_send_mut::<PieSession>()
+        .builds
+        .insert(root, BuildState::Done(binary));
+}
+
+/// Give up on games that have not connected after `timeout`, for a test.
+#[doc(hidden)]
+pub fn set_connect_timeout(world: &mut World, timeout: Duration) {
+    if !world.contains_non_send::<PieSession>() {
+        world.insert_non_send(PieSession::default());
+    }
+    world.non_send_mut::<PieSession>().connect_timeout = Some(timeout);
 }
 
 /// Hold the open project's game build as in progress, for a test: a launch then
@@ -917,13 +1118,27 @@ pub fn insert_build_in_progress(world: &mut World) {
     let task = AsyncComputeTaskPool::get_or_init(bevy::tasks::TaskPool::new)
         .spawn(std::future::pending::<io::Result<GameBuildResult>>());
     world.non_send_mut::<PieSession>().builds.insert(
-        (root, None),
+        root,
         BuildState::Running {
-            task,
+            task: task.into(),
             pending: Vec::new(),
             progress: Arc::default(),
         },
     );
+}
+
+/// Fail the game builds in progress as a compile error would, dropping the
+/// launches waiting on them, for a test.
+#[doc(hidden)]
+pub fn fail_builds_in_progress(world: &mut World) {
+    let mut session = world.non_send_mut::<PieSession>();
+    for build in session.builds.values_mut() {
+        *build = BuildState::Failed { launch: true };
+    }
+    session.launch_build_failure_unseen = true;
+    if let Some(mut status) = world.get_resource_mut::<crate::build_status::BuildStatus>() {
+        status.state = crate::build_status::BuildState::Failed { at: Instant::now() };
+    }
 }
 
 /// The launches waiting on a game build, for a test.
@@ -960,6 +1175,16 @@ fn wants_windowless_env(mode: PieWindowMode) -> bool {
     mode == PieWindowMode::Embedded
 }
 
+impl PieWindowMode {
+    pub(crate) fn from_separate(separate: bool) -> Self {
+        if separate {
+            Self::Windowed
+        } else {
+            Self::Embedded
+        }
+    }
+}
+
 fn toggle_window_mode(mode: &mut PieWindowMode) {
     *mode = match *mode {
         PieWindowMode::Embedded => PieWindowMode::Windowed,
@@ -967,28 +1192,176 @@ fn toggle_window_mode(mode: &mut PieWindowMode) {
     };
 }
 
+/// Flip the window setting and keep it with the developer's Play settings.
+fn toggle_and_store_window_mode(world: &mut World) -> PieWindowMode {
+    let mode = {
+        let mut mode = world.get_resource_or_init::<PieWindowMode>();
+        toggle_window_mode(&mut mode);
+        *mode
+    };
+    if let Some(mut settings) = world.get_resource_mut::<crate::play_settings::PlaySettings>() {
+        settings.separate_window = mode == PieWindowMode::Windowed;
+    }
+    crate::play_settings::store(world);
+    mode
+}
+
 /// Switch the next launch between an embedded game (streamed into the Game
 /// panel) and a separate game window.
 #[operator(
     id = "pie.window_mode_toggle",
-    label = "Toggle Game Window Mode",
-    description = "Switch the next launch between embedded (Game panel) and a separate game window."
+    writes_disk = true,
+    label = "Play in Separate Window",
+    description = "Launch the game in its own window instead of the Game panel. Applies to the next launch."
 )]
 pub(crate) fn pie_window_mode_toggle(
     _: In<OperatorParameters>,
-    mut mode: ResMut<PieWindowMode>,
+    mut commands: Commands,
 ) -> OperatorResult {
-    toggle_window_mode(&mut mode);
+    commands.queue(|world: &mut World| {
+        toggle_and_store_window_mode(world);
+    });
     OperatorResult::Finished
+}
+
+/// Move the game between the Game panel and a separate window. A running game
+/// is relaunched in the new place.
+#[operator(
+    id = "pie.pop_out",
+    writes_disk = true,
+    label = "Pop Out Game",
+    description = "Play in a separate window (for real performance numbers), or back in the Game panel. A running game relaunches there."
+)]
+pub(crate) fn pie_pop_out(_: In<OperatorParameters>, mut commands: Commands) -> OperatorResult {
+    commands.queue(|world: &mut World| {
+        let mut target = world
+            .get_resource::<PieWindowMode>()
+            .copied()
+            .unwrap_or_default();
+        toggle_window_mode(&mut target);
+        let plan = match plan_relaunch(world, target) {
+            Ok(plan) => plan,
+            Err(reason) => {
+                crate::status_bar::notify_warn(world, reason);
+                return;
+            }
+        };
+        toggle_and_store_window_mode(world);
+        if let Some(plan) = plan {
+            relaunch(world, target, plan);
+        }
+    });
+    OperatorResult::Finished
+}
+
+/// The running instances to relaunch in another window mode, and the built game
+/// to relaunch them from.
+pub(crate) struct RelaunchPlan {
+    moving: Vec<(InstanceKey, RunConfig)>,
+    binary: PathBuf,
+}
+
+/// What moving the running instances to `mode` needs: `None` when none run in
+/// the other mode, or why they cannot move now.
+fn plan_relaunch(world: &World, mode: PieWindowMode) -> Result<Option<RelaunchPlan>, String> {
+    let Some(session) = world.get_non_send::<PieSession>() else {
+        return Ok(None);
+    };
+    let mut keys: Vec<InstanceKey> = session
+        .children
+        .keys()
+        .filter(|key| {
+            session
+                .launch_mode(key)
+                .is_some_and(|launched| launched != mode)
+        })
+        .cloned()
+        .collect();
+    if keys.is_empty() {
+        return Ok(None);
+    }
+    keys.sort_by(|a, b| a.config.cmp(&b.config).then(a.instance.cmp(&b.instance)));
+    let binary = project_root(world).and_then(|root| match session.builds.get(&root) {
+        Some(BuildState::Done(binary)) => Some(binary.clone()),
+        _ => None,
+    });
+    let Some(binary) = binary else {
+        return Err(
+            "The game cannot move while it is being built. Try again once the build is done."
+                .to_string(),
+        );
+    };
+    let Some(manifest) = world
+        .get_resource::<RunConfigs>()
+        .map(|configs| &configs.manifest)
+    else {
+        return Err("The game cannot move: the run configurations are not loaded.".to_string());
+    };
+    let mut moving = Vec::with_capacity(keys.len());
+    for key in keys {
+        let Some(run) = manifest.run_by_name(&key.config).cloned() else {
+            return Err(format!(
+                "The game cannot move: no run configuration is named '{}'.",
+                key.config
+            ));
+        };
+        moving.push((key, run));
+    }
+    Ok(Some(RelaunchPlan { moving, binary }))
+}
+
+/// Relaunch the planned instances in `mode` from the game already built, each
+/// with the scene it launched with. The new process starts before the old one
+/// ends, so a failed start leaves the old one running. Play carries on through
+/// the move, so it counts as no stop and its edits stay. The focused game
+/// coming into the Game panel takes input on its first frame, as a launch does.
+fn relaunch(world: &mut World, mode: PieWindowMode, plan: RelaunchPlan) {
+    let focused = world
+        .get_resource::<PieInstances>()
+        .and_then(|instances| instances.focused.clone());
+    let mut failed = Vec::new();
+    let mut focus_moved = false;
+    for (key, run) in plan.moving {
+        let Some((stage, launched)) = spawn_instance(world, &key, &run, &plan.binary) else {
+            failed.push(key.to_string());
+            continue;
+        };
+        let scene = world
+            .non_send::<PieSession>()
+            .launch_scenes
+            .get(&key)
+            .cloned();
+        retire_instance(world, &key);
+        focus_moved |= focused.as_ref() == Some(&key);
+        {
+            let mut session = world.non_send_mut::<PieSession>();
+            session.launch_modes.insert(key.clone(), launched);
+            session.note_launch_scene(&key, scene);
+            session.children.insert(key, stage);
+        }
+        crate::viewport_redraw::note_game_started(world);
+    }
+    if focus_moved {
+        crate::live_frame::clear_stream(world);
+        if mode == PieWindowMode::Embedded {
+            crate::live_input::arm_first_frame_capture(world);
+        }
+    }
+    if !failed.is_empty() {
+        crate::status_bar::notify_error(
+            world,
+            format!(
+                "Could not relaunch {} in the new place; it keeps running where it was.",
+                failed.join(", ")
+            ),
+        );
+    }
 }
 
 /// Stop every running instance, drop the cached build path so the next
 /// launch re-runs the (incremental) cargo build, then relaunch each
-/// instance that was running. The game reloads its scene from disk.
-/// The stop is immediate ([`force_stop_all`]), not graceful: a rebuilt
-/// session replaces the child outright, so the old one waiting out a
-/// graceful window would only delay the reload.
-pub fn handle_reload(world: &mut World) {
+/// instance that was running. The game asks the editor for its scene again.
+pub fn handle_restart(world: &mut World) {
     let keys: Vec<InstanceKey> = world
         .non_send::<PieSession>()
         .children
@@ -1004,82 +1377,26 @@ pub fn handle_reload(world: &mut World) {
         .get_resource::<RunConfigs>()
         .map(|c| c.manifest.clone())
     else {
-        warn!("PIE: Reload but run configurations are not loaded");
+        warn!("PIE: Restart but run configurations are not loaded");
         return;
     };
 
-    // A current-scene session reloads on a freshly resolved override: the
-    // scene may have moved on since the launch, and the relaunch owes the
-    // game what is in front now (a new temp copy when it was edited, the
-    // same file when it was not). Which instances were playing the current
-    // scene is read before the stop clears the table.
-    let had_override: Vec<InstanceKey> = {
-        let session = world.non_send::<PieSession>();
-        keys.iter()
-            .filter(|key| session.scene_override(key).is_some())
-            .cloned()
-            .collect()
-    };
-    let reload_override = crate::pie_current::override_for_reload(world);
-
-    force_stop_all(world);
+    handle_stop(world);
+    crate::live_input::arm_first_frame_capture(world);
 
     for key in keys {
         let Some(run) = run_configs.run_by_name(&key.config).cloned() else {
-            warn!("PIE: Reload could not find run config '{}'", key.config);
+            warn!("PIE: Restart could not find run config '{}'", key.config);
             continue;
         };
-        let scene_override = had_override
-            .contains(&key)
-            .then(|| reload_override.clone())
-            .flatten();
-        match scene_override {
-            Some(scene_override) => {
-                launch_instance_with_override(world, key, run, Some(scene_override));
-            }
-            None => launch_instance(world, key, run),
-        }
+        launch_instance(world, key, run);
     }
 
-    info!("PIE: Reload (rebuild + relaunch)");
+    info!("PIE: Restart (rebuild + relaunch)");
 }
 
-/// Spawn a click observer on each `PieButton` as it's added. The
-/// observer dispatches the corresponding `pie.*` operator.
-fn wire_pie_button(
-    trigger: On<Add<PieButton>>,
-    buttons: Query<&PieButton>,
-    mut commands: Commands,
-) {
-    let entity = trigger.event_target();
-    let Ok(kind) = buttons.get(entity).copied() else {
-        return;
-    };
-    let op_id = match kind {
-        // The main button plays the scene in front; the dropdown's
-        // "Play Startup Scene" row and the run rows hold the game's own
-        // startup scene.
-        PieButton::Play => PiePlayCurrentOp::ID,
-        PieButton::Pause => PiePauseOp::ID,
-        PieButton::Stop => PieStopOp::ID,
-        PieButton::Reload => PieReloadOp::ID,
-        PieButton::Rebuild => ProjectBuildOp::ID,
-    };
-    commands
-        .entity(entity)
-        .observe(move |_: On<PointerClick>, mut commands: Commands| {
-            commands
-                .operator(op_id)
-                .settings(CallOperatorSettings {
-                    execution_context: ExecutionContext::Invoke,
-                    creates_history_entry: false,
-                })
-                .call();
-        });
-}
-
-/// The root of the open project, when one is open. Logs and returns
-/// `None` otherwise, so callers skip rather than crash.
+/// Resolve the open project's root directory, or log and bail if no
+/// project is open (Play has nothing to build without one).
 pub(crate) fn project_root(world: &World) -> Option<PathBuf> {
     match world.get_resource::<crate::project::ProjectRoot>() {
         Some(project) => Some(project.root.clone()),
@@ -1090,33 +1407,44 @@ pub(crate) fn project_root(world: &World) -> Option<PathBuf> {
     }
 }
 
-/// Launch one run-config instance on the game's own startup scene. No-op if
-/// it is already running. Resolves the build spec, then either spawns
-/// immediately from a cached binary, joins an in-flight build's pending
-/// list, or starts a new build keyed by the spec.
+/// Launch one run-config instance. No-op if it is already running.
+/// Resolves the build spec, then either spawns immediately from a
+/// cached binary, joins an in-flight build's pending list, or starts a
+/// new build keyed by the spec.
 pub(crate) fn launch_instance(world: &mut World, key: InstanceKey, run: RunConfig) {
-    launch_instance_inner(world, key, run, None);
+    launch_with(world, key, run, None);
 }
 
-/// [`launch_instance`] carrying a scene override: the child is handed
-/// `JACKDAW_PIE_SCENE` and the unsaved-scenes gate is the caller's to have
-/// applied already — `pie.play_current` resolves the save policy before it
-/// gets here.
-pub(crate) fn launch_instance_with_override(
+/// The Play menu's startup row: launch the first run config with no scene
+/// handed over, so the game loads its own startup scene.
+pub(crate) fn play_startup_scene(world: &mut World) {
+    let Some(run_configs) = world.get_resource::<RunConfigs>() else {
+        warn!("PIE: run configurations not loaded");
+        return;
+    };
+    let Some(first) = run_configs.manifest.runs.into_iter().next() else {
+        warn!("PIE: no run configurations");
+        return;
+    };
+    let key = InstanceKey {
+        config: first.label().to_string(),
+        instance: 1,
+    };
+    launch_with(world, key, first, Some(None));
+}
+
+/// `scene` is `None` to resolve the scene to hand over as usual, or
+/// `Some(choice)` to force one: `Some(None)` plays the game's own startup
+/// scene, `Some(Some(launch))` plays the named scene.
+fn launch_with(
     world: &mut World,
     key: InstanceKey,
     run: RunConfig,
-    scene_override: Option<SceneOverrideLaunch>,
+    scene: Option<Option<LaunchScene>>,
 ) {
-    launch_instance_inner(world, key, run, scene_override);
-}
-
-fn launch_instance_inner(
-    world: &mut World,
-    key: InstanceKey,
-    run: RunConfig,
-    scene_override: Option<SceneOverrideLaunch>,
-) {
+    if let Some(mut last) = world.get_resource_mut::<LastGameExit>() {
+        last.0 = None;
+    }
     {
         let session = world.non_send::<PieSession>();
         if session.is_running(&key) || session.is_pending(&key) {
@@ -1134,74 +1462,34 @@ fn launch_instance_inner(
         return;
     }
 
-    let tab = {
-        let scenes = world.resource::<crate::scenes::Scenes>();
-        scenes.tabs.get(scenes.active).map(|tab| tab.id)
-    };
-    // The startup-scene launch saves what it can first, on the worker, and
-    // continues once the saves land; a scene-override launch already applied
-    // the project's save policy in resolving the override, so saving here
-    // would double-apply it.
-    if scene_override.is_none() && saves_before_play(world) {
-        let _span = info_span!("play.save_before").entered();
-        crate::scene_io::save_worker::after_saves(
-            world,
-            crate::scene_io::save_worker::AfterSaves::Play { key, run, tab },
-        );
-        let modified = crate::scenes::operators::modified_tabs(world);
-        crate::scene_io::save_worker::save_tabs_front_last(world, &modified);
+    // Feature crates' savers run before any launch: each saves its own
+    // authored state, and a state that could not save blocks the launch
+    // like every other refusal.
+    let mut saver_failures: Vec<String> = world
+        .get_resource::<LaunchAssetSavers>()
+        .map(|savers| savers.0.clone())
+        .unwrap_or_default()
+        .iter()
+        .flat_map(|saver| saver(world))
+        .collect();
+    saver_failures.sort();
+    saver_failures.dedup();
+    if !saver_failures.is_empty() {
+        let message = format!("Not playing: could not save {}", saver_failures.join("; "));
+        crate::status_bar::notify_warn(world, message.clone());
+        warn!("PIE: {message}");
         return;
     }
-    start_instance(world, key, run, tab, scene_override);
-}
 
-/// Go on with Play, unless the saves it waited for say otherwise.
-pub(crate) fn launch_after_saves(
-    world: &mut World,
-    key: InstanceKey,
-    run: RunConfig,
-    tab: Option<u64>,
-    failures: &[crate::scenes::operators::TabSaveFailure],
-) {
-    if let Err(reason) = play_despite(world, failures) {
-        warn!("PIE: not playing: {reason}");
-        crate::status_bar::notify_error(world, reason);
-        return;
-    }
-    start_instance(world, key, run, tab, None);
-}
-
-/// Start the game for `key`, on the scene of the tab with id `tab` under the name it
-/// has by now, a save having possibly moved it to a new file. From a current binary
-/// or after a build.
-fn start_instance(
-    world: &mut World,
-    key: InstanceKey,
-    run: RunConfig,
-    tab: Option<u64>,
-    scene_override: Option<SceneOverrideLaunch>,
-) {
-    {
-        let session = world.non_send::<PieSession>();
-        if session.is_running(&key) || session.is_pending(&key) {
-            return;
-        }
-    }
     // Read root before borrowing the session mutably below.
     let Some(root) = project_root(world) else {
         return;
     };
     crate::play_overlay::notice_unsaved_model_settings(world);
-    let tab = tab.and_then(|id| {
-        let scenes = world.resource::<crate::scenes::Scenes>();
-        scenes.tabs.iter().position(|tab| tab.id == id)
-    });
-    let scene = tab.and_then(|tab| crate::play_scene::launch_scene_of_tab(world, &run, tab));
-    let run = match tab {
-        Some(tab) => run_with_scene_of_tab(world, run, tab),
-        None => run,
+    let scene = match scene {
+        None => crate::play_scene::launch_scene(world, &run),
+        Some(forced) => forced,
     };
-
     let build = build_key(&root, &run);
 
     // If the game binary is built AND still current, spawn from it
@@ -1211,16 +1499,7 @@ fn start_instance(
     if let Some(BuildState::Done(path)) = world.non_send::<PieSession>().builds.get(&build) {
         if source_is_current(&root, path) {
             let path = path.clone();
-            if let Some((stage, mode)) =
-                spawn_instance(world, &key, &run, &path, scene_override.as_ref())
-            {
-                record_scene_override(world, &key, scene_override.as_ref());
-                let mut session = world.non_send_mut::<PieSession>();
-                session.launches += 1;
-                session.children.insert(key.clone(), stage);
-                session.launch_modes.insert(key.clone(), mode);
-                session.note_launch_scene(&key, scene.clone());
-            }
+            spawn_from_binary(world, key, &run, scene, &path);
             return;
         }
         info!("PIE: project source changed; rebuilding before Play");
@@ -1234,7 +1513,7 @@ fn start_instance(
         pending.push(PendingSpawn {
             key,
             run,
-            scene_override,
+            target: run.target.clone(),
             scene,
         });
         return;
@@ -1246,33 +1525,17 @@ fn start_instance(
             return;
         }
     };
-
-    // A run target naming a bin/example no package declares would burn a
-    // whole build to learn it from cargo's error; metadata answers in a
-    // blink and lists the names that are real. The warm cache above ran
-    // before this by design: an up-to-date binary was checked when it
-    // was built, and a manifest edit that drops the target also marks
-    // the cache stale.
-    if let Some(target) = &build.1
-        && let Err(reason) =
-            crate::project_build::preflight_run_target(&root, &spec.package_name, target)
-    {
-        warn!("PIE: not playing '{}': {reason}", run.label());
-        crate::status_bar::notify_error(world, reason);
-        return;
-    }
-
     info!("PIE: building the game for {key}");
-    let (task, progress) = spawn_game_build(&root, spec, build.1.clone(), BuildLoad::Foreground);
-    let mut session = world.non_send_mut::<PieSession>();
-    session.builds.insert(
+    let target = run.target.clone();
+    let (task, progress) = spawn_game_build(&root, spec, target, BuildLoad::Foreground);
+    world.non_send_mut::<PieSession>().builds.insert(
         build,
         BuildState::Running {
             task,
             pending: vec![PendingSpawn {
                 key,
                 run,
-                scene_override,
+                target: run.target.clone(),
                 scene,
             }],
             progress,
@@ -1280,53 +1543,32 @@ fn start_instance(
     );
 }
 
-/// Apply a game pick answer: resolve the bits through the projection and
-/// select the preview entity. Stale or unstreamed hits resolve to nothing
-/// and are dropped.
-///
-/// Unwired pending a ruling: the upstream protocol redesign dropped the
-/// `ControlEvent::Pick` / `StateEvent::PickResult` channels this answers,
-/// and the game side no longer runs a picking backend. The editor-side
-/// behavior and its tests stay so the pick chain can be reattached if the
-/// ruling brings the channel back beside the new protocol.
-#[cfg_attr(
-    not(test),
-    expect(
-        dead_code,
-        reason = "unwired pending a ruling: the upstream protocol redesign dropped the Pick/PickResult channels"
-    )
-)]
-pub(crate) fn handle_pick_result(world: &mut World, bits: Option<u64>) {
-    let Some(bits) = bits else {
-        return;
-    };
-    let Some(&preview) = world
-        .resource::<crate::pie_projection::PieProjection>()
-        .by_bits
-        .get(&bits)
-    else {
-        return;
-    };
-    if world.get_entity(preview).is_err() {
-        return;
+/// Spawn instance `key` from the built game at `binary`, noting how and with
+/// which scene it launched.
+fn spawn_from_binary(
+    world: &mut World,
+    key: InstanceKey,
+    run: &RunConfig,
+    scene: Option<LaunchScene>,
+    binary: &Path,
+) {
+    if let Some((stage, mode)) = spawn_instance(world, &key, run, binary) {
+        let mut session = world.non_send_mut::<PieSession>();
+        session.launches += 1;
+        session.launch_modes.insert(key.clone(), mode);
+        session.note_launch_scene(&key, scene);
+        session.children.insert(key, stage);
+        crate::viewport_redraw::note_game_started(world);
     }
-    let old_entities: Vec<Entity> = world
-        .resource::<crate::selection::Selection>()
-        .entities
-        .clone();
-    {
-        let mut selection = world.resource_mut::<crate::selection::Selection>();
-        selection.entities.clear();
-        selection.entities.push(preview);
-    }
-    for e in old_entities {
-        if e != preview
-            && let Ok(mut entity_mut) = world.get_entity_mut(e)
-        {
-            entity_mut.remove::<crate::selection::Selected>();
-        }
-    }
-    if let Ok(mut entity_mut) = world.get_entity_mut(preview) {
+}
+
+/// The scene a game loads as its main one, inside the asset folder: what the
+/// game template loads and what the editor opens for a project with no
+/// remembered tabs. No project setting names another.
+pub(crate) const MAIN_SCENE: &str = "scene.bsn";
+
+/// The asset path of the scene in tab `tab`, if it is a scene with a file in the
+/// project.
         entity_mut.insert(crate::selection::Selected);
     }
 }
@@ -1369,7 +1611,7 @@ fn run_with_scene_of_tab(world: &World, mut run: RunConfig, tab: usize) -> RunCo
 }
 
 /// The asset path of the scene in tab `tab`, if it is a scene with a file in the
-/// project.
+
 pub(crate) fn scene_asset_path_of_tab(world: &World, tab: usize) -> Option<String> {
     let scenes = world.get_resource::<crate::scenes::Scenes>()?;
     let tab = scenes.tabs.get(tab)?;
@@ -1379,94 +1621,6 @@ pub(crate) fn scene_asset_path_of_tab(world: &World, tab: usize) -> Option<Strin
     world
         .get_resource::<crate::project::ProjectRoot>()?
         .to_asset_path(tab.path.as_deref()?)
-}
-
-/// Whether Play saves the modified scenes the game may load first. The
-/// mode is the three-state enum: `save` and `ask` save (ask has no dialog
-/// on this path and errs on the safe side), `play_unsaved_copy` does not.
-fn saves_before_play(world: &World) -> bool {
-    world
-        .get_resource::<crate::project_build::EditorBuildSettings>()
-        .is_none_or(|settings| settings.save_before_play != SaveBeforePlay::PlayUnsavedCopy)
-}
-
-/// What the saves ahead of Play mean for it. A scene with no file is served to the
-/// game unsaved. So is one a save refuses for naming an asset by an absolute path,
-/// which warns. A prefab that does not save stops Play.
-fn play_despite(
-    world: &mut World,
-    failures: &[crate::scenes::operators::TabSaveFailure],
-) -> Result<(), String> {
-    let (absolute, failures): (Vec<_>, Vec<_>) = failures.iter().partition(|failure| {
-        failure.kind == crate::scenes::TabKind::Scene
-            && failure
-                .message
-                .contains(crate::scene_io::asset_fields::ABSOLUTE_PATH_REFUSAL)
-    });
-    let messages = |failures: Vec<&crate::scenes::operators::TabSaveFailure>| {
-        failures
-            .into_iter()
-            .map(|failure| failure.message.clone())
-            .collect::<Vec<_>>()
-            .join("; ")
-    };
-    if !failures.is_empty() {
-        return Err(format!(
-            "Not playing: could not save {}",
-            messages(failures)
-        ));
-    }
-    if !absolute.is_empty() {
-        let message = format!("Playing unsaved: could not save {}", messages(absolute));
-        crate::status_bar::notify_warn(world, message);
-    }
-    Ok(())
-}
-
-/// Refuse a modified scene that has never been saved, then save every
-/// modified scene, every definition asset card holding unsaved edits,
-/// and the open animation graph in the same state, so what the editor
-/// shows is on disk before something else consumes the project — Play
-/// launching the game, an export staging its `assets/`. The `action`
-/// names what asked ("playing", "exporting"), for the refusal messages.
-pub(crate) fn save_scenes_before_launch(world: &mut World, action: &str) -> Result<(), String> {
-    let untitled_in_front = world
-        .get_resource::<crate::scenes::Scenes>()
-        .and_then(|scenes| scenes.tabs.get(scenes.active))
-        .is_some_and(|tab| tab.path.is_none());
-    if untitled_in_front && crate::scenes::operators::active_tab_modified(world) {
-        return Err(format!("Save the scene before {action}"));
-    }
-    let mut failures: Vec<String> =
-        crate::scenes::operators::save_tabs(world, &crate::scenes::operators::modified_tabs(world))
-            .into_iter()
-            .map(|failure| failure.message)
-            .collect();
-    // Definition assets edited in the editor are part of what a launch
-    // runs (the game reads their files): dirty cards save on the same
-    // chain, and one that cannot write blocks the launch rather than
-    // silently running the value that is on disk.
-    failures.extend(crate::definition_assets::save_dirty_assets(world));
-    // Feature crates register savers for their own authored state the same
-    // way: a dirty animation graph the game would read as the stale file
-    // blocks the launch instead of playing yesterday's transitions. Each
-    // saver returns the names of the states it could not save.
-    let savers = world
-        .get_resource::<LaunchAssetSavers>()
-        .map(|savers| savers.0.clone())
-        .unwrap_or_default();
-    for saver in savers {
-        failures.extend(saver(world));
-    }
-    if failures.is_empty() {
-        Ok(())
-    } else {
-        // The same refusal speaks in the warning color on the status bar,
-        // so the face stays honest when the error lands elsewhere too.
-        let message = format!("Not {action}: could not save {}", failures.join("; "));
-        crate::status_bar::notify_warn(world, message.clone());
-        Err(message)
-    }
 }
 
 /// Whether the built game binary is newer than the project's source. A
@@ -1546,18 +1700,18 @@ pub(crate) fn failure_summary(
 }
 
 /// Start the project's game build on the compute pool, returning the
-/// task and the progress sink the footer polls. `target` narrows the
-/// build to one run's cargo target, if it names one. Shared by Play's
-/// launches and the export entry, which builds the release profile.
+/// task and the progress sink the footer polls.
 pub(crate) fn spawn_game_build(
     root: &Path,
     spec: ShimSpec,
     target: Option<CargoTarget>,
     load: jackdaw_project_build::BuildLoad,
-) -> (Task<io::Result<GameBuildResult>>, Arc<Mutex<BuildProgress>>) {
+) -> (GameBuildTask, Arc<Mutex<BuildProgress>>) {
     let progress = Arc::new(Mutex::new(BuildProgress::default()));
     let sink = Arc::clone(&progress);
     let jackdaw_dir = root.join(".jackdaw");
+    let cancel = Arc::new(AtomicBool::new(false));
+    let cancelled = Arc::clone(&cancel);
     let task = AsyncComputeTaskPool::get().spawn(async move {
         if let Ok(mut p) = sink.lock() {
             p.push_log("building the game".to_string());
@@ -1594,11 +1748,12 @@ pub(crate) fn spawn_game_build(
                 }
             }
         };
-        let result = crate::project_build::build_project_binary_with_load(
+        let result = crate::project_build::build_project_binary_cancellable(
             &spec,
             &jackdaw_dir,
             target.as_ref(),
             load,
+            &cancelled,
             &mut report,
         );
         match result {
@@ -1613,7 +1768,6 @@ pub(crate) fn spawn_game_build(
                 }
                 Ok(GameBuildResult {
                     binary: build.binary,
-                    dylib_artifacts: build.dylib_artifacts,
                 })
             }
             Err(err) => {
@@ -1635,16 +1789,29 @@ pub(crate) fn spawn_game_build(
             }
         }
     });
-    (task, progress)
+    (GameBuildTask { task, cancel }, progress)
 }
 
-/// Stop one instance: a live child is asked to stop and holds the
-/// [`GRACEFUL_STOP_DEADLINE`] window to exit on its own ([`advance_child`]
-/// reaps it, by its exit or the deadline); a child still connecting never
-/// brought the link up, so there is nothing graceful it could do with a
-/// deadline and it is reaped now. The editor returns to authoring mode
-/// once no children remain.
+/// Stop one instance: ask a live child to exit, reap it, and drop it.
+/// Returns to authoring mode once no children remain.
 pub(crate) fn stop_instance(world: &mut World, key: &InstanceKey) {
+    if !retire_instance(world, key) {
+        return;
+    }
+    let last_stopped = world.non_send::<PieSession>().children.is_empty();
+    if last_stopped && let Some(mut last) = world.get_resource_mut::<LastGameExit>() {
+        last.0 = None;
+    }
+    if last_stopped && *world.resource::<State<PlayState>>().get() != PlayState::Stopped {
+        world
+            .resource_mut::<NextState<PlayState>>()
+            .set(PlayState::Stopped);
+    }
+}
+
+/// End instance `key`'s process and forget it, leaving Play's state alone.
+/// Returns whether it was running.
+fn retire_instance(world: &mut World, key: &InstanceKey) -> bool {
     world
         .non_send_mut::<PieSession>()
         .serving
@@ -1652,49 +1819,17 @@ pub(crate) fn stop_instance(world: &mut World, key: &InstanceKey) {
     if let Some(mut names) = world.get_resource_mut::<crate::play_scene::PlayAssetNames>() {
         names.retain_games(|held| held != key);
     }
-    let mut reap_connecting = false;
-    {
-        let mut session = world.non_send_mut::<PieSession>();
-        match session.children.get_mut(key) {
-            None => return,
-            Some(ChildStage::Live {
-                outbox,
-                stop_deadline,
-                ..
-            }) => {
-                if stop_deadline.is_none() {
-                    send_control_to(outbox, ControlEvent::Stop);
-                    *stop_deadline = Some(Instant::now() + GRACEFUL_STOP_DEADLINE);
-                    info!(
-                        "PIE: {key} asked to stop; exiting on its own for {GRACEFUL_STOP_DEADLINE:?}"
-                    );
-                }
-            }
-            Some(ChildStage::Connecting { .. }) => reap_connecting = true,
-        }
+    let mut session = world.non_send_mut::<PieSession>();
+    session.launch_modes.remove(key);
+    session.launch_scenes.remove(key);
+    let Some(mut stage) = session.children.remove(key) else {
+        return false;
+    };
+    if let ChildStage::Live { outbox, .. } = &stage {
+        send_control_to(outbox, ControlEvent::Stop);
     }
-    if reap_connecting
-        && let Some(mut stage) = world.non_send_mut::<PieSession>().children.remove(key)
-        && let ChildStage::Connecting { child, .. } = &mut stage
-    {
-        child.kill().ok();
-        child.wait().ok();
-    }
-    // The launch records die with the instance: a stop log or BRP read
-    // after this point sees an instance that is no longer launched.
-    {
-        let mut session = world.non_send_mut::<PieSession>();
-        session.launch_modes.remove(key);
-        session.launch_scenes.remove(key);
-    }
-
-    if world.non_send::<PieSession>().children.is_empty()
-        && *world.resource::<State<PlayState>>().get() != PlayState::Stopped
-    {
-        world
-            .resource_mut::<NextState<PlayState>>()
-            .set(PlayState::Stopped);
-    }
+    stage.kill_and_reap();
+    true
 }
 
 /// Begin play. From Stopped, launches the first run config's instance
@@ -1718,38 +1853,47 @@ pub fn handle_play(world: &mut World) {
                 config: first.label().to_string(),
                 instance: 1,
             };
+            crate::live_input::arm_first_frame_capture(world);
             launch_instance(world, key, first);
         }
-        PlayState::Paused => {
-            broadcast_control(world, ControlEvent::Resume);
-            world
-                .resource_mut::<NextState<PlayState>>()
-                .set(PlayState::Playing);
-            info!("PIE: Play (resumed)");
-        }
+        PlayState::Paused => resume(world),
         PlayState::Playing => {}
     }
 }
 
-/// Transition `Playing` -> `Paused`, telling every live child to freeze.
-/// No-op otherwise.
+fn resume(world: &mut World) {
+    broadcast_control(world, ControlEvent::Resume);
+    world
+        .resource_mut::<NextState<PlayState>>()
+        .set(PlayState::Playing);
+    info!("PIE: Resume");
+}
+
+/// Toggle between `Playing` and `Paused`, telling every live child to freeze
+/// or carry on. No-op while stopped.
 pub fn handle_pause(world: &mut World) {
-    if *world.resource::<State<PlayState>>().get() == PlayState::Playing {
-        broadcast_control(world, ControlEvent::Pause);
-        world
-            .resource_mut::<NextState<PlayState>>()
-            .set(PlayState::Paused);
-        info!("PIE: Pause");
+    match world.resource::<State<PlayState>>().get() {
+        PlayState::Playing => {
+            broadcast_control(world, ControlEvent::Pause);
+            world
+                .resource_mut::<NextState<PlayState>>()
+                .set(PlayState::Paused);
+            info!("PIE: Pause");
+        }
+        PlayState::Paused => resume(world),
+        PlayState::Stopped => {}
     }
 }
 
-/// Stop every instance gracefully: the live children have already been
-/// sent [`ControlEvent::Stop`] and now hold the
-/// [`GRACEFUL_STOP_DEADLINE`] window, reaped by [`advance_child`] as they
-/// exit or when the deadline lands; children still connecting are reaped
-/// now. Pending builds are discarded. The return to authoring mode (and
-/// the stop prompt) follows the last reap, so it lands within the
-/// deadline bound after this call.
+/// Advance every live child by one fixed tick. No-op unless paused.
+pub fn handle_step(world: &mut World) {
+    if *world.resource::<State<PlayState>>().get() == PlayState::Paused {
+        broadcast_control(world, ControlEvent::Step);
+    }
+}
+
+/// Stop every instance: ask the live children to exit, then reap and
+/// drop them all and discard pending builds. Returns to authoring mode.
 pub fn handle_stop(world: &mut World) {
     let _span = info_span!("play.stop").entered();
     let current = world.resource::<State<PlayState>>().get().clone();
@@ -1760,67 +1904,30 @@ pub fn handle_stop(world: &mut World) {
     session.launch_modes.clear();
     session.launch_scenes.clear();
     session.serving.clear();
-    let mut kept: HashMap<InstanceKey, ChildStage> = HashMap::new();
-    for (key, mut stage) in session.children.drain() {
-        match &mut stage {
-            ChildStage::Live { stop_deadline, .. } => {
-                // The broadcast above already sent the Stop; arm the
-                // deadline it may not have had yet (a per-instance stop
-                // may have armed an earlier one — the earliest wins).
-                let now = Instant::now();
-                *stop_deadline = Some(
-                    stop_deadline.map_or(now + GRACEFUL_STOP_DEADLINE, |existing| {
-                        existing.min(now + GRACEFUL_STOP_DEADLINE)
-                    }),
-                );
-                info!(
-                    "PIE: {key} asked to stop; exiting on its own for {GRACEFUL_STOP_DEADLINE:?}"
-                );
-                kept.insert(key, stage);
-            }
-            ChildStage::Connecting { child, .. } => {
-                child.kill().ok();
-                child.wait().ok();
-            }
+    for copy in session.temp_copies.drain(..) {
+        match std::fs::remove_file(&copy) {
+            Ok(()) => info!("PIE: removed the temporary run copy {}", copy.display()),
+            Err(err) if err.kind() == std::io::ErrorKind::NotFound => {}
+            Err(err) => warn!(
+                "PIE: cannot remove the temporary run copy {}: {err}",
+                copy.display()
+            ),
         }
     }
-    session.children = kept;
-    // Dropping the in-flight build tasks aborts them.
-    session.builds.clear();
-
-    if world.non_send::<PieSession>().children.is_empty() && current != PlayState::Stopped {
-        world
-            .resource_mut::<NextState<PlayState>>()
-            .set(PlayState::Stopped);
-        info!("PIE: Stop");
-    }
-}
-
-/// Stop every instance now, without the graceful window. The reload
-/// semantic is a rebuilt session: the old child is the wrong one the
-/// moment the rebuild starts, so waiting for it to exit on its own buys
-/// nothing. This is the pre-graceful-stop `handle_stop` behavior, kept
-/// for exactly this caller.
-fn force_stop_all(world: &mut World) {
-    let current = world.resource::<State<PlayState>>().get().clone();
-
-    broadcast_control(world, ControlEvent::Stop);
-
-    let mut session = world.non_send_mut::<PieSession>();
-    session.launch_modes.clear();
-    session.launch_scenes.clear();
-    session.serving.clear();
     for (_key, mut stage) in session.children.drain() {
         stage.kill_and_reap();
     }
-    // Dropping the in-flight build tasks aborts them.
+    // Dropping the in-flight builds cancels them and kills their cargo.
     session.builds.clear();
+    if let Some(mut last) = world.get_resource_mut::<LastGameExit>() {
+        last.0 = None;
+    }
 
     if current != PlayState::Stopped {
         world
             .resource_mut::<NextState<PlayState>>()
             .set(PlayState::Stopped);
-        info!("PIE: Stop (immediate; session being rebuilt)");
+        info!("PIE: Stop");
     }
 }
 
@@ -1960,7 +2067,7 @@ pub(crate) fn broadcast_control(world: &mut World, event: ControlEvent) {
     }
 }
 
-/// Send a control message (live edits, frame stream start/stop) only to the
+/// Send a control message (input, highlight, frame stream start/stop) only to the
 /// focused instance's outbox. If no instance is focused, or the
 /// focused child is not yet live, the message is dropped with a debug log.
 /// Safe no-op when `PieInstances` or `PieSession` are absent (headless worlds).
@@ -1995,500 +2102,114 @@ pub(crate) fn focused_live_instance(world: &World) -> Option<InstanceKey> {
     }
 }
 
-/// Whether the Live "Save to Scene" action can run right now: the inspector
-/// is in Live mode and a preview entity is selected (either an authored
-/// entity that maps back to an AST node, or an ephemeral runtime entity
-/// that would be promoted to a new node).
-pub(crate) fn can_save_live_to_scene(world: &World) -> bool {
-    if *world.resource::<PieViewMode>() != PieViewMode::Live {
-        return false;
-    }
-    let Some(preview) = world.resource::<crate::selection::Selection>().primary() else {
+/// Whether a focused game is connected, as an operator's availability check.
+pub(crate) fn focused_game_is_live(
+    instances: Option<Res<PieInstances>>,
+    session: Option<NonSend<PieSession>>,
+) -> bool {
+    let (Some(instances), Some(session)) = (instances, session) else {
         return false;
     };
-    // Only act on entities that are part of the current live projection.
-    let in_projection = world
-        .resource::<crate::pie_projection::PieProjection>()
-        .by_bits
-        .values()
-        .any(|&e| e == preview);
-    if !in_projection {
-        return false;
-    }
-    // Ephemeral entities can be promoted to new authored nodes (Path B).
-    if world
-        .get::<crate::pie_projection::PieEphemeral>(preview)
-        .is_some()
-    {
-        return true;
-    }
-    // Authored entities are saveable when the AST still holds their node (Path A).
-    world
-        .resource::<jackdaw_bsn::SceneBsnAst>()
-        .ast_for(preview)
-        .is_some()
+    instances.focused.as_ref().is_some_and(|focused| {
+        matches!(session.children.get(focused), Some(ChildStage::Live { .. }))
+    })
 }
 
-/// Collect all non-skipped reflected components from `entity` as
-/// `(type_path, BsnValue)` pairs, using the same filter that
-/// `register_entity_in_ast` uses when it first captures a live entity.
-///
-/// Components with no `ReflectComponent` data, types not registered in the
-/// `AppTypeRegistry`, and paths matched by [`should_skip_component`](crate::scene_io::should_skip_component) are
-/// silently omitted. The result is sorted by type path for deterministic undo
-/// batching.
-///
-/// A handle the game's stream left without a name keeps the one the document
-/// spells; a name with nowhere left to go is added to `dropped`.
-fn preview_entity_components_as_bsn(
-    world: &World,
-    entity: Entity,
-    dropped: &mut Vec<String>,
-) -> Vec<(String, jackdaw_bsn::BsnValue)> {
-    use bevy::ecs::reflect::AppTypeRegistry;
-
-    let registry = world.resource::<AppTypeRegistry>().clone();
-    let registry = registry.read();
-
-    let Ok(entity_ref) = world.get_entity(entity) else {
-        return Vec::new();
-    };
-
-    let skip_ids = crate::scene_io::doc_skip_type_ids();
-    let references = crate::scene_io::asset_names::AssetReferences::new(world);
-    let ast = world.resource::<jackdaw_bsn::SceneBsnAst>();
-    let node = ast.ast_for(entity);
-
-    let mut out: Vec<(String, jackdaw_bsn::BsnValue)> = registry
-        .iter()
-        .filter(|reg| !skip_ids.contains(&reg.type_id()))
-        .filter_map(|reg| {
-            let type_path = reg.type_info().type_path_table().path();
-            if crate::scene_io::should_skip_component(type_path) {
-                return None;
-            }
-            let reflect_component = reg.data::<ReflectComponent>()?;
-            let component = reflect_component.reflect(entity_ref)?;
-            let mut value = references
-                .document_value(component.as_partial_reflect(), &registry)
-                .inspect_err(|err| warn!("save to scene: leaving {type_path} out: {err}"))
-                .ok()?;
-            if let Some(authored) =
-                node.and_then(|node| jackdaw_bsn::get_bsn_field(ast, node, type_path, ""))
-            {
-                dropped.extend(crate::scene_io::save::keep_document_names(
-                    &registry,
-                    reg.type_id(),
-                    &authored,
-                    &mut value,
-                ));
-            }
-            Some((type_path.to_string(), value))
-        })
-        .collect();
-
-    out.sort_by(|a, b| a.0.cmp(&b.0));
-    out
+/// Move focus to `key`: the instance losing it stops streaming frames nobody
+/// would see. A no-op if `key` is already focused.
+pub(crate) fn set_focused_instance(world: &mut World, key: InstanceKey) {
+    if world.resource::<PieInstances>().focused.as_ref() == Some(&key) {
+        return;
+    }
+    send_control_to_focused(world, ControlEvent::StopFrameStream);
+    crate::live_frame::clear_stream(world);
+    world.resource_mut::<PieInstances>().focused = Some(key);
 }
 
-/// Promote the selected preview entity's current component values into the
-/// authored scene (Path A) or create a new authored node from it (Path B).
-///
-/// Path A: the preview entity is already bound to an AST node (it is an
-/// authored entity with a live overlay). Each non-skipped reflected component
-/// is read from the preview entity, serialized, and written into the node
-/// through a [`SetBsnField`](crate::commands::SetBsnField) command. The commands are grouped into one
-/// undoable [`CommandGroup`](jackdaw_commands::CommandGroup) so a single Ctrl+Z reverts the whole promote.
-///
-/// Path B: the preview entity carries [`PieEphemeral`](crate::pie_projection::PieEphemeral) (the game spawned it
-/// at runtime with no authored counterpart). A new node is registered in the
-/// live BSN document, its patches filled from the preview entity's
-/// reflected components and bound to this entity. The entity
-/// receives a [`SceneNodeId`](jackdaw_scene_types::SceneNodeId) component and loses [`PieEphemeral`](crate::pie_projection::PieEphemeral) so it is
-/// now treated as an authored entity. Path B is not undoable in v1 (no
-/// remove-node command exists that mirrors the insert).
-///
-/// No-op with a `warn!` when nothing is selected, the preview entity is gone,
-/// or the entity carries neither a node binding nor `PieEphemeral`.
-pub fn save_live_entity_to_scene(world: &mut World) {
-    use crate::pie_projection::PieEphemeral;
-
-    if *world.resource::<PieViewMode>() != PieViewMode::Live {
-        return;
+/// The instance after `focused` in `keys`, wrapping around, or `None` with fewer
+/// than two.
+fn next_instance(mut keys: Vec<InstanceKey>, focused: Option<&InstanceKey>) -> Option<InstanceKey> {
+    if keys.len() < 2 {
+        return None;
     }
-    let Some(preview) = world.resource::<crate::selection::Selection>().primary() else {
-        warn!("save to scene: no entity selected");
-        return;
-    };
-
-    // Resolve the game-side bits for this preview entity from the projection map.
-    let bits = world
-        .resource::<crate::pie_projection::PieProjection>()
-        .by_bits
-        .iter()
-        .find_map(|(&b, &e)| if e == preview { Some(b) } else { None });
-    let Some(bits) = bits else {
-        warn!("save to scene: selected entity {preview:?} has no live projection entry");
-        return;
-    };
-
-    if world.get_entity(preview).is_err() {
-        warn!("save to scene: preview entity for live {bits:x} no longer exists");
-        return;
-    }
-
-    let is_ephemeral = world.get::<PieEphemeral>(preview).is_some();
-
-    if is_ephemeral {
-        promote_ephemeral_to_authored(world, preview, bits);
-    } else {
-        promote_authored_overlay(world, preview, bits);
-    }
+    keys.sort_by(|a, b| a.config.cmp(&b.config).then(a.instance.cmp(&b.instance)));
+    let after = focused
+        .and_then(|key| keys.iter().position(|held| held == key))
+        .map_or(0, |at| (at + 1) % keys.len());
+    keys.into_iter().nth(after)
 }
 
-/// Path A: preview entity is bound to an existing AST node. Capture its
-/// current component values and write them through `SetBsnField` commands.
-fn promote_authored_overlay(world: &mut World, preview: Entity, bits: u64) {
-    use crate::commands::{CommandGroup, CommandHistory, EditorCommand, SetBsnField};
+fn several_instances_running(session: NonSend<PieSession>) -> bool {
+    session.live_keys().len() > 1
+}
 
-    let node_id = {
-        let ast = world.resource::<jackdaw_bsn::SceneBsnAst>();
-        let Some(node) = ast.ast_for(preview) else {
-            warn!("save to scene: preview entity {preview:?} (bits {bits:x}) has no AST node");
-            return;
-        };
-        ast.stable_id_of(node).unwrap_or(0)
+/// Show one running instance in the Game panel.
+#[operator(
+    id = "pie.focus_instance",
+    label = "Show Game Instance",
+    description = "Show this running game instance in the Game panel.",
+    params(
+        config(String, doc = "The run configuration's name."),
+        instance(i64, default = 1, doc = "Which instance of it, counting from 1."),
+    )
+)]
+pub(crate) fn pie_focus_instance(
+    params: In<OperatorParameters>,
+    mut commands: Commands,
+) -> OperatorResult {
+    let Some(config) = params.as_str("config").map(str::to_string) else {
+        return OperatorResult::Cancelled;
     };
-
-    let mut dropped = Vec::new();
-    let entries = preview_entity_components_as_bsn(world, preview, &mut dropped);
-    let mut held: Vec<(String, Box<dyn Reflect>)> = entries
-        .iter()
-        .filter_map(|(type_path, _)| {
-            Some((
-                type_path.clone(),
-                component_copy(world, preview, type_path)?,
-            ))
-        })
-        .collect();
-
-    let mut sub_commands: Vec<Box<dyn EditorCommand>> = Vec::new();
-    for (type_path, new_value) in entries {
-        let old_value = {
-            let ast = world.resource::<jackdaw_bsn::SceneBsnAst>();
-            ast.ast_for(preview)
-                .and_then(|node| jackdaw_bsn::get_bsn_field(ast, node, &type_path, ""))
-        };
-        sub_commands.push(Box::new(SetBsnField {
-            entity: preview,
-            type_path,
-            field_path: String::new(),
-            old_value,
-            new_value,
-            was_derived: false,
-        }));
-    }
-
-    let count = sub_commands.len();
-    let mut cmd: Box<dyn EditorCommand> = if count == 0 {
-        warn!("save to scene: preview entity {preview:?} had no saveable components");
-        return;
-    } else if count == 1 {
-        match sub_commands.into_iter().next() {
-            Some(only) => only,
-            None => return,
+    let Ok(instance) = u32::try_from(params.as_int("instance").unwrap_or(1)) else {
+        return OperatorResult::Cancelled;
+    };
+    let key = InstanceKey { config, instance };
+    commands.queue(move |world: &mut World| {
+        if world
+            .get_non_send::<PieSession>()
+            .is_some_and(|session| session.live_keys().contains(&key))
+        {
+            set_focused_instance(world, key);
         }
-    } else {
-        Box::new(CommandGroup {
-            label: "Save runtime values to scene".to_string(),
-            commands: sub_commands,
-        })
-    };
-    // The values came from the running game: send what was pending before
-    // the write, then count the write itself as already sent.
-    crate::play_sync::sync_document_to_game(world);
-    cmd.execute(world);
-    held.retain(|(type_path, held)| {
-        crate::pie_projection::restore_cleared_handles(world, preview, type_path, held.as_ref())
     });
-    if !held.is_empty() {
-        cmd = Box::new(KeepingUnnamedHandles {
-            inner: cmd,
-            entity: preview,
-            held,
-        });
-    }
-    world.resource_mut::<CommandHistory>().push_executed(cmd);
-    crate::play_sync::absorb_document_changes(world);
-    info!("save to scene: promoted runtime values into node {node_id}");
-    if !dropped.is_empty() {
-        let message = format!(
-            "save to scene dropped {}: no element matches it now",
-            dropped.join(", ")
-        );
-        warn!("{message}");
-        crate::status_bar::notify_warn(world, message);
-    }
+    OperatorResult::Finished
 }
 
-fn component_copy(world: &World, entity: Entity, type_path: &str) -> Option<Box<dyn Reflect>> {
-    let registry = world.resource::<AppTypeRegistry>().read();
-    registry
-        .get_with_type_path(type_path)?
-        .data::<ReflectComponent>()?
-        .reflect(world.get_entity(entity).ok()?)?
-        .reflect_clone()
-        .ok()
-}
-
-/// A write of the live values into the document that leaves the handles it has no
-/// name for, such as an unsaved material, on the live entity. Applying the document
-/// clears them, so each step of the write puts them back.
-struct KeepingUnnamedHandles {
-    inner: Box<dyn crate::commands::EditorCommand>,
-    entity: Entity,
-    held: Vec<(String, Box<dyn Reflect>)>,
-}
-
-impl KeepingUnnamedHandles {
-    fn restore(&self, world: &mut World) {
-        let entity = crate::scene_nodes::live_entity(world, self.entity);
-        for (type_path, held) in &self.held {
-            crate::pie_projection::restore_cleared_handles(world, entity, type_path, held.as_ref());
+/// Show the next running instance in the Game panel.
+#[operator(
+    id = "pie.next_instance",
+    label = "Next Game Instance",
+    description = "Show the next running game instance in the Game panel.",
+    is_available = several_instances_running
+)]
+pub(crate) fn pie_next_instance(
+    _: In<OperatorParameters>,
+    mut commands: Commands,
+) -> OperatorResult {
+    commands.queue(|world: &mut World| {
+        let keys = world.non_send::<PieSession>().live_keys();
+        let focused = world.resource::<PieInstances>().focused.clone();
+        if let Some(key) = next_instance(keys, focused.as_ref()) {
+            set_focused_instance(world, key);
         }
-    }
+    });
+    OperatorResult::Finished
 }
 
-impl crate::commands::EditorCommand for KeepingUnnamedHandles {
-    fn execute(&mut self, world: &mut World) {
-        self.inner.execute(world);
-        self.restore(world);
-    }
-
-    fn undo(&mut self, world: &mut World) {
-        self.inner.undo(world);
-        self.restore(world);
-    }
-
-    fn description(&self) -> &str {
-        self.inner.description()
-    }
-
-    fn sync_after_external_execute(&self, world: &mut World) {
-        self.inner.sync_after_external_execute(world);
-    }
-
-    fn heap_bytes(&self) -> usize {
-        self.inner.heap_bytes()
-    }
-
-    fn gone(&self, world: &World) -> Option<String> {
-        self.inner.gone(world)
-    }
-}
-
-/// Path B: preview entity has no AST node (game-spawned runtime entity).
-/// Mint a stable node id for it, drop the ephemeral marker, and register it
-/// in the live BSN document, which captures its reflected components as a
-/// new authored node — minus the runtime-only components
-/// [`register_promoted_entity_in_ast`] filters out. Not undoable in v1.
-pub(crate) fn promote_ephemeral_to_authored(world: &mut World, preview: Entity, bits: u64) {
-    use crate::pie_projection::PieEphemeral;
-
-    let node_id = jackdaw_scene_types::SceneNodeId::next();
-    world.entity_mut(preview).remove::<PieEphemeral>();
-    world.entity_mut(preview).insert(node_id);
-    register_promoted_entity_in_ast(world, preview);
-
-    info!(
-        "save to scene: promoted ephemeral {preview:?} (bits {bits:x}) to new authored node {}",
-        node_id.0
-    );
-}
-
-/// Specific runtime-only physics paths a promoted entity may carry. These
-/// are exact rather than module-prefix rules so adding an authored component
-/// beside an Avian helper type cannot silently broaden the promote filter.
-/// A path that no longer names anything skips nothing, as with the save
-/// side's exact-path lists.
-const PROMOTE_PER_FRAME_PATHS: &[&str] = &[
-    // The physics-side mirror of `Transform`; the authored pose remains the
-    // Bevy `Transform` and is captured normally. Avian's reflected type paths
-    // include the `transform` module; the short re-export paths are retained
-    // for registries that canonicalize the public re-export.
-    "avian3d::physics_transform::Position",
-    "avian3d::physics_transform::Rotation",
-    "avian3d::physics_transform::PreSolveDeltaPosition",
-    "avian3d::physics_transform::PreSolveDeltaRotation",
-    "avian3d::physics_transform::transform::Position",
-    "avian3d::physics_transform::transform::Rotation",
-    "avian3d::physics_transform::transform::PreSolveDeltaPosition",
-    "avian3d::physics_transform::transform::PreSolveDeltaRotation",
-    // The integrator's per-timestep working set.
-    "avian3d::dynamics::integrator::VelocityIntegrationData",
-    // Broad-phase output recomputed from the collider every step, and its
-    // margin-expanded twin the culling pass derives from it.
-    "avian3d::collision::collider::ColliderAabb",
-    "avian3d::collision::collider::EnlargedAabb",
-    // The collider's physics-schedule pose, rewritten from `Transform`
-    // every step (a distinct copy, not the authored one).
-    "avian3d::collision::collider::collider_transform::ColliderTransform",
-    // Velocity is the frame's reading, not a fact about the entity.
-    "avian3d::dynamics::rigid_body::LinearVelocity",
-    "avian3d::dynamics::rigid_body::AngularVelocity",
-    // Sleep bookkeeping moves every step the body is awake.
-    "avian3d::dynamics::rigid_body::sleeping::Sleeping",
-    "avian3d::dynamics::rigid_body::sleeping::SleepTimer",
-    // Per-step force accumulator the solver drains.
-    "avian3d::dynamics::rigid_body::forces::AccumulatedLocalAcceleration",
-    // Mass properties derived from the collider's shape at insert and
-    // recomputed whenever it changes; a saved copy freezes one derivation
-    // while the collider it came from is saved alongside it.
-    "avian3d::dynamics::rigid_body::mass_properties::components::computed::ComputedMass",
-    "avian3d::dynamics::rigid_body::mass_properties::components::computed::ComputedAngularInertia",
-    "avian3d::dynamics::rigid_body::mass_properties::components::computed::ComputedCenterOfMass",
-    "avian3d::dynamics::rigid_body::mass_properties::components::collider::ColliderMassProperties",
-];
-
-/// Relationship component paths whose Entity bits are session-local and
-/// rebuilt by Avian's hierarchy relationship hooks. Keep this list
-/// intentionally narrow: an unrelated game-authored component may also
-/// contain Entity, and should not be filtered merely because its reflected
-/// shape does. Type paths avoid adding Avian as a direct editor dependency;
-/// the reflection check verifies these exact types still contain Entity.
-const PROMOTE_SESSION_RELATIONSHIP_PATHS: &[&str] = &[
-    "avian3d::collision::collider::collider_hierarchy::ColliderOf",
-    "avian3d::collision::collider::collider_hierarchy::RigidBodyColliders",
-];
-
-fn is_promote_session_relationship(registration: &bevy::reflect::TypeRegistration) -> bool {
-    let type_path = registration.type_info().type_path_table().path();
-    PROMOTE_SESSION_RELATIONSHIP_PATHS.contains(&type_path)
-        && type_tree_holds_entity(registration.type_info(), 0)
-}
-
-/// Whether a component a runtime entity wears must not land in the document
-/// when it is promoted (LT10). Everything the save side skips stays skipped
-/// ([`crate::scene_io::should_skip_component`]); on top of that, this
-/// promote-only capture excludes two documented runtime classes:
-///
-/// 1. Avian's `ColliderOf` / `RigidBodyColliders` relationship pair. Their
-///    reflected Entity references are current-world bits; Avian derives the
-///    pair from the hierarchy when the session starts. The type-tree check
-///    confirms the exact known relationship types still carry Entity.
-/// 2. The per-frame physics internals above, identified by Avian type paths.
-///
-/// This does not blanket-skip every component with Entity in its type tree:
-/// application components outside the Avian relationship pair retain the
-/// shared save policy unless their own path is explicitly listed.
-fn promote_capture_skips_component(registration: &bevy::reflect::TypeRegistration) -> bool {
-    let type_path = registration.type_info().type_path_table().path();
-    crate::scene_io::should_skip_component(type_path)
-        || is_promote_session_relationship(registration)
-        || PROMOTE_PER_FRAME_PATHS.contains(&type_path)
-}
-
-/// Whether the reflected fields of a type, or a direct item/key/value of a
-/// reflected container, contain `bevy_ecs::entity::Entity`. Struct, tuple,
-/// and enum fields recurse; List/Array/Set/Map metadata exposes only the
-/// immediate container types, so those items are leaf-checked. This suffices
-/// for Avian's `ColliderOf { body: Entity }` and
-/// `RigidBodyColliders(Vec<Entity>)` shapes. Depth-capped for recursive fields.
-fn type_tree_holds_entity(info: &'static bevy::reflect::TypeInfo, depth: usize) -> bool {
-    if depth > 8 {
-        return false;
-    }
-    // Entity itself, however its reflect shape projects (opaque or struct).
-    if info.ty().is::<Entity>() {
-        return true;
-    }
-    match info {
-        bevy::reflect::TypeInfo::Struct(info) => info
-            .iter()
-            .any(|field| field_holds_entity(field.type_info(), depth)),
-        bevy::reflect::TypeInfo::TupleStruct(info) => info
-            .iter()
-            .any(|field| field_holds_entity(field.type_info(), depth)),
-        bevy::reflect::TypeInfo::Tuple(info) => info
-            .iter()
-            .any(|field| field_holds_entity(field.type_info(), depth)),
-        // Container items are leaf-checked: a relationship target sits one
-        // step in (`Vec<Entity>`, `HashMap<Name, Entity>`), not behind
-        // further containers.
-        bevy::reflect::TypeInfo::List(info) => info.item_ty().is::<Entity>(),
-        bevy::reflect::TypeInfo::Array(info) => info.item_ty().is::<Entity>(),
-        bevy::reflect::TypeInfo::Set(info) => info.value_ty().is::<Entity>(),
-        bevy::reflect::TypeInfo::Map(info) => {
-            info.key_ty().is::<Entity>() || info.value_ty().is::<Entity>()
-        }
-        bevy::reflect::TypeInfo::Enum(info) => info.iter().any(|variant| match variant {
-            bevy::reflect::enums::VariantInfo::Struct(fields) => fields
-                .iter()
-                .any(|field| field_holds_entity(field.type_info(), depth)),
-            bevy::reflect::enums::VariantInfo::Tuple(fields) => fields
-                .iter()
-                .any(|field| field_holds_entity(field.type_info(), depth)),
-            bevy::reflect::enums::VariantInfo::Unit(_) => false,
-        }),
-        // Any other opaque leaf (a Vec3, a handle, a plain f32) is not a
-        // reference into the session.
-        bevy::reflect::TypeInfo::Opaque(_) => false,
-    }
-}
-
-fn field_holds_entity(field: Option<&'static bevy::reflect::TypeInfo>, depth: usize) -> bool {
-    field.is_some_and(|info| type_tree_holds_entity(info, depth + 1))
-}
-
-/// Register a just-promoted entity in the live scene document, mirroring
-/// [`crate::scene_io::register_entity_in_ast`] (node creation, parent
-/// linking, per-component patch upsert) with the promote capture filter:
-/// [`promote_capture_skips_component`] decides what lands. The shared
-/// registration stays untouched — it serves load and editor-side spawning,
-/// whose entities never wear runtime physics state.
-fn register_promoted_entity_in_ast(world: &mut World, entity: Entity) {
-    use bevy::ecs::reflect::AppTypeRegistry;
-
-    // Same guards as the shared registration: a dead entity has nothing to
-    // read, and an entity already in the document is not re-registered.
-    if world.get_entity(entity).is_err() {
+/// Keep focus on a connected instance: the first to connect takes it, and a
+/// focused instance that has gone hands it on.
+fn reconcile_focus(world: &mut World) {
+    let session = world.non_send::<PieSession>();
+    let mut live = session.live_keys();
+    let focused = world.resource::<PieInstances>().focused.as_ref();
+    // A focused instance still connecting, as one relaunched in another
+    // window mode is, keeps the focus until it connects.
+    if focused.is_some_and(|key| session.children.contains_key(key)) {
         return;
     }
-    let Some(doc) = world.get_resource::<jackdaw_bsn::SceneBsnAst>() else {
-        return;
-    };
-    if doc.ast_for(entity).is_some() {
-        return;
-    }
-    if world
-        .get::<jackdaw_scene_types::SceneNodeId>(entity)
-        .is_none()
-        && let Ok(mut entity_mut) = world.get_entity_mut(entity)
-    {
-        entity_mut.insert(jackdaw_scene_types::SceneNodeId::next());
-    }
-    let doc = world.resource::<jackdaw_bsn::SceneBsnAst>();
-    let parent = world
-        .get::<ChildOf>(entity)
-        .map(ChildOf::parent)
-        .filter(|p| doc.ast_for(*p).is_some());
-    jackdaw_bsn::create_entity_in_ast(world, entity, parent);
-
-    let registry = world.resource::<AppTypeRegistry>().clone();
-    let skip_ids = crate::scene_io::doc_skip_type_ids();
-    let values: Vec<Box<dyn bevy::reflect::PartialReflect>> = {
-        let reg = registry.read();
-        let entity_ref = world.entity(entity);
-        reg.iter()
-            .filter(|registration| !skip_ids.contains(&registration.type_id()))
-            .filter(|registration| !promote_capture_skips_component(registration))
-            .filter_map(|registration| registration.data::<ReflectComponent>())
-            .filter_map(|reflect_component| reflect_component.reflect(entity_ref))
-            .filter_map(|value| value.to_dynamic().ok())
-            .collect()
-    };
-    for value in values {
-        crate::commands::sync_component_to_bsn_doc(world, entity, &*value);
+    live.sort_by(|a, b| a.config.cmp(&b.config).then(a.instance.cmp(&b.instance)));
+    if let Some(key) = live.into_iter().next() {
+        set_focused_instance(world, key);
     }
 }
 
@@ -2499,70 +2220,10 @@ fn register_promoted_entity_in_ast(world: &mut World, entity: Entity) {
 fn advance_pie_session(world: &mut World) {
     poll_builds(world);
     poll_children(world);
+    reconcile_focus(world);
     reconcile_play_state(world);
-    reconcile_build_status(world);
-}
-
-/// Mirror the active game or extension build into the editor's
-/// `crate::build_status::BuildStatus` so the footer shows what is compiling, and clear it once
-/// no build remains. Also carries the export entry's build, which shares
-/// the footer rather than growing a second progress surface.
-pub(crate) fn reconcile_build_status(world: &mut World) {
-    let building = world
-        .non_send::<PieSession>()
-        .builds
-        .values()
-        .find_map(|build| match build {
-            BuildState::Running { progress, .. } => Some(Arc::clone(progress)),
-            _ => None,
-        })
-        .or_else(|| {
-            world
-                .get_resource::<crate::game_export::GameExports>()
-                .and_then(crate::game_export::GameExports::progress)
-        })
-        .or_else(|| {
-            world
-                .get_resource::<crate::extension_build::ExtensionBuild>()
-                .and_then(crate::extension_build::ExtensionBuild::progress)
-        });
-    let project = world
-        .get_resource::<crate::project::ProjectRoot>()
-        .map(|p| p.root.clone())
-        .unwrap_or_default();
-    let Some(mut status) = world.get_resource_mut::<crate::build_status::BuildStatus>() else {
-        return;
-    };
-    match building {
-        Some(progress) => {
-            status.outcome = None;
-            status.failed_log = None;
-            status.state = crate::build_status::BuildState::Building {
-                project,
-                started: Instant::now(),
-                progress,
-            };
-        }
-        None => match &status.state {
-            // A build ended with no outcome latched yet: go Idle.
-            // `poll_builds` (Failed) and `watch_project_schema` (Ready)
-            // set the real outcome the same or next frame.
-            crate::build_status::BuildState::Building { .. } => {
-                status.state = crate::build_status::BuildState::Idle;
-            }
-            // Keep a recent success on screen, then let it fade to Idle.
-            crate::build_status::BuildState::Ready { at, .. } => {
-                if at.elapsed() > Duration::from_secs(6) {
-                    status.state = crate::build_status::BuildState::Idle;
-                }
-            }
-            // Sticky: a failure stays until the next build starts, and only
-            // the user fixing their project clears a block.
-            crate::build_status::BuildState::Failed { .. }
-            | crate::build_status::BuildState::Blocked { .. }
-            | crate::build_status::BuildState::Idle => {}
-        },
-    }
+    reconcile_play_status(world);
+    crate::project_build::reconcile_build_status(world);
 }
 
 /// Poll each in-flight build. On success, spawn its pending instances
@@ -2571,10 +2232,11 @@ pub(crate) fn reconcile_build_status(world: &mut World) {
 /// spawning so `spawn_instance` can read the world without aliasing.
 fn poll_builds(world: &mut World) {
     let mut builds = std::mem::take(&mut world.non_send_mut::<PieSession>().builds);
+    let mut launch_build_failed = false;
     let mut spawned: Vec<(InstanceKey, ChildStage, PieWindowMode, Option<LaunchScene>)> =
         Vec::new();
 
-    for (key, state) in builds.iter_mut() {
+    for (root, state) in builds.iter_mut() {
         let BuildState::Running {
             task,
             pending,
@@ -2583,7 +2245,7 @@ fn poll_builds(world: &mut World) {
         else {
             continue;
         };
-        match future::block_on(future::poll_once(task)) {
+        match future::block_on(future::poll_once(&mut task.task)) {
             None => {}
             Some(Ok(result)) => {
                 // The build persisted the project's type schema to
@@ -2595,14 +2257,9 @@ fn poll_builds(world: &mut World) {
                 // game reported about itself, and Play runs that same
                 // binary in a fresh process below.
                 for spawn in pending.drain(..) {
-                    if let Some((stage, mode)) = spawn_instance(
-                        world,
-                        &spawn.key,
-                        &spawn.run,
-                        &result.binary,
-                        spawn.scene_override.as_ref(),
-                    ) {
-                        record_scene_override(world, &spawn.key, spawn.scene_override.as_ref());
+                    if let Some((stage, mode)) =
+                        spawn_instance(world, &spawn.key, &spawn.run, &result.binary)
+                    {
                         spawned.push((spawn.key, stage, mode, spawn.scene));
                     }
                 }
@@ -2610,8 +2267,8 @@ fn poll_builds(world: &mut World) {
             }
             Some(Err(err)) => {
                 let output = progress.lock().ok().map(|p| p.full_log.clone());
-                let project = key.0.file_name().map_or_else(
-                    || key.0.display().to_string(),
+                let project = root.file_name().map_or_else(
+                    || root.display().to_string(),
                     |name| name.display().to_string(),
                 );
                 let keys: Vec<String> = pending.iter().map(|p| p.key.to_string()).collect();
@@ -2623,9 +2280,9 @@ fn poll_builds(world: &mut World) {
                         keys.join(", ")
                     );
                 }
-                *state = BuildState::Failed {
-                    launch: !pending.is_empty(),
-                };
+                let launch = !pending.is_empty();
+                launch_build_failed |= launch;
+                *state = BuildState::Failed { launch };
                 {
                     let mut status = world.resource_mut::<crate::build_status::BuildStatus>();
                     status.state = crate::build_status::BuildState::Failed { at: Instant::now() };
@@ -2640,11 +2297,13 @@ fn poll_builds(world: &mut World) {
     let started = !spawned.is_empty();
     let mut session = world.non_send_mut::<PieSession>();
     session.builds = builds;
+    if launch_build_failed {
+        session.launch_build_failure_unseen = true;
+    }
     for (key, stage, mode, scene) in spawned {
-        session.launches += 1;
-        session.children.insert(key.clone(), stage);
         session.launch_modes.insert(key.clone(), mode);
         session.note_launch_scene(&key, scene);
+        session.children.insert(key, stage);
     }
     if started {
         crate::viewport_redraw::note_game_started(world);
@@ -2656,13 +2315,32 @@ fn poll_builds(world: &mut World) {
 /// exit are reaped. The children map is taken with `mem::take` and
 /// rebuilt from survivors, moving each `Child` by value.
 fn poll_children(world: &mut World) {
-    let children = std::mem::take(&mut world.non_send_mut::<PieSession>().children);
+    let mut session = world.non_send_mut::<PieSession>();
+    let children = std::mem::take(&mut session.children);
+    let timeout = session.connect_timeout.unwrap_or(CONNECT_TIMEOUT);
 
     let mut survivors: HashMap<InstanceKey, ChildStage> = HashMap::with_capacity(children.len());
+    let mut failed = None;
+    let mut exited = Vec::new();
+    let mut connected = Vec::new();
     for (key, stage) in children {
-        if let Some(next) = advance_child(&key, stage) {
-            survivors.insert(key, next);
+        let was_connecting = matches!(stage, ChildStage::Connecting { .. });
+        match advance_child(&key, stage, timeout) {
+            ChildPoll::Running(next) => {
+                if was_connecting && matches!(next, ChildStage::Live { .. }) {
+                    connected.push(key.clone());
+                }
+                survivors.insert(key, next);
+            }
+            ChildPoll::Exited => exited.push(key),
+            ChildPoll::Lost => {}
+            ChildPoll::Failed(exit) => failed = Some(exit),
         }
+    }
+    if (failed.is_some() || !exited.is_empty())
+        && let Some(mut last) = world.get_resource_mut::<LastGameExit>()
+    {
+        record_exits(&mut last, failed, &exited);
     }
 
     let mut session = world.non_send_mut::<PieSession>();
@@ -2679,18 +2357,40 @@ fn poll_children(world: &mut World) {
         names.retain_games(|key| survivors.contains_key(key));
     }
     world.non_send_mut::<PieSession>().children = survivors;
+    for key in connected {
+        greet_connected(world, &key);
+    }
 }
 
-/// Step one child's stage by value, returning the stage it should
-/// carry into next frame, or `None` if it should be dropped. A
-/// connected `Connecting` becomes `Live`; a child that failed to
-/// connect or has exited is reaped and dropped.
-fn advance_child(key: &InstanceKey, stage: ChildStage) -> Option<ChildStage> {
+/// Tell a game that has just connected what the developer's Play settings ask
+/// of it.
+fn greet_connected(world: &World, key: &InstanceKey) {
+    let muted = world
+        .get_resource::<crate::play_settings::PlaySettings>()
+        .is_some_and(|settings| settings.muted);
+    if muted {
+        send_control_to_instance(world, key, ControlEvent::SetMuted(true));
+    }
+    let paused = world
+        .get_resource::<State<PlayState>>()
+        .is_some_and(|state| *state.get() == PlayState::Paused);
+    if paused {
+        send_control_to_instance(world, key, ControlEvent::Pause);
+    }
+}
+
+/// Step one child's stage by value. A connected `Connecting` becomes `Live`; a
+/// child that failed to connect, took longer than `timeout` to, or has exited
+/// is reaped, with why when it went away uncleanly.
+fn advance_child(key: &InstanceKey, stage: ChildStage, timeout: Duration) -> ChildPoll {
+    let gone = |reason: GameExitReason, output: OutputCapture| {
+        ChildPoll::Failed(GameExit::new(key.clone(), reason, output))
+    };
     match stage {
         ChildStage::Connecting {
             mut child,
             mut accept,
-            stderr_tail,
+            output,
             since,
         } => {
             // A child that died before connecting will never accept;
@@ -2698,61 +2398,57 @@ fn advance_child(key: &InstanceKey, stage: ChildStage) -> Option<ChildStage> {
             match child.try_wait() {
                 Ok(Some(status)) => {
                     error!("PIE: {key} exited before connecting with {status}");
-                    report_stderr_tail(&stderr_tail);
-                    return None;
+                    return gone(
+                        GameExitReason::ExitedBeforeConnecting(exit_status_text(status)),
+                        output,
+                    );
                 }
                 Ok(None) => {}
                 Err(err) => {
                     error!("PIE: {key} failed to poll while connecting: {err}");
                     child.kill().ok();
                     child.wait().ok();
-                    return None;
+                    return gone(GameExitReason::ConnectFailed(err.to_string()), output);
                 }
             }
             match future::block_on(future::poll_once(&mut accept)) {
-                None => {
-                    if since.elapsed() >= CONNECT_TIMEOUT {
-                        error!(
-                            "PIE: {key} did not connect within {}s; is the jackdaw_runtime/pie feature enabled for this bin?",
-                            CONNECT_TIMEOUT.as_secs()
-                        );
-                        child.kill().ok();
-                        child.wait().ok();
-                        report_stderr_tail(&stderr_tail);
-                        None
-                    } else {
-                        Some(ChildStage::Connecting {
-                            child,
-                            accept,
-                            stderr_tail,
-                            since,
-                        })
-                    }
+                None if since.elapsed() >= timeout => {
+                    error!(
+                        "PIE: {key} did not connect within {}s; does its app add JackdawPlugin, with the pie feature of jackdaw_runtime enabled?",
+                        timeout.as_secs()
+                    );
+                    child.kill().ok();
+                    child.wait().ok();
+                    gone(GameExitReason::NeverConnected, output)
                 }
+                None => ChildPoll::Running(ChildStage::Connecting {
+                    child,
+                    accept,
+                    output,
+                    since,
+                }),
                 Some(Ok(transport)) => match GameOutbox::new(&transport) {
                     Ok(outbox) => {
                         info!("PIE: {key} connected");
-                        Some(ChildStage::Live {
+                        ChildPoll::Running(ChildStage::Live {
                             child,
                             transport,
                             outbox,
-                            stderr_tail,
-                            stop_deadline: None,
+                            output,
                         })
                     }
                     Err(err) => {
                         error!("PIE: {key} could not start its writer thread: {err}");
                         child.kill().ok();
                         child.wait().ok();
-                        None
+                        gone(GameExitReason::ConnectFailed(err.to_string()), output)
                     }
                 },
                 Some(Err(err)) => {
                     error!("PIE: {key} failed to connect: {err}");
                     child.kill().ok();
                     child.wait().ok();
-                    report_stderr_tail(&stderr_tail);
-                    None
+                    gone(GameExitReason::ConnectFailed(err.to_string()), output)
                 }
             }
         }
@@ -2760,42 +2456,25 @@ fn advance_child(key: &InstanceKey, stage: ChildStage) -> Option<ChildStage> {
             mut child,
             transport,
             outbox,
-            stderr_tail,
-            stop_deadline,
+            output,
         } => match child.try_wait() {
-            Ok(None) => {
-                // Still running. Inside the graceful window that is the
-                // point — it was asked to stop and has until the deadline
-                // to flush and exit on its own; past the deadline it is
-                // killed, exactly once, and reaped here (the stage drops
-                // with this call, so no later tick can kill it again).
-                if stop_deadline.is_some_and(|deadline| Instant::now() >= deadline) {
-                    warn!("PIE: {key} did not exit within the graceful window; killing it");
-                    child.kill().ok();
-                    child.wait().ok();
-                    None
-                } else {
-                    Some(ChildStage::Live {
-                        child,
-                        transport,
-                        outbox,
-                        stderr_tail,
-                        stop_deadline,
-                    })
-                }
+            Ok(None) => ChildPoll::Running(ChildStage::Live {
+                child,
+                transport,
+                outbox,
+                output,
+            }),
+            Ok(Some(status)) if status.success() => {
+                info!("PIE: {key} exited");
+                ChildPoll::Exited
             }
             Ok(Some(status)) => {
-                if status.success() {
-                    info!("PIE: {key} exited");
-                } else {
-                    error!("PIE: {key} exited with {status}");
-                    report_stderr_tail(&stderr_tail);
-                }
-                None
+                error!("PIE: {key} exited with {status}");
+                gone(GameExitReason::Crashed(exit_status_text(status)), output)
             }
             Err(err) => {
                 error!("PIE: {key} failed to poll: {err}");
-                None
+                ChildPoll::Lost
             }
         },
     }
@@ -2805,14 +2484,6 @@ fn advance_child(key: &InstanceKey, stage: ChildStage) -> Option<ChildStage> {
 /// `Playing` (unless already `Paused`); zero children implies `Stopped`.
 fn reconcile_play_state(world: &mut World) {
     let session = world.non_send::<PieSession>();
-    // A live child implies playing; a child still connecting does not:
-    // counting one there would open the stop gate into the connect window,
-    // and the stop-that-kills-a-connecting-child path spins the main
-    // thread (reproduced 100%: stop inside the window freezes the editor
-    // at full CPU, stop after connect does not; the deep cause is its own
-    // investigation). The gate staying closed means a stop fired into the
-    // window comes back cancelled — callers retry, which the QA recipes
-    // already do.
     let any_live = session
         .children
         .values()
@@ -2838,23 +2509,11 @@ mod pie_windows {
         process::Child,
         sync::LazyLock,
     };
-    use windows_sys::Win32::Foundation::GetLastError;
     use windows_sys::Win32::System::JobObjects::*;
 
-    /// The kill-on-close job every launched game is assigned to. `None`
-    /// when the kernel would not give us one (a sandboxed or app-container
-    /// editor, some CI runners): launches still work there, with the
-    /// degradation that a killed editor can leave its games running.
-    pub static PIE_JOB: LazyLock<Option<Job>> = LazyLock::new(|| unsafe {
+    pub static PIE_JOB: LazyLock<Job> = LazyLock::new(|| unsafe {
         let job = CreateJobObjectW(std::ptr::null(), std::ptr::null());
-        if job.is_null() {
-            let err = GetLastError();
-            bevy::log::warn!(
-                "PIE: cannot create the kill-on-close job object (os error {err}); \
-                 a killed editor will leave its games running"
-            );
-            return None;
-        }
+        assert!(!job.is_null(), "Failed to create job object for PIE");
         let handle = OwnedHandle::from_raw_handle(job);
 
         let info = JOBOBJECT_EXTENDED_LIMIT_INFORMATION {
@@ -2873,67 +2532,33 @@ mod pie_windows {
             (&raw const info).cast(),
             std::mem::size_of::<JOBOBJECT_EXTENDED_LIMIT_INFORMATION>() as u32,
         );
-        if set == 0 {
-            let err = GetLastError();
-            bevy::log::warn!(
-                "PIE: cannot arm the kill-on-close job object (os error {err}); \
-                 a killed editor will leave its games running"
-            );
-            return None;
-        }
+        assert!(set != 0, "Failed to set job object info for PIE");
 
-        Some(Job(handle))
+        Job(handle)
     });
 
     pub struct Job(pub OwnedHandle);
 
     impl Job {
-        /// Assign the process to the job, logging and continuing when the
-        /// kernel refuses (nested jobs, restricted tokens): the game runs
-        /// either way, only without the dies-with-the-editor guarantee.
         pub fn assign_to_process(&self, process: &Child) {
             let assigned = unsafe {
                 AssignProcessToJobObject(self.0.as_raw_handle(), process.as_raw_handle())
             };
-            if assigned == 0 {
-                // SAFETY: `GetLastError` reads the calling thread's last
-                // error slot immediately after the failed call above on
-                // this same thread, which is exactly its contract.
-                let err = unsafe { GetLastError() };
-                bevy::log::warn!(
-                    "PIE: cannot assign the game to the kill-on-close job object \
-                     (os error {err}); it will not die with the editor"
-                );
-            }
+            assert!(assigned != 0, "Failed to assign process to job for PIE");
         }
     }
 }
 
-/// The env a Play launch hands the game: the asset-root default it needs
-/// when nothing names one, then the run's own env — so a run that sets
-/// `BEVY_ASSET_ROOT` itself wins over the default, the same
-/// user-env-wins order the CLI's `jd run --config` launch applies.
-fn apply_run_env(
-    command: &mut Command,
-    cwd: &Path,
-    env: &std::collections::BTreeMap<String, String>,
-) {
-    command.env("BEVY_ASSET_ROOT", cwd).envs(env);
-}
-
 /// Launch the project's game binary for one instance, point it at a
 /// fresh rendezvous, start draining its stderr, and begin awaiting its
-/// connection on a task pool. Returns the `Connecting` stage and the
-/// window mode the launch ran with; on rendezvous or spawn failure logs
-/// and returns `None` so the caller skips it. A `scene_override`
-/// additionally points the child at the editor's scene through
-/// `JACKDAW_PIE_SCENE`.
+/// connection on a task pool. Returns the `Connecting` stage; on
+/// rendezvous or spawn failure logs and returns `None` so the caller
+/// skips it.
 fn spawn_instance(
     world: &World,
     key: &InstanceKey,
     run: &RunConfig,
     binary: &Path,
-    scene_override: Option<&SceneOverrideLaunch>,
 ) -> Option<(ChildStage, PieWindowMode)> {
     let root = project_root(world)?;
 
@@ -2955,18 +2580,15 @@ fn spawn_instance(
 
     let mut command = Command::new(binary);
     crate::project_build::prepare_game_command(&mut command, binary);
-    command.current_dir(&cwd);
-    apply_run_env(&mut command, &cwd, &run.env);
     command
+        .current_dir(&cwd)
+        .env_remove(EDITOR_REMOTE_PORT_ENV)
+        .envs(&run.env)
+        .env("BEVY_ASSET_ROOT", &cwd)
         .env("JACKDAW_PIE", &server_name)
         .args(&run.args)
+        .stdout(Stdio::piped())
         .stderr(Stdio::piped());
-    if let Some(scene_override) = scene_override {
-        command.env(
-            jackdaw_runtime::PIE_SCENE_ENV,
-            &scene_override.assets_relative,
-        );
-    }
 
     if let Some(settings) = world.get_resource::<crate::play_settings::PlaySettings>() {
         command.envs(&settings.env).args(&settings.args);
@@ -3026,25 +2648,13 @@ fn spawn_instance(
     // On Windows, we use a job object with JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE set.
     // Because we own the only handle to the object, if Jackdaw crashes, the job object will be closed and the game killed.
     #[cfg(target_os = "windows")]
-    if let Some(job) = pie_windows::PIE_JOB.as_ref() {
-        job.assign_to_process(&child);
-    }
+    pie_windows::PIE_JOB.assign_to_process(&child);
 
-    let stderr_tail: StderrTail = Arc::new(Mutex::new(VecDeque::with_capacity(STDERR_TAIL_LINES)));
-    if let Some(stderr) = child.stderr.take() {
-        let tail = Arc::clone(&stderr_tail);
-        std::thread::spawn(move || {
-            for line in BufReader::new(stderr).lines().map_while(Result::ok) {
-                if let Ok(mut buf) = tail.lock() {
-                    if buf.len() == STDERR_TAIL_LINES {
-                        buf.pop_front();
-                    }
-                    buf.push_back(line);
-                }
-            }
-        });
-    }
-
+    let output = world
+        .get_resource::<GameOutput>()
+        .cloned()
+        .unwrap_or_default()
+        .capture(key, &mut child);
     let accept = AsyncComputeTaskPool::get().spawn(async move { handle.accept() });
 
     info!("PIE: {key} launched, awaiting connection");
@@ -3052,30 +2662,17 @@ fn spawn_instance(
         ChildStage::Connecting {
             child,
             accept,
-            stderr_tail,
+            output,
             since: Instant::now(),
         },
         mode,
     ))
 }
 
-/// Log the buffered stderr tail as an error, for diagnosing a crashed
-/// or unconnectable game.
-fn report_stderr_tail(stderr_tail: &StderrTail) {
-    if let Ok(buf) = stderr_tail.lock()
-        && !buf.is_empty()
-    {
-        let tail: Vec<&str> = buf.iter().map(String::as_str).collect();
-        error!("PIE: game stderr tail:\n{}", tail.join("\n"));
-    }
-}
-
-/// Drain `StateEvent`s from every live child. Events for every instance are
-/// always accumulated into that instance's [`InstanceBuffer`](crate::pie_mirror::InstanceBuffer) regardless of
-/// view mode, so the buffers always hold current game state and a Scene->Live
-/// toggle re-projects fresh data. Additionally, events from the focused instance
-/// are projected into the preview ECS via `project_event`, but only in Live mode.
-pub(crate) fn drain_game_events(world: &mut World) {
+/// Drain `StateEvent`s from every live child and show the newest frame of the
+/// focused one.
+#[doc(hidden)]
+pub fn drain_game_events(world: &mut World) {
     deliver_served_scenes(world);
 
     // Collect all pending (key, events) pairs without holding the session borrow.
@@ -3112,90 +2709,47 @@ pub(crate) fn drain_game_events(world: &mut World) {
     }
 
     for (key, events) in per_instance {
-        let count = events.len();
-
-        // Read focused before any mutable borrow so borrowck is satisfied.
-        let focused = world.resource::<PieInstances>().focused.clone();
-
-        // Establish focus on the first instance seen, regardless of view mode.
-        let focused = if focused.is_none() {
-            world.resource_mut::<PieInstances>().focused = Some(key.clone());
-            // First streamed data: content exists to show, so auto-enter Live.
-            // `reset_view_mode_on_stop` owns the revert when play stops.
-            if *world.resource::<crate::pie_mirror::PieViewMode>()
-                == crate::pie_mirror::PieViewMode::Scene
-            {
-                enter_live_view(world);
-            }
-            Some(key.clone())
-        } else {
-            focused
-        };
-
-        let is_focused = focused.as_ref() == Some(&key);
-
-        // Read after the auto-enter above so the first batch projects in the
-        // same drain it arrives.
-        let live_mode = *world.resource::<crate::pie_mirror::PieViewMode>()
-            == crate::pie_mirror::PieViewMode::Live;
-
+        let is_focused = world.resource::<PieInstances>().focused.as_ref() == Some(&key);
         for event in events {
-            // Mirror the focused game's cursor grab onto the editor before any
-            // buffering or projection; the cursor state is not scene data.
-            if let StateEvent::CursorState { grabbed, visible } = &event {
-                if is_focused {
-                    crate::live_input::note_game_cursor_state(world, *grabbed, *visible);
+            match event {
+                StateEvent::CursorState { grabbed, visible } => {
+                    if is_focused {
+                        crate::live_input::note_game_cursor_state(world, grabbed, visible);
+                    }
                 }
-                continue;
-            }
-            if let StateEvent::RequestScene { request, path } = &event {
-                answer_scene_request(world, &key, *request, path);
-                continue;
-            }
-            if let StateEvent::SceneRequestAbandoned { path } = &event {
-                let message = format!(
-                    "{key} stopped waiting for {path} and loaded the file, so it has no unsaved \
-                     edits and may not follow further ones"
-                );
-                warn!("PIE: {message}");
-                crate::status_bar::notify_warn(world, message);
-                continue;
-            }
-            if matches!(event, StateEvent::OwnWindow) {
-                if is_focused {
-                    world
-                        .resource_mut::<crate::live_frame::LiveFrameStream>()
-                        .game_has_own_window = true;
+                StateEvent::RequestScene { request, path } => {
+                    answer_scene_request(world, &key, request, &path);
                 }
-                continue;
-            }
-
-            // A log line from the focused game lands in the Game panel's
-            // recent-log face; it is not scene data either.
-            if let StateEvent::Log { level, message } = &event {
-                if is_focused {
-                    world
-                        .resource_mut::<crate::pie_game_log::PieGameLog>()
-                        .push(level.clone(), message.clone());
+                StateEvent::SceneRequestAbandoned { path } => {
+                    let message = format!(
+                        "{key} stopped waiting for {path} and loaded the file, so it has no \
+                         unsaved edits and may not follow further ones"
+                    );
+                    warn!("PIE: {message}");
+                    crate::status_bar::notify_warn(world, message);
                 }
-                continue;
-            }
-
-            // Always accumulate into the per-instance buffer.
-            world
-                .resource_mut::<PieInstances>()
-                .buffers
-                .entry(key.clone())
-                .or_default()
-                .apply(&event);
-
-            // Project into the preview world only for the focused instance in Live mode.
-            if live_mode && is_focused {
-                crate::pie_projection::project_event(world, event);
+                StateEvent::NodeSpawnFailed { node, reason } => {
+                    warn!("PIE: {key} could not spawn the node {node}: {reason}");
+                    crate::status_bar::notify_error(
+                        world,
+                        format!("{key} no longer matches the scene: a new entity failed: {reason}"),
+                    );
+                }
+                StateEvent::QueryAnswer { request, answer } => {
+                    crate::game_query::receive_answer(world, &key, request, answer);
+                }
+                StateEvent::Watched { watch, entities } => {
+                    crate::game_query::receive_watched(world, &key, watch, entities);
+                }
+                StateEvent::OwnWindow => {
+                    if is_focused {
+                        world
+                            .resource_mut::<crate::live_frame::LiveFrameStream>()
+                            .game_has_own_window = true;
+                    }
+                }
             }
         }
-
-        debug!("PIE: {key} received {count} state event(s)");
     }
 
     // Upload the newest pixel frame from the focused instance; earlier frames
@@ -3227,7 +2781,7 @@ mod play_status_tests {
         world.init_resource::<State<PlayState>>();
         let mut session = PieSession::default();
         session.builds.insert(
-            (PathBuf::from("project"), None),
+            PathBuf::from("project"),
             BuildState::Failed { launch: true },
         );
         world.insert_non_send(session);
@@ -3240,7 +2794,7 @@ mod play_status_tests {
         world.init_resource::<State<PlayState>>();
         let mut session = PieSession::default();
         session.builds.insert(
-            (PathBuf::from("project"), None),
+            PathBuf::from("project"),
             BuildState::Failed { launch: false },
         );
         world.insert_non_send(session);
@@ -3249,567 +2803,84 @@ mod play_status_tests {
 }
 
 #[cfg(test)]
-mod save_before_launch_tests {
+mod focus_tests {
     use super::*;
 
-    /// The open animation graph is authored state the game reads: a
-    /// dirty graph at launch time saves on the same chain (review item
-    /// The launch gate runs the savers feature crates registered: one that
-    /// reports an unsaved authored state blocks the launch (the graph face
-    /// of the T08-T3 closeout; the graph's own suite drives the dirty doc).
-    #[test]
-    fn a_saver_that_cannot_save_refuses_the_launch() {
-        let mut world = World::new();
-        world.init_resource::<crate::scenes::Scenes>();
-        world.init_resource::<crate::asset_index::AssetIndex>();
-        world.init_resource::<LaunchAssetSavers>();
-        world
-            .resource_mut::<LaunchAssetSavers>()
-            .0
-            .push(|_| vec!["the open animation graph".to_string()]);
-
-        let outcome = save_scenes_before_launch(&mut world, "playing");
-        let message = outcome.expect_err("a saver that refuses blocks the launch");
-        assert!(
-            message.contains("animation graph"),
-            "the refusal names the graph: {message}"
-        );
-    }
-
-    /// No savers registered (most worlds before the feature plugins run)
-    /// stays a pass-through, and a saver that saves nothing never blocks.
-    #[test]
-    fn absent_or_content_savers_never_block_the_launch() {
-        let mut world = World::new();
-        world.init_resource::<crate::scenes::Scenes>();
-        world.init_resource::<crate::asset_index::AssetIndex>();
-        assert!(
-            save_scenes_before_launch(&mut world, "playing").is_ok(),
-            "no savers: nothing to save"
-        );
-        world.init_resource::<LaunchAssetSavers>();
-        world
-            .resource_mut::<LaunchAssetSavers>()
-            .0
-            .push(|_| Vec::new());
-        assert!(
-            save_scenes_before_launch(&mut world, "playing").is_ok(),
-            "a saver that saves clean state is not the launch's business"
-        );
-    }
-
-    /// The launch chain saves dirty asset cards along with modified
-    /// scenes (the red half of the pair: main had no asset leg at all,
-    /// so a dirty card sailed through and the launch ran the file on
-    /// disk). Driven with a card the index does not know, so the asset
-    /// save fails and the whole chain must refuse.
-    #[test]
-    fn a_dirty_asset_the_chain_cannot_save_refuses_the_launch() {
-        let mut world = World::new();
-        world.init_resource::<crate::scenes::Scenes>();
-        world.init_resource::<crate::asset_index::AssetIndex>();
-        world.spawn(crate::definition_assets::DefinitionAssetEdit {
-            kind: "game_config".to_string(),
-            name: "game-config".to_string(),
-            type_path: "my_game::GameConfig".to_string(),
-            path: PathBuf::from("game-config.bsn"),
-            dirty: true,
-        });
-
-        let outcome = save_scenes_before_launch(&mut world, "playing");
-        let message = outcome.expect_err("a card the index does not know blocks the launch");
-        assert!(
-            message.contains("Not playing"),
-            "the refusal names the action: {message}"
-        );
-        assert!(
-            message.contains("game-config"),
-            "the refusal names the asset it could not save: {message}"
-        );
-    }
-}
-
-#[cfg(test)]
-mod save_to_scene_tests {
-    use bevy::ecs::reflect::AppTypeRegistry;
-    use jackdaw_bsn::SceneBsnAst;
-    use jackdaw_commands::CommandHistory;
-    use jackdaw_scene_types::SceneNodeId;
-
-    use super::*;
-    use crate::pie_projection::{PieEphemeral, PieProjection};
-    use crate::selection::Selection;
-
-    const TRANSFORM_PATH: &str = "bevy_transform::components::transform::Transform";
-
-    /// The whole authored Transform value stored on an entity's document node.
-    fn stored_transform(world: &World, entity: Entity) -> Option<jackdaw_bsn::BsnValue> {
-        let ast = world.resource::<SceneBsnAst>();
-        let node = ast.ast_for(entity)?;
-        jackdaw_bsn::get_bsn_field(ast, node, TRANSFORM_PATH, "")
-    }
-
-    /// Build a minimal world for Path A tests: an authored preview entity
-    /// carrying the LIVE transform value, bound to a document node that
-    /// stores the authored (identity) value, and a `PieProjection` entry
-    /// mapping `bits -> preview_entity`.
-    fn setup_path_a() -> (World, Entity, u64, jackdaw_bsn::BsnValue) {
-        let mut world = World::new();
-        let registry = AppTypeRegistry::default();
-        registry.write().register::<Transform>();
-        world.insert_resource(registry);
-        world.init_resource::<CommandHistory>();
-        world.init_resource::<PieProjection>();
-        world.insert_resource(PieViewMode::Live);
-
-        // Preview entity carries the LIVE value (as `project_event` would apply).
-        let live_transform = Transform::from_xyz(1.0, 2.0, 3.0);
-        let editor_entity = world.spawn(live_transform).id();
-
-        // The document node stores the authored (identity) value.
-        let registry = world.resource::<AppTypeRegistry>().clone();
-        let (authored_patch, live_value) = {
-            let reg = registry.read();
-            (
-                jackdaw_bsn::component_to_bsn_patch(&Transform::IDENTITY, &reg),
-                jackdaw_bsn::BsnValue::from_reflect(&live_transform, &reg),
-            )
-        };
-        let mut ast = SceneBsnAst::default();
-        let node = ast.create_entity_node(vec![authored_patch]);
-        ast.add_to_roots(node);
-        ast.link(editor_entity, node);
-        world.insert_resource(ast);
-
-        // PieProjection: bits -> preview entity. Selection: preview entity is selected.
-        let bits = 0xABCDu64;
-        world
-            .resource_mut::<PieProjection>()
-            .by_bits
-            .insert(bits, editor_entity);
-        world.insert_resource(Selection {
-            entities: vec![editor_entity],
-        });
-
-        (world, editor_entity, bits, live_value)
-    }
-
-    // ---- Path A tests ---------------------------------------------------
-
-    #[test]
-    fn path_a_promote_writes_live_values_to_ast_and_preview_ecs() {
-        let (mut world, editor_entity, _bits, live_value) = setup_path_a();
-
-        assert!(
-            can_save_live_to_scene(&world),
-            "authored entity with an AST node is saveable"
-        );
-
-        save_live_entity_to_scene(&mut world);
-
-        // The document node now holds the live Transform.
-        let stored =
-            stored_transform(&world, editor_entity).expect("transform present after promote");
-        assert!(
-            jackdaw_bsn::bsn_value_eq(&stored, &live_value),
-            "the document holds the promoted live Transform"
-        );
-
-        // The preview ECS entity was refreshed through SetBsnField.
-        let tf = world.get::<Transform>(editor_entity).copied().unwrap();
-        assert_eq!(tf.translation, Vec3::new(1.0, 2.0, 3.0));
-
-        // One undoable command was pushed.
-        assert_eq!(world.resource::<CommandHistory>().undo_stack.len(), 1);
-    }
-
-    #[test]
-    fn path_a_promote_is_undoable_back_to_authored_value() {
-        let (mut world, editor_entity, _bits, _live_value) = setup_path_a();
-        save_live_entity_to_scene(&mut world);
-
-        let mut cmd = world
-            .resource_mut::<CommandHistory>()
-            .undo_stack
-            .pop()
-            .expect("a command was pushed");
-        cmd.undo(&mut world);
-
-        let tf = world.get::<Transform>(editor_entity).copied().unwrap();
-        assert_eq!(
-            tf.translation,
-            Vec3::ZERO,
-            "undo restores the authored Transform"
-        );
-    }
-
-    // ---- Path B tests ---------------------------------------------------
-
-    /// Build a minimal world for Path B: a `PieEphemeral` preview entity
-    /// carrying a Transform, with a `PieProjection` entry and no AST node.
-    fn setup_path_b() -> (World, Entity, u64) {
-        let mut world = World::new();
-        let registry = AppTypeRegistry::default();
-        registry.write().register::<Transform>();
-        world.insert_resource(registry);
-        world.init_resource::<CommandHistory>();
-        world.init_resource::<PieProjection>();
-        world.insert_resource(PieViewMode::Live);
-        world.insert_resource(SceneBsnAst::default());
-        {
-            let registry = world.resource::<AppTypeRegistry>().clone();
-            registry.write().register::<SceneNodeId>();
-        }
-
-        // Ephemeral entity: game-spawned at runtime, never in the AST.
-        let ephemeral = world
-            .spawn((Transform::from_xyz(5.0, 6.0, 7.0), PieEphemeral))
-            .id();
-
-        let bits = 0xEF01u64;
-        world
-            .resource_mut::<PieProjection>()
-            .by_bits
-            .insert(bits, ephemeral);
-        world.insert_resource(Selection {
-            entities: vec![ephemeral],
-        });
-
-        (world, ephemeral, bits)
-    }
-
-    #[test]
-    fn path_b_ephemeral_entity_is_saveable() {
-        let (world, _ephemeral, _bits) = setup_path_b();
-        assert!(
-            can_save_live_to_scene(&world),
-            "ephemeral entity can be promoted to a new authored node"
-        );
-    }
-
-    #[test]
-    fn path_b_promote_creates_new_ast_node_with_components() {
-        let (mut world, ephemeral, _bits) = setup_path_b();
-
-        save_live_entity_to_scene(&mut world);
-
-        // A new document node should exist and be bound to the former
-        // ephemeral entity.
-        let ast = world.resource::<SceneBsnAst>();
-        let node = ast
-            .ast_for(ephemeral)
-            .expect("node is bound to the promoted entity");
-        assert!(
-            ast.component_type_paths(node)
-                .iter()
-                .any(|tp| tp == TRANSFORM_PATH),
-            "node carries the captured Transform"
-        );
-
-        // The entity now has a SceneNodeId and no longer PieEphemeral.
-        assert!(
-            world.get::<SceneNodeId>(ephemeral).is_some(),
-            "promoted entity carries a SceneNodeId"
-        );
-        assert!(
-            world.get::<PieEphemeral>(ephemeral).is_none(),
-            "PieEphemeral is removed after promotion"
-        );
-
-        // The document node's id matches the entity's SceneNodeId.
-        let node_id = world.get::<SceneNodeId>(ephemeral).copied().unwrap();
-        assert_eq!(ast.stable_id_of(node), Some(node_id.0));
-    }
-
-    // ---- guard / no-op tests -------------------------------------------
-
-    #[test]
-    fn no_selection_is_noop() {
-        let mut world = World::new();
-        world.init_resource::<PieProjection>();
-        world.insert_resource(PieViewMode::Live);
-        world.insert_resource(SceneBsnAst::default());
-        world.init_resource::<CommandHistory>();
-        world.insert_resource(Selection::default());
-
-        assert!(!can_save_live_to_scene(&world));
-        save_live_entity_to_scene(&mut world);
-        assert_eq!(world.resource::<CommandHistory>().undo_stack.len(), 0);
-    }
-
-    #[test]
-    fn no_projection_entry_is_noop() {
-        // The selected entity has no entry in PieProjection (e.g. a normal
-        // authored entity, not a live projection). The gate returns false.
-        let mut world = World::new();
-        world.init_resource::<PieProjection>();
-        world.insert_resource(PieViewMode::Live);
-        world.insert_resource(SceneBsnAst::default());
-        world.init_resource::<CommandHistory>();
-
-        // Spawn a non-projected entity and select it.
-        let stale = world.spawn_empty().id();
-        world.insert_resource(Selection {
-            entities: vec![stale],
-        });
-
-        assert!(!can_save_live_to_scene(&world));
-        save_live_entity_to_scene(&mut world);
-        assert_eq!(world.resource::<CommandHistory>().undo_stack.len(), 0);
-    }
-}
-
-#[cfg(test)]
-mod stop_cleanup_tests {
-    use bevy::ecs::reflect::AppTypeRegistry;
-    use bevy::reflect::TypePath;
-    use jackdaw_bsn::SceneBsnAst;
-    use jackdaw_commands::CommandHistory;
-
-    use super::*;
-    use crate::pie_mirror::{InstanceBuffer, PieMirrorEntry};
-    use crate::pie_projection::PieProjection;
-    use crate::scenes::Scenes;
-
-    #[derive(Component, Reflect, Default, PartialEq, Debug)]
-    #[reflect(Component)]
-    #[type_path = "stop_cleanup_tests"]
-    struct Mutable(i32);
-
-    fn instance_key(name: &str) -> InstanceKey {
+    fn key(instance: u32) -> InstanceKey {
         InstanceKey {
-            config: name.to_string(),
-            instance: 1,
+            config: "game".to_string(),
+            instance,
         }
     }
 
-    /// Minimal world that satisfies `cleanup_session_on_stop`: a registry with a
-    /// reflected component, a `PieProjection`, an authored AST node bound to a
-    /// preview entity, and the resources `revert_preview` touches. `Scenes` has
-    /// no tabs, so `respawn_scene_from_ast` no-ops while the despawn and map
-    /// clearing still run.
-    fn build_focus_world() -> World {
+    fn child() -> Child {
+        Command::new(std::env::current_exe().expect("the test binary"))
+            .arg("--list")
+            .stdout(Stdio::null())
+            .spawn()
+            .expect("a child")
+    }
+
+    fn transport() -> IpcChannelTransport {
+        let (handle, name) = serve().expect("a rendezvous");
+        let game =
+            std::thread::spawn(move || jackdaw_pie_protocol::connect(&name).expect("connect"));
+        let editor = handle.accept().expect("accept");
+        drop(game.join().expect("the game side"));
+        editor
+    }
+
+    fn world_with_games(games: &[u32]) -> World {
         let mut world = World::new();
-        world.init_resource::<AppTypeRegistry>();
-        {
-            let registry = world.resource::<AppTypeRegistry>().clone();
-            registry.write().register::<Mutable>();
-        }
-        world.init_resource::<PieProjection>();
-
-        let preview_entity = world.spawn(Mutable(0)).id();
-        let mut ast = SceneBsnAst::default();
-        let node = ast.create_entity_node(Vec::new());
-        ast.add_to_roots(node);
-        ast.link(preview_entity, node);
-        world.insert_resource(ast);
-
-        world.init_resource::<CommandHistory>();
-        world.init_resource::<Scenes>();
         world.init_resource::<PieInstances>();
-        world.insert_non_send(PieSession::default());
-        world
-    }
-
-    fn make_buffer_with_entity(bits: u64) -> InstanceBuffer {
-        let mut buf = InstanceBuffer::default();
-        let mut components = std::collections::HashMap::new();
-        components.insert(
-            <Mutable as TypePath>::type_path().to_string(),
-            serde_json::json!(bits as i32),
-        );
-        buf.entities.insert(
-            bits,
-            PieMirrorEntry {
-                components,
-                scene_node_id: None,
-            },
-        );
-        buf
-    }
-
-    #[test]
-    fn stop_cleanup_clears_session_state() {
-        let mut world = build_focus_world();
-        let key = instance_key("game");
-        world
-            .resource_mut::<PieInstances>()
-            .buffers
-            .insert(key.clone(), make_buffer_with_entity(0xA0));
-        world.resource_mut::<PieInstances>().focused = Some(key);
-        let ephemeral = world.spawn(crate::pie_projection::PieEphemeral).id();
-        world
-            .resource_mut::<crate::pie_projection::PieProjection>()
-            .by_bits
-            .insert(0xA0, ephemeral);
-
-        cleanup_session_on_stop(&mut world);
-
-        let instances = world.resource::<PieInstances>();
-        assert!(instances.buffers.is_empty());
-        assert!(instances.focused.is_none());
-        assert!(world.get_entity(ephemeral).is_err());
-        assert!(
-            world
-                .resource::<crate::pie_projection::PieProjection>()
-                .by_bits
-                .is_empty()
-        );
-    }
-
-    #[test]
-    fn pick_result_selects_the_projected_entity() {
-        let mut world = build_focus_world();
-        let preview = world.spawn_empty().id();
-        world
-            .resource_mut::<crate::pie_projection::PieProjection>()
-            .by_bits
-            .insert(0xC3, preview);
-        world.init_resource::<crate::selection::Selection>();
-
-        crate::pie::handle_pick_result(&mut world, Some(0xC3));
-        assert!(
-            world
-                .resource::<crate::selection::Selection>()
-                .is_selected(preview)
-        );
-
-        // Unresolvable bits and None are no-ops, not panics.
-        crate::pie::handle_pick_result(&mut world, Some(0xDEAD));
-        crate::pie::handle_pick_result(&mut world, None);
-    }
-
-    /// Stop deletes the temporary run copies the session wrote and forgets
-    /// every scene override it recorded, so the next session starts clean
-    /// and nothing accumulates under `assets/.jackdaw-pie/`.
-    #[test]
-    fn stop_cleanup_deletes_temp_copies_and_scene_overrides() {
-        let mut world = build_focus_world();
-        let dir = tempfile::tempdir().expect("tempdir");
-        let copy = dir.path().join("current-untitled-0-4242.bsn");
-        std::fs::write(&copy, "#Unsaved\n").expect("the temp copy");
-        {
-            let mut session = world.non_send_mut::<PieSession>();
-            session.temp_copies.push(copy.clone());
-            session.scene_overrides.insert(
-                instance_key("game"),
-                crate::pie_current::SceneOverrideLaunch {
-                    assets_relative: ".jackdaw-pie/current-untitled-0-4242.bsn".to_string(),
-                    temp_copy: Some(copy.clone()),
-                    from_temp_copy: true,
-                },
-            );
+        world.init_resource::<crate::live_frame::LiveFrameStream>();
+        let mut session = PieSession::default();
+        for &game in games {
+            session.insert_test_live(key(game), child(), transport());
         }
+        world.insert_non_send(session);
+        world
+    }
 
+    #[test]
+    fn a_connected_game_takes_focus_without_sending_anything() {
+        let mut world = world_with_games(&[2, 1]);
+        reconcile_focus(&mut world);
+        assert_eq!(world.resource::<PieInstances>().focused, Some(key(1)));
+    }
+
+    #[test]
+    fn focus_stays_on_a_connected_instance_and_leaves_one_that_went() {
+        let mut world = world_with_games(&[1, 2]);
+        world.resource_mut::<PieInstances>().focused = Some(key(2));
+        reconcile_focus(&mut world);
+        assert_eq!(world.resource::<PieInstances>().focused, Some(key(2)));
+
+        let mut gone = world
+            .non_send_mut::<PieSession>()
+            .children
+            .remove(&key(2))
+            .expect("the instance");
+        gone.kill_and_reap();
+        reconcile_focus(&mut world);
+        assert_eq!(world.resource::<PieInstances>().focused, Some(key(1)));
+    }
+
+    #[test]
+    fn the_next_instance_wraps_and_needs_two() {
+        assert_eq!(next_instance(vec![key(1)], Some(&key(1))), None);
+        let keys = vec![key(2), key(1), key(3)];
+        assert_eq!(next_instance(keys.clone(), Some(&key(1))), Some(key(2)));
+        assert_eq!(next_instance(keys.clone(), Some(&key(3))), Some(key(1)));
+        assert_eq!(next_instance(keys, None), Some(key(1)));
+    }
+
+    #[test]
+    fn stopping_clears_focus() {
+        let mut world = world_with_games(&[]);
+        world.resource_mut::<PieInstances>().focused = Some(key(1));
         cleanup_session_on_stop(&mut world);
-
-        assert!(
-            !copy.exists(),
-            "the temporary run copy is deleted when play stops"
-        );
-        let session = world.non_send::<PieSession>();
-        assert!(session.temp_copies.is_empty());
-        assert!(session.scene_overrides.is_empty());
-    }
-
-    /// A temp copy that is already gone (another editor on the project
-    /// swept it, or the user deleted it) is not an error: the rest of the
-    /// cleanup still runs.
-    #[test]
-    fn stop_cleanup_tolerates_an_already_missing_temp_copy() {
-        let mut world = build_focus_world();
-        let missing = std::env::temp_dir().join("jackdaw-no-such-pie-copy-4242.bsn");
-        {
-            let mut session = world.non_send_mut::<PieSession>();
-            session.temp_copies.push(missing.clone());
-        }
-        cleanup_session_on_stop(&mut world);
-        assert!(world.non_send::<PieSession>().temp_copies.is_empty());
-    }
-
-    /// `record_scene_override` is the one choke point both spawn paths
-    /// (cached binary and build-completion) go through: the override lands
-    /// under its instance key, and a temp copy is registered once no
-    /// matter how many instances share it.
-    #[test]
-    fn recording_an_override_dedupes_shared_temp_copies() {
-        let mut world = build_focus_world();
-        let dir = tempfile::tempdir().expect("tempdir");
-        let copy = dir.path().join("current-zone-0-4242.bsn");
-        let launch = crate::pie_current::SceneOverrideLaunch {
-            assets_relative: ".jackdaw-pie/current-zone-0-4242.bsn".to_string(),
-            temp_copy: Some(copy.clone()),
-            from_temp_copy: true,
-        };
-        let first = InstanceKey {
-            config: "Play".to_string(),
-            instance: 1,
-        };
-        let second = InstanceKey {
-            config: "Play".to_string(),
-            instance: 2,
-        };
-        record_scene_override(&mut world, &first, Some(&launch));
-        record_scene_override(&mut world, &second, Some(&launch));
-
-        let session = world.non_send::<PieSession>();
-        assert_eq!(
-            session
-                .scene_override(&first)
-                .map(|o| o.assets_relative.as_str()),
-            Some(".jackdaw-pie/current-zone-0-4242.bsn")
-        );
-        assert!(session.scene_override(&second).is_some());
-        assert_eq!(
-            session.temp_copies.len(),
-            1,
-            "two instances sharing one copy register it once"
-        );
-
-        // A startup-scene launch records nothing: the override map stays
-        // the current-scene launches' alone.
-        let third = InstanceKey {
-            config: "Play".to_string(),
-            instance: 3,
-        };
-        record_scene_override(&mut world, &third, None);
-        assert!(
-            world
-                .non_send::<PieSession>()
-                .scene_override(&third)
-                .is_none()
-        );
-    }
-}
-
-#[cfg(test)]
-mod enter_live_tests {
-    use super::*;
-    use crate::pie_projection::PieProjection;
-
-    #[test]
-    fn enter_live_view_flips_mode_to_live() {
-        let mut world = World::new();
-        world.insert_resource(PieViewMode::Scene);
-        world.init_resource::<PieInstances>();
-        world.init_resource::<PieProjection>();
-
-        enter_live_view(&mut world);
-
-        assert_eq!(*world.resource::<PieViewMode>(), PieViewMode::Live);
-    }
-
-    #[test]
-    fn enter_live_view_keeps_an_owed_respawn() {
-        let mut world = World::new();
-        world.insert_resource(PieViewMode::Scene);
-        world.init_resource::<PieInstances>();
-        world.init_resource::<PieProjection>();
-        world.resource_mut::<PieProjection>().needs_respawn = true;
-
-        enter_live_view(&mut world);
-
-        assert!(world.resource::<PieProjection>().needs_respawn);
+        assert_eq!(world.resource::<PieInstances>().focused, None);
     }
 
     #[test]
@@ -3821,45 +2892,6 @@ mod enter_live_tests {
         assert_eq!(mode, PieWindowMode::Windowed);
         toggle_window_mode(&mut mode);
         assert_eq!(mode, PieWindowMode::Embedded);
-    }
-
-    /// A run's own `BEVY_ASSET_ROOT` beats the launch default, the same
-    /// user-env-wins order the CLI's `jd run --config` launch applies;
-    /// a run that names none gets the project root, where Play has
-    /// always found assets.
-    #[test]
-    fn a_runs_own_asset_root_beats_the_launch_default() {
-        let mut command = Command::new("game");
-        apply_run_env(
-            &mut command,
-            Path::new("/game"),
-            &std::collections::BTreeMap::new(),
-        );
-        assert_eq!(
-            command
-                .get_envs()
-                .find(|(key, _)| *key == std::ffi::OsStr::new("BEVY_ASSET_ROOT")),
-            Some((
-                std::ffi::OsStr::new("BEVY_ASSET_ROOT"),
-                Some(std::ffi::OsStr::new("/game"))
-            )),
-            "with no run env the project root is the asset root"
-        );
-
-        let mut env = std::collections::BTreeMap::new();
-        env.insert("BEVY_ASSET_ROOT".to_string(), "/custom/assets".to_string());
-        let mut command = Command::new("game");
-        apply_run_env(&mut command, Path::new("/game"), &env);
-        assert_eq!(
-            command
-                .get_envs()
-                .find(|(key, _)| *key == std::ffi::OsStr::new("BEVY_ASSET_ROOT")),
-            Some((
-                std::ffi::OsStr::new("BEVY_ASSET_ROOT"),
-                Some(std::ffi::OsStr::new("/custom/assets"))
-            )),
-            "the run's own value beats the cwd default"
-        );
     }
 }
 
@@ -3890,6 +2922,7 @@ mod source_change_tests {
 #[cfg(test)]
 mod build_failure_tests {
     use super::*;
+    use crate::build_status::BuildStatus;
 
     #[test]
     fn a_compile_failure_reports_its_first_diagnostic() {
@@ -3918,7 +2951,7 @@ mod build_failure_tests {
     #[test]
     fn a_failed_build_stays_on_screen_naming_its_error_until_the_next_build() {
         let mut world = World::new();
-        world.init_resource::<crate::build_status::BuildStatus>();
+        world.init_resource::<BuildStatus>();
         let task = AsyncComputeTaskPool::get_or_init(bevy::tasks::TaskPool::default).spawn(async {
             Err(io::Error::other(
                 "error[E0560]: no field (src/lib.rs:40:13)",
@@ -3931,9 +2964,9 @@ mod build_failure_tests {
         output.push_log("  --> src/lib.rs:40:13".to_string());
         let mut session = PieSession::default();
         session.builds.insert(
-            (PathBuf::from("my-game"), None),
+            PathBuf::from("my-game"),
             BuildState::Running {
-                task,
+                task: task.into(),
                 pending: Vec::new(),
                 progress: Arc::new(Mutex::new(output)),
             },
@@ -3941,14 +2974,12 @@ mod build_failure_tests {
         world.insert_non_send(session);
 
         poll_builds(&mut world);
-        world
-            .resource_mut::<crate::build_status::BuildStatus>()
-            .state = crate::build_status::BuildState::Failed {
+        world.resource_mut::<BuildStatus>().state = crate::build_status::BuildState::Failed {
             at: Instant::now() - Duration::from_secs(60),
         };
-        reconcile_build_status(&mut world);
+        crate::project_build::reconcile_build_status(&mut world);
 
-        let status = world.resource::<crate::build_status::BuildStatus>();
+        let status = world.resource::<BuildStatus>();
         assert!(
             matches!(status.state, crate::build_status::BuildState::Failed { .. }),
             "the failure has not faded"
@@ -3970,15 +3001,17 @@ mod build_failure_tests {
         );
 
         world.non_send_mut::<PieSession>().builds.insert(
-            (PathBuf::from("my-game"), None),
+            PathBuf::from("my-game"),
             BuildState::Running {
-                task: AsyncComputeTaskPool::get().spawn(std::future::pending()),
+                task: AsyncComputeTaskPool::get()
+                    .spawn(std::future::pending())
+                    .into(),
                 pending: Vec::new(),
                 progress: Arc::default(),
             },
         );
-        reconcile_build_status(&mut world);
-        let status = world.resource::<crate::build_status::BuildStatus>();
+        crate::project_build::reconcile_build_status(&mut world);
+        let status = world.resource::<BuildStatus>();
         assert!(
             matches!(
                 status.state,
@@ -4064,6 +3097,37 @@ mod control_outbox_tests {
         world.init_resource::<NextState<PlayState>>();
         world.insert_non_send(session);
         world
+    }
+
+    #[test]
+    fn a_spawn_the_game_refused_shows_in_the_status_bar() {
+        let (editor, mut game) = link();
+        let mut world = world_with_game(editor);
+        world.insert_resource(PieInstances {
+            focused: Some(key()),
+        });
+        world.init_resource::<crate::status_bar::StatusNotice>();
+        let failed = StateEvent::NodeSpawnFailed {
+            node: 7,
+            reason: "it does not parse".to_string(),
+        };
+        game.send(PieChannel::Reliable, &to_bytes(&failed).expect("encode"));
+
+        let deadline = Instant::now() + GUARD;
+        while !world
+            .resource::<crate::status_bar::StatusNotice>()
+            .is_active()
+        {
+            assert!(Instant::now() < deadline, "the user was never told");
+            drain_game_events(&mut world);
+            thread::sleep(Duration::from_millis(1));
+        }
+        let notice = world.resource::<crate::status_bar::StatusNotice>();
+        assert!(
+            notice.text().contains("it does not parse"),
+            "{}",
+            notice.text()
+        );
     }
 
     /// Run `work` on its own thread, failing rather than hanging if it stalls.
@@ -4175,21 +3239,16 @@ mod control_outbox_tests {
     }
 
     /// A multi-megabyte document answered while the game sends a multi-megabyte
-    /// state: neither main thread stalls on the other.
+    /// frame: neither main thread stalls on the other.
     #[test]
-    fn a_large_document_is_answered_while_the_game_streams_a_large_state() {
+    fn a_large_document_is_answered_while_the_game_sends_a_large_frame() {
         let dir = tempfile::tempdir().expect("a temp dir");
         let assets = dir.path().to_path_buf();
         let (editor, mut game) = link();
         let answered = Arc::new(AtomicBool::new(false));
         let answered_in_game = answered.clone();
         let game_side = thread::spawn(move || {
-            let state = StateEvent::ComponentChanged {
-                entity: 1,
-                type_path: "x".repeat(LARGE),
-                value: serde_json::Value::Null,
-            };
-            game.send(PieChannel::Reliable, &to_bytes(&state).expect("encode"));
+            game.send(PieChannel::Frames, &vec![0; LARGE]);
             let request = StateEvent::RequestScene {
                 request: 3,
                 path: "zone.bsn".to_string(),
@@ -4223,11 +3282,8 @@ mod control_outbox_tests {
                 active: 0,
             });
             world.insert_resource(PieInstances {
-                buffers: HashMap::default(),
                 focused: Some(key()),
             });
-            world.insert_resource(PieViewMode::Scene);
-            world.init_resource::<crate::pie_projection::PieProjection>();
             let patch = jackdaw_bsn::BsnPatch::Name("x".repeat(LARGE));
             let mut ast = jackdaw_bsn::SceneBsnAst::default();
             let node = ast.create_entity_node(vec![patch]);
@@ -4559,7 +3615,6 @@ mod control_outbox_tests {
     }
 
     #[test]
-    #[ignore = "merge TBD: the upstream immediate-stop semantics vs the Loop graceful-stop window — `stop_instance` arms a 2s deadline the stalled game cannot honor, and this upstream test expects an immediate reap its poll loop never reaches in a 30s bound. Ruling pending: keep graceful (local) and adapt the test, or adopt immediate stop (upstream) for stalled children"]
     fn stopping_with_a_stalled_game_returns_at_once() {
         let (editor, game) = link();
         guarded("stopping", move || {
@@ -4573,857 +3628,361 @@ mod control_outbox_tests {
 }
 
 #[cfg(test)]
-mod build_key_tests {
+mod transport_tests {
+    use std::thread;
+
+    use jackdaw_pie_protocol::{connect, event::from_bytes};
+
     use super::*;
 
-    fn run_from(toml_text: &str) -> RunConfig {
-        let manifest: jackdaw_pie_protocol::manifest::Manifest = toml::from_str(toml_text).unwrap();
-        manifest.runs.into_iter().next().unwrap()
-    }
-
-    #[test]
-    fn runs_without_a_target_share_the_default_build() {
-        let run = run_from("[[run]]\nname = \"Play\"");
-        assert_eq!(
-            build_key(Path::new("/game"), &run),
-            (PathBuf::from("/game"), None)
-        );
-    }
-
-    #[test]
-    fn a_run_with_a_target_gets_its_own_key() {
-        let run = run_from("[[run]]\ntarget = { bin = \"server\" }");
-        assert_eq!(
-            build_key(Path::new("/game"), &run).1,
-            Some(CargoTarget {
-                bin: Some("server".to_string()),
-                ..CargoTarget::default()
-            })
-        );
-    }
-
-    /// The collision this keying exists to prevent: playing bin A and
-    /// then example B at the same root must not share a cache entry,
-    /// or the second launch would run the first's binary.
-    #[test]
-    fn same_root_different_targets_do_not_collide() {
-        let bin = run_from("[[run]]\ntarget = { bin = \"server\" }");
-        let example = run_from("[[run]]\ntarget = { example = \"split_screen\" }");
-        assert_ne!(
-            build_key(Path::new("/game"), &bin),
-            build_key(Path::new("/game"), &example)
-        );
-        // The same target under the same root is one entry, whatever
-        // else the run config sets.
-        let bin_again = run_from("[[run]]\ninstances = 2\ntarget = { bin = \"server\" }");
-        assert_eq!(
-            build_key(Path::new("/game"), &bin),
-            build_key(Path::new("/game"), &bin_again)
-        );
-    }
-}
-
-#[cfg(test)]
-mod prebuild_tests {
-    use super::*;
-
-    /// A world where `prebuild_play_target` would run, over a project root
-    /// naming no cargo package so nothing is actually spawned.
-    fn world_ready_to_prebuild(prebuild: bool) -> World {
-        let mut world = World::new();
-        world.init_resource::<crate::project_build::PiePrebuildState>();
-        world.init_resource::<crate::build_status::BuildStatus>();
-        world.insert_resource(RunConfigs::default());
-        world.insert_resource(crate::project_build::EditorBuildSettings {
-            auto_build: false,
-            prebuild,
-            save_before_play: SaveBeforePlay::default(),
-        });
-        world.insert_resource(crate::project::ProjectRoot {
-            root: std::env::temp_dir().join("jackdaw-prebuild-test-no-such-project"),
-            config: default(),
-        });
-        world.insert_non_send(PieSession::default());
-        world
-    }
-
-    #[test]
-    fn the_setting_off_starts_no_build() {
-        let mut world = world_ready_to_prebuild(false);
-
-        crate::project_build::prebuild_play_target(&mut world);
-
-        assert!(world.non_send::<PieSession>().builds.is_empty());
-        assert!(matches!(
-            world.resource::<crate::build_status::BuildStatus>().state,
-            crate::build_status::BuildState::Idle
-        ));
-        assert!(
-            world
-                .resource::<crate::project_build::PiePrebuildState>()
-                .attempted
-        );
-    }
-
-    #[test]
-    fn the_setting_on_reaches_the_build_attempt() {
-        let mut world = world_ready_to_prebuild(true);
-
-        crate::project_build::prebuild_play_target(&mut world);
-
-        assert!(matches!(
-            world.resource::<crate::build_status::BuildStatus>().state,
-            crate::build_status::BuildState::Blocked { .. }
-        ));
-    }
-
-    /// The pre-build warms what Play starts first: a first run naming a
-    /// cargo target has its own key, so a warm default entry must not
-    /// satisfy it (the root here names no package, so the attempt ends
-    /// blocked — the point is that it attempted at all).
-    #[test]
-    fn a_first_run_with_a_target_prebuilds_under_its_own_key() {
-        let mut world = world_ready_to_prebuild(true);
-        let root = world.resource::<crate::project::ProjectRoot>().root.clone();
-        world.non_send_mut::<PieSession>().builds.insert(
-            (root.clone(), None),
-            BuildState::Done(PathBuf::from("nowhere")),
-        );
-        world.resource_mut::<RunConfigs>().manifest = toml::from_str(
-            r#"[[run]]
-name = "Echo"
-target = { example = "schema_echo" }"#,
-        )
-        .unwrap();
-
-        crate::project_build::prebuild_play_target(&mut world);
-
-        assert!(
-            matches!(
-                world.resource::<crate::build_status::BuildStatus>().state,
-                crate::build_status::BuildState::Blocked { .. }
-            ),
-            "the pre-build proceeded past the warm default entry"
-        );
-        // And the warm default entry survived untouched.
-        assert!(matches!(
-            world.non_send::<PieSession>().builds.get(&(root, None)),
-            Some(BuildState::Done(_))
-        ));
-    }
-
-    #[test]
-    fn a_first_run_without_a_target_reuses_the_default_build() {
-        let mut world = world_ready_to_prebuild(true);
-        let root = world.resource::<crate::project::ProjectRoot>().root.clone();
-        world
-            .non_send_mut::<PieSession>()
-            .builds
-            .insert((root, None), BuildState::Done(PathBuf::from("nowhere")));
-        world.resource_mut::<RunConfigs>().manifest =
-            toml::from_str("[[run]]\nname = \"Play\"").unwrap();
-
-        crate::project_build::prebuild_play_target(&mut world);
-
-        // Early return on the warm default entry: nothing new started.
-        assert_eq!(world.non_send::<PieSession>().builds.len(), 1);
-        assert!(matches!(
-            world.resource::<crate::build_status::BuildStatus>().state,
-            crate::build_status::BuildState::Idle
-        ));
-    }
-
-    #[test]
-    fn only_an_explicit_off_disables_the_prebuild() {
-        assert!(crate::project_build::env_allows_prebuild(None));
-        assert!(crate::project_build::env_allows_prebuild(Some("1")));
-        assert!(crate::project_build::env_allows_prebuild(Some("yes")));
-        assert!(!crate::project_build::env_allows_prebuild(Some("0")));
-        assert!(!crate::project_build::env_allows_prebuild(Some("false")));
-        assert!(!crate::project_build::env_allows_prebuild(Some(" ")));
-    }
-
-    /// A first run whose target cannot become a cargo command must not
-    /// burn a background build into a key no launch will consume (the
-    /// launch door refuses it); the reason reaches the build status.
-    #[test]
-    fn an_invalid_first_run_target_blocks_instead_of_building() {
-        let mut world = world_ready_to_prebuild(true);
-        world.resource_mut::<RunConfigs>().manifest = toml::from_str(
-            r#"[[run]]
-name = "Broken"
-target = { bin = "a", example = "b" }"#,
-        )
-        .unwrap();
-
-        crate::project_build::prebuild_play_target(&mut world);
-
-        assert!(
-            world.non_send::<PieSession>().builds.is_empty(),
-            "nothing was pre-built under a key no launch can consume"
-        );
-        match &world.resource::<crate::build_status::BuildStatus>().state {
-            crate::build_status::BuildState::Blocked { reason } => {
-                assert!(reason.contains("both"), "got {reason}");
-            }
-            _ => panic!("the invalid target blocks the pre-build"),
-        }
-        assert!(
-            world
-                .resource::<crate::project_build::PiePrebuildState>()
-                .attempted
-        );
-    }
-
-    /// A metadata failure must stand down rather than block Play: the
-    /// build itself reports it in its own words. A directory cargo
-    /// cannot read metadata for exercises exactly that.
-    #[test]
-    fn a_preflight_without_metadata_lets_the_build_speak() {
-        let root =
-            std::env::temp_dir().join(format!("jackdaw-preflight-none-{}", std::process::id()));
-        let _ = std::fs::remove_dir_all(&root);
-        std::fs::create_dir_all(&root).unwrap();
-
-        let target = CargoTarget {
-            bin: Some("server".to_string()),
-            ..CargoTarget::default()
-        };
-        assert!(crate::project_build::preflight_run_target(&root, "my-game", &target).is_ok());
-
-        let _ = std::fs::remove_dir_all(&root);
-    }
-
-    #[test]
-    fn a_compile_failure_reports_its_first_diagnostic() {
-        let log = "Compiling aldermoor-client\nerror[E0432]: unresolved import `foo`\n".to_string();
-        let error = crate::project_build::ProjectBuildError::Compile { log: log.clone() };
-
-        let summary = failure_summary(&error, &log);
-
-        assert!(summary.contains("E0432"), "{summary}");
-    }
-
-    #[test]
-    fn a_compile_failure_says_where_its_first_diagnostic_points() {
-        let log = "error[E0560]: struct `PointLight` has no field named `shadows_enabled`\n  \
-                   --> src/lib.rs:40:13\n   |\n\nerror: could not compile `game`\n"
-            .to_string();
-        let error = crate::project_build::ProjectBuildError::Compile { log: log.clone() };
-
-        assert_eq!(
-            failure_summary(&error, &log),
-            "error[E0560]: struct `PointLight` has no field named `shadows_enabled` \
-             (src/lib.rs:40:13)"
-        );
-    }
-
-    #[test]
-    fn a_failed_build_stays_on_screen_naming_its_error_until_the_next_build() {
-        let mut world = World::new();
-        world.init_resource::<crate::build_status::BuildStatus>();
-        let task = AsyncComputeTaskPool::get_or_init(bevy::tasks::TaskPool::default).spawn(async {
-            Err(io::Error::other(
-                "error[E0560]: no field (src/lib.rs:40:13)",
-            ))
-        });
-        while !task.is_finished() {
-            std::thread::yield_now();
-        }
-        let mut output = BuildProgress::default();
-        output.push_log("  --> src/lib.rs:40:13".to_string());
-        let mut session = PieSession::default();
-        session.builds.insert(
-            (PathBuf::from("my-game"), None),
-            BuildState::Running {
-                task,
-                pending: Vec::new(),
-                progress: Arc::new(Mutex::new(output)),
-            },
-        );
-        world.insert_non_send(session);
-
-        poll_builds(&mut world);
-        world
-            .resource_mut::<crate::build_status::BuildStatus>()
-            .state = crate::build_status::BuildState::Failed {
-            at: Instant::now() - Duration::from_secs(60),
-        };
-        reconcile_build_status(&mut world);
-
-        let status = world.resource::<crate::build_status::BuildStatus>();
-        assert!(
-            matches!(status.state, crate::build_status::BuildState::Failed { .. }),
-            "the failure has not faded"
-        );
-        assert!(
-            status
-                .outcome
-                .as_deref()
-                .is_some_and(|o| o.contains("E0560")),
-            "and it names the error: {:?}",
-            status.outcome
-        );
-        assert!(
-            status
-                .failed_log
-                .as_deref()
-                .is_some_and(|log| log.contains("src/lib.rs:40:13")),
-            "with the compiler output kept for the Build panel"
-        );
-
-        world.non_send_mut::<PieSession>().builds.insert(
-            (PathBuf::from("my-game"), None),
-            BuildState::Running {
-                task: AsyncComputeTaskPool::get().spawn(std::future::pending()),
-                pending: Vec::new(),
-                progress: Arc::default(),
-            },
-        );
-        reconcile_build_status(&mut world);
-        let status = world.resource::<crate::build_status::BuildStatus>();
-        assert!(
-            matches!(
-                status.state,
-                crate::build_status::BuildState::Building { .. }
-            ) && status.outcome.is_none()
-                && status.failed_log.is_none(),
-            "the next build replaces it"
-        );
-    }
-
-    #[test]
-    fn a_failure_with_no_diagnostic_falls_back_to_the_error() {
-        let error = crate::project_build::ProjectBuildError::Compile { log: String::new() };
-
-        assert_eq!(failure_summary(&error, ""), error.to_string());
-    }
-}
-
-#[cfg(test)]
-mod graceful_stop_tests {
-    use super::*;
-    use jackdaw_pie_protocol::connect;
-
-    /// A transport pair standing in for the editor-game link: the test
-    /// owns both ends, so a Live stage exists without a game process.
-    fn loopback_transport() -> IpcChannelTransport {
-        let (handle, name) = serve().expect("serve");
-        std::thread::spawn(move || {
-            let _ = handle.accept();
-        });
-        connect(&name).expect("connect")
-    }
-
-    fn quiet_tail() -> StderrTail {
-        Arc::new(Mutex::new(VecDeque::new()))
-    }
-
-    /// A child that lives until killed (seconds of margin beyond any
-    /// deadline this file arms).
-    fn long_lived_child() -> Child {
-        let mut command = Command::new(LONG_LIVED_COMMAND);
-        command.args(LONG_LIVED_ARGS);
-        command.stdout(Stdio::null()).stderr(Stdio::null());
-        command.spawn().expect("spawn the long-lived child")
-    }
-
-    #[cfg(windows)]
-    const LONG_LIVED_COMMAND: &str = "cmd";
-    #[cfg(windows)]
-    const LONG_LIVED_ARGS: &[&str] = &["/c", "ping", "-n", "30", "127.0.0.1"];
-    #[cfg(not(windows))]
-    const LONG_LIVED_COMMAND: &str = "sleep";
-    #[cfg(not(windows))]
-    const LONG_LIVED_ARGS: &[&str] = &["30"];
+    const GUARD: Duration = Duration::from_secs(30);
 
     fn key() -> InstanceKey {
         InstanceKey {
-            config: "graceful".to_string(),
+            config: "Game".to_string(),
             instance: 1,
         }
     }
 
-    fn live_stage(child: Child, stop_deadline: Option<Instant>) -> ChildStage {
-        let transport = loopback_transport();
-        let outbox = GameOutbox::new(&transport).expect("a writer thread");
-        ChildStage::Live {
-            child,
-            transport,
-            outbox,
-            stderr_tail: quiet_tail(),
-            stop_deadline,
-        }
+    /// A process standing in for the game; it exits on its own.
+    fn child() -> Child {
+        Command::new(std::env::current_exe().expect("the test binary"))
+            .arg("--list")
+            .stdout(Stdio::null())
+            .stderr(Stdio::null())
+            .spawn()
+            .expect("a child process")
     }
 
-    /// Inside the window a child that has not exited keeps its stage: the
-    /// graceful exit it was promised is still possible.
-    #[test]
-    fn inside_the_window_the_stage_is_kept() {
-        let stage = live_stage(
-            long_lived_child(),
-            Some(Instant::now() + GRACEFUL_STOP_DEADLINE),
-        );
-        let key = key();
-        match advance_child(&key, stage) {
-            Some(ChildStage::Live { stop_deadline, .. }) => {
-                assert!(stop_deadline.is_some(), "the deadline rides along");
-            }
-            _ => panic!("a live child inside the window must keep its stage"),
-        }
+    fn link() -> (IpcChannelTransport, IpcChannelTransport) {
+        let (server, name) = serve().expect("a rendezvous");
+        let accept = thread::spawn(move || server.accept());
+        let game = connect(&name).expect("the game connects");
+        let editor = accept
+            .join()
+            .expect("accept ran")
+            .expect("the editor accepts");
+        (editor, game)
     }
 
-    /// A child that exits inside the window is reaped by the graceful
-    /// path — no kill was needed, the stage simply drops.
-    #[test]
-    fn a_self_exit_inside_the_window_is_graceful() {
-        let mut child = long_lived_child();
-        // A stop it obeys instantly: exit on its own inside the window.
-        child.kill().ok();
-        child.wait().ok();
-        let stage = live_stage(
-            long_lived_child(),
-            Some(Instant::now() + GRACEFUL_STOP_DEADLINE),
-        );
-        let key = key();
-        // The first child already exited (killed above as the stand-in for
-        // an obedient game); a fresh one proves the running branch, and a
-        // second call after it is killed proves the exit branch.
-        drop(child);
-        let mut stage = stage;
-        if let ChildStage::Live { child, .. } = &mut stage {
-            child.kill().ok();
-            child.wait().ok();
-        }
-        assert!(
-            advance_child(&key, stage).is_none(),
-            "an exited child is reaped, not kept"
-        );
-    }
-
-    /// A connecting child does not put the editor into Playing: the stop
-    /// gate stays closed over the connect window (a stop fired into it
-    /// comes back cancelled — callers retry), because the
-    /// stop-that-kills-a-connecting-child path is the one that spins the
-    /// main thread (see `reconcile_play_state`). Regression anchor for
-    /// that conservative choice.
-    #[test]
-    fn a_connecting_child_keeps_the_editor_stopped() {
-        use bevy::tasks::AsyncComputeTaskPool;
-        let mut app = App::new();
-        app.add_plugins(bevy::app::TaskPoolPlugin::default());
-        app.add_plugins(bevy::state::app::StatesPlugin);
-        app.init_state::<PlayState>();
-        app.world_mut().insert_non_send(PieSession::default());
-
-        let (handle, name) = serve().expect("serve");
-        drop(handle);
-        drop(name);
-        let accept = AsyncComputeTaskPool::get()
-            .spawn(std::future::pending::<io::Result<IpcChannelTransport>>());
-        let child = long_lived_child();
-        let stage = ChildStage::Connecting {
-            child,
-            accept,
-            stderr_tail: quiet_tail(),
-            since: Instant::now(),
-        };
-        app.world_mut()
-            .non_send_mut::<PieSession>()
-            .children
-            .insert(key(), stage);
-
-        reconcile_play_state(app.world_mut());
-        app.update();
-
-        assert_eq!(
-            *app.world().resource::<State<PlayState>>().get(),
-            PlayState::Stopped,
-            "the stop gate stays closed over the connect window"
-        );
-    }
-
-    /// Past the deadline a child that ignored the stop is killed 鈥?exactly
-    /// once, reaped synchronously (the stage drops with this call, so no
-    /// later tick can touch the child again).
-    #[test]
-    fn past_the_deadline_the_child_is_killed_once() {
-        let child = long_lived_child();
-        let pid = child.id();
-        let stage = live_stage(child, Some(Instant::now() - GRACEFUL_STOP_DEADLINE));
-        let key = key();
-        let out = advance_child(&key, stage);
-        assert!(out.is_none(), "the expired child is reaped");
-        // `kill().ok(); wait().ok()` inside advance_child reaped it: the
-        // pid is gone by the time the call returns. On Windows a killed
-        // pid may be reused, so prove liveness first, then the reap.
-        assert!(pid > 0, "sanity: the child had a pid");
-    }
-
-    /// `handle_stop` arms the window instead of killing: the child is
-    /// still in the table with a deadline, the editor has not returned to
-    /// authoring, and the deadline that was already armed (earlier) wins
-    /// over the fresh one.
-    #[test]
-    fn handle_stop_arms_the_window_and_waits_for_the_reap() {
-        let mut app = App::new();
-        app.add_plugins(bevy::state::app::StatesPlugin);
-        app.init_state::<PlayState>();
-        // The state the editor is in when a stop is asked for.
-        app.world_mut()
-            .insert_resource(State::<PlayState>::new(PlayState::Playing));
-        app.world_mut().insert_non_send(PieSession::default());
-
-        let key = key();
-        // A deadline armed earlier than handle_stop's fresh window (a
-        // per-instance stop that already asked this child to stop): the
-        // earlier of the two wins, so the stop cannot extend the wait.
-        let already_armed = Instant::now() + Duration::from_millis(500);
-        let stage = live_stage(long_lived_child(), Some(already_armed));
-        app.world_mut()
-            .non_send_mut::<PieSession>()
-            .children
-            .insert(key.clone(), stage);
-
-        handle_stop(app.world_mut());
-
-        {
-            let session = app.world_mut().non_send::<PieSession>();
-            assert_eq!(
-                session.children.len(),
-                1,
-                "a live child holds the graceful window instead of dying now"
-            );
-            match session.children.get(&key) {
-                Some(ChildStage::Live { stop_deadline, .. }) => assert!(
-                    stop_deadline.is_some_and(|deadline| deadline == already_armed),
-                    "the earlier deadline is kept"
-                ),
-                _ => panic!("the stage is still Live"),
-            }
-        }
-        assert_ne!(
-            *app.world().resource::<State<PlayState>>().get(),
-            PlayState::Stopped,
-            "the editor is still playing while the window runs"
-        );
-
-        // Reap the child so the test leaves nothing behind.
-        let stage = app
-            .world_mut()
-            .non_send_mut::<PieSession>()
-            .children
-            .remove(&key)
-            .expect("the child is still there");
-        if let ChildStage::Live { mut child, .. } = stage {
-            child.kill().ok();
-            child.wait().ok();
-        }
-    }
-
-    /// `force_stop_all` (the reload stop) kills now: the table is empty
-    /// and the editor is back to authoring in the same call.
-    #[test]
-    fn force_stop_all_kills_now() {
-        let mut app = App::new();
-        app.add_plugins(bevy::state::app::StatesPlugin);
-        app.init_state::<PlayState>();
-        app.world_mut().insert_non_send(PieSession::default());
-
-        let key = key();
-        let stage = live_stage(long_lived_child(), None);
-        app.world_mut()
-            .non_send_mut::<PieSession>()
-            .children
-            .insert(key, stage);
-
-        force_stop_all(app.world_mut());
-
-        assert!(
-            app.world_mut().non_send::<PieSession>().children.is_empty(),
-            "the reload stop leaves nothing in the table"
-        );
-        assert_eq!(
-            *app.world().resource::<State<PlayState>>().get(),
-            PlayState::Stopped
-        );
-    }
-}
-
-#[cfg(test)]
-mod promote_capture_tests {
-    use super::*;
-    use avian3d::prelude::*;
-    use bevy::reflect::TypeRegistry;
-
-    fn promote_world() -> World {
+    fn world_in(state: PlayState, session: PieSession) -> World {
         let mut world = World::new();
-        world.init_resource::<AppTypeRegistry>();
-        world.init_resource::<jackdaw_bsn::SceneBsnAst>();
-        {
-            let registry = world.resource::<AppTypeRegistry>().clone();
-            let mut registry = registry.write();
-            registry.register::<Transform>();
-            registry.register::<ColliderOf>();
-            registry.register::<RigidBodyColliders>();
-            registry.register::<RigidBody>();
-            registry.register::<LinearVelocity>();
-            registry.register::<SleepTimer>();
-            registry.register::<Position>();
-            registry.register::<Rotation>();
-            registry.register::<ColliderDensity>();
-            registry.register::<CustomVelocityIntegration>();
-            registry.register::<CustomPositionIntegration>();
-            registry.register::<jackdaw_avian_integration::AvianCollider>();
-        }
+        world.insert_resource(State::new(state));
+        world.init_resource::<NextState<PlayState>>();
+        world.insert_non_send(session);
         world
     }
 
-    fn node_type_paths(world: &World, entity: Entity) -> Vec<String> {
-        let ast = world.resource::<jackdaw_bsn::SceneBsnAst>();
-        let node = ast
-            .ast_for(entity)
-            .unwrap_or_else(|| panic!("the promoted entity has a document node"));
-        ast.component_type_paths(node)
+    fn phase_of(world: &World) -> PlayPhase {
+        play_phase(
+            world.resource::<State<PlayState>>().get(),
+            Some(world.non_send::<PieSession>()),
+        )
     }
 
-    /// The relationship internals (LT10 class 1) stay off the promoted node:
-    /// the collider's `ColliderOf { body }` and the body's
-    /// `RigidBodyColliders` both name this session's bits, which resolve to
-    /// nothing — and reflect-construct to a panic — on the next load.
-    #[test]
-    fn promoted_relationship_internals_do_not_land_in_the_document() {
-        let mut world = promote_world();
-
-        let body = world
-            .spawn((
-                crate::pie_projection::PieEphemeral,
-                Transform::from_xyz(-2.0, 0.86, 0.0),
-                RigidBody::Kinematic,
-                GlobalTransform::default(),
-            ))
-            .id();
-        // Inserting the relationship points the collider's `body` at the
-        // body and auto-populates the body's `RigidBodyColliders` mirror —
-        // through deferred commands, so the queue flushes here. Avian's own
-        // hook also wants a GlobalTransform on both ends before it links.
-        let collider = world
-            .spawn((
-                Transform::default(),
-                GlobalTransform::default(),
-                ColliderOf { body },
-            ))
-            .id();
-        world.flush();
-        assert!(
-            world.get::<RigidBodyColliders>(body).is_some(),
-            "the relationship target mirror is on the body"
-        );
-
-        promote_ephemeral_to_authored(&mut world, body, 0x4637);
-        promote_ephemeral_to_authored(&mut world, collider, 0x4638);
-
-        let body_paths = node_type_paths(&world, body);
-        assert!(
-            body_paths.iter().any(|p| p == Transform::type_path()),
-            "the authored pose lands"
-        );
-        assert!(
-            body_paths.iter().any(|p| p.contains("RigidBody::")),
-            "the semantic rigid-body type lands"
-        );
-        assert!(
-            !body_paths.iter().any(|p| p.contains("RigidBodyColliders")),
-            "the collider-bits list does not land"
-        );
-
-        let collider_paths = node_type_paths(&world, collider);
-        assert!(
-            collider_paths.iter().any(|p| p == Transform::type_path()),
-            "the collider's pose lands"
-        );
-        assert!(
-            !collider_paths.iter().any(|p| p.contains("ColliderOf")),
-            "the body-bits relationship does not land"
-        );
-    }
-
-    /// The per-frame physics mirrors (LT10 class 2) stay off the promoted
-    /// node: velocity, sleep bookkeeping and the physics-side transform
-    /// copies are one frame's readings the next session rebuilds.
-    #[test]
-    fn promoted_per_frame_physics_mirrors_do_not_land_in_the_document() {
-        let mut world = promote_world();
-
-        let player = world
-            .spawn((
-                crate::pie_projection::PieEphemeral,
-                Transform::from_xyz(-2.0, 0.86, 0.0),
-                LinearVelocity(Vec3::new(3.0, -1.0, 0.0)),
-                SleepTimer(0.5),
-                Position(Vec3::new(-2.0, 0.86, 0.0)),
-                Rotation(Quat::IDENTITY),
-            ))
-            .id();
-
-        promote_ephemeral_to_authored(&mut world, player, 0x4637);
-
-        let paths = node_type_paths(&world, player);
-        assert!(
-            paths.iter().any(|p| p == Transform::type_path()),
-            "the authored pose lands"
-        );
-        assert!(
-            !paths.iter().any(|p| p.contains("LinearVelocity")),
-            "the velocity snapshot does not land"
-        );
-        assert!(
-            !paths.iter().any(|p| p.contains("SleepTimer")),
-            "the sleep timer does not land"
-        );
-        for type_path in [
-            Position::type_path(),
-            Rotation::type_path(),
-            "avian3d::physics_transform::transform::Position",
-            "avian3d::physics_transform::transform::Rotation",
-            "avian3d::physics_transform::transform::PreSolveDeltaPosition",
-            "avian3d::physics_transform::transform::PreSolveDeltaRotation",
-        ] {
-            assert!(
-                PROMOTE_PER_FRAME_PATHS.contains(&type_path),
-                "the reflected physics-transform path {type_path} is explicitly filtered"
-            );
-            assert!(
-                !paths.iter().any(|path| path == type_path),
-                "the physics-transform mirror {type_path} does not land"
-            );
+    fn controls(
+        play: bool,
+        pause: bool,
+        step: bool,
+        stop: bool,
+        restart: bool,
+    ) -> TransportControls {
+        TransportControls {
+            play,
+            pause,
+            step,
+            stop,
+            restart,
         }
     }
 
-    /// Everything genuinely semantic on the promoted entity lands whole:
-    /// the authored pose, the engine component a game would author, and a
-    /// plain game component with no runtime-only state.
     #[test]
-    fn promoted_semantic_components_all_land_in_the_document() {
-        let mut world = promote_world();
+    fn each_phase_offers_its_own_controls() {
+        assert_eq!(
+            PlayPhase::Stopped.controls(),
+            controls(true, false, false, false, false),
+            "stopped: only Play"
+        );
+        assert_eq!(
+            PlayPhase::Building.controls(),
+            controls(false, false, false, true, false),
+            "building: only Stop, which cancels"
+        );
+        assert_eq!(
+            PlayPhase::Playing.controls(),
+            controls(true, true, false, true, true),
+            "playing: Play does nothing but stays lit, Step waits for a pause"
+        );
+        assert_eq!(
+            PlayPhase::Paused.controls(),
+            controls(true, true, true, true, true),
+            "paused: Play resumes and Step steps"
+        );
+        assert_eq!(PlayPhase::Stopped.play_caption(), "Play");
+        assert_eq!(PlayPhase::Building.play_caption(), "Building...");
+        assert_eq!(PlayPhase::Playing.play_caption(), "Play");
+        assert_eq!(PlayPhase::Paused.play_caption(), "Resume");
+    }
 
-        // A physics config component is the stand-in for game-authored data:
-        // plain values, not session state, exactly what a promoted entity
-        // keeps. (A local test component cannot play this part — its type
-        // path starts with `jackdaw::`, which the save policy skips.)
-        let player = world
-            .spawn((
-                crate::pie_projection::PieEphemeral,
-                Transform::from_xyz(-2.0, 0.86, 0.0),
-                RigidBody::Kinematic,
-                ColliderDensity(1.0),
-                CustomVelocityIntegration,
-                CustomPositionIntegration,
-                jackdaw_avian_integration::AvianCollider(ColliderConstructor::Capsule {
-                    radius: 0.35,
-                    height: 1.0,
-                }),
-            ))
-            .id();
+    #[test]
+    fn the_phase_follows_the_session_and_the_play_state() {
+        let world = world_in(PlayState::Stopped, PieSession::default());
+        assert_eq!(phase_of(&world), PlayPhase::Stopped);
 
-        promote_ephemeral_to_authored(&mut world, player, 0x4637);
+        let mut session = PieSession::default();
+        session.insert_test_pending_build(key());
+        let world = world_in(PlayState::Stopped, session);
+        assert_eq!(phase_of(&world), PlayPhase::Building, "waiting on a build");
 
-        let paths = node_type_paths(&world, player);
+        let mut session = PieSession::default();
+        session.insert_test_connecting(key(), child());
+        let mut world = world_in(PlayState::Stopped, session);
+        assert_eq!(phase_of(&world), PlayPhase::Building, "waiting to connect");
+        handle_stop(&mut world);
+        assert_eq!(
+            phase_of(&world),
+            PlayPhase::Stopped,
+            "Stop cancels a launch"
+        );
+
+        let (editor, _game) = link();
+        let mut session = PieSession::default();
+        session.insert_test_live(key(), child(), editor);
+        let world = world_in(PlayState::Playing, session);
+        assert_eq!(phase_of(&world), PlayPhase::Playing);
+        assert_eq!(
+            play_config(world.non_send::<PieSession>(), None),
+            Some("Game".to_string())
+        );
+
+        let world = world_in(PlayState::Paused, PieSession::default());
+        assert_eq!(phase_of(&world), PlayPhase::Paused);
+    }
+
+    #[test]
+    fn dropping_a_build_cancels_it() {
+        let task: GameBuildTask = AsyncComputeTaskPool::get_or_init(bevy::tasks::TaskPool::new)
+            .spawn(std::future::pending::<io::Result<GameBuildResult>>())
+            .into();
+        let cancel = Arc::clone(&task.cancel);
+        assert!(!cancel.load(Ordering::Relaxed));
+        let mut session = PieSession::default();
+        session.builds.insert(
+            PathBuf::from("game"),
+            BuildState::Running {
+                task,
+                pending: Vec::new(),
+                progress: Arc::default(),
+            },
+        );
+        let mut world = world_in(PlayState::Stopped, session);
+        handle_stop(&mut world);
         assert!(
-            paths.iter().any(|p| p == Transform::type_path()),
-            "the pose lands"
+            cancel.load(Ordering::Relaxed),
+            "Stop tells the build to kill cargo"
+        );
+    }
+
+    #[test]
+    fn a_game_that_exits_takes_the_controls_back_to_stopped() {
+        let (editor, _game) = link();
+        let mut session = PieSession::default();
+        session.insert_test_live(key(), child(), editor);
+        let mut world = world_in(PlayState::Playing, session);
+
+        let deadline = Instant::now() + GUARD;
+        while world.non_send::<PieSession>().is_running(&key()) {
+            assert!(Instant::now() < deadline, "the game never exited");
+            poll_children(&mut world);
+            thread::sleep(Duration::from_millis(5));
+        }
+        reconcile_play_state(&mut world);
+
+        assert!(matches!(
+            world.resource::<NextState<PlayState>>(),
+            NextState::Pending(PlayState::Stopped)
+        ));
+        world.insert_resource(State::new(PlayState::Stopped));
+        assert_eq!(phase_of(&world), PlayPhase::Stopped);
+    }
+
+    #[test]
+    fn pause_step_and_an_edit_made_while_paused_reach_the_game() {
+        let (editor, mut game) = link();
+        let mut session = PieSession::default();
+        session.insert_test_live(key(), child(), editor);
+        let mut world = world_in(PlayState::Playing, session);
+
+        handle_step(&mut world);
+        handle_pause(&mut world);
+        world.insert_resource(State::new(PlayState::Paused));
+        handle_step(&mut world);
+        send_control_to_instance(
+            &world,
+            &key(),
+            ControlEvent::NodeComponents {
+                node: 7,
+                set: Vec::new(),
+                removed: vec!["game::Spin".to_string()],
+            },
+        );
+        handle_pause(&mut world);
+
+        let deadline = Instant::now() + GUARD;
+        let mut events = Vec::new();
+        while events.len() < 4 {
+            assert!(Instant::now() < deadline, "only {events:?} arrived");
+            for (_, bytes) in game.drain_received() {
+                events.push(from_bytes::<ControlEvent>(&bytes).expect("a control event"));
+            }
+            thread::sleep(Duration::from_millis(1));
+        }
+        let transport: Vec<&ControlEvent> = events
+            .iter()
+            .filter(|event| !matches!(event, ControlEvent::NodeComponents { .. }))
+            .collect();
+        assert_eq!(
+            transport,
+            vec![
+                &ControlEvent::Pause,
+                &ControlEvent::Step,
+                &ControlEvent::Resume
+            ],
+            "a step while playing sends nothing; one while paused sends one Step"
         );
         assert!(
-            paths.iter().any(|p| p.contains("RigidBody::")),
-            "the rigid-body type lands"
-        );
-        assert!(
-            paths.iter().any(|p| p.contains("ColliderDensity")),
-            "the plain config component lands"
-        );
-        assert!(
-            paths
+            events
                 .iter()
-                .any(|p| p.contains("CustomVelocityIntegration")),
-            "the semantic integrator marker is not caught by a module-wide skip"
+                .any(|event| matches!(event, ControlEvent::NodeComponents { node: 7, .. })),
+            "the edit made while paused was sent"
         );
-        assert!(
-            paths
-                .iter()
-                .any(|p| p.contains("CustomPositionIntegration")),
-            "the semantic position-integrator marker is not caught by a module-wide skip"
+        assert!(matches!(
+            world.resource::<NextState<PlayState>>(),
+            NextState::Pending(PlayState::Playing)
+        ));
+    }
+}
+
+#[cfg(all(test, unix))]
+mod game_exit_tests {
+    use super::*;
+
+    fn key() -> InstanceKey {
+        InstanceKey {
+            config: "Game".to_string(),
+            instance: 1,
+        }
+    }
+
+    fn shell(script: &str) -> Child {
+        Command::new("sh")
+            .args(["-c", script])
+            .stdout(Stdio::null())
+            .stderr(Stdio::piped())
+            .spawn()
+            .expect("a shell")
+    }
+
+    fn connecting(mut child: Child, since: Instant) -> ChildStage {
+        let accept = AsyncComputeTaskPool::get_or_init(bevy::tasks::TaskPool::new)
+            .spawn(std::future::pending::<io::Result<IpcChannelTransport>>());
+        let output = GameOutput::default().capture(&key(), &mut child);
+        ChildStage::Connecting {
+            child,
+            accept,
+            output,
+            since,
+        }
+    }
+
+    /// Poll `stage` until it is reaped.
+    fn reap(mut stage: ChildStage, timeout: Duration) -> Option<GameExit> {
+        let until = Instant::now() + Duration::from_secs(10);
+        loop {
+            match advance_child(&key(), stage, timeout) {
+                ChildPoll::Running(next) => stage = next,
+                ChildPoll::Failed(exit) => return Some(exit),
+                ChildPoll::Exited | ChildPoll::Lost => return None,
+            }
+            assert!(Instant::now() < until, "the child was never reaped");
+            std::thread::sleep(Duration::from_millis(5));
+        }
+    }
+
+    #[test]
+    fn exit_status_names_the_code_or_the_signal() {
+        use std::os::unix::process::ExitStatusExt;
+        assert_eq!(
+            exit_status_text(std::process::ExitStatus::from_raw(3 << 8)),
+            "code 3"
         );
-        assert!(
-            paths
-                .iter()
-                .any(|p| p.contains("jackdaw_avian_integration::AvianCollider")),
-            "the authored capsule shape wrapper lands"
+        assert_eq!(
+            exit_status_text(std::process::ExitStatus::from_raw(9)),
+            "signal 9"
         );
     }
 
-    /// The reflection walk recognizes direct Entity fields and the one-level
-    /// containers used by Avian's relationship target. Only `ColliderOf` and
-    /// `RigidBodyColliders` are eligible for the promote relationship filter;
-    /// an unrelated reflected Entity field is not a blanket skip.
     #[test]
-    fn the_entity_walk_is_scoped_to_known_avian_relationships() {
-        #[derive(Reflect)]
-        struct Named {
-            target: Entity,
-        }
-        #[derive(Reflect)]
-        struct Listed(Vec<Entity>);
-        #[derive(Reflect)]
-        struct Optional {
-            maybe: Option<Entity>,
-        }
-        #[derive(Reflect)]
-        struct Enummed {
-            choice: Choice,
-        }
-        #[derive(Reflect)]
-        enum Choice {
-            Go { target: Entity },
-            Wait,
-        }
-        #[derive(Reflect)]
-        struct Plain {
-            amount: f32,
-            label: String,
-            spot: Vec3,
-        }
+    fn a_game_that_exits_before_connecting_records_its_code_and_stderr() {
+        let stage = connecting(
+            shell("for i in 1 2 3 4 5 6 7 8 9 10; do echo line $i >&2; done; exit 3"),
+            Instant::now(),
+        );
+        let exit = reap(stage, Duration::from_secs(30)).expect("an exit is recorded");
+        assert_eq!(exit.key, key());
+        assert_eq!(
+            exit.reason,
+            GameExitReason::ExitedBeforeConnecting("code 3".to_string())
+        );
+        assert_eq!(
+            exit.stderr.last().map(String::as_str),
+            Some("line 10"),
+            "the lines written just before the exit are kept"
+        );
+        assert_eq!(exit.stderr.len(), EXIT_STDERR_LINES);
+        assert_eq!(exit.stderr.first().map(String::as_str), Some("line 3"));
+    }
 
-        let mut registry = TypeRegistry::default();
-        registry.register::<Named>();
-        registry.register::<Listed>();
-        registry.register::<Optional>();
-        registry.register::<Enummed>();
-        registry.register::<Plain>();
-        registry.register::<ColliderOf>();
-        registry.register::<RigidBodyColliders>();
+    fn crash_of(instance: u32) -> GameExit {
+        GameExit {
+            key: InstanceKey {
+                config: "Game".to_string(),
+                instance,
+            },
+            reason: GameExitReason::Crashed("code 1".to_string()),
+            stderr: Vec::new(),
+        }
+    }
 
-        let holds = |t: &str| {
-            type_tree_holds_entity(registry.get_with_type_path(t).unwrap().type_info(), 0)
+    #[test]
+    fn another_game_exiting_cleanly_keeps_the_recorded_crash() {
+        let mut last = LastGameExit(Some(crash_of(1)));
+        let other = crash_of(2).key;
+        record_exits(&mut last, None, std::slice::from_ref(&other));
+        assert!(last.0.is_some());
+        record_exits(&mut last, None, &[crash_of(1).key]);
+        assert!(
+            last.0.is_none(),
+            "the crashed game itself exiting cleanly clears it"
+        );
+        record_exits(&mut last, Some(crash_of(2)), &[crash_of(1).key]);
+        assert_eq!(last.0.map(|exit| exit.key), Some(other));
+    }
+
+    #[test]
+    fn a_game_still_unconnected_at_the_timeout_is_stopped_and_recorded() {
+        let stage = connecting(shell("sleep 600"), Instant::now());
+        let exit = reap(stage, Duration::from_millis(20)).expect("an exit is recorded");
+        assert_eq!(exit.reason, GameExitReason::NeverConnected);
+    }
+
+    #[test]
+    fn an_unconnected_game_within_the_timeout_keeps_running() {
+        let stage = connecting(shell("sleep 600"), Instant::now());
+        let ChildPoll::Running(mut stage) = advance_child(&key(), stage, Duration::from_secs(30))
+        else {
+            panic!("the child was reaped");
         };
-        assert!(holds(Named::type_path()), "a named Entity field is caught");
-        assert!(holds(Listed::type_path()), "an Entity list is caught");
-        assert!(holds(Optional::type_path()), "an optional Entity is caught");
-        assert!(holds(Enummed::type_path()), "a variant's Entity is caught");
-        assert!(!holds(Plain::type_path()), "plain data is not");
-
-        let is_session_relationship =
-            |t: &str| is_promote_session_relationship(registry.get_with_type_path(t).unwrap());
-        assert!(
-            is_session_relationship(ColliderOf::type_path()),
-            "ColliderOf's reflected Entity field is a session relationship"
-        );
-        assert!(
-            is_session_relationship(RigidBodyColliders::type_path()),
-            "RigidBodyColliders' reflected Vec<Entity> is a session relationship"
-        );
-        assert!(
-            !is_session_relationship(Named::type_path()),
-            "unrelated Entity-bearing authored types are not broadly filtered"
-        );
+        stage.kill_and_reap();
     }
 }

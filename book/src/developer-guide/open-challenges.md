@@ -38,31 +38,26 @@ share.
 PIE is the "click play to run your game" flow. The process model
 is settled: the game always runs out of process as its own cargo
 binary over IPC, with zero play-time compilation once built. Frame
-streaming into the Game panel, input capture, click-to-select
-picking, and the Live entity tree all shipped; see
+streaming into the Game panel, input capture and live sync of
+document edits to the running game all shipped; see
 [Play-in-editor](../user-guide/play-in-editor.md).
 
-What's not done: deeper live editing (a broader set of
-component edits riding back into the running game and into the
-authored scene), richer widget metadata for live values, and
-protocol maturity across more component types. Five smaller
-ledgers from the input-actions and physics work (2026-10): the
-schema watcher only fires on `schema.json` changes, so a restart
-into an unchanged schema can serve New Asset before its kinds
-land (an initial read on project open would close it); the game's
-own log lines have no editor-visible surface (its stderr feeds a
-crash tail buffer only — a log pane would make a teaching
-template's `Jump!`/`Pause!` lines observable in PIE); stop still
-closes open asset cards on some paths (the post-stop re-open
-works, the close calls are the residue); the physical-gamepad
-end-to-end leg has never run on hardware (the mechanism is
-pinned — the game's own GilrsPlugin reads pads directly, and the
-synthetic event chain is red-green tested — but no pad was ever
-attached to this machine); and the version-pinned bevy fork the
-physics integration patches to is a path on the machine that
-built it — CI (and any collaborator) breaks until the fork is
-hosted or upstream resolves the source split, which is where the
-fix belongs.
+What's not done: richer widget metadata for the streamed live
+values, and protocol maturity across more component types. Four
+smaller ledgers from the input-actions and physics work
+(2026-10): the schema watcher only fires on `schema.json`
+changes, so a restart into an unchanged schema can serve New
+Asset before its kinds land (an initial read on project open
+would close it); stop still closes open asset cards on some
+paths (the post-stop re-open works, the close calls are the
+residue); the physical-gamepad end-to-end leg has never run on
+hardware (the mechanism is pinned — the game's own GilrsPlugin
+reads pads directly, and the synthetic event chain is red-green
+tested — but no pad was ever attached to this machine); and the
+version-pinned bevy fork the physics integration patches to is a
+path on the machine that built it — CI (and any collaborator)
+breaks until the fork is hosted or upstream resolves the source
+split, which is where the fix belongs.
 
 Where to dig in: pick one component family that doesn't
 round-trip yet and follow it through the IPC lanes.

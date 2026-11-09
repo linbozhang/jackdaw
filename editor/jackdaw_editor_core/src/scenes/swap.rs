@@ -33,9 +33,6 @@ pub fn swap_active_tab(world: &mut World, target: usize) -> bool {
     capture_active_tab(world);
     clear_scene_entities(world);
     activate_tab(world, target);
-    // The respawn above replaced every authored entity, so any live game
-    // projection now points at stale ids; rebuild it against the new tab.
-    crate::pie_projection::reproject_focused(world);
     true
 }
 
@@ -45,25 +42,6 @@ pub fn swap_active_tab(world: &mut World, target: usize) -> bool {
 /// re-capture a tab that's being dropped).
 pub fn reactivate_after_close(world: &mut World, target: usize) {
     activate_tab(world, target);
-    crate::pie_projection::reproject_focused(world);
-}
-
-/// Re-spawn the active tab's authored scene from the live AST, reverting any
-/// overlaid live values. Equivalent to a tab switch to the same tab: moves the
-/// document into the tab, clears scene entities, then re-spawns from it.
-///
-/// Used by PIE stop to revert projected live state after the game process ends.
-/// Safe to call when nothing is projected (clear + respawn of an unchanged
-/// scene is harmless).
-pub(crate) fn respawn_scene_from_ast(world: &mut World) {
-    let _span = info_span!("tab.respawn").entered();
-    let active = world.resource::<Scenes>().active;
-    if world.resource::<Scenes>().tabs.is_empty() {
-        return;
-    }
-    capture_active_tab(world);
-    clear_scene_entities(world);
-    activate_tab(world, active);
 }
 
 /// Move the live scene document into the active tab and stash the per-tab
@@ -220,8 +198,8 @@ pub fn activate_tab(world: &mut World, target: usize) {
     };
 
     // Restore the target tab's bulk terrain data before spawning its scene
-    // and importing any sidecars. `FillMissing` can now preserve unsaved
-    // edits without confusing a same-named sidecar from another tab.
+    // and importing any sidecars, so the import keeps unsaved edits without
+    // confusing a same-named sidecar from another tab.
     if let Some(terrain_data_store) = terrain_data_store {
         *world.resource_mut::<crate::terrain_mode::TerrainDataStore>() = terrain_data_store;
     }
@@ -407,21 +385,17 @@ pub fn activate_tab(world: &mut World, target: usize) {
     // by `scene_open_system` pushes a parsed document straight onto the
     // tab strip and never goes through `finish_load_scene`, so this is the
     // only place its bulk data gets read.
-    // A dirty tab keeps its unsaved edits; a clean one re-reads the file.
+    // Each file is decided on its own: one holding unsaved edits keeps them, and
+    // one with none re-reads a file that has moved on.
     if let Some(path) = tab_path.as_ref() {
-        let mode = if world
-            .resource::<Scenes>()
-            .tabs
-            .get(target)
-            .is_some_and(|tab| tab.dirty)
-        {
-            crate::scene_io::SidecarImport::FillMissing
-        } else {
-            crate::scene_io::SidecarImport::RefreshChanged
-        };
         let path = path.to_string_lossy();
-        info_span!("tab.sidecars")
-            .in_scope(|| crate::scene_io::hooks::import_sidecars(world, &path, mode));
+        info_span!("tab.sidecars").in_scope(|| {
+            crate::scene_io::hooks::import_sidecars(
+                world,
+                &path,
+                crate::scene_io::SidecarImport::RefreshChanged,
+            );
+        });
     }
 
     let mut scenes = world.resource_mut::<Scenes>();
@@ -432,6 +406,7 @@ pub fn activate_tab(world: &mut World, target: usize) {
     scenes.tabs[target].observed_undo_len = history_depth;
     scenes.tabs[target].observed_pushes = history_pushes;
     scenes.tabs[target].history_state_at_last_check = None;
+    crate::scenes::external_watch::ask_about_changed_files(world, target);
     info_span!("tab.opened_observers").in_scope(|| {
         world.trigger(jackdaw_api_internal::document::SceneOpened { path: tab_path });
     });

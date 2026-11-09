@@ -1821,22 +1821,14 @@ fn apply(world: &mut World, source: Entity, mutate: impl FnOnce(&mut Vec<Binding
         }
     };
 
-    if !super::reflect_fields::try_route_pie_live_field_edit(
+    crate::commands::field_edit_commit(
         world,
-        source,
+        None,
         bindings_type_path(),
         "",
-        json.clone(),
-    ) {
-        crate::commands::field_edit_commit(
-            world,
-            None,
-            bindings_type_path(),
-            "",
-            &json,
-            GROUP_LABEL,
-        );
-    }
+        &json,
+        GROUP_LABEL,
+    );
     // Remember the tick this write landed on, so the change-detection pass does
     // not rebuild the card for the edit it just made.
     let echo = world.get_entity(source).ok().and_then(|entity| {

@@ -18,6 +18,7 @@ use bevy::prelude::*;
 use jackdaw_pie_protocol::SceneAnswer;
 use jackdaw_pie_protocol::event::StateEvent;
 
+use crate::node_structure::PlayedAs;
 use crate::{JackdawScene, JackdawSceneRoot};
 
 /// How long a root waits for the editor before it loads its file. A large
@@ -55,6 +56,17 @@ struct AwaitingDocument(u64);
 /// A root told to load its file, by the editor or by its silence.
 #[derive(Component)]
 struct SceneFromFile;
+
+/// A root inserted again asks the editor afresh when it next spawns, whatever it was
+/// told about the scene it held before.
+pub(crate) fn forget_answer_on_insert(
+    insert: On<Insert<JackdawSceneRoot>>,
+    mut commands: Commands,
+) {
+    commands
+        .entity(insert.entity)
+        .remove::<(SceneFromFile, AwaitingDocument, PlayedAs)>();
+}
 
 /// What a spawn pass does with a root.
 pub(crate) enum Gate {
@@ -145,7 +157,9 @@ pub(crate) fn gate(world: &mut World, root: Entity, handle: &Handle<JackdawScene
             return Gate::File;
         }
         let request = ask(world, &path);
-        world.entity_mut(root).insert(AwaitingDocument(request));
+        world
+            .entity_mut(root)
+            .insert((AwaitingDocument(request), PlayedAs(path)));
         return Gate::Hold;
     };
 
@@ -254,7 +268,7 @@ mod tests {
 
     use super::*;
     use crate::pie::install_link;
-    use crate::{JackdawPlugin, SceneRefused, ServedScene};
+    use crate::{JackdawPlugin, JackdawSceneReady, JackdawSceneSpawned, SceneRefused, ServedScene};
 
     const TRANSFORM: &str = "bevy_transform::components::transform::Transform";
     const NAME: &str = "bevy_ecs::name::Name";
@@ -278,14 +292,7 @@ mod tests {
     }
 
     fn base_app(dir: &Path) -> App {
-        base_app_with(dir, None)
-    }
-
-    fn base_app_with(dir: &Path, play_scene: Option<crate::PieSceneOverride>) -> App {
         let mut app = App::new();
-        if let Some(play_scene) = play_scene {
-            app.insert_resource(play_scene);
-        }
         app.add_plugins(MinimalPlugins);
         app.add_plugins(bevy::transform::TransformPlugin);
         app.add_plugins(bevy::asset::AssetPlugin {
@@ -389,6 +396,108 @@ mod tests {
         }
     }
 
+    fn spawn_node(node: u64, scene: &str) -> ControlEvent {
+        ControlEvent::SpawnNode {
+            node,
+            parent: None,
+            follows: None,
+            scene: scene.to_string(),
+            dir: String::new(),
+            bsn: format!("jackdaw_scene_types::node_id::SceneNodeId({node})\n{TRANSFORM}\n"),
+        }
+    }
+
+    fn holders_of(app: &mut App, node: u64) -> usize {
+        let world = app.world_mut();
+        world
+            .query::<&SceneNodeId>()
+            .iter(world)
+            .filter(|held| held.0 == node)
+            .count()
+    }
+
+    /// A spawn sent while the root waits on its answer lands once the root has
+    /// spawned, and a later one lands at once, whichever file the root was sent to.
+    #[test]
+    fn a_spawn_over_the_link_waits_for_the_answer_and_later_ones_land_at_once() {
+        let (mut app, mut editor, _dir) = game();
+        spawn_root(&mut app, "scene.bsn");
+        app.update();
+        let (request, path) = requests_from(&mut editor)[0].clone();
+        assert_eq!(path, "scene.bsn");
+
+        send(&mut editor, &spawn_node(31, "scene.bsn"));
+        app.update();
+        assert_eq!(holders_of(&mut app, 31), 0, "no root to spawn it under yet");
+
+        send(&mut editor, &document(request, scene_text(5.0)));
+        update_until_spawned(&mut app);
+        app.update();
+        assert_eq!(holders_of(&mut app, 31), 1);
+
+        send(&mut editor, &spawn_node(32, "scene.bsn"));
+        app.update();
+        assert_eq!(holders_of(&mut app, 32), 1);
+
+        send(
+            &mut editor,
+            &ControlEvent::DespawnNode {
+                node: 32,
+                scene: "scene.bsn".to_string(),
+            },
+        );
+        app.update();
+        assert_eq!(holders_of(&mut app, 32), 0);
+    }
+
+    #[test]
+    fn a_spawn_the_game_cannot_read_is_reported_to_the_editor() {
+        let (mut app, mut editor, _dir) = game();
+        spawn_root(&mut app, "scene.bsn");
+        app.update();
+        let (request, _) = requests_from(&mut editor)[0].clone();
+        send(&mut editor, &document(request, scene_text(5.0)));
+        update_until_spawned(&mut app);
+
+        let mut unreadable = spawn_node(34, "scene.bsn");
+        if let ControlEvent::SpawnNode { bsn, .. } = &mut unreadable {
+            *bsn = "{{{ not a document".to_string();
+        }
+        send(&mut editor, &unreadable);
+        app.update();
+        assert_eq!(holders_of(&mut app, 34), 0);
+        let reported = editor.drain_received().into_iter().any(|(_, bytes)| {
+            matches!(
+                from_bytes(&bytes),
+                Ok(StateEvent::NodeSpawnFailed { node: 34, .. })
+            )
+        });
+        assert!(reported, "the editor hears");
+    }
+
+    /// A root sent to another file still goes by the path it asked for.
+    #[test]
+    fn a_root_sent_to_another_file_takes_spawns_for_the_path_it_asked_for() {
+        let (mut app, mut editor, _dir) = game();
+        spawn_root(&mut app, "scene.bsn");
+        app.update();
+        let (request, _) = requests_from(&mut editor)[0].clone();
+        send(
+            &mut editor,
+            &ControlEvent::SceneDocument {
+                request,
+                answer: SceneAnswer::UseFile {
+                    path: "other.bsn".to_string(),
+                    sidecars: None,
+                },
+            },
+        );
+        update_until_spawned(&mut app);
+        send(&mut editor, &spawn_node(33, "scene.bsn"));
+        app.update();
+        assert_eq!(holders_of(&mut app, 33), 1);
+    }
+
     /// The file loads whatever the answer will be, and a game spawning the
     /// editor's document has no use for the file's parse.
     #[test]
@@ -458,6 +567,32 @@ mod tests {
     }
 
     #[test]
+    fn a_served_document_reports_its_spawn_with_its_entities_present() {
+        let (mut app, mut editor, _dir) = game();
+        let seen: Arc<std::sync::Mutex<Vec<(Entity, usize)>>> = Arc::default();
+        let record = seen.clone();
+        app.add_observer(
+            move |spawned: On<JackdawSceneSpawned>, nodes: Query<(), With<SceneNodeId>>| {
+                if let Ok(mut seen) = record.lock() {
+                    seen.push((spawned.entity, nodes.iter().count()));
+                }
+            },
+        );
+        let root = spawn_root(&mut app, "scene.bsn");
+        app.update();
+        let (request, _) = requests_from(&mut editor)[0];
+        assert!(seen.lock().expect("the record").is_empty(), "held");
+
+        send(&mut editor, &document(request, scene_text(5.0)));
+        app.update();
+        app.update();
+
+        assert!(app.world().get::<ServedScene>(root).is_some());
+        assert!(app.world().get::<JackdawSceneReady>(root).is_some());
+        assert_eq!(*seen.lock().expect("the record"), vec![(root, 1)]);
+    }
+
+    #[test]
     fn roots_on_one_path_share_a_request_and_other_paths_ask_their_own() {
         let (mut app, mut editor, _dir) = game();
         spawn_root(&mut app, "scene.bsn");
@@ -476,28 +611,45 @@ mod tests {
         assert_eq!(node_xs(&mut app), vec![5.0, 5.0, 6.0]);
     }
 
-    /// A game told to play a scene asks for that scene, not its usual one.
+    /// A root put back to restart a level asks again, so it gets the scene the
+    /// editor plays in its place and not the game's usual one.
     #[test]
-    fn a_redirected_root_asks_for_the_scene_it_was_told() {
-        let dir = tempfile::tempdir().expect("a temp dir");
-        let (mut editor, game) = LoopbackTransport::pair();
-        let mut app = base_app_with(
-            dir.path(),
-            Some(crate::PieSceneOverride::new(
-                "levels/meadow.bsn",
-                "scene.bsn",
-            )),
-        );
-        install_link(&mut app, Box::new(game));
-        spawn_root(&mut app, "scene.bsn");
-        spawn_root(&mut app, "hud.bsn");
+    fn a_root_inserted_again_asks_the_editor_again() {
+        let (mut app, mut editor, _dir) = game();
+        let root = spawn_root(&mut app, "scene.bsn");
         app.update();
-        let mut asked: Vec<String> = requests_from(&mut editor)
-            .into_iter()
-            .map(|(_, path)| path)
-            .collect();
-        asked.sort();
-        assert_eq!(asked, vec!["hud.bsn", "levels/meadow.bsn"]);
+        let (request, _) = requests_from(&mut editor)[0];
+        send(&mut editor, &use_file(request, "other.bsn"));
+        update_until_spawned(&mut app);
+
+        let handle: Handle<JackdawScene> = app.world().resource::<AssetServer>().load("scene.bsn");
+        app.world_mut()
+            .entity_mut(root)
+            .insert(JackdawSceneRoot(handle));
+        let mut asked = Vec::new();
+        for _ in 0..500 {
+            app.update();
+            asked.extend(requests_from(&mut editor));
+            if !asked.is_empty() {
+                break;
+            }
+            std::thread::sleep(std::time::Duration::from_millis(2));
+        }
+        assert_eq!(asked.len(), 1, "once the scene it now names has loaded");
+        assert_eq!(asked[0].1, "scene.bsn");
+    }
+
+    /// A scene answer naming a file with a hash loads that file, not a label of one.
+    #[test]
+    fn a_file_answer_whose_name_holds_a_hash_loads_as_a_file() {
+        let (mut app, mut editor, dir) = game();
+        std::fs::write(dir.path().join("boss#2.bsn"), scene_text(3.0)).expect("a scene");
+        spawn_root(&mut app, "scene.bsn");
+        app.update();
+        let (request, _) = requests_from(&mut editor)[0];
+        send(&mut editor, &use_file(request, "boss#2.bsn"));
+        update_until_spawned(&mut app);
+        assert_eq!(node_xs(&mut app), vec![3.0]);
     }
 
     /// Under Play the loader does not decode a binary scene either. Sent to the

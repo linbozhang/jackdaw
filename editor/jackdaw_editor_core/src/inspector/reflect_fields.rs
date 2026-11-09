@@ -2136,14 +2136,6 @@ fn apply_color_with_undo(
         return;
     }
 
-    // Live edits need the color in canonical reflect form (a `Color`
-    // enum like `{"LinearRgba": {..}}`), not the picker's raw sRGBA
-    // array, so the game can deserialize the full component.
-    if *world.resource::<crate::pie_mirror::PieViewMode>() == crate::pie_mirror::PieViewMode::Live {
-        try_route_pie_live_field_edit(world, entity, type_path, field_path, new_json);
-        return;
-    }
-
     crate::commands::field_edit_commit(
         world,
         Some(entity),
@@ -2324,97 +2316,9 @@ fn spawn_editable_field(
     );
 }
 
-/// When the inspector is in PIE Live mode, apply a field edit to the selected
-/// preview entity immediately (so the viewport reflects the change) and stream
-/// a `SetComponent` to the focused running game instance. Returns `true` when
-/// handled as a live edit so the caller skips the authored `SetBsnField` path.
-///
-/// The preview entity IS the normal `Selection` entity in Live mode (the
-/// projection has already applied the live overlay to it). A reverse-lookup
-/// through `PieProjection.by_bits` finds which game-side bits to address.
-pub(crate) fn try_route_pie_live_field_edit(
-    world: &mut World,
-    source_entity: Entity,
-    type_path: &str,
-    field_path: &str,
-    field_value: serde_json::Value,
-) -> bool {
-    use crate::pie_mirror::PieViewMode;
-    use jackdaw_pie_protocol::ControlEvent;
-
-    // A resource entity is editor-session state: its edits never stream to
-    // a running game, whatever the mode or the projection wiring says.
-    if super::resource_commands::is_resource_entity(world, source_entity) {
-        return false;
-    }
-
-    if *world.resource::<PieViewMode>() != PieViewMode::Live {
-        return false;
-    }
-
-    // Find the game-entity bits that correspond to this preview entity.
-    let bits = crate::live_edits::live_bits_for_preview(
-        world.resource::<crate::pie_projection::PieProjection>(),
-        source_entity,
-    );
-    let Some(bits) = bits else {
-        // Not a projected live entity; fall through to the authored path.
-        return false;
-    };
-
-    // Read the full component value from the preview entity via reflection,
-    // then merge the edited field into it so the game receives a complete
-    // canonical component JSON.
-    let registry = world.resource::<AppTypeRegistry>().clone();
-    let mut full_value =
-        crate::live_edits::serialize_component_json(world, source_entity, type_path);
-
-    // Log the field as it lands in the merged component (post-normalization),
-    // not the raw inspector input; fall back to the input when the field
-    // cannot be extracted back out.
-    let field_value_for_log;
-    {
-        let reg = registry.read();
-        let raw = field_value.clone();
-        crate::component_json::set_field_in_component_json(
-            &mut full_value,
-            type_path,
-            field_path,
-            field_value,
-            &reg,
-        );
-        field_value_for_log = crate::component_json::get_field_in_component_json(
-            &full_value,
-            type_path,
-            field_path,
-            &reg,
-        )
-        .cloned()
-        .unwrap_or(raw);
-    }
-
-    crate::pie::send_control_to_focused(
-        world,
-        ControlEvent::SetComponent {
-            entity: bits,
-            type_path: type_path.to_string(),
-            value: full_value,
-        },
-    );
-    crate::live_edits::record_live_edit(
-        world,
-        source_entity,
-        bits,
-        type_path,
-        field_path,
-        field_value_for_log,
-    );
-    true
-}
-
 /// Serialize a `Color` to its canonical reflect JSON (e.g.
-/// `{"LinearRgba": {..}}`) so a live color edit round-trips through the
-/// game's full-component deserializer. Falls back to the raw sRGBA array
+/// `{"LinearRgba": {..}}`), which deserializes into any `Color`-typed field.
+/// Falls back to the raw sRGBA array
 /// when `Color` is not registered.
 fn color_to_canonical_json(
     color: Color,
@@ -2442,10 +2346,6 @@ pub(crate) fn apply_field_json_with_undo(
     // which holds no patch for it and would write the selection instead.
     if super::resource_commands::is_resource_entity(world, entity) {
         super::resource_commands::resource_field_commit(world, type_path, field_path, &new_json);
-        return;
-    }
-
-    if try_route_pie_live_field_edit(world, entity, type_path, field_path, new_json.clone()) {
         return;
     }
 
@@ -2927,19 +2827,12 @@ pub(crate) fn on_text_edit_commit(
 
     let value_str = event.value.clone();
     commands.queue(move |world: &mut World| {
-        apply_field_json_with_undo(
-            world,
-            source_entity,
-            &tp,
-            &path,
-            serde_json::Value::String(value_str),
-        );
+        apply_field_json_with_undo(world, source_entity, &tp, &path, serde_json::Value::String(value_str));
     });
 }
 
 /// Apply a drag-tick (non-final) numeric edit via [`crate::commands::field_edit_preview`].
-/// Live ECS only, no document write or minting of undo. In PIE Live mode it routes
-/// through the live-edit stream instead.
+/// Live ECS only, no document write or minting of undo.
 fn apply_field_value_live(
     world: &mut World,
     source_entity: Entity,
@@ -2952,15 +2845,6 @@ fn apply_field_value_live(
     // gesture baseline the resource commit reads is captured there.
     if super::resource_commands::is_resource_entity(world, source_entity) {
         super::resource_commands::resource_field_preview(world, type_path, field_path, &new_json);
-        return;
-    }
-    if try_route_pie_live_field_edit(
-        world,
-        source_entity,
-        type_path,
-        field_path,
-        new_json.clone(),
-    ) {
         return;
     }
     crate::commands::field_edit_preview(
@@ -3757,7 +3641,7 @@ pub(super) fn spawn_enum_menu(
                 let path = path.clone();
                 let tp = tp.clone();
                 commands.queue(move |world: &mut World| {
-                    apply_enum_variant_with_undo(world, source_entity, &tp, &path, &variant);
+                    apply_enum_variant_with_undo(world, &tp, &path, &variant);
                 });
             },
         );
@@ -3903,7 +3787,6 @@ pub(super) fn spawn_variant_contents(
 /// Apply an enum variant change with undo support.
 pub(super) fn apply_enum_variant_with_undo(
     world: &mut World,
-    _entity: Entity,
     type_path: &str,
     field_path: &str,
     variant_name: &str,
@@ -3927,10 +3810,6 @@ pub(super) fn apply_enum_variant_with_undo(
     // never the document pipeline and never the PIE stream.
     if super::resource_commands::is_resource_entity(world, _entity) {
         super::resource_commands::resource_field_commit(world, type_path, field_path, &new_json);
-        return;
-    }
-
-    if try_route_pie_live_field_edit(world, _entity, type_path, field_path, new_json.clone()) {
         return;
     }
 

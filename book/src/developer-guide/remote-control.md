@@ -246,7 +246,8 @@ embedded mode the game streams into the editor's Game panel, so a window capture
 shows the running game.
 
 The launch is a cargo build then a process, so `status` reports progress under
-`pie` -- `building`, `running` or `stopped` -- and `wait` holds for either end:
+`pie` -- `building`, `running`, `paused`, `failed` or `stopped` -- and `wait`
+holds for either end:
 
 ```text
 call_operator(id: "pie.play")
@@ -256,7 +257,34 @@ call_operator(id: "pie.stop")
 wait(until: "pie_stopped")
 ```
 
-A paused game counts as running.
+A game that is still connecting reads `building`. A `pie_running` wait also ends
+on `paused`, and ends with an error if the build fails or the game stops before
+it connects.
+
+The BRP method `jackdaw/game_output` answers with what a game printed, also after
+it exited:
+
+```text
+jackdaw/game_output { "instance": "Client 2", "since": 120, "limit": 200 }
+-> { "instance": { "config": "Client", "instance": 2, "name": "Client 2" },
+     "instances": ["Server", "Client 1", "Client 2"], "running": true,
+     "lines": [{ "seq": 120, "stream": "stderr", "text": "..." }],
+     "first": 0, "next": 121, "more": false }
+```
+
+- `instance` takes the name the Game panel shows, a run configuration's name,
+  or `{ "config": "Client", "instance": 2 }`. Left out, it is the instance the
+  Game Output window shows, which follows the Game panel.
+- `since` answers with the lines from that sequence number on. Pass the last
+  answer's `next` to read only new lines. Without it the answer holds the last
+  `limit` lines (200 by default).
+- `next` is the sequence number to pass as `since` to read on from here.
+  `first` is the oldest sequence number still kept, so a `since` below it
+  missed lines the buffer no longer holds. `more` says lines were left out to
+  keep to `limit`.
+- Each line carries its `stream`, `stdout` or `stderr`.
+- Sequence numbers carry on when Play launches the instance again, which
+  empties its buffer, and start from 0 again when the editor restarts.
 
 ## Packing repeated groups
 

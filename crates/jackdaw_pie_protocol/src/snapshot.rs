@@ -2,21 +2,19 @@ use std::any::TypeId;
 use std::collections::HashMap;
 
 use bevy::{
-    asset::{ReflectHandle, UntypedHandle},
+    asset::ReflectHandle,
     ecs::{
         archetype::{Archetype, ArchetypeId},
-        component::ComponentId,
         reflect::ReflectComponent,
         world::EntityRef,
     },
     prelude::*,
     reflect::{
-        TypeRegistration, TypeRegistry,
-        serde::{ReflectDeserializerProcessor, ReflectSerializerProcessor, TypedReflectSerializer},
+        TypeRegistry,
+        serde::{ReflectSerializerProcessor, TypedReflectSerializer},
     },
 };
-use serde::de::IgnoredAny;
-use serde::{Deserializer, Serialize, Serializer};
+use serde::{Serialize, Serializer};
 use serde_json::Value;
 
 /// A single entity's full ECS state, serialized for remote inspection.
@@ -150,49 +148,16 @@ impl ReflectSerializerProcessor for RemoteSerializerProcessor {
     }
 }
 
-/// Deserializer counterpart to `RemoteSerializerProcessor`. The serializer emits
-/// `null` for every `Handle<T>` (the game's assets are not loaded in the editor).
-/// A plain reflect deserializer rejects that `null` and fails the whole component,
-/// which drops any brush whose face materials serialized to null. This turns the
-/// `null` back into the handle type's default, so the component deserializes and
-/// brush faces fall back to the editor's own material in `regenerate_brush_meshes`.
-pub struct RemoteDeserializerProcessor;
-
-impl ReflectDeserializerProcessor for RemoteDeserializerProcessor {
-    fn try_deserialize<'de, D>(
-        &mut self,
-        registration: &TypeRegistration,
-        _registry: &TypeRegistry,
-        deserializer: D,
-    ) -> Result<Result<Box<dyn PartialReflect>, D>, D::Error>
-    where
-        D: Deserializer<'de>,
-    {
-        // Intercept asset handles: the serializer emits `null` for each one, so
-        // consume that and rebuild the handle type's default. Bevy 0.19 dropped
-        // `Handle`'s `Default` impl (so `ReflectDefault` is no longer
-        // registered), so build the default through `ReflectHandle` instead.
-        if let Some(reflect_handle) = registration.data::<ReflectHandle>() {
-            deserializer.deserialize_option(IgnoredAny)?;
-            let untyped = UntypedHandle::default_for_type(reflect_handle.asset_type_id());
-            return Ok(Ok(reflect_handle.typed(untyped).into_partial_reflect()));
-        }
-        Ok(Err(deserializer))
-    }
-}
-
-/// One component an entity of some archetype streams, resolved from the type
-/// registry once per archetype so a frame never walks the whole registry.
-#[derive(Clone)]
-pub struct SnapshotColumn {
-    pub id: ComponentId,
-    pub type_path: &'static str,
+/// One component an entity of some archetype snapshots, resolved from the type
+/// registry once per archetype.
+struct SnapshotColumn {
+    type_path: &'static str,
     reflect: ReflectComponent,
 }
 
 impl SnapshotColumn {
     /// The component's serialized value on `entity`, if it has one that serializes.
-    pub fn value(&self, entity: EntityRef, registry: &TypeRegistry) -> Option<Value> {
+    fn value(&self, entity: EntityRef, registry: &TypeRegistry) -> Option<Value> {
         let component = self.reflect.reflect(entity)?;
         let processor = RemoteSerializerProcessor;
         let serializer = TypedReflectSerializer::with_processor(component, registry, &processor);
@@ -200,9 +165,17 @@ impl SnapshotColumn {
     }
 }
 
-/// The components of `archetype` that stream: registered as reflectable
+/// A reflected value serialized as [`entity_components`] serializes component
+/// values, or `None` when it does not serialize.
+pub fn reflect_value_json(value: &dyn PartialReflect, registry: &TypeRegistry) -> Option<Value> {
+    let processor = RemoteSerializerProcessor;
+    let serializer = TypedReflectSerializer::with_processor(value, registry, &processor);
+    serde_json::to_value(&serializer).ok()
+}
+
+/// The components of `archetype` a snapshot holds: registered as reflectable
 /// components and not on a skip list.
-pub fn snapshot_columns(
+fn snapshot_columns(
     world: &World,
     registry: &TypeRegistry,
     archetype: &Archetype,
@@ -217,12 +190,71 @@ pub fn snapshot_columns(
                 return None;
             }
             Some(SnapshotColumn {
-                id,
                 type_path,
                 reflect: registration.data::<ReflectComponent>()?.clone(),
             })
         })
         .collect()
+}
+
+/// The values of `entity`'s components by type path, sorted, with the skip lists
+/// applied, and the names of the components it holds that do not serialize.
+pub fn entity_components(
+    world: &World,
+    registry: &TypeRegistry,
+    entity: EntityRef,
+) -> (Vec<(String, Value)>, Vec<String>) {
+    let mut values = Vec::new();
+    let mut opaque = Vec::new();
+    for id in entity.archetype().iter_components() {
+        let Some(info) = world.components().get_info(id) else {
+            continue;
+        };
+        let registration = info.type_id().and_then(|type_id| registry.get(type_id));
+        let column = registration.and_then(|registration| {
+            Some(SnapshotColumn {
+                type_path: registration.type_info().type_path_table().path(),
+                reflect: registration.data::<ReflectComponent>()?.clone(),
+            })
+        });
+        match column {
+            Some(column) if should_skip(column.type_path) => {}
+            Some(column) => match column.value(entity, registry) {
+                Some(value) => values.push((column.type_path.to_string(), value)),
+                None => opaque.push(column.type_path.to_string()),
+            },
+            None => opaque.push(info.name().to_string()),
+        }
+    }
+    values.sort_by(|a, b| a.0.cmp(&b.0));
+    opaque.sort();
+    (values, opaque)
+}
+
+/// The value of `entity`'s component with type path `type_path`, as
+/// [`entity_components`] holds it, or its name among the opaque ones.
+pub fn entity_component(
+    registry: &TypeRegistry,
+    entity: EntityRef,
+    type_path: &str,
+) -> (Vec<(String, Value)>, Vec<String>) {
+    let Some(reflect) = registry
+        .get_with_type_path(type_path)
+        .and_then(|registration| registration.data::<ReflectComponent>())
+    else {
+        return (Vec::new(), Vec::new());
+    };
+    let column = SnapshotColumn {
+        type_path: "",
+        reflect: reflect.clone(),
+    };
+    if !reflect.contains(entity) {
+        return (Vec::new(), Vec::new());
+    }
+    match column.value(entity, registry) {
+        Some(value) => (vec![(type_path.to_string(), value)], Vec::new()),
+        None => (Vec::new(), vec![type_path.to_string()]),
+    }
 }
 
 /// Reflection-serialize `entities` for remote display, applying the skip lists
@@ -268,7 +300,6 @@ mod tests {
         assert!(should_skip("bevy_camera::camera::RenderTarget"));
         assert!(should_skip("bevy_camera::components::Camera3d"));
         assert!(should_skip("bevy_camera::components::Camera2d"));
-        // The projection still streams: the editor's camera lock reads it.
         assert!(!should_skip("bevy_camera::projection::Projection"));
     }
 

@@ -60,50 +60,48 @@ pub enum PlayScene {
     Untitled(String),
 }
 
-/// The scene the scene in front makes `run` play, if any. A run configuration
-/// or project setting that names a scene keeps it, so the scene in front does
-/// not take its place.
+/// What `run` plays in place of the game's main scene, if anything: the scene a
+/// project setting or the run configuration names in `JACKDAW_PIE_SCENE`, or else
+/// the scene in front.
 pub fn launch_scene(world: &World, run: &RunConfig) -> Option<LaunchScene> {
-    launch_scene_of_tab(world, run, world.get_resource::<Scenes>()?.active)
+    let _span = info_span!("play.launch_scene").entered();
+    let replaces =
+        named_path(world, run, "JACKDAW_PIE_REPLACES").unwrap_or_else(|| MAIN_SCENE.to_string());
+    let scene = match named_path(world, run, "JACKDAW_PIE_SCENE") {
+        Some(named) if named == replaces => return None,
+        Some(named) => PlayScene::Path(named),
+        None => scene_in_front(world)?,
+    };
+    Some(LaunchScene { replaces, scene })
 }
 
-/// [`launch_scene`] for the scene in tab `index`.
-pub(crate) fn launch_scene_of_tab(
-    world: &World,
-    run: &RunConfig,
-    index: usize,
-) -> Option<LaunchScene> {
-    let _span = info_span!("play.launch_scene").entered();
-    let names_scene = run.env.contains_key("JACKDAW_PIE_SCENE")
-        || world
-            .get_resource::<crate::play_settings::PlaySettings>()
-            .is_some_and(|settings| settings.env.contains_key("JACKDAW_PIE_SCENE"));
-    if names_scene {
-        return None;
-    }
+/// The asset path in the variable `key`, a project setting winning over the run
+/// configuration as it does in the game's environment. Empty names nothing.
+fn named_path(world: &World, run: &RunConfig, key: &str) -> Option<String> {
+    world
+        .get_resource::<crate::play_settings::PlaySettings>()
+        .and_then(|settings| settings.env.get(key))
+        .or_else(|| run.env.get(key))
+        .filter(|path| !path.is_empty())
+        .map(|path| path.replace('\\', "/"))
+}
+
+fn scene_in_front(world: &World) -> Option<PlayScene> {
     let scenes = world.get_resource::<Scenes>()?;
+    let index = scenes.active;
     let tab = scenes.tabs.get(index)?;
     if tab.kind != TabKind::Scene || tab.is_refused() {
         return None;
     }
-    let modified = if index == scenes.active {
-        crate::scenes::operators::active_tab_modified(world)
-    } else {
-        tab.dirty
-    };
-    let scene = match &tab.path {
-        None if modified => PlayScene::Untitled(tab.display_name.clone()),
-        None => return None,
-        Some(_) => PlayScene::Path(
-            crate::pie::scene_asset_path_of_tab(world, index).filter(|s| s != MAIN_SCENE)?,
-        ),
-    };
-    let replaces = run
-        .env
-        .get("JACKDAW_PIE_REPLACES")
-        .cloned()
-        .unwrap_or_else(|| MAIN_SCENE.to_string());
-    Some(LaunchScene { replaces, scene })
+    match &tab.path {
+        None if crate::scenes::operators::active_tab_modified(world) => {
+            Some(PlayScene::Untitled(tab.display_name.clone()))
+        }
+        None => None,
+        Some(_) => crate::pie::scene_asset_path_of_tab(world, index)
+            .filter(|path| path != MAIN_SCENE)
+            .map(PlayScene::Path),
+    }
 }
 
 /// What the game spawns for a root asking for the asset path `requested`, for an
@@ -190,6 +188,10 @@ pub(crate) fn prepare_scene(
     requested: &str,
     request: u64,
 ) -> PreparedScene {
+    let asked = AskedScene::resolved(world, launch, requested);
+    world
+        .get_resource_or_init::<PlayAssetNames>()
+        .note_asked(key, asked);
     let answered = answer_with_assets(world, launch, requested);
     prepare(world, Some(key), answered, request)
 }
@@ -618,15 +620,23 @@ fn answer_with_assets(
     launch: Option<&LaunchScene>,
     requested: &str,
 ) -> Answered {
-    let requested = requested.replace('\\', "/");
-    let target = match launch {
-        Some(launch) if launch.replaces == requested => launch.scene.clone(),
-        _ => PlayScene::Path(requested.clone()),
-    };
-    let served = match &target {
-        PlayScene::Path(path) => ServedAs::of(path, None),
-        PlayScene::Untitled(name) => ServedAs::of(&requested, Some(name.clone())),
-    };
+    let AskedScene {
+        requested,
+        target,
+        tab,
+        ..
+    } = AskedScene::resolved(world, launch, requested);
+    let tab = tab.and_then(|id| {
+        world
+            .get_resource::<Scenes>()?
+            .tabs
+            .iter()
+            .position(|held| held.id == id)
+    });
+    let served = tab.and_then(|tab| tab_asset_path(world, tab)).map_or_else(
+        || ServedAs::of_target(&target, &requested),
+        |path| ServedAs::of(&path, None),
+    );
     let file = match &target {
         PlayScene::Path(path) => path.clone(),
         PlayScene::Untitled(_) => requested.clone(),
@@ -635,7 +645,6 @@ fn answer_with_assets(
     let Some(assets) = crate::asset_index::assets_dir(world) else {
         return Answered::use_file(world, file);
     };
-    let tab = tab_of(world, &target);
     if let (None, PlayScene::Untitled(name)) = (tab, &target) {
         let message =
             format!("{name} was saved or closed during the build, so the game loads {requested}");
@@ -832,6 +841,13 @@ struct ServedAs {
 }
 
 impl ServedAs {
+    fn of_target(target: &PlayScene, requested: &str) -> Self {
+        match target {
+            PlayScene::Path(path) => Self::of(path, None),
+            PlayScene::Untitled(name) => Self::of(requested, Some(name.clone())),
+        }
+    }
+
     fn of(path: &str, name: Option<String>) -> Self {
         let path = Path::new(path);
         let dir = path
@@ -845,6 +861,269 @@ impl ServedAs {
         });
         Self { dir, stem }
     }
+}
+
+/// A scene a game asked for, whichever way it was answered.
+#[derive(Clone, PartialEq, Eq, Debug)]
+pub(crate) struct AskedScene {
+    /// The asset path the game knows it by.
+    pub(crate) requested: String,
+    /// What that path stands for.
+    pub(crate) target: PlayScene,
+    /// The folder it counts as being in, under the asset folder.
+    pub(crate) dir: String,
+    /// The tab holding it when it was asked for. A save can give that tab another
+    /// path and the game goes on playing it.
+    tab: Option<u64>,
+}
+
+impl AskedScene {
+    fn of(launch: Option<&LaunchScene>, requested: &str) -> Self {
+        let requested = requested.replace('\\', "/");
+        let target = match launch {
+            Some(launch) if launch.replaces == requested => launch.scene.clone(),
+            _ => PlayScene::Path(requested.clone()),
+        };
+        let dir = ServedAs::of_target(&target, &requested).dir;
+        Self {
+            requested,
+            target,
+            dir,
+            tab: None,
+        }
+    }
+
+    /// What `requested` stands for now. A tab holding the target decides, and failing
+    /// that the tab a game asked for it from earlier, since a save can have given that
+    /// tab another path or a first one. An unsaved tab saved before any game asked
+    /// stays unknown, and the game loads the file.
+    fn resolved(world: &World, launch: Option<&LaunchScene>, requested: &str) -> Self {
+        let mut asked = Self::of(launch, requested);
+        let Some(scenes) = world.get_resource::<Scenes>() else {
+            return asked;
+        };
+        asked.tab = tab_of(world, &asked.target)
+            .map(|tab| scenes.tabs[tab].id)
+            .or_else(|| {
+                let names = world.get_resource::<PlayAssetNames>()?;
+                names
+                    .asked
+                    .values()
+                    .flatten()
+                    .filter(|earlier| {
+                        earlier.requested == asked.requested && earlier.target == asked.target
+                    })
+                    .find_map(|earlier| earlier.tab)
+                    .filter(|id| scenes.tabs.iter().any(|tab| tab.id == *id))
+            });
+        asked
+    }
+}
+
+/// Record that the game `key` asked for the scene `requested`, for a test.
+#[doc(hidden)]
+pub fn note_test_asked_scene(world: &mut World, key: &InstanceKey, requested: &str) {
+    let asked = AskedScene::resolved(world, None, requested);
+    world
+        .resource_mut::<PlayAssetNames>()
+        .note_asked(key, asked);
+}
+
+/// The path under the asset folder of the file tab `tab` holds, if it has one.
+pub(crate) fn tab_asset_path(world: &World, tab: usize) -> Option<String> {
+    let path = world.get_resource::<Scenes>()?.tabs[tab].path.clone()?;
+    world
+        .get_resource::<crate::project::ProjectRoot>()?
+        .to_asset_path(path)
+}
+
+/// The scenes the game `key` asked for that the document in front is, each with the
+/// folder the document counts as being in now. The tab it was asked from decides
+/// while that tab is open, and otherwise the path or name asked for.
+pub(crate) fn scenes_playing_active_tab(world: &World, key: &InstanceKey) -> Vec<AskedScene> {
+    let (Some(names), Some(scenes)) = (
+        world.get_resource::<PlayAssetNames>(),
+        world.get_resource::<Scenes>(),
+    ) else {
+        return Vec::new();
+    };
+    let Some(active) = scenes.tabs.get(scenes.active) else {
+        return Vec::new();
+    };
+    let held_dir = tab_asset_path(world, scenes.active).map(|path| ServedAs::of(&path, None).dir);
+    names
+        .asked
+        .get(key)
+        .into_iter()
+        .flatten()
+        .filter(|asked| {
+            match asked
+                .tab
+                .filter(|id| scenes.tabs.iter().any(|tab| tab.id == *id))
+            {
+                Some(id) => id == active.id,
+                None => tab_of(world, &asked.target) == Some(scenes.active),
+            }
+        })
+        .map(|asked| AskedScene {
+            dir: held_dir.clone().unwrap_or_else(|| asked.dir.clone()),
+            ..asked.clone()
+        })
+        .collect()
+}
+
+/// New subtrees of the live document as a game takes them.
+pub(crate) struct SubtreesForGame {
+    /// The text of each subtree, by the node at its top.
+    pub(crate) texts: HashMap<u64, String>,
+    /// The `#Name`, definition and text of each asset root the texts name.
+    pub(crate) assets: Vec<(String, u64, String)>,
+    /// The asset files they name.
+    pub(crate) files: Vec<AssetFile>,
+    /// The unsaved prefabs they reach.
+    pub(crate) prefabs: Vec<UnsavedPrefab>,
+    /// The `#Name` and definition of each asset root those prefabs' texts hold.
+    pub(crate) prefab_assets: Vec<(String, u64)>,
+}
+
+/// The subtrees of the live document at `spawns`, as `(node id, document node)`,
+/// under session names and spelled as `asked`'s text spells them. A child in
+/// `existing` is left out: it exists in the game and moves there on its own. One
+/// authoring pass covers them all, so its cost follows the nodes spawned and not the
+/// document. Unsaved sidecars of a new node arrive on a respawn. The texts are not
+/// read back here: the game parses them anyway and reports one it cannot.
+pub(crate) fn subtrees_for_game(
+    world: &mut World,
+    spawns: &[(u64, Entity)],
+    existing: &bevy::platform::collections::HashSet<u64>,
+    asked: &AskedScene,
+) -> Option<SubtreesForGame> {
+    let _span = info_span!("play.subtrees").entered();
+    let assets = crate::asset_index::assets_dir(world)?;
+    let tab = world.resource::<Scenes>().active;
+    let parent = tab_folder(world, tab, &assets, &asked.dir);
+    let registry = world.resource::<AppTypeRegistry>().clone();
+    let mut part = SceneBsnAst::default();
+    let copies: Vec<(u64, Entity)> = {
+        let live = world.resource::<SceneBsnAst>();
+        for root in jackdaw_bsn::asset_roots(live, &registry.read()) {
+            jackdaw_bsn::clone_subtree_into(&mut part, live, root, None);
+        }
+        spawns
+            .iter()
+            .map(|&(id, node)| {
+                (
+                    id,
+                    copy_new_nodes(&mut part, live, node, None, existing, false),
+                )
+            })
+            .collect()
+    };
+    let mut document = crate::scene_io::save::part_of_live_document_for_game(world, part, &parent);
+    warn_absolute(world, &document.absolute);
+    keep_assets_named(&mut document.ast, &registry.read());
+    let mut ast = with_session_names(world, document);
+    let held = DocumentAssets::of(world, &mut ast);
+    let overlay = crate::play_overlay::prefabs_of_document_part(
+        world,
+        tab,
+        &asked.target,
+        &ast,
+        &parent,
+        &asked.dir,
+    );
+    let texts = copies
+        .into_iter()
+        .map(|(id, copy)| (id, jackdaw_bsn::emit_entity(&ast, copy)))
+        .collect();
+    let roots = {
+        let registry = registry.read();
+        jackdaw_bsn::asset_roots(&ast, &registry)
+    };
+    let assets = held
+        .embedded
+        .into_iter()
+        .filter_map(|(name, definition)| {
+            let root = roots
+                .iter()
+                .copied()
+                .find(|&root| ast.get_name(root) == Some(name.trim_start_matches('#')))?;
+            let mut alone = SceneBsnAst::default();
+            jackdaw_bsn::clone_subtree_into(&mut alone, &ast, root, None);
+            Some((name, definition, jackdaw_bsn::emit_scene(&alone)))
+        })
+        .collect();
+    let mut files = held.files;
+    files.extend(overlay.assets.files);
+    let mut prefabs = Vec::new();
+    for prefab in overlay.prefabs {
+        match text_read_back(&prefab.ast) {
+            Ok(body) => prefabs.push(UnsavedPrefab {
+                path: prefab.path,
+                text: asset_file_text(PREFAB_TYPE, &body),
+            }),
+            Err(detail) => {
+                warn!(
+                    "PIE: the unsaved prefab {} does not read back: {detail}",
+                    prefab.path
+                );
+                crate::status_bar::notify_warn(world, edits_not_sent(&prefab.path));
+            }
+        }
+    }
+    Some(SubtreesForGame {
+        texts,
+        assets,
+        files,
+        prefabs,
+        prefab_assets: overlay.assets.embedded,
+    })
+}
+
+/// Copy `node` into `part`, linked to its entity, with the children `existing` does
+/// not hold. Everything below a prefab instance belongs to it (`whole`), whatever id
+/// it repeats.
+fn copy_new_nodes(
+    part: &mut SceneBsnAst,
+    live: &SceneBsnAst,
+    node: Entity,
+    parent: Option<Entity>,
+    existing: &bevy::platform::collections::HashSet<u64>,
+    whole: bool,
+) -> Entity {
+    let copy = part.create_entity_node(live.cloned_component_patches(node));
+    match parent {
+        Some(parent) => part.add_child_to_ast(parent, copy),
+        None => part.add_to_roots(copy),
+    }
+    if let Some(entity) = live.ecs_for_ast(node) {
+        part.link(entity, copy);
+    }
+    let whole = whole || crate::document_units::is_instance(live, node);
+    for child in live.get_children_ast(node) {
+        let exists = live
+            .stable_id_of(child)
+            .is_some_and(|id| existing.contains(&id));
+        if whole || !exists {
+            copy_new_nodes(part, live, child, Some(copy), existing, whole);
+        }
+    }
+    copy
+}
+
+/// Drop the asset roots of `ast` that nothing in it names.
+fn keep_assets_named(ast: &mut SceneBsnAst, registry: &bevy::reflect::TypeRegistry) {
+    let mut named: HashSet<String> = HashSet::new();
+    crate::scene_io::save::visit_asset_references(ast, registry, |reference| {
+        if let Some(bare) = reference.strip_prefix(['#', '@']) {
+            named.insert(bare.to_string());
+        }
+    });
+    let unused: Vec<Entity> = jackdaw_bsn::asset_roots(ast, registry)
+        .into_iter()
+        .filter(|&root| ast.get_name(root).is_none_or(|name| !named.contains(name)))
+        .collect();
+    ast.roots.retain(|root| !unused.contains(root));
 }
 
 /// The index of the tab holding `target`, when it holds a scene or prefab that
@@ -928,6 +1207,9 @@ pub struct PlayAssetNames {
     /// The digest of the unsaved text each game last received for each prefab, by
     /// path under the asset folder.
     given_prefabs: HashMap<InstanceKey, HashMap<String, u64>>,
+    /// The scenes each game asked for, so structural changes go only to a game
+    /// playing the document they were made in.
+    asked: HashMap<InstanceKey, Vec<AskedScene>>,
 }
 
 impl PlayAssetNames {
@@ -1091,10 +1373,17 @@ impl PlayAssetNames {
         }
     }
 
+    fn note_asked(&mut self, key: &InstanceKey, asked: AskedScene) {
+        let held = self.asked.entry(key.clone()).or_default();
+        held.retain(|earlier| earlier.requested != asked.requested);
+        held.push(asked);
+    }
+
     /// Keep what games were given only for those `keep` accepts.
     pub(crate) fn retain_games(&mut self, keep: impl Fn(&InstanceKey) -> bool) {
         self.given.retain(|key, _| keep(key));
         self.given_prefabs.retain(|key, _| keep(key));
+        self.asked.retain(|key, _| keep(key));
     }
 
     /// Whether the game `key` holds the unsaved prefab at `path` as `digest`.
@@ -1137,16 +1426,11 @@ pub(crate) fn forget_asset_names(mut names: ResMut<PlayAssetNames>) {
 mod tests {
     use bevy::asset::{AssetPlugin, ReflectAsset, ReflectHandle};
     use jackdaw_bsn::{SceneBsnAst, component_to_bsn_patch};
-    use jackdaw_pie_protocol::{RemoteEntity, StateEvent};
     use jackdaw_runtime::JackdawPlugin;
     use jackdaw_scene_types::SceneNodeId;
 
     use super::*;
-    use crate::pie_projection::{PieProjection, project_event};
     use crate::play_sync::PlayReferences;
-
-    const TRANSFORM: &str = "bevy_transform::components::transform::Transform";
-    const PAINTED: &str = "game::Painted";
 
     #[derive(Asset, Reflect, Default, Clone)]
     #[reflect(Asset, Default)]
@@ -1243,7 +1527,6 @@ mod tests {
             tabs: vec![tab],
             active: 0,
         });
-        app.init_resource::<PieProjection>();
         app.init_resource::<PlayAssetNames>();
         app.init_resource::<SceneBsnAst>();
         app
@@ -1328,119 +1611,6 @@ mod tests {
         (swatch.0, tone)
     }
 
-    fn stream_spawn(id: u64, level: u32, x: f32) -> StateEvent {
-        StateEvent::EntitySpawned {
-            entity: RemoteEntity {
-                entity: 1,
-                components: [
-                    (
-                        TRANSFORM.to_string(),
-                        serde_json::json!({
-                            "translation": [x, 0.0, 0.0],
-                            "rotation": [0.0, 0.0, 0.0, 1.0],
-                            "scale": [1.0, 1.0, 1.0]
-                        }),
-                    ),
-                    (
-                        PAINTED.to_string(),
-                        serde_json::json!({ "level": level, "swatch": null }),
-                    ),
-                ]
-                .into_iter()
-                .collect(),
-                scene_node_id: Some(id),
-            },
-        }
-    }
-
-    #[test]
-    fn projected_game_state_never_reaches_the_text() {
-        let dir = tempfile::tempdir().expect("a temp dir");
-        let mut app = editor(dir.path());
-        let color = swatch(&mut app, 4);
-        let entity = add_node(
-            &mut app,
-            5,
-            Painted {
-                level: 1,
-                swatch: color.clone(),
-            },
-            1,
-        );
-        let before = answer(&mut app);
-
-        project_event(app.world_mut(), stream_spawn(5, 99, 77.0));
-        let world = app.world();
-        let projected = world.get::<Painted>(entity).expect("the component");
-        assert_eq!(projected.level, 99, "the entity shows the game's value");
-        assert_eq!(
-            world
-                .get::<Transform>(entity)
-                .expect("a transform")
-                .translation
-                .x,
-            77.0
-        );
-        assert_eq!(projected.swatch, color, "the stream carries no handle");
-
-        let after = answer(&mut app);
-        assert_eq!(after, before, "the document alone decides the text");
-        assert!(!after.contains("99") && !after.contains("77"), "{after}");
-        assert_eq!(game_painted(&mut game_spawning(after), 5), (1, 4));
-    }
-
-    /// A document edit made while the entity is projected is in the text, next
-    /// to no game value.
-    #[test]
-    fn an_edit_of_a_projected_entity_is_read_from_the_document() {
-        let dir = tempfile::tempdir().expect("a temp dir");
-        let mut app = editor(dir.path());
-        let color = swatch(&mut app, 4);
-        let entity = add_node(
-            &mut app,
-            5,
-            Painted {
-                level: 1,
-                swatch: color,
-            },
-            1,
-        );
-        project_event(app.world_mut(), stream_spawn(5, 99, 0.0));
-        let registry = app.world().resource::<AppTypeRegistry>().clone();
-        let registry = registry.read();
-        app.world_mut()
-            .resource_scope(|_, mut ast: Mut<SceneBsnAst>| {
-                let node = ast.ast_for(entity).expect("a node");
-                let value = jackdaw_bsn::BsnValue::from_reflect(&12u32, &registry);
-                jackdaw_bsn::set_bsn_field(&mut ast, node, PAINTED, "level", value, &registry);
-            });
-        drop(registry);
-        assert_eq!(
-            game_painted(&mut game_spawning(answer(&mut app)), 5),
-            (12, 4)
-        );
-    }
-
-    /// A tab switched away from while projected keeps the document's values.
-    #[test]
-    fn a_snapshot_taken_while_projected_holds_the_document() {
-        let dir = tempfile::tempdir().expect("a temp dir");
-        let mut app = editor(dir.path());
-        let color = swatch(&mut app, 4);
-        add_node(
-            &mut app,
-            5,
-            Painted {
-                level: 1,
-                swatch: color,
-            },
-            1,
-        );
-        project_event(app.world_mut(), stream_spawn(5, 99, 0.0));
-        let text = crate::scene_io::emit_bsn_scene_with_inline_assets(app.world_mut(), dir.path());
-        assert!(!text.contains("99"), "{text}");
-    }
-
     /// Asset names hold across emits with an asset added ahead in the document,
     /// and live sync's references read the same ones.
     #[test]
@@ -1500,165 +1670,6 @@ mod tests {
             Some(name),
             "live sync sends the same name"
         );
-    }
-
-    /// A node holding `live`, overlaid with game state, whose document holds
-    /// `patch`.
-    fn overlaid_node(app: &mut App, id: u64, live: impl Bundle, patch: jackdaw_bsn::BsnPatch) {
-        let world = app.world_mut();
-        let entity = world
-            .spawn((SceneNodeId(id), Transform::default(), live))
-            .id();
-        let registry = world.resource::<AppTypeRegistry>().clone();
-        let patches = vec![
-            component_to_bsn_patch(&SceneNodeId(id), &registry.read()),
-            component_to_bsn_patch(&Transform::default(), &registry.read()),
-            patch,
-        ];
-        let mut ast = world.resource_mut::<SceneBsnAst>();
-        let node = ast.create_entity_node(patches);
-        ast.add_to_roots(node);
-        ast.link(entity, node);
-        world
-            .resource_mut::<PieProjection>()
-            .overlaid
-            .insert(entity);
-    }
-
-    fn patch_of(app: &App, value: &dyn PartialReflect) -> jackdaw_bsn::BsnPatch {
-        component_to_bsn_patch(value, &app.world().resource::<AppTypeRegistry>().read())
-    }
-
-    fn tone_of(game: &App, handle: &Handle<Swatch>) -> u32 {
-        game.world()
-            .resource::<Assets<Swatch>>()
-            .get(handle)
-            .map_or(u32::MAX, |swatch| swatch.tone)
-    }
-
-    /// A save from Live view writes the document's values and takes only the
-    /// references from the entity: in an enum variant, a map value, a set, a tuple
-    /// component and a bare-type tuple component.
-    #[test]
-    fn a_save_of_an_overlaid_entity_keeps_every_kind_of_nested_handle() {
-        let dir = tempfile::tempdir().expect("a temp dir");
-        let mut app = editor(dir.path());
-        let (one, two, three) = (
-            swatch(&mut app, 1),
-            swatch(&mut app, 2),
-            swatch(&mut app, 3),
-        );
-        let (four, five, six) = (
-            swatch(&mut app, 4),
-            swatch(&mut app, 5),
-            swatch(&mut app, 6),
-        );
-
-        let doc = patch_of(
-            &app,
-            &Slotted {
-                level: 1,
-                first: Slot::Held(one.clone()),
-                second: Slot::Named {
-                    swatch: two.clone(),
-                },
-            },
-        );
-        overlaid_node(
-            &mut app,
-            1,
-            Slotted {
-                level: 99,
-                first: Slot::Held(one),
-                second: Slot::Named { swatch: two },
-            },
-            doc,
-        );
-        let doc = patch_of(
-            &app,
-            &Palette {
-                level: 1,
-                by_name: [("rock".to_string(), three.clone())].into_iter().collect(),
-            },
-        );
-        overlaid_node(
-            &mut app,
-            2,
-            Palette {
-                level: 99,
-                by_name: [("rock".to_string(), three)].into_iter().collect(),
-            },
-            doc,
-        );
-        let doc = patch_of(&app, &Tinted(four.clone()));
-        overlaid_node(&mut app, 3, Tinted(four), doc);
-        overlaid_node(
-            &mut app,
-            4,
-            Tinted(five),
-            jackdaw_bsn::BsnPatch::Type("game::Tinted".to_string()),
-        );
-        let doc = patch_of(&app, &Coat::Painted(six.clone()));
-        overlaid_node(&mut app, 5, Coat::Painted(six.clone()), doc);
-        let doc = patch_of(
-            &app,
-            &Bag {
-                level: 1,
-                set: [six.clone()].into_iter().collect(),
-            },
-        );
-        overlaid_node(
-            &mut app,
-            6,
-            Bag {
-                level: 99,
-                set: [six].into_iter().collect(),
-            },
-            doc,
-        );
-
-        let text = crate::scene_io::save::emit_bsn_scene_for_file(app.world_mut(), dir.path())
-            .expect("nothing is refused");
-        assert!(!text.contains("99"), "the document's values:\n{text}");
-
-        let mut game = game_spawning(text);
-        let mut slotted = game.world_mut().query::<&Slotted>();
-        let slotted = slotted.single(game.world()).expect("spawned");
-        assert_eq!(slotted.level, 1);
-        let Slot::Held(first) = &slotted.first else {
-            panic!("the first variant");
-        };
-        assert_eq!(tone_of(&game, first), 1, "a tuple variant");
-        let Slot::Named { swatch } = &slotted.second else {
-            panic!("the second variant");
-        };
-        assert_eq!(tone_of(&game, swatch), 2, "a struct variant");
-
-        let mut palette = game.world_mut().query::<&Palette>();
-        let palette = palette.single(game.world()).expect("spawned");
-        assert_eq!(palette.level, 1);
-        assert_eq!(tone_of(&game, &palette.by_name["rock"]), 3, "a map value");
-
-        let mut tones: Vec<u32> = game
-            .world_mut()
-            .query::<&Tinted>()
-            .iter(game.world())
-            .map(|tinted| tone_of(&game, &tinted.0))
-            .collect();
-        tones.sort_unstable();
-        assert_eq!(tones, vec![4, 5], "a tuple component, written and bare");
-
-        let mut coat = game.world_mut().query::<&Coat>();
-        let Coat::Painted(painted) = coat.single(game.world()).expect("spawned") else {
-            panic!("the variant");
-        };
-        assert_eq!(tone_of(&game, painted), 6, "an enum component");
-
-        let mut bag = game.world_mut().query::<&Bag>();
-        let bag = bag.single(game.world()).expect("spawned");
-        assert_eq!(bag.level, 1);
-        let item = bag.set.iter().next().expect("the item");
-        assert_eq!(tone_of(&game, item), 6, "a set item");
     }
 
     /// `tab.path` is canonical and the project root is not: the tab still answers.

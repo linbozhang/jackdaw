@@ -1,7 +1,7 @@
 //! The queue carrying every editor-to-game message of one Live instance.
 //!
 //! A large `ipc-channel` send blocks until the receiver reads, and the game's
-//! main thread can itself be blocked sending its state stream to the editor.
+//! main thread can itself be blocked sending to the editor.
 //! So the editor's main thread only queues; a writer thread does the sends, in
 //! queue order.
 //!
@@ -645,6 +645,24 @@ mod tests {
                 ControlEvent::Pause,
                 sent(1, &[(A, 3)], &[]),
             ]
+        );
+    }
+
+    /// An edit made after a node came back must not merge into one from before it
+    /// left, which the game would read ahead of the despawn.
+    #[test]
+    fn an_edit_stays_on_its_side_of_a_structural_change() {
+        let despawn = ControlEvent::DespawnNode {
+            node: 1,
+            scene: "level.bsn".to_string(),
+        };
+        let shared = Shared::new();
+        shared.push_edit(edit(1, &[(A, 1)], &[]));
+        shared.push(to_bytes(&despawn).expect("encode"));
+        shared.push_edit(edit(1, &[(A, 2)], &[]));
+        assert_eq!(
+            drain(&shared),
+            vec![sent(1, &[(A, 1)], &[]), despawn, sent(1, &[(A, 2)], &[])]
         );
     }
 

@@ -20,7 +20,7 @@ use crate::util::OperatorResultExt as _;
 const TRANSFORM: &str = "bevy_transform::components::transform::Transform";
 const NAME: &str = "bevy_ecs::name::Name";
 
-fn cube(app: &mut App) -> SceneNodeId {
+pub(super) fn cube(app: &mut App) -> SceneNodeId {
     let before = nodes(app);
     menu(app, "entity.add.cube", true);
     nodes(app)
@@ -29,7 +29,7 @@ fn cube(app: &mut App) -> SceneNodeId {
         .expect("the menu added a node")
 }
 
-fn nodes(app: &mut App) -> Vec<SceneNodeId> {
+pub(super) fn nodes(app: &mut App) -> Vec<SceneNodeId> {
     app.world_mut()
         .query::<&SceneNodeId>()
         .iter(app.world())
@@ -37,7 +37,7 @@ fn nodes(app: &mut App) -> Vec<SceneNodeId> {
         .collect()
 }
 
-fn entity_of(app: &mut App, node: SceneNodeId) -> Entity {
+pub(super) fn entity_of(app: &mut App, node: SceneNodeId) -> Entity {
     app.world_mut()
         .query::<(Entity, &SceneNodeId)>()
         .iter(app.world())
@@ -55,7 +55,7 @@ fn x_of(app: &mut App, node: SceneNodeId) -> f32 {
         .x
 }
 
-fn move_to(app: &mut App, node: SceneNodeId, x: f64) {
+pub(super) fn move_to(app: &mut App, node: SceneNodeId, x: f64) {
     let entity = entity_of(app, node);
     app.world_mut()
         .operator("entity.set_transform")
@@ -256,6 +256,112 @@ fn pie_sync_an_edit_and_its_undo_land_in_the_game() {
     assert_eq!(x(&game), 4.0);
 }
 
+/// An inspector edit during Play authors the document as it does when stopped: the
+/// game takes it, it undoes, and the tab reads as modified.
+#[test]
+fn pie_sync_an_inspector_edit_during_play_authors_the_document() {
+    let (mut app, _dir, rock) = playing();
+    let (mut game, entity) = game(rock);
+    let (mut link, mut game_end) = LoopbackTransport::pair();
+    app.world_mut()
+        .resource_mut::<NextState<jackdaw_api::pie::PlayState>>()
+        .set(jackdaw_api::pie::PlayState::Playing);
+    app.update();
+    let world = app.world_mut();
+    let mut scenes = world.resource_mut::<jackdaw::scenes::Scenes>();
+    let active = scenes.active;
+    scenes.tabs[active].dirty = false;
+
+    let target = entity_of(&mut app, rock);
+    let authored = |app: &App| {
+        let ast = app.world().resource::<jackdaw_bsn::SceneBsnAst>();
+        let node = ast.ast_for(target).expect("a node");
+        jackdaw_bsn::get_bsn_field(ast, node, TRANSFORM, "translation.x")
+    };
+    let depth = app.world().resource::<CommandHistory>().undo_stack.len();
+    assert!(jackdaw::commands::field_edit_commit_on(
+        app.world_mut(),
+        target,
+        TRANSFORM,
+        "translation.x",
+        &serde_json::json!(4.0),
+    ));
+    app.update();
+
+    assert!(
+        matches!(authored(&app), Some(jackdaw_bsn::BsnValue::Float(x)) if x == 4.0),
+        "the document holds the edit: {:?}",
+        authored(&app)
+    );
+    assert_eq!(
+        app.world().resource::<CommandHistory>().undo_stack.len(),
+        depth + 1
+    );
+    assert!(app.world().resource::<jackdaw::scenes::Scenes>().tabs[active].dirty);
+    deliver(&mut app, &mut link, &mut game_end, &mut game);
+    assert_eq!(game_x(&game, entity), 4.0);
+
+    history(&mut app, "history.undo");
+    assert!(
+        !matches!(authored(&app), Some(jackdaw_bsn::BsnValue::Float(x)) if x == 4.0),
+        "the undo takes it out of the document"
+    );
+    deliver(&mut app, &mut link, &mut game_end, &mut game);
+    assert_eq!(game_x(&game, entity), 0.0);
+}
+
+/// Stop leaves the document alone: an edit made during Play stays on the entity and
+/// in the document, the tab stays modified, and the file still holds the last save.
+#[test]
+fn pie_sync_an_edit_during_play_survives_stop() {
+    let (mut app, dir, rock) = playing();
+    let path = dir.path().join("assets/stop.bsn");
+    std::fs::create_dir_all(path.parent().expect("a parent")).expect("the folder");
+    app.world_mut()
+        .operator("scene.save")
+        .param("path", path.to_string_lossy().into_owned())
+        .call()
+        .expect("scene.save dispatches")
+        .assert_finished();
+    app.update();
+    let saved = std::fs::read(&path).expect("the saved scene");
+    app.world_mut()
+        .resource_mut::<NextState<jackdaw_api::pie::PlayState>>()
+        .set(jackdaw_api::pie::PlayState::Playing);
+    app.update();
+
+    move_to(&mut app, rock, 4.0);
+    app.update();
+    app.world_mut()
+        .operator("pie.stop")
+        .call()
+        .expect("pie.stop dispatches")
+        .assert_finished();
+    for _ in 0..3 {
+        app.update();
+    }
+
+    assert_eq!(
+        *app.world()
+            .resource::<State<jackdaw_api::pie::PlayState>>()
+            .get(),
+        jackdaw_api::pie::PlayState::Stopped
+    );
+    assert_eq!(x_of(&mut app, rock), 4.0);
+    let target = entity_of(&mut app, rock);
+    let ast = app.world().resource::<jackdaw_bsn::SceneBsnAst>();
+    let node = ast.ast_for(target).expect("a node");
+    assert!(matches!(
+        jackdaw_bsn::get_bsn_field(ast, node, TRANSFORM, "translation.x"),
+        Some(jackdaw_bsn::BsnValue::Float(x)) if x == 4.0
+    ));
+    let scenes = app.world().resource::<jackdaw::scenes::Scenes>();
+    assert!(scenes.tabs[scenes.active].dirty, "the tab stays modified");
+    assert_eq!(std::fs::read(&path).expect("the file"), saved);
+    history(&mut app, "history.undo");
+    assert_eq!(x_of(&mut app, rock), 0.0, "and it still undoes");
+}
+
 const VISIBILITY: &str = "bevy_camera::visibility::Visibility";
 const BRUSH: &str = "jackdaw_scene_types::types::Brush";
 
@@ -299,7 +405,7 @@ fn pie_sync_undoing_a_derived_component_edit_sends_its_value() {
 
 /// A material the open scene embeds as `name`, as a loaded scene file's named
 /// asset entries are.
-fn embed_as(world: &mut World, name: &str) -> Handle<StandardMaterial> {
+pub(super) fn embed_as(world: &mut World, name: &str) -> Handle<StandardMaterial> {
     let stone = world
         .resource_mut::<Assets<StandardMaterial>>()
         .add(StandardMaterial::default());
@@ -497,7 +603,7 @@ fn pie_sync_an_edit_made_before_the_scene_spawns_lands_once_it_spawns() {
 
 /// Change the brush the way the brush tools do: on the entity, which the
 /// editor mirrors into the document.
-fn edit_brush(app: &mut App, rock: SceneNodeId, edit: impl FnOnce(&mut Brush)) {
+pub(super) fn edit_brush(app: &mut App, rock: SceneNodeId, edit: impl FnOnce(&mut Brush)) {
     let entity = entity_of(app, rock);
     let world = app.world_mut();
     let mut brush = world.get::<Brush>(entity).expect("a brush").clone();
@@ -606,4 +712,51 @@ fn pie_sync_an_edit_to_a_nested_node_of_an_opened_scene_lands_in_the_game() {
     move_to(&mut app, sun, 3.0);
     deliver(&mut app, &mut link, &mut game_end, &mut game);
     assert_eq!(game_x(&game, entity), 3.0);
+}
+
+#[test]
+fn a_list_field_set_shorter_by_path_loses_its_tail_and_undo_restores_it() {
+    let (mut app, _dir, rock) = playing();
+    app.register_type::<Waypoints>();
+    let waypoints = Waypoints::type_path();
+    add_component(&mut app, rock, waypoints);
+    set_field(&mut app, rock, waypoints, "points", "[1.0, 2.0, 3.0]");
+
+    set_field(&mut app, rock, waypoints, "points", "[7.0]");
+    let entity = entity_of(&mut app, rock);
+    let points = |app: &App| {
+        app.world()
+            .get::<Waypoints>(entity)
+            .map(|w| w.points.clone())
+    };
+    assert_eq!(points(&app), Some(vec![7.0]));
+    let (_, set, _) = only(collect_node_changes(app.world_mut()));
+    assert_eq!(sent(&set, waypoints)["points"], serde_json::json!([7.0]));
+
+    history(&mut app, "history.undo");
+    assert_eq!(points(&app), Some(vec![1.0, 2.0, 3.0]));
+}
+
+#[test]
+fn a_brush_field_set_by_path_keeps_the_face_materials() {
+    let (mut app, _dir, rock) = playing();
+    let stone = embed_stone(app.world_mut());
+    set_field(&mut app, rock, BRUSH, "faces[0].material", "\"#Stone\"");
+    let entity = entity_of(&mut app, rock);
+    let material = |app: &App| {
+        app.world()
+            .get::<Brush>(entity)
+            .map(|b| b.faces[0].material.clone())
+    };
+    assert_eq!(material(&app), Some(stone.clone()));
+
+    set_field(&mut app, rock, BRUSH, "faces[0].uv_scale", "[2.0, 2.0]");
+    assert_eq!(material(&app), Some(stone.clone()));
+    set_field(&mut app, rock, BRUSH, "faces[1].uv_offset", "[0.5, 0.5]");
+    assert_eq!(material(&app), Some(stone));
+    let (_, set, _) = only(collect_node_changes(app.world_mut()));
+    let sent_name = sent(&set, BRUSH)["faces"][0]["material"]
+        .as_str()
+        .unwrap_or_default();
+    assert!(sent_name.starts_with("#Play"), "still named: {sent_name}");
 }
