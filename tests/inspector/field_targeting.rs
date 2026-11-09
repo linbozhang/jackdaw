@@ -81,7 +81,7 @@ fn extend_selection(app: &mut App, entity: Entity) {
 fn app_with_two_entities() -> (App, Entity, Entity) {
     let mut app = util::editor_test_app();
     app.world_mut()
-        .spawn(jackdaw::layout::inspector_components_content(default()));
+        .spawn(jackdaw::layout::inspector_components_content());
     app.world_mut()
         .resource_mut::<NextState<jackdaw::AppState>>()
         .set(jackdaw::AppState::Editor);

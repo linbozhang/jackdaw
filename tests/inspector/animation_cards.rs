@@ -35,7 +35,7 @@ fn app_with(components: impl Bundle) -> (App, Entity, Entity) {
     }
     let root = app
         .world_mut()
-        .spawn(jackdaw::layout::inspector_components_content(default()))
+        .spawn(jackdaw::layout::inspector_components_content())
         .id();
     let entity = app
         .world_mut()

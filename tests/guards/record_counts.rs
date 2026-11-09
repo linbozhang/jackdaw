@@ -545,10 +545,6 @@ const SELF_PUSHING: &[&str] = &[
     "brush.join",
     // The extend keybind (Ctrl+E) pushes its own rebuild command.
     "brush.extend_face_to_brush",
-    // The PIE "Apply All" buttons push the edit group they build.
-    "pie.live_edits_apply_all",
-    // The PIE tray's single-edit save pushes its own save command.
-    "pie.live_edit_save",
     // Terrain panel buttons push their own SetTerrainHeights entries.
     "terrain.generate",
     "terrain.erode",

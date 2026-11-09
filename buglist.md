@@ -597,6 +597,9 @@
 - [ ] **A30. tilemap 跨场景 paste 后 b→a→b 换页重读丢弃未保存 store 细胞（🟡，数据丢失面；复现先行）**（2026-11-07 二次 review 待裁定案；主控批准立账——修复落点 T16 域）
   行为链（agent 插桩定位，插桩已移除）：paste 时 `ensure_paths` 正确把 a 的细胞 fork 到 `b.tilemap-0.jdtiles`；随后一次 b→a→b 双换页（疑似本地 Loop dirty 追踪/`file_has_moved_on` 域发起的重读换页，上游无此触发）把 b 的未保存 store 细胞丢弃；换回时 `import_sidecars(FillMissing)` 以「file missing → 空表」覆盖；save 导出空 sidecar。上游/本地 `import_tilemap_sidecars`/`ensure_paths`/`swap.rs` 语义逐字一致，分歧只在换页发起方。测试锚：`scenes::scenes_swap::a_map_pasted_from_another_scene_takes_a_copy_of_its_cells`（当前 84/85 唯一红）。证据：`loop/reports/github-sync-review2-report.md` §二.4/§四。
   修复方向（候裁）：裁定本地重读换页是否合法；若合法则 dirty tab 离开不应丢弃 store 中 `changed` 细胞（或换页离开前把 changed 细胞落盘/并入文档）。
+- [ ] **A31. #806 revert 边界的显式 dirty 被本地 doc-hash 指纹臂覆盖（🟡，上游测试红；dirty 语义设计冲突）**（2026-11-09 第三轮同步真机发现；主控批准立账——dirty 语义设计冲突，交正式策划→程序→QA 轮）
+  `stage::play_revert::a_tab_modified_for_another_reason_stays_modified_after_the_revert` 红（插桩实证已撤）：`revert_to_marks` 正确置 `tab.dirty = !saved || (was_dirty && reached)` = true（was_dirty/holds_mark/reached 全真），但随后帧内本地 doc-hash 指纹臂（`track_active_dirty_from_history` 的 `Some(saved_hash) if current_len == saved_undo_len` 分支，本地字段）以「内容==存盘」把显式 dirty 覆盖回 false——上游测试期待旗标语义（Play 前因其它原因 dirty 在 revert 后保持），本地指纹臂是内容语义。天真修法（指纹臂并入 was_dirty）会打翻 dirty_matrix「undo 回存盘内容=干净」的锚定裁决；可能方向=revert 边界对 was_dirty&&reached 的 tab 暂置 `history_state_at_last_check=None`（走 None 臂 preserves）或引入独立的「非历史 dirty 源」位。证据：`loop/github-sync/sync3-mod-stage.log`+插桩记录（已撤，报告 §A31）。
+  修复方向：dirty 语义设计轮（本地指纹臂 vs 上游旗标语义的统一模型），一并覆盖 A30 的同类「内容 vs 旗标」分歧面。
 - [ ] **LT8. Live Changes badge 点击不展开托盘（⚪，T25-T1 探针发现，只记不修）**（2026-11-03 T25-T1 可达性探针三窗实证；主控批准立账）
   hierarchy 头部 badge click `clicked:true` 但不 spawn 托盘面板（live_edits_ui.rs badge 观察器无展开行为）；托盘开行现成路线=停止→StopPrompt「Review」键交接（即 C4 链本体，零产品改动）。
   修复方向（候裁）：badge click 补托盘 spawn（一行级观察器）或 book 注记「badge 是计数器，开托盘走 Review/结构树」；T25-T3 book 轮顺手裁定。

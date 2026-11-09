@@ -42,7 +42,7 @@ fn editor_on(document: &str) -> (App, tempfile::TempDir, PathBuf) {
 
     let mut app = util::editor_test_app();
     app.world_mut()
-        .spawn(jackdaw::layout::inspector_components_content(default()));
+        .spawn(jackdaw::layout::inspector_components_content());
     app.world_mut()
         .insert_resource(jackdaw::project::ProjectRoot {
             root: tmp.path().to_path_buf(),
