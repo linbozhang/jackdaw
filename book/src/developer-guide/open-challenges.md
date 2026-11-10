@@ -38,12 +38,12 @@ share.
 PIE is the "click play to run your game" flow. The process model
 is settled: the game always runs out of process as its own cargo
 binary over IPC, with zero play-time compilation once built. Frame
-streaming into the Game panel, input capture and live sync of
-document edits to the running game all shipped; see
+streaming into the Game panel, input capture, live sync of
+document edits to the running game, and read-only runtime entities
+and live values in the editor all shipped; see
 [Play-in-editor](../user-guide/play-in-editor.md).
 
-What's not done: richer widget metadata for the streamed live
-values, and protocol maturity across more component types. Four
+What's not done: protocol maturity across more component types. Four
 smaller ledgers from the input-actions and physics work
 (2026-10): the schema watcher only fires on `schema.json`
 changes, so a restart into an unchanged schema can serve New

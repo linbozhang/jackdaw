@@ -2,7 +2,8 @@
 //!
 //! A scene reaches prefabs and sidecars the game reads off disk at spawn. For
 //! each scene it asks for, the game gets the unsaved ones with the answer: the
-//! text of each prefab in the scene's `IsA` closure that differs from its last
+//! text of each prefab the scene reaches, through `IsA` or a terrain's scatter,
+//! that differs from its last
 //! saved state, spelled as a save spells it, and a copy of each sidecar with
 //! unsaved changes, under a folder of that scene's own in `.jackdaw/play/` of the
 //! project, so no document reads another's copies. Nothing a save writes is
@@ -20,13 +21,13 @@ use jackdaw_pie_protocol::ControlEvent;
 
 use crate::pie::InstanceKey;
 use crate::play_scene::{
-    DocumentAssets, PlayAssetNames, PlayScene, warn_absolute, with_session_names,
+    AssetOwner, DocumentAssets, PlayAssetNames, PlayScene, warn_absolute, with_session_names,
 };
 use crate::prefab::canonical_prefab_path;
 use crate::prefab::operators::prefab_body;
 use crate::prefab::resolver_bsn::clone_scene;
 use crate::prefab::save_load::{read_prefab_ast, resolve_source_path, source_root};
-use crate::scene_io::hooks::{PlayCopies, PlayDocument, export_play_sidecars};
+use crate::scene_io::hooks::{PlayCopies, PlayDocument, export_play_sidecars, play_prefabs};
 use crate::scene_io::save::{GameDocument, live_document_for_game, snapshot_for_game};
 use crate::scenes::{Scenes, TabContent};
 
@@ -215,21 +216,20 @@ fn overlay_of(world: &mut World, scene: &SceneInOverlay) -> Overlay {
     };
     let namespace = source_root(world, scene.folder);
     let copies_root = scene_folder(&play, scene.target);
+    let document = PlayDocument {
+        tab: scene.tab,
+        instanced: false,
+        file: scene.file,
+        ast: scene.ast,
+        overlay_dir: &copies_root.join(scene.dir),
+    };
     if scene.sidecars {
         world.get_resource_or_init::<PlayCopies>().begin_walk();
-        export_copies(
-            world,
-            &PlayDocument {
-                tab: scene.tab,
-                instanced: false,
-                file: scene.file,
-                ast: scene.ast,
-                overlay_dir: &copies_root.join(scene.dir),
-            },
-        );
+        export_copies(world, &document);
     }
 
     let mut pending = sources_of(scene.ast, &namespace, scene.folder);
+    pending.extend(data_prefabs(world, &document, &assets));
     let mut seen = HashSet::new();
     while let Some(source) = pending.pop() {
         if !seen.insert(canonical_prefab_path(&source)) {
@@ -243,20 +243,23 @@ fn overlay_of(world: &mut World, scene: &SceneInOverlay) -> Overlay {
         };
         let parent = source.parent().map(Path::to_path_buf).unwrap_or_default();
         pending.extend(sources_of(&held.ast, &namespace, &parent));
+        let document = PlayDocument {
+            tab: held.tab,
+            instanced: true,
+            file: Some(&source),
+            ast: &held.ast,
+            overlay_dir: &copies_root.join(relative.parent().unwrap_or(Path::new(""))),
+        };
+        pending.extend(data_prefabs(world, &document, &assets));
         if scene.sidecars {
-            export_copies(
-                world,
-                &PlayDocument {
-                    tab: held.tab,
-                    instanced: true,
-                    file: Some(&source),
-                    ast: &held.ast,
-                    overlay_dir: &copies_root.join(relative.parent().unwrap_or(Path::new(""))),
-                },
-            );
+            export_copies(world, &document);
         }
         if let Some(document) = held.unsaved {
-            add_unsaved(world, &mut overlay, &relative, document);
+            let owner = match held.tab {
+                Some(tab) => AssetOwner::of_tab(world, tab),
+                None => AssetOwner::File(relative.to_string_lossy().replace('\\', "/")),
+            };
+            add_unsaved(world, &mut overlay, &relative, document, &owner);
         }
     }
     if scene.sidecars {
@@ -281,9 +284,15 @@ fn export_copies(world: &mut World, document: &PlayDocument) {
 
 /// `document` as the unsaved prefab at `relative`, under session names and spelled
 /// as a save spells it.
-fn add_unsaved(world: &mut World, overlay: &mut Overlay, relative: &Path, document: GameDocument) {
+fn add_unsaved(
+    world: &mut World,
+    overlay: &mut Overlay,
+    relative: &Path,
+    document: GameDocument,
+    owner: &AssetOwner,
+) {
     warn_absolute(world, &document.absolute);
-    let mut ast = with_session_names(world, document);
+    let mut ast = with_session_names(world, document, owner);
     let assets = DocumentAssets::of(world, &mut ast);
     let embedded = assets
         .embedded
@@ -305,6 +314,15 @@ fn sources_of(ast: &SceneBsnAst, namespace: &Path, folder: &Path) -> Vec<PathBuf
         .into_iter()
         .filter_map(|node| jackdaw_prefab::read_isa_source(ast, node))
         .map(|source| resolve_source_path(&source, namespace, folder))
+        .collect()
+}
+
+/// The file of each prefab `document`'s data names, such as a terrain's scatter.
+fn data_prefabs(world: &World, document: &PlayDocument, assets: &Path) -> Vec<PathBuf> {
+    play_prefabs(world, document)
+        .into_iter()
+        .filter(|path| is_plain_relative(Path::new(path)))
+        .map(|path| assets.join(path))
         .collect()
 }
 

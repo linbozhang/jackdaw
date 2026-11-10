@@ -1,13 +1,14 @@
 use bevy::math::UVec2;
 use jackdaw_tilemap::{
-    CollisionMode, MatchMode, Peer, RgbaImage, Scope, Stamp, TileAddress, TilesetSetup, auto_setup,
-    rerun,
+    MatchMode, Peer, RgbaImage, Scope, ShapePreset, Stamp, TileAddress, TileCollision,
+    TilesetSetup, auto_setup, rerun,
 };
 use jackdaw_tileset::{Tileset, TilesetError, TilesetObject, TilesetSheet};
 
 const SHEET: &str = "tiles/overworld.png";
 const GROUND: u8 = 2;
 const WATER: u8 = 11;
+const GRASS_TILE: TileAddress = TileAddress { sheet: 0, tile: 1 };
 
 struct Sheet {
     width: u32,
@@ -55,13 +56,15 @@ fn tileset() -> Tileset {
 fn edited_setup(sheet: &Sheet) -> TilesetSetup {
     let fresh = auto_setup(&sheet.inputs(), &[GROUND]).expect("auto setup runs");
     let mut setup = TilesetSetup::from_auto(&fresh);
-    assert!(setup.tiles.values().any(|t| t.shape.value.is_some()));
-    let tile = TileAddress { sheet: 0, tile: 1 };
-    setup.set_peer(tile, Peer::Top, GROUND).expect("peer");
+    assert!(setup.tiles.values().any(|t| !t.collision.value.is_empty()));
+    setup.set_peer(GRASS_TILE, Peer::Top, GROUND).expect("peer");
     setup.rename_terrain(1, "Grass").expect("rename");
-    (setup.set_collision_mode(WATER, CollisionMode::Solid)).expect("collision");
-    (setup.set_match_mode(GROUND, 1, MatchMode::Sides)).expect("mode");
-    setup.lock_set(WATER, 1, true).expect("lock");
+    let trigger = TileCollision::preset(ShapePreset::SlopeUp, 1, true).expect("a preset");
+    assert!(setup.set_collision(GRASS_TILE, trigger));
+    let ground = setup.set_index(GROUND, 1).expect("a set");
+    (setup.set_match_mode(ground, MatchMode::Sides)).expect("mode");
+    let water = setup.set_index(WATER, 1).expect("a set");
+    setup.lock_set(water, true).expect("lock");
     setup.put_stamp(Stamp {
         sheet: 0,
         origin: UVec2::new(0, 30),
@@ -81,7 +84,7 @@ fn a_setup_survives_the_tileset_unchanged() {
         .expect("the setup's sheets are the tileset's");
 
     assert_eq!(tileset.terrains.len(), 8);
-    assert_eq!(tileset.terrain_sets.len(), 6);
+    assert_eq!(tileset.terrain_sets.len(), 3);
     assert_eq!(tileset.setup().expect("converts back"), setup);
 }
 
@@ -97,6 +100,8 @@ fn a_rerun_through_the_tileset_keeps_what_the_user_set() {
     let through = rerun(&back, &sheet.inputs(), &Scope::All).expect("rerun");
     assert_eq!(through, direct);
     assert_eq!(through.terrain(1).expect("grass").name.value, "Grass");
+    let kept = &through.tiles[&GRASS_TILE].collision;
+    assert!(kept.is_user() && kept.value.iter().any(|c| c.trigger && c.layer == 1));
 }
 
 #[test]

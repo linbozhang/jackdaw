@@ -20,8 +20,8 @@ fn apply_template_lays_its_shapes_from_the_origin() {
         &dir,
         "tileset.apply_template",
         &[
-            ("inner", "11"),
-            ("outer", "2"),
+            ("terrain", "11"),
+            ("base", "2"),
             ("template", "corner2x2"),
             ("origin", "10,0"),
         ],
@@ -34,8 +34,8 @@ fn apply_template_lays_its_shapes_from_the_origin() {
     let apply = "tileset.apply_template";
     let at = |origin| {
         [
-            ("inner", "11"),
-            ("outer", "2"),
+            ("terrain", "11"),
+            ("base", "2"),
             ("template", "side16"),
             ("origin", origin),
         ]
@@ -55,8 +55,8 @@ fn apply_template_lays_its_shapes_from_the_origin() {
 fn apply_template_lays_each_shape_on_the_cell_its_order_names() {
     let (mut app, dir) = overworld();
     let params = [
-        ("inner", "11"),
-        ("outer", "2"),
+        ("terrain", "11"),
+        ("base", "2"),
         ("template", "corner2x2"),
         ("origin", "10,0"),
         ("order", "3,-,0,2"),
@@ -78,8 +78,8 @@ fn apply_template_lays_each_shape_on_the_cell_its_order_names() {
     let apply = "tileset.apply_template";
     let at = |order| {
         [
-            ("inner", "11"),
-            ("outer", "2"),
+            ("terrain", "11"),
+            ("base", "2"),
             ("template", "corner2x2"),
             ("origin", "10,0"),
             ("order", order),
@@ -95,8 +95,8 @@ fn apply_template_lays_each_shape_on_the_cell_its_order_names() {
 fn apply_template_takes_a_block_size_and_a_placement() {
     let (mut app, dir) = overworld();
     let params = [
-        ("inner", "11"),
-        ("outer", "2"),
+        ("terrain", "11"),
+        ("base", "2"),
         ("template", "corner16"),
         ("origin", "10,0"),
         ("size", "8,2"),
@@ -113,8 +113,8 @@ fn apply_template_takes_a_block_size_and_a_placement() {
 
     let apply = "tileset.apply_template";
     let walls = [
-        ("inner", "11"),
-        ("outer", "2"),
+        ("terrain", "11"),
+        ("base", "2"),
         ("template", "corner16"),
         ("origin", "10,0"),
         ("placement", "on_cells"),
@@ -273,13 +273,13 @@ fn describe_reports_the_overworld_tileset_without_history() {
         "tileset \"overworld.tileset.bsn\"",
         "image \"overworld.tiles.png\": tile 16x16, 27x38 layers",
         "terrains: 8",
-        "  terrain 1 \"grass\": swatch #8aa744, collision passable",
-        "  terrain 2 \"grass 2\": swatch #c6b15d, collision passable",
-        "  terrain 6 \"grass 4\": swatch #555d47, background, collision passable",
-        "  terrain 11 \"water\": swatch #06a1b3, collision passable",
-        "terrain sets: 6",
-        "  set \"grass 2\" over \"grass\": CornersAndSides, 35/47 shapes, missing ",
-        "  set \"water\" over \"grass\": CornersAndSides, 30/47 shapes, missing ",
+        "  terrain 1 \"Terrain 1\": swatch #f032e6",
+        "  terrain 2 \"Terrain 2\": swatch #42d4f4",
+        "  terrain 6 \"Terrain 4\": swatch #4363d8, background",
+        "  terrain 11 \"Terrain 7\": swatch #911eb4",
+        "terrain sets: 3",
+        "  set \"Terrain set 1\" (CornersAndSides): terrains bottom first [\"Terrain 1\", \"Terrain 2\", \"Terrain 7\"], 65/94 shapes, missing ",
+        "  set \"Terrain set 3\" (Corners): terrains bottom first [\"Terrain 4\", \"Terrain 3\"], 6/16 shapes",
         "flagged tiles: 0",
         "objects: 34",
         "  object on sheet 0 at 0,4: 5x3, 14 tiles, pivot 0.5,0",
@@ -314,7 +314,7 @@ fn the_layout_operators_run_over_the_remote() {
         vec![
             (
                 "tileset.apply_template",
-                json!({ "inner": "11", "outer": "2", "template": "corner2x2", "origin": "10,0" }),
+                json!({ "terrain": "11", "base": "2", "template": "corner2x2", "origin": "10,0" }),
             ),
             (
                 "tileset.tile.set_bits",

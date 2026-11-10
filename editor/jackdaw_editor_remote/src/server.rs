@@ -419,9 +419,10 @@ pub fn status_handler(In(_): In<Option<Value>>, world: &mut World) -> BrpResult 
         // and holding the editor until an entry is taken or `modal.cancel`
         // drops it.
         "picker": open_picker(world),
-        // `building`, `running`, `paused`, `failed` or `stopped`: what
-        // play-in-editor is doing, which `jackdaw/wait` can be held on.
+        // `building`, `running`, `paused`, `failed` or `stopped`: what Play is
+        // doing, which `jackdaw/wait` can be held on.
         "pie": jackdaw_editor_core::pie::play_status(world),
+        "instances": game_instances(world),
     }))
 }
 
@@ -778,6 +779,28 @@ pub fn history_handler(In(params): In<Option<Value>>, world: &mut World) -> BrpR
     }))
 }
 
+/// Every game instance Play launched, each `building`, `connecting` or
+/// `connected`. `focused` marks the one the game methods ask.
+fn game_instances(world: &World) -> Vec<Value> {
+    let focused = world
+        .get_resource::<jackdaw_editor_core::pie::PieInstances>()
+        .and_then(|instances| instances.focused.clone());
+    world
+        .get_non_send::<jackdaw_editor_core::pie::PieSession>()
+        .map(jackdaw_editor_core::pie::PieSession::instance_stages)
+        .unwrap_or_default()
+        .into_iter()
+        .map(|(key, stage)| {
+            json!({
+                "config": key.config,
+                "instance": key.instance,
+                "stage": stage,
+                "focused": focused.as_ref() == Some(&key),
+            })
+        })
+        .collect()
+}
+
 /// The list of choices on screen: which list it is, and the entries it offers
 /// where they are text a caller can name.
 fn open_picker(world: &mut World) -> Option<Value> {
@@ -899,7 +922,8 @@ pub fn cancel_handler(In(_): In<Option<Value>>, world: &mut World) -> BrpResult 
         .map_err(|err| internal_error(err.to_string()))?;
     Ok(json!({ "cancelled": id }))
 }
-/// The scene as the outliner shows it. `root` names the node to report and
+/// The scene as the outliner shows it, in its order. Each node carries its
+/// `node` id, which `jackdaw/game_entity` takes. `root` names the node to report and
 /// `depth` counts generations below it; absent, they mean the whole scene.
 /// `filter` is an entity reference: the nodes it matches (within `root`, when
 /// given) are reported as the roots, the topmost one where one sits under
@@ -974,8 +998,13 @@ fn node_json(world: &mut World, entity: Entity, depth: u32) -> Value {
         .map(|child| node_json(world, child, depth.saturating_sub(1)))
         .collect();
 
+    let node = world
+        .get::<jackdaw_scene_types::SceneNodeId>(entity)
+        .map(|node| node.0);
+
     json!({
         "entity": entity.to_bits(),
+        "node": node,
         "name": name,
         "missing_source": missing_source,
         "components": components,
@@ -2229,10 +2258,14 @@ pub fn wait_handler(In(params): In<Option<Value>>, world: &mut World) -> BrpResu
 /// otherwise. Ten minutes at 60fps, since a game build takes minutes.
 const PIE_WAIT_FRAMES: u32 = 36_000;
 
-/// Hold until play-in-editor reaches `wanted`, the build behind it fails, or the
-/// wait runs out of frames. A `pie_stopped` wait resolves only once a game has
-/// been seen building or up, since `pie.play` returns while the editor still
-/// reads as stopped.
+/// Frames a `pie_stopped` wait that has seen no game gives a `pie.play` sent
+/// just before it to register its launch.
+const PIE_STOP_GRACE_FRAMES: u32 = 30;
+
+/// Hold until Play reaches `wanted`, the build behind it fails, or the
+/// wait runs out of frames. A `pie_stopped` wait resolves once Play reads as
+/// stopped with no instance launched or building, since `pie.play` returns
+/// while the editor still reads as stopped.
 fn pie_wait(
     world: &mut World,
     params: &Value,
@@ -2245,6 +2278,9 @@ fn pie_wait(
         .get("frames")
         .and_then(Value::as_u64)
         .map_or(PIE_WAIT_FRAMES, |frames| frames as u32);
+    let launched = world
+        .get_non_send::<jackdaw_editor_core::pie::PieSession>()
+        .is_some_and(|session| !session.instance_stages().is_empty());
 
     let launch_baseline = world
         .get_non_send::<jackdaw_editor_core::pie::PieSession>()
@@ -2268,17 +2304,15 @@ fn pie_wait(
             "request {key} is already waiting on something else"
         )));
     };
-    wait.seen_active |= status != "stopped";
-    // A session counts even when the wait never observed it: a stop that
-    // completes before the first poll still moved the launch count, and
-    // holding for `seen_active` alone would hang that wait forever (the
-    // race the live QA worked around by polling `jackdaw/status`).
-    let session_ran = wait.seen_active || launches_now > wait.launch_baseline;
+    wait.seen_active |= status != "stopped" || launched;
+    let settled = wait.seen_active
+        || launches_now > wait.launch_baseline
+        || frame >= wait.until.saturating_sub(cap) + PIE_STOP_GRACE_FRAMES;
     let reached = match wait.wanted {
         "running" => matches!(status, "running" | "paused"),
-        _ => session_ran && status == "stopped",
+        _ => status == "stopped" && !launched && settled,
     };
-    let gone = wait.wanted == "running" && wait.seen_active && status == "stopped";
+    let gone = wait.wanted == "running" && wait.seen_active && status == "stopped" && !launched;
     let out_of_frames = frame >= wait.until;
 
     // A build that did not compile, or a game that went away before it
@@ -2692,13 +2726,13 @@ enum PendingState {
     Frames { until: u32 },
     /// The asset walk running on the IO pool.
     Assets { task: Task<Vec<String>> },
-    /// A play-in-editor state being held for.
+    /// A Play state being held for.
     Pie(PieWait),
     /// A question the running game has yet to answer.
     Game { request: u64 },
 }
 
-/// A wait held on a play-in-editor state.
+/// A wait held on a Play state.
 struct PieWait {
     /// The status the caller asked for.
     wanted: &'static str,

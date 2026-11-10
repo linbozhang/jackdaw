@@ -4,7 +4,7 @@ use std::fmt::Write as _;
 use bevy::color::ColorToPacked as _;
 use jackdaw_tilemap::{CellCoord, Region, TileAddress, TilesetSetup, emit_rows};
 
-use crate::{TerrainCollision, Tileset, TilesetError};
+use crate::{Tileset, TilesetError, terrain_match};
 
 impl Tileset {
     /// Sets `key` to `value` on each of `layers`, or removes it for an empty
@@ -60,23 +60,24 @@ impl Tileset {
             });
             let _ = writeln!(
                 out,
-                "  terrain {} \"{}\": swatch #{r:02x}{g:02x}{b:02x}{background}, collision {}{icon}",
-                t.id,
-                t.name,
-                collision_name(t.collision)
+                "  terrain {} \"{}\": swatch #{r:02x}{g:02x}{b:02x}{background}{icon}",
+                t.id, t.name
             );
         }
-        let _ = writeln!(out, "terrain sets: {}", self.terrain_sets.len());
-        for s in &self.terrain_sets {
+        let _ = writeln!(out, "terrain sets: {}", setup.sets.len());
+        for (index, s) in setup.sets.iter().enumerate() {
             let locked = if s.locked_manual { ", locked" } else { "" };
+            let terrains: Vec<String> = (s.terrains.iter())
+                .map(|&id| format!("\"{}\"", self.terrain_name(id)))
+                .collect();
             let _ = write!(
                 out,
-                "  set \"{}\" over \"{}\": {:?}{locked}",
-                self.terrain_name(s.inner),
-                self.terrain_name(s.outer),
-                s.mode
+                "  set \"{}\" ({:?}{locked}): terrains bottom first [{}]",
+                s.name,
+                terrain_match(s.mode.value),
+                terrains.join(", ")
             );
-            if let Ok(c) = setup.coverage(s.inner, s.outer) {
+            if let Ok(c) = setup.coverage(index) {
                 let _ = write!(out, ", {}/{} shapes", c.covered, c.total);
                 let missing: Vec<String> = (c.missing.iter())
                     .map(|t| t.peers.map(|p| p.to_string()).join(","))
@@ -112,6 +113,18 @@ impl Tileset {
                 o.cells.len(),
                 o.pivot.x,
                 o.pivot.y
+            );
+        }
+        let layers = self.physics_layer_names();
+        let _ = writeln!(out, "physics layers: {}", layers.len());
+        for (index, name) in (0..).zip(layers.iter()) {
+            let on =
+                (self.tiles.iter()).flat_map(|t| t.collision.iter().filter(|c| c.layer == index));
+            let triggers = on.clone().filter(|c| c.trigger).count();
+            let solid = on.count() - triggers;
+            let _ = writeln!(
+                out,
+                "  layer {index} \"{name}\": {solid} solid, {triggers} trigger tiles"
             );
         }
         let _ = writeln!(out, "properties: {} layers", self.properties.len());
@@ -179,13 +192,5 @@ impl Tileset {
         let origin = CellCoord::new(0, 0);
         let region = Region::from_cells(origin, source.columns, source.rows, cells)?;
         Some(emit_rows(&region))
-    }
-}
-
-fn collision_name(collision: TerrainCollision) -> &'static str {
-    match collision {
-        TerrainCollision::Solid => "solid",
-        TerrainCollision::Trigger => "trigger",
-        TerrainCollision::Passable => "passable",
     }
 }
