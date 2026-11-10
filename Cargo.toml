@@ -362,17 +362,18 @@ doc = false
 # pre-release `0.20.0-dev` the git tree carries, which is why the fork
 # exists at all). Remake the fork with scripts/make-bevy-fork.ps1 whenever
 # the pin moves; the git_deps guard fails the build when the fork and the
-# pin drift apart. The path is a machine convention, documented in the book.
+# pin drift apart. Keep jackdaw and bevy-fork-pinned as sibling directories
+# on macOS and Windows; these paths are relative to this manifest.
 [patch.crates-io]
-bevy = { path = "/Users/linbo.zhang/workspace/bevy-fork-pinned" }
-bevy_curve = { path = "/Users/linbo.zhang/workspace/bevy-fork-pinned/crates/bevy_curve" }
-bevy_math = { path = "/Users/linbo.zhang/workspace/bevy-fork-pinned/crates/bevy_math" }
-bevy_reflect = { path = "/Users/linbo.zhang/workspace/bevy-fork-pinned/crates/bevy_reflect" }
-bevy_shape = { path = "/Users/linbo.zhang/workspace/bevy-fork-pinned/crates/bevy_shape" }
+bevy = { path = "../bevy-fork-pinned" }
+bevy_curve = { path = "../bevy-fork-pinned/crates/bevy_curve" }
+bevy_math = { path = "../bevy-fork-pinned/crates/bevy_math" }
+bevy_reflect = { path = "../bevy-fork-pinned/crates/bevy_reflect" }
+bevy_shape = { path = "../bevy-fork-pinned/crates/bevy_shape" }
 
 [patch."https://github.com/bevyengine/bevy"]
-bevy = { path = "/Users/linbo.zhang/workspace/bevy-fork-pinned" }
-bevy_curve = { path = "/Users/linbo.zhang/workspace/bevy-fork-pinned/crates/bevy_curve" }
-bevy_math = { path = "/Users/linbo.zhang/workspace/bevy-fork-pinned/crates/bevy_math" }
-bevy_reflect = { path = "/Users/linbo.zhang/workspace/bevy-fork-pinned/crates/bevy_reflect" }
-bevy_shape = { path = "/Users/linbo.zhang/workspace/bevy-fork-pinned/crates/bevy_shape" }
+bevy = { path = "../bevy-fork-pinned" }
+bevy_curve = { path = "../bevy-fork-pinned/crates/bevy_curve" }
+bevy_math = { path = "../bevy-fork-pinned/crates/bevy_math" }
+bevy_reflect = { path = "../bevy-fork-pinned/crates/bevy_reflect" }
+bevy_shape = { path = "../bevy-fork-pinned/crates/bevy_shape" }
