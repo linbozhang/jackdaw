@@ -1,5 +1,26 @@
 # Rust builds
 /target
+# Compiled outputs and exported game copies are reproducible, not QA evidence.
+/loop/**/*.exe
+/loop/**/*.dll
+/loop/**/*.dylib
+/loop/**/*.so
+/loop/**/*.a
+/loop/**/*.rlib
+/loop/**/*.rmeta
+/loop/**/*.o
+/loop/**/*.obj
+/loop/**/*.pdb
+/loop/**/*.wasm
+/loop/**/target/
+/loop/**/__pycache__/
+/loop/**/*.pyc
+/loop/t07-final-live/cell5/foreign/
+/loop/t07-final-live/moved/deep/nest/game/
+/loop/t08-t3-live/moved8/dist/
+/loop/t20-live/t20-game-pure/
+/loop/**/.jackdaw-export
+/loop/**/export-manifest.json
 # xtask is a detached workspace with its own build output
 xtask/target
 # test fixtures target and cargo lock files
