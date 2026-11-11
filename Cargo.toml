@@ -80,6 +80,10 @@ repository = "https://github.com/jbuehler23/jackdaw"
 # to the version-pinned fork of the very commit the workspace pins — one
 # bevy, whichever side declares it. Keep the fork in step with the pin:
 # scripts/make-bevy-fork.ps1 remakes it, git_deps checks them apart.
+avian2d = { version = "0.8", features = [
+    "2d",
+    "parry-f32",
+] }
 avian3d = { version = "0.8", features = [
     "3d",
     "parry-f32",
