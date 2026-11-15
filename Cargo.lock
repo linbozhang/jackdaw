@@ -4588,7 +4588,6 @@ dependencies = [
  "bevy_reflect",
  "jackdaw_bind",
  "log",
- "nom",
  "path-slash",
  "pathdiff",
  "serde",
